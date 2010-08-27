@@ -1,0 +1,5 @@
+permalink: /:categories/:title
+auto: true
+url: http://relaxdiego.github.com/redmine_backlogs
+name: Redmine Backlogs
+description: A Redmine plugin for agile teams
