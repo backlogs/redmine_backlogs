@@ -1,8 +1,12 @@
 <div class="model release" id="<%= release_html_id_or_empty(release) %>">
   <h3><%= release_link_or_empty(release) %></h3>
-  <div class="release_start_date editable date" fieldname="release_start_date">Start date: <%= release.release_start_date || "no start date" %></div>
-  <div class="release_end_date editable date" fieldname="release_end_date">End date: <%= release.release_end_date || "no end date" %></div>
-  <div class="initial_story_points editable" fieldname="initial_story_points">Initial story points: <%= release.initial_story_points || "not set" %></div>
+  <div class="release_start_date date" fieldname="release_start_date">Start date: <%= release.release_start_date || "no start date" %></div>
+  <div class="release_end_date date" fieldname="release_end_date">End date: <%= release.release_end_date || "no end date" %></div>
+  <div class="initial_story_points" fieldname="initial_story_points">Initial story points: <%= release.initial_story_points || "not set" %></div>
+  <% if release.has_burndown? %>
+    <div class="snapshots" fieldname="snapshots">Saved snapshots: <%= release.burndown_days.count %></div>
+  <% end %>
+  <br />
   <div class="meta">
     <%= render :partial => "shared/model_errors", :object => release.errors %>
   </div>

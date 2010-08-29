@@ -16,9 +16,9 @@
     <div class="box">
     <% if @release.today %>
       <%= link_to 'update snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
-      (currently set to <%= @release.today.remaining_story_points %> points)
+      (current: <%= @release.today.remaining_story_points %> / new: <b><%= @remaining_story_points  %></b>)
     <% else %>
-      <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+      <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-add' %>
     <% end %>
     </div>
   <% end %>
@@ -35,6 +35,7 @@
   <p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
   <p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
   <p><b>Remaining story points:</b> <%= @remaining_story_points %> (<%= @release.stories.count %> stories)</p>
+  <p><b>Saved snapshots:</b>        <%= @release.burndown_days.count %></p>
 <% end %>
 
 <% html_title(@release.name) -%>
