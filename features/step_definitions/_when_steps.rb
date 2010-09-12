@@ -72,8 +72,8 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
   @story = Story.find(story.text.to_i)
 end
 
-When /^I request the server_variables resource$/ do
-  visit url_for(:controller => :rb_server_variables, :action => :show, :project_id => @project.id)
+When /^I request the (.+) resource$/ do |resource_name|
+  visit url_for(:controller => "rb_" + resource_name, :action => :show, :project_id => @project.id)
 end
 
 When /^I update the impediment$/ do

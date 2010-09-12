@@ -7,11 +7,15 @@ Feature: Common
     Given the ecookbook project has the backlogs plugin enabled
       And I am a team member of the project
 
-  Scenario: View the product backlog
+  Scenario: Fetch the server variables
     Given I am viewing the master backlog
      When I request the server_variables resource
      Then the request should complete successfully
-     
+
+  Scenario: Fetch the dynamic styles
+     When I request the custom_styles resource
+     Then the request should complete successfully
+
   Scenario: View the product backlog without any stories
     Given there are no stories in the project
      When I view the master backlog

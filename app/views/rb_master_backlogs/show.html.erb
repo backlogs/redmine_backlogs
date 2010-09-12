@@ -4,6 +4,7 @@
   <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
   <%= theme_stylesheet_link_tag 'master_backlog.css' %>
+  <link href="<%= url_for(:controller => 'rb_custom_styles', :action => 'show', :project_id => @project.id, :format => :css) %>" media="screen" rel="stylesheet" type="text/css" />
 <%- end %>
 
 <%- content_for :breadcrumbs do %>

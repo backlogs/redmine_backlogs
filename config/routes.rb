@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :story,            :except => :index,            :controller => :rb_stories,          :as => "story/:id"
     rb.resources  :stories,          :only => :index,              :controller => :rb_stories,          :as => "stories/:project_id"
     rb.resource   :sprint,           :only => [:show, :update],    :controller => :rb_sprints,          :as => "sprints/:sprint_id"
+    rb.resource   :custom_styles,    :only => :show,               :controller => :rb_custom_styles,    :as => "custom_styles/:project_id"
     rb.resource   :server_variables, :only => :show,               :controller => :rb_server_variables, :as => "server_variables/:project_id"
     rb.resource   :taskboard,        :only => :show,               :controller => :rb_taskboards,       :as => "taskboards/:sprint_id"
     rb.resource   :master_backlog,   :only => :show,               :controller => :rb_master_backlogs,  :as => "master_backlogs/:project_id"
