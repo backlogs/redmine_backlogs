@@ -1,6 +1,8 @@
-<% colors = ["FF0000", "00FF00", "0000FF", "FFFFCC", "FCFCFC", "CFCFCF", "336699"] %>
+<% background_colors = ["FF0000", "00FF00", "0000FF", "FFFFCC", "FCFCFC", "CFCFCF", "336699"] %>
+<% colors            = ["FFFFFF", "FFFFFF", "FFFFFF", "000000", "000000", "000000", "000000"] %>
 <%-  Tracker.find_all_by_id(Setting.plugin_redmine_backlogs[:story_trackers]).each_with_index do |tracker, index| %>
 #backlogs_container .stories .story .id.<%= tracker.name.parameterize %> .t * {
-  background-color:#<%= colors[index] %>;
+  background-color:#<%= background_colors[index] %>;
+  color:#<%= colors[index] %>;
 }
 <%- end %>
