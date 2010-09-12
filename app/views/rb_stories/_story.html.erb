@@ -1,5 +1,5 @@
-<li class="model story <%= mark_if_closed(story) %> <%= tracker_name_or_empty(story) %>" id="<%= story_html_id_or_empty(story) %>">
-  <div class="id">
+<li class="model story <%= mark_if_closed(story) %>" id="<%= story_html_id_or_empty(story) %>">
+  <div class="id <%= tracker_name_or_empty(story).parameterize %>">
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
