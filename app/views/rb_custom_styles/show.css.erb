@@ -1,8 +1,8 @@
-<% background_colors = ["FF0000", "00FF00", "0000FF", "FFFFCC", "FCFCFC", "CFCFCF", "336699"] %>
-<% colors            = ["FFFFFF", "FFFFFF", "FFFFFF", "000000", "000000", "000000", "000000"] %>
-<%-  Tracker.find_all_by_id(Setting.plugin_redmine_backlogs[:story_trackers]).each_with_index do |tracker, index| %>
-#backlogs_container .stories .story .id.<%= tracker.name.parameterize %> .t * {
-  background-color:#<%= background_colors[index] %>;
-  color:#<%= colors[index] %>;
+<%-  Tracker.find_all_by_id(Setting.plugin_redmine_backlogs[:story_trackers]).each do |tracker| %>
+
+#backlogs_container .stories .story .id.tracker_<%= tracker.id %> .t * {
+  background-color:#<%= Setting.plugin_redmine_backlogs[:custom_styles]["tracker_" + tracker.id]["background-color"] %>;
+  color:#<%= Setting.plugin_redmine_backlogs[:custom_styles]["tracker_" + tracker.id]["color"] %>;
 }
+
 <%- end %>
