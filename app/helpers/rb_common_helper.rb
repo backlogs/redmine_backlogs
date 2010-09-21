@@ -21,10 +21,6 @@ module RbCommonHelper
     "<span class='separator'>&gt;</span>"
   end
 
-  def description_or_empty(story)
-    story.new_record? ? "" : textilizable(story, :description)
-  end
-
   def id_or_empty(item)
     item.new_record? ? "" : item.id
   end
@@ -48,18 +44,6 @@ module RbCommonHelper
   def story_points_or_empty(story)
     story.story_points.nil? ? "" : story.story_points
   end
-
-  def record_id_or_empty(story)
-    story.new_record? ? "" : story.id
-  end
-  
-  def sprint_status_id_or_default(sprint)
-    sprint.new_record? ? Version::VERSION_STATUSES.first : sprint.status
-  end
-
-  def sprint_status_label_or_default(sprint)
-    sprint.new_record? ? l("version_status_#{Version::VERSION_STATUSES.first}") : l("version_status_#{sprint.status}")
-  end
   
   def status_id_or_default(story)
     story.new_record? ? IssueStatus.find(:first, :order => "position ASC").id : story.status.id
@@ -75,10 +59,6 @@ module RbCommonHelper
 
   def story_html_id_or_empty(story)
     story.new_record? ? "" : "story_#{story.id}"
-  end
-
-  def textile_description_or_empty(story)
-    story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
 
   def theme_name
@@ -99,10 +79,6 @@ module RbCommonHelper
 
   def tracker_name_or_empty(story)
     story.new_record? ? "" : story.tracker.name
-  end
-  
-  def updated_on_with_milliseconds(story)
-    date_string_with_milliseconds(story.updated_on, 0.001) unless story.nil?
   end
 
   def date_string_with_milliseconds(d, add=0)
