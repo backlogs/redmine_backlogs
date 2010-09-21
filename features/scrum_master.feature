@@ -87,7 +87,7 @@ Feature: Scrum Master
      Then the request should complete successfully
     Given I have guessed an API access key
      When I download the calendar feed
-     Then the request should fail
+     Then the request should not be authorized
      
   Scenario: Download printable cards for the product backlog
     Given I have selected card label stock Avery 7169

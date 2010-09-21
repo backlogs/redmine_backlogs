@@ -124,6 +124,21 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
 
+Given /^story and task trackers for the (.*) project are not configured$/ do |project_id|
+  @project = get_project(project_id)
+
+  # Enable the backlogs plugin
+  @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
+
+  # Configure the story and task trackers
+  plugin = Redmine::Plugin.find('redmine_backlogs')
+  Setting["plugin_#{plugin.id}"] = {:story_trackers => [], :task_tracker => nil }
+
+  # Make sure trackers are enabled in the project
+  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
+  @project.update_attributes :tracker_ids => (story_trackers)
+end
+
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project = get_project(project_id)
 

@@ -113,6 +113,10 @@ When /^I view the master backlog$/ do
   click_link("Backlogs")
 end
 
+When /^I view the master backlog without specifying a project id$/ do
+  visit url_for(:controller => :rb_master_backlogs, :action => :show, :id => nil)
+end
+
 When /^I view the stories of (.+) in the issues tab/ do |sprint_name|
   sprint = Sprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id)

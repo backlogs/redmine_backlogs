@@ -29,6 +29,10 @@ Then /^I should see (\d+) stories in the product backlog$/ do |count|
   page.all(:css, "#product_backlog_container .backlog .story").length.should == count.to_i
 end
 
+Then /^I should see the '([^"]*)' notice$/ do |css_id|
+  page.should have_css("#" + css_id)
+end
+
 Then /^show me the list of sprints$/ do
   sprints = Sprint.find(:all, :conditions => ["project_id=?", @project.id])
 
@@ -69,8 +73,13 @@ Then /^the request should complete successfully$/ do
 end
 
 Then /^the request should fail$/ do
+  page.driver.response.status.should == 400
+end
+
+Then /^the request should not be authorized$/ do
   page.driver.response.status.should == 401
 end
+
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)

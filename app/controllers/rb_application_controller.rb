@@ -15,7 +15,7 @@ class RbApplicationController < ApplicationController
                elsif params[:project_id]
                  Project.find(params[:project_id])
                else
-                 raise "Cannot determine project (#{params.inspect})"
+                 render :text => "Cannot determine project (#{params.inspect})", :status => 400
                end
   end
 
@@ -23,7 +23,7 @@ class RbApplicationController < ApplicationController
     settings = Setting.plugin_redmine_backlogs
     if settings[:story_trackers].nil? || settings[:task_tracker].nil?
       respond_to do |format|
-        format.html { render :file => "rb_common/not_configured" }
+        format.html { render :file => "shared/not_configured" }
       end
     end
   end
