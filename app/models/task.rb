@@ -40,6 +40,19 @@ class Task < Issue
          :order => "updated_on ASC")
   end
 
+  def self.allowed_statuses(role_id)
+    Workflow.find(:all,
+                  :include    => :new_status,
+                  :conditions => {
+                                   :role_id    => role_id,
+                                   :tracker_id => tracker
+                                 }
+             ).
+        collect(&:new_status).
+        uniq.
+        sort{|a,b| a.position<=>b.position}
+  end
+
   def self.tasks_for(story_id)
     tasks = []
     Task.find(:all,
