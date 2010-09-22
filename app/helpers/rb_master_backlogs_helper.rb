@@ -9,7 +9,7 @@ module RbMasterBacklogsHelper
         <ul class="items">
     }
     items.each do |item|
-      item[:condition] = true if item[:condition].nil?
+      item[:condition] = true if item[:condition].blank?
       if item[:condition] && ( (is_sprint && item[:for] == :sprint) ||
                                (!is_sprint && item[:for] == :product) ||
                                (item[:for] == :both) )

@@ -1,3 +1,5 @@
+require 'fileutils'
+
 namespace :redmine do
   namespace :backlogs do 
 
@@ -9,22 +11,30 @@ namespace :redmine do
       settings = Setting.plugin_redmine_backlogs
       settings[:points_burn_direction] ||= 'down'
       settings[:wiki_template]         ||= ''
-      settings[:card_spec]             ||= 'APLI 01293'
 
       puts "\n"
       puts "====================================================="
       puts "             Redmine Backlogs Installer"
       puts "====================================================="
       puts "Installing to the #{ENV['RAILS_ENV']} environment."
-      print "Fetching card labels from http://git.gnome.org..."
-      STDOUT.flush
-      begin
-        Cards::TaskboardCards.fetch_labels
-        print "done!\n"
-      rescue
-        print "\nCard labels could not be fetched. Please try again later. Proceeding anyway...\n"
+
+      if ! ['no', 'false'].include?("#{ENV['labels']}".downcase)
+        print "Fetching card labels from http://git.gnome.org..."
+        STDOUT.flush
+        begin
+          Cards::TaskboardCards.fetch_labels
+          print "done!\n"
+        rescue Exception => fetch_error
+          print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
+        end
+      else
+        if ! File.exist?(File.dirname(__FILE__) + '/../labels.yaml')
+          print "Default labels installed\n"
+          FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
+        end
       end
-      
+      settings[:card_spec] ||= Cards::TaskboardCards::LABELS.keys[0] unless Cards::TaskboardCards::LABELS.size == 0
+
       trackers = Tracker.find(:all)
 
       if Story.trackers.length == 0
@@ -73,7 +83,7 @@ namespace :redmine do
           while invalid
             # If there's at least one, ask the user to pick one
             puts "Which tracker do you want to use for your tasks?"
-            available_trackers = trackers.select{|t| !settings[:task_tracker].include? t.id}
+            available_trackers = trackers.select{|t| !settings[:story_trackers].include? t.id}
             j = 0
             available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
             # puts "  #{ j + 1 }. <<new>>"
