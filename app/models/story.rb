@@ -10,7 +10,7 @@ class Story < Issue
             :order => 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC',
             :conditions => [
                 "parent_id is NULL
-                  and project_id = ?
+                  and project_id in (?,?)
                   and tracker_id in (?)
                   and (
                     (fixed_version_id is NULL and ? is NULL)
@@ -18,7 +18,7 @@ class Story < Issue
                     (fixed_version_id = ? and not ? is NULL)
                     )
                   and (is_closed = ? or not ? is NULL)", 
-                project.id,
+                project.id, project.descendants.active.collect{|p| p.id},
                 Story.trackers,
                 sprint,
                 sprint, sprint,
