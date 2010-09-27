@@ -22,6 +22,7 @@ class Burndown
 
     @days = sprint.days
     @sprint_id = sprint.id
+    @project_id = sprint.project_scope.id
 
     # end date for graph
     days = @days
@@ -33,7 +34,7 @@ class Burndown
     # load cache
     day_index = to_h(days, (0..(days.size - 1)).to_a)
     starts = sprint.sprint_start_date
-    BurndownDay.find(:all, :order=>'created_at', :conditions => ["version_id = ?", sprint.id]).each {|data|
+    BurndownDay.find(:all, :order=>'created_at', :conditions => ["backlogs_sprint_id = ? and project_id = ?", @sprint_id, @project_id]).each {|data|
       day = day_index[data.created_at.to_date]
       next if !day
 
@@ -148,7 +149,8 @@ class Burndown
       :points_accepted => datapoint[2],
       :remaining_hours => datapoint[3],
       :created_at => day,
-      :version_id => @sprint_id
+      :backlogs_sprint_id => @sprint_id,
+      :project_id => @project_id,
     }
     bdd = BurndownDay.new datapoint
     bdd.save!
@@ -167,125 +169,148 @@ class Burndown
 
 end
 
-class Sprint < Version
-    unloadable
+class Sprint < ActiveRecord::Base
+  set_table_name "backlogs_sprints"
+  unloadable
 
-    validate :start_and_end_dates
+  belongs_to :project
+  validates_presence_of :name
+  validates_uniqueness_of :name, :scope => [:project_id]
+  validates_length_of :name, :maximum => 60
+  validates_format_of :start_date, :with => /^\d{4}-\d{2}-\d{2}$/, :message => :not_a_date, :allow_nil => true
+  validates_format_of :end_date, :with => /^\d{4}-\d{2}-\d{2}$/, :message => :not_a_date, :allow_nil => true
+  validate :start_and_end_dates
 
-    def start_and_end_dates
-        errors.add_to_base("Sprint cannot end before it starts") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
-    end
+  def start_and_end_dates
+    errors.add_to_base("Sprint cannot end before it starts") if self.start_date && self.end_date && self.start_date >= self.end_date
+  end
 
-    named_scope :open_sprints, lambda { |project|
-        {
-            :order => 'sprint_start_date ASC, effective_date ASC',
-            :conditions => [ "status = 'open' and project_id = ?", project.id ]
-        }
+  named_scope :open_sprints, lambda { |project|
+    {
+      :order => 'start_date ASC, end_date ASC',
+      # enable later for shared sprints
+      #:conditions => [ "end_date >= ? and project_id in (select id from projects where lft >= ? and rgt <= ?)", Date.today, project.lft, project.rgt]
+      :conditions => [ "end_date >= ? and project_id = ?", Date.today, project.id]
     }
+  }
 
-    def stories
-        return Story.sprint_backlog(self)
-    end
+  def stories
+    return Story.sprint_backlog(self)
+  end
 
-    def points
-        return stories.inject(0){|sum, story| sum + story.story_points.to_i}
-    end
+  def points
+    return stories.inject(0){|sum, story| sum + story.story_points.to_i}
+  end
    
-    def has_wiki_page
-        return false if wiki_page_title.blank?
+  def has_wiki_page
+    return false if wiki_page_title.blank?
 
-        page = project.wiki.find_page(self.wiki_page_title)
-        return false if !page
+    page = project.wiki.find_page(self.wiki_page_title)
+    return false if !page
 
-        template = project.wiki.find_page(Setting.plugin_redmine_backlogs[:wiki_template])
-        return false if template && page.text == template.text
+    template = project.wiki.find_page(Setting.plugin_redmine_backlogs[:wiki_template])
+    return false if template && page.text == template.text
 
-        return true
+    return true
+  end
+
+  def wiki_page
+    if ! project.wiki
+      return ''
     end
 
-    def wiki_page
-        if ! project.wiki
-            return ''
-        end
+    self.update_attribute(:wiki_page_title, Wiki.titleize(self.name)) if wiki_page_title.blank?
 
-        self.update_attribute(:wiki_page_title, Wiki.titleize(self.name)) if wiki_page_title.blank?
+    page = project.wiki.find_page(self.wiki_page_title)
+    template = project.wiki.find_page(Setting.plugin_redmine_backlogs[:wiki_template])
 
-        page = project.wiki.find_page(self.wiki_page_title)
-        template = project.wiki.find_page(Setting.plugin_redmine_backlogs[:wiki_template])
-
-        if template and not page
-            page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
-            page.content = WikiContent.new
-            page.content.text = "h1. #{self.name}\n\n#{template.text}"
-            page.save!
-        end
-
-        return wiki_page_title
+    if template and not page
+      page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
+      page.content = WikiContent.new
+      page.content.text = "h1. #{self.name}\n\n#{template.text}"
+      page.save!
     end
 
-    def days(cutoff = nil)
-        # assumes mon-fri are working days, sat-sun are not. this
-        # assumption is not globally right, we need to make this configurable.
-        cutoff = self.effective_date if cutoff.nil?
-        return (self.sprint_start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
+    return wiki_page_title
+  end
+
+  def days(cutoff = nil)
+    # assumes mon-fri are working days, sat-sun are not. this
+    # assumption is not globally right, we need to make this configurable.
+    cutoff = self.effective_date if cutoff.nil?
+    return (self.sprint_start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
+  end
+
+  def eta
+    return nil if ! self.start_date
+
+    dpp = project_scope.scrum_statistics.info[:average_days_per_point]
+    return nil if !dpp
+
+    # assume 5 out of 7 are working days
+    return self.start_date + Integer(self.points * dpp * 7.0/5)
+  end
+
+  def has_burndown
+    return !!(self.effective_date and self.sprint_start_date)
+  end
+
+  def project_scope
+    @project_scope ||= self.project
+    @project_scope
+  end
+
+  def project_scope=(project)
+    raise "Project scope can only be set to subproject of #{self.project.name}" unless project.lft >= self.project.lft && project.rgt <= self.project.rgt
+    @project_scope = project
+  end
+
+  def activity
+    bd = self.burndown('up')
+    return false if !bd
+
+    # assume a sprint is active if it's only 2 days old
+    return true if bd.remaining_hours.size <= 2
+
+    return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
+  end
+
+  def burndown(burn_direction = nil)
+    return nil if not self.has_burndown
+    @cached_burndown ||= Burndown.new(project_scope, self, burn_direction)
+    return @cached_burndown
+  end
+
+  def self.generate_burndown(only_current = true)
+    if only_current
+      conditions = ["? between sprint_start_date and effective_date", Date.today]
+    else
+      conditions = "1 = 1"
     end
 
-    def eta
-        return nil if ! self.start_date
+    Sprint.find(:all, :conditions => conditions).each { |sprint|
+      sprint.project.self_and_descendants.each {|project|
+        sprint.project_scope = project
+        sprint.burndown
+      }
+    }
+  end
 
-        dpp = self.project.scrum_statistics.info[:average_days_per_point]
-        return nil if !dpp
-
-        # assume 5 out of 7 are working days
-        return self.start_date + Integer(self.points * dpp * 7.0/5)
-    end
-
-    def has_burndown
-        return !!(self.effective_date and self.sprint_start_date)
-    end
-
-    def activity
-        bd = self.burndown('up')
-        return false if !bd
-
-        # assume a sprint is active if it's only 2 days old
-        return true if bd.remaining_hours.size <= 2
-
-        return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
-    end
-
-    def burndown(burn_direction = nil)
-        return nil if not self.has_burndown
-        @cached_burndown ||= Burndown.new(self, burn_direction)
-        return @cached_burndown
-    end
-
-    def self.generate_burndown(only_current = true)
-        if only_current
-            conditions = ["? between sprint_start_date and effective_date", Date.today]
-        else
-            conditions = "1 = 1"
-        end
-
-        Version.find(:all, :conditions => conditions).each { |sprint|
-            sprint.burndown
-        }
-    end
-
-    def impediments
-        return Issue.find(:all, 
-            :conditions => ["id in (
-                            select issue_from_id
-                            from issue_relations ir
-                            join issues blocked
-                                on blocked.id = ir.issue_to_id
-                                and blocked.tracker_id in (?)
-                                and blocked.fixed_version_id = (?)
-                            where ir.relation_type = 'blocks'
-                            )",
-                        Story.trackers + [Task.tracker],
-                        self.id]
-            ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
-    end
-
+  def impediments
+    return Issue.find(:all, 
+      :conditions => ["id in (
+              select issue_from_id
+              from issue_relations ir
+              join issues blocked
+                on blocked.id = ir.issue_to_id
+                and blocked.tracker_id in (?)
+                and blocked.backlogs_sprint_id = ?
+                and blocked.project_id = ?
+              where ir.relation_type = 'blocks'
+              )",
+            Story.trackers + [Task.tracker],
+            self.id,
+            project_scope.id]
+      ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
+  end
 end

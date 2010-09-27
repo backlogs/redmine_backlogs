@@ -38,7 +38,7 @@ class Story < Issue
     end
 
     def self.sprint_backlog(sprint, options={})
-      return Story.backlog(sprint.project, sprint.id, options)
+      return Story.backlog(sprint.project_scope, sprint.id, options)
     end
 
     def self.create_and_position(params)
