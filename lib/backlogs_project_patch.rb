@@ -93,6 +93,12 @@ module Backlogs
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
+
+      base.class_eval do
+        unloadable
+  
+        has_many :sprints
+      end
     end
     
     module ClassMethods
@@ -105,6 +111,7 @@ module Backlogs
           :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", self.id, Time.now])
       end
     
+      
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
         return @scrum_statistics if @scrum_statistics
