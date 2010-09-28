@@ -117,7 +117,12 @@ Then /^the sprint should be updated accordingly$/ do
   
   sprint.attributes.each_key do |key|
     unless ['updated_on', 'created_on'].include?(key)
-      (key.include?('_date') ? sprint[key].strftime("%Y-%m-%d") : sprint[key]).should == @sprint_params[key]
+      if key.include?('_date')
+        "#{sprint[key]}".should == "#{@sprint_params[key]}"
+      else
+        sprint[key].should == @sprint_params[key]
+      end
+      #(key.include?('_date') ? sprint[key].strftime("%Y-%m-%d") : sprint[key]).should == @sprint_params[key]
     end
   end
 end
