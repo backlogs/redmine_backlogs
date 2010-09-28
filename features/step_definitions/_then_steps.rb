@@ -1,6 +1,6 @@
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
-  story = Story.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story = Story.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :sprint)
   story_position(story).should == position.to_i
 end
 
@@ -53,7 +53,7 @@ Then /^show me the list of stories$/ do
   puts "\n"
   puts "\t| #{'id'.ljust(5)} | #{'position'.ljust(8)} | #{'status'.ljust(12)} | #{'rank'.ljust(4)} | #{'subject'.ljust(subject_max)} | #{'sprint'.ljust(sprint_max)} |"
   stories.each do |story|
-    puts "\t| #{story.id.to_s.ljust(5)} | #{story.position.to_s.ljust(8)} | #{story.status.name[0,12].ljust(12)} | #{story.rank.to_s.ljust(4)} | #{story.subject.ljust(subject_max)} | #{(story.fixed_version_id.nil? ? Sprint.new : Sprint.find(story.fixed_version_id)).name.ljust(sprint_max)} |"
+    puts "\t| #{story.id.to_s.ljust(5)} | #{story.position.to_s.ljust(8)} | #{story.status.name[0,12].ljust(12)} | #{story.rank.to_s.ljust(4)} | #{story.subject.ljust(subject_max)} | #{(story.backlogs_sprint_id.nil? ? Sprint.new : Sprint.find(story.backlogs_sprint_id)).name.ljust(sprint_max)} |"
   end
   puts "\n\n"
 end
@@ -109,6 +109,22 @@ Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |spr
   sprints = Sprint.find(:all, :conditions => { :name => sprint_name })
   sprints.length.should == 1
   
+  Sprint.connection.execute("
+    select issue_from_id, blocked.id, blocked.tracker_id, blocked.backlogs_sprint_id, blocked.project_id
+    from issue_relations ir
+    join issues blocked on
+      blocked.id = ir.issue_to_id
+    where ir.relation_type = 'blocks'
+    ").each {|imp|
+    puts "@@@@ imp=#{imp[0]}, blocked=#{imp[1]}, tracker=#{imp[2]}, sprint=#{imp[3]}, project=#{imp[4]}"
+    puts "@@ trackers: #{(Story.trackers + [Task.tracker]).collect{|t| t.to_s}.join(',')}"
+    puts "@@ sprint: #{sprints.first.id}"
+    puts "@@ project: #{sprints.first.project_scope.id}"
+      #and blocked.tracker_id in (#{(Story.trackers + [Task.tracker]).collect{|t| t.to_s}.join(',')})
+      #and blocked.backlogs_sprint_id = #{sprints.first.id}
+      #and blocked.project_id = #{sprints.first.project_scope.id}
+  }
+
   sprints.first.impediments.map{ |i| i.subject==impediment_subject}.length.should == count.to_i
 end
 

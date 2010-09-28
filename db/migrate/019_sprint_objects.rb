@@ -16,7 +16,7 @@ class SprintObjects < ActiveRecord::Migration
     add_column :burndown_days, :project_id, :integer, :default => 0, :null => false
     add_column :burndown_days, :backlogs_sprint_id, :integer, :default => 0, :null => false
 
-    add_column :issues, :backlogs_sprint_id, :integer, :default => 0, :null => false
+    add_column :issues, :backlogs_sprint_id, :integer
 
     Version.find(:all).each {|version|
       sprint = Sprint.new

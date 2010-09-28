@@ -27,13 +27,13 @@ class Burndown
     # end date for graph
     days = @days
     daycount = days.size
-    days = sprint.days(Date.today) if sprint.effective_date > Date.today
+    days = sprint.days(Date.today) if sprint.end_date > Date.today
 
     _series = ([nil] * days.size)
 
     # load cache
     day_index = to_h(days, (0..(days.size - 1)).to_a)
-    starts = sprint.sprint_start_date
+    starts = sprint.start_date
     BurndownDay.find(:all, :order=>'created_at', :conditions => ["backlogs_sprint_id = ? and project_id = ?", @sprint_id, @project_id]).each {|data|
       day = day_index[data.created_at.to_date]
       next if !day
@@ -237,8 +237,8 @@ class Sprint < ActiveRecord::Base
   def days(cutoff = nil)
     # assumes mon-fri are working days, sat-sun are not. this
     # assumption is not globally right, we need to make this configurable.
-    cutoff = self.effective_date if cutoff.nil?
-    return (self.sprint_start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
+    cutoff = self.end_date if cutoff.nil?
+    return (self.start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
   end
 
   def eta
@@ -252,7 +252,7 @@ class Sprint < ActiveRecord::Base
   end
 
   def has_burndown
-    return !!(self.effective_date and self.sprint_start_date)
+    return !!(self.end_date and self.start_date)
   end
 
   def project_scope
@@ -283,7 +283,7 @@ class Sprint < ActiveRecord::Base
 
   def self.generate_burndown(only_current = true)
     if only_current
-      conditions = ["? between sprint_start_date and effective_date", Date.today]
+      conditions = ["? between start_date and end_date", Date.today]
     else
       conditions = "1 = 1"
     end

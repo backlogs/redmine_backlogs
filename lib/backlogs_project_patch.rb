@@ -106,12 +106,19 @@ module Backlogs
     
     module InstanceMethods
     
+      def sprint(id)
+        sprint = Sprint.find(id)
+        sprint.project_scope = self
+        return sprint
+      end
+
+      ## TODO: sprint sharing
       def active_sprint
         return Sprint.find(:first,
           :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", self.id, Time.now])
       end
     
-      
+      ## TODO: sprint sharing
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
         return @scrum_statistics if @scrum_statistics

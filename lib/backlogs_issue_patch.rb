@@ -13,6 +13,8 @@ module Backlogs
         alias_method_chain :recalculate_attributes_for, :remaining_hours
         before_validation :backlogs_before_validation
         after_save  :backlogs_after_save
+
+        belongs_to :sprint
       end
     end
   
