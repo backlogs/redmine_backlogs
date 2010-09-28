@@ -180,18 +180,18 @@
   top:1px;
   width:330px;
 }
-#backlogs_container .backlog .sprint .sprint_start_date,
-#backlogs_container .backlog .sprint .effective_date{
+#backlogs_container .backlog .sprint .start_date,
+#backlogs_container .backlog .sprint .end_date {
   font-size:12px;
   height:28px;
   line-height:31px;
   position:absolute;
   top:2px;
 }
-#backlogs_container .backlog .sprint .sprint_start_date{
+#backlogs_container .backlog .sprint .start_date {
   left:340px;
 }
-#backlogs_container .backlog .sprint .effective_date{
+#backlogs_container .backlog .sprint .end_date {
   left:430px;
 }
 #backlogs_container .backlog .stories{
@@ -307,7 +307,7 @@
   top:1px;
   width:28px;
 }
-#backlogs_container .stories .story .fixed_version_id,
+#backlogs_container .stories .story .sprint_id,
 #backlogs_container .stories .story .higher_item_id {
   display:none;
 }
@@ -369,7 +369,7 @@
   top:2px;
   width:320px;
 }
-#backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
+#backlogs_container .backlog .sprint.editing .start_date.editor{
   display:block;
   height:23px;
   left:338px;
@@ -379,7 +379,7 @@
   top:2px;
   width:75px;
 }
-#backlogs_container .backlog .sprint.editing .effective_date.editor{
+#backlogs_container .backlog .sprint.editing .end_date.editor{
   display:block;
   height:23px;
   left:428px;
@@ -446,8 +446,8 @@
 .debug .story .status_id,
 .debug .story .story_points,
 .debug .sprint .name,
-.debug .sprint .sprint_start_date,
-.debug .sprint .effective_date,
+.debug .sprint .start_date,
+.debug .sprint .end_date,
 .debug .backlog .header .actions,
 .debug .backlog .menu,
 .debug .backlog .velocity,

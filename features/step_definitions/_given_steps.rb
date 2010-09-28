@@ -191,12 +191,13 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     params = initialize_story_params
     params['subject'] = story['subject']
     params['prev_id'] = prev_id
-    params['backlogs_sprint_id'] = Sprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    params['sprint_id'] = Sprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
     s = Story.create_and_position params
+
     prev_id = s.id
   end
 end

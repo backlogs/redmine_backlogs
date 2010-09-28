@@ -17,7 +17,7 @@ class RbCalendarsController < RbApplicationController
     cal = Icalendar::Calendar.new
 
     # current + future sprints
-    Sprint.find(:all, :conditions => ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
+    Sprint.find(:all, :conditions => ["not start_date is null and not end_date is null and project_id = ? and end_date >= ?", @project.id, Date.today]).each {|sprint|
       summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
       description_text = l(:event_sprint_description, {
                             :summary => sprint.name,
@@ -31,8 +31,8 @@ class RbCalendarsController < RbApplicationController
                               })
                             })
       cal.event do
-        dtstart     sprint.sprint_start_date
-        dtend       sprint.effective_date
+        dtstart     sprint.start_date
+        dtend       sprint.end_date
         summary     summary_text
         description description_text
         klass       'PRIVATE'
@@ -43,13 +43,12 @@ class RbCalendarsController < RbApplicationController
     open_issues = %Q[
         #{IssueStatus.table_name}.is_closed = ?
         and tracker_id in (?)
-        and fixed_version_id in (
+        and sprint_id in (
           select id
-          from versions
+          from sprints
           where project_id = ?
-            and status = 'open'
-            and not sprint_start_date is null
-            and effective_date >= ?
+            and not start_date is null
+            and end_date >= ?
         )
     ]
     open_issues_and_impediments = %Q[

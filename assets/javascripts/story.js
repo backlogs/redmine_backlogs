@@ -51,7 +51,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
                     this.$.parents('.backlog').data('this').getSprint().data('this').getID() : '';
         
     var data = "prev=" + (prev.length==1 ? this.$.prev().data('this').getID() : '') +
-               "&fixed_version_id=" + sprint_id;
+               "&sprint_id=" + sprint_id;
     
     if(j.find('.editor').length > 0) data += "&" + j.find('.editor').serialize();
     

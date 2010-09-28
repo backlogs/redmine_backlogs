@@ -115,7 +115,7 @@ module Backlogs
       ## TODO: sprint sharing
       def active_sprint
         return Sprint.find(:first,
-          :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", self.id, Time.now])
+          :conditions => ["project_id = ? and ? between start_date and end_date", self.id, Time.now])
       end
     
       ## TODO: sprint sharing
@@ -129,8 +129,8 @@ module Backlogs
         backlog = Story.product_backlog(self, 10)
         active_sprint = self.active_sprint
         closed_sprints = Sprint.find(:all,
-          :conditions => ["project_id = ? and status in ('closed', 'locked') and not(effective_date is null or sprint_start_date is null)", self.id],
-          :order => "effective_date desc",
+          :conditions => ["project_id = ? and not(end_date is null or start_date is null)", self.id],
+          :order => "end_date desc",
           :limit => 5)
         all_sprints = ([active_sprint] + closed_sprints).compact
   
@@ -140,8 +140,8 @@ module Backlogs
         @scrum_statistics[:error, :product_backlog, :is_empty] = (self.status == Project::STATUS_ACTIVE && backlog.length == 0)
         @scrum_statistics[:error, :product_backlog, :unsized] = backlog.inject(false) {|unsized, story| unsized || story.story_points.blank? }
   
-        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and parent_id is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, Story.trackers])
-        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and not parent_id is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, Task.tracker])
+        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and parent_id is null and sprint_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, Story.trackers])
+        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and not parent_id is null and sprint_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, Task.tracker])
         @scrum_statistics[:error, :sprint, :notes_missing] = closed_sprints.inject(false){|missing, sprint| missing || !sprint.has_wiki_page}
   
         @scrum_statistics[:error, :inactive] = (self.status == Project::STATUS_ACTIVE && !(active_sprint && active_sprint.activity))
@@ -194,7 +194,7 @@ module Backlogs
           select_stories = "
             not (story_points is null or story_points = 0)
             and not (estimated_hours is null or estimated_hours = 0)
-            and fixed_version_id in (#{sprint_ids})
+            and sprint_id in (#{sprint_ids})
             and project_id = #{self.id}
             and not parent_id is null
             and tracker_id in (#{story_trackers})

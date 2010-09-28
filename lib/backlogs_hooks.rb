@@ -16,7 +16,7 @@ module BacklogsPlugin
 
                 q = context[:request].session[:query]
                 if q && q[:filters]
-                    sprint = q[:filters]['fixed_version_id']
+                    sprint = q[:filters]['sprint_id']
                     if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
                         locals[:sprint] = Sprint.find_by_id(sprint[:values][0])
                     end

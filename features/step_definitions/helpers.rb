@@ -25,7 +25,7 @@ def initialize_impediment_params(sprint_id)
   params['project_id'] = @project.id
   params['tracker_id'] = Task.tracker
   params['author_id']  = @user.id
-  params['backlogs_sprint_id'] = sprint_id
+  params['sprint_id'] = sprint_id
   params['status_id'] = IssueStatus.find(:first).id
   params
 end
@@ -70,11 +70,11 @@ def task_position(task)
 end
 
 def story_position(story)
-  p1 = Story.backlog(story.project, story.backlogs_sprint_id).select{|s| s.id == story.id}[0].rank
+  p1 = Story.backlog(story.project, story.sprint_id).select{|s| s.id == story.id}[0].rank
   p2 = story.rank
   p1.should == p2
 
-  Story.at_rank(story.project_id, story.backlogs_sprint_id, p1).id.should == story.id
+  Story.at_rank(story.project_id, story.sprint_id, p1).id.should == story.id
   return p1
 end
 

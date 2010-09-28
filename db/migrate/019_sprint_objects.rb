@@ -1,6 +1,6 @@
 class SprintObjects < ActiveRecord::Migration
   def self.up
-    create_table :backlogs_sprints, :force => true do |t|
+    create_table :sprints, :force => true do |t|
       t.column :project_id, :integer, :null => false
       t.column :name, :string, :limit => 30, :null => false
       t.column :description, :string, :default => ""
@@ -14,9 +14,9 @@ class SprintObjects < ActiveRecord::Migration
     Sprint.reset_column_information
 
     add_column :burndown_days, :project_id, :integer, :default => 0, :null => false
-    add_column :burndown_days, :backlogs_sprint_id, :integer, :default => 0, :null => false
+    add_column :burndown_days, :sprint_id, :integer, :default => 0, :null => false
 
-    add_column :issues, :backlogs_sprint_id, :integer
+    add_column :issues, :sprint_id, :integer
 
     Version.find(:all).each {|version|
       sprint = Sprint.new
@@ -30,9 +30,9 @@ class SprintObjects < ActiveRecord::Migration
       sprint.updated_on = version.updated_on
       sprint.save
 
-      BurndownDay.connection.execute("update burndown_days set backlogs_sprint_id = #{sprint.id.to_i}, project_id = #{sprint.project_id.to_i} where version_id = #{version.id.to_i}")
+      BurndownDay.connection.execute("update burndown_days set sprint_id = #{sprint.id.to_i}, project_id = #{sprint.project_id.to_i} where version_id = #{version.id.to_i}")
 
-      Issue.connection.execute("update issues set backlogs_sprint_id = #{sprint.id.to_i} where fixed_version_id = #{version.id.to_i}")
+      Issue.connection.execute("update issues set sprint_id = #{sprint.id.to_i} where fixed_version_id = #{version.id.to_i}")
     }
 
     remove_column :burndown_days, :version_id

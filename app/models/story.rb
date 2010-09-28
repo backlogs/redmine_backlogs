@@ -2,6 +2,7 @@ class Story < Issue
     unloadable
 
     acts_as_list :scope => :project
+    belongs_to :sprint
 
     def self.backlog(project, sprint, options={})
       stories = []
@@ -13,9 +14,9 @@ class Story < Issue
                   and project_id = ?
                   and tracker_id in (?)
                   and (
-                    (fixed_version_id is NULL and ? is NULL)
+                    (sprint_id is NULL and ? is NULL)
                     or
-                    (fixed_version_id = ? and not ? is NULL)
+                    (sprint_id = ? and not ? is NULL)
                     )
                   and (is_closed = ? or not ? is NULL)", 
                 project.id,
@@ -155,9 +156,9 @@ class Story < Issue
                                 and project_id = ?
                                 and tracker_id in (?)
                                 and (
-                                  (fixed_version_id is NULL and ? is NULL)
+                                  (sprint_id is NULL and ? is NULL)
                                   or
-                                  (fixed_version_id = ? and not ? is NULL)
+                                  (sprint_id = ? and not ? is NULL)
                                   )
                                 and (is_closed = ? or not ? is NULL)
                                 and (
@@ -168,9 +169,9 @@ class Story < Issue
                                 ", 
                               self.project.id,
                               Story.trackers,
-                              self.fixed_version_id,
-                              self.fixed_version_id, self.fixed_version_id,
-                              false, self.fixed_version_id,
+                              self.sprint_id,
+                              self.sprint_id, self.sprint_id,
+                              false, self.sprint_id,
 
                               self.position, self.id,
                               self.position, self.position
@@ -188,9 +189,9 @@ class Story < Issue
                             and project_id = ?
                             and tracker_id in (?)
                             and (
-                              (fixed_version_id is NULL and ? is NULL)
+                              (sprint_id is NULL and ? is NULL)
                               or
-                              (fixed_version_id = ? and not ? is NULL)
+                              (sprint_id = ? and not ? is NULL)
                               )
                             and (is_closed = ? or not ? is NULL)", 
                           project_id,

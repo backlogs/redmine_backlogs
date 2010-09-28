@@ -34,7 +34,7 @@ class Burndown
     # load cache
     day_index = to_h(days, (0..(days.size - 1)).to_a)
     starts = sprint.start_date
-    BurndownDay.find(:all, :order=>'created_at', :conditions => ["backlogs_sprint_id = ? and project_id = ?", @sprint_id, @project_id]).each {|data|
+    BurndownDay.find(:all, :order=>'created_at', :conditions => ["sprint_id = ? and project_id = ?", @sprint_id, @project_id]).each {|data|
       day = day_index[data.created_at.to_date]
       next if !day
 
@@ -149,7 +149,7 @@ class Burndown
       :points_accepted => datapoint[2],
       :remaining_hours => datapoint[3],
       :created_at => day,
-      :backlogs_sprint_id => @sprint_id,
+      :sprint_id => @sprint_id,
       :project_id => @project_id,
     }
     bdd = BurndownDay.new datapoint
@@ -170,7 +170,6 @@ class Burndown
 end
 
 class Sprint < ActiveRecord::Base
-  set_table_name "backlogs_sprints"
   unloadable
 
   belongs_to :project
@@ -272,12 +271,12 @@ class Sprint < ActiveRecord::Base
     # assume a sprint is active if it's only 2 days old
     return true if bd.remaining_hours.size <= 2
 
-    return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
+    return Issue.exists?(['sprint_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
   end
 
   def burndown(burn_direction = nil)
     return nil if not self.has_burndown
-    @cached_burndown ||= Burndown.new(project_scope, self, burn_direction)
+    @cached_burndown ||= Burndown.new(self, burn_direction)
     return @cached_burndown
   end
 
@@ -304,7 +303,7 @@ class Sprint < ActiveRecord::Base
               join issues blocked
                 on blocked.id = ir.issue_to_id
                 and blocked.tracker_id in (?)
-                and blocked.backlogs_sprint_id = ?
+                and blocked.sprint_id = ?
                 and blocked.project_id = ?
               where ir.relation_type = 'blocks'
               )",
@@ -312,5 +311,13 @@ class Sprint < ActiveRecord::Base
             self.id,
             project_scope.id]
       ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
+  end
+
+  def touch_burndown
+    today = connection.quote(Date.today)
+    tomorrow = connection.quote(Date.today + 1)
+
+    # not the same as between
+    connection.execute "delete from burndown_days where created_at >= #{today} and created_at < #{tomorrow}"
   end
 end

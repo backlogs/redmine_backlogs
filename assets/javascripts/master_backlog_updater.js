@@ -27,12 +27,12 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     if(previous.length > 0){
       target.$.insertAfter( $('#story_' + previous) );
     } else {
-      if(target.$.find(".fixed_version_id").text().length==0){
+      if(target.$.find(".sprint_id").text().length==0){
         // Story belongs to the product backlog
         var stories = $('#product_backlog_container .backlog .stories');
       } else {
         // Story belongs to a sprint backlog
-        var stories = $('#sprint_' + target.$.find(".fixed_version_id").text()).siblings(".stories").first();
+        var stories = $('#sprint_' + target.$.find(".sprint_id").text()).siblings(".stories").first();
       }
       stories.prepend(target.$);
     }

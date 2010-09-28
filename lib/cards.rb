@@ -215,7 +215,8 @@ module Cards
     
     
                         @pdf.font_size(6) do
-                            parent = (type == :task ? parent_story.subject : (issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)))
+                            parent = (type == :task ?
+                            parent_story.subject : (issue.sprint ? issue.sprint.name : I18n.t(:backlogs_product_backlog)))
                             text_box parent, {
                                     :width => pdf.bounds.width - scoresize,
                                     :height => @pdf.font.height

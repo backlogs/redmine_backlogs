@@ -22,7 +22,7 @@ When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
   
   attributes = story.attributes
   attributes[:prev]             = prev.id
-  attributes[:backlogs_sprint_id] = prev.backlogs_sprint_id
+  attributes[:sprint_id] = prev.sprint_id
 
   page.driver.process :post,
                       url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
@@ -39,7 +39,7 @@ When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) positio
   attributes[:prev] = if position == 1
                         ''
                       else
-                        stories = Story.find(:all, :conditions => ["backlogs_sprint_id=? AND tracker_id IN (?)", sprint.id, Story.trackers], :order => "position ASC")
+                        stories = Story.find(:all, :conditions => ["sprint_id=? AND tracker_id IN (?)", sprint.id, Story.trackers], :order => "position ASC")
                         raise "You indicated an invalid position (#{position}) in a sprint with #{stories.length} stories" if 0 > position or position > stories.length
                         stories[position - (direction=="up" ? 2 : 1)].id
                       end

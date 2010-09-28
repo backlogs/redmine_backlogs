@@ -16,10 +16,10 @@ module Backlogs
             base.add_available_column(QueryColumn.new(:position,
                                       :sortable => [
                                         # sprint startdate
-                                        "coalesce((select sprint_start_date from versions where versions.id = issues.fixed_version_id), '1900-01-01')",
+                                        "coalesce((select start_date from sprints where sprints.id = issues.sprint_id), '1900-01-01')",
 
                                         # sprint name, in case start dates are the same
-                                        "(select name from versions where versions.id = issues.fixed_version_id)",
+                                        "(select name from sprints where sprints.id = issues.sprint_id)",
 
                                         # make sure stories with NULL
                                         # position sort-last
@@ -39,16 +39,25 @@ module Backlogs
                                       ],
                                       :default_order => 'asc'))
 
-  
-            alias_method_chain :available_filters, :backlogs_issue_type
-            alias_method_chain :sql_for_field, :backlogs_issue_type
+            base.add_available_column(QueryColumn.new(:sprint,
+                                      :sortable => [
+                                        # sprint startdate
+                                        "coalesce((select start_date from sprints where sprints.id = issues.sprint_id), '1900-01-01')",
+
+                                        # sprint name, in case start dates are the same
+                                        "(select name from sprints where sprints.id = issues.sprint_id)"
+                                      ],
+                                      :default_order => 'asc'))
+
+            alias_method_chain :available_filters, :backlogs
+            alias_method_chain :sql_for_field, :backlogs
         end
   
     end
   
     module InstanceMethods
-        def available_filters_with_backlogs_issue_type
-            @available_filters = available_filters_without_backlogs_issue_type
+        def available_filters_with_backlogs
+            @available_filters = available_filters_without_backlogs
   
             if Story.trackers.length == 0 or Task.tracker.blank?
                 backlogs_filters = { }
@@ -56,14 +65,20 @@ module Backlogs
                 backlogs_filters = {
                         "backlogs_issue_type" => {  :type => :list,
                                                     :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_any), "any"]],
-                                                    :order => 20 } 
+                                                    :order => 20 },
+                        "sprint" => {               :type => :list,
+                                                    :values => Sprint.find(:all, :order => "coalesce(start_date, '1900-01-01'), name").collect{|s| [s.name, s.id]},
+                                                    :order => 20 },
+                        "open_sprint" => {          :type => :list,
+                                                    :values => Sprint.find(:all, :conditions => ['end_date >= ?', Date.today], :order => "coalesce(start_date, '1900-01-01'), name").collect{|s| [s.name, s.id]},
+                                                    :order => 20 },
                     }
             end
   
             return @available_filters.merge(backlogs_filters)
         end
   
-        def sql_for_field_with_backlogs_issue_type(field, operator, v, db_table, db_field, is_custom_filter=false)
+        def sql_for_field_with_backlogs(field, operator, v, db_table, db_field, is_custom_filter=false)
             if field == "backlogs_issue_type"
                 db_table = Issue.table_name
   
@@ -90,8 +105,20 @@ module Backlogs
   
                 return sql
         
+            elsif ['sprint', 'open_sprint'].include?(field)
+              sprints = values_for(field).collect{|s| s.to_i.to_s}
+
+              if sprints.size == 0
+                sql = '(issues.sprint_id is null)'
+              else
+                sql = "(issues.sprint_id in (#{sprints.join(',')}))"
+              end
+
+              sql = "(not #{sql})" if operator == '!'
+              return sql
+
             else
-                return sql_for_field_without_backlogs_issue_type(field, operator, v, db_table, db_field, is_custom_filter)
+                return sql_for_field_without_backlogs(field, operator, v, db_table, db_field, is_custom_filter)
             end
       
         end

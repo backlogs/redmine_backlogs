@@ -118,17 +118,17 @@ module Backlogs
           if not Task.tracker.nil?
             tasks = self.descendants.collect{|t| connection.quote(t.id)}.join(",")
             if tasks != ""
-              connection.execute("update issues set tracker_id=#{connection.quote(Task.tracker)}, fixed_version_id=#{connection.quote(self.fixed_version_id)} where id in (#{tasks})")
+              connection.execute("update issues set tracker_id=#{connection.quote(Task.tracker)}, sprint_id=#{connection.quote(self.sprint_id)} where id in (#{tasks})")
             end
           end
-          touched_sprint = self.fixed_version
+          touched_sprint = self.sprint
   
         elsif not Task.tracker.nil?
           begin
             story = self.story
             if not story.blank?
-              connection.execute "update issues set tracker_id = #{connection.quote(Task.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
-              touched_sprint = story.fixed_version
+              connection.execute "update issues set tracker_id = #{connection.quote(Task.tracker)}, sprint_id = #{connection.quote(story.sprint_id)} where id = #{connection.quote(self.id)}"
+              touched_sprint = story.sprint
             end
           end
         end
