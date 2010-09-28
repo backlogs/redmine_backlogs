@@ -7,7 +7,7 @@ Feature: Scrum Master
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
       And the project has the following sprints:
-        | name       | sprint_start_date | effective_date  |
+        | name       | start_date        | end_date        |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
         | Sprint 002 | 2010-02-01        | 2010-02-28      |
         | Sprint 003 | 2010-03-01        | 2010-03-31      |
