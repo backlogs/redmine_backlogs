@@ -18,7 +18,7 @@ class SprintObjects < ActiveRecord::Migration
 
     add_column :issues, :sprint_id, :integer
 
-    Version.find(:all).each {|version|
+    Version.find(:all, :conditions => 'not (sprint_start_date is null or effective_date is null)').each {|version|
       sprint = Sprint.new
       sprint.project = version.project
       sprint.name = version.name
@@ -34,6 +34,8 @@ class SprintObjects < ActiveRecord::Migration
 
       Issue.connection.execute("update issues set sprint_id = #{sprint.id.to_i} where fixed_version_id = #{version.id.to_i}")
     }
+
+    BurndownDay.connection.execute("delete from burndown_days where sprint_id not in (select id from sprints)")
 
     remove_column :burndown_days, :version_id
   end
