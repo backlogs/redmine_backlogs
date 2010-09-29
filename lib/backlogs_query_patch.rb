@@ -66,10 +66,10 @@ module Backlogs
                         "backlogs_issue_type" => {  :type => :list,
                                                     :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_any), "any"]],
                                                     :order => 20 },
-                        "sprint" => {               :type => :list,
+                        "sprint_id" => {            :type => :list,
                                                     :values => Sprint.find(:all, :order => "coalesce(start_date, '1900-01-01'), name").collect{|s| [s.name, s.id]},
                                                     :order => 20 },
-                        "open_sprint" => {          :type => :list,
+                        "open_sprint_id" => {       :type => :list,
                                                     :values => Sprint.find(:all, :conditions => ['end_date >= ?', Date.today], :order => "coalesce(start_date, '1900-01-01'), name").collect{|s| [s.name, s.id]},
                                                     :order => 20 },
                     }
@@ -105,7 +105,7 @@ module Backlogs
   
                 return sql
         
-            elsif ['sprint', 'open_sprint'].include?(field)
+            elsif ['sprint_id', 'open_sprint_id'].include?(field)
               sprints = values_for(field).collect{|s| s.to_i.to_s}
 
               if sprints.size == 0

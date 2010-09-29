@@ -97,9 +97,9 @@ Feature: Scrum Master
 
   Scenario: Download printable cards for the task board
     Given I have selected card label stock Avery 7169
-      And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
+      And I move the story named Story 4 up to the 1st position of the sprint named Sprint 004
       And I am viewing the issues list
-      And I follow "Sprint 001"
+      And I follow "Sprint 004"
      Then the request should complete successfully
      When I follow "Sprint cards"
      Then the request should complete successfully

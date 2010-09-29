@@ -44,6 +44,10 @@ Then /^show me the list of sprints$/ do
   puts "\n\n"
 end
 
+Then /^show me the current page$/ do
+  puts page.body
+end
+
 Then /^show me the list of stories$/ do
   stories = Story.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC")
   subject_max = (stories.map{|s| s.subject} << "subject").sort{|a,b| a.length <=> b.length}.last.length
