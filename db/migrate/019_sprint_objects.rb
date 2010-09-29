@@ -2,7 +2,7 @@ class SprintObjects < ActiveRecord::Migration
   def self.up
     create_table :sprints, :force => true do |t|
       t.column :project_id, :integer, :null => false
-      t.column :name, :string, :limit => 30, :null => false
+      t.column :name, :string, :limit => nil, :null => false
       t.column :description, :string, :default => ""
       t.column :start_date, :date
       t.column :end_date, :date
