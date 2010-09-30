@@ -11,7 +11,7 @@ Feature: Product Owner
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
-        | Sprint 004 | 2010-03-01        | 2010-03-31     |
+        | Sprint 004 | 2.weeks.ago       | 1.week.from_now |
       And the project has the following stories in the product backlog:
         | position | subject |
         | 1        | Story 1 |
@@ -27,7 +27,7 @@ Feature: Product Owner
     Given I am viewing the master backlog
      Then I should see the product backlog
       And I should see 4 stories in the product backlog
-      And I should see 4 sprint backlogs
+      And I should see 1 sprint backlogs
 
   Scenario: View scrum statistics
      When I visit the scrum statistics page
