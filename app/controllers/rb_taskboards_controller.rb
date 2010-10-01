@@ -4,7 +4,7 @@ class RbTaskboardsController < RbApplicationController
   unloadable
   
   def show
-    @statuses     = Tracker.find_by_id(Task.tracker).issue_statuses
+    @statuses     = Task.allowed_statuses( User.current.roles_for_project(@project).collect(&:id) )
     @story_ids    = @sprint.stories.map{|s| s.id}
     @last_updated = Task.find(:first, 
                               :conditions => ["parent_id in (?)", @story_ids],
