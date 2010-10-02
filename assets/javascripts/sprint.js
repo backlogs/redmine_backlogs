@@ -37,8 +37,14 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   saveDirectives: function(){
     var j = this.$;
 
-    var data = j.find('.editor').serialize() + "&_method=put";
-    var url = RB.urlFor('update_sprint', { id: this.getID() });
+    var data = j.find('.editor').serialize();
+
+    if( this.isNew() ){
+      var url = RB.urlFor( 'create_sprint' );
+    } else {
+      var url = RB.urlFor( 'update_sprint', { sprint_id: this.getID() } );
+      data += "&_method=put"
+    }
     
     return {
       url : url,
