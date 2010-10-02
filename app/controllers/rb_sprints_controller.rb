@@ -10,7 +10,6 @@ class RbSprintsController < RbApplicationController
   def create
     attribs = params.select{|k,v| k != 'id' and Sprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
-    puts attribs
     @sprint  = Sprint.create(attribs)
     status  = (@sprint.errors.length==0 ? 200 : 400)
     
