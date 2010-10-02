@@ -42,7 +42,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     if( this.isNew() ){
       var url = RB.urlFor( 'create_sprint' );
     } else {
-      var url = RB.urlFor( 'update_sprint', { sprint_id: this.getID() } );
+      var url = RB.urlFor( 'update_sprint', { id: this.getID() } );
       data += "&_method=put"
     }
     
