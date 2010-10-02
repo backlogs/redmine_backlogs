@@ -12,6 +12,7 @@ Given /^I am a scrum master of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_taskboards
+  role.permissions << :create_sprints
   role.permissions << :update_sprints
   role.permissions << :update_stories
   role.permissions << :create_impediments
@@ -78,6 +79,10 @@ end
 Given /^I want to create a task for (.+)$/ do |story_subject|
   story = Story.find(:first, :conditions => ["subject=?", story_subject])
   @task_params = initialize_task_params(story.id)
+end
+
+Given /^I want to create a sprint$/ do
+  @sprint_params = initialize_sprint_params
 end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|

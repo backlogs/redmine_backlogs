@@ -10,6 +10,12 @@ When /^I create the story$/ do
                       @story_params
 end
 
+When /^I create the sprint$/ do
+  page.driver.process :post, 
+                      url_for(:controller => :rb_sprints, :action => :create, :project_id => @project.id),
+                      @sprint_params
+end
+
 When /^I create the task$/ do
   page.driver.process :post, 
                       url_for(:controller => :rb_tasks, :action => :create),

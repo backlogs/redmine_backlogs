@@ -44,6 +44,16 @@ Feature: Scrum Master
      Then the request should complete successfully
       And the sprint named Sprint 001 should have 1 impediment named Good Impediment
 
+  Scenario: Create a sprint
+    Given I want to create a sprint
+      And I want to set the project_id of the sprint to ecookbook
+      And I want to set the name of the sprint to A real sprint
+      And I want to set the description of the sprint to whatever i want it to be
+      And I want to set the start_date of the sprint to 2010-03-01
+      And I want to set the end_date of the sprint to 2010-03-20
+     When I create the sprint
+     Then the request should complete successfully
+
   Scenario: Update sprint details
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001

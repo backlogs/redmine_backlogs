@@ -2,6 +2,12 @@ def get_project(identifier)
   Project.find(:first, :conditions => "identifier='#{identifier}'")
 end
 
+def initialize_sprint_params
+  @sprint = HashWithIndifferentAccess.new(Sprint.new.attributes)
+  @sprint['project_id'] = @project.id
+  @sprint
+end
+
 def initialize_story_params
   @story = HashWithIndifferentAccess.new(Story.new.attributes)
   @story['project_id'] = @project.id

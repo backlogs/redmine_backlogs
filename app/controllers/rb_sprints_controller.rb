@@ -7,6 +7,18 @@ include RbCommonHelper
 class RbSprintsController < RbApplicationController
   unloadable
   
+  def create
+    attribs = params.select{|k,v| k != 'id' and Sprint.column_names.include? k }
+    attribs = Hash[*attribs.flatten]
+    puts attribs
+    @sprint  = Sprint.create(attribs)
+    status  = (@sprint.errors.length==0 ? 200 : 400)
+    
+    respond_to do |format|
+      format.html { render :partial => "sprint", :status => status }
+    end    
+  end
+  
   def update
     attribs = params.select{|k,v| k != 'id' and Sprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
