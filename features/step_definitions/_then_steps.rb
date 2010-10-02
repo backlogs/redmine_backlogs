@@ -118,8 +118,8 @@ end
 
 Then /^the sprint should be updated accordingly$/ do
   sprint = Sprint.find(@sprint_params['id'])
-  
-  sprint.attributes.each_key do |key|
+
+  @sprint_params.each_key do |key|
     unless ['updated_on', 'created_on'].include?(key)
       if key.include?('_date')
         "#{sprint[key]}".should == "#{@sprint_params[key]}"

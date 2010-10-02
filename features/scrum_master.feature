@@ -48,8 +48,8 @@ Feature: Scrum Master
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001
       And I want to set the name of the sprint to sprint xxx
-      And I want to set the sprint_start_date of the sprint to 2010-03-01
-      And I want to set the effective_date of the sprint to 2010-03-20
+      And I want to set the start_date of the sprint to 2010-03-01
+      And I want to set the end_date of the sprint to 2010-03-20
      When I update the sprint
      Then the request should complete successfully
       And the sprint should be updated accordingly
