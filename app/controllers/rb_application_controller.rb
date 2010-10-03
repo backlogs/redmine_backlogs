@@ -9,7 +9,7 @@ class RbApplicationController < ApplicationController
   # Loads the project to be used by the authorize filter to
   # determine if User.current has permission to invoke the method in question.
   def load_project
-    @project = if params[:sprint_id]
+    @project = if params[:sprint_id] and !params[:sprint_id].blank?
                  load_sprint
                  @sprint.project
                elsif params[:project_id]
