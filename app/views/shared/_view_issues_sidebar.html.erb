@@ -1,6 +1,6 @@
 <div>
     <% if sprints && sprints.size > 0 %>
-        <h3><%= l(:backlogs_sprints) %></h3>
+        <h3><%= l(:label_sprints) %></h3>
         <% sprints.each do |sp| %>
             <%= link_to(sp.name, {
                     :controller => 'rb_queries',
@@ -13,13 +13,13 @@
 
     <% if project %>
       <h3><%= project.name %></h3>
-      <%= link_to(l(:backlogs_product_backlog), {
+      <%= link_to(l(:label_product_backlog), {
               :controller => 'rb_queries',
               :action => 'show',
               :project_id => project.id
               }) %><br/>
       <% if Cards::TaskboardCards.selected_label %>
-        <%= link_to(l(:label_product_cards), {
+        <%= link_to(l(:label_printable_cards_all), {
                 :controller => 'rb_stories',
                 :action => 'index',
                 :project_id => project.id,
@@ -57,7 +57,7 @@
         %><br/>
 
         <% if Cards::TaskboardCards.selected_label %>
-          <%= link_to(l(:label_sprint_cards), {
+          <%= link_to(l(:label_printable_cards_sprint), {
                   :controller => 'rb_stories',
                   :action => 'index',
                   :project_id => project.id,

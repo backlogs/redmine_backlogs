@@ -1,97 +1,91 @@
 # English strings go here for Rails i18n
+#
+# Prefixes used:
+#   error_  = A single model validation error, other errors, and also used for error dialog text
+#   label_  = Field labels, database column names, buttons, links, nav elements
+#   txt_    = All other text
+
 en:
-  backlogs_story_tracker: "Story trackers"
-  backlogs_task_tracker: "Task tracker"
-  backlogs_card_specification: "Label types for card printing"
-  backlogs_sprints: "Sprints"
-  field_story_points: "Story points"
-  field_remaining_hours: "Remaining hours"
-  button_edit_wiki: "Edit wiki page"
-  field_backlogs_issue_type: "Backlog type"
-  backlogs_story: Story
-  backlogs_task: Task
-  backlogs_any: any
-  backlogs_points_burn_direction: "Points burn up/down"
-  label_points_burn_up: Up
-  label_points_burn_down: Down
-  field_position: Position
-  backlogs_product_backlog: "Product backlog"
-  backlogs_wiki_template: "Template for sprint wiki page"
-  points_committed: "points committed"
-  required_burn_rate_points: "required burn rate (points)"
-  required_burn_rate_hours: "required burn rate (hours)"
-  points_to_accept: "points not accepted"
-  points_accepted: "points accepted"
-  ideal: "ideal"
-  points_to_resolve: "points not resolved"
-  points_resolved: "points resolved"
-  remaining_hours: "remaining hours"
-  field_velocity_based_estimate: "Velocity based estimate"
-
-  backlogs_active: active
-
-  label_task_board: "Task board"
-  label_stories_tasks: "Stories/Tasks"
-  label_stories: "Stories"
-  label_burndown: "Burndown"
-  label_product_cards: "Product backlog cards"
-  label_sprint_cards: "Sprint cards"
-  label_select_all: "Select all"
-
-  label_back_to_project: "Back to project page"
-  label_sprint_name: "Sprint \"{{name}}\""
-  label_backlogs: Backlogs
-  label_scrum_statistics: "Scrum statistics"
-
-  label_sprint_backlog: "sprint backlog"
-  label_product_backlog: "product backlog"
-  label_Product_backlog: "Product backlog"
-
-  backlogs_sizing_inconsistent: "Story sizes vary against their estimates"
-  backlogs_velocity_missing: "No velocity could be calculated for this project"
-  backlogs_product_backlog_is_empty: "Product backlog is empty"
-  backlogs_inactive: "Project shows no activity"
-  backlogs_sprint_unestimated: "Closed or active sprints with unestimated stories"
-  backlogs_sprint_notes_missing: "Closed sprints without retrospective/review notes"
-  backlogs_product_backlog_unsized: "The top of the product backlog has unsized stories"
-  backlogs_velocity_varies: "Velocity varies significantly over sprints"
-  backlogs_sprint_unsized: "Project has stories on active or recently closed sprints that were not sized"
-
-  label_hours: hours
-  label_points: points
-  label_not_prioritized: "not prioritized"
-
-  label_backlogs_unconfigured: "You have not configured Backlogs yet. Please go to {{administration}} > {{plugins}}, then click on the {{configure}} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
-
-  label_sprint_velocity: "Velocity {{velocity}}, based on {{sprints}} sprints with an average {{days}} days"
-
-  event_sprint_summary: "{{project}}: {{summary}}"
-  event_sprint_description: "{{summary}}: {{url}}\n{{description}}"
-  todo_issue_summary: "{{type}}: {{summary}}"
-  todo_issue_description: "{{summary}}: {{url}}\n{{description}}"
-
-  label_chart_options: "Chart Options"
-
-  error_intro_singular: "The following error was encountered:"
+  error_blank: "%{field} cannot be blank"
+  error_greater_than_start_date: "End Date cannot be earlier than Start Date"
+  error_inclusion: "%{field} is not included in the list"
   error_intro_plural: "The following errors were encountered:"
+  error_intro_singular: "The following error was encountered:"
+  error_must_have_comma_delimited_list: "%{field} must have a comma delimited list of story or task IDs"
   error_outro: "Please correct the above errors before submitting again."
+  error_product_backlog_unsized: "The top of the product backlog has unsized stories"
+  error_sizing_inconsistent: "Story sizes vary against their estimates"
+  error_sprint_notes_missing: Contains sprints without retrospective/review notes
+  error_sprint_unestimated: Contains closed or active sprints with unestimated stories
 
-  label_sprint_impediments: "Sprint Impediments"
-
-  field_subject: "Subject"
-
-  field_blocks: "Blocks"
-  error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
-
-  field_tracker_id: Tracker ID
-  inclusion: "is not included in the list"
-  
-  label_webcal: Webcal Feed
+  label_backlogs: Backlogs  
+  label_backlogs_card_specification: "Card labels"
+  label_backlog_issue_type: "Backlog type"
+  label_burndown_chart: Burndown Chart
+  label_burn_direction: "Points burn up/down"
+  label_chart_options: "Chart Options"
+  label_column_width: Column width
+  label_disable_autorefresh: Disable autorefresh
+  label_enable_autorefresh: Enable autorefresh
   label_master_backlog: Master Backlog
-
-  # Version fields
-  field_name: "Name"
+  label_new_sprint: New Sprint
+  label_new_story: New Story
+  label_overall: Overall
+  label_position: Position
+  label_printable_cards: "Printable cards"
+  label_printable_cards_all: "All printable cards"
+  label_printable_cards_sprint: "Sprint printable cards"
+  label_product_backlog: "Product backlog"
+  label_product_backlog_unsized: "Stories on active or recently closed sprints that were not sized"
+  label_project_errors: "Project errors"
+  label_project_info: Project info
+  label_refresh: Refresh
+  label_remaining_hours: "Remaining hours"
+  label_scrum_statistics: "Scrum statistics"
+  label_sizing_inconsistent: "Story sizes that vary against their estimates"
+  label_sprint_impediments: "Sprint Impediments"
+  label_sprints: "Sprints"
+  label_sprint_notes_missing: "Closed sprints without retrospective/review notes"
+  label_sprint_unestimated: "Closed or active sprints with unestimated stories"
+  label_stories: "Stories"
+  label_stories_tasks: "Stories/Tasks"
+  label_story: Story
+  label_story_points: "Story points"
+  label_story_tracker: "Story trackers"
+  label_task_board: "Task board"
+  label_task_tracker: "Task tracker"
+  label_velocity_based_estimate: "Velocity based estimate"
+  label_webcal: Webcal Feed
   
-  # Error messages
-  error_blank: "cannot be blank"
-  error_greater_than_start_date: "cannot be earlier than Start Date"
+  txt_active: active
+  txt_backlogs_story: Story
+  txt_backlogs_task: Task
+  txt_burndown: "Burndown"
+  txt_burn_down: Down
+  txt_burn_up: Up
+  txt_hours: hours
+  txt_ideal: ideal
+  txt_issue_description: "%{summary}: %{url}\n%{description}"
+  txt_issue_summary: "%{type}: %{summary}"
+  txt_not_prioritized: "not prioritized"
+  txt_not_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
+  txt_points: points
+  txt_points_accepted: "points accepted"
+  txt_points_committed: "points committed"
+  txt_points_resolved: "points resolved"
+  txt_points_to_accept: "points not accepted"
+  txt_points_to_resolve: "points not resolved"
+  txt_product_backlog_is_empty: "Product backlog is empty"  
+  txt_required_burn_rate_points: "required burn rate (points)"
+  txt_project_inactive: "Project shows no activity"
+  txt_remaining_hours: "remaining hours"
+  txt_required_burn_rate_hours: "required burn rate (hours)"
+  txt_select_all: "Select all"
+  txt_sprint_backlog: "sprint backlog"
+  txt_sprint_description: "%{summary}: %{url}\n%{description}"
+  txt_sprint_name: "Sprint \"%{name}\""
+  txt_sprint_summary: "%{project}: %{summary}"
+  txt_sprint_velocity: "Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days"
+  txt_velocity_missing: "No velocity could be calculated for this project"
+  txt_velocity_varies: "Velocity varies significantly over sprints"
+  txt_wiki_template: "Template for sprint wiki page"

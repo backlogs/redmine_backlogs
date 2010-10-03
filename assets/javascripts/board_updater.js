@@ -11,7 +11,8 @@ RB.BoardUpdater = RB.Object.create({
     
     $('#refresh').bind('click', function(e,u){ self.handleRefreshClick(e,u) });
     $('#disable_autorefresh').bind('click', function(e,u){ self.handleDisableAutorefreshClick(e,u) });
-
+    $('#enable_autorefresh').bind('click', function(e,u){ self.handleEnableAutorefreshClick(e,u) });
+    
     this.loadPreferences();
     this.pollWait = 1000;
     this.poll()
@@ -43,13 +44,17 @@ RB.BoardUpdater = RB.Object.create({
   },
 
   handleDisableAutorefreshClick: function(event, ui){
-    $('body').toggleClass('no_autorefresh');
+    $('body').addClass('no_autorefresh');
     RB.UserPreferences.set('autorefresh', !$('body').hasClass('no_autorefresh'));
     if(!$('body').hasClass('no_autorefresh')){
       this.pollWait = 1000;
       this.poll();
     }
-    this.updateAutorefreshText();
+  },
+
+  handleEnableAutorefreshClick: function(event, ui){
+    $('body').removeClass('no_autorefresh');
+    RB.UserPreferences.set('autorefresh', !$('body').hasClass('no_autorefresh'));
   },
 
   handleRefreshClick: function(event, ui){
@@ -64,7 +69,6 @@ RB.BoardUpdater = RB.Object.create({
     } else {
       $('body').addClass('no_autorefresh');
     }
-    this.updateAutorefreshText();
   },
 
   poll: function() {
@@ -96,13 +100,5 @@ RB.BoardUpdater = RB.Object.create({
   processError: function(){
     this.adjustPollWait(0); 
     this.poll();
-  },
-
-  updateAutorefreshText: function(){
-    if($('body').hasClass('no_autorefresh')){
-      $('#disable_autorefresh').text('Enable Auto-refresh');
-    } else {
-      $('#disable_autorefresh').text('Disable Auto-refresh');
-    }
   }
 });

@@ -1,7 +1,7 @@
 <%= backlog_menu backlog[:sprint],
     [
       {
-        :item => "<a href='#' class='add_new_story'>New Story</a>",
+        :item => "<a href='#' class='add_new_story'>#{ l(:label_new_story) }</a>",
         :for  => :both
       },
       {
@@ -12,7 +12,7 @@
         :for => :sprint
       },
       {
-        :item => "<a href='#' class='show_burndown_chart'>Burndown chart</a>",
+        :item => "<a href='#' class='show_burndown_chart'>#{ l(:label_burndown_chart) }</a>",
         :for  => :sprint,
         :condition => backlog[:sprint] && backlog[:sprint].has_burndown
       },
@@ -32,7 +32,7 @@
         :for => :product
       },
       {
-        :item => menu_link(l(:label_sprint_cards), {
+        :item => menu_link(l(:label_printable_cards), {
                            :controller => 'rb_stories',
                            :action => 'index',
                            :project_id => @project,
@@ -42,7 +42,7 @@
         :condition => Cards::TaskboardCards.selected_label
       },
       {
-        :item => menu_link(l(:label_product_cards), {
+        :item => menu_link(l(:label_printable_cards), {
                            :controller => 'rb_stories',
                            :action => 'index',
                            :project_id => @project,

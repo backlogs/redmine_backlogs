@@ -51,6 +51,15 @@ a:hover{
   cursor:pointer;
   padding-left:5px;
 }
+body.no_autorefresh #disable_autorefresh{
+  display:none;
+}
+body #enable_autorefresh{
+  display:none;
+}
+body.no_autorefresh #enable_autorefresh{
+  display:inline;
+}
 body.loading #refresh{
   background-image:url('images/bouncer.gif');
   background-repeat:no-repeat;

@@ -15,18 +15,19 @@
 
 <%- content_for :view_specific_links do %>
   <% if @sprint.has_burndown %>
-    <a id='show_charts'><%= l(:label_burndown) %></a>
+    <a id='show_charts'><%= l(:label_burndown_chart) %></a>
   <% end %>
-  <span id="col_width">Column width: <input name="col_width"/></span>
-  <a id="disable_autorefresh">Disable Auto-refresh</a>
-  <a id="refresh">Refresh</a>
+  <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
+  <a id="disable_autorefresh"><%= l(:label_disable_autorefresh) %></a>
+  <a id="enable_autorefresh"><%= l(:label_enable_autorefresh) %></a>
+  <a id="refresh"><%= l(:label_refresh) %></a>
 <%- end %>
 
 <%- content_for :main do %>
 <div id="taskboard">
   <table id="board_header" cellspacing="0">
     <tr>
-      <td><%= l(:backlogs_story) %></td>
+      <td><%= l(:label_story) %></td>
       <%- @statuses.each do |status| %>
       <td class="swimlane"><%= status.name %></td>
       <%- end %>
