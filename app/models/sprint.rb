@@ -186,12 +186,12 @@ class Sprint < ActiveRecord::Base
     errors.add_to_base("Sprint cannot end before it starts") if self.start_date && self.end_date && self.start_date >= self.end_date
   end
 
+  ## TODO: maybe split this into open_sprints and open_shared_sprints
+  ## for UI purposes
   named_scope :open_sprints, lambda { |project|
     {
       :order => 'start_date ASC, end_date ASC',
-      # enable later for shared sprints
-      #:conditions => [ "end_date >= ? and project_id in (select id from projects where lft >= ? and rgt <= ?)", Date.today, project.lft, project.rgt]
-      :conditions => [ "end_date >= ? and project_id = ?", Date.today, project.id]
+      :conditions => [ "end_date >= ? and project_id in (select id from projects where lft <= ? and rgt >= ?)", Date.today, project.lft, project.rgt]
     }
   }
 

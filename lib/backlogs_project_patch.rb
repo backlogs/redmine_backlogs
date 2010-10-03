@@ -113,13 +113,10 @@ module Backlogs
         return sprint
       end
 
-      ## TODO: sprint sharing
       def active_sprint
-        return Sprint.find(:first,
-          :conditions => ["project_id = ? and ? between start_date and end_date", self.id, Time.now])
+        return Sprint.find(:first, :conditions => ["id in (select sprint_id from issues where project_id = ?) and ? between start_date and end_date", self.id, Time.now])
       end
     
-      ## TODO: sprint sharing
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
         return @scrum_statistics if @scrum_statistics
@@ -129,8 +126,9 @@ module Backlogs
         # magic constant
         backlog = Story.product_backlog(self, 10)
         active_sprint = self.active_sprint
+
         closed_sprints = Sprint.find(:all,
-          :conditions => ["project_id = ? and not(end_date is null or start_date is null)", self.id],
+          :conditions => ["end_date < ? and id in (select sprint_id from issues where project_id = ?)", Time.now, self.id],
           :order => "end_date desc",
           :limit => 5)
         all_sprints = ([active_sprint] + closed_sprints).compact
