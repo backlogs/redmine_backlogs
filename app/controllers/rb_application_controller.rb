@@ -25,6 +25,9 @@ class RbApplicationController < ApplicationController
     elsif params[:project_id]
       @project = Project.find(params[:project_id])
 
+    else
+      render :text => "Cannot determine project (#{params.inspect})", :status => 400
+
     end
   end
   
