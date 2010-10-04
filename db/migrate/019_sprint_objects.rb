@@ -4,8 +4,8 @@ class SprintObjects < ActiveRecord::Migration
       t.column :project_id, :integer, :null => false
       t.column :name, :string, :limit => nil, :null => false
       t.column :description, :string, :default => ""
-      t.column :start_date, :date
-      t.column :end_date, :date
+      t.column :start_date, :date, :null => false
+      t.column :end_date, :date, :null => false
       t.column :wiki_page_title, :string
       t.column :created_on, :timestamp
       t.column :updated_on, :timestamp
