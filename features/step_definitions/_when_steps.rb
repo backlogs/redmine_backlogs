@@ -133,7 +133,7 @@ When /^I view the stories in the issues tab/ do
 end
 
 When /^I view the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint.id)
+  visit url_for(:controller => 'rb_wikis', :action => 'show', :project_id => @project.id, :sprint_id => @sprint.id)
 end
 
 When /^I edit the sprint notes$/ do
