@@ -13,6 +13,9 @@ end
 def do_upgrade
   ActiveRecord::Base.transaction {
     Version.find(:all, :conditions => 'not (sprint_start_date is null or effective_date is null)').each {|version|
+      sprint = Sprint.find(:first, :conditions => ['project_id = ? and start_date = ? and end_date = ?', version.project.id, version.sprint_start_date, version.effective_date])
+      next if sprint
+
       sprint = Sprint.new
       sprint.project = version.project
       sprint.name = version.name
