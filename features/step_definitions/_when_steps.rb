@@ -137,7 +137,7 @@ When /^I view the sprint notes$/ do
 end
 
 When /^I edit the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => @sprint.id)
+  visit url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint.id)
 end
 
 When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type, how_many, period, direction|

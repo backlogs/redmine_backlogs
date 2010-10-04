@@ -16,7 +16,7 @@ def do_upgrade
       sprint = Sprint.find(:first, :conditions => ['project_id = ? and start_date = ? and end_date = ?', version.project.id, version.sprint_start_date, version.effective_date])
       next if sprint
 
-      puts "Creating sprint "#{version.name}"
+      puts "Creating sprint #{version.name}"
 
       sprint = Sprint.new
       sprint.project = version.project
