@@ -17,8 +17,9 @@ class RbApplicationController < ApplicationController
 
     # load a sprint in the context of the project that owns it
     elsif params[:sprint_id]
-      @sprint = Sprint.find(params[:sprint_id])
-      @project = @sprint.project
+      #@sprint = Sprint.find(params[:sprint_id])
+      #@project = @sprint.project
+      raise "It's best to always explicitly load the project now we have shared sprints"
 
     # load only a project
     elsif params[:project_id]
