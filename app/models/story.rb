@@ -4,6 +4,7 @@ class Story < Issue
     acts_as_list :scope => :project
     belongs_to :sprint
 
+    ## TODO: sprint sharing
     def self.backlog(project, sprint, options={})
       stories = []
       Story.find(:all,
@@ -150,6 +151,7 @@ class Story < Issue
     @rank = r
   end
 
+  ## TODO: sprint sharing
   def rank
     @rank ||= Issue.count(:conditions => [
                               "parent_id is NULL
@@ -181,6 +183,7 @@ class Story < Issue
     return @rank
   end
 
+  ## TODO: sprint sharing
   def self.at_rank(project_id, sprint_id, rank)
     return Story.find(:first,
                       :order => 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC',

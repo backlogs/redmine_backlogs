@@ -15,10 +15,10 @@ module BacklogsPlugin
                 locals[:key] = user ? user.api_key : nil
 
                 q = context[:request].session[:query]
-                if q && q[:filters]
+                if q && q[:filters] && context[:project]
                     sprint = q[:filters]['sprint_id']
                     if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-                        locals[:sprint] = Sprint.find_by_id(sprint[:values][0])
+                        locals[:sprint] = context[:project].sprint(sprint[:values][0])
                     end
                 end
 
@@ -86,32 +86,6 @@ module BacklogsPlugin
                 end
 
                 return snippet
-            end
-
-            def view_versions_show_bottom(context={ })
-                version = context[:version]
-                project = version.project
-
-                snippet = ''
-
-                if User.current.allowed_to?(:edit_wiki_pages, project)
-                    snippet += '<span id="edit_wiki_page_action">'
-                    snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
-                    snippet += '</span>'
-
-                    # this wouldn't be necesary if the schedules plugin
-                    # didn't disable the contextual hook
-                    snippet += javascript_include_tag 'jquery-1.4.2.min.js', :plugin => 'redmine_backlogs'
-                    snippet += <<-generatedscript
-
-                        <script type="text/javascript">
-                                var $j = jQuery.noConflict();
-                            $j(document).ready(function() {
-                                $j('#edit_wiki_page_action').detach().appendTo("div.contextual");
-                            });
-                        </script>
-                    generatedscript
-                end
             end
 
             def view_my_account(context={ })

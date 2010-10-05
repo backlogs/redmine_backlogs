@@ -22,6 +22,7 @@ RB.urlFor = function(route_name, options){
   return route;
 }
 
+// TODO: sprint sharing
 RB.routes = {
   create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
   update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',

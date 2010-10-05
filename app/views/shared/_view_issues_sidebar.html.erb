@@ -44,6 +44,7 @@
         <%= link_to(l(:label_task_board), {
                 :controller => 'rb_taskboards',
                 :action => 'show',
+                :project_id => project.id,
                 :sprint_id => sprint.id
                 })
         %><br/>

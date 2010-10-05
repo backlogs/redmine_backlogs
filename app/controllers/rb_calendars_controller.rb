@@ -40,6 +40,7 @@ class RbCalendarsController < RbApplicationController
       end
     }
 
+    ## TODO: sprint sharing
     open_issues = %Q[
         #{IssueStatus.table_name}.is_closed = ?
         and tracker_id in (?)
