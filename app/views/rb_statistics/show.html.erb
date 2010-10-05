@@ -33,16 +33,16 @@
                        }
                      ) %><br/>
             <% end %>
-            <h4><%= l(:label_product_backlog) %></h4>
-            <%= link_to(l(:label_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
+            <h4><%= l(:rb_label_product_backlog) %></h4>
+            <%= link_to(l(:rb_label_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
             <% if info[:active_sprint] || info[:closed_sprints] %>
-                <h4><%= l(:label_sprints) %></h4>
+                <h4><%= l(:rb_label_sprints) %></h4>
                 <% if info[:active_sprint] %>
                     <%= link_to(info[:active_sprint].name, {
                         :controller => 'rb_queries',
                         :action => 'show',
                         :project_id => project,
-                        :sprint_id => info[:active_sprint].id }) %> (<%= l(:txt_active) %>)<br/>
+                        :sprint_id => info[:active_sprint].id }) %> (<%= l(:rb_txt_active) %>)<br/>
                 <% end %>
                 <% if info[:closed_sprints] %>
                     <% info[:closed_sprints].each do |sprint| %>
@@ -51,7 +51,7 @@
                 <% end %>
             <% end %>
 
-            <h4><%= l(:label_project_errors) %></h4>
+            <h4><%= l(:rb_label_project_errors) %></h4>
             <% errors.each do |e| %>
                 <ul>
                     <li><%= l(e) %></li>
@@ -61,7 +61,7 @@
     <% end %>
 </div>
     <% if @projects.size > 0 %>
-      <h3><%= l(:label_overall)%></h3>
+      <h3><%= l(:rb_label_overall)%></h3>
       <table>
         <% global.each_pair do |e, n| %>
           <tr>

@@ -6,86 +6,87 @@
 #   txt_    = All other text
 
 en:
-  error_blank: "%{field} cannot be blank"
-  error_greater_than_start_date: "End Date cannot be earlier than Start Date"
-  error_inclusion: "%{field} is not included in the list"
-  error_intro_plural: "The following errors were encountered:"
-  error_intro_singular: "The following error was encountered:"
-  error_must_have_comma_delimited_list: "%{field} must have a comma delimited list of story or task IDs"
-  error_outro: "Please correct the above errors before submitting again."
-  error_product_backlog_unsized: "The top of the product backlog has unsized stories"
-  error_sizing_inconsistent: "Story sizes vary against their estimates"
-  error_sprint_notes_missing: Contains sprints without retrospective/review notes
-  error_sprint_unestimated: Contains closed or active sprints with unestimated stories
+  rb_error_blank: "%{field} cannot be blank"
+  rb_error_greater_than_start_date: "End Date cannot be earlier than Start Date"
+  rb_error_inclusion: "%{field} is not included in the list"
+  rb_error_intro_plural: "The following errors were encountered:"
+  rb_error_intro_singular: "The following error was encountered:"
+  rb_error_must_have_comma_delimited_list: "%{field} must have a comma delimited list of story or task IDs"
+  rb_error_outro: "Please correct the above errors before submitting again."
+  rb_error_product_backlog_unsized: "The top of the product backlog has unsized stories"
+  rb_error_sizing_inconsistent: "Story sizes vary against their estimates"
+  rb_error_sprint_notes_missing: Contains sprints without retrospective/review notes
+  rb_error_sprint_unestimated: Contains closed or active sprints with unestimated stories
 
-  label_backlogs: Backlogs  
-  label_backlogs_card_specification: "Card labels"
-  label_backlog_issue_type: "Backlog type"
-  label_burndown_chart: Burndown Chart
-  label_burn_direction: "Points burn up/down"
-  label_chart_options: "Chart Options"
-  label_column_width: Column width
-  label_disable_autorefresh: Disable autorefresh
-  label_enable_autorefresh: Enable autorefresh
-  label_master_backlog: Master Backlog
-  label_new_sprint: New Sprint
-  label_new_story: New Story
-  label_overall: Overall
-  label_position: Position
-  label_printable_cards: "Printable cards"
-  label_printable_cards_all: "All printable cards"
-  label_printable_cards_sprint: "Sprint printable cards"
-  label_product_backlog: "Product backlog"
-  label_product_backlog_unsized: "Stories on active or recently closed sprints that were not sized"
-  label_project_errors: "Project errors"
-  label_project_info: Project info
-  label_refresh: Refresh
-  label_remaining_hours: "Remaining hours"
-  label_scrum_statistics: "Scrum statistics"
-  label_sizing_inconsistent: "Story sizes that vary against their estimates"
-  label_sprint_impediments: "Sprint Impediments"
-  label_sprints: "Sprints"
-  label_sprint_notes_missing: "Closed sprints without retrospective/review notes"
-  label_sprint_unestimated: "Closed or active sprints with unestimated stories"
-  label_stories: "Stories"
-  label_stories_tasks: "Stories/Tasks"
-  label_story: Story
-  label_story_points: "Story points"
-  label_story_tracker: "Story trackers"
-  label_task_board: "Task board"
-  label_task_tracker: "Task tracker"
-  label_velocity_based_estimate: "Velocity based estimate"
-  label_webcal: Webcal Feed
-  
-  txt_active: active
-  txt_backlogs_story: Story
-  txt_backlogs_task: Task
-  txt_burndown: "Burndown"
-  txt_burn_down: Down
-  txt_burn_up: Up
-  txt_hours: hours
-  txt_ideal: ideal
-  txt_issue_description: "%{summary}: %{url}\n%{description}"
-  txt_issue_summary: "%{type}: %{summary}"
-  txt_not_prioritized: "not prioritized"
-  txt_not_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
-  txt_points: points
-  txt_points_accepted: "points accepted"
-  txt_points_committed: "points committed"
-  txt_points_resolved: "points resolved"
-  txt_points_to_accept: "points not accepted"
-  txt_points_to_resolve: "points not resolved"
-  txt_product_backlog_is_empty: "Product backlog is empty"  
-  txt_required_burn_rate_points: "required burn rate (points)"
-  txt_project_inactive: "Project shows no activity"
-  txt_remaining_hours: "remaining hours"
-  txt_required_burn_rate_hours: "required burn rate (hours)"
-  txt_select_all: "Select all"
-  txt_sprint_backlog: "sprint backlog"
-  txt_sprint_description: "%{summary}: %{url}\n%{description}"
-  txt_sprint_name: "Sprint \"%{name}\""
-  txt_sprint_summary: "%{project}: %{summary}"
-  txt_sprint_velocity: "Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days"
-  txt_velocity_missing: "No velocity could be calculated for this project"
-  txt_velocity_varies: "Velocity varies significantly over sprints"
-  txt_wiki_template: "Template for sprint wiki page"
+  rb_label_backlogs: Backlogs  
+  rb_label_backlogs_card_specification: "Card labels"
+  rb_label_backlog_issue_type: "Backlog type"
+  rb_label_burndown_chart: Burndown Chart
+  rb_label_burn_direction: "Points burn up/down"
+  rb_label_chart_options: "Chart Options"
+  rb_label_column_width: Column width
+  rb_label_disable_autorefresh: Disable autorefresh
+  rb_label_enable_autorefresh: Enable autorefresh
+  rb_label_master_backlog: Master Backlog
+  rb_label_new_sprint: New Sprint
+  rb_label_new_story: New Story
+  rb_label_overall: Overall
+  rb_label_position: Position
+  rb_label_printable_cards: "Printable cards"
+  rb_label_printable_cards_all: "All printable cards"
+  rb_label_printable_cards_sprint: "Sprint printable cards"
+  rb_label_product_backlog: "Product backlog"
+  rb_label_product_backlog_unsized: "Stories on active or recently closed sprints that were not sized"
+  rb_label_project_errors: "Project errors"
+  rb_label_project_info: Project info
+  rb_label_refresh: Refresh
+  rb_label_remaining_hours: "Remaining hours"
+  rb_label_scrum_statistics: "Scrum statistics"
+  rb_label_sizing_inconsistent: "Story sizes that vary against their estimates"
+  rb_label_sprint_impediments: "Sprint Impediments"
+  rb_label_sprints: "Sprints"
+  rb_label_sprint_notes_missing: "Closed sprints without retrospective/review notes"
+  rb_label_sprint_unestimated: "Closed or active sprints with unestimated stories"
+  rb_label_stories: "Stories"
+  rb_label_stories_tasks: "Stories/Tasks"
+  rb_label_story: Story
+  rb_label_story_points: "Story points"
+  rb_label_story_tracker: "Story trackers"
+  rb_label_task_board: "Task board"
+  rb_label_task_tracker: "Task tracker"
+  rb_label_velocity_based_estimate: "Velocity based estimate"
+  rb_label_webcal: Webcal Feed
+  rb_label_wiki: Wiki
+
+  rb_txt_active: active
+  rb_txt_backlogs_story: Story
+  rb_txt_backlogs_task: Task
+  rb_txt_burndown: "Burndown"
+  rb_txt_burn_down: Down
+  rb_txt_burn_up: Up
+  rb_txt_hours: hours
+  rb_txt_ideal: ideal
+  rb_txt_issue_description: "%{summary}: %{url}\n%{description}"
+  rb_txt_issue_summary: "%{type}: %{summary}"
+  rb_txt_not_prioritized: "not prioritized"
+  rb_txt_not_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
+  rb_txt_points: points
+  rb_txt_points_accepted: "points accepted"
+  rb_txt_points_committed: "points committed"
+  rb_txt_points_resolved: "points resolved"
+  rb_txt_points_to_accept: "points not accepted"
+  rb_txt_points_to_resolve: "points not resolved"
+  rb_txt_product_backlog_is_empty: "Product backlog is empty"  
+  rb_txt_required_burn_rate_points: "required burn rate (points)"
+  rb_txt_project_inactive: "Project shows no activity"
+  rb_txt_remaining_hours: "remaining hours"
+  rb_txt_required_burn_rate_hours: "required burn rate (hours)"
+  rb_txt_select_all: "Select all"
+  rb_txt_sprint_backlog: "sprint backlog"
+  rb_txt_sprint_description: "%{summary}: %{url}\n%{description}"
+  rb_txt_sprint_name: "Sprint \"%{name}\""
+  rb_txt_sprint_summary: "%{project}: %{summary}"
+  rb_txt_sprint_velocity: "Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days"
+  rb_txt_velocity_missing: "No velocity could be calculated for this project"
+  rb_txt_velocity_varies: "Velocity varies significantly over sprints"
+  rb_txt_wiki_template: "Template for sprint wiki page"
