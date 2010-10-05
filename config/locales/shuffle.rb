@@ -29,6 +29,10 @@ Dir.glob("*.yml").select{|f| !['en.yml', 'old-en.yml'].include?(f)}.each {|f|
   puts lang
 
   new_trans = trans.dup
+  new_trans[lang].each_pair{|k, v|
+    new_trans[lang][k] = new_trans[lang][k].gsub(/\{\{([^}]+)\}\}/, '%{\1}')
+  }
+
   new_keys.each_pair{|ko, kns|
     kns.each{|kn|
       new_trans[lang][kn] = trans[lang][ko].gsub(/\{\{([^}]+)\}\}/, '%{\1}') if trans[lang][ko]
