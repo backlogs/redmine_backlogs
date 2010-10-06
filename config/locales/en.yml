@@ -37,7 +37,7 @@ en:
   rb_label_new_sprint: New Sprint
   rb_label_new_story: New Story
   rb_label_overall: Overall
-  rb_label_position: Position
+  label_position: Position
   rb_label_printable_cards: "Printable cards"
   rb_label_printable_cards_all: "All printable cards"
   rb_label_printable_cards_sprint: "Sprint printable cards"

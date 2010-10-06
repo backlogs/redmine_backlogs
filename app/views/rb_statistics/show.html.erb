@@ -24,7 +24,7 @@
         <h3><a href="#"><span class="score score_<%= stats.score %>"><%= stats.score %></span> <%= project.name %></a> </h3>
         <div>
             <% if !scores[:velocity_missing] %>
-                <%= l(
+                <%= t(
                        :rb_txt_sprint_velocity, 
                        :velocity => info[:velocity], 
                        :sprints  => info[:closed_sprints].length, 
