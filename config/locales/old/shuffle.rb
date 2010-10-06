@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+Dir.chdir(File.dirname(__FILE__) + '/..')
 
 en = YAML::load_file('en.yml')['en']
 old_en = YAML::load_file('old/en.yml')['en']
