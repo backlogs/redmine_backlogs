@@ -36,11 +36,15 @@ en:
   rb_label_disable_autorefresh: Disable autorefresh
   rb_label_edit_wiki: Edit wiki
   rb_label_enable_autorefresh: Enable autorefresh
+  rb_label_ideal: Ideal
   rb_label_inactive: Inactive projects
   rb_label_master_backlog: Master Backlog
   rb_label_new_sprint: New Sprint
   rb_label_new_story: New Story
   rb_label_overall: Overall
+  rb_label_points_committed: Points committed
+  rb_label_points_to_accept: Points to accept
+  rb_label_points_to_resolve: Points to resolve
   rb_label_printable_cards: "Printable cards"
   rb_label_printable_cards_all: "All printable cards"
   rb_label_printable_cards_sprint: "Sprint printable cards"
@@ -51,6 +55,8 @@ en:
   rb_label_project_info: Project info
   rb_label_refresh: Refresh
   rb_label_remaining_hours: "Remaining hours"
+  rb_label_required_burn_rate_hours: Required burn rate (hours)
+  rb_label_required_burn_rate_points: Required burn rate (points)
   rb_label_scrum_statistics: "Scrum statistics"
   rb_label_sizing_inconsistent: "Story sizes that vary against their estimates"
   rb_label_sprint_impediments: "Sprint Impediments"
