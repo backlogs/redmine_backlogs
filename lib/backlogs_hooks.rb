@@ -33,13 +33,13 @@ module BacklogsPlugin
                 snippet = ''
 
                 if issue.is_story?
-                    snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{Story.find(issue.id).points_display}</td></tr>"
+                    snippet += "<tr><th>#{l(:rb_label_story_points)}</th><td>#{Story.find(issue.id).points_display}</td></tr>"
                     vbe = issue.velocity_based_estimate
-                    snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
+                    snippet += "<tr><th>#{l(:rb_label_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
                 end
 
                 if issue.is_task? || (issue.is_story? && issue.descendants.length == 0)
-                    snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
+                    snippet += "<tr><th>#{l(:rb_label_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
                 end
 
                 return snippet
@@ -96,7 +96,7 @@ module BacklogsPlugin
 
                 if User.current.allowed_to?(:edit_wiki_pages, project)
                     snippet += '<span id="edit_wiki_page_action">'
-                    snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
+                    snippet += link_to l(:rb_label_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
                     snippet += '</span>'
 
                     # this wouldn't be necesary if the schedules plugin

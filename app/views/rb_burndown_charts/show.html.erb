@@ -3,7 +3,7 @@
 <div class="burndown_chart" id="burndown_<%= @burndown.sprint_id %>"><div class="loading">Generating chart...</div></div>
 
 <fieldset>
-    <legend><%= l(:label_chart_options) %></legend>
+    <legend><%= l(:rb_label_chart_options) %></legend>
     <% @burndown.series(:all).each do |series| %>
         <input class="series_enabled" type="checkbox" onclick="burndown_configure(this)" id="<%= series.name %>_enabled" name="<%= series.name %>_enabled" value="<%= series.name %>"><%= l(series.name) %><br/>
     <% end %>

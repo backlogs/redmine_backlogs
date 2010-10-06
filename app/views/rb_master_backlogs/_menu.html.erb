@@ -1,23 +1,23 @@
 <%= backlog_menu backlog[:sprint],
     [
       {
-        :item => "<a href='#' class='add_new_story'>#{ l(:label_new_story) }</a>",
+        :item => "<a href='#' class='add_new_story'>#{ l(:rb_label_new_story) }</a>",
         :for  => :both
       },
       {
-        :item => menu_link(l(:label_task_board), {
+        :item => menu_link(l(:rb_label_task_board), {
                            :controller => 'rb_taskboards',
                            :action => 'show',
                            :sprint_id => backlog[:sprint] }),
         :for => :sprint
       },
       {
-        :item => "<a href='#' class='show_burndown_chart'>#{ l(:label_burndown_chart) }</a>",
+        :item => "<a href='#' class='show_burndown_chart'>#{ l(:rb_label_burndown_chart) }</a>",
         :for  => :sprint,
         :condition => backlog[:sprint] && backlog[:sprint].has_burndown
       },
       {
-        :item => menu_link(l(:label_stories_tasks), {
+        :item => menu_link(l(:rb_label_stories_tasks), {
                            :controller => 'rb_queries',
                            :action => 'show',
                            :project_id => @project,
@@ -25,14 +25,14 @@
         :for => :sprint
       },
       {
-        :item => menu_link(l(:label_stories), {
+        :item => menu_link(l(:rb_label_stories), {
                            :controller => 'rb_queries',
                            :action => 'show',
                            :project_id => @project }),
         :for => :product
       },
       {
-        :item => menu_link(l(:label_printable_cards), {
+        :item => menu_link(l(:rb_label_printable_cards), {
                            :controller => 'rb_stories',
                            :action => 'index',
                            :project_id => @project,
@@ -42,7 +42,7 @@
         :condition => Cards::TaskboardCards.selected_label
       },
       {
-        :item => menu_link(l(:label_printable_cards), {
+        :item => menu_link(l(:rb_label_printable_cards), {
                            :controller => 'rb_stories',
                            :action => 'index',
                            :project_id => @project,
@@ -50,7 +50,7 @@
         :for => :product
       },
       {
-        :item => menu_link(l(:label_wiki), {
+        :item => menu_link(l(:rb_label_wiki), {
                            :controller => 'rb_wikis',
                            :action => 'edit',
                            :project_id => @project.id,
