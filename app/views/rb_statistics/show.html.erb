@@ -17,15 +17,15 @@
         <%
           stats = project.scrum_statistics
           scores = stats.scores
-          errors = stats.errors('error_')
+          errors = stats.errors('rb_error_')
           info = stats.info
-          global = stats.merge(global, 'label_')
+          global = stats.merge(global, 'rb_label_')
         %>
         <h3><a href="#"><span class="score score_<%= stats.score %>"><%= stats.score %></span> <%= project.name %></a> </h3>
         <div>
             <% if !scores[:velocity_missing] %>
                 <%= l(
-                       :txt_sprint_velocity, 
+                       :rb_txt_sprint_velocity, 
                        { 
                          :velocity => info[:velocity], 
                          :sprints  => info[:closed_sprints].length, 
@@ -63,9 +63,9 @@
     <% if @projects.size > 0 %>
       <h3><%= l(:rb_label_overall)%></h3>
       <table>
-        <% global.each_pair do |e, n| %>
+        <% global.each_pair do |label, n| %>
           <tr>
-            <td><%= l(e) %></td>
+            <td><%= l(label) %></td>
             <td><b><%= (n * 100) / @projects.size %>%</b></td>
             <td><span class="score_<%= 10 - ((n * 10) / @projects.size) %>">&nbsp;&nbsp;</td>
           </tr>

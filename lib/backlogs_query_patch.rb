@@ -64,7 +64,7 @@ module Backlogs
             else
                 backlogs_filters = {
                         "backlogs_issue_type" => {  :type => :list,
-                                                    :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_any), "any"]],
+                                                    :values => [[l(:rb_label_story), "story"], [l(:rb_label_task), "task"], [l(:rb_label_any), "any"]],
                                                     :order => 20 },
                         "sprint_id" => {            :type => :list,
                                                     :values => Sprint.find(:all, :order => "coalesce(start_date, '1900-01-01'), name").collect{|s| [s.name, s.id]},

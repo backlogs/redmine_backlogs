@@ -18,8 +18,8 @@ class RbCalendarsController < RbApplicationController
 
     # current + future sprints
     Sprint.find(:all, :conditions => ["not start_date is null and not end_date is null and project_id = ? and end_date >= ?", @project.id, Date.today]).each {|sprint|
-      summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
-      description_text = l(:event_sprint_description, {
+      summary_text = l(:rb_txt_sprint_summary, { :project => @project.name, :summary => sprint.name } )
+      description_text = l(:rb_txt_sprint_description, {
                             :summary => sprint.name,
                             :description => sprint.description,
                             :url => url_for({
@@ -87,8 +87,8 @@ class RbCalendarsController < RbApplicationController
     conditions << Date.today
 
     issues = Issue.find(:all, :include => :status, :conditions => conditions).each {|issue|
-      summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
-      description_text = l(:todo_issue_description, {
+      summary_text = l(:rb_txt_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
+      description_text = l(:rb_txt_issue_description, {
                             :summary => issue.subject,
                             :description => issue.description,
                             :url => url_for({

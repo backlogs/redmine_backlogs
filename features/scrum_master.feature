@@ -102,7 +102,7 @@ Feature: Scrum Master
   Scenario: Download printable cards for the product backlog
     Given I have selected card label stock Avery 7169
       And I am viewing the issues list
-     When I follow "Product backlog cards"
+     When I follow "All printable cards"
      Then the request should complete successfully
 
   Scenario: Download printable cards for the task board
@@ -111,7 +111,7 @@ Feature: Scrum Master
       And I am viewing the issues list
       And I follow "Sprint 004"
      Then the request should complete successfully
-     When I follow "Sprint cards"
+     When I follow "Sprint printable cards"
      Then the request should complete successfully
 
   Scenario: view the sprint notes

@@ -8,6 +8,7 @@
 en:
   rb_error_blank: "%{field} cannot be blank"
   rb_error_greater_than_start_date: "End Date cannot be earlier than Start Date"
+  rb_error_inactive: "Project shows no activity"
   rb_error_inclusion: "%{field} is not included in the list"
   rb_error_intro_plural: "The following errors were encountered:"
   rb_error_intro_singular: "The following error was encountered:"
@@ -18,15 +19,19 @@ en:
   rb_error_sprint_notes_missing: Contains sprints without retrospective/review notes
   rb_error_sprint_unestimated: Contains closed or active sprints with unestimated stories
 
+  rb_label_any: Any
   rb_label_backlogs: Backlogs  
   rb_label_backlogs_card_specification: "Card labels"
   rb_label_backlog_issue_type: "Backlog type"
   rb_label_burndown_chart: Burndown Chart
   rb_label_burn_direction: "Points burn up/down"
+  rb_label_category: Category
   rb_label_chart_options: "Chart Options"
   rb_label_column_width: Column width
   rb_label_disable_autorefresh: Disable autorefresh
+  rb_label_edit_wiki: Edit wiki
   rb_label_enable_autorefresh: Enable autorefresh
+  rb_label_inactive: Inactive projects
   rb_label_master_backlog: Master Backlog
   rb_label_new_sprint: New Sprint
   rb_label_new_story: New Story
@@ -36,6 +41,7 @@ en:
   rb_label_printable_cards_all: "All printable cards"
   rb_label_printable_cards_sprint: "Sprint printable cards"
   rb_label_product_backlog: "Product backlog"
+  rb_label_product_backlog_is_empty: Product backlogs that are empty
   rb_label_product_backlog_unsized: "Stories on active or recently closed sprints that were not sized"
   rb_label_project_errors: "Project errors"
   rb_label_project_info: Project info
@@ -47,6 +53,7 @@ en:
   rb_label_sprints: "Sprints"
   rb_label_sprint_notes_missing: "Closed sprints without retrospective/review notes"
   rb_label_sprint_unestimated: "Closed or active sprints with unestimated stories"
+  rb_label_sprint_unsized: "Closed or active sprints with stories that don't have estimated points"
   rb_label_stories: "Stories"
   rb_label_stories_tasks: "Stories/Tasks"
   rb_label_story: Story

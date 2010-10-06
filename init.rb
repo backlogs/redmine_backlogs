@@ -84,6 +84,6 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :view_scrum_statistics,   { :rb_statistics => :show }
   end
 
-  menu :project_menu, :backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
-  menu :application_menu, :backlogs, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics
+  menu :project_menu, :backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :rb_label_backlogs, :after => :issues, :param => :project_id
+  menu :application_menu, :backlogs, { :controller => :rb_statistics, :action => :show}, :caption => :rb_label_scrum_statistics
 end
