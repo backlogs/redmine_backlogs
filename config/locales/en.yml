@@ -2,7 +2,8 @@
 #
 # Prefixes used:
 #   error_  = A single model validation error, other errors, and also used for error dialog text
-#   label_  = Field labels, database column names, buttons, links, nav elements
+#   field_  = Table fields (some might not have the rb_ prefix to accommodate Redmine)
+#   label_  = labels, buttons, links, nav elements
 #   txt_    = All other text
 
 en:
@@ -18,6 +19,9 @@ en:
   rb_error_sizing_inconsistent: "Story sizes vary against their estimates"
   rb_error_sprint_notes_missing: Contains sprints without retrospective/review notes
   rb_error_sprint_unestimated: Contains closed or active sprints with unestimated stories
+
+  # Fields don't have the rb_ prefix since Redmine Core dictates the keys, not RB
+  field_position: Position
 
   rb_label_any: Any
   rb_label_backlogs: Backlogs  
@@ -37,7 +41,6 @@ en:
   rb_label_new_sprint: New Sprint
   rb_label_new_story: New Story
   rb_label_overall: Overall
-  label_position: Position
   rb_label_printable_cards: "Printable cards"
   rb_label_printable_cards_all: "All printable cards"
   rb_label_printable_cards_sprint: "Sprint printable cards"
