@@ -24,7 +24,8 @@ en:
   rb_label_backlogs_card_specification: "Card labels"
   rb_label_backlog_issue_type: "Backlog type"
   rb_label_burndown_chart: Burndown Chart
-  rb_label_burn_direction: "Points burn up/down"
+  rb_label_burn_direction: "Burn chart direction"
+  rb_label_card_specification: Card specification
   rb_label_category: Category
   rb_label_chart_options: "Chart Options"
   rb_label_column_width: Column width
@@ -58,12 +59,14 @@ en:
   rb_label_stories_tasks: "Stories/Tasks"
   rb_label_story: Story
   rb_label_story_points: "Story points"
-  rb_label_story_tracker: "Story trackers"
+  rb_label_story_tracker: "Story tracker"
+  rb_label_story_trackers: "Story trackers"
   rb_label_task_board: "Task board"
   rb_label_task_tracker: "Task tracker"
   rb_label_velocity_based_estimate: "Velocity based estimate"
   rb_label_webcal: Webcal Feed
   rb_label_wiki: Wiki
+  rb_label_sprint_wiki_template: Sprint Wiki Template
 
   rb_txt_active: active
   rb_txt_backlogs_story: Story

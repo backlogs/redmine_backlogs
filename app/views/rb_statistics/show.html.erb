@@ -26,11 +26,9 @@
             <% if !scores[:velocity_missing] %>
                 <%= l(
                        :rb_txt_sprint_velocity, 
-                       { 
-                         :velocity => info[:velocity], 
-                         :sprints  => info[:closed_sprints].length, 
-                         :days     => info[:average_days_per_sprint]
-                       }
+                       :velocity => info[:velocity], 
+                       :sprints  => info[:closed_sprints].length, 
+                       :days     => info[:average_days_per_sprint]
                      ) %><br/>
             <% end %>
             <h4><%= l(:rb_label_product_backlog) %></h4>

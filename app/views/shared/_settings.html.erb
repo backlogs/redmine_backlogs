@@ -30,26 +30,26 @@
     </script>
 
     <p>
-        <%= content_tag(:label, l(:rb_backlogs_story_tracker)) %>
+        <%= content_tag(:label, l(:rb_label_story_trackers)) %>
         <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, Story.trackers), :multiple => true) %>
     </p>
     <p>
-        <%= content_tag(:label, l(:rb_backlogs_task_tracker)) %>
+        <%= content_tag(:label, l(:rb_label_task_tracker)) %>
         <%= select_tag("settings[task_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, Task.tracker)) %>
     </p>
     <p>
-        <%= content_tag(:label, l(:rb_backlogs_points_burn_direction)) %>
+        <%= content_tag(:label, l(:rb_label_burn_direction)) %>
         <%= select_tag("settings[points_burn_direction]",
             options_for_select([
-                    [l(:rb_label_points_burn_up), 'up'],
-                    [l(:rb_label_points_burn_down), 'down']
+                    [l(:rb_txt_burn_up), 'up'],
+                    [l(:rb_txt_burn_down), 'down']
                 ], Setting.plugin_redmine_backlogs[:points_burn_direction])) %>
     </p>
     <p>
-        <%= content_tag(:label, l(:rb_backlogs_card_specification)) %>
+        <%= content_tag(:label, l(:rb_label_card_specification)) %>
         <%= select_tag("settings[card_spec]", options_for_select(Cards::TaskboardCards::LABELS.keys.sort.collect{|label| [label, label]}, Setting.plugin_redmine_backlogs[:card_spec])) %>
     </p>
     <p>
-        <%= content_tag(:label, l(:rb_backlogs_wiki_template)) %>
+        <%= content_tag(:label, l(:rb_label_sprint_wiki_template)) %>
         <%= text_field_tag("settings[wiki_template]", Setting.plugin_redmine_backlogs[:wiki_template]) %>
     </p>
