@@ -85,6 +85,17 @@ module BacklogsPlugin
           snippet += '</p>'
         end
 
+        params = context[:controller].params
+        if issue.is_story? && params[:copy_from]
+          snippet += "<p><label for='link_to_original'>#{l(:rb_label_link_to_original)}</label>"
+          snippet += "#{check_box_tag('link_to_original', params[:copy_from], true)}</p>"
+
+          snippet += "<p><label>#{l(:rb_label_copy_tasks)}</label>"
+          snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], true)} #{l(:rb_label_copy_tasks_open)}<br />"
+          snippet += "#{radio_button_tag('copy_tasks', 'none', false)} #{l(:rb_label_copy_tasks_none)}<br />"
+          snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
+        end
+
         return snippet
       end
 
@@ -93,6 +104,48 @@ module BacklogsPlugin
             :partial => 'shared/view_my_account',
             :locals => {:user => context[:user], :color => context[:user].backlogs_preference(:task_color) }
           })
+      end
+
+      def controller_issues_new_after_save(context={ })
+        params = context[:params]
+        issue = context[:issue]
+
+        if issue.is_story?
+          if params[:link_to_original]
+            rel = IssueRelation.new
+
+            rel.issue_from_id = Integer(params[:link_to_original])
+            rel.issue_to_id = issue.id
+            rel.relation_type = IssueRelation::TYPE_RELATES
+            rel.save
+          end
+
+          if params[:copy_tasks]
+            params[:copy_tasks] += ':' if params[:copy_tasks] !~ /:/
+            action, id = *(params[:copy_tasks].split(/:/))
+
+            story = (id == '' ? nil : Story.find(Integer(id)))
+
+            if ! story.nil? && action != 'none'
+              tasks = story.tasks
+              case action
+                when 'open'
+                  tasks = tasks.select{|t| !t.closed?}
+                when 'all', 'none'
+                  #
+                else
+                  raise "Unexpected value #{params[:copy_tasks]}"
+              end
+
+              tasks.each {|t|
+                nt = Task.new
+                nt.copy_from(t)
+                nt.parent_issue_id = issue.id
+                nt.save
+              }
+            end
+          end
+        end
       end
 
     end
