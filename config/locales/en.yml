@@ -20,7 +20,7 @@ en:
   rb_error_sprint_notes_missing: Contains sprints without retrospective/review notes
   rb_error_sprint_unestimated: Contains closed or active sprints with unestimated stories
 
-  # Fields don't have the rb_ prefix since Redmine Core dictates the keys, not RB
+  # Fields don't have the rb_ prefix since Redmine Core dictates some of the keys, not RB
   field_position: Position
 
   rb_label_any: Any
@@ -83,10 +83,20 @@ en:
   rb_txt_burndown: "Burndown"
   rb_txt_burn_down: Down
   rb_txt_burn_up: Up
+  rb_txt_edit_impediment: Edit Impediment
+  rb_txt_edit_issue: Edit Issue
+  rb_txt_edit_sprint: Edit Sprint
+  rb_txt_edit_story: Edit Story
+  rb_txt_edit_task: Edit Task
   rb_txt_hours: hours
   rb_txt_ideal: ideal
   rb_txt_issue_description: "%{summary}: %{url}\n%{description}"
   rb_txt_issue_summary: "%{type}: %{summary}"
+  rb_txt_new_impediment: New Impediment
+  rb_txt_new_issue: New Issue
+  rb_txt_new_sprint: New Sprint
+  rb_txt_new_story: New Story
+  rb_txt_new_task: New Task
   rb_txt_not_prioritized: "not prioritized"
   rb_txt_not_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
   rb_txt_points: points

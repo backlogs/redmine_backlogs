@@ -18,10 +18,6 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   beforeSave: function(){
     // Do nothing
   },
-  
-  editDialogTitle: function(){
-    return "Story #" + this.getID();
-  },
 
   editorDisplayed: function(editor){
     // editor.dialog("option", "position", "center");
@@ -33,7 +29,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   },
 
   getType: function(){
-    return "Story";
+    return "story";
   },
 
   markIfClosed: function(){

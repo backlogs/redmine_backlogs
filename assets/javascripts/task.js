@@ -28,7 +28,7 @@ RB.Task = RB.Object.create(RB.Issue, {
   },
 
   getType: function(){
-    return "Task";
+    return "task";
   },
 
   markIfClosed: function(){

@@ -22,7 +22,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   },
 
   getType: function(){
-    return "Sprint";
+    return "sprint";
   },
 
   markIfClosed: function(){

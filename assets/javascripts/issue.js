@@ -14,7 +14,7 @@ RB.Issue = RB.Object.create(RB.Model, {
   },
   
   getType: function(){
-    return "Issue";
+    return "issue";
   },
 
   saveDragResult: function(){

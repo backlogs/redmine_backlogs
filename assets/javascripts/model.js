@@ -133,7 +133,7 @@ RB.Model = RB.Object.create({
   
   // Override this method to change the dialog title
   editDialogTitle: function(){
-    return "Edit " + this.getType()
+    return RB.locales["rb_txt_edit_" + this.getType()];
   },
   
   editorDisplayed: function(editor){
@@ -215,7 +215,7 @@ RB.Model = RB.Object.create({
 
   // Override this method to change the dialog title
   newDialogTitle: function(){
-    return "New " + this.getType()
+    return RB.locales["rb_txt_new_" + this.getType()];
   },
     
   open: function(){

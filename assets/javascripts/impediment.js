@@ -18,6 +18,10 @@ RB.Impediment = RB.Object.create(RB.Task, {
     j.find(".editable").live('mouseup', this.handleClick);
   },
   
+  getType: function(){
+    return "impediment";
+  },
+  
   // Override saveDirectives of RB.Task
   saveDirectives: function(){
     var j = this.$;

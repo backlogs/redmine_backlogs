@@ -39,4 +39,15 @@ RB.routes = {
   show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>'
 }
 
+RB.locales = {
+  rb_txt_edit_impediment: '<%= l(:rb_txt_edit_impediment) %>',
+  rb_txt_edit_issue: '<%= l(:rb_txt_edit_issue) %>',
+  rb_txt_edit_story: '<%= l(:rb_txt_edit_story) %>',
+  rb_txt_edit_task: '<%= l(:rb_txt_edit_task) %>',
+  rb_txt_new_impediment: '<%= l(:rb_txt_new_impediment) %>',
+  rb_txt_new_issue: '<%= l(:rb_txt_new_issue) %>',
+  rb_txt_new_story: '<%= l(:rb_txt_new_story) %>',
+  rb_txt_new_task: '<%= l(:rb_txt_new_task) %>'
+}
+
 if(typeof console != "undefined" && console != null) console.log('*** server variables loaded ***');
