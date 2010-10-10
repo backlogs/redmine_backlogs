@@ -38,6 +38,8 @@ class MigrateLegacy < ActiveRecord::Migration
 
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
+    Issue.after_save.clear
+
     if legacy
       Story.reset_column_information
       Issue.reset_column_information

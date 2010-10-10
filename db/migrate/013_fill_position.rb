@@ -1,5 +1,7 @@
 class FillPosition < ActiveRecord::Migration
   def self.up
+    Issue.after_save.clear
+
     pos = execute "select project_id, max(position) from issues where parent_id is null group by project_id"
     pos.each do |row|
       project_id = row[0].to_i
