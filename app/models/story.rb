@@ -4,7 +4,6 @@ class Story < Issue
     acts_as_list :scope => :project
     belongs_to :sprint
 
-    ## TODO: sprint sharing
     def self.backlog(project, sprint, options={})
       stories = []
       Story.find(:all,
@@ -12,7 +11,7 @@ class Story < Issue
             :order => 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC',
             :conditions => [
                 "parent_id is NULL
-                  and project_id = ?
+                  and project_id in (select id from projects where lft >= ? and rgt <= ?)
                   and tracker_id in (?)
                   and (
                     (sprint_id is NULL and ? is NULL)
@@ -20,7 +19,7 @@ class Story < Issue
                     (sprint_id = ? and not ? is NULL)
                     )
                   and (is_closed = ? or not ? is NULL)", 
-                project.id,
+                project.lft, project.rgt,
                 Story.trackers,
                 sprint,
                 sprint, sprint,
@@ -151,11 +150,10 @@ class Story < Issue
     @rank = r
   end
 
-  ## TODO: sprint sharing
   def rank
     @rank ||= Issue.count(:conditions => [
                               "parent_id is NULL
-                                and project_id = ?
+                                and project_id in (select id from projects where lft >= ? and rgt <= ?)
                                 and tracker_id in (?)
                                 and (
                                   (sprint_id is NULL and ? is NULL)
@@ -169,7 +167,7 @@ class Story < Issue
                                   (not ? is NULL and not issues.position is NULL and issues.position <= ?)
                                 )
                                 ", 
-                              self.project.id,
+                              self.project.lft, self.project.rgt,
                               Story.trackers,
                               self.sprint_id,
                               self.sprint_id, self.sprint_id,
@@ -183,13 +181,12 @@ class Story < Issue
     return @rank
   end
 
-  ## TODO: sprint sharing
   def self.at_rank(project_id, sprint_id, rank)
     return Story.find(:first,
                       :order => 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC',
                       :conditions => [
                           "parent_id is NULL
-                            and project_id = ?
+                            and project_id in (select id from projects where lft >= ? and rgt <= ?)
                             and tracker_id in (?)
                             and (
                               (sprint_id is NULL and ? is NULL)
@@ -197,7 +194,7 @@ class Story < Issue
                               (sprint_id = ? and not ? is NULL)
                               )
                             and (is_closed = ? or not ? is NULL)", 
-                          project_id,
+                          project.lft, project.rgt,
                           Story.trackers,
                           sprint_id,
                           sprint_id, sprint_id,
