@@ -11,12 +11,12 @@ class RbApplicationController < ApplicationController
   def load_context
 
     # load a shared sprint in the context of a given project
-    if params[:project_id] && params[:sprint_id]
+    if params[:project_id] && params[:sprint_id].present?
       @project = Project.find(params[:project_id])
       @sprint = @project.sprint(params[:sprint_id])
 
     # load a sprint in the context of the project that owns it
-    elsif params[:sprint_id]
+    elsif params[:sprint_id].present?
       #@sprint = Sprint.find(params[:sprint_id])
       #@project = @sprint.project
       raise "It's best to always explicitly load the project now we have shared sprints"
