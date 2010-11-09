@@ -40,6 +40,7 @@ de:
   label_sprint_impediments: Sprint Blockaden
   field_blocks: "[[Blocks]]"
   label_master_backlog: "[[Master Backlog]]"
+  label_release_planning: "Release-Planung"
   points_to_resolve: Nicht beschlossene Punkte
   label_select_all: "Alle ausw\xC3\xA4hlen"
   backlogs_sprint_unestimated: "Geschlossene oder aktive Sprints mit nicht abgesch\xC3\xA4tzten Stories"
