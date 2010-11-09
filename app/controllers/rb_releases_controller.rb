@@ -1,7 +1,7 @@
 include RbCommonHelper
 
 # Responsible for exposing release CRUD.
-class RbReleaseController < RbApplicationController
+class RbReleasesController < RbApplicationController
   unloadable
   
   def update
