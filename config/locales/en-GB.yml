@@ -39,6 +39,7 @@ en-GB:
   points_committed: points committed
   label_sprint_impediments: Sprint Impediments
   label_master_backlog: Master Backlog
+  label_release_planning: Release Planning
   field_blocks: Blocks
   points_to_resolve: points not resolved
   label_select_all: Select all
