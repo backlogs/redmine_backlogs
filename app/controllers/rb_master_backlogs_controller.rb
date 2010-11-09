@@ -6,7 +6,6 @@ class RbMasterBacklogsController < RbApplicationController
   def show
     product_backlog_stories = Story.product_backlog(@project)
     sprints = Sprint.open_sprints(@project)
-    release = Release.find(:first, "id = #{@project.id}")
     
     last_story = Story.find(
                           :first, 
@@ -14,7 +13,7 @@ class RbMasterBacklogsController < RbApplicationController
                           :order => "updated_on DESC"
                           )
     @last_update = (last_story ? last_story.updated_on : nil)
-    @product_backlog = { :sprint => nil, :stories => product_backlog_stories, :release => release }
+    @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
     @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => s.stories } }
 
     respond_to do |format|

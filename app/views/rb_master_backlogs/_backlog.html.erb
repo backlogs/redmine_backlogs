@@ -6,13 +6,7 @@
       <div class="velocity"> </div>
     <%- else %>
       <div class="label"><%=l(:label_product_backlog).titleize %></div>
-      <div class="release_start_date editable date" fieldname="release_start_date">
-        <%= backlog[:release].release_start_date || "no start" %>
-      </div>
-      <div class="release_end_date editable date" fieldname="release_end_date">
-        <%= backlog[:release].release_end_date || "no end" %>
-      </div>
-      <!--<a class="add_new_story" href="#">New Story</a>-->
+      <a class="add_new_story" href="#">New Story</a>
     <%- end %>
   </div>
   <ul class="stories">
