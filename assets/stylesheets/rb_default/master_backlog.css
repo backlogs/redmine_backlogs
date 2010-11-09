@@ -180,6 +180,8 @@
   top:1px;
   width:330px;
 }
+#product_backlog_container .backlog .header .release_start_date,
+#product_backlog_container .backlog .header .release_end_date,
 #backlogs_container .backlog .sprint .sprint_start_date,
 #backlogs_container .backlog .sprint .effective_date{
   font-size:12px;
@@ -188,9 +190,11 @@
   position:absolute;
   top:2px;
 }
+#product_backlog_container .backlog .header .release_start_date,
 #backlogs_container .backlog .sprint .sprint_start_date{
   left:340px;
 }
+#product_backlog_container .backlog .header .release_end_date,
 #backlogs_container .backlog .sprint .effective_date{
   left:430px;
 }
@@ -369,6 +373,7 @@
   top:2px;
   width:320px;
 }
+#product_backlog_container .backlog .header .release_start_date.editor,
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
   display:block;
   height:23px;
@@ -379,6 +384,7 @@
   top:2px;
   width:75px;
 }
+#backlogs_container .backlog .release_end_date.editor,
 #backlogs_container .backlog .sprint.editing .effective_date.editor{
   display:block;
   height:23px;
@@ -448,6 +454,11 @@
 .debug .sprint .name,
 .debug .sprint .sprint_start_date,
 .debug .sprint .effective_date,
+#backlogs_container .backlog .release_end_date,
+#backlogs_container .backlog .release_end_date,
+#backlogs_container .backlog .release_end_date,
+#backlogs_container .backlog .release_end_date,
+#backlogs_container .backlog .release_end_date,
 .debug .backlog .header .actions,
 .debug .backlog .menu,
 .debug .backlog .velocity,
