@@ -41,6 +41,9 @@ de:
   field_blocks: "[[Blocks]]"
   label_master_backlog: "[[Master Backlog]]"
   label_release_planning: "Release-Planung"
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: Neues Release
   points_to_resolve: Nicht beschlossene Punkte
   label_select_all: "Alle ausw\xC3\xA4hlen"
   backlogs_sprint_unestimated: "Geschlossene oder aktive Sprints mit nicht abgesch\xC3\xA4tzten Stories"

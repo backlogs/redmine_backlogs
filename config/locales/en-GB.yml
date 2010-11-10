@@ -40,6 +40,9 @@ en-GB:
   label_sprint_impediments: Sprint Impediments
   label_master_backlog: Master Backlog
   label_release_planning: Release Planning
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: New release
   field_blocks: Blocks
   points_to_resolve: points not resolved
   label_select_all: Select all
