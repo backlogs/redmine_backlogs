@@ -100,6 +100,6 @@ Redmine::Plugin.register :redmine_backlogs do
   end
 
   menu :project_menu, :backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
-  menu :project_menu, :releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_planning, :after => :backlogs, :param => :project_id
+  menu :project_menu, :releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :backlogs, :param => :project_id
   menu :application_menu, :backlogs, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics
 end

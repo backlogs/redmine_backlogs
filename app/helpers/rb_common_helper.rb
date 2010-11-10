@@ -41,6 +41,10 @@ module RbCommonHelper
     item.new_record? ? "" : link_to(text, {:controller => "sprint", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
   end
 
+  def release_link_or_empty(release)
+    release.new_record? ? "" : link_to(release.name, {:controller => "rb_release", :action => "show", :id => release.id})
+  end
+
   def mark_if_closed(story)
     !story.new_record? && story.status.is_closed? ? "closed" : ""
   end
@@ -75,6 +79,10 @@ module RbCommonHelper
 
   def story_html_id_or_empty(story)
     story.new_record? ? "" : "story_#{story.id}"
+  end
+
+  def release_html_id_or_empty(release)
+    release.new_record? ? "" : "release_#{release.id}"
   end
 
   def textile_description_or_empty(story)
