@@ -49,6 +49,16 @@ Redmine::Plugin.register :redmine_backlogs do
                                        :rb_burndown_charts  => :show,
                                        :rb_updated_items    => :show
                                      }
+
+    permission :view_releases,       {
+                                       :rb_releases         => [:index, :show],
+                                       :rb_sprints          => [:index, :show],
+                                       :rb_wikis            => :show,
+                                       :rb_stories          => [:index, :show],
+                                       :rb_server_variables => :show,
+                                       :rb_burndown_charts  => :show,
+                                       :rb_updated_items    => :show
+                                     }
     
     permission :view_taskboards,     { 
                                        :rb_taskboards       => :show,
@@ -61,6 +71,11 @@ Redmine::Plugin.register :redmine_backlogs do
                                        :rb_burndown_charts  => :show,
                                        :rb_updated_items    => :show
                                      }
+
+    # Release permissions
+    # :show_releases and :list_releases are implicit in :view_master_backlog permission
+    permission :create_releases,           { :rb_releases => [:new, :create]  }
+    permission :update_releases,           { :rb_releases => [:edit, :update] }
 
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission
@@ -89,5 +104,6 @@ Redmine::Plugin.register :redmine_backlogs do
   end
 
   menu :project_menu, :backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
+  menu :project_menu, :releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_planning, :after => :backlogs, :param => :project_id
   menu :application_menu, :backlogs, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics
 end
