@@ -4,9 +4,13 @@ include RbCommonHelper
 class RbReleasesController < RbApplicationController
   unloadable
 
-  # FIXME
+  def index
+    @releases = Release.all
+    @the_test = "Let's see what happens"
+  end
+
   def show
-    @releases = Release.find(:first)
+    @release = Release.find(params[:id])
   end
   
 end

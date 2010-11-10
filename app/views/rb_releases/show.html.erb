@@ -1,0 +1,27 @@
+<div class="contextual">
+<%= link_to_if_authorized l(:label_release_new),
+                          {:controller => 'rb_releases', :action => 'new', :project_id => @project},
+                          :class => 'icon icon-add',
+                          :onclick => 'Element.show("add-release"); Form.Element.focus("release_title"); return false;' %>
+</div>
+
+<div id="add-release" style="display:none;">
+<h2><%=l(:label_release_new)%></h2>
+<% form_tag({:controller => 'rb_releases', :action => 'new', :project_id => @project}, :class => "tabular", :multipart => true) do %>
+<%= render :partial => 'rb_releases/form' %>
+<div class="box">
+<p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+</div>
+<%= submit_tag l(:button_create) %>
+<%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-release")' %>
+<% end %>
+</div>
+
+<h2><%=l(:label_release_plural)%></h2>
+
+<% content_for :sidebar do %>
+    <h3>Release Sidebar</h3>
+    foo<br />bar
+<% end %>
+
+<% html_title(l(:label_release_plural)) -%>
