@@ -89,6 +89,9 @@ en:
   label_webcal: Webcal Feed
   label_master_backlog: Master Backlog
   label_release_planning: Release Planning
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: New release
 
   # Version fields
   field_name: "Name"
