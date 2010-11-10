@@ -14,24 +14,28 @@
 <% end %>
 </div>
 
-<h2><%=l(:label_release_plural)%></h2>
+<h2><%=l(:label_release_planning)%></h2>
 
-<p><b>The test:</b><%= @the_test %></p>
-<p><b>Project id:</b><%= @project_id %></p>
-<p><b>Project:</b><%= @project %></p>
-<p><b>Releases:</b><%= @releases %></p>
-<p><b>Releases count:</b><%= @releases.count %></p>
+<!--<p><b>Project id:</b><%= @project_id %></p>-->
+<!--<p><b>Project:</b><%= @project %></p>-->
+<!--<p><b>Releases:</b><%= @releases %></p>-->
+<!--<p><b>Releases count:</b><%= @releases.count %></p>-->
 
 <% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
 
 <% @releases.each do |release| %>
-    <h3><%= release %></h3>
     <%= render :partial => 'rb_releases/release', :object => release %>
 <% end %>
 
 <% content_for :sidebar do %>
-    <h3>Release Sidebar</h3>
-    foo<br />bar
+    <h3><%= l(:label_release_plural) %> Sidebar</h3>
+    <% if @releases.empty? %>
+        no releases
+    <% elsif @releases.count == 1 %>
+        one release
+    <% else %>
+        <%= @releases.count %> releases
+    <% end %>
 <% end %>
 
 <% html_title(l(:label_release_plural)) -%>
