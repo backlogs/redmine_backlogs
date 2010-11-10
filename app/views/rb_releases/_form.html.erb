@@ -1,0 +1,12 @@
+<%= error_messages_for 'release' %>
+<div class="box">
+<!--[form:release]-->
+<p><label for="release_title"><%=l(:field_title)%> <span class="required">*</span></label>
+<%= text_field 'release', 'title', :size => 60 %></p>
+
+<p><label for="release_description"><%=l(:field_description)%></label>
+<%= text_area 'release', 'description', :cols => 60, :rows => 15, :class => 'wiki-edit' %></p>
+<!--[eoform:release]-->
+</div>
+
+<%= wikitoolbar_for 'release_description' %>

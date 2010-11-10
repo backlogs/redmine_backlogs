@@ -1,12 +1,12 @@
-<div class="model release" id="<%= release_html_id_or_empty(release) %>">
+<div class="model release" id="release_html_id_or_empty(release)">
   <div class="id">
-    <div class="t"><%= release_link_or_empty(release) %></div>
-    <div class="v"><%= id_or_empty(release) %></div>
+    <div class="t">release_link_or_empty(release)</div>
+    <div class="v">id_or_empty(release)</div>
+    <div class="t">wat</div>
+    <div class="v">666</div>
   </div>
-  <div class="name editable" fieldname="name"><%= release.name %></div>
-  <div class="release_start_date editable date" fieldname="release_start_date"><%= release.release_start_date %></div>
-  <div class="release_end_date editable date" fieldname="release_end_date"><%= release.release_end_date %></div>
-  <div class="description editable" fieldname="description" fieldtype="textarea"><%= release.description %></div>
+  <div class="release_start_date editable date" fieldname="release_start_date">release.release_start_date</div>
+  <div class="release_end_date editable date" fieldname="release_end_date">release.release_end_date</div>
   <div class="meta">
     <%= render :partial => "shared/model_errors", :object => release.errors %>
   </div>

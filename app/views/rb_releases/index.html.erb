@@ -1,0 +1,37 @@
+<div class="contextual">
+<%= link_to_if_authorized l(:label_release_new),
+                          {:controller => 'rb_releases', :action => 'new', :project_id => @project},
+                          :class => 'icon icon-add',
+                          :onclick => 'Element.show("add-release"); Form.Element.focus("release_title"); return false;' %>
+</div>
+
+<div id="add-release" style="display:none;">
+<h2><%=l(:label_release_new)%></h2>
+<% form_tag({:controller => 'rb_releases', :action => 'new', :project_id => @project}, :class => "tabular", :multipart => true) do %>
+<%= render :partial => 'rb_releases/form' %>
+<%= submit_tag l(:button_create) %>
+<%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-release")' %>
+<% end %>
+</div>
+
+<h2><%=l(:label_release_plural)%></h2>
+
+<p><b>The test:</b><%= @the_test %></p>
+<p><b>Project id:</b><%= @project_id %></p>
+<p><b>Project:</b><%= @project %></p>
+<p><b>Releases:</b><%= @releases %></p>
+<p><b>Releases count:</b><%= @releases.count %></p>
+
+<% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
+
+<% @releases.each do |release| %>
+    <h3><%= release %></h3>
+    <%= render :partial => 'rb_releases/release', :object => release %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <h3>Release Sidebar</h3>
+    foo<br />bar
+<% end %>
+
+<% html_title(l(:label_release_plural)) -%>
