@@ -7,5 +7,10 @@ class RbReleasesController < RbApplicationController
   def index
     @releases = Release.find(:all, :conditions => { :project_id => @project })
   end
+
+  def destroy
+    @release.destroy
+    redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+  end
   
 end
