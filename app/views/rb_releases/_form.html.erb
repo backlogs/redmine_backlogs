@@ -12,5 +12,8 @@
   </p>
   <p>
     <%= f.text_field :initial_story_points, :required => true %>
+    <% if backlog_points %>
+      (current points in backlog: <%= backlog_points %>)
+    <% end %>
   </p>
 </div>
