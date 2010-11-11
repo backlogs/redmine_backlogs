@@ -42,7 +42,7 @@ module RbCommonHelper
   end
 
   def release_link_or_empty(release)
-    release.new_record? ? "" : link_to(release.name, {:controller => "rb/release", :action => "show", :id => release.id})
+    release.new_record? ? "" : link_to(release.name, {:controller => "rb_releases", :action => "show", :release_id => release})
   end
 
   def mark_if_closed(story)
