@@ -2,15 +2,12 @@
 
 <h2><%= @release.name %></h2>
 
-<p><b>Start date:</b> <%= @release.release_start_date || "no start date set" %></p>
-<p><b>End date:</b> <%= @release.release_end_date || "no end date set" %></p>
+<p><b>Start date:</b> <%= @release.release_start_date || "no start date" %></p>
+<p><b>End date:</b>   <%= @release.release_end_date   || "no end date"   %></p>
 
 <% content_for :sidebar do %>
-    <h3><%= l(:label_release) %> Sidebar</h3>
-    just<br />
-    a<br />
-    single<br />
-    release<br />
+    <h3><%= l(:label_release) %></h3>
+    <%= @release.name -%>
 <% end %>
 
-<% html_title(l(:label_release_plural)) -%>
+<% html_title(@release.name) -%>
