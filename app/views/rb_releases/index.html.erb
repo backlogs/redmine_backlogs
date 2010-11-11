@@ -16,11 +16,6 @@
 
 <h2><%=l(:label_release_planning)%></h2>
 
-<!--<p><b>Project id:</b><%= @project_id %></p>-->
-<!--<p><b>Project:</b><%= @project %></p>-->
-<!--<p><b>Releases:</b><%= @releases %></p>-->
-<!--<p><b>Releases count:</b><%= @releases.count %></p>-->
-
 <% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
 
 <% @releases.each do |release| %>
@@ -28,7 +23,7 @@
 <% end %>
 
 <% content_for :sidebar do %>
-    <h3><%= l(:label_release_plural) %> Sidebar</h3>
+    <h3><%= l(:label_release_plural) %></h3>
     <% if @releases.empty? %>
         no releases
     <% elsif @releases.count == 1 %>
