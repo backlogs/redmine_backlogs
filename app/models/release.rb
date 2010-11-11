@@ -4,6 +4,7 @@ class Release < ActiveRecord::Base
     unloadable
 
     belongs_to :project
+    has_many :release_burndown_days
 
     validate :start_and_end_dates
 
