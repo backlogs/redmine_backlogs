@@ -6,8 +6,19 @@
 
 <h2><%= @release.name %></h2>
 
-<p><b>Start date:</b> <%= @release.release_start_date || "no start date" %></p>
-<p><b>End date:</b>   <%= @release.release_end_date   || "no end date"   %></p>
+<p><b>Start date:</b>             <%= @release.release_start_date || "no start date" %></p>
+<p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
+<p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
+<p><b>Remaining story points:</b> <%= @remaining_story_points %></p>
+<p><b>Stories in backlog:</b>     <%= @release.stories.count %></p>
+
+<% unless @release.has_burndown? %>
+  <p class="nodata">No burndown available</p>
+<% else %>
+  <!--FIXME: replace sprint burndown with release burndown -->
+  <div id="burndown_<%= Sprint.first.id %>" style="margin-left:0px; margin-top:20px;"></div>
+  <%= render :partial => "rb_burndown_charts/burndown", :locals => {:div => 'burndown_', :burndown => Sprint.first.burndown } %>
+<% end %>
 
 <% content_for :sidebar do %>
     <h3><%= l(:label_release) %></h3>
