@@ -15,9 +15,10 @@
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
-  <!--FIXME: replace sprint burndown with release burndown -->
-  <div id="burndown_<%= Sprint.first.id %>" style="margin-left:0px; margin-top:20px;"></div>
-  <%= render :partial => "rb_burndown_charts/burndown", :locals => {:div => 'burndown_', :burndown => Sprint.first.burndown } %>
+  <p><b>Release burndown days:</b> <%= @release.release_burndown_days.count %></p>
+
+  <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
+  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
 <% end %>
 
 <% content_for :sidebar do %>
