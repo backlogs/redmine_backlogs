@@ -20,7 +20,7 @@ class ReleaseBurndown
     # end date for graph
     days = @days
     daycount = days.size
-    days = release.days(Date.today) if release.release_end_date > Date.today
+    #days = release.days(Date.today) if release.release_end_date > Date.today
 
     _series = ([nil] * days.size)
 
@@ -34,7 +34,7 @@ class ReleaseBurndown
     }
 
     # use initial story points for first day if not loaded from cache (db)
-    _series[0] = [release.initial_story_points] unless _series[0]
+    _series[0] = [release.initial_story_points.to_f] unless _series[0]
 
     # fill out series
     last = nil
@@ -48,7 +48,7 @@ class ReleaseBurndown
     if daycount == 1 # should never happen
       make_series :ideal, [remaining_story_points[0]]
     else
-      day_diff = remaining_story_points[0][0] / daycount
+      day_diff = remaining_story_points[0][0] / (daycount - 1.0)
       make_series :ideal, remaining_story_points[0].enum_for(:each_with_index).collect{|c, i| remaining_story_points[0][0] - i * day_diff }
     end
 

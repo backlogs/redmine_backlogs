@@ -13,6 +13,11 @@ class RbReleasesController < RbApplicationController
     @release.stories.each do |s|
       @remaining_story_points += s.story_points
     end
+
+    respond_to do |format|
+      format.html { render }
+      format.csv  { send_data(release_burndown_to_csv(@release), :type => 'text/csv; header=present', :filename => 'export.csv') }
+    end
   end
 
   def destroy

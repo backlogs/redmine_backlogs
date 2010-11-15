@@ -19,6 +19,11 @@
 
   <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
   <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
+
+  <% other_formats_links do |f| %>
+    <%= f.link_to 'CSV', :url => { :release_id => @release } %>
+  <% end %>
+  <br />
 <% end %>
 
 <% content_for :sidebar do %>
