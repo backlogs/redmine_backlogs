@@ -122,9 +122,21 @@ module RbCommonHelper
     item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
   end
 
+  def workdays(start_day, end_day)
+    return (start_day .. end_day).select {|d| (d.wday > 0 and d.wday < 6) }
+  end
+
+  def release_burndown_interpolate(release, day)
+    initial_day = release.burndown.days[0]
+    initial_points = release.burndown.remaining_story_points[0]
+    day_diff = initial_points / (release.days.count - 1.0)
+    initial_points - workdays(initial_day, day).count * day_diff
+  end
+
   def release_burndown_to_csv(release)
     ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
     #decimal_separator = l(:general_csv_decimal_separator)
+
     export = FCSV.generate(:col_sep => ';') do |csv|
       # csv header fields
       headers = [ l(:label_date),
@@ -132,13 +144,23 @@ module RbCommonHelper
                   l(:ideal)
                 ]
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+
       # csv lines
-      release.burndown.days.each_with_index do |day,i|
-        fields = [day,
-                  release.burndown.remaining_story_points[i].to_s.sub('.', ','),
-                  release.burndown.ideal[i].to_s.sub('.', ',')
-                  ]
-        #fields << issue.description
+      if (release.release_start_date != release.release_burndown_days[0])
+        fields = [release.release_start_date,
+                  release.initial_story_points.to_f.to_s.gsub('.', ','),
+                  release.initial_story_points.to_f.to_s.gsub('.', ',')]
+        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      end
+      release.release_burndown_days.each do |rbd|
+        fields = [rbd.day,
+                  rbd.remaining_story_points.to_s.gsub('.', ','),
+                  release_burndown_interpolate(release, rbd.day).to_s.gsub('.', ',')
+                 ]
+        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      end
+      if (release.release_end_date != release.release_burndown_days[-1])
+        fields = [release.release_end_date, "", "0,0"]
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
     end
