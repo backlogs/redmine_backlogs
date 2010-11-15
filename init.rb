@@ -69,7 +69,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                      }
 
     # Release permissions
-    permission :create_releases,           { :rb_releases => [:new, :create]  }
+    permission :create_releases,           { :rb_releases => [:new, :create, :snapshot]  }
     permission :update_releases,           { :rb_releases => [:edit, :update] }
     permission :destroy_releases,          { :rb_releases => :destory  }
 

@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :master_backlog,   :only => :show,               :controller => :rb_master_backlogs,  :as => "master_backlogs/:project_id"
     rb.resource   :release,          :except => :index,            :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :releases,         :only => :index,              :controller => :rb_releases,         :as => "releases/:project_id"
+    rb.resources  :releases,         :only => :snapshot,           :controller => :rb_releases,         :as => "releases/:project_id"
   end
 
 end
