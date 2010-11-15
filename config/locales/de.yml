@@ -31,7 +31,8 @@ de:
   backlogs_product_backlog_is_empty: Produkt Backlog ist leer
   backlogs_task_tracker: Aufgaben Tracker
   backlogs_inactive: "Projekt zeigt keine Aktivit\xC3\xA4t"
-  field_story_points: Story Punkte
+  field_story_points: Storypunkte
+  remaining_story_points: Verbleibende Storypunkte
   label_Product_backlog: Produkt Backlog
   rb_label_copy_tasks_none: "[[None]]"
   backlogs_task: Aufgabe

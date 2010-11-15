@@ -32,6 +32,7 @@ en-GB:
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project shows no activity
   field_story_points: Story points
+  remaining_story_points: remaining story points
   label_Product_backlog: Product backlog
   rb_label_copy_tasks_none: "[[None]]"
   backlogs_task: Task
