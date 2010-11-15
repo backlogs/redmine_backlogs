@@ -9,16 +9,23 @@
 <p><b>Start date:</b>             <%= @release.release_start_date || "no start date" %></p>
 <p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
 <p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
-<p><b>Remaining story points:</b> <%= @remaining_story_points %></p>
-<p><b>Stories in backlog:</b>     <%= @release.stories.count %></p>
+<p><b>Remaining story points:</b> <%= @remaining_story_points %> (<%= @release.stories.count %> stories)</p>
 
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
-  <p><b>Release burndown days:</b> <%= @release.release_burndown_days.count %></p>
-
   <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
   <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
+
+  <br />
+  <div class="box">
+  <% if @release.today %>
+    <%= link_to 'update snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+    (currently set to <%= @release.today.remaining_story_points %> points)
+  <% else %>
+    <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+  <% end %>
+  </div>
 
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>

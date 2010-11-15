@@ -114,4 +114,8 @@ class Release < ActiveRecord::Base
         return @cached_burndown
     end
 
+    def today
+      ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
+    end
+
 end

@@ -24,5 +24,21 @@ class RbReleasesController < RbApplicationController
     @release.destroy
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
   end
+
+  def snapshot
+    @remaining_story_points = 0
+    @release.stories.each do |s|
+      @remaining_story_points += s.story_points
+    end
+    rbdd = @release.today
+    unless rbdd
+      rbdd = ReleaseBurndownDay.new
+      rbdd.release_id = @release.id
+      rbdd.day = Date.today
+    end
+    rbdd.remaining_story_points = @remaining_story_points
+    rbdd.save!
+    redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+  end
   
 end
