@@ -9,10 +9,7 @@ class RbReleasesController < RbApplicationController
   end
 
   def show
-    @remaining_story_points = 0
-    @release.stories.each do |s|
-      @remaining_story_points += s.story_points
-    end
+    @remaining_story_points = remaining_story_points
 
     respond_to do |format|
       format.html { render }
@@ -26,19 +23,23 @@ class RbReleasesController < RbApplicationController
   end
 
   def snapshot
-    @remaining_story_points = 0
-    @release.stories.each do |s|
-      @remaining_story_points += s.story_points
-    end
     rbdd = @release.today
     unless rbdd
       rbdd = ReleaseBurndownDay.new
       rbdd.release_id = @release.id
       rbdd.day = Date.today
     end
-    rbdd.remaining_story_points = @remaining_story_points
+    rbdd.remaining_story_points = remaining_story_points
     rbdd.save!
     redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+  end
+
+  private
+
+  def remaining_story_points
+    res = 0
+    @release.stories.each {|s| res += s.story_points}
+    res
   end
   
 end
