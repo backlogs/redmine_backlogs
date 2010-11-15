@@ -121,4 +121,27 @@ module RbCommonHelper
   def remaining_hours(item)
     item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
   end
+
+  def release_burndown_to_csv(release)
+    ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
+    decimal_separator = l(:general_csv_decimal_separator)
+    export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
+      # csv header fields
+      headers = [ l(:label_date),
+                  l(:remaining_story_points),
+                  l(:ideal)
+                ]
+      csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      # csv lines
+      release.burndown.days.each_with_index do |day,i|
+        fields = [day,
+                  release.burndown.remaining_story_points[i],
+                  release.burndown.ideal[i]
+                  ]
+        #fields << issue.description
+        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      end
+    end
+    export
+  end
 end
