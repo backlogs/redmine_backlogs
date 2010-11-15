@@ -101,7 +101,7 @@ class Release < ActiveRecord::Base
         # assumes mon-fri are working days, sat-sun are not. this
         # assumption is not globally right, we need to make this configurable.
         cutoff = self.release_end_date if cutoff.nil?
-        return (self.release_start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
+        workdays(self.release_start_date, cutoff)
     end
 
     def has_burndown?
