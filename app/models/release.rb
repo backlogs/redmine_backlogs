@@ -13,9 +13,7 @@ class ReleaseBurndown
     attr_reader :name
   end
 
-  def initialize(release, burn_direction = nil)
-    burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
-
+  def initialize(release)
     @days = release.days
     @release_id = release.id
 
@@ -42,24 +40,16 @@ class ReleaseBurndown
     last = nil
     _series = _series.enum_for(:each_with_index).collect{|v, i| v.nil? ? last : (last = v; v) }
 
-    # DEBUG
-    @s_check_1 = _series
-
     # make registered series
     remaining_story_points = _series.transpose
-    make_series :remaining_story_points, remaining_story_points
+    make_series :remaining_story_points, remaining_story_points[0]
 
-    # calculate burn-up ideal
-    # FIXME: not working yet
+    # calculate burn-down ideal
     if daycount == 1 # should never happen
-      make_series :ideal, [remaining_story_points]
+      make_series :ideal, [remaining_story_points[0]]
     else
-      make_series :ideal, remaining_story_points.enum_for(:each_with_index).collect{|c, i| c * i * (1.0 / (daycount - 1)) }
-    end
-
-    # decide whether you want burn-up or down
-    if burn_direction == 'down'
-      @ideal.each_with_index{|v, i| @ideal[i] = @remaining_story_points[i] - v}
+      day_diff = remaining_story_points[0][0] / daycount
+      make_series :ideal, remaining_story_points[0].enum_for(:each_with_index).collect{|c, i| remaining_story_points[0][0] - i * day_diff }
     end
 
     @max = @available_series.values.flatten.compact.max
@@ -72,24 +62,11 @@ class ReleaseBurndown
   attr_reader :remaining_story_points
   attr_reader :ideal
 
-  # DEBUG
-  attr_accessor :s_check_1
-
   def series(select = :active)
     return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
   end
 
   private
-
-  def cache(day, points)
-    datapoint = {
-      :day => day,
-      :release_id => @release_id,
-      :remaining_story_points => points
-    }
-    rbdd = ReleaseBurndownDay.new datapoint
-    rbdd.save!
-  end
 
   def make_series(name, data)
     @available_series ||= {}
@@ -131,9 +108,9 @@ class Release < ActiveRecord::Base
         return !!(self.release_start_date and self.release_end_date and self.initial_story_points)
     end
 
-    def burndown(burn_direction = nil)
+    def burndown
         return nil if not self.has_burndown?
-        @cached_burndown ||= ReleaseBurndown.new(self, burn_direction)
+        @cached_burndown ||= ReleaseBurndown.new(self)
         return @cached_burndown
     end
 
