@@ -124,8 +124,8 @@ module RbCommonHelper
 
   def release_burndown_to_csv(release)
     ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
-    decimal_separator = l(:general_csv_decimal_separator)
-    export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
+    #decimal_separator = l(:general_csv_decimal_separator)
+    export = FCSV.generate(:col_sep => ';') do |csv|
       # csv header fields
       headers = [ l(:label_date),
                   l(:remaining_story_points),
@@ -135,8 +135,8 @@ module RbCommonHelper
       # csv lines
       release.burndown.days.each_with_index do |day,i|
         fields = [day,
-                  release.burndown.remaining_story_points[i],
-                  release.burndown.ideal[i]
+                  release.burndown.remaining_story_points[i].to_s.sub('.', ','),
+                  release.burndown.ideal[i].to_s.sub('.', ',')
                   ]
         #fields << issue.description
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
