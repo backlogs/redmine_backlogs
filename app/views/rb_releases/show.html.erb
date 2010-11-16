@@ -17,15 +17,17 @@
   <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
   <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
 
-  <br />
-  <div class="box">
-  <% if @release.today %>
-    <%= link_to 'update snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
-    (currently set to <%= @release.today.remaining_story_points %> points)
-  <% else %>
-    <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+  <% if Date.today >= @release.release_start_date and Date.today <= @release.release_end_date %>
+    <br />
+    <div class="box">
+    <% if @release.today %>
+      <%= link_to 'update snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+      (currently set to <%= @release.today.remaining_story_points %> points)
+    <% else %>
+      <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+    <% end %>
+    </div>
   <% end %>
-  </div>
 
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>
