@@ -12,7 +12,7 @@ de:
   label_not_prioritized: nicht priorisiert
   points_resolved: Beschlossene Punkte
   field_tracker_id: "[[Tracker ID]]"
-  field_name: "[[Name]]"
+  field_name: Name
   error_must_have_comma_delimited_list: muss eine Kommaseparierte Liste mit Story- oder Aufgaben-IDs enthalten
   label_stories: Stories
   todo_issue_summary: "{{type}}: {{summary}}"
