@@ -28,6 +28,13 @@ class RbReleasesController < RbApplicationController
     end
   end
 
+  def edit
+    if request.post? and @release.update_attributes(params[:release])
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+    end
+  end
+
   def destroy
     @release.destroy
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
