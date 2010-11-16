@@ -132,6 +132,9 @@ class Release < ActiveRecord::Base
 
     def js_snapshots
       foo = "["
+      if burndown_days and burndown_days[0] and burndown_days[0].day != release_start_date
+        foo += "['#{release_start_date}', #{initial_story_points}],"
+      end
       burndown_days.each { |bdd| foo += "['#{bdd.day}', #{bdd.remaining_story_points}]," }
       foo += "]"
     end
