@@ -85,7 +85,7 @@ class Release < ActiveRecord::Base
     unloadable
 
     belongs_to :project
-    has_many :release_burndown_days
+    has_many :release_burndown_days, :dependent => :delete_all
 
     validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
     validates_length_of :name, :maximum => 64

@@ -73,9 +73,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                      }
 
     # Release permissions
-    permission :create_releases,           { :rb_releases => [:new, :create, :snapshot]  }
-    permission :update_releases,           { :rb_releases => [:edit, :update] }
-    permission :destroy_releases,          { :rb_releases => :destory  }
+    permission :modify_releases,     { :rb_releases => [:new, :create, :edit, :snapshot, :destroy]  }
 
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission
