@@ -17,6 +17,17 @@ class RbReleasesController < RbApplicationController
     end
   end
 
+  def new
+    @release = Release.new(:project => @project)
+    if request.post?
+      @release.attributes = params[:release]
+      if @release.save
+        flash[:notice] = l(:notice_successful_create)
+        redirect_to :action => 'index', :project_id => @project
+      end
+    end
+  end
+
   def destroy
     @release.destroy
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project

@@ -1,11 +1,16 @@
-<%= error_messages_for 'release' %>
-<div class="box">
-<!--[form:release]-->
-<p><label for="release_name"><%=l(:field_name)%> <span class="required">*</span></label>
-<%= text_field 'release', 'name', :size => 60 %></p>
-<p><label for="release_release_start_date">Start date</label>
-<%= text_field 'release', 'release_start_date', :size => 10 %><%= calendar_for('release_release_start_date') %></p>
-<p><label for="release_release_end_date">End date</label>
-<%= text_field 'release', 'release_end_date', :size => 10 %><%= calendar_for('release_release_end_date') %></p>
-<!--[eoform:release]-->
+<div class="box tabular">
+  <p>
+    <%= f.text_field :name, :required => true %>
+  </p>
+  <p>
+    <%= f.text_field :release_start_date, :required => true %>
+    <%= calendar_for('release_release_start_date') %>
+  </p>
+  <p>
+    <%= f.text_field :release_end_date, :required => true %>
+    <%= calendar_for('release_release_end_date') %>
+  </p>
+  <p>
+    <%= f.text_field :initial_story_points, :required => true %>
+  </p>
 </div>

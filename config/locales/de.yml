@@ -45,6 +45,12 @@ de:
   label_release: Release
   label_release_plural: Releases
   label_release_new: Neues Release
+  field_release_start_date: Release Startdatum
+  field_release_end_date: Release Enddatum
+  label_release_start_date: [[field_release_start_date]]
+  label_release_end_date: [[field_release_start_date]]
+  error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
+  field_initial_story_points: Storypunkte zu Beginn
   points_to_resolve: Nicht beschlossene Punkte
   label_select_all: "Alle ausw\xC3\xA4hlen"
   backlogs_sprint_unestimated: "Geschlossene oder aktive Sprints mit nicht abgesch\xC3\xA4tzten Stories"
