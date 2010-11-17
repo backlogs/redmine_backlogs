@@ -11,17 +11,21 @@
   <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
   <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
 
-  <% if Date.today >= @release.release_start_date and Date.today <= @release.release_end_date %>
-    <br />
-    <div class="box">
-    <% if @release.today %>
-      <%= link_to 'update snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
-      (current: <%= @release.today.remaining_story_points %> / new: <b><%= @remaining_story_points  %></b>)
+  <br />
+  <div class="box">
+  <% if @release.today %>
+    <%= link_to l(:release_update_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+    (current: <%= @release.today.remaining_story_points %> / new: <b><%= @remaining_story_points  %></b>)
+  <% else %>
+    <% if Date.today >= @release.release_start_date and Date.today <= @release.release_end_date %>
+      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-add' %>
     <% else %>
-      <%= link_to 'create snapshot for today', {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-add' %>
+      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :confirm => l(:today_not_in_release_msg), :class => 'icon icon-add' %>
+      <br />
+      <b><%= l(:today_not_in_release_warning) %></b>
     <% end %>
-    </div>
   <% end %>
+  </div>
 
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>

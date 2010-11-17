@@ -50,6 +50,10 @@ de:
   label_release_start_date: [[field_release_start_date]]
   label_release_end_date: [[field_release_start_date]]
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
+  today_not_in_release_msg: Heutiges Datum liegt nicht im Release-Zeitraum. Snapshot wirklich speichern?
+  today_not_in_release_warning: "Achtung: heutiges Datum liegt nicht im Release-Zeitraum."
+  release_update_snapshot_today: Heutigen Punkte-Snapshot aktualisieren
+  release_create_snapshot_today: Heutigen Punkte-Snapshot speichern
   field_initial_story_points: Storypunkte zu Beginn
   points_to_resolve: Nicht beschlossene Punkte
   label_select_all: "Alle ausw\xC3\xA4hlen"
