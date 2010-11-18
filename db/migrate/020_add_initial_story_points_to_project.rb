@@ -4,6 +4,6 @@ class AddInitialStoryPointsToProject < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :projects, :initial_story_points
+    remove_column :projects, :initial_story_points
   end
 end
