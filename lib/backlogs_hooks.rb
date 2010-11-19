@@ -4,7 +4,6 @@ module BacklogsPlugin
       # this ought to be view_issues_sidebar_queries_bottom, but
       # the entire queries toolbar is disabled if you don't have
       # custom queries
-
       def view_issues_sidebar_planning_bottom(context={ })
         locals = {}
         locals[:sprints] = context[:project] ? Sprint.open_sprints(context[:project]) : []
@@ -12,7 +11,7 @@ module BacklogsPlugin
         locals[:sprint] = nil
         locals[:webcal] = (context[:request].ssl? ? 'webcals' : 'webcal')
 
-        return '' if locals[:project].blank? || ! locals[:project].module_enabled?('backlogs')
+        return '' unless locals[:project] && locals[:project].module_enabled?('backlogs')
 
         user = User.find_by_id(context[:request].session[:user_id])
         locals[:key] = user ? user.api_key : nil
