@@ -1,3 +1,8 @@
+body
+{
+  background-image:url('../images/ika_bg.png');
+}
+
 #assigned_to_id_options{
   display:none;
 }
