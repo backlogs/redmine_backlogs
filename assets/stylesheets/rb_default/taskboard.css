@@ -35,13 +35,13 @@ See RB.Taskboard.initialize()
 
 /* status labels */
 #board_header{
-  background-color:#66ccff;
+  background-color:#ccffff;
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
 }
 #board_header td{
-  background-color:#66ccff;
+  background-color:#ccffff;
   border-right:1px dotted #CFCFCF;
   color:#7E7E7E;
   font-size:14px;
