@@ -35,7 +35,7 @@ See RB.Taskboard.initialize()
 
 /* status labels */
 #board_header{
-  background-color:#EBEBEB;
+  background-color:#66ccff;
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
@@ -61,7 +61,7 @@ See RB.Taskboard.initialize()
 
 /* shared #impediments and #tasks */
 .board{
-  background-color:#FCFCFC;
+  /* background-color:#FCFCFC; */
   border:1px solid #CCCCCC;
   border-top:none;
   margin-right:10px;
