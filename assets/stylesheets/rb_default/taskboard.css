@@ -41,7 +41,7 @@ See RB.Taskboard.initialize()
   margin-right:10px;
 }
 #board_header td{
-  background-color:#EBEBEB;
+  background-color:#66ccff;
   border-right:1px dotted #CFCFCF;
   color:#7E7E7E;
   font-size:14px;
@@ -67,7 +67,7 @@ See RB.Taskboard.initialize()
   margin-right:10px;
 }
 .board tr:hover{
-  background-color:#ffffff;
+  /* background-color:#ffffff; */
 }
 .board td{
   border-right:1px dotted #CFCFCF;
