@@ -126,4 +126,13 @@ class Release < ActiveRecord::Base
       ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
     end
 
+    def js_ideal
+      "[['#{release_start_date}', #{initial_story_points}], ['#{release_end_date}', 0]]"
+    end
+
+    def js_snapshots
+      foo = "["
+      burndown_days.each { |bdd| foo += "['#{bdd.day}', #{bdd.remaining_story_points}]," }
+      foo += "]"
+    end
 end

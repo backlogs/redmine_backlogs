@@ -7,6 +7,7 @@
   <!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
   <%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
   <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
   <%= javascript_include_tag 'jquery.cookies.2.2.0.min.js', :plugin => 'redmine_backlogs' %>
 
   <style type="text/css" media="screen">
@@ -42,6 +43,7 @@
         initialize: function() {
           decoration = !(burndown_charts.jquery('#<%= "#{div}#{chart.release_id}" %>').hasClass('minimal'));
 
+          /*
           this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', this.datasets, {
             legend: {show: decoration, location: 'sw'},
             grid: {shadow:false},
@@ -56,6 +58,21 @@
               tooltipAxes: 'y',
               formatString: '%s'
             }
+          }); */
+          snapshots=<%= @release.js_snapshots %>
+          ideal=<%= @release.js_ideal %>
+          this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
+              //gridPadding:{right:35},
+              axes:{
+                  xaxis:{
+                      renderer:burndown_charts.jquery.jqplot.DateAxisRenderer,
+                      tickOptions:{formatString:'%b %#d, %y'},
+                      //min:'May 30, 2008',
+                      //tickInterval:'1 month'
+                  },
+                  yaxis:{min:0, max: this.max_y},
+              },
+              //series:[{lineWidth:4, markerOptions:{style:'square'}}]
           });
         },
 
