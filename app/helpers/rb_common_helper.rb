@@ -130,7 +130,7 @@ module RbCommonHelper
     initial_day = release.burndown.days[0]
     initial_points = release.burndown.remaining_story_points[0]
     day_diff = initial_points / (release.days.count - 1.0)
-    initial_points - workdays(initial_day, day).count * day_diff
+    initial_points - ( (workdays(initial_day, day).count - 1) * day_diff )
   end
 
   def release_burndown_to_csv(release)
