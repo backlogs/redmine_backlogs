@@ -135,6 +135,9 @@ module RbCommonHelper
 
   def release_burndown_to_csv(release)
     ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
+
+    # FIXME decimal_separator is not used, instead a hardcoded s/\./,/g is done
+    # below to make (German) Excel happy
     #decimal_separator = l(:general_csv_decimal_separator)
 
     export = FCSV.generate(:col_sep => ';') do |csv|
