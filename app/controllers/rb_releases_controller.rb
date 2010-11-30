@@ -19,6 +19,8 @@ class RbReleasesController < RbApplicationController
 
   def new
     @release = Release.new(:project => @project)
+    @backlog_points = remaining_story_points
+    @release.initial_story_points = @backlog_points
     if request.post?
       @release.attributes = params[:release]
       if @release.save
@@ -32,6 +34,8 @@ class RbReleasesController < RbApplicationController
     if request.post? and @release.update_attributes(params[:release])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+    else
+      @backlog_points = remaining_story_points
     end
   end
 
