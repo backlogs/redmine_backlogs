@@ -101,6 +101,10 @@ class Release < ActiveRecord::Base
         return Story.product_backlog(@project)
     end
 
+    def burndown_days
+        self.release_burndown_days.sort { |a,b| a.day <=> b.day }
+    end
+
     def days(cutoff = nil)
         # assumes mon-fri are working days, sat-sun are not. this
         # assumption is not globally right, we need to make this configurable.

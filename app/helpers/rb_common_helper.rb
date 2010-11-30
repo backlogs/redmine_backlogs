@@ -146,20 +146,20 @@ module RbCommonHelper
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
 
       # csv lines
-      if (release.release_start_date != release.release_burndown_days[0])
+      if (release.release_start_date != release.burndown_days[0])
         fields = [release.release_start_date,
                   release.initial_story_points.to_f.to_s.gsub('.', ','),
                   release.initial_story_points.to_f.to_s.gsub('.', ',')]
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
-      release.release_burndown_days.each do |rbd|
+      release.burndown_days.each do |rbd|
         fields = [rbd.day,
                   rbd.remaining_story_points.to_s.gsub('.', ','),
                   release_burndown_interpolate(release, rbd.day).to_s.gsub('.', ',')
                  ]
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
-      if (release.release_end_date != release.release_burndown_days[-1])
+      if (release.release_end_date != release.burndown_days[-1])
         fields = [release.release_end_date, "", "0,0"]
         csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
