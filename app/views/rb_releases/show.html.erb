@@ -5,11 +5,6 @@
 
 <h2><%= @release.name %></h2>
 
-<p><b>Start date:</b>             <%= @release.release_start_date || "no start date" %></p>
-<p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
-<p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
-<p><b>Remaining story points:</b> <%= @remaining_story_points %> (<%= @release.stories.count %> stories)</p>
-
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
@@ -35,8 +30,11 @@
 <% end %>
 
 <% content_for :sidebar do %>
-    <h3><%= l(:label_release) %></h3>
-    <%= @release.name -%>
+  <h3><%= l(:label_release) %></h3>
+  <p><b>Start date:</b>             <%= @release.release_start_date || "no start date" %></p>
+  <p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
+  <p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
+  <p><b>Remaining story points:</b> <%= @remaining_story_points %> (<%= @release.stories.count %> stories)</p>
 <% end %>
 
 <% html_title(@release.name) -%>
