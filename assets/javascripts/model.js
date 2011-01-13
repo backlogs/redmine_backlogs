@@ -285,6 +285,18 @@ RB.Model = RB.Object.create({
 
     self.beforeSave();
 
+    if( !this.isNew() ){
+      var note = window.prompt("後から振り返られるように経緯を書いておこう。");
+      if ( note == null ) {
+          var xhr_dummy = new Object();
+          xhr_dummy.responseText = '<div><div class="errors">キャンセルしたね</div></div>';
+          self.error(xhr_dummy, 200, "");
+          self.endEdit();
+          return;
+      }
+      saveDir.data += "&notes=" + note;
+    }
+
     self.unmarkError();
     self.markSaving();
     RB.ajax({

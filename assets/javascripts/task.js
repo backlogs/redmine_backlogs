@@ -54,7 +54,7 @@ RB.Task = RB.Object.create(RB.Issue, {
       var url = RB.urlFor( 'create_task' );
     } else {
       var url = RB.urlFor( 'update_task', { id: this.getID() } );
-      data += "&_method=put"
+      data += "&_method=put";
     }
     
     return {

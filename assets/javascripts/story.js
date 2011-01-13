@@ -97,7 +97,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
       var url = RB.urlFor( 'create_story' );
     } else {
       var url = RB.urlFor( 'update_story', { id: this.getID() } );
-      data += "&_method=put"
+      data += "&_method=put";
     }
     
     return {
