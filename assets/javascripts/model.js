@@ -279,10 +279,18 @@ RB.Model = RB.Object.create({
       type: "POST",
       url: saveDir.url,
       data: saveDir.data,
-      success   : function(d,t,x){ self.afterSave(d,t,x) },
+      success   : function(d,t,x){
+          self.afterSave(d,t,x);
+          self.refreshTooltip();
+      },
       error     : function(x,t,e){ self.error(x,t,e) }
     });
     self.endEdit();
+  },
+
+  refreshTooltip: function() {
+    var _ = this.$.find('div.qtip');
+    _.qtip($.qtipMakeOptions(_));
   },
   
   unmarkError: function(){
