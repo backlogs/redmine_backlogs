@@ -110,9 +110,10 @@
 /*! Default tooltip style */
 .ui-tooltip-titlebar,
 .ui-tooltip-content{
-	border-color: #F1D031;
-	background-color: #FFFFA3;
+	border-color: #666;
+	background-color: #fff;
 	color: #555;
+        font-size: 11px;
 }
 
 	.ui-tooltip-titlebar{

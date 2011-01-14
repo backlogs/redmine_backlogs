@@ -1,5 +1,14 @@
 <li class="model story <%= mark_if_closed(story) %>" id="<%= story_html_id_or_empty(story) %>">
-  <div class="id">
+  <% $tooltip = "
+    <b>Subject</b>: #{story.subject}<br />
+    <b>Tracker</b>: #{story.tracker}<br />
+    <b>Status</b>: #{status_label_or_default(story)}<br />
+    <b>Story points</b>: #{story_points_or_empty(story)}<br />
+    <b>Estimation (hours)</b>: #{story.estimated_hours}<br />
+    <b>Spent time</b>: #{story.spent_hours}<br />
+    <b>Remaining hours</b>: #{story.remaining_hours}
+    <p><b>Description</b><br />#{story.description}</p>" %>
+  <div class="id qtip" title="<%= $tooltip %> ">
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
