@@ -289,7 +289,7 @@ RB.Model = RB.Object.create({
   },
 
   refreshTooltip: function() {
-    var _ = this.$.find('div.qtip');
+    var _ = this.$.find('div.story_tooltip');
     _.qtip($.qtipMakeOptions(_));
   },
   

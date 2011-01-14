@@ -14,7 +14,7 @@ $.qtipMakeOptions = function(container) {
 }
 
 $(function() {
-    $('div.qtip').each(function(el) {
+    $('div.story_tooltip').each(function(el) {
         var _ = $(this);
         _.qtip($.qtipMakeOptions(_));
     });
