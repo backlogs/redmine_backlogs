@@ -1,7 +1,7 @@
 <!-- MASTER BACKLOG VIEW -->
 <%- content_for :head_tags do %>
   <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :id => @project.id, :format => :js) %>"></script>
-  <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'jquery.qtip.pack.js', 'jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'jquery.qtip.pack.js', 'jquery.qtip.setup.js', 'jquery.liveFilter.js', 'jquery.liveFilter.setup.js', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jqplot.css', 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= theme_stylesheet_link_tag 'master_backlog.css', :media => 'print,screen' %>
   <%= theme_stylesheet_link_tag 'master_backlog_print.css', :media => 'print' %>
@@ -12,7 +12,8 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
-  <a id="project_info">Info<a>
+  <input class="filter" name="livefilter" type="text" value="" />
+  <a id="project_info">Info</a>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
 <%- end %>
