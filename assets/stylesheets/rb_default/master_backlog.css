@@ -364,6 +364,7 @@
   position:absolute;
   top:0;
 }
+
 #backlogs_container .sprint.editing .editor{
   display:block;
   font-family:Verdana, Arial, sans-serif;
@@ -381,6 +382,7 @@
   margin:0;
   top:2px;
   width:320px;
+  float: left;
 }
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
   display:block;
@@ -409,45 +411,44 @@
 #backlogs_container .stories .story.editing .id{
   display:none;
 }
+
+#backlogs_container .stories .story.editing .story_field {
+    display: none;
+}
+
 #backlogs_container .stories .story.editing .editors{
   display:block;
-  position:absolute;
-  top:0;
 }
 #backlogs_container .stories .story.editing .editors label{
   display:none;
 }
 #backlogs_container .stories .story.editing .editor{
   font-family:Verdana, Arial, sans-serif;
-  position:absolute;
 }
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
-  left:10px;
   margin:0;
-  top:4px;
   width:55px;
+  float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
   display:block;
-  height:10px;
-  left:67px;
+  font-size: 11px;
   margin:0;
-  top:1px;
+  float: left;
 }
 #backlogs_container .stories .story.editing .status_id.editor{
   display:block;
-  left:456px;
   margin:0;
-  top:4px;
-  width:68px;
+  width:84px;
+  float: left;
+
 }
 #backlogs_container .stories .story.editing .story_points.editor{
   display:block;
   height:10px;
-  left:540px;
   margin:0;
-  top:1px;
+  float: right;
 }
 
 

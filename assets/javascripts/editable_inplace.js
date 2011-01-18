@@ -1,6 +1,10 @@
 RB.EditableInplace = RB.Object.create(RB.Model, {
 
   displayEditor: function(editor){
+    editor.find('textarea').attr('cols', '5');
+    if (editor.find('div.clearfix').length == 0) {
+        editor.append('<div class="clearfix"></div>');
+    }
     this.$.addClass("editing");
     editor.find(".editor").bind('keyup', this.handleKeyup);
   },
