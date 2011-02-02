@@ -8,6 +8,12 @@
     <div class="t"><%= assignee_name_or_empty(task) %></div>
     <div class="v"><%= assignee_id_or_empty(task) %></div>
   </div>
+  <div class="category_id editable"  fieldtype="select"  fieldname="category_id">
+  <% if task.category %>
+    <div class="t"><%= task.category.name %></div>
+    <div class="v"><%= task.category_id %></div>
+  <% end %>
+  </div>
   <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(task) %></div>
   <div class="indicator"> </div>
   <div class="meta">

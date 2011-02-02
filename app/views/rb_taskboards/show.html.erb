@@ -70,6 +70,11 @@
 <%- end %>
 
 <%- content_for :helpers do %>
+  <select class="category_id template" id="category_id_options">
+    <%- @project.issue_categories.each do |c| %>
+    <option value="<%= c.id %>"><%= c.name %></option>
+    <%- end %>
+  </select>
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value=""> </option>
     <%- @project.members.each do |member| %>
