@@ -5,6 +5,7 @@
   <%= stylesheet_link_tag 'jqplot.css', 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= theme_stylesheet_link_tag 'master_backlog.css', :media => 'print,screen' %>
   <%= theme_stylesheet_link_tag 'master_backlog_print.css', :media => 'print' %>
+  <script type="text/javascript">jQuery(document).ready(function() { jQuery("#livefilter_controll").focus(); });</script>
 <%- end %>
 
 <%- content_for :breadcrumbs do %>
@@ -12,7 +13,7 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
-  <input class="filter" name="livefilter" type="text" value="" />
+  <input class="filter" name="livefilter" type="text" value="" id="livefilter_controll" />
   <a id="project_info">Info</a>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
