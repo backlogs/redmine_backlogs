@@ -9,7 +9,10 @@ $.qtipMakeOptions = function(container) {
                 x: 10,
                 y: 10
             }
-        }
+        },
+	style : {
+	    width : 500  			
+	}
     }
 }
 

@@ -28,10 +28,11 @@
 	position: absolute;
 	left: -31000px;
 	top: -31000px;
-
-	max-width: 400px;
+/*
+	max-width: 600px;
 	min-width: 200px;
-	
+*/
+	width: 550px!important;
 	outline: none;
 }
 
