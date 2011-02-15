@@ -5,7 +5,7 @@
     <b>Status</b>: #{status_label_or_default(story)}<br />
     <b>Story points</b>: #{story_points_or_empty(story)}<br />
     <b>Estimation (hours)</b>: #{story.estimated_hours}<br />
-    <b>Spent time</b>: #{story.spent_hours}<br />
+    <b>Spent time</b>: #{story.spent_hours.round(2)}<br />
     <b>Remaining hours</b>: #{story.remaining_hours}
     <p><b>Description</b><br />#{story.description}</p>"
   %>
