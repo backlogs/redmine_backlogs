@@ -4,15 +4,16 @@ $.qtipMakeOptions = function(container) {
             text: container.attr('title')
         },
         position: {
+            my: 'top left',
             target: 'mouse',
+            viewport: $(window), // Keep it on-screen at all times if possible
             adjust: {
-                x: 10,
-                y: 10
+                x: 10,  y: 10
             }
         },
-	style : {
-	    width : 500  			
-	}
+        hide: {
+           fixed: true // Helps to prevent the tooltip from hiding ocassionally when tracking!
+        }
     }
 }
 
