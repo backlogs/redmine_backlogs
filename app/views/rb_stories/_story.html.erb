@@ -7,7 +7,7 @@
     <b>Estimation (hours)</b>: #{story.estimated_hours}<br />
     <b>Spent time</b>: #{story.spent_hours.round(2)}<br />
     <b>Remaining hours</b>: #{story.remaining_hours}
-    <p><b>Description</b><br />#{story.description}</p>"
+    <p><b>Description</b><br />#{textile_to_html(story.description)}</p>"
   %>
   <div class="id story_tooltip story_field" title="<%= $tooltip.gsub("\"", "&quot;") %> ">
     <div class="t"><%= issue_link_or_empty(story) %></div>
