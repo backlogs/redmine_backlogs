@@ -6,6 +6,15 @@
   <%= theme_stylesheet_link_tag 'master_backlog.css', :media => 'print,screen' %>
   <%= theme_stylesheet_link_tag 'master_backlog_print.css', :media => 'print' %>
   <script type="text/javascript">jQuery(document).ready(function() { jQuery("#livefilter_controll").focus(); });</script>
+  <!--[if IE]
+  <script type="text/javascript">
+    jQuery(document).ready(function() { 
+      jQuery("#backlogs_container ul").each(function() { 
+        jQuery(this).find('li:odd').css('background-color', '#dddddd'); 
+      }); 
+    });
+  </script>
+  [endif]-->
 <%- end %>
 
 <%- content_for :breadcrumbs do %>
