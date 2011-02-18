@@ -57,8 +57,8 @@ class Task < Issue
   end
 
   def update_with_relationships(params, is_impediment = false)
-    attribs = params.clone.delete_if {|k,v| !Task.safe_attributes.include?(k) }
-    attribs[:remaining_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
+    attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k) }
+    attribs[:estimated_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
 
     valid_relationships = if is_impediment && params[:blocks] #if blocks param was not sent, that means the impediment was just dragged
                             validate_blocks_list(params[:blocks])
