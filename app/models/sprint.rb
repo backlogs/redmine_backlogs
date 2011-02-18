@@ -179,7 +179,7 @@ class Sprint < Version
     named_scope :open_sprints, lambda { |project|
         {
             :order => 'sprint_start_date ASC, effective_date ASC',
-            :conditions => [ "status = 'open' and project_id = ANY(SELECT id FROM projects WHERE ? BETWEEN lft AND rgt)", project.id ]
+            :conditions => [ "status = 'open' and project_id = ?", project.id ]
         }
     }
 
