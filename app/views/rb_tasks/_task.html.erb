@@ -1,15 +1,5 @@
 <div class="model issue task <%= mark_if_closed(task) %>" id="issue_<%= task.id %>" <%= build_inline_style(task) %>>
-    <% $tooltip = "
-    <b>Subject</b>: #{task.subject}<br />
-    <b>Tracker</b>: #{task.tracker}<br />
-    <b>Status</b>: #{status_label_or_default(task)}<br />
-    <b>Story points</b>: #{story_points_or_empty(task)}<br />
-    <b>Estimation (hours)</b>: #{task.estimated_hours}<br />
-    <b>Spent time</b>: #{task.spent_hours.round(2)}<br />
-    <b>Remaining hours</b>: #{task.remaining_hours}
-    <p><b>Description</b><br />#{textile_to_html(task.description)}</p>"
-  %>
-  <div class="id story_tooltip" title="<%= $tooltip.gsub("\"", "&quot;") %>">
+  <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => task %>">
     <div class="t"><%= issue_link_or_empty(task) %></div>
     <div class="v"><%= id_or_empty(task) %></div>
   </div>

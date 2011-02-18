@@ -1,0 +1,8 @@
+<b>Subject</b>: <%= tooltip.subject.gsub("\"", "&quot;") %><br />
+<b>Tracker</b>: <%= tooltip.tracker %><br />
+<b>Status</b>: <%= status_label_or_default(tooltip) %><br />
+<b>tooltip points</b>: <%= story_points_or_empty(tooltip) %><br />
+<b>Estimation (hours)</b>: <%= tooltip.estimated_hours %><br />
+<b>Spent time</b>: <%= tooltip.spent_hours.round(2) %><br />
+<b>Remaining hours</b>: <%= tooltip.remaining_hours %>
+<p><b>Description</b><br /><%= textile_to_html(tooltip.description).gsub("\"", "&quot;") %></p>
