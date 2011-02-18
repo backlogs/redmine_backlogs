@@ -101,3 +101,11 @@ en:
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
+  
+  # Tooltips
+  story_description: "Description"
+  story_status: "Status"
+  story_points: "Points"
+  story_estimation_hours: "Estimation (hours)"
+  story_remaining_hours: "Remaining (hours)"
+  story_spent_time: "Spent Time"
