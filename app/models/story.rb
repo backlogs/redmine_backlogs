@@ -138,6 +138,7 @@ class Story < Issue
     def update_and_position!(params)
       attribs = params.select{|k,v| k != 'id' and Story.column_names.include? k }
       attribs = Hash[*attribs.flatten]
+      attribs['project_id']=Story.find(params['id']).project_id
       result = journalized_update_attributes attribs
       if result and params[:prev]
         move_after(params[:prev])
