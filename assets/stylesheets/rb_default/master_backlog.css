@@ -1,20 +1,20 @@
 #backlogs_container{
   display:block;
-  margin:10px auto;
+  margin:10px;
   position:relative;
-  width:1190px;
+  width:99%;
 }
 #product_backlog_container{
   position:absolute;
   right:0;
   top:0;
-  width:590px;
+  width:49%;
 }
 #sprint_backlogs_container{
   left:0;
   position:absolute;
   top:0;
-  width:590px;
+  width:49%;
 }
 #product_backlog_container .backlog .header > .add_new_story {
   font-size:11px;
@@ -126,12 +126,12 @@
   font-size:15px;
   font-weight:bold;
   height:28px;
-  left:35px;
+  left:5%;
   line-height:28px;
   overflow:hidden;
   position:absolute;
   top:1px;
-  width:450px;
+  width:58%;
 }
 #backlogs_container .backlog .header .velocity {
   font-size:12px;
@@ -149,10 +149,10 @@
   cursor:pointer;
   display:block;
   height:30px;
-  left:30px;
+  left:5%;
   position:absolute;
   top:0;
-  width:560px;
+  width:41%;
 }
 #backlogs_container .backlog .sprint.saving{
   background-image:url('images/ajax.gif');
@@ -173,12 +173,11 @@
   font-size:15px;
   font-weight:bold;
   height:28px;
-  left:5px;
   line-height:28px;
   overflow:hidden;
   position:absolute;
   top:1px;
-  width:330px;
+  width:100%;
 }
 #backlogs_container .backlog .sprint .sprint_start_date,
 #backlogs_container .backlog .sprint .effective_date{
@@ -189,10 +188,10 @@
   top:2px;
 }
 #backlogs_container .backlog .sprint .sprint_start_date{
-  left:340px;
+  left:105%;
 }
 #backlogs_container .backlog .sprint .effective_date{
-  left:430px;
+  left:131%;
 }
 #backlogs_container .backlog .stories{
   list-style:none;
@@ -264,12 +263,12 @@
 #backlogs_container .stories .story .subject {
   display:block;
   height:15px;
-  left:70px;
+  left:9%;
   overflow:hidden;
   padding:5px 2px 4px 2px;
   position:absolute;
   top:1px;
-  width:375px;
+  width:53%;
   white-space:nowrap;
 }
 #backlogs_container .stories .story.too_long .subject{
@@ -286,12 +285,10 @@
 }
 #backlogs_container .stories .story .status_id.editable {
   display:block;
-  height:15px;
-  left:455px;
-  padding:5px 2px 4px 9px;
+  right:25%;
   position:absolute;
-  top:1px;
-  width:68px;
+  width:10%;
+  top:5px;
 }
 #backlogs_container .stories .story .status_id .v {
   display:none;
@@ -299,13 +296,13 @@
 #backlogs_container .stories .story .story_points {
   display:block;
   height:15px;
-  right:10px;
+  right:1%;
   overflow:hidden;
   padding:5px 3px 4px 9px;
   position:absolute;
   text-align:right;
   top:1px;
-  width:28px;
+  width:3%;
 }
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id {
@@ -398,7 +395,6 @@
 }
 #backlogs_container .stories .story.editing .editors{
   display:block;
-  position:absolute;
   top:0;
 }
 #backlogs_container .stories .story.editing .editors label{
@@ -410,31 +406,31 @@
 }
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
-  left:10px;
+  left:1%;
   margin:0;
   top:4px;
-  width:55px;
+  width:7%;
 }
 #backlogs_container .stories .story.editing .subject.editor{
   display:block;
   height:10px;
-  left:67px;
+  left:9%;
   margin:0;
   top:1px;
+  width:53%;
 }
 #backlogs_container .stories .story.editing .status_id.editor{
   display:block;
-  left:456px;
+  right:26%;
   margin:0;
   top:4px;
-  width:68px;
+  width:10%;
 }
 #backlogs_container .stories .story.editing .story_points.editor{
   display:block;
+  right:1%;
+  width:3%;
   height:10px;
-  left:540px;
-  margin:0;
-  top:1px;
 }
 
 
