@@ -68,6 +68,13 @@ module RbCommonHelper
   def status_label_or_default(story)
     story.new_record? ? IssueStatus.find(:first, :order => "position ASC").name : story.status.name
   end
+  
+  def assignee_id_or_default(story)
+    story.new_record? ? "" : story.assigned_to.object_id
+  end
+  def assignee_label_or_default(story)
+    story.new_record? ? "" : story.assigned_to
+  end
 
   def sprint_html_id_or_empty(sprint)
     sprint.new_record? ? "" : "sprint_#{sprint.id}"

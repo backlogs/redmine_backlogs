@@ -11,6 +11,12 @@
   <%- end %>
 </select>
 
+<select class="assignee_id helper" id="assigned_to_id_options">
+  <%-  User.find(:all).each do |user| %>
+  <option value="<%= user.id %>"><%= user.name %></option>
+  <%- end %>
+</select>
+
 <div id="story_template">
   <%= render :partial => 'rb_stories/story', :object => Story.new %>
 </div>

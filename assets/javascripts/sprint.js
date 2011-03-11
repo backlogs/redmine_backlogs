@@ -31,7 +31,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   
   refreshed: function(){
     // We have to do this since .live() does not work for some reason
-    j.find(".editable").bind('mouseup', this.handleClick);
+    //j.find(".editable").bind('mouseup', this.handleClick);
   },
 
   saveDirectives: function(){
@@ -39,7 +39,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
 
     var data = j.find('.editor').serialize() + "&_method=put";
     var url = RB.urlFor('update_sprint', { id: this.getID() });
-    
+
     return {
       url : url,
       data: data

@@ -12,6 +12,10 @@
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
   </div>
+  <div class="assignee_id editable" fieldtype="select" fieldname="assigned_to_id">
+    <div class="t"><%= assignee_label_or_default(story) %></div>
+    <div class="v"><%= assignee_id_or_default(story) %></div>
+  </div>
   <div class="story_points editable" fieldname="story_points"><%= story_points_or_empty(story) %></div>
   <div class="fixed_version_id"><%= story.fixed_version_id %></div>
   <div class="higher_item_id"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>

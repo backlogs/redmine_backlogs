@@ -293,6 +293,19 @@
 #backlogs_container .stories .story .status_id .v {
   display:none;
 }
+#backlogs_container .stories .story .assignee_id.editable {
+  display:block;
+  right:7%;
+  position:absolute;
+  width:17%;
+  top:5px;
+  text-align: right;
+  overflow:hidden;
+  height:15px;
+}
+#backlogs_container .stories .story .assignee_id .v {
+  display:none;
+}
 #backlogs_container .stories .story .story_points {
   display:block;
   height:15px;
@@ -425,6 +438,13 @@
   margin:0;
   top:4px;
   width:10%;
+}
+#backlogs_container .stories .story.editing .assignee_id.editor{
+  display:block;
+  right:7%;
+  margin:0;
+  top:4px;
+  width:17%;
 }
 #backlogs_container .stories .story.editing .story_points.editor{
   display:block;

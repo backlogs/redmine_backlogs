@@ -12,7 +12,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.find(".editable").live('mouseup', this.handleClick);
+    j.find(".editable").live('dblclick', this.handleClick);
   },
 
   beforeSave: function(){
@@ -52,9 +52,9 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
         
     var data = "prev=" + (prev.length==1 ? this.$.prev().data('this').getID() : '') +
                "&fixed_version_id=" + sprint_id;
-    
+			   
     if(j.find('.editor').length > 0) data += "&" + j.find('.editor').serialize();
-    
+	
     if( this.isNew() ){
       var url = RB.urlFor( 'create_story' );
     } else {
@@ -62,7 +62,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
       data += "&_method=put"
     }
     
-    return {
+	return {
       url: url,
       data: data
     }
