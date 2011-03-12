@@ -1,11 +1,11 @@
 module RbMasterBacklogsHelper
   unloadable
   include Redmine::I18n
-  
+
   def backlog_html_class(backlog)
     is_sprint?(backlog) ? "sprint backlog" : "product backlog"
   end
-  
+
   def backlog_html_id(backlog)
     is_sprint?(backlog) ? "sprint_#{backlog.id}" : "product_backlog"
   end
@@ -33,15 +33,15 @@ module RbMasterBacklogsHelper
       </div>
     }
   end
-  
+
   def date_or_nil(date)
     date.blank? ? '' : date.strftime('%Y-%m-%d')
   end
-  
+
   def editable_if_sprint(backlog)
     "editable" if is_sprint?(backlog)
   end
-  
+
   def is_sprint?(backlog)
     backlog.class.to_s.downcase=='sprint'
   end
@@ -50,11 +50,11 @@ module RbMasterBacklogsHelper
     # options[:class] = "pureCssMenui"
     link_to(label, options)
   end
-  
+
   def name_or_default(backlog)
     is_sprint?(backlog) ? backlog.name : l(:label_Product_backlog)
   end
-  
+
   def stories(backlog)
     backlog[:stories] || backlog.stories
   end
