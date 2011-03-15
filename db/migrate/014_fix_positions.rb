@@ -7,13 +7,16 @@ class FixPositions < ActiveRecord::Migration
 
     if errors.size > 0
       puts "You have issues in your database that have one or more of the following problems:"
-      puts "* subject is missing"
-      puts "* due date is set, but start dat is not"
+      puts "* subject is empty or NULL"
+      puts "* due date is set, but start date is not"
       puts "* start date is later than due date"
       puts "* updated-date is before created-date"
       puts "* start date is after created-date"
       puts errors.inspect
-      raise "Please fix these and retry the migration"
+      raise "Please fix the issues with the follwing IDs and retry the migration"
+      errors.each {|id|
+        puts "- #{id}"
+      }
     end
 
     ActiveRecord::Base.transaction do
