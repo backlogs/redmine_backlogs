@@ -1,0 +1,86 @@
+#!/bin/bash
+
+if [ -z "$DBROOTPW" ]; then
+    echo "DBROOTPW not set"
+    exit
+fi
+if [ -z "$DBPW" ]; then
+    echo "DBPW not set"
+    exit
+fi
+if [ ! -d ~/redmine ]; then
+    echo "~/redmine does not exist"
+    exit
+fi
+if [ ! -f ~/redmine/setup/database.yml ]; then
+    echo "~/redmine/setup/database.yml does not exist"
+    exit
+fi
+
+cd ~/redmine
+
+# ruby env
+read -p "Reinstall RVM? " REPLY
+if [[ $REPLY =~ [Yy] ]]; then
+    rm -rf ~/.rvm
+    curl http://rvm.beginrescueend.com/releases/rvm-install-head | bash
+    rvm install 1.8.7
+    rvm use --default 1.8.7
+    gem update --system 1.3.7
+    gem install mysql
+    gem install rack -v=1.0.1
+    gem install rails -v=2.3.5
+    gem install rmagick
+    gem install -v=0.4.2 i18n
+    gem install icalendar
+    gem install prawn
+    gem install holidays
+fi
+
+# redmine
+read -p "Reinstall Redmine? " REPLY
+if [[ $REPLY =~ [Yy] ]]; then
+    VERSION=1.1.2
+    rm -rf ~/redmine/redmine
+    cd ~/redmine
+    git clone git://github.com/edavis10/redmine.git
+    cd ~/redmine/redmine
+    git fetch --tags
+    git checkout $VERSION
+    cp ~/redmine/setup/database.yml ~/redmine/redmine/config
+    ln -s ~/redmine/redmine_backlogs ~/redmine/redmine/vendor/plugins
+    ln -s ~/redmine/redmine_backlogs/features ~/redmine/redmine
+fi
+
+# dev
+read -p "Dev environment? " REPLY
+if [[ $REPLY =~ [Yy] ]]; then
+
+    gem install -v=1.2.9 rspec
+    gem install -v=1.3.1 rspec-rails
+    gem install -v=0.8.5 cucumber
+    gem install cucumber-rails -v 0.3.2
+    gem install gherkin --version 2.1.4
+    gem install -v=1.4.6 json
+    gem install spork database_cleaner capybara ZenTest autotest-rails redgreen rcov
+
+    cd ~/redmine/redmine
+    [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --capybara --spork
+fi
+
+# database
+read -p "Reinstall database? " REPLY
+if [[ $REPLY =~ [Yy] ]]; then
+    mysqladmin -u root -p$DBROOTPW drop redmine
+    echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
+    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
+
+    cd ~/redmine/redmine
+    rake generate_session_store
+    rake db:migrate
+    rake redmine:load_default_data
+    rake db:migrate:upgrade_plugin_migrations
+    rake db:migrate_plugins
+    rake redmine:backlogs:install
+fi
