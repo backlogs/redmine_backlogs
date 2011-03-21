@@ -1,5 +1,20 @@
 #!/bin/bash
 
+CONFIG="$( cd "$( dirname "$0" )" && pwd )"
+CONFIG="$CONFIG/rbl-reinstall.rc"
+
+if [ ! -f $CONFIG ]; then
+    echo "$CONFIG does not exist"
+    exit
+fi
+
+source $CONFIG
+
+if [ -z "$VERSION" ]; then
+    echo "VERSION not set"
+    exit
+fi
+
 if [ -z "$DBROOTPW" ]; then
     echo "DBROOTPW not set"
     exit
@@ -12,16 +27,24 @@ if [ ! -d ~/redmine ]; then
     echo "~/redmine does not exist"
     exit
 fi
+
+cd ~/redmine
+
 if [ ! -f ~/redmine/setup/database.yml ]; then
     echo "~/redmine/setup/database.yml does not exist"
     exit
 fi
 
-cd ~/redmine
+if [ ! -d ~/redmine/redmine_backlogs ]; then
+    echo "~/redmine/redmine_backlogs does not exist"
+    exit
+fi
 
 # ruby env
-read -p "Reinstall RVM? " REPLY
-if [[ $REPLY =~ [Yy] ]]; then
+if [ -z "$RVM" ]; then
+  read -p "Reinstall RVM? " RVM
+fi
+if [[ $RVM =~ [Yy] ]]; then
     rm -rf ~/.rvm
     curl http://rvm.beginrescueend.com/releases/rvm-install-head | bash
     rvm install 1.8.7
@@ -36,11 +59,15 @@ if [[ $REPLY =~ [Yy] ]]; then
     gem install prawn
     gem install holidays
 fi
+exit
 
 # redmine
-read -p "Reinstall Redmine? " REPLY
-if [[ $REPLY =~ [Yy] ]]; then
-    VERSION=1.1.2
+if [ ! -f ~/redmine/redmine/database.yml ]; then
+  RM=Y
+elif [ -z "$RM" ]; then
+  read -p "Reinstall Redmine? " RM
+fi
+if [[ $RM =~ [Yy] ]]; then
     rm -rf ~/redmine/redmine
     cd ~/redmine
     git clone git://github.com/edavis10/redmine.git
@@ -53,8 +80,10 @@ if [[ $REPLY =~ [Yy] ]]; then
 fi
 
 # dev
-read -p "Dev environment? " REPLY
-if [[ $REPLY =~ [Yy] ]]; then
+if [ -z "$DEV" ]; then
+  read -p "Dev environment? " DEV
+fi
+if [[ $DEV =~ [Yy] ]]; then
 
     gem install -v=1.2.9 rspec
     gem install -v=1.3.1 rspec-rails
@@ -69,8 +98,10 @@ if [[ $REPLY =~ [Yy] ]]; then
 fi
 
 # database
-read -p "Reinstall database? " REPLY
-if [[ $REPLY =~ [Yy] ]]; then
+if [ -z "$DB" ]; then
+  read -p "Reinstall database? " DB
+fi
+if [[ $DB =~ [Yy] ]]; then
     mysqladmin -u root -p$DBROOTPW drop redmine
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
