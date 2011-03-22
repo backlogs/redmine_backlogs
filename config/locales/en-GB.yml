@@ -32,6 +32,7 @@ en-GB:
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project shows no activity
   field_story_points: Story points
+  remaining_story_points: remaining story points
   label_Product_backlog: Product backlog
   rb_label_copy_tasks_none: "[[None]]"
   backlogs_task: Task
@@ -39,6 +40,21 @@ en-GB:
   points_committed: points committed
   label_sprint_impediments: Sprint Impediments
   label_master_backlog: Master Backlog
+  label_release_planning: Release Planning
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: New release
+  field_release_start_date: Release start date
+  field_release_end_date: Release end date
+  label_release_start_date: [[field_release_start_date]]
+  label_release_end_date: [[field_release_start_date]]
+  error_release_end_after_start: Release end date has to be after start date
+  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  today_not_in_release_warning: "Warning: current date is not within release date range."
+  field_number_of_snapshots: Saved point snapshots
+  release_update_snapshot_today: Update story point snapshot for today
+  release_create_snapshot_today: Save story point snapshot for today
+  field_initial_story_points: Initial story points
   field_blocks: Blocks
   points_to_resolve: points not resolved
   label_select_all: Select all

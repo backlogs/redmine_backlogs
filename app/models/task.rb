@@ -10,7 +10,11 @@ class Task < Issue
   end
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
-    attribs = params.clone.delete_if {|k,v| !Task::SAFE_ATTRIBUTES.include?(k) }
+    if Issue.const_defined? "SAFE_ATTRIBUTES"
+      attribs = params.clone.delete_if {|k,v| !Task::SAFE_ATTRIBUTES.include?(k) }
+    else
+      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
+    end
     attribs[:remaining_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
     attribs['author_id'] = user_id
     attribs['tracker_id'] = Task.tracker
@@ -53,7 +57,11 @@ class Task < Issue
   end
 
   def update_with_relationships(params, is_impediment = false)
-    attribs = params.clone.delete_if {|k,v| !Task::SAFE_ATTRIBUTES.include?(k) }
+    if Issue.const_defined? "SAFE_ATTRIBUTES"
+      attribs = params.clone.delete_if {|k,v| !Task::SAFE_ATTRIBUTES.include?(k) }
+    else
+      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
+    end
     attribs[:remaining_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
 
     valid_relationships = if is_impediment && params[:blocks] #if blocks param was not sent, that means the impediment was just dragged
@@ -70,10 +78,10 @@ class Task < Issue
       false
     end
   end
-  
+
   def update_blocked_list(for_blocking)
     # Existing relationships not in for_blocking should be removed from the 'blocks' list
-    relations_from.find(:all, :conditions => "relation_type='blocks'").each{ |ir| 
+    relations_from.find(:all, :conditions => "relation_type='blocks'").each{ |ir|
       ir.destroy unless for_blocking.include?( ir[:issue_to_id] )
     }
 
@@ -87,16 +95,16 @@ class Task < Issue
     }
     reload
   end
-  
+
   def validate_blocks_list(list)
     if list.split(/\D+/).length==0
-      errors.add :blocks, :error_must_have_comma_delimited_list
+      errors.add :blocks, :must_have_comma_delimited_list
       false
     else
       true
     end
   end
-  
+
   # assumes the task is already under the same story as 'id'
   def move_after(id)
     id = nil if id.respond_to?('blank?') && id.blank?

@@ -1,0 +1,26 @@
+<div class="contextual">
+<%= link_to_if_authorized l(:label_release_new),
+                          {:controller => 'rb_releases', :action => 'new', :project_id => @project},
+                          :class => 'icon icon-add' %>
+</div>
+
+<h2><%=l(:label_release_planning)%></h2>
+
+<% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
+
+<% @releases.each do |release| %>
+    <%= render :partial => 'rb_releases/release', :object => release %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <h3><%= l(:label_release_plural) %></h3>
+    <% if @releases.empty? %>
+        no releases
+    <% elsif @releases.size == 1 %>
+        one release
+    <% else %>
+        <%= @releases.size %> releases
+    <% end %>
+<% end %>
+
+<% html_title(l(:label_release_plural)) -%>

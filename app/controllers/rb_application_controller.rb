@@ -12,6 +12,9 @@ class RbApplicationController < ApplicationController
     @project = if params[:sprint_id]
                  load_sprint
                  @sprint.project
+               elsif params[:release_id]
+                 load_release
+                 @release.project
                elsif params[:project_id]
                  Project.find(params[:project_id])
                else
@@ -31,4 +34,8 @@ class RbApplicationController < ApplicationController
   def load_sprint
     @sprint = Sprint.find(params[:sprint_id])
   end  
+
+  def load_release
+    @release = Release.find(params[:release_id])
+  end
 end

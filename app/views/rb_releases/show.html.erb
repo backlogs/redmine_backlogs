@@ -1,0 +1,45 @@
+<div class="contextual">
+<%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases', :action => 'edit',    :release_id => @release}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %>
+</div>
+
+<h2><%= @release.name %></h2>
+
+<% unless @release.has_burndown? %>
+  <p class="nodata">No burndown available</p>
+<% else %>
+  <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
+  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
+
+  <br />
+  <div class="box">
+  <% if @release.today %>
+    <%= link_to l(:release_update_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
+    (current: <%= @release.today.remaining_story_points %> / new: <b><%= @remaining_story_points  %></b>)
+  <% else %>
+    <% if Date.today >= @release.release_start_date and Date.today <= @release.release_end_date %>
+      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-add' %>
+    <% else %>
+      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :confirm => l(:today_not_in_release_msg), :class => 'icon icon-add' %>
+      <br />
+      <b><%= l(:today_not_in_release_warning) %></b>
+    <% end %>
+  <% end %>
+  </div>
+
+  <% other_formats_links do |f| %>
+    <%= f.link_to 'CSV', :url => { :release_id => @release } %>
+  <% end %>
+  <br />
+<% end %>
+
+<% content_for :sidebar do %>
+  <h3><%= l(:label_release) %></h3>
+  <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
+  <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
+  <p><b><%= l(:field_initial_story_points) %>:</b> <%= @release.initial_story_points %></p>
+  <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
+  <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= @release.burndown_days.size   %></p>
+<% end %>
+
+<% html_title(@release.name) -%>

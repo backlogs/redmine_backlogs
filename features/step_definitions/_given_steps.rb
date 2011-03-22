@@ -3,6 +3,10 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :view_master_backlog
   role.permissions << :create_stories
   role.permissions << :update_stories
+  role.permissions << :view_releases
+  role.permissions << :create_releases
+  role.permissions << :update_releases
+  role.permissions << :destroy_releases
   role.permissions << :view_scrum_statistics
   role.save!
   login_as_product_owner
@@ -11,6 +15,7 @@ end
 Given /^I am a scrum master of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
+  role.permissions << :view_releases
   role.permissions << :view_taskboards
   role.permissions << :update_sprints
   role.permissions << :update_stories
@@ -26,6 +31,7 @@ end
 Given /^I am a team member of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
+  role.permissions << :view_releases
   role.permissions << :view_taskboards
   role.permissions << :create_tasks
   role.permissions << :update_tasks

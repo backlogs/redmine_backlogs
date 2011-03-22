@@ -1,0 +1,10 @@
+<h2><%=l(:label_release)%></h2>
+
+<%= error_messages_for 'release' %>
+
+<% labelled_tabular_form_for :release, @release, :url => {:controller => 'rb_releases', :action => 'edit', :release_id => @release} do |f| %>
+  <%= render :partial => 'rb_releases/form', :locals => { :f => f, :backlog_points => @backlog_points } %>
+  <%= submit_tag l(:button_save) %>
+<% end %>
+
+
