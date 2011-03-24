@@ -45,24 +45,32 @@ if [ -z "$RVM" ]; then
   read -p "Reinstall RVM? " RVM
 fi
 if [[ $RVM =~ [Yy] ]]; then
-    rm -rf ~/.rvm
-    curl http://rvm.beginrescueend.com/releases/rvm-install-head | bash
-    rvm install 1.8.7
-    rvm use --default 1.8.7
-    gem update --system 1.3.7
-    gem install mysql
-    gem install rack -v=1.0.1
-    gem install rails -v=2.3.5
-    gem install rmagick
-    gem install -v=0.4.2 i18n
-    gem install icalendar
-    gem install prawn
-    gem install holidays
+    #RUBYVER=1.8.7
+    #echo "Installing ruby $RUBYVER"
+    #rvm use system
+    #rvm remove $RUBYVER
+    #rvm install $RUBYVER
+    #rvm use --default $RUBYVER
+    #echo 'Ruby installation done'
+    rvm --force gemset empty global
+
+    echo 'Downgrading rubygems'
+    rvm rubygems 1.3.7 
+
+    echo 'Installing base gems'
+    rvm gem install mysql
+    rvm gem install rack -v=1.0.1
+    rvm gem install rails -v=2.3.5
+    rvm gem install rmagick
+    rvm gem install -v=0.4.2 i18n
+    rvm gem install icalendar
+    rvm gem install prawn
+    rvm gem install holidays
 fi
-exit
 
 # redmine
-if [ ! -f ~/redmine/redmine/database.yml ]; then
+if [ ! -f ~/redmine/redmine/config/database.yml ]; then
+  echo Forced RM install
   RM=Y
 elif [ -z "$RM" ]; then
   read -p "Reinstall Redmine? " RM
@@ -85,16 +93,23 @@ if [ -z "$DEV" ]; then
 fi
 if [[ $DEV =~ [Yy] ]]; then
 
-    gem install -v=1.2.9 rspec
-    gem install -v=1.3.1 rspec-rails
-    gem install -v=0.8.5 cucumber
-    gem install cucumber-rails -v 0.3.2
-    gem install gherkin --version 2.1.4
-    gem install -v=1.4.6 json
-    gem install spork database_cleaner capybara ZenTest autotest-rails redgreen rcov
+    rvm gem install -v=1.3.1 rspec
+    rvm gem install -v=0.8.5 cucumber
+    rvm gem install spork
+    rvm gem install database_cleaner
+    rvm gem install capybara
+    rvm gem install ZenTest
+    rvm gem install autotest-rails
+    rvm gem install redgreen
+    rvm gem install rcov
+    rvm gem install -v=1.3.3 rspec-rails
+    rvm gem install -v=0.3.2 cucumber-rails
+
+    # cucumber-rails pulls in an unnecesary gherkin
+    rvm gem uninstall gherkin -v=2.3.5
 
     cd ~/redmine/redmine
-    [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --capybara --spork
+    [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --spork
 fi
 
 # database
