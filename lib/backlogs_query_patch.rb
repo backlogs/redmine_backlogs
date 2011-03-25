@@ -89,7 +89,7 @@ module Backlogs
                                     blocked.id = ir.issue_to_id
                                     and blocked.tracker_id in (#{all_trackers})
                                   where ir.relation_type = 'blocks'
-                                )"
+                                ))"
                     end
                 }
   
