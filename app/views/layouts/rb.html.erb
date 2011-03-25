@@ -29,6 +29,7 @@
 <body>
   <div id="toolbar">
     <div class="breadcrumbs">
+      <%= render_backlog_project_jump_box %>
       <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
       <%= breadcrumb_separator %>
       <%= yield :breadcrumbs -%>
