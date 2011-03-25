@@ -67,6 +67,12 @@
 <%- end %>
 
 <%- content_for :helpers do %>
+  <select class="priority_id template" id="priority_id_options">
+    <%- IssuePriority.all.each do |p| %>
+    <option value="<%= p.id %>"><%= p.name %></option>
+    <%- end %>
+  </select>
+
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value=""> </option>
     <%- @project.members.each do |member| %>

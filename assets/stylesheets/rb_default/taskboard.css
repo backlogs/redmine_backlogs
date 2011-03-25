@@ -1,3 +1,12 @@
+body
+{
+  background-image:url('images/ika_bg.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right bottom;
+  
+}
+
 #assigned_to_id_options{
   display:none;
 }
@@ -26,13 +35,13 @@ See RB.Taskboard.initialize()
 
 /* status labels */
 #board_header{
-  background-color:#EBEBEB;
+  background-color:#ccffff;
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
 }
 #board_header td{
-  background-color:#EBEBEB;
+  background-color:#ccffff;
   border-right:1px dotted #CFCFCF;
   color:#7E7E7E;
   font-size:14px;
@@ -52,13 +61,13 @@ See RB.Taskboard.initialize()
 
 /* shared #impediments and #tasks */
 .board{
-  background-color:#FCFCFC;
+  /* background-color:#FCFCFC; */
   border:1px solid #CCCCCC;
   border-top:none;
   margin-right:10px;
 }
 .board tr:hover{
-  background-color:#ffffff;
+  /* background-color:#ffffff; */
 }
 .board td{
   border-right:1px dotted #CFCFCF;
@@ -197,6 +206,27 @@ See RB.Taskboard.initialize()
 .issue .assigned_to_id .v{
   display:none;
 }
+
+.issue .priority_id.editable{
+  -moz-border-radius:15px 15px 15px 15px;
+  -webkit-border-radius:15px 15px 15px 15px;
+  border-radius:15px 15px 15px 15px;
+  border:2px solid #FFFFFF;
+  background-color:#0000ee;
+  bottom:10px;
+  color:#FFFFFF;
+  font-size:9px;
+  height:13px;
+  padding-left:5px;
+  padding-right:5px;
+  position:absolute;
+  right:-5px;
+}
+
+.issue .priority_id .v{
+  display:none;
+}
+
 .issue .remaining_hours.editable{
   -moz-border-radius:15px 15px 15px 15px;
   -webkit-border-radius:15px 15px 15px 15px;
