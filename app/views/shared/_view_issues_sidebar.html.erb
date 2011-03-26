@@ -75,7 +75,12 @@
                     })
             %><br/>
         <% end %>
-
+        <%= link_to(l(:label_impediments), {
+                :controller => 'rb_queries',
+                :action => 'impediments',
+                :project_id => project.id,
+                :sprint_id => sprint.id
+                }) %><br/>
         <div id="burndown_<%= sprint.id %>" class="minimal" style="margin-left:0px; margin-top:20px; width:250px; height:192px;"></div>
         <%= render :partial => "rb_burndown_charts/burndown", :locals => {:div => 'burndown_', :burndown => sprint.burndown } %>
     <% end %>
