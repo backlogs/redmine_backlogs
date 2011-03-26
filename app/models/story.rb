@@ -1,7 +1,7 @@
 class Story < Issue
     unloadable
 
-    acts_as_list :scope => :project
+    acts_as_list
 
     def self.condition(project_id, sprint_id, extras=[])
       if sprint_id.nil?  
