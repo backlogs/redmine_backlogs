@@ -5,6 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :rb, :only => :none do |rb|
     rb.resource   :updated_items,    :only => :show,               :controller => :rb_updated_items,    :as => "updated_items/:project_id"
     rb.resource   :query,            :only => :show,               :controller => :rb_queries,          :as => "queries/:project_id"
+    rb.resource   :query,            :only => :impediments,        :controller => :rb_queries,          :as => "queries/:project_id/:sprint_id"
     rb.resource   :wiki,             :only => [:show, :edit],      :controller => :rb_wikis,            :as => "wikis/:sprint_id"
     rb.resource   :statistics,       :only => :show,               :controller => :rb_statistics
     rb.resource   :calendars,        :only => :show,               :controller => :rb_calendars,        :as => "calendars/:project_id"
