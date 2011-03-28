@@ -58,8 +58,6 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
     missing << key if ! lang[l][key]
   }
   
-  pct = ((templates.keys.size - missing.keys.size) * 100) / templates.keys.size
-
   lang[l].keys.each {|key|
     if !template[key]
       obsolete << key
@@ -68,26 +66,37 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
     end
   }
 
-  if missing.size > 0 || obsolete.size > 0
-    columns = 2
-    if pct == 100
-    log "bq(error). #{language}\n\n"
-    [[missing, 'Missing'], [obsolete, 'Obsolete'], [varstyle, 'Old-style variable substitution']].each {|cat|
-        keys, title = *cat
-        next if keys.size == 0
-
-        log "*#{title}*\n\n"
-        keys.sort!
-        while keys.size > 0
-            row = (keys.shift(columns) + ['', ''])[0..columns-1]
-            log "|" + row.join("|") + "|\n"
-        end
-        log "\n"
-    }
+  if missing.size > 0
+    pct = ((template.keys.size - missing.size) * 100) / template.keys.size
+    pct = " (#{pct}%)"
   else
-    log "bq(success). #{language}\n\n"
+    pct = ''
   end
-}
 
+  columns = 2
+
+  if missing.size > 0
+    status = 'error'
+  elsif obsolete.size > 0
+    status = 'warning'
+  else
+    status = 'success'
+  end
+
+  log "bq(#{status}). #{language}#{pct}\n\n"
+  [[missing, 'Missing'], [obsolete, 'Obsolete'], [varstyle, 'Old-style variable substitution']].each {|cat|
+    keys, title = *cat
+    next if keys.size == 0
+
+    log "*#{title}*\n\n"
+    keys.sort!
+    while keys.size > 0
+      row = (keys.shift(columns) + ['', ''])[0..columns-1]
+      log "|" + row.join("|") + "|\n"
+    end
+
+    log "\n"
+  }
+}
 
 $logfile.close if $logfile
