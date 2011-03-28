@@ -18,6 +18,7 @@ en:
   label_points_burn_down: Down
   field_position: Position
   backlogs_product_backlog: "Product backlog"
+  label_impediments: Impediments
   backlogs_wiki_template: "Template for sprint wiki page"
   points_committed: "points committed"
   required_burn_rate_points: "required burn rate (points)"

@@ -44,7 +44,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                        :rb_sprints          => [:index, :show],
                                        :rb_wikis            => :show,
                                        :rb_stories          => [:index, :show],
-                                       :rb_queries          => :show,
+                                       :rb_queries          => [:show, :impediments],
                                        :rb_server_variables => :show,
                                        :rb_burndown_charts  => :show,
                                        :rb_updated_items    => :show

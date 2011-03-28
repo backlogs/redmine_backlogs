@@ -44,6 +44,14 @@ Feature: Scrum Master
      Then the request should complete successfully
       And the sprint named Sprint 001 should have 1 impediment named Good Impediment
 
+  Scenario: View impediments
+    Given I am viewing the issues list
+      And I follow "Sprint 001"
+     Then the request should complete successfully
+     When I follow "Impediments"
+     Then the request should complete successfully
+      And I should see "Impediment 1"
+
   Scenario: Update sprint details
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001
