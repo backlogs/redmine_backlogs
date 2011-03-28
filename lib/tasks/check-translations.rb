@@ -2,6 +2,17 @@
 
 require 'yaml'
 
+language_name = {
+  'de' => 'German', 
+  'en-GB' => 'UK English',
+  'en' => 'US English',
+  'fr' => 'French',
+  'nl' => 'Dutch',
+  'pt-BR' => 'Brazilian Portuguese',
+  'ru' => 'Russian',
+  'zh' => 'Chinese',
+}
+
 webdir = File.join(File.dirname(__FILE__), '..', '..', '..', 'www.redminebacklogs.net')
 $logfile = nil
 if File.directory? webdir
@@ -25,7 +36,7 @@ categories: en
 ---
 h1. Translations
 
-h2. en
+bq(success). en
 
 serves as a base for all other translations
 
@@ -37,7 +48,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
 
   lang = YAML::load_file(lang_file)
   l = lang.keys[0]
-
+  language = language_name[l] || l
 
   missing = []
   obsolete = []
@@ -57,7 +68,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
 
   if missing.size > 0 || obsolete.size > 0
     columns = 2
-    log "h2. #{l}: needs update\n\n"
+    log "bq(error). #{language}\n\n"
     [[missing, 'Missing'], [obsolete, 'Obsolete'], [varstyle, 'Old-style variable substitution']].each {|cat|
         keys, title = *cat
         next if keys.size == 0
@@ -71,7 +82,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
         log "\n"
     }
   else
-    log "h2. #{l}\n\n"
+    log "bq(success). #{language}\n\n"
   end
 }
 
