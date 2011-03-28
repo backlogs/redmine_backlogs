@@ -36,7 +36,7 @@ categories: en
 ---
 h1. Translations
 
-bq(success). en
+bq(success). English
 
 serves as a base for all other translations
 
