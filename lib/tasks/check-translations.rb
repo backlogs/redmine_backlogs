@@ -69,7 +69,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
 
   if missing.size > 0
     status = 'error'
-  elsif obsolete.size > 0
+  elsif obsolete.size > 0 || varstyle.size > 0
     status = 'warning'
   else
     status = 'success'
