@@ -67,7 +67,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   }
 
   if missing.size > 0
-    pct = ((template.keys.size - missing.size) * 100) / template.keys.size
+    pct = ((template.keys.size - (varstyle + missing).uniq.size) * 100) / template.keys.size
     pct = " (#{pct}%)"
   else
     pct = ''
