@@ -54,9 +54,11 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   obsolete = []
   varstyle = []
 
-  template.each_pair {|key, txt|
+  template.keys.each {|key|
     missing << key if ! lang[l][key]
   }
+  
+  pct = ((templates.keys.size - missing.keys.size) * 100) / templates.keys.size
 
   lang[l].keys.each {|key|
     if !template[key]
@@ -68,6 +70,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
 
   if missing.size > 0 || obsolete.size > 0
     columns = 2
+    if pct == 100
     log "bq(error). #{language}\n\n"
     [[missing, 'Missing'], [obsolete, 'Obsolete'], [varstyle, 'Old-style variable substitution']].each {|cat|
         keys, title = *cat
