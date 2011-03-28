@@ -54,17 +54,9 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   obsolete = []
   varstyle = []
 
-  template.keys.each {|key|
-    missing << key if ! lang[l][key]
-  }
-  
-  lang[l].keys.each {|key|
-    if !template[key]
-      obsolete << key
-    elsif lang[l][key].include?('{{')
-      varstyle << key
-    end
-  }
+  missing = template.keys - lang[l].keys
+  obsolete = lang[l].keys - template.keys
+  varstyle = template.keys.select{|k| lang[l][k] && lang[l][k].include?('{{') }
 
   if missing.size > 0
     pct = ((template.keys.size - (varstyle + missing).uniq.size) * 100) / template.keys.size
