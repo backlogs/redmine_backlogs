@@ -18,6 +18,7 @@ ru:
   label_points_burn_down: Сколько осталось выполнить
   field_position: Положение 
   backlogs_product_backlog: "Бэклог продукта (список требований к функциональности, которые упорядочены по степени важности)"
+  label_impediments: Задержки
   backlogs_wiki_template: "Шаблон для спринта страницы wiki"
   points_committed: "выполненные оценки"
   required_burn_rate_points: "требуемая скорость выполнения (точки)"
