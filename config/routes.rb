@@ -25,6 +25,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.resources  :release,          :only => :destroy,            :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :releases,         :only => :index,              :controller => :rb_releases,         :as => "releases/:project_id"
     rb.resources  :releases,         :only => :snapshot,           :controller => :rb_releases,         :as => "releases/:project_id"
+    rb.connect "transitions/:project_id",                          :controller => :rb_stories,          :action => 'transitions'
   end
 
 end
+

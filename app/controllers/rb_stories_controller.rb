@@ -39,4 +39,19 @@ class RbStoriesController < RbApplicationController
     end
   end
 
+
+  def transitions
+    transitions = Hash.new
+    @project.trackers.each do |tid|
+      tracker = Tracker.find_by_id(tid)
+      transitions[tracker.id] = Hash.new
+      IssueStatus.find(:all, :order => "position ASC").each do |status|
+        allowed = status.find_new_statuses_allowed_to(User.current.roles_for_project(@project), tracker)
+        to = transitions[tracker.id]["from-#{status.id}"] = allowed << status
+      end
+    end
+    respond_to do |format|
+      format.json { render :json => transitions }
+    end
+  end
 end
