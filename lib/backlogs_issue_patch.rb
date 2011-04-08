@@ -103,7 +103,7 @@ module Backlogs
       end
 
       def backlogs_scrub_position_journal
-        @issue_before_change.position = self.position
+        @issue_before_change.position = self.position if @issue_before_change
       end
 
       def backlogs_after_save
