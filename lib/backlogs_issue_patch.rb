@@ -13,6 +13,8 @@ module Backlogs
         alias_method_chain :recalculate_attributes_for, :remaining_hours
         before_validation :backlogs_before_validation
         after_save  :backlogs_after_save
+
+        before_save :backlogs_scrub_position_journal
       end
     end
 
@@ -98,6 +100,10 @@ module Backlogs
           self.estimated_hours = self.remaining_hours if self.estimated_hours.blank? && ! self.remaining_hours.blank?
           self.remaining_hours = self.estimated_hours if self.remaining_hours.blank? && ! self.estimated_hours.blank?
         end
+      end
+
+      def backlogs_scrub_position_journal
+        @issue_before_change.position = self.position
       end
 
       def backlogs_after_save
