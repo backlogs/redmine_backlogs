@@ -14,6 +14,9 @@ language_name = {
 }
 
 webdir = File.join(File.dirname(__FILE__), '..', '..', '..', 'www.redminebacklogs.net')
+
+diffs = File.join(File.dirname(__FILE__), 'lang-diffs')
+
 $logfile = nil
 if File.directory? webdir
     $logfile = File.open(File.join(webdir, '_posts', 'en', '1992-01-01-translations.textile'), 'w')
@@ -45,7 +48,6 @@ serves as a base for all other translations
 Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   next if lang_file == template_file
 
-
   lang = YAML::load_file(lang_file)
   l = lang.keys[0]
   language = language_name[l] || l
@@ -57,6 +59,16 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   missing = (template.keys - lang[l].keys) + template.keys.select{|k| lang[l][k] && lang[l][k] =~ /^\[\[.*\]\]$/}
   obsolete = lang[l].keys - template.keys
   varstyle = template.keys.select{|k| lang[l][k] && lang[l][k].include?('{{') }
+
+  if File.directory? diffs
+    diff = {}
+    missing.each {|key|
+      diff[key] = template[key]
+    }
+    File.open("#{diffs}/#{l}.yaml", 'w') do |out|
+      out.write(diff.to_yaml)
+    end
+  end
 
   if missing.size > 0
     pct = ((template.keys.size - (varstyle + missing).uniq.size) * 100) / template.keys.size

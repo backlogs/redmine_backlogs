@@ -84,3 +84,22 @@ nl:
   backlogs_product_backlog: Product backlog
   remaining_hours: resterende uren
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
+  label_release_new: Nieuwe release
+  label_release_planning: Release Planning
+  field_number_of_snapshots: Opgeslagen point snapshots
+  today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
+  release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
+  field_initial_story_points: Initiele story points
+  remaining_story_points: resterende story points
+  field_release_end_date: Eind datum van de release
+  label_impediments: Impediments
+  error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
+  backlogs_impediment: Impediment
+  release_create_snapshot_today: Story point snapshot voor vandaag opslaan
+  label_release: Release
+  label_release_plural: Releases
+  today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
+  field_release_start_date: Startdaum release
+  label_release_end_date: Einddatum release
+  label_release_start_date: Startdatum release
+
