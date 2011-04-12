@@ -54,7 +54,7 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   obsolete = []
   varstyle = []
 
-  missing = template.keys - lang[l].keys
+  missing = (template.keys - lang[l].keys) + template.keys.select{|k| lang[l][k] && lang[l][k] =~ /^\[\[.*\]\]$/}
   obsolete = lang[l].keys - template.keys
   varstyle = template.keys.select{|k| lang[l][k] && lang[l][k].include?('{{') }
 
