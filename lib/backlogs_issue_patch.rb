@@ -23,8 +23,9 @@ module Backlogs
 
     module InstanceMethods
       def move_to_project_without_transaction_with_autolink(new_project, new_tracker = nil, options = {})
+
         newissue = move_to_project_without_transaction_without_autolink(new_project, new_tracker, options)
-        return newissue if newissue.blank?
+        return newissue if newissue.blank? || !self.project.module_enabled?('backlogs')
 
         if self.project_id == newissue.project_id and self.is_story? and newissue.is_story? and self.id != newissue.id
           relation = IssueRelation.new :relation_type => IssueRelation::TYPE_DUPLICATES
@@ -88,6 +89,8 @@ module Backlogs
       def recalculate_attributes_for_with_remaining_hours(issue_id)
         recalculate_attributes_for_without_remaining_hours(issue_id)
 
+        return unless self.project.module_enabled? 'backlogs'
+
         if issue_id && p = Issue.find_by_id(issue_id)
           if p.left != (p.right + 1) # this node has children
             p.update_attribute(:remaining_hours, p.leaves.sum(:remaining_hours).to_f)
@@ -96,6 +99,8 @@ module Backlogs
       end
 
       def backlogs_before_validation
+        return unless self.project.module_enabled? 'backlogs'
+
         if self.tracker_id == Task.tracker
           self.estimated_hours = self.remaining_hours if self.estimated_hours.blank? && ! self.remaining_hours.blank?
           self.remaining_hours = self.estimated_hours if self.remaining_hours.blank? && ! self.estimated_hours.blank?
@@ -112,6 +117,8 @@ module Backlogs
         ## Normally one of the _before_save hooks ought to take
         ## care of this, but appearantly neither root_id nor
         ## parent_id are set at that point
+
+        return unless self.project.module_enabled? 'backlogs'
 
         touched_sprints = []
 
