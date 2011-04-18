@@ -21,14 +21,14 @@ RB.Impediment = RB.Object.create(RB.Task, {
   // Override saveDirectives of RB.Task
   saveDirectives: function(){
     var j = this.$;
-    var prev = this.$.prev();
+    var nxt = this.$.next();
     var statusID = j.parent('td').first().attr('id').split("_")[1];
       
     var data = j.find('.editor').serialize() +
                "&is_impediment=true" +
                "&fixed_version_id=" + RB.constants['sprint_id'] +
                "&status_id=" + statusID +
-               "&prev=" + (prev.length==1 ? prev.data('this').getID() : '') +
+               "&next=" + (nxt.length==1 ? nxt.data('this').getID() : '') +
                (this.isNew() ? "" : "&id=" + j.children('.id').text());
 
     if( this.isNew() ){

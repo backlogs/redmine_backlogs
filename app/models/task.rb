@@ -29,7 +29,7 @@ class Task < Issue
                           end
 
     if valid_relationships && task.save
-      task.move_after params[:prev]
+      task.move_before params[:next]
       task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
     end
 
@@ -71,7 +71,7 @@ class Task < Issue
                           end
 
     if valid_relationships && result = journalized_update_attributes!(attribs)
-      move_after params[:prev]
+      move_before params[:next]
       update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
       result
     else
@@ -106,13 +106,13 @@ class Task < Issue
   end
 
   # assumes the task is already under the same story as 'id'
-  def move_after(id)
+  def move_before(id)
     id = nil if id.respond_to?('blank?') && id.blank?
     if id.nil?
       sib = self.siblings
-      move_to_left_of sib[0].id if sib.any?
+      move_to_right_of sib[-1].id if sib.any?
     else
-      move_to_right_of id
+      move_to_left_of id
     end
   end
 
