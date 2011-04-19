@@ -1,10 +1,8 @@
 body
 {
-  background-image:url('images/ika_bg.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: right bottom;
-  
 }
 
 #assigned_to_id_options{
