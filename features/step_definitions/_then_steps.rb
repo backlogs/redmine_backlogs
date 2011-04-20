@@ -5,7 +5,7 @@ Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, ".sprint")
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint")
   sprint_backlogs.length.should == count.to_i
 end
 

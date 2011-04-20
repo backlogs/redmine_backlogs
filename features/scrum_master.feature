@@ -52,6 +52,16 @@ Feature: Scrum Master
      Then the request should complete successfully
       And I should see "Impediment 1"
 
+  Scenario: Create a new sprint
+    Given I am viewing the master backlog
+      And I want to create a sprint
+      And I want to set the name of the sprint to sprint 005
+      And I want to set the sprint_start_date of the sprint to 2010-03-01
+      And I want to set the effective_date of the sprint to 2010-03-20
+     When I create the sprint
+     Then the request should complete successfully
+      And I should see "sprint 005"
+
   Scenario: Update sprint details
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001

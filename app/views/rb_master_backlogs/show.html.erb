@@ -29,6 +29,11 @@
 <%- end %>
 
 <%- content_for :helpers do %>
+  <div id="sprint_template">
+    <%- sprint = Sprint.new( :name => "sprint" ) -%>
+    <%- sprint_backlog = { :sprint => sprint, :stories => nil } -%>
+    <%= render :partial => "backlog", :object => sprint_backlog %>
+  </div>
 <%= render :partial => "rb_stories/helpers" %>
 <div id="last_updated"><%= date_string_with_milliseconds(@last_update, 0.001) %></div>
 <%- end %>

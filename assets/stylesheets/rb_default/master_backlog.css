@@ -27,6 +27,17 @@
   top:1px;
   width:100px;
 }
+#product_backlog_container .backlog .header > .add_new_sprint {
+  font-size:11px;
+  height:28px;
+  line-height:31px;
+  padding:0;
+  position:absolute;
+  right:110px;
+  text-align:right;
+  top:1px;
+  width:100px;
+}
 #backlogs_container .backlog{
   -moz-box-shadow: 3px 3px 4px #A0A0A0;
   -webkit-box-shadow: 3px 3px 4px #A0A0A0;

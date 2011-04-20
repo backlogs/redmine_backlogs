@@ -50,6 +50,8 @@ RB.Backlog = RB.Object.create({
     
     // Handle New Story clicks
     j.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
+    // Handle New Sprint clicks
+    j.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
   },
   
   dragComplete: function(event, ui) {
@@ -90,6 +92,11 @@ RB.Backlog = RB.Object.create({
     $(this).parents('.backlog').data('this').newStory();
   },
 
+  handleNewSprintClick: function(event){
+    event.preventDefault();
+    $(this).parents('.backlog').data('this').newSprint();
+  },
+
   isSprintBacklog: function(){
     return $(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
   },
@@ -103,6 +110,15 @@ RB.Backlog = RB.Object.create({
     story.find('.editor' ).first().focus();
   },
   
+  newSprint: function(){
+    var sprint_backlog = $('#sprint_template').children().first().clone();
+
+    $("*#sprint_backlogs_container").append(sprint_backlog);
+    o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
+    o.edit();
+    sprint_backlog.getSprint().find('.editor' ).first().focus();
+  },
+
   recalcVelocity: function(){
     if( !this.isSprintBacklog() ) return true;
     total = 0;

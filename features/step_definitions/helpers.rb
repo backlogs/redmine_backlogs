@@ -30,6 +30,12 @@ def initialize_impediment_params(sprint_id)
   params
 end
 
+def initialize_sprint_params
+  params = HashWithIndifferentAccess.new(Sprint.new.attributes)
+  params['project_id'] = @project.id
+  params
+end
+
 def login_as_product_owner
   visit url_for(:controller => 'account', :action=>'login')
   fill_in 'username', :with => 'jsmith'

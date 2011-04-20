@@ -24,6 +24,7 @@ Given /^I am a scrum master of the project$/ do
   role.permissions << :subscribe_to_calendars
   role.permissions << :view_wiki_pages        # NOTE: This is a Redmine core permission
   role.permissions << :edit_wiki_pages        # NOTE: This is a Redmine core permission
+  role.permissions << :create_sprints
   role.save!
   login_as_scrum_master
 end
@@ -89,6 +90,10 @@ end
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   sprint = Sprint.find(:first, :conditions => { :name => sprint_subject })
   @impediment_params = initialize_impediment_params(sprint.id)
+end
+
+Given /^I want to create a sprint$/ do
+  @sprint_params = initialize_sprint_params
 end
 
 Given /^I want to edit the task named (.+)$/ do |task_subject|
