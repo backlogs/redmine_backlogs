@@ -27,7 +27,7 @@ nl:
   backlogs_sprints: Sprints
   field_position: Positie
   backlogs_active: lopend
-  inclusion: is geen onderdeel van de lijst
+  error_inclusion: is geen onderdeel van de lijst
   backlogs_product_backlog_is_empty: Product backlog is leeg
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project lijkt inactief
