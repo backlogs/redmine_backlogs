@@ -104,3 +104,10 @@ Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
 }
 
 $logfile.close if $logfile
+
+if File.directory? webdir
+  Dir.chdir(webdir)
+  `git add .`
+  `git commit -m "Translation updates"`
+  `git push`
+end
