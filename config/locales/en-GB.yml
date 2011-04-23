@@ -27,7 +27,7 @@ en-GB:
   backlogs_sprints: Sprints
   field_position: Position
   backlogs_active: active
-  inclusion: is not included in the list
+  error_inclusion: is not included in the list
   backlogs_product_backlog_is_empty: Product backlog is empty
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project shows no activity

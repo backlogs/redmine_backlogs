@@ -87,7 +87,7 @@ en:
   error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
 
   field_tracker_id: Tracker ID
-  inclusion: "is not included in the list"
+  error_inclusion: "is not included in the list"
   
   label_webcal: Webcal Feed
   label_master_backlog: Master Backlog
