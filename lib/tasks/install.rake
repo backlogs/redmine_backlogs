@@ -7,6 +7,45 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
+      redmine_supported = "1.1.2"
+
+      platform = nil
+      version = nil
+      File.open('doc/CHANGELOG').each_line do |line|
+        break if platform && version
+
+        platform = :redmine if line.match(/^== Redmine changelog$/)
+        
+        m = line.match(/^== 2011-03-07 v([.0-9]+)$/)
+        version = m[1] if m
+      end
+
+      raise "Only Redmine version #{redmine_supported} is supported at this time" unless platform == :redmine && version == redmine_supported
+
+      begin
+        Story.trackers
+      rescue NoMethodError
+        raise "Looks like there's a conflicting plugin that redefines the Story class"
+      end
+
+      issues = []
+      puts "Testing for database corruption..."
+      Issue.all.each do |issue|
+        begin
+          issue.save!
+        rescue => e
+          issues << [issue.id, "#{e}"]
+        end
+      end
+      if issues.size == 0
+        puts "Database OK!"
+      else
+        puts "The following issues have problems (how ironic is that?):"
+        issues.each do |issue|
+          puts "* #{issue[0]}: #{issue[1]}"
+        end
+      end
+
       ['holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem
