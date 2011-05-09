@@ -53,7 +53,7 @@ module Backlogs
       end
 
       def is_story?
-        return (Story.trackers.include?(self.tracker_id) and self.root?)
+        return Story.trackers.include?(self.tracker_id)
       end
 
       def is_task?
@@ -61,8 +61,12 @@ module Backlogs
       end
 
       def story
-        return Issue.find(:first,
-          :conditions => [ "id = ? and tracker_id in (?)", self.root_id, Story.trackers ])
+        # the self.id test verifies we're not looking at a new,
+        # unsaved issue object
+        return nil unless self.id && self.is_task?
+
+        return Issue.find(:first, :order => 'lft DESC',
+          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, Story.trackers ])
       end
 
       def blocks
@@ -144,7 +148,7 @@ module Backlogs
               connection.execute "update issues set tracker_id = #{connection.quote(Task.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
             end
 
-            touched_sprints = [self.root_id, self.root_id_was].compact.uniq.collect{|s| Story.find(s).fixed_version}.compact
+            touched_sprints = [self.parent_id, self.parent_id_was].compact.uniq.collect{|t| Task.find(t).story }.compact.uniq.collect{|s| s.fixed_version}.compact
           end
         end
 

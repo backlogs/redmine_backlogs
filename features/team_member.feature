@@ -32,7 +32,7 @@ Feature: Team Member
       And I set the subject of the task to A Whole New Task
      When I create the task
      Then the request should complete successfully
-      And the 1st task for Story 1 should be A Whole New Task
+      And the 2nd task for Story 1 should be A Whole New Task
 
   Scenario: Update a task for a story
     Given I am viewing the taskboard for Sprint 001

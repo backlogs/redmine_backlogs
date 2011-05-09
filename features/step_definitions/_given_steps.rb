@@ -232,6 +232,7 @@ end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
   Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:card_spec => stock } )
+  Cards::TaskboardCards.selected_label.should_not be_nil
 end
 
 Given /^I have set my API access key$/ do

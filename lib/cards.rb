@@ -210,7 +210,7 @@ module Cards
     
             @pdf.start_new_page if row == 1 and col == 1 and @cards != 1
     
-            parent_story = issue.story
+            parent_story = (type == :task ? issue.story : issue)
     
             # card bounds
             @pdf.bounding_box self.top_left(row, col), :width => @width, :height => @height do

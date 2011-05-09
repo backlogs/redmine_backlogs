@@ -37,7 +37,7 @@ class Task < Issue
   end
 
   # TODO: there's an assumption here that impediments always have the
-  # task-tracker as their tracker.
+  # task-tracker as their tracker, and are top-level issues.
   def self.find_all_updated_since(since, project_id, find_impediments = false)
     find(:all,
          :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
@@ -46,13 +46,13 @@ class Task < Issue
 
   def self.tasks_for(story_id)
     tasks = []
-    Task.find(:all,
-              :conditions => ['tracker_id = ? and not parent_id is NULL and root_id = ?', Task.tracker, story_id],
-              :order => :lft
-              ).each_with_index {|task, i|
-      task.rank = i + 1
-      tasks << task
-    }
+    story = Story.find_by_id(story_id)
+    if Story.trackers.include?(story.tracker_id)
+      story.descendants.each_with_index {|task, i|
+        task.rank = i + 1
+        tasks << task 
+      }
+    end
     return tasks
   end
 
@@ -121,7 +121,12 @@ class Task < Issue
   end
 
   def rank
-    @rank ||= Issue.count(:conditions => ['tracker_id = ? and not parent_id is NULL and root_id = ? and lft <= ?', Task.tracker, story_id, self.lft])
+    s = self.story
+    return nil if !s
+
+    @rank ||= Issue.count(
+      :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?',
+                      Task.tracker, s.root_id, s.lft, self.lft])
     return @rank
   end
 end

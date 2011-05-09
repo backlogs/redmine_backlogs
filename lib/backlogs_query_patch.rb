@@ -13,26 +13,35 @@ module Backlogs
             base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
             base.add_available_column(QueryColumn.new(:velocity_based_estimate))
 
+            # couldn't get HAVING to work, so a subselect will have to
+            # do
+            story_sql = "from issues story
+                         where
+                          story.root_id = issues.root_id
+                          and story.lft in (
+                            select max(story_lft.lft)
+                            from issues story_lft
+                            where story_lft.root_id = issues.root_id
+                            and story_lft.tracker_id in (#{Story.trackers(:string)})
+                            and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
+                          )"
+
             base.add_available_column(QueryColumn.new(:position,
                                       :sortable => [
                                         # sprint startdate
                                         "coalesce((select sprint_start_date from versions where versions.id = issues.fixed_version_id), '1900-01-01')",
 
-                                        # sprint name, in case start dates are the same
-                                        "(select name from versions where versions.id = issues.fixed_version_id)",
+                                        # sprint id, in case start dates are the same
+                                        "(select id from versions where versions.id = issues.fixed_version_id)",
 
-                                        # make sure stories with NULL
-                                        # position sort-last
-                                        "(select case when root.position is null then 1 else 0 end from issues root where issues.root_id = root.id)",
+                                        # make sure stories with NULL position sort-last
+                                        "(select case when story.position is null then 1 else 0 end #{story_sql})",
 
                                         # story position
-                                        "(select root.position from issues root where issues.root_id = root.id)",
+                                        "(select story.position #{story_sql})",
 
-                                        # story ID, in case positions
-                                        # are the same (SHOULD NOT HAPPEN!).
-                                        # DO NOT CHANGE; root_id is the only field that sorts the same for stories _and_
-                                        # the tasks it has.
-                                        "issues.root_id",
+                                        # story ID, in case story positions are the same (SHOULD NOT HAPPEN!).
+                                        "(select story.id #{story_sql})",
 
                                         # order in task tree
                                         "issues.lft"
@@ -78,9 +87,9 @@ module Backlogs
                 selected_values.each { |val|
                     case val
                         when "story"
-                            sql << "(#{db_table}.tracker_id in (#{story_trackers}) and #{db_table}.parent_id is NULL)"
+                            sql << "(#{db_table}.tracker_id in (#{story_trackers}))"
                         when "task"
-                            sql << "(#{db_table}.tracker_id = #{Task.tracker} and not #{db_table}.parent_id is NULL)"
+                            sql << "(#{db_table}.tracker_id = #{Task.tracker})"
                         when "impediment"
                             sql << "(#{db_table}.id in (
                                   select issue_from_id

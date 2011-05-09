@@ -4,7 +4,7 @@ class RemoveTaskPosition < ActiveRecord::Migration
       # this intentionally loads tasks as stories so we can issue
       # remove_from_list, which does more than just nilling the
       # position
-      Story.find(:all, :conditions => "id <> root_id and not position is null").each do |t|
+      Story.find(:all, :conditions => "tracker_id = #{Task.tracker}").each do |t|
         t.remove_from_list
       end
     end

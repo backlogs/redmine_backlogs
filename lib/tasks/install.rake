@@ -7,6 +7,9 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
+      batch = (ENV['batch'] == 'true')
+      corruption_test = (ENV['corruptiontest'] != 'false')
+
       redmine_supported = "1.1.2"
 
       platform = nil
@@ -28,21 +31,25 @@ namespace :redmine do
         raise "Looks like there's a conflicting plugin that redefines the Story class"
       end
 
-      issues = []
-      puts "Testing for database corruption..."
-      Issue.all.each do |issue|
-        begin
-          issue.save!
-        rescue => e
-          issues << [issue.id, "#{e}"]
-        end
-      end
-      if issues.size == 0
-        puts "Database OK!"
+      if !corruption_test
+        puts "Assuming no database corruption"
       else
-        puts "The following issues have problems (how ironic is that?):"
-        issues.each do |issue|
-          puts "* #{issue[0]}: #{issue[1]}"
+        issues = []
+        puts "Testing for database corruption..."
+        Issue.all.each do |issue|
+          begin
+            issue.save!
+          rescue => e
+            issues << [issue.id, "#{e}"]
+          end
+        end
+        if issues.size == 0
+          puts "Database OK!"
+        else
+          puts "The following issues have problems (how ironic is that?):"
+          issues.each do |issue|
+            puts "* #{issue[0]}: #{issue[1]}"
+          end
         end
       end
 
@@ -84,7 +91,7 @@ namespace :redmine do
 
       trackers = Tracker.find(:all)
 
-      if Story.trackers.length == 0
+      if !batch && Story.trackers.length == 0
         puts "Configuring story and task trackers..."
         invalid = true
         while invalid
@@ -122,7 +129,7 @@ namespace :redmine do
       end
 
       
-      if !Task.tracker
+      if !batch && !Task.tracker
         # Check if there is at least one tracker available
         puts "-----------------------------------------------------"
         if settings[:story_trackers].length < trackers.length
