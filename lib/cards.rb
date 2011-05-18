@@ -6,11 +6,14 @@ require 'rexml/document'
 
 require 'yaml'
 require 'uri/common'
+require 'open-uri/cached'
 
 module Cards
     class TaskboardCards
         include Redmine::I18n
-        
+        include GravatarHelper::PublicMethods
+        include ERB::Util
+                
         begin
           LABELS = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
         rescue
@@ -30,7 +33,7 @@ module Cards
             raise "Label stock \"#{Setting.plugin_redmine_backlogs[:card_spec]}\" not found" unless label
 
             label['papersize'].upcase!
-    
+
             geom = Prawn::Document::PageGeometry::SIZES[label['papersize']]
             raise "Paper size '#{label['papersize']}' not supported" if geom.nil?
     
@@ -270,14 +273,31 @@ module Cards
                                     :height => @y - 8
                                 }
                         end
-    
+
+                        start_of_footer = @y
+                        
+                        @y = start_of_footer
                         @pdf.font_size(6) do
                             category = issue.category ? "#{l(:field_category)}: #{issue.category.name}" : ''
                             catsize = @pdf.width_of(" #{category} ")
                             text_box(category, {
                                     :width => catsize,
                                     :height => @pdf.font.height
-                                }, pdf.bounds.width - catsize)
+                                })
+                        end
+                        
+                        @y = start_of_footer
+                        gravatar_offset = gravatar_box(issue)
+                        
+                        @y = start_of_footer
+                        @pdf.font_size(10) do
+                            #category = issue.category ? "#{l(:field_category)}: #{issue.category.name}" : ''
+                            assignee = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.firstname} #{issue.assigned_to.lastname}"
+                            assigneesize = @pdf.width_of(" #{assignee} ")
+                            text_box(assignee, {
+                                    :width => assigneesize,
+                                    :height => @pdf.font.height
+                                }, pdf.bounds.width - assigneesize - gravatar_offset)
                         end
                     end
                 end
@@ -293,7 +313,21 @@ module Cards
     
             card(story, :story)
         end
-    
+         
+        def gravatar_box(issue)
+            return 0 if issue.assigned_to.blank?
+                        
+            gravatar_width = 20
+            
+            image_url = gravatar_url(issue.assigned_to.mail.to_s.downcase, :size => gravatar_width * 4)
+            image_obj = open(image_url)
+            y_offset = @y + (gravatar_width - 10)
+            x_offset = @pdf.bounds.width - gravatar_width
+            @pdf.image image_obj, :at => [x_offset, y_offset], :width => gravatar_width
+            
+            return gravatar_width + 2
+        end 
+        
         def text_box(s, options, x = 0)
             box = Prawn::Text::Box.new(s, options.merge(:overflow => :ellipses, :at => [x, @y], :document => @pdf))
             box.render
