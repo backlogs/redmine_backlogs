@@ -49,8 +49,11 @@
     <%- @sprint.stories.each do |story| %>
     <tr>
       <td>
-        <div class="story <%= mark_if_closed(story) %>">
-          <div class="id"><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %></div>
+        <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
+          <div class="id">
+              <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
+              <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+          </div>
           <div class="subject"><%= story.subject %></div>
         </div>
       </td>

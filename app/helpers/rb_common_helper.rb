@@ -17,6 +17,10 @@ module RbCommonHelper
     task.blank? || task.assigned_to.blank? ? '' : "style='background-color:#{task.assigned_to.backlogs_preference(:task_color)}'"
   end
 
+  def build_inline_style_color(task)
+    task.blank? || task.assigned_to.blank? ? '' : "#{task.assigned_to.backlogs_preference(:task_color)}"
+  end 
+  
   def breadcrumb_separator
     "<span class='separator'>&gt;</span>"
   end
