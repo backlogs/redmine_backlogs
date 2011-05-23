@@ -33,10 +33,21 @@
   line-height:31px;
   padding:0;
   position:absolute;
-  right:110px;
+  right:90px;
   text-align:right;
   top:1px;
   width:100px;
+}
+#product_backlog_container .backlog .header > .close_sprint {
+  font-size:11px;
+  height:28px;
+  line-height:31px;
+  padding:0;
+  position:absolute;
+  right:170px;
+  text-align:right;
+  top:1px;
+  width:150px;
 }
 #backlogs_container .backlog{
   -moz-box-shadow: 3px 3px 4px #A0A0A0;
@@ -466,3 +477,4 @@
 .debug #new_story{
   background-color:red;
 }
+
