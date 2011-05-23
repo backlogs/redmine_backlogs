@@ -7,6 +7,14 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
+      ['open-uri-cached', holidays', 'icalendar', 'prawn'].each{|gem|
+        begin
+          require gem
+        rescue LoadError
+          raise "You are missing the '#{gem}' gem"
+        end
+      }
+
       batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
@@ -35,8 +43,9 @@ namespace :redmine do
         puts "Assuming no database corruption"
       else
         issues = []
-        puts "Testing for database corruption..."
-        Issue.all.each do |issue|
+        puts "Testing #{Issue.count(:all)} issues for database corruption..."
+        Issue.all.each_with_index do |issue, i|
+          puts i + 1 if ((i+1) % 100) == 0
           begin
             issue.save!
           rescue => e
@@ -52,14 +61,6 @@ namespace :redmine do
           end
         end
       end
-
-      ['holidays', 'icalendar', 'prawn'].each{|gem|
-        begin
-          require gem
-        rescue LoadError
-          raise "You are missing the '#{gem}' gem"
-        end
-      }
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       settings = Setting.plugin_redmine_backlogs
