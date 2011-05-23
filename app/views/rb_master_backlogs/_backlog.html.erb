@@ -8,6 +8,7 @@
       <div class="label"><%=l(:label_product_backlog).titleize %></div>
       <a class="add_new_story" href="#">New Story</a>
       <a class="add_new_sprint" href="#">New Sprint</a>
+      <a class="close_sprint" <%= link_to "Close completed Sprints", close_completed_project_versions_path(@project), :method => :put, :target => "_blank" %>
     <%- end %>
   </div>
   <ul class="stories">
