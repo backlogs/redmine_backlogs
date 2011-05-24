@@ -122,7 +122,7 @@ module RbCommonHelper
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
   end
 
-  def estimated_hours(item)
+  def estimated_hour(item)
     item.estimated_hours.blank? || item.estimated_hours==0 ? "" : item.estimated_hours
   end
 

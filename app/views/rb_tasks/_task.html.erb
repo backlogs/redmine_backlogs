@@ -15,7 +15,7 @@
     <div class="v"><%= task.category_id %></div>
   <% end %>
   </div>
-  <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(task) %></div>
+  <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hour(task) %></div>
   <div class="indicator"> </div>
   <div class="meta">
     <div class="story_id"><%= task.story ? task.story.id : '' %></div>
