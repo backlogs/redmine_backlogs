@@ -7,7 +7,7 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
-      ['open-uri-cached', holidays', 'icalendar', 'prawn'].each{|gem|
+      ['open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem
         rescue LoadError
