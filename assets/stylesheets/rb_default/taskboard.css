@@ -158,6 +158,10 @@ td.closed{
   position:relative;
   width:85px;
 }
+.issue.closed {
+  height: 20px;
+}
+
 .issue{
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;
