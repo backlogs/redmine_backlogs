@@ -18,7 +18,7 @@ namespace :redmine do
       batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
-      redmine_supported = "1.1.2"
+      redmine_supported = "1.1.3"
 
       platform = nil
       version = nil
