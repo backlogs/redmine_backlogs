@@ -27,7 +27,7 @@ namespace :redmine do
 
         platform = :redmine if line.match(/^== Redmine changelog$/)
         
-        m = line.match(/^== 2011-03-07 v([.0-9]+)$/)
+        m = line.match(/^== [0-9]{4}-[0-9]{2}-[0-9]{2} v([.0-9]+)$/)
         version = m[1] if m
       end
 
