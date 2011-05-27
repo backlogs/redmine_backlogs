@@ -1,0 +1,21 @@
+<li class="model story <%= mark_if_closed(issue) %>" id="<%= story_html_id_or_empty(issue) %>">
+  <div class="id">
+    <div class="t"><%= issue_link_or_empty(issue) %></div>
+    <div class="v"><%= id_or_empty(issue) %></div>
+  </div>
+  <div class="tracker_id">
+    <div class="t"><%= tracker_name_or_empty(issue) %></div>
+    <div class="v"><%= tracker_id_or_empty(issue) %></div>
+  </div>
+  <div class="subject editable" fieldname="subject"><%=h issue.subject %></div>
+  <div class="status_id editable" fieldtype="select" fieldname="status_id">
+    <div class="t"><%= status_label_or_default(issue) %></div>
+    <div class="v"><%= status_id_or_default(issue) %></div>
+  </div>
+  <div class="story_points editable" fieldname="story_points"><%= story_points_or_empty(issue) %></div>
+  <div class="fixed_version_id"><%= issue.fixed_version_id %></div>
+  <div class="higher_item_id"><%= issue.higher_item.blank? ? '' : issue.higher_item.id %></div>
+  <div class="meta">
+    <%= render :partial => "shared/model_errors", :object => issue.errors %>
+  </div>
+</li>

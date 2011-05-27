@@ -123,3 +123,9 @@ ja:
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
+
+  label_issues: ストーリーにならないチケット
+  button_new_issue: チケットを作る
+
+  label_insert_spent_hour: "時間入力だよ"
+  label_update_spent_hour: "時間を編集したよ"

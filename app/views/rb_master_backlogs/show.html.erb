@@ -21,6 +21,9 @@
   <div id="backlogs_container">
     <div id="product_backlog_container">
       <%= render :partial => 'backlog', :object => @product_backlog %>
+      <% @issues_backlog.each do |issue_backlog| %>
+        <%= render :partial => 'issues', :object => issue_backlog %>
+      <% end %>
     </div>
     <div id="top_sprint_backlogs_container">
       <div id="sprint_backlogs_container">

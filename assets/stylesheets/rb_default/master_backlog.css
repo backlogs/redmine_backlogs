@@ -69,7 +69,7 @@
   width:100%;
 }
 #product_backlog_container .backlog{ /* Overrides style above */
-  position:absolute;
+  position:relative;
   top:0;
 }
 #backlogs_container .backlog .header{

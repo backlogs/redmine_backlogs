@@ -1,0 +1,29 @@
+<style type="text/css">
+.issue_anchor {
+  font-size: 11px;
+  height: 28px;
+  line-height: 31px;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  position: absolute;
+  right: 110px;
+  text-align: right;
+  top: 1px;
+  width: 100px;
+  color: #CC0000;
+  text-decoration: none;
+}
+</style>
+
+<div class="backlog">
+  <div class="header">
+    <div class="label"><%= issues[:tracker] %></div>
+    <%= link_to 'issues', {:project_id => @project, :controller => 'issues', :set_filter => 1, :tracker_id => issues[:tracker]}, :class => 'issue_anchor', :target => '_blank', :style => "right: 150px;" %>
+    <%= link_to_if_authorized l(:button_new_issue), {:project_id => @project, :controller => 'issues', :action => 'new'}, :class => 'issue_anchor', :target => '_blank', :style => "right: 30px;" %>
+  </div>
+  <ul class="stories">
+    <%= render :partial => "rb_stories/issue", :collection => issues[:stories] %>
+  </ul>
+</div>

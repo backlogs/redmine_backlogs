@@ -15,6 +15,19 @@ class RbMasterBacklogsController < RbApplicationController
     @last_update = (last_story ? last_story.updated_on : nil)
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
     @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => s.stories } }
+    
+    @issue_trackers = @project.trackers.all.delete_if {|t| t.id == RbTask.tracker or RbStory.trackers.include?(t.id) }
+    @issues = Array.new
+    @issues_backlog = Array.new
+    @issue_trackers.each do |tracker|
+      is = RbStory.find(
+                          :all, 
+                          :conditions => ["project_id=? AND tracker_id = (?)", @project, tracker],
+                          :order => "position ASC"
+                          ).delete_if {|i| i.closed?}
+      @issues << is
+      @issues_backlog << {:sprint => nil, :tracker => tracker, :stories => is}
+    end
 
     respond_to do |format|
       format.html { render :layout => "rb"}
