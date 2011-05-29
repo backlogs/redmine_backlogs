@@ -82,7 +82,9 @@ module Cards
         end
 
         def self.malformed(label)
-          return TaskboardCards.topts(label['height']) > TaskboardCards.topts(label['vertical_pitch']) || TaskboardCards.topts(label['width']) > TaskboardCards.topts(label['horizontal_pitch'])
+          return true if label['down'] > 1 && TaskboardCards.topts(label['height']) > TaskboardCards.topts(label['vertical_pitch']) 
+          return true if label['across'] > 1 && TaskboardCards.topts(label['width']) > TaskboardCards.topts(label['horizontal_pitch'])
+          return false
         end
 
         def self.fetch_labels
