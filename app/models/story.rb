@@ -68,7 +68,13 @@ class Story < Issue
     end
 
     def self.trackers(type = :array)
-        trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+        # this happens during initial redmine install
+        begin
+            trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+        rescue ActiveRecord::StatementInvalid
+            return []
+        end
+
         return [] if trackers.blank?
 
         return trackers.join(',') if type == :string
