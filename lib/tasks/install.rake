@@ -18,7 +18,7 @@ namespace :redmine do
       batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
-      redmine_supported = "1.1.3"
+      redmine_supported = "1.2.0"
 
       platform = nil
       version = nil
@@ -77,7 +77,7 @@ namespace :redmine do
         print "Fetching card labels from http://git.gnome.org..."
         STDOUT.flush
         begin
-          Cards::TaskboardCards.fetch_labels
+          BacklogsCards::LabelStock.fetch_labels
           print "done!\n"
         rescue Exception => fetch_error
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
@@ -88,7 +88,7 @@ namespace :redmine do
           FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
         end
       end
-      settings[:card_spec] ||= Cards::TaskboardCards::LABELS.keys[0] unless Cards::TaskboardCards::LABELS.size == 0
+      settings[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
 
       trackers = Tracker.find(:all)
 

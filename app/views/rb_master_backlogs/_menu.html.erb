@@ -39,7 +39,7 @@
                            :sprint_id => backlog[:sprint],
                            :format => :pdf }),
         :for => :sprint,
-        :condition => Cards::TaskboardCards.selected_label
+        :condition => BacklogsCards::LabelStock.selected_label
       },
       {
         :item => menu_link(l(:label_product_cards), {

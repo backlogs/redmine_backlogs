@@ -2,10 +2,10 @@ include RbCommonHelper
 
 class RbStoriesController < RbApplicationController
   unloadable
-  include Cards
+  include BacklogsCards
   
   def index
-    cards = TaskboardCards.new(current_language)
+    cards = Cards.new(current_language)
     
     if params[:sprint_id]
       @sprint.stories.each { |story| cards.add(story) }
