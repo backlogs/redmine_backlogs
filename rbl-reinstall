@@ -122,6 +122,15 @@ if [[ $DB =~ [Yy] ]]; then
     echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
 
     cd ~/redmine/redmine
+
+    if [ -f ~/redmine/setup/redmine.sql.gz ]; then
+      zcat ~/redmine/setup/redmine.sql.gz | mysql -u redmine -p$DBPW redmine
+
+      if [ ! -z "$ADMINPW" ]; then
+        ./script/runner 'user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = "$ADMINPW"; user.save!'
+      fi
+    fi
+
     rake db:migrate
     rake generate_session_store
     rake redmine:load_default_data
