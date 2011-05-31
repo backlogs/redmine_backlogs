@@ -178,9 +178,24 @@ module BacklogsCards
     end
   end
 
-  class Template
+  # put the mixins in a separate class, seems to interfere with prawn otherwise
+  class Gravatar
     include GravatarHelper::PublicMethods
     include ERB::Util
+
+    def initialize(email, size)
+      # see conversion chart pt -> px @ http://sureshjain.wordpress.com/2007/07/06/53/
+      @url = gravatar_url(email, :size => (size * 16) / 12)
+    end
+
+    def image
+      return open(@url)
+    end
+
+    attr_reader :url
+  end
+
+  class Template
 
     def initialize(width, height, template)
       f = nil
@@ -211,11 +226,23 @@ module BacklogsCards
 
     def style(b)
       s = b.xpath('Span')[0]
+      style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
+      style = 'normal' if style == ''
       return {
         :size => Integer(s['font_size']),
-        :weight => s['font_weight'],
-        :italic => (s['font_italic'] != "False")
+        :style => style.intern
       }
+    end
+
+    def line_width(obj)
+      return obj['line_width'].to_points
+    end
+
+    def color(obj, prop)
+      c = obj[prop]
+      return nil if c =~ /00$/
+      raise "Alpha channel not supported" unless c =~ /ff$/i
+      return c[2, 6]
     end
 
     def line(l)
@@ -229,19 +256,44 @@ module BacklogsCards
     end
 
     def render(x, y, pdf, data)
+      default_stroke_color = pdf.stroke_color
+      default_fill_color = pdf.fill_color
+
       pdf.bounding_box [x, y], :width => @width, :height => @height do
         @card.children.each {|obj|
           next if obj.text?
 
           case obj.name
+            when 'Object-box'
+              dim = box(obj)
+              pdf.fill_color = color(obj, 'fill_color') || default_fill_color
+              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
+              pdf.line_width = line_width(obj)
+
+              pdf.stroke {
+                if color(obj, 'fill_color')
+                  pdf.fill_rectangle [312,260], 180, 16 
+                else
+                  pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
+                end
+              }
+
+
             when 'Object-line'
               dim = line(obj)
-              pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
+              pdf.line_width = line_width(obj)
+              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
+
+              pdf.stroke {
+                pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
+              }
 
             when 'Object-text'
               dim = box(obj)
+
+              pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
+
               content = ''
-              
               obj.xpath('Span')[0].children.each {|t|
                 if t.text?
                   content << t.text
@@ -254,24 +306,18 @@ module BacklogsCards
                 end
               }
 
+              content.strip!
+
               s = style(obj)
               pdf.font_size(s[:size]) do
-                options = {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h]}
-                options[:style => :italic] if s[:italic]
-
-                Prawn::Text::Box.new(content, options).render
+                Prawn::Text::Box.new(content, {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style]}).render
               end
 
             when 'Object-image'
               if data['email']
                 dim = box(obj)
 
-                size = (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]
-
-                # see conversion chart pt -> px @ http://sureshjain.wordpress.com/2007/07/06/53/
-                image_url = gravatar_url(data['email'], :size => (size * 16) / 12)
-                image_obj = open(image_url)
-                pdf.image image_obj, :at => [dim[:x], dim[:y]], :width => dim[:w]
+                pdf.image Gravatar.new(data['email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image, :at => [dim[:x], dim[:y]], :width => dim[:w]
               end
 
             else
@@ -279,6 +325,9 @@ module BacklogsCards
           end
         }
       end
+
+      pdf.stroke_color = default_stroke_color
+      pdf.fill_color = default_fill_color
     end
   end
 
@@ -317,14 +366,14 @@ module BacklogsCards
     attr_reader :pdf
   
     def card(issue, type)
-      row = (@cards % @label.down) + 1
-      col = ((@cards / @label.down) % @label.across) + 1
+      row = @cards % @label.down
+      col = Integer(@cards / @label.down) % @label.across
       @cards += 1
   
-      @pdf.start_new_page if row == 1 and col == 1 and @cards != 1
+      @pdf.start_new_page if row == 0 and col == 0 and @cards != 1
   
-      x = @label.left_margin + (@label.horizontal_pitch * (col - 1))
-      y = @label.paper_height - (@label.top_margin + @label.vertical_pitch * (row - 1))
+      x = @label.left_margin + (@label.horizontal_pitch * col)
+      y = @label.paper_height - (@label.top_margin + (@label.vertical_pitch * row))
 
       data = {}
       case type
@@ -334,11 +383,11 @@ module BacklogsCards
           data['story.subject'] = issue.story.subject
 
           data['task.id'] = issue.id
-          data['task.subject'] = issue.subject
-          data['task.description'] = issue.description || data['story.subject']
+          data['task.subject'] = issue.subject.to_s.strip
+          data['task.description'] = issue.description.to_s.strip; data['task.description'] = data['task.subject'] if data['task.description'] == ''
           data['task.category'] = issue.category ? issue.category.name : ''
           data['task.hours.estimated'] = (issue.estimated_hours ? "#{issue.estimated_hours}" : '?') + ' ' + l(:label_hours)
-          data['task.hours.remaining'] = (issue.hours_remaining ? "#{issue.hours_remaining}" : '?') + ' ' + l(:label_hours)
+          data['task.hours.remaining'] = (issue.remaining_hours ? "#{issue.remaining_hours}" : '?') + ' ' + l(:label_hours)
           data['task.position'] = issue.position ? issue.position : l(:label_not_prioritized)
           data['task.path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
           data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
@@ -350,7 +399,7 @@ module BacklogsCards
         when :story
           data['story.id'] = issue.id
           data['story.subject'] = issue.subject
-          data['story.description'] = issue.description || data['story.subject']
+          data['story.description'] = issue.description.to_s.strip; data['story.description'] = data['story.subject'] if data['story.description'] == ''
           data['story.category'] = issue.category ? issue.category.name : ''
           data['story.size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
           data['story.position'] = issue.position ? issue.position : l(:label_not_prioritized)
