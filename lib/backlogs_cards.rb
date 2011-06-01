@@ -314,10 +314,10 @@ module BacklogsCards
               end
 
             when 'Object-image'
-              if data['email']
+              if data['owner.email']
                 dim = box(obj)
 
-                pdf.image Gravatar.new(data['email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image, :at => [dim[:x], dim[:y]], :width => dim[:w]
+                pdf.image Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image, :at => [dim[:x], dim[:y]], :width => dim[:w]
               end
 
             else
@@ -334,7 +334,7 @@ module BacklogsCards
   class Cards
     include Redmine::I18n
 
-    def initialize(lang)
+    def initialize(stories, with_tasks, lang)
       set_language_if_valid lang
 
       @label = LabelStock.new
@@ -361,11 +361,21 @@ module BacklogsCards
       @pdf.font "DejaVuSans"
 
       @cards = 0
+
+      stories.each { |story| 
+        if with_tasks
+          story.descendants.each {|task|
+            add(task)
+          }
+        end
+  
+        add(story)
+      }
     end
   
     attr_reader :pdf
   
-    def card(issue, type)
+    def add(issue)
       row = @cards % @label.down
       col = Integer(@cards / @label.down) % @label.across
       @cards += 1
@@ -376,42 +386,42 @@ module BacklogsCards
       y = @label.paper_height - (@label.top_margin + (@label.vertical_pitch * row))
 
       data = {}
-      case type
-        when :task
-          data['story.position'] = issue.story.position ? issue.story.position : l(:label_not_prioritized)
-          data['story.id'] = issue.story.id
-          data['story.subject'] = issue.story.subject
+      if issue.is_task?
+        data['story.position'] = issue.story.position ? issue.story.position : l(:label_not_prioritized)
+        data['story.id'] = issue.story.id
+        data['story.subject'] = issue.story.subject
 
-          data['task.id'] = issue.id
-          data['task.subject'] = issue.subject.to_s.strip
-          data['task.description'] = issue.description.to_s.strip; data['task.description'] = data['task.subject'] if data['task.description'] == ''
-          data['task.category'] = issue.category ? issue.category.name : ''
-          data['task.hours.estimated'] = (issue.estimated_hours ? "#{issue.estimated_hours}" : '?') + ' ' + l(:label_hours)
-          data['task.hours.remaining'] = (issue.remaining_hours ? "#{issue.remaining_hours}" : '?') + ' ' + l(:label_hours)
-          data['task.position'] = issue.position ? issue.position : l(:label_not_prioritized)
-          data['task.path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
-          data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
-          data['task.owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.firstname} #{issue.assigned_to.lastname}"
-          data['email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
+        data['id'] = issue.id
+        data['subject'] = issue.subject.to_s.strip
+        data['description'] = issue.description.to_s.strip; data['description'] = data['subject'] if data['description'] == ''
+        data['category'] = issue.category ? issue.category.name : ''
+        data['hours.estimated'] = (issue.estimated_hours ? "#{issue.estimated_hours}" : '?') + ' ' + l(:label_hours)
+        data['hours.remaining'] = (issue.remaining_hours ? "#{issue.remaining_hours}" : '?') + ' ' + l(:label_hours)
+        data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
+        data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
+        data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
+        data['owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.firstname} #{issue.assigned_to.lastname}"
+        data['owner.email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
 
-          card = @task
+        card = @task
 
-        when :story
-          data['story.id'] = issue.id
-          data['story.subject'] = issue.subject
-          data['story.description'] = issue.description.to_s.strip; data['story.description'] = data['story.subject'] if data['story.description'] == ''
-          data['story.category'] = issue.category ? issue.category.name : ''
-          data['story.size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
-          data['story.position'] = issue.position ? issue.position : l(:label_not_prioritized)
-          data['story.path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
-          data['story.owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.firstname} #{issue.assigned_to.lastname}"
-          data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
-          data['email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
+      elsif issue.is_story?
+        data['id'] = issue.id
+        data['subject'] = issue.subject
+        data['description'] = issue.description.to_s.strip; data['description'] = data['subject'] if data['description'] == ''
+        data['category'] = issue.category ? issue.category.name : ''
+        data['size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
+        data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
+        data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
+        data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
+        data['owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.firstname} #{issue.assigned_to.lastname}"
+        data['owner.email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
 
-          card = @story
+        card = @story
 
-        else
-          raise "Unsupported card type '#{type}'"
+      else
+        raise "Unsupported card type '#{type}'"
+
       end
 
       data.keys.each {|d| data[d] = data[d].to_s }
@@ -419,14 +429,5 @@ module BacklogsCards
       card.render(x, y, @pdf, data)
     end
   
-    def add(story, add_tasks = true)
-      if add_tasks
-        story.descendants.each {|task|
-          card(task, :task)
-        }
-      end
-  
-      card(story, :story)
-    end
   end
 end

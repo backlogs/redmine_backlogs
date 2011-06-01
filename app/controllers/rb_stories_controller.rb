@@ -5,13 +5,7 @@ class RbStoriesController < RbApplicationController
   include BacklogsCards
   
   def index
-    cards = Cards.new(current_language)
-    
-    if params[:sprint_id]
-      @sprint.stories.each { |story| cards.add(story) }
-    else
-      Story.product_backlog(@project).each { |story| cards.add(story, false) }
-    end
+    cards = Cards.new(params[:sprint_id] ? @sprint.stories : Story.product_backlog(@project), params[:sprint_id], current_language)
     
     respond_to do |format|
       format.pdf { send_data(cards.pdf.render, :disposition => 'attachment', :type => 'application/pdf') }
