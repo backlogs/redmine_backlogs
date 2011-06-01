@@ -37,40 +37,40 @@ Avery 8435B:
   left_margin: 27.5mm
 Agipa 119488: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 142pt
+  inner_margin: "5"
+  vertical_pitch: "142"
   down: 5
   papersize: A4
-  top_margin: 67pt
-  horizontal_pitch: 255pt
-  height: 142pt
+  top_margin: "67"
+  horizontal_pitch: "255"
+  height: "142"
   source: glabel
-  width: 255pt
-  left_margin: 43pt
+  width: "255"
+  left_margin: "43"
 Neato Slimline CD Case, spine: 
   across: 1
-  inner_margin: 7.5pt
-  vertical_pitch: 363pt
+  inner_margin: "7.5"
+  vertical_pitch: "363"
   down: 2
   papersize: Letter
-  top_margin: 41.9pt
-  horizontal_pitch: 0pt
-  height: 342.5pt
+  top_margin: "41.9"
+  horizontal_pitch: "0"
+  height: "342.5"
   source: glabel
-  width: 394.5pt
-  left_margin: 96.5pt
+  width: "394.5"
+  left_margin: "96.5"
 Ednet BC: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 145pt
+  inner_margin: "5"
+  vertical_pitch: "145"
   down: 5
   papersize: A4
-  top_margin: 59pt
-  horizontal_pitch: 253pt
-  height: 145pt
+  top_margin: "59"
+  horizontal_pitch: "253"
+  height: "145"
   source: glabel
-  width: 253pt
-  left_margin: 40pt
+  width: "253"
+  left_margin: "40"
 PEARL PE-8008: 
   across: 4
   inner_margin: 3.2mm
@@ -133,16 +133,16 @@ Sattleford VM-5061:
   left_margin: 16.5mm
 Stomper PRO Zip: 
   across: 1
-  inner_margin: 5pt
-  vertical_pitch: 142pt
+  inner_margin: "5"
+  vertical_pitch: "142"
   down: 2
   papersize: Letter
-  top_margin: 440pt
-  horizontal_pitch: 0pt
-  height: 142pt
+  top_margin: "440"
+  horizontal_pitch: "0"
+  height: "142"
   source: glabel
-  width: 168pt
-  left_margin: 37pt
+  width: "168"
+  left_margin: "37"
 Russian A4 5x9: 
   across: 4
   inner_margin: 5pt
@@ -289,16 +289,16 @@ Your Design VM-5112:
   left_margin: 12mm
 Avery 7169: 
   across: 2
-  inner_margin: 6pt
-  vertical_pitch: 394.0pt
+  inner_margin: "6"
+  vertical_pitch: "394.0"
   down: 2
   papersize: A4
-  top_margin: 20.0pt
-  horizontal_pitch: 287.7pt
-  height: 394.0pt
+  top_margin: "20.0"
+  horizontal_pitch: "287.7"
+  height: "394.0"
   source: glabel
-  width: 280.9pt
-  left_margin: 14.2pt
+  width: "280.9"
+  left_margin: "14.2"
 Impact LC33: 
   across: 3
   inner_margin: 3mm
@@ -313,7 +313,7 @@ Impact LC33:
   left_margin: 0mm
 Avery LSK-3: 
   across: 2
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -373,7 +373,7 @@ Avery 6871:
   left_margin: 0.3725in
 Avery LSK-8.5: 
   across: 2
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -409,7 +409,7 @@ Zweckform 4760:
   left_margin: 25.5118pt
 Avery LSK-5: 
   across: 4
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -433,28 +433,28 @@ Zweckform 4732:
   left_margin: 31.1811pt
 APLI 02793: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 144pt
+  inner_margin: "5"
+  vertical_pitch: "144"
   down: 5
   papersize: A4
-  top_margin: 62.3622pt
-  horizontal_pitch: 255.118pt
-  height: 144pt
+  top_margin: "62.3622"
+  horizontal_pitch: "255.118"
+  height: "144"
   source: glabel
-  width: 255.118pt
-  left_margin: 42.5197pt
+  width: "255.118"
+  left_margin: "42.5197"
 Zweckform 4761: 
   across: 1
-  inner_margin: 5pt
-  vertical_pitch: 172.9pt
+  inner_margin: "5"
+  vertical_pitch: "172.9"
   down: 4
   papersize: A4
-  top_margin: 75pt
-  horizontal_pitch: 544.25pt
-  height: 172.9pt
+  top_margin: "75"
+  horizontal_pitch: "544.25"
+  height: "172.9"
   source: glabel
-  width: 544.25pt
-  left_margin: 25pt
+  width: "544.25"
+  left_margin: "25"
 Avery 6873: 
   across: 2
   inner_margin: 0.0625in
@@ -577,16 +577,16 @@ Avery 5931-Spine:
   left_margin: 0.5in
 Zweckform 3651: 
   across: 4
-  inner_margin: 5pt
-  vertical_pitch: 83.6220pt
+  inner_margin: "5"
+  vertical_pitch: "83.6220"
   down: 10
   papersize: A4
-  top_margin: 2.834pt
-  horizontal_pitch: 147.4016pt
-  height: 83.6220pt
+  top_margin: "2.834"
+  horizontal_pitch: "147.4016"
+  height: "83.6220"
   source: glabel
-  width: 147.4016pt
-  left_margin: 2.834pt
+  width: "147.4016"
+  left_margin: "2.834"
 Sigel DE 160: 
   across: 2
   inner_margin: 3.2mm
@@ -601,7 +601,7 @@ Sigel DE 160:
   left_margin: 15mm
 Avery LSK-8: 
   across: 4
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -649,16 +649,16 @@ Kores KPCV1:
   left_margin: 15mm
 Biltem 23-756: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 204.038pt
+  inner_margin: "5"
+  vertical_pitch: "204.038"
   down: 4
   papersize: A4
-  top_margin: 10pt
-  horizontal_pitch: 187.08pt
-  height: 204.038pt
+  top_margin: "10"
+  horizontal_pitch: "187.08"
+  height: "204.038"
   source: glabel
-  width: 180pt
-  left_margin: 20.84pt
+  width: "180"
+  left_margin: "20.84"
 Worldlabel WL-172: 
   across: 2
   inner_margin: 0.0625in
@@ -806,15 +806,15 @@ Sattleford VM-6102:
 Worldlabel WL-175: 
   across: 1
   inner_margin: 0.0625in
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Letter
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 11.in
   source: glabel
   width: 8.5in
-  left_margin: 0pt
+  left_margin: "0"
 Avery 6879: 
   across: 2
   inner_margin: 0.0625in
@@ -878,39 +878,39 @@ Avery 5161:
 Brother DK-11201: 
   across: 1
   inner_margin: 1mm
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Other
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 83.90mm
   source: glabel
   width: 25.91mm
-  left_margin: 0pt
-Avery 18036: 
-  across: 3
-  inner_margin: 10pt
-  vertical_pitch: 91pt
-  down: 9
-  papersize: A4
-  top_margin: 13pt
-  horizontal_pitch: 198pt
-  height: 91pt
-  source: glabel
-  width: 198pt
-  left_margin: 0pt
+  left_margin: "0"
 Sigel DP 830: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 156pt
+  inner_margin: "5"
+  vertical_pitch: "156"
   down: 5
   papersize: A4
-  top_margin: 31pt
-  horizontal_pitch: 269pt
-  height: 155.9pt
+  top_margin: "31"
+  horizontal_pitch: "269"
+  height: "155.9"
   source: glabel
-  width: 240.9pt
-  left_margin: 40pt
+  width: "240.9"
+  left_margin: "40"
+Avery 18036: 
+  across: 3
+  inner_margin: "10"
+  vertical_pitch: "91"
+  down: 9
+  papersize: A4
+  top_margin: "13"
+  horizontal_pitch: "198"
+  height: "91"
+  source: glabel
+  width: "198"
+  left_margin: "0"
 Avery 5162: 
   across: 2
   inner_margin: 0.0625in
@@ -926,15 +926,15 @@ Avery 5162:
 Brother DK-11202: 
   across: 1
   inner_margin: 1mm
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Other
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 93.20mm
   source: glabel
   width: 58.93mm
-  left_margin: 0pt
+  left_margin: "0"
 Avery 5163: 
   across: 2
   inner_margin: 0.125in
@@ -973,7 +973,7 @@ Avery 32015:
   left_margin: 17mm
 Avery LSK-3.5: 
   across: 1
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -1046,27 +1046,27 @@ Zweckform 3348:
 Brother DK-11204: 
   across: 1
   inner_margin: 1mm
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Other
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 47.92mm
   source: glabel
   width: 13.97mm
-  left_margin: 0pt
+  left_margin: "0"
 Zweckform 3659: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 120.5pt
+  inner_margin: "5"
+  vertical_pitch: "120.5"
   down: 6
   papersize: A4
-  top_margin: 60pt
-  horizontal_pitch: 274pt
-  height: 120.5pt
+  top_margin: "60"
+  horizontal_pitch: "274"
+  height: "120.5"
   source: glabel
-  width: 274pt
-  left_margin: 22.68pt
+  width: "274"
+  left_margin: "22.68"
 Dymo 99010: 
   across: 1
   inner_margin: 0pt
@@ -1081,16 +1081,16 @@ Dymo 99010:
   left_margin: 0pt
 Southworth BC554: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 144pt
+  inner_margin: "5"
+  vertical_pitch: "144"
   down: 5
   papersize: Letter
-  top_margin: 36pt
-  horizontal_pitch: 288pt
-  height: 144pt
+  top_margin: "36"
+  horizontal_pitch: "288"
+  height: "144"
   source: glabel
-  width: 252pt
-  left_margin: 36pt
+  width: "252"
+  left_margin: "36"
 PEARL VM-6398: 
   across: 9
   inner_margin: 1.5mm
@@ -1105,16 +1105,16 @@ PEARL VM-6398:
   left_margin: 4.5mm
 APLI 1999: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 194pt
+  inner_margin: "5"
+  vertical_pitch: "194"
   down: 4
   papersize: A4
-  top_margin: 21.890pt
-  horizontal_pitch: 289pt
-  height: 193pt
+  top_margin: "21.890"
+  horizontal_pitch: "289"
+  height: "193"
   source: glabel
-  width: 281pt
-  left_margin: 13pt
+  width: "281"
+  left_margin: "13"
 Best Office 75753: 
   across: 3
   inner_margin: 3.2mm
@@ -1129,16 +1129,16 @@ Best Office 75753:
   left_margin: 0mm
 Avery 8414: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 144pt
+  inner_margin: "5"
+  vertical_pitch: "144"
   down: 5
   papersize: A4
-  top_margin: 57.890pt
-  horizontal_pitch: 264pt
-  height: 144pt
+  top_margin: "57.890"
+  horizontal_pitch: "264"
+  height: "144"
   source: glabel
-  width: 246.6pt
-  left_margin: 42pt
+  width: "246.6"
+  left_margin: "42"
 Zweckform 3688: 
   across: 1
   inner_margin: 9.07087pt
@@ -1261,7 +1261,7 @@ Avery 5167:
   left_margin: 0.28125in
 Avery LSK-5.5: 
   across: 2
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 0.5in
   down: 20
   papersize: Letter
@@ -1297,15 +1297,15 @@ Avery 5196:
   left_margin: 0.125in
 Zweckform 3490: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 102.047pt
+  inner_margin: "5"
+  vertical_pitch: "102.047"
   down: 8
   papersize: A4
-  top_margin: 12.557pt
-  horizontal_pitch: 198.425pt
-  height: 102.047pt
+  top_margin: "12.557"
+  horizontal_pitch: "198.425"
+  height: "102.047"
   source: glabel
-  width: 198.425pt
+  width: "198.425"
   left_margin: ""
 Avery 5168: 
   across: 2
@@ -1355,6 +1355,18 @@ Sattleford VM-6700:
   source: glabel
   width: 180mm
   left_margin: 15mm
+Avery 6573: 
+  across: 1
+  inner_margin: 0.0625in
+  vertical_pitch: 5in
+  down: 2
+  papersize: Letter
+  top_margin: 0.5in
+  horizontal_pitch: "0"
+  height: 5in
+  source: glabel
+  width: 8.12992in
+  left_margin: 0.18504in
 Avery 5366: 
   across: 2
   inner_margin: 0.0625in
@@ -1382,27 +1394,15 @@ Dymo 99014:
 Brother DK-11208: 
   across: 1
   inner_margin: 1mm
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Other
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 83.90mm
   source: glabel
   width: 34.91mm
-  left_margin: 0pt
-Avery 5197: 
-  across: 2
-  inner_margin: 0.0625in
-  vertical_pitch: 1.5in
-  down: 6
-  papersize: Letter
-  top_margin: 1in
-  horizontal_pitch: 4.125in
-  height: 1.5in
-  source: glabel
-  width: 4in
-  left_margin: 0.1875in
+  left_margin: "0"
 Zweckform J8435A: 
   across: 1
   inner_margin: 2mm
@@ -1415,30 +1415,18 @@ Zweckform J8435A:
   source: glabel
   width: 155mm
   left_margin: 27.5mm
-Avery 6573: 
-  across: 1
-  inner_margin: 0.0625in
-  vertical_pitch: 5in
-  down: 2
-  papersize: Letter
-  top_margin: 0.5in
-  horizontal_pitch: 0pt
-  height: 5in
-  source: glabel
-  width: 8.12992in
-  left_margin: 0.18504in
-Zweckform 32015: 
+Avery 5197: 
   across: 2
-  inner_margin: 5mm
-  vertical_pitch: 60mm
-  down: 4
-  papersize: A4
-  top_margin: 31.5mm
-  horizontal_pitch: 91mm
-  height: 54mm
+  inner_margin: 0.0625in
+  vertical_pitch: 1.5in
+  down: 6
+  papersize: Letter
+  top_margin: 1in
+  horizontal_pitch: 4.125in
+  height: 1.5in
   source: glabel
-  width: 85mm
-  left_margin: 17mm
+  width: 4in
+  left_margin: 0.1875in
 Zweckform J8435B: 
   across: 1
   inner_margin: 2mm
@@ -1451,54 +1439,18 @@ Zweckform J8435B:
   source: glabel
   width: 155mm
   left_margin: 27.5mm
-Worldlabel WL-125: 
+Sigel LP 800: 
   across: 2
-  inner_margin: 0.125in
-  vertical_pitch: 2in
+  inner_margin: "5"
+  vertical_pitch: 55.0mm
   down: 5
-  papersize: Letter
-  top_margin: 0.5in
-  horizontal_pitch: 4.1875in
-  height: 2in
-  source: glabel
-  width: 4in
-  left_margin: 0.1625in
-Avery 5395: 
-  across: 2
-  inner_margin: 0.0625in
-  vertical_pitch: 2.5in
-  down: 4
-  papersize: Letter
-  top_margin: 0.583333333in
-  horizontal_pitch: 3.75in
-  height: 2.333333333in
-  source: glabel
-  width: 3.375in
-  left_margin: 0.6875in
-Viking 02204: 
-  across: 3
-  inner_margin: 5pt
-  vertical_pitch: 120pt
-  down: 7
   papersize: A4
-  top_margin: 0pt
-  horizontal_pitch: 198pt
-  height: 120pt
+  top_margin: 10.0mm
+  horizontal_pitch: 95.0mm
+  height: 55.0mm
   source: glabel
-  width: 198pt
-  left_margin: 0pt
-PEARL VM-5220: 
-  across: 1
-  inner_margin: 3.2mm
-  vertical_pitch: 297mm
-  down: 1
-  papersize: A4
-  top_margin: 0mm
-  horizontal_pitch: 210mm
-  height: 297mm
-  source: glabel
-  width: 210mm
-  left_margin: 0mm
+  width: 85.0mm
+  left_margin: 15.0mm
 Avery 6121: 
   across: 5
   inner_margin: 8.496pt
@@ -1511,42 +1463,102 @@ Avery 6121:
   source: glabel
   width: 107.928pt
   left_margin: 26.928pt
-Sigel LP 800: 
+Zweckform 32015: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 55.0mm
-  down: 5
+  inner_margin: 5mm
+  vertical_pitch: 60mm
+  down: 4
   papersize: A4
-  top_margin: 10.0mm
-  horizontal_pitch: 95.0mm
-  height: 55.0mm
+  top_margin: 31.5mm
+  horizontal_pitch: 91mm
+  height: 54mm
   source: glabel
-  width: 85.0mm
-  left_margin: 15.0mm
+  width: 85mm
+  left_margin: 17mm
+Viking 02204: 
+  across: 3
+  inner_margin: "5"
+  vertical_pitch: "120"
+  down: 7
+  papersize: A4
+  top_margin: "0"
+  horizontal_pitch: "198"
+  height: "120"
+  source: glabel
+  width: "198"
+  left_margin: "0"
+PEARL VM-5220: 
+  across: 1
+  inner_margin: 3.2mm
+  vertical_pitch: 297mm
+  down: 1
+  papersize: A4
+  top_margin: 0mm
+  horizontal_pitch: 210mm
+  height: 297mm
+  source: glabel
+  width: 210mm
+  left_margin: 0mm
+Avery 5395: 
+  across: 2
+  inner_margin: 0.0625in
+  vertical_pitch: 2.5in
+  down: 4
+  papersize: Letter
+  top_margin: 0.583333333in
+  horizontal_pitch: 3.75in
+  height: 2.333333333in
+  source: glabel
+  width: 3.375in
+  left_margin: 0.6875in
 Tough-Tags TTLW-2016: 
   across: 5
-  inner_margin: 5pt
-  vertical_pitch: 45.3pt
+  inner_margin: "5"
+  vertical_pitch: "45.3"
   down: 17
   papersize: Letter
-  top_margin: 4.17pt
-  horizontal_pitch: 100.8pt
-  height: 36pt
+  top_margin: "4.17"
+  horizontal_pitch: "100.8"
+  height: "36"
   source: glabel
-  width: 92.16pt
-  left_margin: 68pt
+  width: "92.16"
+  left_margin: "68"
+Worldlabel WL-125: 
+  across: 2
+  inner_margin: 0.125in
+  vertical_pitch: 2in
+  down: 5
+  papersize: Letter
+  top_margin: 0.5in
+  horizontal_pitch: 4.1875in
+  height: 2in
+  source: glabel
+  width: 4in
+  left_margin: 0.1625in
 Zweckform 4746: 
   across: 1
-  inner_margin: 5pt
-  vertical_pitch: 56.6929pt
+  inner_margin: "5"
+  vertical_pitch: "56.6929"
   down: 13
   papersize: A4
-  top_margin: 52.2425pt
-  horizontal_pitch: 416.6pt
-  height: 56.6929pt
+  top_margin: "52.2425"
+  horizontal_pitch: "416.6"
+  height: "56.6929"
   source: glabel
-  width: 416.6pt
-  left_margin: 88.8377pt
+  width: "416.6"
+  left_margin: "88.8377"
+Avery 5997-Face: 
+  across: 2
+  inner_margin: "5"
+  vertical_pitch: "133"
+  down: 5
+  papersize: Letter
+  top_margin: "60.5"
+  horizontal_pitch: "236"
+  height: "133"
+  source: glabel
+  width: "220"
+  left_margin: "80"
 PEARL VM-5221: 
   across: 3
   inner_margin: 3.2mm
@@ -1559,18 +1571,6 @@ PEARL VM-5221:
   source: glabel
   width: 70mm
   left_margin: 0mm
-Avery 5997-Face: 
-  across: 2
-  inner_margin: 5pt
-  vertical_pitch: 133pt
-  down: 5
-  papersize: Letter
-  top_margin: 60.5pt
-  horizontal_pitch: 236pt
-  height: 133pt
-  source: glabel
-  width: 220pt
-  left_margin: 80pt
 APLI 01293: 
   across: 3
   inner_margin: 0pt
@@ -1586,15 +1586,15 @@ APLI 01293:
 Avery 8165: 
   across: 1
   inner_margin: 0.0625in
-  vertical_pitch: 0pt
+  vertical_pitch: "0"
   down: 1
   papersize: Letter
-  top_margin: 0pt
-  horizontal_pitch: 0pt
+  top_margin: "0"
+  horizontal_pitch: "0"
   height: 11.in
   source: glabel
   width: 8.5in
-  left_margin: 0pt
+  left_margin: "0"
 Avery 6490: 
   across: 3
   inner_margin: 0.0625in
@@ -1645,7 +1645,7 @@ PEARL VM-5081:
   left_margin: 0mm
 Avery 7664: 
   across: 2
-  inner_margin: 5pt
+  inner_margin: "5"
   vertical_pitch: 72mm
   down: 4
   papersize: A4
@@ -1693,40 +1693,40 @@ Bruna 241301:
   left_margin: 0pt
 Neato Slimline CD Case: 
   across: 1
-  inner_margin: 7.5pt
-  vertical_pitch: 363pt
+  inner_margin: "7.5"
+  vertical_pitch: "363"
   down: 2
   papersize: Letter
-  top_margin: 41.9pt
-  horizontal_pitch: 0pt
-  height: 342.5pt
+  top_margin: "41.9"
+  horizontal_pitch: "0"
+  height: "342.5"
   source: glabel
-  width: 394.5pt
-  left_margin: 130pt
+  width: "394.5"
+  left_margin: "130"
 Stomper PRO Spine: 
   across: 2
-  inner_margin: 2pt
-  vertical_pitch: 0pt
+  inner_margin: "2"
+  vertical_pitch: "0"
   down: 1
   papersize: Letter
-  top_margin: 385pt
-  horizontal_pitch: 288pt
-  height: 20pt
+  top_margin: "385"
+  horizontal_pitch: "288"
+  height: "20"
   source: glabel
-  width: 288pt
-  left_margin: 18pt
+  width: "288"
+  left_margin: "18"
 Worldlabel WL-1150: 
   across: 1
-  inner_margin: 5pt
-  vertical_pitch: 48pt
+  inner_margin: "5"
+  vertical_pitch: "48"
   down: 15
   papersize: Letter
-  top_margin: 36pt
-  horizontal_pitch: 0pt
-  height: 48pt
+  top_margin: "36"
+  horizontal_pitch: "0"
+  height: "48"
   source: glabel
-  width: 414pt
-  left_margin: 99pt
+  width: "414"
+  left_margin: "99"
 Worldlabel WL-157: 
   across: 2
   inner_margin: 0.0625in
@@ -1739,18 +1739,6 @@ Worldlabel WL-157:
   source: glabel
   width: 3.4375in
   left_margin: 0.49755in
-PEARL VM-6234: 
-  across: 2
-  inner_margin: 3.2mm
-  vertical_pitch: 57mm
-  down: 5
-  papersize: A4
-  top_margin: 6mm
-  horizontal_pitch: 102.1mm
-  height: 57mm
-  source: glabel
-  width: 99.1mm
-  left_margin: 5mm
 PEARL VM-6206: 
   across: 1
   inner_margin: 3.2mm
@@ -1777,16 +1765,28 @@ Avery 38931:
   left_margin: 0mm
 Neato USCD2lbl Rectangles: 
   across: 2
-  inner_margin: 2.016pt
-  vertical_pitch: 0pt
+  inner_margin: "2.016"
+  vertical_pitch: "0"
   down: 1
   papersize: Letter
-  top_margin: 279.72pt
-  horizontal_pitch: 433.44pt
-  height: 234.36pt
+  top_margin: "279.72"
+  horizontal_pitch: "433.44"
+  height: "234.36"
   source: glabel
-  width: 77.04pt
-  left_margin: 51.3pt
+  width: "77.04"
+  left_margin: "51.3"
+PEARL VM-6234: 
+  across: 2
+  inner_margin: 3.2mm
+  vertical_pitch: 57mm
+  down: 5
+  papersize: A4
+  top_margin: 6mm
+  horizontal_pitch: 102.1mm
+  height: 57mm
+  source: glabel
+  width: 99.1mm
+  left_margin: 5mm
 Avery L4770: 
   across: 4
   inner_margin: 1mm
@@ -1801,28 +1801,16 @@ Avery L4770:
   left_margin: 10mm
 Worldlabel WL-1125: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 133pt
+  inner_margin: "5"
+  vertical_pitch: "133"
   down: 5
   papersize: Letter
-  top_margin: 60.5pt
-  horizontal_pitch: 236pt
-  height: 133pt
+  top_margin: "60.5"
+  horizontal_pitch: "236"
+  height: "133"
   source: glabel
-  width: 220pt
-  left_margin: 80pt
-Worldlabel WL-100: 
-  across: 2
-  inner_margin: 0.0625in
-  vertical_pitch: 1.333333333in
-  down: 7
-  papersize: Letter
-  top_margin: 0.833333333in
-  horizontal_pitch: 4.1875in
-  height: 1.333333333in
-  source: glabel
-  width: 4in
-  left_margin: 0.15625in
+  width: "220"
+  left_margin: "80"
 Sattleford VM-6059: 
   across: 2
   inner_margin: 3.2mm
@@ -1854,11 +1842,23 @@ Worldlabel WL-159:
   down: 2
   papersize: Letter
   top_margin: 0.5in
-  horizontal_pitch: 0pt
+  horizontal_pitch: "0"
   height: 5in
   source: glabel
   width: 8.12992in
   left_margin: 0.18504in
+Worldlabel WL-100: 
+  across: 2
+  inner_margin: 0.0625in
+  vertical_pitch: 1.333333333in
+  down: 7
+  papersize: Letter
+  top_margin: 0.833333333in
+  horizontal_pitch: 4.1875in
+  height: 1.333333333in
+  source: glabel
+  width: 4in
+  left_margin: 0.15625in
 PEARL VM-6096: 
   across: 1
   inner_margin: 3.2mm
@@ -1909,16 +1909,16 @@ Neato 69143:
   left_margin: 1.875in
 Zweckform 3669: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 144pt
+  inner_margin: "5"
+  vertical_pitch: "144"
   down: 5
   papersize: A4
-  top_margin: 61pt
-  horizontal_pitch: 198.425pt
-  height: 144pt
+  top_margin: "61"
+  horizontal_pitch: "198.425"
+  height: "144"
   source: glabel
-  width: 198.425pt
-  left_margin: 0pt
+  width: "198.425"
+  left_margin: "0"
 PEARL VM-6097: 
   across: 1
   inner_margin: 3.2mm
@@ -1933,40 +1933,40 @@ PEARL VM-6097:
   left_margin: 0mm
 Avery 7414: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 147.4pt
+  inner_margin: "5"
+  vertical_pitch: "147.4"
   down: 5
   papersize: A4
-  top_margin: 52.44pt
-  horizontal_pitch: 255.1pt
-  height: 147.4pt
+  top_margin: "52.44"
+  horizontal_pitch: "255.1"
+  height: "147.4"
   source: glabel
-  width: 255.1pt
-  left_margin: 42.51pt
+  width: "255.1"
+  left_margin: "42.51"
 Avery 7160: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 108.0pt
+  inner_margin: "5"
+  vertical_pitch: "108.0"
   down: 7
   papersize: A4
-  top_margin: 43.9pt
-  horizontal_pitch: 187.2pt
-  height: 108.0pt
+  top_margin: "43.9"
+  horizontal_pitch: "187.2"
+  height: "108.0"
   source: glabel
-  width: 181.4pt
-  left_margin: 21.2pt
+  width: "181.4"
+  left_margin: "21.2"
 Avery 5997-Spine: 
   across: 1
-  inner_margin: 5pt
-  vertical_pitch: 48pt
+  inner_margin: "5"
+  vertical_pitch: "48"
   down: 15
   papersize: Letter
-  top_margin: 36pt
-  horizontal_pitch: 0pt
-  height: 48pt
+  top_margin: "36"
+  horizontal_pitch: "0"
+  height: "48"
   source: glabel
-  width: 414pt
-  left_margin: 99pt
+  width: "414"
+  left_margin: "99"
 Sattleford VM-6200: 
   across: 1
   inner_margin: 1mm
@@ -1981,16 +1981,16 @@ Sattleford VM-6200:
   left_margin: 15mm
 Zweckform 4780: 
   across: 4
-  inner_margin: 5pt
-  vertical_pitch: 72pt
+  inner_margin: "5"
+  vertical_pitch: "72"
   down: 10
   papersize: A4
-  top_margin: 53.8898pt
-  horizontal_pitch: 137.48pt
-  height: 72pt
+  top_margin: "53.8898"
+  horizontal_pitch: "137.48"
+  height: "72"
   source: glabel
-  width: 137.48pt
-  left_margin: 23pt
+  width: "137.48"
+  left_margin: "23"
 Worldlabel WL-160: 
   across: 3
   inner_margin: 0.0625in
@@ -2005,28 +2005,16 @@ Worldlabel WL-160:
   left_margin: 0.3725in
 Avery 8651: 
   across: 5
-  inner_margin: 5pt
-  vertical_pitch: 60.09pt
+  inner_margin: "5"
+  vertical_pitch: "60.09"
   down: 13
   papersize: A4
-  top_margin: 30.90pt
-  horizontal_pitch: 115.09pt
-  height: 60.09pt
+  top_margin: "30.90"
+  horizontal_pitch: "115.09"
+  height: "60.09"
   source: glabel
-  width: 108pt
-  left_margin: 13.32pt
-Staples STAP14: 
-  across: 2
-  inner_margin: 3mm
-  vertical_pitch: 38mm
-  down: 7
-  papersize: A4
-  top_margin: 15mm
-  horizontal_pitch: 102mm
-  height: 38mm
-  source: glabel
-  width: 99mm
-  left_margin: 5mm
+  width: "108"
+  left_margin: "13.32"
 OfficeMax 86112: 
   across: 1
   inner_margin: 9pt
@@ -2041,28 +2029,40 @@ OfficeMax 86112:
   left_margin: 4.5pt
 Avery 7162: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 96.1pt
+  inner_margin: "5"
+  vertical_pitch: "96.1"
   down: 8
   papersize: A4
-  top_margin: 36.8pt
-  horizontal_pitch: 290.5pt
-  height: 96.1pt
+  top_margin: "36.8"
+  horizontal_pitch: "290.5"
+  height: "96.1"
   source: glabel
-  width: 280.9pt
-  left_margin: 11.3pt
+  width: "280.9"
+  left_margin: "11.3"
+Staples STAP14: 
+  across: 2
+  inner_margin: 3mm
+  vertical_pitch: 38mm
+  down: 7
+  papersize: A4
+  top_margin: 15mm
+  horizontal_pitch: 102mm
+  height: 38mm
+  source: glabel
+  width: 99mm
+  left_margin: 5mm
 Zweckform 4781: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 119.905pt
+  inner_margin: "5"
+  vertical_pitch: "119.905"
   down: 6
   papersize: A4
-  top_margin: 61.030pt
-  horizontal_pitch: 274.960pt
-  height: 119.905pt
+  top_margin: "61.030"
+  horizontal_pitch: "274.960"
+  height: "119.905"
   source: glabel
-  width: 274.960pt
-  left_margin: 22.677pt
+  width: "274.960"
+  left_margin: "22.677"
 Worldlabel WL-161: 
   across: 2
   inner_margin: 0.0625in
@@ -2101,124 +2101,112 @@ PEARL PE-8004:
   left_margin: 0mm
 Avery 7163: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 108pt
+  inner_margin: "5"
+  vertical_pitch: "108"
   down: 7
   papersize: A4
-  top_margin: 43pt
-  horizontal_pitch: 292pt
-  height: 108pt
+  top_margin: "43"
+  horizontal_pitch: "292"
+  height: "108"
   source: glabel
-  width: 280.9pt
-  left_margin: 9.5pt
+  width: "280.9"
+  left_margin: "9.5"
 Zweckform 6091: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 95.881pt
+  inner_margin: "5"
+  vertical_pitch: "95.881"
   down: 8
   papersize: A4
-  top_margin: 37.502pt
-  horizontal_pitch: 183.118pt
-  height: 95.811pt
+  top_margin: "37.502"
+  horizontal_pitch: "183.118"
+  height: "95.811"
   source: glabel
-  width: 183.118pt
-  left_margin: 22.961pt
+  width: "183.118"
+  left_margin: "22.961"
 Zweckform 3474: 
   across: 3
-  inner_margin: 0pt
+  inner_margin: "0"
   vertical_pitch: 37mm
   down: 8
   papersize: A4
-  top_margin: 0pt
+  top_margin: "0"
   horizontal_pitch: 70mm
   height: 37mm
   source: glabel
   width: 70mm
-  left_margin: 0pt
+  left_margin: "0"
 Avery 7164: 
   across: 3
-  inner_margin: 5pt
-  vertical_pitch: 204.038pt
+  inner_margin: "5"
+  vertical_pitch: "204.038"
   down: 4
   papersize: A4
-  top_margin: 10pt
-  horizontal_pitch: 187.08pt
-  height: 204.038pt
+  top_margin: "10"
+  horizontal_pitch: "187.08"
+  height: "204.038"
   source: glabel
-  width: 180pt
-  left_margin: 20.84pt
+  width: "180"
+  left_margin: "20.84"
 Epson S041144: 
   across: 4
-  inner_margin: 5pt
-  vertical_pitch: 79.5pt
+  inner_margin: "5"
+  vertical_pitch: "79.5"
   down: 4
   papersize: A6
-  top_margin: 59pt
-  horizontal_pitch: 59.5pt
-  height: 68pt
+  top_margin: "59"
+  horizontal_pitch: "59.5"
+  height: "68"
   source: glabel
-  width: 48pt
-  left_margin: 33pt
+  width: "48"
+  left_margin: "33"
 Celcast IJ37: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 147.5pt
+  inner_margin: "5"
+  vertical_pitch: "147.5"
   down: 5
   papersize: A4
-  top_margin: 52.7pt
-  horizontal_pitch: 255pt
-  height: 147.5pt
+  top_margin: "52.7"
+  horizontal_pitch: "255"
+  height: "147.5"
   source: glabel
-  width: 255pt
-  left_margin: 43pt
+  width: "255"
+  left_margin: "43"
 "Netc 749303-70001 ": 
   across: 3
-  inner_margin: 18pt
-  vertical_pitch: 72pt
+  inner_margin: "18"
+  vertical_pitch: "72"
   down: 10
   papersize: Letter
-  top_margin: 45pt
-  horizontal_pitch: 189pt
-  height: 59.4pt
+  top_margin: "45"
+  horizontal_pitch: "189"
+  height: "59.4"
   source: glabel
-  width: 162pt
-  left_margin: 36pt
+  width: "162"
+  left_margin: "36"
 Encre.com BCV10: 
   across: 2
-  inner_margin: 5pt
-  vertical_pitch: 157.32pt
+  inner_margin: "5"
+  vertical_pitch: "157.32"
   down: 5
   papersize: A4
-  top_margin: 42.50pt
-  horizontal_pitch: 255.12pt
-  height: 153.07pt
+  top_margin: "42.50"
+  horizontal_pitch: "255.12"
+  height: "153.07"
   source: glabel
-  width: 243.78pt
-  left_margin: 48.19pt
+  width: "243.78"
+  left_margin: "48.19"
 Zweckform 3475: 
   across: 3
-  inner_margin: 0pt
-  vertical_pitch: 102.121pt
+  inner_margin: "0"
+  vertical_pitch: "102.121"
   down: 8
   papersize: A4
-  top_margin: 12.566pt
-  horizontal_pitch: 198.570pt
-  height: 102.121pt
+  top_margin: "12.566"
+  horizontal_pitch: "198.570"
+  height: "102.121"
   source: glabel
-  width: 198.570pt
-  left_margin: 0pt
-Your Design VM-6310: 
-  across: 2
-  inner_margin: 3.2mm
-  vertical_pitch: 69mm
-  down: 4
-  papersize: A4
-  top_margin: 18mm
-  horizontal_pitch: 100mm
-  height: 53.5mm
-  source: glabel
-  width: 85mm
-  left_margin: 12mm
+  width: "198.570"
+  left_margin: "0"
 Avery 7165: 
   across: 2
   inner_margin: 5.66929pt
@@ -2243,3 +2231,15 @@ Avery 8435A:
   source: glabel
   width: 155mm
   left_margin: 27.5mm
+Your Design VM-6310: 
+  across: 2
+  inner_margin: 3.2mm
+  vertical_pitch: 69mm
+  down: 4
+  papersize: A4
+  top_margin: 18mm
+  horizontal_pitch: 100mm
+  height: 53.5mm
+  source: glabel
+  width: 85mm
+  left_margin: 12mm

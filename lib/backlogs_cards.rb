@@ -2,7 +2,6 @@ require 'rubygems'
 require 'prawn'
 require 'prawn/measurement_extensions'
 require 'net/http'
-require 'rexml/document'
 
 require 'yaml'
 require 'uri/common'
@@ -12,7 +11,7 @@ require 'nokogiri'
 require 'ruby-units'
 
 class String
-  def to_points
+  def units_to_points
     return Float(self) if self =~/[0-9]$/
     return self.to_unit.to('pt').scalar
   end
@@ -31,13 +30,13 @@ module BacklogsCards
       raise "No label stock selected" unless LabelStock.selected_label
       layout = LabelStock.selected_label
 
-      @top_margin = layout['top_margin'].to_points
-      @vertical_pitch = layout['vertical_pitch'].to_points
-      @height = layout['height'].to_points
+      @top_margin = layout['top_margin'].units_to_points
+      @vertical_pitch = layout['vertical_pitch'].units_to_points
+      @height = layout['height'].units_to_points
   
-      @left_margin = layout['left_margin'].to_points
-      @horizontal_pitch = layout['horizontal_pitch'].to_points
-      @width = layout['width'].to_points
+      @left_margin = layout['left_margin'].units_to_points
+      @horizontal_pitch = layout['horizontal_pitch'].units_to_points
+      @width = layout['width'].units_to_points
 
       @across = Integer(layout['across'])
       @down = Integer(layout['down'])
@@ -63,8 +62,8 @@ module BacklogsCards
     end
 
     def self.malformed(label)
-      return true if label['down'] > 1 && label['height'] > label['vertical_pitch']
-      return true if label['across'] > 1 && label['width'] > label['horizontal_pitch']
+      return true if (label['down'] > 1) && (label['height'].units_to_points > label['vertical_pitch'].units_to_points)
+      return true if (label['across'] > 1) && (label['width'].units_to_points > label['horizontal_pitch'].units_to_points)
       return false
     end
   
@@ -112,30 +111,31 @@ module BacklogsCards
           next
         end
 
-        doc = REXML::Document.new(labels)
+        doc = Nokogiri::XML(labels)
+        doc.remove_namespaces!
   
-        doc.elements.each('Glabels-templates/Template') { |specs|
+        doc.xpath('Glabels-templates/Template').each { |specs|
           label = nil
   
-          papersize = specs.attributes['size']
+          papersize = specs['size']
           papersize = 'Letter' if papersize == 'US-Letter'
   
-          specs.elements.each('Label-rectangle') { |geom|
+          specs.xpath('Label-rectangle').each { |geom|
             margin = nil
-            geom.elements.each('Markup-margin') { |m| margin = m.attributes['size'] }
+            geom.xpath('Markup-margin').each { |m| margin = m['size'] }
             margin = "1mm" if margin.blank?
   
-            geom.elements.each('Layout') { |layout|
+            geom.xpath('Layout').each { |layout|
               label = {
                 'inner_margin' => margin,
-                'across' => Integer(layout.attributes['nx']),
-                'down' => Integer(layout.attributes['ny']),
-                'top_margin' => layout.attributes['y0'],
-                'height' => geom.attributes['height'],
-                'horizontal_pitch' => layout.attributes['dx'],
-                'left_margin' => layout.attributes['x0'],
-                'width' => geom.attributes['width'],
-                'vertical_pitch' => layout.attributes['dy'],
+                'across' => Integer(layout['nx']),
+                'down' => Integer(layout['ny']),
+                'top_margin' => layout['y0'],
+                'height' => geom['height'],
+                'horizontal_pitch' => layout['dx'],
+                'left_margin' => layout['x0'],
+                'width' => geom['width'],
+                'vertical_pitch' => layout['dy'],
                 'papersize' => papersize,
                 'source' => 'glabel'
               }
@@ -144,7 +144,7 @@ module BacklogsCards
   
           next if label.nil?
   
-          key = "#{specs.attributes['brand']} #{specs.attributes['part']}"
+          key = "#{specs['brand']} #{specs['part']}"
 
           if LabelStock.malformed(label)
             puts "Skipping malformed label '#{key}' from #{filename}"
@@ -152,8 +152,8 @@ module BacklogsCards
           else
             LAYOUTS[key] = label if not LAYOUTS[key] or LAYOUTS[key]['source'] == 'glabel'
   
-            specs.elements.each('Alias') { |also|
-              key = "#{also.attributes['brand']} #{also.attributes['part']}"
+            specs.xpath('Alias').each { |also|
+              key = "#{also['brand']} #{also['part']}"
               LAYOUTS[key] = label.dup if not LAYOUTS[key] or LAYOUTS[key]['source'] == 'glabel'
             }
           end
@@ -208,7 +208,7 @@ module BacklogsCards
       label.remove_namespaces!
 
       bounds = label.xpath('//Template/Label-rectangle')[0]
-      @template = { :x => bounds['width'].to_points, :y => bounds['height'].to_points}
+      @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points}
 
       @card = label.xpath('//Objects')[0]
       @width = width
@@ -217,10 +217,10 @@ module BacklogsCards
 
     def box(b, scaled=true)
       return {
-        :x => (b['x'].to_points / @template[:x]) * @width,
-        :y => (1 - (b['y'].to_points / @template[:y])) * @height,
-        :w => (b['w'].to_points / @template[:x]) * @width,
-        :h => (b['h'].to_points / @template[:y]) * @height
+        :x => (b['x'].units_to_points / @template[:x]) * @width,
+        :y => (1 - (b['y'].units_to_points / @template[:y])) * @height,
+        :w => (b['w'].units_to_points / @template[:x]) * @width,
+        :h => (b['h'].units_to_points / @template[:y]) * @height
       }
     end
 
@@ -235,7 +235,7 @@ module BacklogsCards
     end
 
     def line_width(obj)
-      return obj['line_width'].to_points
+      return obj['line_width'].units_to_points
     end
 
     def color(obj, prop)
@@ -247,10 +247,10 @@ module BacklogsCards
 
     def line(l)
       return {
-        :x1 => (l['x'].to_points / @template[:x]) * @width,
-        :y1 => (1 - (l['y'].to_points / @template[:y])) * @height,
-        :x2 => ((l['x'].to_points + l['dx'].to_points) / @template[:x]) * @width,
-        :y2 => (1 - ((l['y'].to_points + l['dy'].to_points) / @template[:y])) * @height
+        :x1 => (l['x'].units_to_points / @template[:x]) * @width,
+        :y1 => (1 - (l['y'].units_to_points / @template[:y])) * @height,
+        :x2 => ((l['x'].units_to_points + l['dx'].units_to_points) / @template[:x]) * @width,
+        :y2 => (1 - ((l['y'].units_to_points + l['dy'].units_to_points) / @template[:y])) * @height
       }
       return data
     end
