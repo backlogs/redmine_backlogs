@@ -56,12 +56,13 @@ if [[ $RVM =~ [Yy] ]]; then
     gem install rack -v=1.1.0
     gem install rails -v=2.3.11
     gem install rmagick
-    gem install -v=0.4.2 i18n
+    gem install i18n -v=0.4.2
     gem install icalendar
     gem install prawn -v=0.8.4
     gem install holidays
     gem install open-uri-cached
     gem install ruby-units
+    gem install nokogiri
 fi
 
 # redmine
