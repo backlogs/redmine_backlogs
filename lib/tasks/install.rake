@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'benchmark'
 
 namespace :redmine do
   namespace :backlogs do 
@@ -42,21 +43,30 @@ namespace :redmine do
       if !corruption_test
         puts "Assuming no database corruption"
       else
-        issues = []
-        puts "Testing #{Issue.count(:all)} issues for database corruption..."
-        Issue.all.each_with_index do |issue, i|
-          puts i + 1 if ((i+1) % 100) == 0
-          begin
-            issue.save!
-          rescue => e
-            issues << [issue.id, "#{e}"]
-          end
+        issues = Issue.all + []
+        problems = []
+        tested = 0
+        puts "Testing #{issues.size} issues for database corruption..."
+        while ((chunk = issues.slice!(1, 100)).size != 0) do
+          b = Benchmark.measure {
+            chunk.each {|issue|
+              begin
+                issue.save!
+              rescue => e
+                problems << [issue.id, "#{e}"]
+              end
+            }
+          }
+          tested += chunk.size
+          speed = chunk.size.to_f / b.real
+          puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
         end
-        if issues.size == 0
+
+        if problems.size == 0
           puts "Database OK!"
         else
           puts "The following issues have problems (how ironic is that?):"
-          issues.each do |issue|
+          problems.each do |issue|
             puts "* #{issue[0]}: #{issue[1]}"
           end
         end
