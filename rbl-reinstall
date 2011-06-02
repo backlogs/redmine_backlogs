@@ -125,17 +125,19 @@ if [[ $DB =~ [Yy] ]]; then
     cd ~/redmine/redmine
 
     if [ -f ~/redmine/setup/redmine.sql.gz ]; then
-      zcat ~/redmine/setup/redmine.sql.gz | mysql -u redmine -p$DBPW redmine
-
-      if [ ! -z "$ADMINPW" ]; then
-        ./script/runner 'user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = "$ADMINPW"; user.save!'
-      fi
+      echo 'Restoring database backup'
+      zcat ~/redmine/setup/redmine.sql.gz | mysql -u root -p$DBROOTPW redmine
     fi
 
+    echo "Let's go!"
     rake db:migrate
     rake generate_session_store
     rake redmine:load_default_data
     rake db:migrate:upgrade_plugin_migrations
     rake db:migrate_plugins
     rake redmine:backlogs:install
+
+    if [ ! -z "$ADMINPW" ]; then
+      ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
+    fi
 fi
