@@ -4,6 +4,16 @@
   position:relative;
   width:1190px;
 }
+#dummy_backlog_container{
+  height:150px;
+  width:590px;
+}
+#top_sprint_backlogs_container{
+  left:0;
+  position:absolute;
+  top:0;
+  width:590px;
+}
 #product_backlog_container{
   position:absolute;
   right:0;
@@ -11,9 +21,6 @@
   width:590px;
 }
 #sprint_backlogs_container{
-  left:0;
-  position:absolute;
-  top:0;
   width:590px;
 }
 #product_backlog_container .backlog .header > .add_new_story {
