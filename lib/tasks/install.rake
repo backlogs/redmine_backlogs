@@ -46,22 +46,23 @@ namespace :redmine do
         issues = Issue.all + []
         problems = []
         tested = 0
-        puts "Testing #{issues.size} issues for database corruption..."
-        while ((chunk = issues.slice!(1, 100)).size != 0) do
-          b = Benchmark.measure {
-            chunk.each {|issue|
-              begin
-                issue.save!
-              rescue => e
-                problems << [issue.id, "#{e}"]
-              end
+        if issues.size != 0
+          puts "Testing #{issues.size} issues for database corruption..."
+          while ((chunk = issues.slice!(1, 100)).size != 0) do
+            b = Benchmark.measure {
+              chunk.each {|issue|
+                begin
+                  issue.save!
+                rescue => e
+                  problems << [issue.id, "#{e}"]
+                end
+              }
             }
-          }
-          tested += chunk.size
-          speed = chunk.size.to_f / b.real
-          puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
+            tested += chunk.size
+            speed = chunk.size.to_f / b.real
+            puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
+          end
         end
-
         if problems.size == 0
           puts "Database OK!"
         else
