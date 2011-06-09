@@ -1,0 +1,27 @@
+<tr class="<%= class_overcost(story) %> <%= cycle 'odd', 'even' %>">
+  <td><%= link_to_issue(story) %></td>
+  <td class="hour"><%= l_hour(story.estimated_hours) %></td>
+  <td class="hour"><%= l_hour(story.spent_hours) %></td>
+  <% unless story.children.empty? %>
+    <td><a href="" onclick="if ($('task<%= story.id %>').style.display=='none' || $('task<%= story.id %>').style.display=='') {$('task<%= story.id %>').style.display='block';} else {$('task<%= story.id %>').style.display='none';} return false;">詳細</a></td>
+    <td><table class="tasks" id="task<%= story.id %>">
+      <tr>
+        <th>タスク</th>
+        <th>カテゴリ</th>
+        <th>担当</th>
+        <th>予定工数</th>
+        <th>作業時間</th>
+      </tr>
+    <% story.children.each do |task| %>
+      <tr class="<%= class_overcost(task) %>">
+        <td><%= link_to_issue(task) %></td>
+        <td><%= task.category %></td>
+        <td><%= link_to_user(task.assigned_to) %></td>
+        <td class="hour"><%= l_hour(task.estimated_hours) %></td>
+        <td class="hour"><%= l_hour(task.spent_hours) %></td>
+      </tr>
+    <% end %>
+    </table></td>
+  <% end %>
+</tr>
+

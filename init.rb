@@ -102,9 +102,12 @@ Redmine::Plugin.register :redmine_backlogs do
 
     permission :subscribe_to_calendars,  { :rb_calendars  => :show }
     permission :view_scrum_statistics,   { :rb_statistics => :show }
+    permission :view_yojitsu, {:yojitsu => :show}
   end
 
   menu :project_menu, :rb_master_backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
   menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_master_backlogs, :param => :project_id
   menu :application_menu, :rb_statistics, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics, :if => Proc.new {|| User.current.allowed_to?({:controller => :rb_statistics, :action => :show}, nil, :global => true) }
+
+  menu :project_menu, :yojitsu, {:controller => 'yojitsu', :action => 'show'}, :caption => :yojitsu
 end

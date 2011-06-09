@@ -12,6 +12,7 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
+  <%= link_to l(:yojitsu), :id => @project, :controller => 'yojitsu', :action => 'show' %>
   <a id="project_info">Info</a>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
