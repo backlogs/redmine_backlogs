@@ -8,6 +8,8 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
+      raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
+
       ['open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem
@@ -140,7 +142,6 @@ namespace :redmine do
         settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
       end
 
-      
       if !batch && !Task.tracker
         # Check if there is at least one tracker available
         puts "-----------------------------------------------------"
