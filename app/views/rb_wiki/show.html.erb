@@ -1,0 +1,8 @@
+
+<%- content_for :main do %>
+<div class="contextual">
+<%= link_to_if_authorized(l(:button_edit), {:controller=> 'wiki',:action => 'edit', :id => @page.title}, :class => 'icon icon-edit', :accesskey => accesskey(:edit)) if @content.version == @page.content.version %>
+<%= link_to_if_authorized(l(:label_history), {:controller=> 'wiki',:action => 'history', :id => @page.title}, :class => 'icon icon-history') %>
+</div>
+<%= render(:partial => "wiki/content", :locals => {:content => @content}) %>
+<%- end %>

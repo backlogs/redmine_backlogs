@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" style="overflow:auto;">
+<head>
+<title><%=h html_title %></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<%= stylesheet_link_tag 'application', :media => 'all' %>
+
+<!-- looks like we don't need this anymore -->
+<!--[if lte IE 1]>
+<script type="text/javascript">
+    // and when it all appears to work beautifully on every browser,
+    // it fails on IE
+    $(document).ready(function() {
+        var zIndex = 10000;
+        $('div, ul, li, span').each(function() {
+            $(this).css('zIndex', zIndex);
+            zIndex -= 10;
+        });
+    });
+</script>
+<![endif]-->
+
+<%= yield :head_tags -%>
+</head>
+<body style="min-width: 500px;">
+  <div id="main">
+    <%= yield :main %>
+  </div>
+</body>
+</html>
