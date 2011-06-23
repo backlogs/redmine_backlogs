@@ -362,15 +362,46 @@ module BacklogsCards
 
       @cards = 0
 
-      stories.each { |story| 
-        if with_tasks
-          story.descendants.each {|task|
-            add(task)
+      
+      case Setting.plugin_redmine_backlogs[:taskboard_card_order]
+        when 'tasks_follow_story'
+          stories.each { |story| 
+            add(story)
+
+            if with_tasks
+              story.descendants.each {|task|
+                add(task)
+              }
+            end
           }
-        end
+
+        when 'stories_then_tasks'
+          stories.each { |story| 
+            add(story)
+          }
+
+          if with_tasks
+            @cards  = 0
+            @pdf.start_new_page
+
+            stories.each { |story| 
+              story.descendants.each {|task|
+                add(task)
+              }
+            }
+          end
+
+        else # 'story_follows_tasks'
+          stories.each { |story| 
+            if with_tasks
+              story.descendants.each {|task|
+                add(task)
+              }
+            end
   
-        add(story)
-      }
+            add(story)
+          }
+      end
     end
   
     attr_reader :pdf

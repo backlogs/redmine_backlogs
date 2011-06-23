@@ -31,7 +31,8 @@ Redmine::Plugin.register :redmine_backlogs do
   settings :default => { 
                          :story_trackers  => nil, 
                          :task_tracker    => nil, 
-                         :card_spec       => nil 
+                         :card_spec       => nil,
+                         :taskboard_card_order => 'story_follows_tasks'
                        }, 
            :partial => 'shared/settings'
 

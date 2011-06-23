@@ -103,3 +103,7 @@ nl:
   label_release_end_date: Einddatum release
   label_release_start_date: Startdatum release
 
+  rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
+  rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
+  rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
+  rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken

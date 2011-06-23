@@ -107,3 +107,7 @@ en-GB:
   backlogs_impediment: Impediment
   rb_label_link_to_original: Include link to original story
   rb_label_copy_tasks: Copy tasks
+  rb_taskboard_card_order: Card print order
+  rb_task_cards_story_follows_tasks: Tasks followed by their story
+  rb_task_cards_tasks_follow_story: Story followed by their tasks
+  rb_task_cards_stories_then_tasks: First all stories, then all tasks
