@@ -1,0 +1,13 @@
+<div class="model release" id="<%= release_html_id_or_empty(release) %>">
+  <h3><%= release_link_or_empty(release) %></h3>
+  <p><b><%= l(:field_release_start_date) %>:</b>   <%= release.release_start_date   %></p>
+  <p><b><%= l(:field_release_end_date) %>:</b>     <%= release.release_end_date     %></p>
+  <p><b><%= l(:field_initial_story_points) %>:</b> <%= release.initial_story_points %></p>
+  <% if release.has_burndown? %>
+    <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= release.burndown_days.size %></p>
+  <% end %>
+  <br />
+  <div class="meta">
+    <%= render :partial => "shared/model_errors", :object => release.errors %>
+  </div>
+</div>

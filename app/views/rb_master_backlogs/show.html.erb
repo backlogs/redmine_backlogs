@@ -12,7 +12,7 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
-  <a id="project_info">Info<a>
+  <a id="project_info">Info</a>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
 <%- end %>
@@ -22,13 +22,22 @@
     <div id="product_backlog_container">
       <%= render :partial => 'backlog', :object => @product_backlog %>
     </div>
-    <div id="sprint_backlogs_container">
-      <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
+    <div id="top_sprint_backlogs_container">
+      <div id="sprint_backlogs_container">
+        <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
+      </div>
+      <div id="dummy_backlog_container"></div>
     </div>
   </div>
+
 <%- end %>
 
 <%- content_for :helpers do %>
+  <div id="sprint_template">
+    <%- sprint = Sprint.new( :name => "sprint" ) -%>
+    <%- sprint_backlog = { :sprint => sprint, :stories => nil } -%>
+    <%= render :partial => "backlog", :object => sprint_backlog %>
+  </div>
 <%= render :partial => "rb_stories/helpers" %>
 <div id="last_updated"><%= date_string_with_milliseconds(@last_update, 0.001) %></div>
 <%- end %>

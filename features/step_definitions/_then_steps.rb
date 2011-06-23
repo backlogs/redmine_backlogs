@@ -5,7 +5,7 @@ Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, ".sprint")
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint")
   sprint_backlogs.length.should == count.to_i
 end
 
@@ -121,8 +121,8 @@ end
 Then /^the story named (.+) should have (\d+) task named (.+)$/ do |story_subject, count, task_subject|
   stories = Story.find(:all, :conditions => { :subject => story_subject })
   stories.length.should == 1
-  
-  tasks = Task.find(:all, :conditions => { :parent_id => stories.first.id })
+
+  tasks = stories.first.descendants
   tasks.length.should == 1
   
   tasks.first.subject.should == task_subject

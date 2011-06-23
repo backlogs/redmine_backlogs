@@ -16,6 +16,12 @@ When /^I create the task$/ do
                       @task_params
 end
 
+When /^I create the sprint$/ do
+  page.driver.process :post,
+                      url_for(:controller => :rb_sprints, :action => :create),
+                      @sprint_params
+end
+
 When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
   story = Story.find(:first, :conditions => ["subject=?", story_subject])
   prev  = Story.find(:first, :conditions => ["subject=?", prev_subject])

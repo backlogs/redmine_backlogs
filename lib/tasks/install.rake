@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'benchmark'
 
 namespace :redmine do
   namespace :backlogs do 
@@ -7,13 +8,72 @@ namespace :redmine do
     task :install => :environment do |t|
       ENV["RAILS_ENV"] ||= "development"
 
-      ['holidays', 'icalendar', 'prawn'].each{|gem|
+      raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
+
+      ['open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem
         rescue LoadError
           raise "You are missing the '#{gem}' gem"
         end
       }
+
+      batch = (ENV['batch'] == 'true')
+      corruption_test = (ENV['corruptiontest'] != 'false')
+
+      redmine_supported = "1.2.0"
+
+      platform = nil
+      version = nil
+      File.open('doc/CHANGELOG').each_line do |line|
+        break if platform && version
+
+        platform = :redmine if line.match(/^== Redmine changelog$/)
+        
+        m = line.match(/^== [0-9]{4}-[0-9]{2}-[0-9]{2} v([.0-9]+)$/)
+        version = m[1] if m
+      end
+
+      raise "Only Redmine version #{redmine_supported} is supported at this time" unless platform == :redmine && version == redmine_supported
+
+      begin
+        Story.trackers
+      rescue NoMethodError
+        raise "Looks like there's a conflicting plugin that redefines the Story class"
+      end
+
+      if !corruption_test
+        puts "Assuming no database corruption"
+      else
+        issues = Issue.all + []
+        problems = []
+        tested = 0
+        if issues.size != 0
+          puts "Testing #{issues.size} issues for database corruption..."
+          while ((chunk = issues.slice!(1, 100)).size != 0) do
+            b = Benchmark.measure {
+              chunk.each {|issue|
+                begin
+                  issue.save!
+                rescue => e
+                  problems << [issue.id, "#{e}"]
+                end
+              }
+            }
+            tested += chunk.size
+            speed = chunk.size.to_f / b.real
+            puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
+          end
+        end
+        if problems.size == 0
+          puts "Database OK!"
+        else
+          puts "The following issues have problems (how ironic is that?):"
+          problems.each do |issue|
+            puts "* #{issue[0]}: #{issue[1]}"
+          end
+        end
+      end
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       settings = Setting.plugin_redmine_backlogs
@@ -30,7 +90,7 @@ namespace :redmine do
         print "Fetching card labels from http://git.gnome.org..."
         STDOUT.flush
         begin
-          Cards::TaskboardCards.fetch_labels
+          BacklogsCards::LabelStock.fetch_labels
           print "done!\n"
         rescue Exception => fetch_error
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
@@ -41,11 +101,11 @@ namespace :redmine do
           FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
         end
       end
-      settings[:card_spec] ||= Cards::TaskboardCards::LABELS.keys[0] unless Cards::TaskboardCards::LABELS.size == 0
+      settings[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
 
       trackers = Tracker.find(:all)
 
-      if Story.trackers.length == 0
+      if !batch && Story.trackers.length == 0
         puts "Configuring story and task trackers..."
         invalid = true
         while invalid
@@ -82,8 +142,7 @@ namespace :redmine do
         settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
       end
 
-      
-      if !Task.tracker
+      if !batch && !Task.tracker
         # Check if there is at least one tracker available
         puts "-----------------------------------------------------"
         if settings[:story_trackers].length < trackers.length

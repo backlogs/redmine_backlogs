@@ -1,0 +1,131 @@
+<%- charts = (burndown.is_a?(Array) ? burndown : [burndown]) %>
+<%- dataseries = charts[0].series(:all).collect{|series| series.name } %>
+
+  <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
+
+  <%= javascript_include_tag 'jquery-1.4.2.min.js', :plugin => 'redmine_backlogs' %>
+  <!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
+  <%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag 'jquery.cookies.2.2.0.min.js', :plugin => 'redmine_backlogs' %>
+
+  <style type="text/css" media="screen">
+    .jqplot-axis {
+      font-size: 0.85em;
+    }
+    .jqplot-title {
+      font-size: 1.1em;
+    }
+    .jqplot-y6axis-tick {
+      padding-right: 0px;
+    }
+  </style>
+  <script type="text/javascript" language="javascript">
+    // Define options otherwise jqplot throws an error
+    var options = {};
+    // chart objects
+    burndown_charts = new Object();
+    // TODO: I have no idea why plain 'jQuery' doesn't work
+    burndown_charts.jquery = jQuery.noConflict();
+
+    <%- charts.each do |chart| %>
+      burndown_charts[<%= chart.release_id%>] = {
+        chart: null,
+        dataset_position: {<%= chart.series(:all).enum_for(:each_with_index).collect{|s, i| "#{s.name}: #{i}"}.join(', ') %>},
+        datasets: [<%= chart.series(:all).collect{|s| "[#{s.join(',')}]"}.join(', ') %>],
+        series: [<%= chart.series(:all).collect{|s| "{ label: '#{escape_javascript(l(s.name))}', yaxis: 'yaxis' }"}.join(',') %>],
+        xticks: [<%= chart.days.enum_for(:each_with_index).collect{|d,i| "[#{i+1}, '#{escape_javascript(::I18n.t('date.abbr_day_names')[d.wday % 7])}']"}.join(',') %>],
+
+        // add a little clearance to the chart
+        max_y: <%= chart.max == 0 ? 1 : 1.01 * chart.max %>,
+
+        initialize: function() {
+          decoration = !(burndown_charts.jquery('#<%= "#{div}#{chart.release_id}" %>').hasClass('minimal'));
+
+          /*
+          this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', this.datasets, {
+            legend: {show: decoration, location: 'sw'},
+            grid: {shadow:false},
+            seriesDefaults: {showMarker: decoration, shadow:false},
+            axesDefaults: {showTick: decoration},
+            series: this.series,
+            axes:{
+              xaxis:{min:1, max:<%= chart.days.length %>, tickInterval:1, ticks: this.xticks}, 
+              yaxis:{min:0, max: this.max_y, tickOptions:{formatString:'%d'}},
+              },
+            highlighter:{
+              tooltipAxes: 'y',
+              formatString: '%s'
+            }
+          }); */
+          snapshots=<%= @release.js_snapshots %>
+          ideal=<%= @release.js_ideal %>
+          this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
+              //gridPadding:{right:35},
+              axes:{
+                  xaxis:{
+                      renderer:burndown_charts.jquery.jqplot.DateAxisRenderer,
+                      tickOptions:{formatString:'%b %#d, %y'},
+                      //min:'May 30, 2008',
+                      //tickInterval:'1 month'
+                  },
+                  yaxis:{min:0, max: this.max_y},
+              },
+              //series:[{lineWidth:4, markerOptions:{style:'square'}}]
+          });
+        },
+
+        reconfigure: function(disabled) {
+          if (this.chart) {
+            <%- dataseries.each do |series| %>
+              p = this.dataset_position['<%= "#{series}" %>'];
+              if (!(p == undefined)) { this.chart.series[p].show = (disabled.indexOf('|<%= "#{series}" %>|') == -1); };
+            <%- end %>
+            this.chart.replot();
+          }
+        }
+      };
+    <%- end %>
+
+    function burndown_configure(cb)
+    {
+      disabled = '|' + burndown_charts.jquery.cookies.get('release_burndown_series') + '|';
+
+      if (!(cb == undefined)) {
+        _disabled = [];
+        <%- dataseries.each do |series| %>
+          if (disabled.indexOf('|<%= "#{series}" %>|') != -1 && cb.value != '<%= "#{series}" %>') {
+            _disabled.push('<%= "#{series}" %>');
+          }
+        <%- end %>
+        if (!cb.checked) {
+          _disabled.push(cb.value);
+        }
+        disabled = _disabled.join('|');
+        burndown_charts.jquery.cookies.set('release_burndown_series', disabled, { expiresAt: new Date((new Date()).getFullYear + 100, 1, 1)});
+        disabled = '|' + disabled + '|';
+      }
+
+      checkboxes = burndown_charts.jquery('.series_enabled');
+      if (checkboxes) {
+        /* enable all, then reset */
+        checkboxes.attr('checked', true);
+        <%- dataseries.each do |series| %>
+          checkbox = burndown_charts.jquery('#<%= "#{series}" %>_enabled');
+          if (checkbox && -1 != disabled.indexOf('|<%= "#{series}" %>|')) { checkbox.attr('checked', false); }
+        <%- end %>
+      }
+
+      <%- charts.each do |chart| %>
+        burndown_charts[<%= chart.release_id %>].reconfigure(disabled);
+      <%- end %>
+    }
+
+    burndown_charts.jquery(document).ready(function(){
+      <%- charts.each do |chart| %>
+        burndown_charts[<%= chart.release_id%>].initialize();
+      <%- end %>
+      burndown_configure();
+    });
+  </script>

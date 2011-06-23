@@ -41,13 +41,13 @@ RB.Task = RB.Object.create(RB.Issue, {
 
   saveDirectives: function(){
     var j = this.$;
-    var prev = this.$.prev();
+    var nxt = this.$.next();
     var cellID = j.parent('td').first().attr('id').split("_");
 
     var data = j.find('.editor').serialize() +
                "&parent_issue_id=" + cellID[0] +
                "&status_id=" + cellID[1] +
-               "&prev=" + (prev.length==1 ? prev.data('this').getID() : '') +
+               "&next=" + (nxt.length==1 ? nxt.data('this').getID() : '') +
                (this.isNew() ? "" : "&id=" + j.children('.id').text());
 
     if( this.isNew() ){

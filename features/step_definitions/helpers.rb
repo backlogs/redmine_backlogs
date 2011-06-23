@@ -30,11 +30,17 @@ def initialize_impediment_params(sprint_id)
   params
 end
 
+def initialize_sprint_params
+  params = HashWithIndifferentAccess.new(Sprint.new.attributes)
+  params['project_id'] = @project.id
+  params
+end
+
 def login_as_product_owner
   visit url_for(:controller => 'account', :action=>'login')
   fill_in 'username', :with => 'jsmith'
   fill_in 'password', :with => 'jsmith'
-  click_button 'Login »'
+  page.find(:xpath, '//input[@name="login"]').click
   @user = User.find(:first, :conditions => "login='jsmith'")
 end
 
@@ -42,7 +48,7 @@ def login_as_scrum_master
   visit url_for(:controller => 'account', :action=>'login')
   fill_in 'username', :with => 'jsmith'
   fill_in 'password', :with => 'jsmith'
-  click_button 'Login »'
+  page.find(:xpath, '//input[@name="login"]').click
   @user = User.find(:first, :conditions => "login='jsmith'")
 end
 
@@ -50,7 +56,7 @@ def login_as_team_member
   visit url_for(:controller => 'account', :action=>'login')
   fill_in 'username', :with => 'jsmith'
   fill_in 'password', :with => 'jsmith'
-  click_button 'Login »'
+  page.find(:xpath, '//input[@name="login"]').click
   @user = User.find(:first, :conditions => "login='jsmith'")
 end
 
@@ -58,7 +64,7 @@ def login_as_admin
   visit url_for(:controller => 'account', :action=>'login')
   fill_in 'username', :with => 'admin'
   fill_in 'password', :with => 'admin'
-  click_button 'Login »'
+  page.find(:xpath, '//input[@name="login"]').click
   @user = User.find(:first, :conditions => "login='admin'")
 end  
 

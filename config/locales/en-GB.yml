@@ -2,7 +2,7 @@
 en-GB: 
   rb_label_copy_tasks_open: "[[Open]]"
   label_webcal: Webcal Feed
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_remaining_hours: Remaining hours
   error_intro_singular: "The following error was encountered:"
@@ -15,23 +15,24 @@ en-GB:
   field_tracker_id: Tracker ID
   error_must_have_comma_delimited_list: must have a comma delimited list of story or task IDs
   label_stories: Stories
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   label_product_backlog: product backlog
   required_burn_rate_hours: required burn rate (hours)
   backlogs_velocity_missing: No velocity could be calculated for this project
-  label_sprint_name: Sprint "{{name}}"
+  label_sprint_name: Sprint "%{name}"
   backlogs_any: any
   label_stories_tasks: Stories/Tasks
   label_task_board: Task board
-  label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to {{administration}} > {{plugins}}, then click on the {{configure}} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
+  label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
   backlogs_sprints: Sprints
   field_position: Position
   backlogs_active: active
-  inclusion: is not included in the list
+  error_inclusion: is not included in the list
   backlogs_product_backlog_is_empty: Product backlog is empty
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project shows no activity
   field_story_points: Story points
+  remaining_story_points: remaining story points
   label_Product_backlog: Product backlog
   rb_label_copy_tasks_none: "[[None]]"
   backlogs_task: Task
@@ -39,6 +40,21 @@ en-GB:
   points_committed: points committed
   label_sprint_impediments: Sprint Impediments
   label_master_backlog: Master Backlog
+  label_release_planning: Release Planning
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: New release
+  field_release_start_date: Release start date
+  field_release_end_date: Release end date
+  label_release_start_date: [[field_release_start_date]]
+  label_release_end_date: [[field_release_start_date]]
+  error_release_end_after_start: Release end date has to be after start date
+  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  today_not_in_release_warning: "Warning: current date is not within release date range."
+  field_number_of_snapshots: Saved point snapshots
+  release_update_snapshot_today: Update story point snapshot for today
+  release_create_snapshot_today: Save story point snapshot for today
+  field_initial_story_points: Initial story points
   field_blocks: Blocks
   points_to_resolve: points not resolved
   label_select_all: Select all
@@ -54,7 +70,7 @@ en-GB:
   backlogs_product_backlog_unsized: The top of the product backlog has unsized stories
   points_accepted: points accepted
   backlogs_sprint_notes_missing: Closed sprints without retrospective/review notes
-  label_sprint_velocity: Velocity {{velocity}}, based on {{sprints}} sprints with an average {{days}} days
+  label_sprint_velocity: Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days
   field_subject: Subject
   backlogs_story: Story
   label_sprint_backlog: sprint backlog
@@ -71,16 +87,23 @@ en-GB:
   backlogs_card_specification: Label types for card printing
   backlogs_story_tracker: Story trackers
   event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+    %{summary}: %{url}
+    %{description}
   label_burndown: Burndown
   rb_label_copy_tasks_all: "[[All]]"
   field_velocity_based_estimate: Velocity based estimate
   label_product_cards: Product backlog cards
   todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+    %{summary}: %{url}
+    %{description}
   label_chart_options: Chart Options
   backlogs_product_backlog: Product backlog
   remaining_hours: remaining hours
   error_outro: Please correct the above errors before submitting again.
+  rb_label_copy_tasks_open: Open
+  rb_label_copy_tasks_all: All
+  rb_label_copy_tasks_none: None
+  label_impediments: Impediments
+  backlogs_impediment: Impediment
+  rb_label_link_to_original: Include link to original story
+  rb_label_copy_tasks: Copy tasks

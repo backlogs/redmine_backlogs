@@ -1,20 +1,18 @@
 class Story < Issue
     unloadable
 
-    acts_as_list :scope => :project
+    acts_as_list
 
     def self.condition(project_id, sprint_id, extras=[])
       if sprint_id.nil?  
         c = ["
-          parent_id is NULL
-          and project_id = ?
+          project_id = ?
           and tracker_id in (?)
           and fixed_version_id is NULL
           and is_closed = ?", project_id, Story.trackers, false]
       else
         c = ["
-          parent_id is NULL
-          and project_id = ?
+          project_id = ?
           and tracker_id in (?)
           and fixed_version_id = ?",
           project_id, Story.trackers, sprint_id]
@@ -69,9 +67,17 @@ class Story < Issue
            :order => "updated_on ASC")
     end
 
-    def self.trackers
-        trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+    def self.trackers(type = :array)
+        # this happens during initial redmine install
+        begin
+            trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+        rescue ActiveRecord::StatementInvalid
+            return []
+        end
+
         return [] if trackers.blank?
+
+        return trackers.join(',') if type == :string
 
         return trackers.map { |tracker| Integer(tracker) }
     end

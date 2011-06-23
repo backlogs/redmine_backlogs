@@ -12,7 +12,7 @@ de:
   label_not_prioritized: nicht priorisiert
   points_resolved: Beschlossene Punkte
   field_tracker_id: "[[Tracker ID]]"
-  field_name: "[[Name]]"
+  field_name: Name
   error_must_have_comma_delimited_list: muss eine Kommaseparierte Liste mit Story- oder Aufgaben-IDs enthalten
   label_stories: Stories
   todo_issue_summary: "{{type}}: {{summary}}"
@@ -31,7 +31,8 @@ de:
   backlogs_product_backlog_is_empty: Produkt Backlog ist leer
   backlogs_task_tracker: Aufgaben Tracker
   backlogs_inactive: "Projekt zeigt keine Aktivit\xC3\xA4t"
-  field_story_points: Story Punkte
+  field_story_points: Storypunkte
+  remaining_story_points: Verbleibende Storypunkte
   label_Product_backlog: Produkt Backlog
   rb_label_copy_tasks_none: "[[None]]"
   backlogs_task: Aufgabe
@@ -40,6 +41,21 @@ de:
   label_sprint_impediments: Sprint Blockaden
   field_blocks: "[[Blocks]]"
   label_master_backlog: "[[Master Backlog]]"
+  label_release_planning: "Release-Planung"
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: Neues Release
+  field_release_start_date: Release Startdatum
+  field_release_end_date: Release Enddatum
+  label_release_start_date: [[field_release_start_date]]
+  label_release_end_date: [[field_release_start_date]]
+  error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
+  today_not_in_release_msg: Heutiges Datum liegt nicht im Release-Zeitraum. Snapshot wirklich speichern?
+  today_not_in_release_warning: "Achtung: heutiges Datum liegt nicht im Release-Zeitraum."
+  field_number_of_snapshots: Gespeicherte Punkte-Snapshots
+  release_update_snapshot_today: Heutigen Punkte-Snapshot aktualisieren
+  release_create_snapshot_today: Heutigen Punkte-Snapshot speichern
+  field_initial_story_points: Storypunkte zu Beginn
   points_to_resolve: Nicht beschlossene Punkte
   label_select_all: "Alle ausw\xC3\xA4hlen"
   backlogs_sprint_unestimated: "Geschlossene oder aktive Sprints mit nicht abgesch\xC3\xA4tzten Stories"

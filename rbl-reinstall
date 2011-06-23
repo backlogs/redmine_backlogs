@@ -1,0 +1,143 @@
+#!/bin/bash
+
+CONFIG="$( cd "$( dirname "$0" )" && pwd )"
+CONFIG="$CONFIG/rbl-reinstall.rc"
+
+if [ ! -f $CONFIG ]; then
+    echo "$CONFIG does not exist"
+    exit
+fi
+
+source $CONFIG
+
+if [ -z "$VERSION" ]; then
+    echo "VERSION not set"
+    exit
+fi
+
+if [ -z "$DBROOTPW" ]; then
+    echo "DBROOTPW not set"
+    exit
+fi
+if [ -z "$DBPW" ]; then
+    echo "DBPW not set"
+    exit
+fi
+if [ ! -d ~/redmine ]; then
+    echo "~/redmine does not exist"
+    exit
+fi
+
+cd ~/redmine
+
+if [ ! -f ~/redmine/setup/database.yml ]; then
+    echo "~/redmine/setup/database.yml does not exist"
+    exit
+fi
+
+if [ ! -d ~/redmine/redmine_backlogs ]; then
+    echo "~/redmine/redmine_backlogs does not exist"
+    exit
+fi
+
+# ruby env
+if [ -z "$RVM" ]; then
+  read -p "Reinstall RVM? " RVM
+fi
+if [[ $RVM =~ [Yy] ]]; then
+    rvm gemset create redmine
+    rvm --force gemset empty redmine
+
+    echo 'Downgrading rubygems'
+    rvm rubygems 1.3.7 
+
+    echo 'Installing base gems'
+    gem install mysql
+    gem install rack -v=1.1.0
+    gem install rails -v=2.3.11
+    gem install rmagick
+    gem install i18n -v=0.4.2
+    gem install icalendar
+    gem install prawn -v=0.8.4
+    gem install holidays
+    gem install open-uri-cached
+    gem install ruby-units
+    gem install nokogiri
+fi
+
+# redmine
+if [ ! -f ~/redmine/redmine/config/database.yml ]; then
+  echo Forced RM install
+  RM=Y
+elif [ -z "$RM" ]; then
+  read -p "Reinstall Redmine? " RM
+fi
+if [[ $RM =~ [Yy] ]]; then
+    rm -rf ~/redmine/redmine
+    cd ~/redmine
+    git clone git://github.com/edavis10/redmine.git
+    cd ~/redmine/redmine
+    git fetch --tags
+    git checkout $VERSION
+    cp ~/redmine/setup/database.yml ~/redmine/redmine/config
+    ln -s ~/redmine/redmine_backlogs ~/redmine/redmine/vendor/plugins
+    ln -s ~/redmine/redmine_backlogs/features ~/redmine/redmine
+    echo 'rvm use 1.8.7@redmine' > ~/redmine/redmine/.rvmrc
+fi
+
+# dev
+if [[ $RVM =~ [Yy] ]]; then
+  DEV=y
+fi
+if [ -z "$DEV" ]; then
+  read -p "Dev environment? " DEV
+fi
+if [[ $DEV =~ [Yy] ]]; then
+    gem install -v=1.3.1 rspec
+    gem install -v=0.8.5 cucumber
+    gem install spork
+    gem install database_cleaner
+    gem install capybara
+    gem install ZenTest
+    gem install autotest-rails
+    gem install redgreen
+    gem install rcov
+    gem install -v=1.3.3 rspec-rails
+    gem install -v=0.3.2 cucumber-rails
+
+    # cucumber-rails pulls in an unnecesary gherkin
+    eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').select{|x| x.version.version != '2.1.5'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+
+    cd ~/redmine/redmine
+    [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --spork
+fi
+
+# database
+if [ -z "$DB" ]; then
+  read -p "Reinstall database? " DB
+fi
+if [[ $DB =~ [Yy] ]]; then
+    mysqladmin -u root -p$DBROOTPW drop redmine
+    echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
+    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
+
+    cd ~/redmine/redmine
+
+    if [ -f ~/redmine/setup/redmine.sql.gz ]; then
+      echo 'Restoring database backup'
+      zcat ~/redmine/setup/redmine.sql.gz | mysql -u root -p$DBROOTPW redmine
+    fi
+
+    echo "Let's go!"
+    rake db:migrate
+    rake generate_session_store
+    rake redmine:load_default_data
+    rake db:migrate:upgrade_plugin_migrations
+    rake db:migrate_plugins
+    rake redmine:backlogs:install
+
+    if [ ! -z "$ADMINPW" ]; then
+      ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
+    fi
+fi

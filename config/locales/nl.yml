@@ -1,7 +1,7 @@
 --- 
 nl: 
   rb_label_copy_tasks_open: "Open"
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   label_webcal: Agenda
   field_backlogs_issue_type: Backlog type
   error_intro_singular: "De volgende fout is opgetreden:"
@@ -14,20 +14,20 @@ nl:
   error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story of taak IDs hebben
   label_stories: Stories
   field_name: Naam
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   field_tracker_id: Tracker ID
   label_product_backlog: product backlog
   required_burn_rate_hours: benodigde burn rate (hours)
   backlogs_velocity_missing: De velocity voor dit project kan niet worden berekend
-  label_sprint_name: Sprint "{{name}}"
+  label_sprint_name: Sprint "%{name}"
   backlogs_any: alle
   label_stories_tasks: Stories/Taken
   label_task_board: Taakbord
-  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u asltublieft naar {{administration}} > {{plugins}}, en klik dan op de {{configure}} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
+  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u asltublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
   backlogs_sprints: Sprints
   field_position: Positie
   backlogs_active: lopend
-  inclusion: is geen onderdeel van de lijst
+  error_inclusion: is geen onderdeel van de lijst
   backlogs_product_backlog_is_empty: Product backlog is leeg
   backlogs_task_tracker: Task tracker
   backlogs_inactive: Project lijkt inactief
@@ -53,7 +53,7 @@ nl:
   rb_label_link_to_original: "Relateer aan originele story"
   backlogs_product_backlog_unsized: De top van de product backlog heeft stories zonder size
   points_accepted: points geaccepteerd
-  label_sprint_velocity: Velocity {{velocity}}, berekend over {{sprints}} sprints met gemiddeld {{days}} dagen
+  label_sprint_velocity: Velocity %{velocity}, berekend over %{sprints} sprints met gemiddeld %{days} dagen
   backlogs_sprint_notes_missing: Gesloten sprints zonder retrospective/review aantekeningen
   field_subject: Onderwerp
   backlogs_story: Story
@@ -72,15 +72,34 @@ nl:
   backlogs_story_tracker: Story trackers
   label_burndown: Burndown
   event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+    %{summary}: %{url}
+    %{description}
   rb_label_copy_tasks_all: "Alle"
   todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+    %{summary}: %{url}
+    %{description}
   label_chart_options: Grafiek Opties
   field_velocity_based_estimate: Schatting obv velocity
   label_product_cards: Product backlog kaarten
   backlogs_product_backlog: Product backlog
   remaining_hours: resterende uren
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
+  label_release_new: Nieuwe release
+  label_release_planning: Release Planning
+  field_number_of_snapshots: Opgeslagen point snapshots
+  today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
+  release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
+  field_initial_story_points: Initiele story points
+  remaining_story_points: resterende story points
+  field_release_end_date: Eind datum van de release
+  label_impediments: Impediments
+  error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
+  backlogs_impediment: Impediment
+  release_create_snapshot_today: Story point snapshot voor vandaag opslaan
+  label_release: Release
+  label_release_plural: Releases
+  today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
+  field_release_start_date: Startdaum release
+  label_release_end_date: Einddatum release
+  label_release_start_date: Startdatum release
+

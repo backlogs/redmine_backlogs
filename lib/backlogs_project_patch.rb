@@ -127,8 +127,8 @@ module Backlogs
         @scrum_statistics[:error, :product_backlog, :is_empty] = (self.status == Project::STATUS_ACTIVE && backlog.length == 0)
         @scrum_statistics[:error, :product_backlog, :unsized] = backlog.inject(false) {|unsized, story| unsized || story.story_points.blank? }
   
-        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and parent_id is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, Story.trackers])
-        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and not parent_id is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, Task.tracker])
+        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, Story.trackers])
+        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, Task.tracker])
         @scrum_statistics[:error, :sprint, :notes_missing] = closed_sprints.inject(false){|missing, sprint| missing || !sprint.has_wiki_page}
   
         @scrum_statistics[:error, :inactive] = (self.status == Project::STATUS_ACTIVE && !(active_sprint && active_sprint.activity))
@@ -191,14 +191,14 @@ module Backlogs
             and not (estimated_hours is null or estimated_hours = 0)
             and fixed_version_id in (#{sprint_ids})
             and project_id = #{self.id}
-            and not parent_id is null
             and tracker_id in (#{story_trackers})
           "
   
           points_per_hour = Story.find_by_sql("select avg(story_points) / avg(estimated_hours) as points_per_hour from issues where #{select_stories}")[0].points_per_hour
   
           if points_per_hour
-            stories = Stories.select(:all, :conditions => [select_stories])
+            points_per_hour = Float(points_per_hour)
+            stories = Story.find(:all, :conditions => [select_stories])
             error = stories.inject(0) {|err, story|
               err + (1 - (points_per_hour / (story.story_points / story.estimated_hours)))
             }

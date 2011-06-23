@@ -3,6 +3,10 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :view_master_backlog
   role.permissions << :create_stories
   role.permissions << :update_stories
+  role.permissions << :view_releases
+  role.permissions << :create_releases
+  role.permissions << :update_releases
+  role.permissions << :destroy_releases
   role.permissions << :view_scrum_statistics
   role.save!
   login_as_product_owner
@@ -11,6 +15,7 @@ end
 Given /^I am a scrum master of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
+  role.permissions << :view_releases
   role.permissions << :view_taskboards
   role.permissions << :update_sprints
   role.permissions << :update_stories
@@ -19,6 +24,7 @@ Given /^I am a scrum master of the project$/ do
   role.permissions << :subscribe_to_calendars
   role.permissions << :view_wiki_pages        # NOTE: This is a Redmine core permission
   role.permissions << :edit_wiki_pages        # NOTE: This is a Redmine core permission
+  role.permissions << :create_sprints
   role.save!
   login_as_scrum_master
 end
@@ -26,6 +32,7 @@ end
 Given /^I am a team member of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
+  role.permissions << :view_releases
   role.permissions << :view_taskboards
   role.permissions << :create_tasks
   role.permissions << :update_tasks
@@ -85,6 +92,10 @@ Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   @impediment_params = initialize_impediment_params(sprint.id)
 end
 
+Given /^I want to create a sprint$/ do
+  @sprint_params = initialize_sprint_params
+end
+
 Given /^I want to edit the task named (.+)$/ do |task_subject|
   task = Task.find(:first, :conditions => { :subject => task_subject })
   task.should_not be_nil
@@ -134,7 +145,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
   task_tracker = "#{Tracker.create!(:name => 'Task').id}"
   plugin = Redmine::Plugin.find('redmine_backlogs')
-  Setting["plugin_#{plugin.id}"] = {:story_trackers => story_trackers, :task_tracker => task_tracker }
+  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:story_trackers => story_trackers, :task_tracker => task_tracker } )
 
   # Make sure these trackers are enabled in the project
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
@@ -220,7 +231,8 @@ Given /^I am viewing the issues list$/ do
 end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
-  Setting.plugin_redmine_backlogs[:card_spec] = stock
+  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:card_spec => stock } )
+  BacklogsCards::LabelStock.selected_label.should_not be_nil
 end
 
 Given /^I have set my API access key$/ do

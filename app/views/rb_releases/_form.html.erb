@@ -1,0 +1,19 @@
+<div class="box tabular">
+  <p>
+    <%= f.text_field :name, :required => true %>
+  </p>
+  <p>
+    <%= f.text_field :release_start_date, :required => true %>
+    <%= calendar_for('release_release_start_date') %>
+  </p>
+  <p>
+    <%= f.text_field :release_end_date, :required => true %>
+    <%= calendar_for('release_release_end_date') %>
+  </p>
+  <p>
+    <%= f.text_field :initial_story_points, :required => true %>
+    <% if backlog_points %>
+      (current points in backlog: <%= backlog_points %>)
+    <% end %>
+  </p>
+</div>

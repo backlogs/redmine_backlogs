@@ -4,9 +4,13 @@ require 'dispatcher'
 Dispatcher.to_prepare do
   require_dependency 'issue'
 
-  Issue::SAFE_ATTRIBUTES << "story_points" if Issue.const_defined? "SAFE_ATTRIBUTES"
-  Issue::SAFE_ATTRIBUTES << "remaining_hours" if Issue.const_defined? "SAFE_ATTRIBUTES"
-  Issue::SAFE_ATTRIBUTES << "position" if Issue.const_defined? "SAFE_ATTRIBUTES"
+  if Issue.const_defined? "SAFE_ATTRIBUTES"
+    Issue::SAFE_ATTRIBUTES << "story_points"
+    Issue::SAFE_ATTRIBUTES << "remaining_hours"
+    Issue::SAFE_ATTRIBUTES << "position"
+  else
+    Issue.safe_attributes "story_points", "remaining_hours", "position"
+  end
 
   require_dependency 'backlogs_query_patch'
   require_dependency 'backlogs_issue_patch'
@@ -40,7 +44,17 @@ Redmine::Plugin.register :redmine_backlogs do
                                        :rb_sprints          => [:index, :show],
                                        :rb_wikis            => :show,
                                        :rb_stories          => [:index, :show],
-                                       :rb_queries          => :show,
+                                       :rb_queries          => [:show, :impediments],
+                                       :rb_server_variables => :show,
+                                       :rb_burndown_charts  => :show,
+                                       :rb_updated_items    => :show
+                                     }
+
+    permission :view_releases,       {
+                                       :rb_releases         => [:index, :show],
+                                       :rb_sprints          => [:index, :show],
+                                       :rb_wikis            => :show,
+                                       :rb_stories          => [:index, :show],
                                        :rb_server_variables => :show,
                                        :rb_burndown_charts  => :show,
                                        :rb_updated_items    => :show
@@ -58,9 +72,13 @@ Redmine::Plugin.register :redmine_backlogs do
                                        :rb_updated_items    => :show
                                      }
 
+    # Release permissions
+    permission :modify_releases,     { :rb_releases => [:new, :create, :edit, :snapshot, :destroy]  }
+
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission
-    permission :update_sprints,      { 
+    permission :create_sprints,      { :rb_sprints => [:new, :create]  }
+    permission :update_sprints,      {
                                         :rb_sprints => [:edit, :update],
                                         :rb_wikis   => [:edit, :update]
                                       }
@@ -84,6 +102,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :view_scrum_statistics,   { :rb_statistics => :show }
   end
 
-  menu :project_menu, :backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
-  menu :application_menu, :backlogs, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics
+  menu :project_menu, :rb_master_backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
+  menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_master_backlogs, :param => :project_id
+  menu :application_menu, :rb_statistics, { :controller => :rb_statistics, :action => :show}, :caption => :label_scrum_statistics, :if => Proc.new {|| User.current.allowed_to?({:controller => :rb_statistics, :action => :show}, nil, :global => true) }
 end

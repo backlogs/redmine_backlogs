@@ -1,0 +1,123 @@
+---
+ru:
+  backlogs_story_tracker: "Трекеры истории"
+  backlogs_task_tracker: "Трекер задания"
+  backlogs_card_specification: "Типы меток для печати карт"
+  backlogs_sprints: "Спринты"
+  field_story_points: "Оценка истории (человеко-часы)"
+  remaining_story_points: "Оставшиеся оценки истории"
+  field_remaining_hours: "Оставшиеся часы"
+  button_edit_wiki: "Редактировать страницу wiki"
+  field_backlogs_issue_type: "Тип бэклога"
+  backlogs_story: История
+  backlogs_task: Задание 
+  backlogs_any: любой 
+  backlogs_impediment: Задержка
+  backlogs_points_burn_direction: "Точки с указанием, сколько уже выполнено задания и сколько ещё остаётся сделать"
+  label_points_burn_up: Сколько выполнено  
+  label_points_burn_down: Сколько осталось выполнить
+  field_position: Положение 
+  backlogs_product_backlog: "Бэклог продукта (список требований к функциональности, которые упорядочены по степени важности)"
+  label_impediments: Задержки
+  backlogs_wiki_template: "Шаблон для спринта страницы wiki"
+  points_committed: "выполненные оценки"
+  required_burn_rate_points: "требуемая скорость выполнения (точки)"
+  required_burn_rate_hours: "требуемая скорость выполнения (часы)"
+  points_to_accept: "не принятые оценки"
+  points_accepted: "принятые оценки"
+  ideal: "идеальный"
+  points_to_resolve: "не разрешённые оценки"
+  points_resolved: "разрешённые оценки"
+  remaining_hours: "оставшиеся часы"
+  field_velocity_based_estimate: "Оценка на основе скорости"
+
+  backlogs_active: активный 
+
+  label_task_board: "Доска заданий"
+  label_stories_tasks: "Истории/Задания"
+  label_stories: "Истории"
+  label_burndown: "Выполнение"
+  label_product_cards: "Карты бэклога продукта"
+  label_sprint_cards: "Карты спринта"
+  label_select_all: "Выбрать всё"
+
+  label_back_to_project: "Назад на страницу проекта"
+  label_sprint_name: "Спринт \"{{name}}\""
+  label_backlogs: Бэклоги 
+  label_scrum_statistics: "Статистики скрама"
+
+  label_sprint_backlog: " бэклог спринта"
+  label_product_backlog: "бэклог продукта"
+  label_Product_backlog: "Бэклог продукта"
+
+  backlogs_sizing_inconsistent: "Изменение размеров истории относительно их оценок"
+  backlogs_velocity_missing: "Скорость для этого проекта не может быть вычислена"
+  backlogs_product_backlog_is_empty: "Бэклог продукта пуст"
+  backlogs_inactive: "Проект не показывает активности"
+  backlogs_sprint_unestimated: "Закрытые или активные спринты с неоценёнными историями"
+  backlogs_sprint_notes_missing: "Закрытые спринты без ретроспективных/обзорных замечаний"
+  backlogs_product_backlog_unsized: "Верх бэклога продукта имеет истории с неопределённым размером"
+  backlogs_velocity_varies: "Скорость значительно изменяется по спринтам"
+  backlogs_sprint_unsized: "Проект имеет истории по активным или недавно закрытым спринтам, для которых не были установлены размеры"
+
+  label_hours: часы
+  label_points: точки
+  label_not_prioritized: "без приоритета"
+
+  label_backlogs_unconfigured: "Вы ещё не отконфигурировали бэклог. Пожалуйста, пройдите {{administration}} > {{plugins}}, затем нажмите {{configure}} для соединения с этим плагином. После того, как установили поля, возвращайтесь назад к этой странице, чтобы начать использование этого инструмента."
+
+  label_sprint_velocity: "Скорость {{velocity}}, основанная на спринтах {{sprints}} со средним количеством дней {{days}}."
+  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_description: "{{summary}}: {{url}}\n{{description}}"
+  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_description: "{{summary}}: {{url}}\n{{description}}"
+
+  label_chart_options: "Выборы карты"
+
+  error_intro_singular: "Была обнаружена следующая ошибка:"
+  error_intro_plural: "Были обнаружены следующие ошибки:"
+  error_outro: "Пожалуйста, исправьте вышепреведенные ошибки перед следующим запуском."
+
+  label_sprint_impediments: "Препятствия для Спринта"
+
+  field_subject: "Содержание"
+
+  field_blocks: "Блокировки"
+  error_must_have_comma_delimited_list: "должно иметь запятую, разделяющую список истории или ID заданий "
+
+  field_tracker_id: ID трекера
+  inclusion: "Не включено в список"
+
+
+  label_webcal: Подача Web-календаря событий (Webcal)
+  label_master_backlog:  Бэклог Руководителя
+  label_release_planning: Планирование версии
+  label_release: Версия
+  label_release_plural: Версии
+  label_release_new: Новая версия 
+  field_release_start_date: Дата начала версии
+  field_release_end_date: Дата окончания версии
+  label_release_start_date: [[Поле_даты_начала_версии]]
+  label_release_end_date: [[Поле_даты_окончания_версии]]
+  field_initial_story_points: Начальная оценка истории   
+  error_release_end_after_start: Дата окончания версии должна быть после даты  начала  
+  today_not_in_release_msg: Текущая дата не находится в пределах дат версии. Вы действительно хотите сохранить снимок? 
+  today_not_in_release_warning: "Предупреждение: текущая дата не находится в пределах дат версии. Вы действительно желаете сохранить снимок?"
+  field_number_of_snapshots: Сохранённые снимки оценки 
+  release_update_snapshot_today: Обновить снимок оценки истории  на сегодняшнюю дату
+  release_create_snapshot_today: Сохранить снимок оценки истории  на сегодняшнюю дату
+
+
+
+  # Version fields
+  field_name: "Название"
+  
+  # Error messages
+  error_blank: "Не может быть чистым"
+  error_greater_than_start_date: "Не может быть раньше, чем дата начала"
+
+  rb_label_link_to_original: "включить ссылку на оригинальную историю"
+  rb_label_copy_tasks: "Копировать задания"
+  rb_label_copy_tasks_none: "Нет (Не копировать задания)"
+  rb_label_copy_tasks_all: "Все (Копировать все задания)"
+  rb_label_copy_tasks_open: "Открыть"
