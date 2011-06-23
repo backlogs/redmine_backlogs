@@ -14,6 +14,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :taskboard,        :only => :show,               :controller => :rb_taskboards,       :as => "taskboards/:sprint_id"
     rb.resource   :master_backlog,   :only => :show,               :controller => :rb_master_backlogs,  :as => "master_backlogs/:project_id"
     rb.resource   :wiki,             :only => :show,               :controller => :rb_wiki,             :as => "wiki/:project_id"
+    rb.resource   :activity,         :only => :show,               :controller => :rb_activity,         :as => "activity/:project_id"
     rb.resource   :release,          :only => :show,               :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :release,          :only => :edit,               :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :release,          :only => :destroy,            :controller => :rb_releases,         :as => "release/:release_id"
