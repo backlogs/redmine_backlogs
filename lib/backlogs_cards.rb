@@ -8,12 +8,28 @@ require 'uri/common'
 require 'open-uri/cached'
 require 'zlib'
 require 'nokogiri'
-require 'ruby-units'
 
 class String
   def units_to_points
     return Float(self) if self =~/[0-9]$/
-    return self.to_unit.to('pt').scalar
+
+    m = self.match(/^([^a-z\s]+)\s*([a-z]+)$/)
+    raise "No units found for #{self}" unless m
+
+    value = Float(m[1])
+    case m[2]
+      when 'mm'
+        return value * 2.8346457
+        
+      when 'pt'
+        return value
+
+      when 'in'
+        return value * 72
+
+      else
+        raise "Unexpected unit specification for #{self}"
+    end
   end
 end
 

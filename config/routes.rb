@@ -17,7 +17,6 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :story,            :except => :index,            :controller => :rb_stories,          :as => "story/:id"
     rb.resources  :stories,          :only => :index,              :controller => :rb_stories,          :as => "stories/:project_id"
     rb.resource   :sprint,           :except => :index,            :controller => :rb_sprints,          :as => "sprints/:sprint_id"
-    rb.resource   :server_variables, :only => :show,               :controller => :rb_server_variables, :as => "server_variables/:project_id"
     rb.resource   :taskboard,        :only => :show,               :controller => :rb_taskboards,       :as => "taskboards/:sprint_id"
     rb.resource   :master_backlog,   :only => :show,               :controller => :rb_master_backlogs,  :as => "master_backlogs/:project_id"
     rb.resource   :release,          :only => :show,               :controller => :rb_releases,         :as => "release/:release_id"
@@ -25,6 +24,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.resources  :release,          :only => :destroy,            :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :releases,         :only => :index,              :controller => :rb_releases,         :as => "releases/:project_id"
     rb.resources  :releases,         :only => :snapshot,           :controller => :rb_releases,         :as => "releases/:project_id"
+
+    rb.connect    'server_variables/:project_id.:format',          :controller => :rb_server_variables, :action => 'show'
   end
 
 end
