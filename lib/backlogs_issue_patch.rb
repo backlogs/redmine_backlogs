@@ -53,11 +53,11 @@ module Backlogs
       end
 
       def is_story?
-        return Story.trackers.include?(self.tracker_id)
+        return RbStory.trackers.include?(self.tracker_id)
       end
 
       def is_task?
-        return (self.parent_id && self.tracker_id == Task.tracker)
+        return (self.parent_id && self.tracker_id == RbTask.tracker)
       end
 
       def story
@@ -66,7 +66,7 @@ module Backlogs
         return nil unless self.id && self.is_task?
 
         return Issue.find(:first, :order => 'lft DESC',
-          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, Story.trackers ])
+          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ])
       end
 
       def blocks
@@ -105,7 +105,7 @@ module Backlogs
       def backlogs_before_validation
         return unless self.project.module_enabled? 'backlogs'
 
-        if self.tracker_id == Task.tracker
+        if self.tracker_id == RbTask.tracker
           self.estimated_hours = self.remaining_hours if self.estimated_hours.blank? && ! self.remaining_hours.blank?
           self.remaining_hours = self.estimated_hours if self.remaining_hours.blank? && ! self.estimated_hours.blank?
         end
@@ -131,24 +131,24 @@ module Backlogs
           # doing so causes an update loop when Issue calls
           # update_parent
 
-          if not Task.tracker.nil?
+          if not RbTask.tracker.nil?
             tasks = self.descendants.collect{|t| connection.quote(t.id)}.join(",")
             if tasks != ""
-              connection.execute("update issues set tracker_id=#{connection.quote(Task.tracker)}, fixed_version_id=#{connection.quote(self.fixed_version_id)} where id in (#{tasks})")
+              connection.execute("update issues set tracker_id=#{connection.quote(RbTask.tracker)}, fixed_version_id=#{connection.quote(self.fixed_version_id)} where id in (#{tasks})")
             end
           end
 
           touched_sprints = [self.fixed_version_id, self.fixed_version_id_was].compact.uniq
-          touched_sprints = touched_sprints.collect{|s| Sprint.find(s)}.compact
+          touched_sprints = touched_sprints.collect{|s| RbSprint.find(s)}.compact
 
-        elsif not Task.tracker.nil?
+        elsif not RbTask.tracker.nil?
           begin
             story = self.story
             if not story.blank?
-              connection.execute "update issues set tracker_id = #{connection.quote(Task.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
+              connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
             end
 
-            touched_sprints = [self.parent_id, self.parent_id_was].compact.uniq.collect{|t| Task.find(t).story }.compact.uniq.collect{|s| s.fixed_version}.compact
+            touched_sprints = [self.parent_id, self.parent_id_was].compact.uniq.collect{|t| RbTask.find(t).story }.compact.uniq.collect{|s| s.fixed_version}.compact
           end
         end
 

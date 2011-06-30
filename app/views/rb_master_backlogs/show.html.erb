@@ -34,7 +34,7 @@
 
 <%- content_for :helpers do %>
   <div id="sprint_template">
-    <%- sprint = Sprint.new( :name => "sprint" ) -%>
+    <%- sprint = RbSprint.new( :name => "sprint" ) -%>
     <%- sprint_backlog = { :sprint => sprint, :stories => nil } -%>
     <%= render :partial => "backlog", :object => sprint_backlog %>
   </div>

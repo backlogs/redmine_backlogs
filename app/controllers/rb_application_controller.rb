@@ -32,10 +32,10 @@ class RbApplicationController < ApplicationController
   end
 
   def load_sprint
-    @sprint = Sprint.find(params[:sprint_id])
+    @sprint = RbSprint.find(params[:sprint_id])
   end  
 
   def load_release
-    @release = Release.find(params[:release_id])
+    @release = RbRelease.find(params[:release_id])
   end
 end

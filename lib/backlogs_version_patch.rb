@@ -21,7 +21,7 @@ module Backlogs
       end
   
       def burndown
-        return Sprint.find_by_id(self.id).burndown
+        return RbSprint.find_by_id(self.id).burndown
       end
   
     end

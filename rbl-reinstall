@@ -45,10 +45,9 @@ if [ -z "$RVM" ]; then
   read -p "Reinstall RVM? " RVM
 fi
 if [[ $RVM =~ [Yy] ]]; then
-    rvm use 1.8.7
     rvm gemset create redmine
-    rvm --force gemset empty redmine
     rvm use 1.8.7@redmine
+    rvm --force gemset empty redmine
 
     echo 'Downgrading rubygems'
     rvm rubygems 1.3.7 
@@ -73,6 +72,8 @@ elif [ -z "$RM" ]; then
   read -p "Reinstall Redmine? " RM
 fi
 if [[ $RM =~ [Yy] ]]; then
+    echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
+    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/redmine
     cd ~/redmine
     git clone git://github.com/edavis10/redmine.git
@@ -98,7 +99,7 @@ if [[ $DEV =~ [Yy] ]]; then
     gem install -v=0.8.5 cucumber
     gem install spork
     gem install database_cleaner
-    gem install capybara
+    gem install capybara -v=0.4.1.2
     gem install ZenTest
     gem install autotest-rails
     gem install redgreen

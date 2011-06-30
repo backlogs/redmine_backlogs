@@ -51,13 +51,13 @@ Given /^I am viewing the master backlog$/ do
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = Sprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = Sprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
@@ -83,12 +83,12 @@ Given /^I want to create a story$/ do
 end
 
 Given /^I want to create a task for (.+)$/ do |story_subject|
-  story = Story.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   @task_params = initialize_task_params(story.id)
 end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
-  sprint = Sprint.find(:first, :conditions => { :name => sprint_subject })
+  sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
   @impediment_params = initialize_impediment_params(sprint.id)
 end
 
@@ -97,25 +97,25 @@ Given /^I want to create a sprint$/ do
 end
 
 Given /^I want to edit the task named (.+)$/ do |task_subject|
-  task = Task.find(:first, :conditions => { :subject => task_subject })
+  task = RbTask.find(:first, :conditions => { :subject => task_subject })
   task.should_not be_nil
   @task_params = HashWithIndifferentAccess.new(task.attributes)
 end
 
 Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
-  impediment = Task.find(:first, :conditions => { :subject => impediment_subject })
+  impediment = RbTask.find(:first, :conditions => { :subject => impediment_subject })
   impediment.should_not be_nil
   @impediment_params = HashWithIndifferentAccess.new(impediment.attributes)
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = Sprint.find(:first, :conditions => ["name=?", name])
+  sprint = RbSprint.find(:first, :conditions => ["name=?", name])
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
 
 Given /^I want to indicate that the impediment blocks (.+)$/ do |blocks_csv|
-  blocks_csv = Story.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
+  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
   @impediment_params[:blocks] = blocks_csv
 end
 
@@ -130,7 +130,7 @@ Given /^I want to set the (.+) of the impediment to (.+)$/ do |attribute, value|
 end
 
 Given /^I want to edit the story with subject (.+)$/ do |subject|
-  @story = Story.find(:first, :conditions => ["subject=?", subject])
+  @story = RbStory.find(:first, :conditions => ["subject=?", subject])
   @story.should_not be_nil
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
@@ -158,7 +158,7 @@ Given /^the project has the following sprints:$/ do |table|
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
     end
-    Sprint.create! version
+    RbSprint.create! version
   end
 end
 
@@ -174,7 +174,7 @@ Given /^the project has the following stories in the product backlog:$/ do |tabl
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = Story.create_and_position params
+    s = RbStory.create_and_position params
     prev_id = s.id
   end
 end
@@ -187,33 +187,33 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     params = initialize_story_params
     params['subject'] = story['subject']
     params['prev_id'] = prev_id
-    params['fixed_version_id'] = Sprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    params['fixed_version_id'] = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = Story.create_and_position params
+    s = RbStory.create_and_position params
     prev_id = s.id
   end
 end
 
 Given /^the project has the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = Story.find(:first, :conditions => { :subject => task['parent'] })
+    story = RbStory.find(:first, :conditions => { :subject => task['parent'] })
     params = initialize_task_params(story.id)
     params['subject'] = task['subject']
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    Task.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, @project.id)
   end
 end
 
 Given /^the project has the following impediments:$/ do |table|
   table.hashes.each do |impediment|
-    sprint = Sprint.find(:first, :conditions => { :name => impediment['sprint'] })
-    blocks = Story.find(:all, :conditions => { :subject => impediment['blocks'].split(', ')  }).map{ |s| s.id }
+    sprint = RbSprint.find(:first, :conditions => { :name => impediment['sprint'] })
+    blocks = RbStory.find(:all, :conditions => { :subject => impediment['blocks'].split(', ')  }).map{ |s| s.id }
     params = initialize_impediment_params(sprint.id)
     params['subject'] = impediment['subject']
     params['blocks']  = blocks.join(',')
@@ -221,7 +221,7 @@ Given /^the project has the following impediments:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    Task.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, @project.id)
   end
 end
 

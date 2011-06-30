@@ -5,7 +5,7 @@ class RbReleasesController < RbApplicationController
   unloadable
 
   def index
-    @releases = Release.find(:all, :conditions => { :project_id => @project })
+    @releases = RbRelease.find(:all, :conditions => { :project_id => @project })
   end
 
   def show
@@ -18,7 +18,7 @@ class RbReleasesController < RbApplicationController
   end
 
   def new
-    @release = Release.new(:project => @project)
+    @release = RbRelease.new(:project => @project)
     @backlog_points = remaining_story_points
     @release.initial_story_points = @backlog_points
     if request.post?

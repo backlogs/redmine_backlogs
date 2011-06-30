@@ -1,4 +1,4 @@
-class Story < Issue
+class RbStory < Issue
     unloadable
 
     acts_as_list
@@ -9,13 +9,13 @@ class Story < Issue
           project_id = ?
           and tracker_id in (?)
           and fixed_version_id is NULL
-          and is_closed = ?", project_id, Story.trackers, false]
+          and is_closed = ?", project_id, RbStory.trackers, false]
       else
         c = ["
           project_id = ?
           and tracker_id in (?)
           and fixed_version_id = ?",
-          project_id, Story.trackers, sprint_id]
+          project_id, RbStory.trackers, sprint_id]
       end
 
       if extras.size > 0
@@ -33,9 +33,9 @@ class Story < Issue
       stories = []
 
 
-      Story.find(:all,
-            :order => Story::ORDER,
-            :conditions => Story.condition(project_id, sprint_id),
+      RbStory.find(:all,
+            :order => RbStory::ORDER,
+            :conditions => RbStory.condition(project_id, sprint_id),
             :joins => :status,
             :limit => options[:limit]).each_with_index {|story, i|
         story.rank = i + 1
@@ -46,17 +46,17 @@ class Story < Issue
     end
 
     def self.product_backlog(project, limit=nil)
-      return Story.backlog(project.id, nil, :limit => limit)
+      return RbStory.backlog(project.id, nil, :limit => limit)
     end
 
     def self.sprint_backlog(sprint, options={})
-      return Story.backlog(sprint.project.id, sprint.id, options)
+      return RbStory.backlog(sprint.project.id, sprint.id, options)
     end
 
     def self.create_and_position(params)
-      attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and Story.column_names.include? k }
+      attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and RbStory.column_names.include? k }
       attribs = Hash[*attribs.flatten]
-      s = Story.new(attribs)
+      s = RbStory.new(attribs)
       s.move_after(params['prev_id']) if s.save!
       return s
     end
@@ -83,7 +83,7 @@ class Story < Issue
     end
 
     def tasks
-      return Task.tasks_for(self.id)
+      return RbTask.tasks_for(self.id)
     end
 
     def move_after(prev_id)
@@ -156,7 +156,7 @@ class Story < Issue
     end
 
     def update_and_position!(params)
-      attribs = params.select{|k,v| k != 'id' and Story.column_names.include? k }
+      attribs = params.select{|k,v| k != 'id' and RbStory.column_names.include? k }
       attribs = Hash[*attribs.flatten]
       result = journalized_update_attributes attribs
       if result and params[:prev]
@@ -176,15 +176,15 @@ class Story < Issue
       extras = ['and not issues.position is NULL and issues.position <= ?', self.position]
     end
 
-    @rank ||= Issue.count(:conditions => Story.condition(self.project.id, self.fixed_version_id, extras), :joins => :status)
+    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => :status)
 
     return @rank
   end
 
   def self.at_rank(project_id, sprint_id, rank)
-    return Story.find(:first,
-                      :order => Story::ORDER,
-                      :conditions => Story.condition(project_id, sprint_id),
+    return RbStory.find(:first,
+                      :order => RbStory::ORDER,
+                      :conditions => RbStory.condition(project_id, sprint_id),
                       :joins => :status,
                       :limit => 1,
                       :offset => rank - 1)

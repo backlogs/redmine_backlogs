@@ -31,11 +31,11 @@
 
     <p>
         <%= content_tag(:label, l(:backlogs_story_tracker)) %>
-        <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, Story.trackers), :multiple => true) %>
+        <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, RbStory.trackers), :multiple => true) %>
     </p>
     <p>
         <%= content_tag(:label, l(:backlogs_task_tracker)) %>
-        <%= select_tag("settings[task_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, Task.tracker)) %>
+        <%= select_tag("settings[task_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, RbTask.tracker)) %>
     </p>
     <p>
         <%= content_tag(:label, l(:backlogs_points_burn_direction)) %>

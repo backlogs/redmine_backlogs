@@ -1,4 +1,5 @@
 When /^I create the impediment$/ do
+  post url_for(:controller => :rb_impediments, :action => :create)
   page.driver.process :post, 
                       url_for(:controller => :rb_impediments, :action => :create),
                       @impediment_params
@@ -23,8 +24,8 @@ When /^I create the sprint$/ do
 end
 
 When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
-  story = Story.find(:first, :conditions => ["subject=?", story_subject])
-  prev  = Story.find(:first, :conditions => ["subject=?", prev_subject])
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  prev  = RbStory.find(:first, :conditions => ["subject=?", prev_subject])
   
   attributes = story.attributes
   attributes[:prev]             = prev.id
@@ -37,15 +38,15 @@ end
 
 When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, direction, position, sprint_name|
   position = position.to_i
-  story = Story.find(:first, :conditions => ["subject=?", story_subject])
-  sprint = Sprint.find(:first, :conditions => ["name=?", sprint_name])
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   story.fixed_version = sprint
   
   attributes = story.attributes
   attributes[:prev] = if position == 1
                         ''
                       else
-                        stories = Story.find(:all, :conditions => ["fixed_version_id=? AND tracker_id IN (?)", sprint.id, Story.trackers], :order => "position ASC")
+                        stories = RbStory.find(:all, :conditions => ["fixed_version_id=? AND tracker_id IN (?)", sprint.id, RbStory.trackers], :order => "position ASC")
                         raise "You indicated an invalid position (#{position}) in a sprint with #{stories.length} stories" if 0 > position or position > stories.length
                         stories[position - (direction=="up" ? 2 : 1)].id
                       end
@@ -75,7 +76,7 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
                       url_for(:controller => :rb_stories, :action => :update, :id => story.text),
                       {:prev => (prev.nil? ? '' : prev.text), :project_id => @project.id, "_method" => "put"}
 
-  @story = Story.find(story.text.to_i)
+  @story = RbStory.find(story.text.to_i)
 end
 
 When /^I request the server_variables resource$/ do
@@ -120,7 +121,7 @@ When /^I view the master backlog$/ do
 end
 
 When /^I view the stories of (.+) in the issues tab/ do |sprint_name|
-  sprint = Sprint.find(:first, :conditions => ["name=?", sprint_name])
+  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id)
 end
 

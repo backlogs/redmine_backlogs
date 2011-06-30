@@ -8,9 +8,9 @@ class RbSprintsController < RbApplicationController
   unloadable
   
   def create
-    attribs = params.select{|k,v| k != 'id' and Sprint.column_names.include? k }
+    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
-    @sprint = Sprint.new(attribs)
+    @sprint = RbSprint.new(attribs)
     @sprint.save!
     result = @sprint.errors.length
     status = (result == 0 ? 200 : 400)
@@ -21,7 +21,7 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    attribs = params.select{|k,v| k != 'id' and Sprint.column_names.include? k }
+    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     result  = @sprint.update_attributes attribs
     status  = (result ? 200 : 400)

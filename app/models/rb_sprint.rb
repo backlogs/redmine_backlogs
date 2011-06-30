@@ -167,7 +167,7 @@ class Burndown
 
 end
 
-class Sprint < Version
+class RbSprint < Version
     unloadable
 
     validate :start_and_end_dates
@@ -184,7 +184,7 @@ class Sprint < Version
     }
 
     def stories
-        return Story.sprint_backlog(self)
+        return RbStory.sprint_backlog(self)
     end
 
     def points
@@ -283,7 +283,7 @@ class Sprint < Version
                                 and blocked.fixed_version_id = (?)
                             where ir.relation_type = 'blocks'
                             )",
-                        Story.trackers + [Task.tracker],
+                        RbStory.trackers + [RbTask.tracker],
                         self.id]
             ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
     end

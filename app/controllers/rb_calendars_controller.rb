@@ -17,7 +17,7 @@ class RbCalendarsController < RbApplicationController
     cal = Icalendar::Calendar.new
 
     # current + future sprints
-    Sprint.find(:all, :conditions => ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
+    RbSprint.find(:all, :conditions => ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
       summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
       description_text = l(:event_sprint_description, {
                             :summary => sprint.name,
@@ -74,7 +74,7 @@ class RbCalendarsController < RbApplicationController
 
     # open stories/tasks
     conditions << false
-    conditions << Story.trackers + [Task.tracker]
+    conditions << RbStory.trackers + [RbTask.tracker]
     conditions << @project.id
     conditions << Date.today
 
@@ -83,7 +83,7 @@ class RbCalendarsController < RbApplicationController
 
     # ... for open stories/tasks
     conditions << false
-    conditions << Story.trackers + [Task.tracker]
+    conditions << RbStory.trackers + [RbTask.tracker]
     conditions << @project.id
     conditions << Date.today
 

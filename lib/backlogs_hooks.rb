@@ -7,7 +7,7 @@ module BacklogsPlugin
 
       def view_issues_sidebar_planning_bottom(context={ })
         locals = {}
-        locals[:sprints] = context[:project] ? Sprint.open_sprints(context[:project]) : []
+        locals[:sprints] = context[:project] ? RbSprint.open_sprints(context[:project]) : []
         locals[:project] = context[:project]
         locals[:sprint] = nil
         locals[:webcal] = (context[:request].ssl? ? 'webcals' : 'webcal')
@@ -23,7 +23,7 @@ module BacklogsPlugin
         if q && q[:filters]
           sprint = q[:filters]['fixed_version_id']
           if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-            locals[:sprint] = Sprint.find_by_id(sprint[:values][0])
+            locals[:sprint] = RbSprint.find_by_id(sprint[:values][0])
           end
         end
 
@@ -41,7 +41,7 @@ module BacklogsPlugin
         snippet = ''
 
         if issue.is_story?
-          snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{Story.find(issue.id).points_display}</td></tr>"
+          snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td></tr>"
           vbe = issue.velocity_based_estimate
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
         end
@@ -165,7 +165,7 @@ module BacklogsPlugin
             params[:copy_tasks] += ':' if params[:copy_tasks] !~ /:/
             action, id = *(params[:copy_tasks].split(/:/))
 
-            story = (id == '' ? nil : Story.find(Integer(id)))
+            story = (id == '' ? nil : RbStory.find(Integer(id)))
 
             if ! story.nil? && action != 'none'
               tasks = story.tasks
@@ -179,7 +179,7 @@ module BacklogsPlugin
               end
 
               tasks.each {|t|
-                nt = Task.new
+                nt = RbTask.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
                 nt.save

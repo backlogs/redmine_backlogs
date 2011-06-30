@@ -37,7 +37,7 @@ namespace :redmine do
       raise "Only Redmine version #{redmine_supported} is supported at this time" unless platform == :redmine && version == redmine_supported
 
       begin
-        Story.trackers
+        RbStory.trackers
       rescue NoMethodError
         raise "Looks like there's a conflicting plugin that redefines the Story class"
       end
@@ -105,7 +105,7 @@ namespace :redmine do
 
       trackers = Tracker.find(:all)
 
-      if !batch && Story.trackers.length == 0
+      if !batch && RbStory.trackers.length == 0
         puts "Configuring story and task trackers..."
         invalid = true
         while invalid
@@ -142,7 +142,7 @@ namespace :redmine do
         settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
       end
 
-      if !batch && !Task.tracker
+      if !batch && !RbTask.tracker
         # Check if there is at least one tracker available
         puts "-----------------------------------------------------"
         if settings[:story_trackers].length < trackers.length
