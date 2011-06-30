@@ -100,6 +100,7 @@ RB.Backlog = RB.Object.create({
     }
 
     this.recalcVelocity();
+    this.drawMenu();
   },
   
   dragStart: function(event, ui){ 
