@@ -292,5 +292,4 @@ RB.Model = RB.Object.create({
   unmarkSaving: function(){
     this.$.removeClass('saving');
   }
-
 });

@@ -54,6 +54,17 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
 
   beforeSaveDragResult: function(){
     // Do nothing
-  }
+  },
 
+  getBacklog: function(){
+    return $(this.el).parents(".backlog").first();
+  },
+
+  afterCreate: function(data, textStatus, xhr){
+    this.getBacklog().data('this').drawMenu();
+  },
+
+  afterUpdate: function(data, textStatus, xhr){
+    this.getBacklog().data('this').drawMenu();
+  }
 });

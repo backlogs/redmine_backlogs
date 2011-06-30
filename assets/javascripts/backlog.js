@@ -41,6 +41,8 @@ RB.Backlog = RB.Object.create({
       sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
     }
 
+    this.drawMenu();
+
     // Initialize each item in the backlog
     this.getStories().each(function(index){
       story = RB.Factory.initialize(RB.Story, this); // 'this' refers to an element with class="story"
@@ -52,6 +54,39 @@ RB.Backlog = RB.Object.create({
     j.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
     // Handle New Sprint clicks
     j.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
+  },
+
+  afterCreate: function(data, textStatus, xhr){
+    this.drawMenu();
+  },
+
+  afterUpdate: function(data, textStatus, xhr){
+    this.drawMenu();
+  },
+
+  drawMenu: function()
+  {
+    var menu = this.$.find('ul.items');
+    var id = null;
+    if (this.isSprintBacklog()) {
+      id = this.getSprint().data('this').getID();
+    }
+    if (id == '') { return; } // template sprint
+
+    RB.ajax({
+      url: RB.routes.backlog_menu,
+      data: (id ? { sprint_id: id } : {}),
+      dataType: 'json',
+      success   : function(data,t,x) {
+        menu.empty() 
+        for (var i = 0; i < data.length; i++) {
+          li = $('<li class="item"><a href="#"></a></li>');
+          $('a', li).attr('href', data[i].url).text(data[i].label);
+          if (data[i].class) { $('a', li).attr('class', data[i].class); }
+          menu.append(li);
+        }
+      },
+    });
   },
   
   dragComplete: function(event, ui) {
@@ -116,7 +151,7 @@ RB.Backlog = RB.Object.create({
     $("*#sprint_backlogs_container").append(sprint_backlog);
     o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
     o.edit();
-    sprint_backlog.getSprint().find('.editor' ).first().focus();
+    sprint_backlog.find('.editor' ).first().focus();
   },
 
   recalcVelocity: function(){

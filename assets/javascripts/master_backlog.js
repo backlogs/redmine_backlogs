@@ -2,7 +2,7 @@
 $(function() {
   // Initialize each backlog
   $('.backlog').each(function(index){
-    backlog = RB.Factory.initialize(RB.Backlog, this); // 'this' refers to an element with class="backlog"
+    RB.Factory.initialize(RB.Backlog, this);
   });
   // $("#project_info").bind('click', function(){ $("#velocity").dialog({ modal: true, title: "Project Info"}); });
   RB.BacklogsUpdater.start();

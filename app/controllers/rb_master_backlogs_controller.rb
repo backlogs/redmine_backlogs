@@ -20,5 +20,22 @@ class RbMasterBacklogsController < RbApplicationController
       format.html { render :layout => "rb"}
     end
   end
-  
+
+  def menu
+    links = []
+
+    links << {:label => l(:label_task_board), :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint)} if @sprint && @sprint.stories.size > 0
+    links << {:label => 'Burndown chart', :url => '#', :class => 'show_burndown_chart'} if @sprint && @sprint.has_burndown
+    links << {:label => l(:label_stories_tasks), :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project, :sprint_id => @sprint) } if @sprint && @sprint.stories.size > 0
+    links << {:label => l(:label_stories), :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project) } unless @sprint
+    links << {:label => l(:label_sprint_cards), :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project, :sprint_id => @sprint, :format => :pdf) } if @sprint && BacklogsCards::LabelStock.selected_label && @sprint.stories.size > 0
+    links << {:label => l(:label_product_cards), :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project, :format => :pdf) } unless @sprint
+    links << {:label => l(:label_wiki), :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint) } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
+
+    puts "Returning #{links.size} links"
+
+    respond_to do |format|
+      format.json { render :json => links }
+    end
+  end
 end
