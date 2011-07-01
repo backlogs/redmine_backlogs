@@ -10,7 +10,7 @@ namespace :redmine do
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
-      ['open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
+      ['nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem
         rescue LoadError
@@ -21,20 +21,9 @@ namespace :redmine do
       batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
-      redmine_supported = "1.2.0"
+      redmine_supported = "1.2.0.stable"
 
-      platform = nil
-      version = nil
-      File.open('doc/CHANGELOG').each_line do |line|
-        break if platform && version
-
-        platform = :redmine if line.match(/^== Redmine changelog$/)
-        
-        m = line.match(/^== [0-9]{4}-[0-9]{2}-[0-9]{2} v([.0-9]+)$/)
-        version = m[1] if m
-      end
-
-      raise "Only Redmine version #{redmine_supported} is supported at this time" unless platform == :redmine && version == redmine_supported
+      raise "You have Redmine version #{Redmine::VERSION}, only version #{redmine_supported} is supported at this time" unless Redmine::VERSION.to_s == redmine_supported
 
       begin
         RbStory.trackers
