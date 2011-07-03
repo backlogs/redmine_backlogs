@@ -21,9 +21,7 @@ namespace :redmine do
       batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
-      redmine_supported = "1.2.0.stable"
-
-      raise "You have Redmine version #{Redmine::VERSION}, only version #{redmine_supported} is supported at this time" unless Redmine::VERSION.to_s == redmine_supported
+      raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.0 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.0/
 
       begin
         RbStory.trackers
