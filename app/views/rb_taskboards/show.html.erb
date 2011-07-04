@@ -36,7 +36,11 @@
   <table id="impediments" class="board" cellspacing="0">
     <tr>
       <td><div class="label_sprint_impediments"><%= l(:label_sprint_impediments) %></div></td>
-      <td class="add_new">+</td>
+      <% if User.current.allowed_to?(:permission_manage_issue_relations, @project) %>
+        <td class="add_new">+</td>
+      <% else %>
+        <td/>
+      <% end %>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
         <%= render :partial => "rb_impediments/impediment", :collection => @sprint.impediments.select{|impediment| impediment.status_id==status.id} %>
