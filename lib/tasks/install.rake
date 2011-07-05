@@ -127,9 +127,9 @@ namespace :redmine do
               invalid = !(STDIN.gets.chomp!).match("y")
             end
           end
-        end
 
-        settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
+          settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
+        end
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
