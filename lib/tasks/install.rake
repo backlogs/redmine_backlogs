@@ -18,7 +18,6 @@ namespace :redmine do
         end
       }
 
-      batch = (ENV['batch'] == 'true')
       corruption_test = (ENV['corruptiontest'] != 'false')
 
       raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.0 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.0/
@@ -92,83 +91,91 @@ namespace :redmine do
 
       trackers = Tracker.find(:all)
 
-      if !batch && RbStory.trackers.length == 0
-        puts "Configuring story and task trackers..."
-        invalid = true
-        while invalid
-          puts "-----------------------------------------------------"
-          puts "Which trackers do you want to use for your stories?"
-          trackers.each_with_index { |t, i| puts "  #{ i + 1 }. #{ t.name }" }
-          print "Separate values with a space (e.g. 1 3): "
-          STDOUT.flush
-          selection = (STDIN.gets.chomp!).split(/\D+/)
-          
-          # Check that all values correspond to an items in the list
-          invalid = false
-          invalid_value = nil
-          tracker_names = []
-          selection.each do |s|
-            if s.to_i > trackers.length
-              invalid = true
-              invalid_value = s
-              break
-            else
-              tracker_names << trackers[s.to_i-1].name
-            end
-          end
-        
-          if invalid
-            puts "Oooops! You entered an invalid value (#{invalid_value}). Please try again."
-          else
-            print "You selected the following trackers: #{tracker_names.join(', ')}. Is this correct? (y/n) "
+      if ENV['story_trackers'] && ENV['story_trackers'] != ''
+        settings[:story_trackers] = ENV['story_trackers'].split(',').collect{|n| Tracker.find_by_name(n).id }
+      else
+        if RbStory.trackers.length == 0
+          puts "Configuring story and task trackers..."
+          invalid = true
+          while invalid
+            puts "-----------------------------------------------------"
+            puts "Which trackers do you want to use for your stories?"
+            trackers.each_with_index { |t, i| puts "  #{ i + 1 }. #{ t.name }" }
+            print "Separate values with a space (e.g. 1 3): "
             STDOUT.flush
-            invalid = !(STDIN.gets.chomp!).match("y")
+            selection = (STDIN.gets.chomp!).split(/\D+/)
+            
+            # Check that all values correspond to an items in the list
+            invalid = false
+            invalid_value = nil
+            tracker_names = []
+            selection.each do |s|
+              if s.to_i > trackers.length
+                invalid = true
+                invalid_value = s
+                break
+              else
+                tracker_names << trackers[s.to_i-1].name
+              end
+            end
+          
+            if invalid
+              puts "Oooops! You entered an invalid value (#{invalid_value}). Please try again."
+            else
+              print "You selected the following trackers: #{tracker_names.join(', ')}. Is this correct? (y/n) "
+              STDOUT.flush
+              invalid = !(STDIN.gets.chomp!).match("y")
+            end
           end
         end
 
         settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
       end
 
-      if !batch && !RbTask.tracker
-        # Check if there is at least one tracker available
-        puts "-----------------------------------------------------"
-        if settings[:story_trackers].length < trackers.length
-          invalid = true
-          while invalid
-            # If there's at least one, ask the user to pick one
-            puts "Which tracker do you want to use for your tasks?"
-            available_trackers = trackers.select{|t| !settings[:story_trackers].include? t.id}
-            j = 0
-            available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
-            # puts "  #{ j + 1 }. <<new>>"
-            print "Choose one from above (or choose none to create a new tracker): "
-            STDOUT.flush
-            selection = (STDIN.gets.chomp!).split(/\D+/)
-                  
-            if selection.length > 0 and selection.first.to_i <= available_trackers.length
-              # If the user picked one, use that
-              print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
+      if ENV['task_tracker'] && ENV['task_tracker'] != ''
+        settings[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
+      else
+        if !RbTask.tracker
+          # Check if there is at least one tracker available
+          puts "-----------------------------------------------------"
+          if settings[:story_trackers].length < trackers.length
+            invalid = true
+            while invalid
+              # If there's at least one, ask the user to pick one
+              puts "Which tracker do you want to use for your tasks?"
+              available_trackers = trackers.select{|t| !settings[:story_trackers].include? t.id}
+              j = 0
+              available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
+              # puts "  #{ j + 1 }. <<new>>"
+              print "Choose one from above (or choose none to create a new tracker): "
               STDOUT.flush
-              if (STDIN.gets.chomp!).match("y")
-                settings[:task_tracker] = available_trackers[selection.first.to_i-1].id
-                invalid = false
+              selection = (STDIN.gets.chomp!).split(/\D+/)
+                    
+              if selection.length > 0 and selection.first.to_i <= available_trackers.length
+                # If the user picked one, use that
+                print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
+                STDOUT.flush
+                if (STDIN.gets.chomp!).match("y")
+                  settings[:task_tracker] = available_trackers[selection.first.to_i-1].id
+                  invalid = false
+                end
+              # elsif selection.length == 0 or selection.first.to_i == j + 1
+              #   # If the user chose to create a new one, then ask for the name
+              #   settings[:task_tracker] = create_new_tracker
+              #   invalid = false
+              else
+                puts "Oooops! That's not a valid selection. Please try again."
               end
-            # elsif selection.length == 0 or selection.first.to_i == j + 1
-            #   # If the user chose to create a new one, then ask for the name
-            #   settings[:task_tracker] = create_new_tracker
-            #   invalid = false
-            else
-              puts "Oooops! That's not a valid selection. Please try again."
             end
+          else
+            # If there's none, ask to create one
+            # settings[:task_tracker] = create_new_tracker
+            puts "You don't have any trackers available for use with tasks."
+            puts "Please create a new tracker via the Redmine admin interface,"
+            puts "then re-run this installer. Press any key to continue."
+            STDOUT.flush
+            STDIN.gets
           end
-        else
-          # If there's none, ask to create one
-          # settings[:task_tracker] = create_new_tracker
-          puts "You don't have any trackers available for use with tasks."
-          puts "Please create a new tracker via the Redmine admin interface,"
-          puts "then re-run this installer. Press any key to continue."
-          STDOUT.flush
-          STDIN.gets
         end
       end
 
