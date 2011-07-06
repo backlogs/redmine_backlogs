@@ -5,6 +5,8 @@ Feature: Common
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And the current project has no sub projects
+      And the current project has no stories
       And I am a team member of the project
 
   Scenario: View the product backlog

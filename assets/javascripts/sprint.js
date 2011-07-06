@@ -61,7 +61,10 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   },
 
   afterCreate: function(data, textStatus, xhr){
-    this.getBacklog().data('this').drawMenu();
+    var backlog = this.getBacklog();
+
+    backlog.data('this').drawMenu();
+    backlog.find('.stories').attr('id', 'stories-for-' + this.getID());
   },
 
   afterUpdate: function(data, textStatus, xhr){

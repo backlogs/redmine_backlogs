@@ -151,8 +151,16 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
+Given /^the current project has no sub projects$/ do 
+  @project.descendants.destroy_all
+end
+
+Given /^the current project has no stories$/ do 
+  @project.issues.destroy_all
+end
+
 Given /^the project has the following sprints:$/ do |table|
-  @project.versions.delete_all
+  @project.shared_versions.each {|s| s.destroy }
   table.hashes.each do |version|
     version['project_id'] = @project.id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
@@ -163,7 +171,6 @@ Given /^the project has the following sprints:$/ do |table|
 end
 
 Given /^the project has the following stories in the product backlog:$/ do |table|
-  @project.issues.delete_all
   prev_id = ''
 
   table.hashes.each do |story|
@@ -180,7 +187,6 @@ Given /^the project has the following stories in the product backlog:$/ do |tabl
 end
 
 Given /^the project has the following stories in the following sprints:$/ do |table|
-  @project.issues.delete_all
   prev_id = ''
 
   table.hashes.each do |story|
@@ -265,5 +271,5 @@ Given /^I have made (.+) the template page for sprint notes/ do |title|
 end
 
 Given /^there are no stories in the project$/ do
-  @project.issues.delete_all
+  @project.issues.destroy_all
 end

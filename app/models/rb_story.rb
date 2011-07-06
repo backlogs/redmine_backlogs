@@ -3,41 +3,59 @@ class RbStory < Issue
 
     acts_as_list
 
-    def self.condition(project_id, sprint_id, extras=[])
-      if sprint_id.nil?  
-        c = ["
-          project_id = ?
-          and tracker_id in (?)
-          and fixed_version_id is NULL
-          and is_closed = ?", project_id, RbStory.trackers, false]
-      else
-        c = ["
-          project_id = ?
-          and tracker_id in (?)
-          and fixed_version_id = ?",
-          project_id, RbStory.trackers, sprint_id]
+    def self.find_params(options)
+      project_id = options.delete(:project_id)
+      sprint_id = options.delete(:sprint_id)
+      include_backlog = options.delete(:include_backlog)
+
+      sprint_id = RbSprint.open_sprints(Project.find(project_id)).collect{|s| s.id} if project_id && sprint_id == :open
+
+      project_id = nil if !include_backlog && sprint_id
+      sprint_id = [sprint_id] if sprint_id && !sprint_id.is_a?(Array)
+
+      raise "Specify either sprint or project id" unless (sprint_id || project_id)
+
+      options[:joins] = [options[:joins]] unless options[:joins].is_a?(Array)
+
+      conditions = []
+      parameters = []
+
+      if project_id
+        conditions << "(tracker_id in (?) and fixed_version_id is NULL and #{IssueStatus.table_name}.is_closed = ? and (#{Project.find(project_id).project_condition(true)}))"
+        parameters += [RbStory.trackers, false]
+        options[:joins] << :project
+        options[:joins] << :status
       end
 
-      if extras.size > 0
-        c[0] += ' ' + extras.shift
-        c += extras
+      if sprint_id
+        conditions << "(tracker_id in (?) and fixed_version_id in (?))"
+        parameters += [RbStory.trackers, sprint_id]
       end
 
-      return c
+      conditions = conditions.join(' or ')
+
+      options[:conditions] = [options[:conditions]] if options[:conditions] && !options[:conditions].is_a?(Array)
+      if options[:conditions]
+        conditions << " and (" + options[:conditions].delete_at(0) + ")"
+        parameters += options[:conditions]
+      end
+
+      options[:conditions] = [conditions] + parameters
+
+      options[:joins].compact!
+      options[:joins].uniq!
+      options.delete(:joins) if options[:joins].size == 0
+
+      return options
     end
 
     # this forces NULLS-LAST ordering
     ORDER = 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC'
 
-    def self.backlog(project_id, sprint_id, options={})
+    def self.backlog(options={})
       stories = []
 
-
-      RbStory.find(:all,
-            :order => RbStory::ORDER,
-            :conditions => RbStory.condition(project_id, sprint_id),
-            :joins => :status,
-            :limit => options[:limit]).each_with_index {|story, i|
+      RbStory.find(:all, RbStory.find_params(options.merge(:order => RbStory::ORDER))).each_with_index {|story, i|
         story.rank = i + 1
         stories << story
       }
@@ -46,11 +64,11 @@ class RbStory < Issue
     end
 
     def self.product_backlog(project, limit=nil)
-      return RbStory.backlog(project.id, nil, :limit => limit)
+      return RbStory.backlog(:project_id => project.id, :limit => limit)
     end
 
     def self.sprint_backlog(sprint, options={})
-      return RbStory.backlog(sprint.project.id, sprint.id, options)
+      return RbStory.backlog(options.merge(:sprint_id => sprint.id))
     end
 
     def self.create_and_position(params)
@@ -170,23 +188,19 @@ class RbStory < Issue
   end
 
   def rank
-    if self.position.blank?
-      extras = ['and ((issues.position is NULL and issues.id <= ?) or not issues.position is NULL)', self.id]
-    else
-      extras = ['and not issues.position is NULL and issues.position <= ?', self.position]
-    end
-
-    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => :status)
+    @rank ||= Issue.count(RbStory.find_params(
+      :sprint_id => self.fixed_version_id,
+      :project_id => self.project.id,
+      :conditions => self.position.blank? ? ['(issues.position is NULL and issues.id <= ?) or not issues.position is NULL', self.id] : ['not issues.position is NULL and issues.position <= ?', self.position]
+    ))
 
     return @rank
   end
 
-  def self.at_rank(project_id, sprint_id, rank)
-    return RbStory.find(:first,
+  def self.at_rank(rank, options)
+    return RbStory.find(:first, RbStory.find_params(options.merge(
                       :order => RbStory::ORDER,
-                      :conditions => RbStory.condition(project_id, sprint_id),
-                      :joins => :status,
                       :limit => 1,
-                      :offset => rank - 1)
+                      :offset => rank - 1)))
   end
 end

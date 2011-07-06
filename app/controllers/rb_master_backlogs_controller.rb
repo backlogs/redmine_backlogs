@@ -32,8 +32,6 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_product_cards), :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project, :format => :pdf) } unless @sprint
     links << {:label => l(:label_wiki), :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint) } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
 
-    puts "Returning #{links.size} links"
-
     respond_to do |format|
       format.json { render :json => links }
     end

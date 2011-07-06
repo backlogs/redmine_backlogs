@@ -15,7 +15,7 @@
       <%= link_to "Close completed Sprints", close_completed_project_versions_path(@project), :class => "close_sprint", :method => :put, :target => "_blank" %>
     <%- end %>
   </div>
-  <ul class="stories">
+  <ul id="stories-for-<%= backlog[:sprint] ? backlog[:sprint].id : 'product-backlog' %>" class="stories">
     <%= render :partial => "rb_stories/story", :collection => backlog[:stories] %>
   </ul>
 </div>

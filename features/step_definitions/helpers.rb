@@ -76,11 +76,11 @@ def task_position(task)
 end
 
 def story_position(story)
-  p1 = RbStory.backlog(story.project, story.fixed_version_id).select{|s| s.id == story.id}[0].rank
+  p1 = RbStory.backlog(:project_id => story.fixed_version_id ? nil : story.project.id, :sprint_id => story.fixed_version_id).select{|s| s.id == story.id}[0].rank
   p2 = story.rank
   p1.should == p2
 
-  RbStory.at_rank(story.project_id, story.fixed_version_id, p1).id.should == story.id
+  RbStory.at_rank(p1, :project_id => story.project_id, :sprint_id => story.fixed_version_id).id.should == story.id
   return p1
 end
 

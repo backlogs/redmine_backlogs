@@ -18,7 +18,7 @@ RB.Backlog = RB.Object.create({
     
     this.$ = j = $(el);
     this.el = el;
-    
+
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
@@ -29,7 +29,9 @@ RB.Backlog = RB.Object.create({
                     forcePlaceholderSize: true,
                     dropOnEmpty: true,
                     start: this.dragStart,
+                    receive: this.dragReceive,
                     stop: this.dragStop,
+                    beforeStop: this.dragBeforeStop,
                     update: function(e,u){ self.dragComplete(e, u) }
                     });
 
@@ -95,7 +97,8 @@ RB.Backlog = RB.Object.create({
     // jQuery triggers dragComplete of source and target. 
     // Thus we have to check here. Otherwise, the story
     // would be saved twice.
-    if(isDropTarget){
+    if(isDropTarget && ui.item.data('drag-state') == 'dragging'){
+      RB.Dialog.notice('saving story');
       ui.item.data('this').saveDragResult();
     }
 
@@ -103,12 +106,34 @@ RB.Backlog = RB.Object.create({
     this.drawMenu();
   },
   
-  dragStart: function(event, ui){ 
+  dragReceive: function(event, ui) {
+    if (ui.item.data('drag-state') != 'dragging') {
+      $(ui.sender).sortable('cancel');
+    }
+  },
+
+  dragStart: function(event, ui) {
     ui.item.addClass("dragging");
+    ui.item.data('drag-state', 'dragging');
+    // disable invalid drag targets
+    //$('#stories-for-117').sortable('disable');
   },
   
-  dragStop: function(event, ui){ 
+  dragBeforeStop: function(event, ui){ 
+    // determine valid drop
+    ui.item.data('drag-state', 'cancel');
+
+    // RB.Dialog.notice('from: ' + $(ui.sender).attr('id'));
+      
+    // var to = ui.item.parents('.backlog').data('this').isSprintBacklog() ? ui.item.parents('.backlog').data('this').getSprint().data('this').getID() : 'product backlog';
+    // RB.Dialog.notice('to: ' + to);
+  },
+
+  dragStop: function(event, ui) { 
     ui.item.removeClass("dragging");  
+
+    // enable all backlogs as drop targets
+    $('.stories').sortable('enable');
   },
   
   getSprint: function(){

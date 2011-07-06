@@ -5,6 +5,8 @@ Feature: Product Owner
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And the current project has no sub projects
+      And the current project has no stories
       And I am a product owner of the project
       And the project has the following sprints:
         | name       | sprint_start_date | effective_date |

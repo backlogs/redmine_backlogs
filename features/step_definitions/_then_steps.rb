@@ -30,26 +30,33 @@ Then /^I should see (\d+) stories in the product backlog$/ do |count|
 end
 
 Then /^show me the list of sprints$/ do
-  sprints = RbSprint.find(:all, :conditions => ["project_id=?", @project.id])
+  header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
+  header = header.collect{|h| [h[0].ljust(h[1]), h[1]] }
 
   puts "\n"
-  puts "\t| #{'id'.ljust(3)} | #{'name'.ljust(18)} | #{'sprint_start_date'.ljust(18)} | #{'effective_date'.ljust(18)} | #{'updated_on'.ljust(20)}"
+  puts "\t| #{header.collect{|h| h[0] }.join(' | ')} |"
+
+  sprints = RbSprint.open_sprints(@project.id)
   sprints.each do |sprint|  
-    puts "\t| #{sprint.id.to_s.ljust(3)} | #{sprint.name.to_s.ljust(18)} | #{sprint.sprint_start_date.to_s.ljust(18)} | #{sprint.effective_date.to_s.ljust(18)} | #{sprint.updated_on.to_s.ljust(20)} |"
+    row = [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on]
+    row = 0.upto(row.size - 1).collect{|i| row[i].to_s[0,header[i][1]].ljust(header[i][1]) }
+    puts "\t| #{row.join(' | ')} |"
   end
   puts "\n\n"
 end
 
 Then /^show me the list of stories$/ do
-  stories = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC")
-  subject_max = (stories.map{|s| s.subject} << "subject").sort{|a,b| a.length <=> b.length}.last.length
-  sprints = @project.versions.find(:all)
-  sprint_max = (sprints.map{|s| s.name} << "sprint").sort{|a,b| a.length <=> b.length}.last.length
+  header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20]]
+  header = header.collect{|h| [h[0].ljust(h[1]), h[1]] }
 
   puts "\n"
-  puts "\t| #{'id'.ljust(5)} | #{'position'.ljust(8)} | #{'status'.ljust(12)} | #{'rank'.ljust(4)} | #{'subject'.ljust(subject_max)} | #{'sprint'.ljust(sprint_max)} |"
+  puts "\t| #{header.collect{|h| h[0] }.join(' | ')} |"
+
+  stories = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true)
   stories.each do |story|
-    puts "\t| #{story.id.to_s.ljust(5)} | #{story.position.to_s.ljust(8)} | #{story.status.name[0,12].ljust(12)} | #{story.rank.to_s.ljust(4)} | #{story.subject.ljust(subject_max)} | #{(story.fixed_version_id.nil? ? RbSprint.new : Sprint.find(story.fixed_version_id)).name.ljust(sprint_max)} |"
+    row = [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+    row = 0.upto(row.size - 1).collect{|i| row[i].to_s[0,header[i][1]].ljust(header[i][1]) }
+    puts "\t| #{row.join(' | ')} |"
   end
   puts "\n\n"
 end
@@ -74,7 +81,7 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
-  story = RbStory.at_rank(@project.id, sprint, position.to_i)
+  story = RbStory.at_rank(position.to_i, :project_id => sprint.nil? ? @project.id : nil, :sprint_id => sprint)
   story.should_not be_nil
   story.subject.should == subject
 end
