@@ -22,7 +22,7 @@ RB.Impediment = RB.Object.create(RB.Task, {
   saveDirectives: function(){
     var j = this.$;
     var nxt = this.$.next();
-    var statusID = j.parent('td').first().attr('id').split("_")[1];
+    var statusID = j.parents('td').first().attr('id').split("_")[1];
       
     var data = j.find('.editor').serialize() +
                "&is_impediment=true" +
