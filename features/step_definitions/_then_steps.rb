@@ -61,6 +61,10 @@ Then /^show me the list of stories$/ do
   puts "\n\n"
 end
 
+Then /^show me the sprint impediments$/ do
+  puts @sprint.impediments.collect{|i| i.subject}.inspect
+end
+
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
   higher = RbStory.find(:all, :conditions => { :subject => higher_subject })
   higher.length.should == 1

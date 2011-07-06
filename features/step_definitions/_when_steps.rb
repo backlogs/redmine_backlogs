@@ -84,7 +84,7 @@ When /^I request the server_variables resource$/ do
 end
 
 When /^I update the impediment$/ do
-  page.driver.process :post, 
+  page.driver.process :put, 
                       url_for(:controller => :rb_impediments, :action => :update),
                       @impediment_params.merge({ "_method" => "put" })
 end
