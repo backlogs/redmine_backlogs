@@ -10,8 +10,6 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :statistics,       :only => :show,               :controller => :rb_statistics
     rb.resource   :calendars,        :only => :show,               :controller => :rb_calendars,        :as => "calendars/:project_id"
     rb.resource   :burndown_chart,   :only => :show,               :controller => :rb_burndown_charts,  :as => "burndown_charts/:sprint_id"
-    rb.resource   :impediment,       :except => :index,            :controller => :rb_impediments,      :as => "impediment/:id"
-    rb.resources  :impediments,      :only => :index,              :controller => :rb_impediments,      :as => "impediments/:sprint_id"
     rb.resource   :task,             :except => :index,            :controller => :rb_tasks,            :as => "task/:id"
     rb.resources  :tasks,            :only => :index,              :controller => :rb_tasks,            :as => "tasks/:story_id"
     rb.resource   :story,            :except => :index,            :controller => :rb_stories,          :as => "story/:id"
@@ -28,6 +26,9 @@ ActionController::Routing::Routes.draw do |map|
 
     rb.connect    'master_backlog/:project_id',                    :controller => :rb_master_backlogs,  :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.:format',       :controller => :rb_master_backlogs,  :action => 'menu'
+
+    rb.connect    'impediments',                                   :controller => :rb_impediments,      :action => 'create',  :via => :post
+    rb.connect    'impediments/:id',                               :controller => :rb_impediments,      :action => 'update',  :via => :put
   end
 
 end
