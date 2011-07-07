@@ -29,7 +29,7 @@ class RbTask < Issue
                           end
 
     if valid_relationships && task.save
-      task.move_before params[:next]
+      task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
     end
 
@@ -71,7 +71,7 @@ class RbTask < Issue
                           end
 
     if valid_relationships && result = journalized_update_attributes!(attribs)
-      move_before params[:next]
+      move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
       result
     else

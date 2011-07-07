@@ -28,7 +28,7 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
     } else {
       target = $(idPrefix + update.getID()).data('this');  // Re-use existing item
       target.refresh(update);
-      oldCellID = target.$.parent('td').first().attr('id');
+      oldCellID = target.$.parents('td').first().attr('id');
     }
 
     // Find the correct cell for the item
