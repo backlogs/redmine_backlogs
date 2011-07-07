@@ -86,18 +86,15 @@ class RbStory < Issue
     end
 
     def self.trackers(type = :array)
-        # this happens during initial redmine install
-        begin
-            trackers = Setting.plugin_redmine_backlogs[:story_trackers]
-        rescue ActiveRecord::StatementInvalid
-            return []
-        end
+      # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
+      return [] unless ActiveRecord::Base.connection.tables.include?('settings')
 
-        return [] if trackers.blank?
+      trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+      return [] if trackers.blank?
 
-        return trackers.join(',') if type == :string
+      return trackers.join(',') if type == :string
 
-        return trackers.map { |tracker| Integer(tracker) }
+      return trackers.map { |tracker| Integer(tracker) }
     end
 
     def tasks
