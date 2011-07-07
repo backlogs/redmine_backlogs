@@ -1,5 +1,4 @@
 When /^I create the impediment$/ do
-  post url_for(:controller => :rb_impediments, :action => :create)
   page.driver.process :post, 
                       url_for(:controller => :rb_impediments, :action => :create),
                       @impediment_params

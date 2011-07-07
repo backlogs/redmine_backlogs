@@ -1,6 +1,17 @@
 require_dependency 'query'
+require 'erb'
 
 module Backlogs
+  class RbERB
+    def initialize(s)
+      @sql = ERB.new(s)
+    end
+
+    def to_s
+      return @sql.result
+    end
+  end
+
   module QueryPatch
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
@@ -22,7 +33,7 @@ module Backlogs
                             select max(story_lft.lft)
                             from issues story_lft
                             where story_lft.root_id = issues.root_id
-                            and story_lft.tracker_id in (#{RbStory.trackers(:string)})
+                            and story_lft.tracker_id in (<%= RbStory.trackers(:string) %>)
                             and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
                           )"
 
@@ -35,13 +46,13 @@ module Backlogs
                                         "(select id from versions where versions.id = issues.fixed_version_id)",
 
                                         # make sure stories with NULL position sort-last
-                                        "(select case when story.position is null then 1 else 0 end #{story_sql})",
+                                        RbERB.new("(select case when story.position is null then 1 else 0 end #{story_sql})"),
 
                                         # story position
-                                        "(select story.position #{story_sql})",
+                                        RbERB.new("(select story.position #{story_sql})"),
 
                                         # story ID, in case story positions are the same (SHOULD NOT HAPPEN!).
-                                        "(select story.id #{story_sql})",
+                                        RbERB.new("(select story.id #{story_sql})"),
 
                                         # order in task tree
                                         "issues.lft"
