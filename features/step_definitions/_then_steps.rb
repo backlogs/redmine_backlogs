@@ -31,38 +31,26 @@ end
 
 Then /^show me the list of sprints$/ do
   header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  header = header.collect{|h| [h[0].ljust(h[1]), h[1]] }
+  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
 
-  puts "\n"
-  puts "\t| #{header.collect{|h| h[0] }.join(' | ')} |"
-
-  sprints = RbSprint.open_sprints(@project.id)
-  sprints.each do |sprint|  
-    row = [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on]
-    row = 0.upto(row.size - 1).collect{|i| row[i].to_s[0,header[i][1]].ljust(header[i][1]) }
-    puts "\t| #{row.join(' | ')} |"
-  end
-  puts "\n\n"
+  show_table(header, data)
 end
 
 Then /^show me the list of stories$/ do
   header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20]]
-  header = header.collect{|h| [h[0].ljust(h[1]), h[1]] }
+  data = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true).collect {|story|
+    [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+  }
 
-  puts "\n"
-  puts "\t| #{header.collect{|h| h[0] }.join(' | ')} |"
-
-  stories = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true)
-  stories.each do |story|
-    row = [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
-    row = 0.upto(row.size - 1).collect{|i| row[i].to_s[0,header[i][1]].ljust(header[i][1]) }
-    puts "\t| #{row.join(' | ')} |"
-  end
-  puts "\n\n"
+  show_table(header, data)
 end
 
 Then /^show me the sprint impediments$/ do
   puts @sprint.impediments.collect{|i| i.subject}.inspect
+end
+
+Then /^show me the projects$/ do
+  #show_projects
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|

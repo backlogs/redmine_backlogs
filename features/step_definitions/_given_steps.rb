@@ -142,21 +142,22 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
-  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
-  task_tracker = "#{Tracker.create!(:name => 'Task').id}"
-  plugin = Redmine::Plugin.find('redmine_backlogs')
+  story_trackers = [(Tracker.find_by_name('Story') || [Tracker.create!(:name => 'Story')])[0].id]
+  task_tracker = (Tracker.find_by_name('Task') || [Tracker.create!(:name => 'Task')])[0].id
+
   Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:story_trackers => story_trackers, :task_tracker => task_tracker } )
 
   # Make sure these trackers are enabled in the project
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
-Given /^the current project has no sub projects$/ do 
-  @project.descendants.destroy_all
+Given /^no versions or issues exist$/ do
+  Issue.find(:all).each{|i| i.destroy }
+  Version.find(:all).each{|v| v.destroy }
 end
 
-Given /^the current project has no stories$/ do 
-  @project.issues.destroy_all
+Given /^I select the (.*) project$/ do |project_id|
+  @project = get_project(project_id)
 end
 
 Given /^the project has the following sprints:$/ do |table|

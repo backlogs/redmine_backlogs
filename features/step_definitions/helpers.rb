@@ -88,3 +88,26 @@ def logout
   visit url_for(:controller => 'account', :action=>'logout')
   @user = nil
 end
+
+def show_table(header, data)
+  header = header.collect{|h| [h[0].ljust(h[1]), h[1]] }
+
+  puts "\n"
+  puts "\t| #{header.collect{|h| h[0] }.join(' | ')} |"
+
+  data.each {|row|
+    row = 0.upto(row.size - 1).collect{|i| row[i].to_s[0,header[i][1]].ljust(header[i][1]) }
+    puts "\t| #{row.join(' | ')} |"
+  }
+
+  puts "\n\n"
+end
+
+def show_projects(p = nil, l = -1)
+  puts "#{'  ' * l}#{p.identifier}" if p
+  puts "\n" unless p
+
+  (p ? p.children : Project.roots).each {|project|
+    show_projects(project, l + 1)
+  }
+end
