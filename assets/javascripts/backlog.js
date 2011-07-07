@@ -97,8 +97,7 @@ RB.Backlog = RB.Object.create({
     // jQuery triggers dragComplete of source and target. 
     // Thus we have to check here. Otherwise, the story
     // would be saved twice.
-    if(isDropTarget && ui.item.data('drag-state') == 'dragging'){
-      RB.Dialog.notice('saving story');
+    if(isDropTarget && ui.item.data('dragging')){
       ui.item.data('this').saveDragResult();
     }
 
@@ -107,26 +106,43 @@ RB.Backlog = RB.Object.create({
   },
   
   dragReceive: function(event, ui) {
-    if (ui.item.data('drag-state') != 'dragging') {
+    if (!ui.item.data('dragging')) {
       $(ui.sender).sortable('cancel');
     }
   },
 
   dragStart: function(event, ui) {
     ui.item.addClass("dragging");
-    ui.item.data('drag-state', 'dragging');
+
+    var origin = ui.item.parents('.backlog').data('this');
+    ui.item.data('dragging', 'true');
+
+    var storyProject = ui.item.find(".story_project").text();
     // disable invalid drag targets
-    //$('#stories-for-117').sortable('disable');
+    $('#sprint_backlogs_container .stories').sortable('disable');
+    if (RB.constants.project_versions[storyProject]) {
+      for (var i = 0; i < RB.constants.project_versions[storyProject].length; i++) {
+        $('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
+      }
+    }
   },
   
   dragBeforeStop: function(event, ui){ 
-    // determine valid drop
-    ui.item.data('drag-state', 'cancel');
+    var dropTarget = ui.item.parents('.backlog').data('this');
 
-    // RB.Dialog.notice('from: ' + $(ui.sender).attr('id'));
-      
-    // var to = ui.item.parents('.backlog').data('this').isSprintBacklog() ? ui.item.parents('.backlog').data('this').getSprint().data('this').getID() : 'product backlog';
-    // RB.Dialog.notice('to: ' + to);
+    // always allowed to go back to the product backlog
+    if (!dropTarget.isSprintBacklog()) { return; }
+
+    var targetSprint = dropTarget.getSprint().data('this').getID();
+    var storyProject = ui.item.find(".story_project").text();
+
+    var validDrop = true;
+    validDrop = validDrop && RB.constants.project_versions[storyProject];
+    validDrop = validDrop && ($.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0);
+
+    if (RB.constants.project_versions[storyProject] && $.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0) { return; }
+
+    ui.item.removeData('dragging');
   },
 
   dragStop: function(event, ui) { 

@@ -338,6 +338,7 @@
 }
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
+#backlogs_container .stories .story .story_project,
 #backlogs_container .stories .story .user_status {
   display:none;
 }
