@@ -24,6 +24,7 @@ class RbMasterBacklogsController < RbApplicationController
   def menu
     links = []
 
+    links << {:label => 'New Story', :url => '#', :class => 'add_new_story'} if @sprint
     links << {:label => l(:label_task_board), :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint)} if @sprint && @sprint.stories.size > 0
     links << {:label => 'Burndown chart', :url => '#', :class => 'show_burndown_chart'} if @sprint && @sprint.has_burndown
     links << {:label => l(:label_stories_tasks), :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project, :sprint_id => @sprint) } if @sprint && @sprint.stories.size > 0
