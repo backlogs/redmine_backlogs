@@ -1,7 +1,7 @@
 <!-- MASTER BACKLOG VIEW -->
 <%- content_for :head_tags do %>
   <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.identifier, :format => :js) %>"></script>
-  <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'jquery/jquery.scrollTo-1.4.2-min.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
   <%= theme_stylesheet_link_tag 'master_backlog.css', :media => 'print,screen' %>
   <%= theme_stylesheet_link_tag 'master_backlog_print.css', :media => 'print' %>

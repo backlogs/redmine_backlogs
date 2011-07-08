@@ -144,7 +144,9 @@ RB.Backlog = RB.Object.create({
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();
-    $.scrollTo(story.find('.editor' ).first());
+    $('html,body').animate({
+        scrollTop: story.find('.editor').first().offset().top
+        }, 2000);
   },
   
   newSprint: function(){
@@ -154,7 +156,9 @@ RB.Backlog = RB.Object.create({
     o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
     o.edit();
     sprint_backlog.find('.editor' ).first().focus();
-    $.scrollTo(sprint_backlog.find('.editor' ).first());
+    $('html,body').animate({
+        scrollTop: sprint_backlog.find('.editor').first().offset().top
+        }, 2000);
   },
 
   recalcVelocity: function(){
