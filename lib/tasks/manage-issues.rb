@@ -47,11 +47,9 @@ class GitHub
     def labels(which = :current)
       return @data[:labels] if which == :current
 
-      l = @data[:labels].select{|l| !(l =~ /^feedback/i || l =~ /^waiting for feedback/i) }
+      l = @data[:labels].select{|l| !(l =~ /^feedback/i) }
 
-      l << "#{user}"
       if comments.size > 0
-        comments.each {|c| l << "#{c.user}" }
         if @gh.committers.include?(comments[-1].user) && !l.include?('featurerequest') && !l.include?('inprogress')
           date = comments[-1].updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
@@ -74,10 +72,10 @@ class GitHub
 
       # post user and api key here
       remove.each {|l|
-        @gh.post("issues/label/remove/:user/:repo/#{l.gsub(' ', '+')}/#{number}")
+        @gh.post("issues/label/remove/:user/:repo/#{l}/#{number}")
       }
       add.each {|l|
-        @gh.post("issues/label/add/:user/:repo/#{l.gsub(' ', '+')}/#{number}")
+        @gh.post("issues/label/add/:user/:repo/#{l}/#{number}")
       }
     end
   end
@@ -128,10 +126,10 @@ class GitHub
 
     # post user and api key here
     remove.each {|l|
-      post("issues/label/remove/:user/:repo/#{l.gsub(' ', '+')}")
+      post("issues/label/remove/:user/:repo/#{l}")
     }
     add.each {|l|
-      post("issues/label/add/:user/:repo/#{l.gsub(' ', '+')}")
+      post("issues/label/add/:user/:repo/#{l}")
     }
   end
 
