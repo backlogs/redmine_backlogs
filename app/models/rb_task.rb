@@ -49,6 +49,7 @@ class RbTask < Issue
     story = RbStory.find_by_id(story_id)
     if RbStory.trackers.include?(story.tracker_id)
       story.descendants.each_with_index {|task, i|
+        task = task.becomes(RbTask)
         task.rank = i + 1
         tasks << task 
       }

@@ -37,6 +37,9 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var user_status = this.$.find(".user_status").text();
     var status_id = status.val()
 
+    // right after creation, no menu exists to pick from
+    if (!status_id || status_id == '') { status_id = RB.constants.story_states['default']; }
+
     var states = RB.constants.story_states['transitions'][tracker_id][user_status][status_id];
     if (!states) { states = RB.constants.story_states['transitions'][tracker_id][user_status][RB.constants.story_states['transitions'][tracker_id][user_status]['default']]; }
 

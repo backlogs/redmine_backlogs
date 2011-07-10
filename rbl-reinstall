@@ -120,7 +120,7 @@ if [ -z "$DB" ]; then
   read -p "Reinstall database? " DB
 fi
 if [[ $DB =~ [Yy] ]]; then
-    mysqladmin -u root -p$DBROOTPW drop redmine
+    mysqladmin -u root -p$DBROOTPW -f drop redmine
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql

@@ -35,10 +35,6 @@ RB.Backlog = RB.Object.create({
                     update: function(e,u){ self.dragComplete(e, u) }
                     });
 
-    // Observe menu items
-    j.find('.new_story').bind('mouseup', this.handleMenuClick);
-    j.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) }); // capture 'click' instead of 'mouseup' so we can preventDefault();
-
     if(this.isSprintBacklog()){
       sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
     }
@@ -51,11 +47,6 @@ RB.Backlog = RB.Object.create({
     });
     
     if (this.isSprintBacklog()) this.recalcVelocity();
-    
-    // Handle New Story clicks
-    j.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
-    // Handle New Sprint clicks
-    j.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
   },
 
   afterCreate: function(data, textStatus, xhr){
@@ -70,6 +61,7 @@ RB.Backlog = RB.Object.create({
   {
     var menu = this.$.find('ul.items');
     var id = null;
+    var self = this;
     if (this.isSprintBacklog()) {
       id = this.getSprint().data('this').getID();
     }
@@ -87,6 +79,10 @@ RB.Backlog = RB.Object.create({
           if (data[i].class) { $('a', li).attr('class', data[i].class); }
           menu.append(li);
         }
+        menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
+        menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
+        // capture 'click' instead of 'mouseup' so we can preventDefault();
+        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) });
       },
     });
   },
@@ -178,13 +174,16 @@ RB.Backlog = RB.Object.create({
     return $(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
   },
     
-  newStory: function(){
+  newStory: function() {
     var story = $('#story_template').children().first().clone();
     
     this.getList().prepend(story);
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();
+    $('html,body').animate({
+        scrollTop: story.find('.editor').first().offset().top
+        }, 2000);
   },
   
   newSprint: function(){
@@ -194,6 +193,9 @@ RB.Backlog = RB.Object.create({
     o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
     o.edit();
     sprint_backlog.find('.editor' ).first().focus();
+    $('html,body').animate({
+        scrollTop: sprint_backlog.find('.editor').first().offset().top
+        }, 2000);
   },
 
   recalcVelocity: function(){
