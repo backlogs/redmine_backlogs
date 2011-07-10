@@ -13,7 +13,7 @@ RB.constants = {
     default_status = default_status.id.to_s if default_status
 
     roles = User.current.roles_for_project(@project)
-    transitions = {:states => {}, :transitions => {} }
+    transitions = {:states => {}, :transitions => {} , :default => default_status }
 
     RbStory.trackers.each {|tracker_id|
       tracker = Tracker.find(tracker_id)

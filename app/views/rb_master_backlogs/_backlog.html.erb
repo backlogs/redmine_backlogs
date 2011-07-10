@@ -10,8 +10,6 @@
       <div class="velocity"> </div>
     <%- else %>
       <div class="label"><%=l(:label_product_backlog).titleize %></div>
-      <a class="add_new_story" href="#">New Story</a>
-      <a class="add_new_sprint" href="#">New Sprint</a>
       <%= link_to "Close completed Sprints", close_completed_project_versions_path(@project), :class => "close_sprint", :method => :put, :target => "_blank" %>
     <%- end %>
   </div>
