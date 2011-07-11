@@ -89,7 +89,7 @@ end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   sprint = RbSprint.find_by_name(sprint_subject)
-  @impediment_params = initialize_impediment_params(sprint.id)
+  @impediment_params = initialize_impediment_params(:fixed_version_id => sprint.id)
 end
 
 Given /^I want to create a sprint$/ do
@@ -105,7 +105,7 @@ end
 Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
   impediment = RbTask.find_by_subject(impediment_subject)
   impediment.should_not be_nil
-  @impediment_params = HashWithIndifferentAccess.new(impediment.attributes)
+  @impediment_params = initialize_impediment_params(impediment.attributes)
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
@@ -115,7 +115,7 @@ Given /^I want to edit the sprint named (.+)$/ do |name|
 end
 
 Given /^I want to indicate that the impediment blocks (.+)$/ do |blocks_csv|
-  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
+  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(',').collect{|b| b.strip} }).collect{ |s| s.id.to_s }.join(',')
   @impediment_params[:blocks] = blocks_csv
 end
 
@@ -220,15 +220,13 @@ end
 Given /^I have defined the following impediments:$/ do |table|
   table.hashes.each do |impediment|
     sprint = RbSprint.find_by_name(impediment['sprint'])
-    blocks = RbStory.find(:all, :conditions => { :subject => impediment['blocks'].split(', ')  }).map{ |s| s.id }
-    params = initialize_impediment_params(sprint.id)
-    params['subject'] = impediment['subject']
-    params['blocks']  = blocks.join(',')
-
+    blocks = RbStory.find(:all, :conditions => { :subject => impediment['blocks'].split(',').collect{|b| b.strip} })
+    params = initialize_impediment_params(:sprint_id => sprint.id, :subject => impediment['subject'], :blocks => blocks.collect{|t| t.id.to_s}.join(','))
+    params[:project_id] = blocks[0].project_id
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, blocks[0].project_id)
   end
 end
 

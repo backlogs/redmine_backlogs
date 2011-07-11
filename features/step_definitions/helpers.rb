@@ -26,13 +26,11 @@ def sprint_id_from_name(name)
   return sprint.id
 end
 
-def initialize_impediment_params(sprint_id, project_id)
-  params = HashWithIndifferentAccess.new(RbTask.new.attributes)
-  params['project_id'] = project_id
+def initialize_impediment_params(attributes)
+  params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['fixed_version_id'] = sprint_id
-  params['status_id'] = IssueStatus.find(:first).id
+  params['status_id'] = IssueStatus.default
   params
 end
 
