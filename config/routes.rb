@@ -14,7 +14,6 @@ ActionController::Routing::Routes.draw do |map|
     rb.resources  :tasks,            :only => :index,              :controller => :rb_tasks,            :as => "tasks/:story_id"
     rb.resource   :story,            :except => :index,            :controller => :rb_stories,          :as => "story/:id"
     rb.resources  :stories,          :only => :index,              :controller => :rb_stories,          :as => "stories/:project_id"
-    rb.resource   :sprint,           :except => :index,            :controller => :rb_sprints,          :as => "sprints/:sprint_id"
     rb.resource   :taskboard,        :only => :show,               :controller => :rb_taskboards,       :as => "taskboards/:sprint_id"
     rb.resource   :release,          :only => :show,               :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :release,          :only => :edit,               :controller => :rb_releases,         :as => "release/:release_id"
@@ -27,8 +26,11 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'master_backlog/:project_id',                    :controller => :rb_master_backlogs,  :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.:format',       :controller => :rb_master_backlogs,  :action => 'menu'
 
-    rb.connect    'impediments',                                   :controller => :rb_impediments,      :action => 'create',  :via => :post
-    rb.connect    'impediments/:id',                               :controller => :rb_impediments,      :action => 'update',  :via => :put
+    rb.connect    'impediment',                                    :controller => :rb_impediments,      :action => 'create'# ,  :via => :post
+    rb.connect    'impediment/:id',                                :controller => :rb_impediments,      :action => 'update'# ,  :via => :put
+
+    rb.connect    'sprints',                                       :controller => :rb_sprints,          :action => 'create'#,  :via => :post
+    rb.connect    'sprints/:sprint_id',                            :controller => :rb_sprints,          :action => 'update'#,  :via => :put
   end
 
 end

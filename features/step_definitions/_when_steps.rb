@@ -84,8 +84,8 @@ end
 
 When /^I update the impediment$/ do
   page.driver.process :post, 
-                      url_for(:controller => :rb_impediments, :action => :update),
-                      @impediment_params.merge({ "_method" => "put" })
+                      url_for(:controller => :rb_impediments, :action => :update, :id => @impediment_params['id']),
+                      @impediment_params
 end
 
 When /^I update the sprint$/ do
