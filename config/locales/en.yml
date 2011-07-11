@@ -79,7 +79,7 @@ en:
   error_intro_plural: "The following errors were encountered:"
   error_outro: "Please correct the above errors before submitting again."
 
-  error_taken: "Name is already in use"
+  error_taken: "is already in use"
 
   label_sprint_impediments: "Sprint Impediments"
 

@@ -11,7 +11,14 @@ class RbSprintsController < RbApplicationController
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     @sprint = RbSprint.new(attribs)
-    @sprint.save!
+
+    begin
+      @sprint.save!
+    rescue => e
+      render :text => e.to_s, :status => 400
+      return
+    end
+
     result = @sprint.errors.length
     status = (result == 0 ? 200 : 400)
 
@@ -23,11 +30,15 @@ class RbSprintsController < RbApplicationController
   def update
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
-    result  = @sprint.update_attributes attribs
-    status  = (result ? 200 : 400)
-    
+    begin
+      result  = @sprint.update_attributes attribs
+    rescue => e
+      render :text => e.to_s, :status => 400
+      return
+    end
+
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => status }
+      format.html { render :partial => "sprint", :status => (result ? 200 : 400) }
     end
   end
   

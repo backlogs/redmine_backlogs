@@ -151,6 +151,7 @@ RB.Model = RB.Object.create({
     try { msg = $(xhr.responseText).find('.errors').html(); } catch (err) { msg = null; }
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/pre>/i); }
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/h1>/i); }
+    if (!msg) { msg = xhr.responseText; }
     if (msg instanceof Array) { msg = msg[0]; }
     if (!msg || msg.length == 0) {
       msg = 'an error occured, please check the server logs (' + xhr.statusText + ')';
