@@ -34,10 +34,9 @@ RB.constants = {
           allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id.to_s}
           transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
 
-          allowed.unshift(allowed.delete(default_status))
-          allowed.unshift(allowed.delete(status_id))
+          allowed.unshift(status_id)
 
-          transitions[:transitions][tracker_id][key][status_id] = allowed.compact
+          transitions[:transitions][tracker_id][key][status_id] = allowed.compact.uniq
         }
       }
     }
