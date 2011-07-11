@@ -152,7 +152,10 @@ RB.Model = RB.Object.create({
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/pre>/i); }
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/h1>/i); }
     if (msg instanceof Array) { msg = msg[0]; }
-    if (!msg || msg.length == 0) { msg = 'an error occured, please check the server logs'; }
+    if (!msg || msg.length == 0) {
+      msg = 'an error occured, please check the server logs';
+      RB.Dialog.notice(xhr.responseText);
+    }
     msg = msg.replace(/<h1>/ig, '<b>').replace(/<\/h1>/ig, '</b>: ').replace(/<\/?pre>/ig, '');
     RB.Dialog.msg(msg);
     this.processError(xhr, textStatus, error);
