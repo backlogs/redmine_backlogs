@@ -47,19 +47,19 @@ class GitHub
     def labels(which = :current)
       return @data[:labels] if which == :current
 
-      l = @data[:labels].select{|l| !(l =~ /^feedback/i) }
+      l = @data[:labels].select{|l| !(l =~ /^feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i) }
 
       if comments.size > 0
         if @gh.committers.include?(comments[-1].user) && !l.include?('featurerequest') && !l.include?('inprogress')
+          l << "feedback"
+
           date = comments[-1].updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
-          diff = case diff
-            when 0 then ''
-            when 1 then '1day'
-            else "#{diff}days"
+          case diff
+            when 0 then nil
+            when 1 then l << '1day'
+            else l << "#{diff}days"
           end
-
-          l << "feedback#{diff}"
         end
       end
       return l.compact.uniq.collect{|lb| lb.downcase}
