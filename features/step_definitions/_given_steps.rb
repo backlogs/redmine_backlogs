@@ -1,5 +1,5 @@
 Given /^I am a product owner of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find_by_name('Manager')
   role.permissions << :view_master_backlog
   role.permissions << :create_stories
   role.permissions << :update_stories
@@ -13,7 +13,7 @@ Given /^I am a product owner of the project$/ do
 end
 
 Given /^I am a scrum master of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find_by_name('Manager')
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -29,8 +29,8 @@ Given /^I am a scrum master of the project$/ do
   login_as_scrum_master
 end
 
-Given /^I am a team member of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+Given /^I am a team member of the projects?$/ do
+  role = Role.find_by_name('Manager')
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -51,13 +51,13 @@ Given /^I am viewing the master backlog$/ do
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find_by_name(sprint_name)
   visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find_by_name(sprint_name)
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
@@ -65,10 +65,10 @@ end
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
   if attribute=="tracker"
     attribute="tracker_id"
-    value = Tracker.find(:first, :conditions => ["name=?", value]).id
+    value = Tracker.find_by_name(value).id
   elsif attribute=="status"
     attribute="status_id"
-    value = IssueStatus.find(:first, :conditions => ["name=?", value]).id
+    value = IssueStatus.find_by_name(value).id
   end
   @story_params[attribute] = value
 end
@@ -83,12 +83,12 @@ Given /^I want to create a story$/ do
 end
 
 Given /^I want to create a task for (.+)$/ do |story_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find_by_subject(story_subject)
   @task_params = initialize_task_params(story.id)
 end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
-  sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
+  sprint = RbSprint.find_by_name(sprint_subject)
   @impediment_params = initialize_impediment_params(sprint.id)
 end
 
@@ -97,19 +97,19 @@ Given /^I want to create a sprint$/ do
 end
 
 Given /^I want to edit the task named (.+)$/ do |task_subject|
-  task = RbTask.find(:first, :conditions => { :subject => task_subject })
+  task = RbTask.find_by_subject(task_subject)
   task.should_not be_nil
   @task_params = HashWithIndifferentAccess.new(task.attributes)
 end
 
 Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
-  impediment = RbTask.find(:first, :conditions => { :subject => impediment_subject })
+  impediment = RbTask.find_by_subject(impediment_subject)
   impediment.should_not be_nil
   @impediment_params = HashWithIndifferentAccess.new(impediment.attributes)
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = RbSprint.find(:first, :conditions => ["name=?", name])
+  sprint = RbSprint.find_by_name(name)
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
@@ -130,7 +130,7 @@ Given /^I want to set the (.+) of the impediment to (.+)$/ do |attribute, value|
 end
 
 Given /^I want to edit the story with subject (.+)$/ do |subject|
-  @story = RbStory.find(:first, :conditions => ["subject=?", subject])
+  @story = RbStory.find_by_subject(subject)
   @story.should_not be_nil
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
@@ -142,13 +142,13 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
-  story_trackers = [(Tracker.find_by_name('Story') || [Tracker.create!(:name => 'Story')])[0].id]
-  task_tracker = (Tracker.find_by_name('Task') || [Tracker.create!(:name => 'Task')])[0].id
+  story_tracker = (Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id
+  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task')).id
 
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:story_trackers => story_trackers, :task_tracker => task_tracker } )
+  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:story_trackers => [story_tracker], :task_tracker => task_tracker } )
 
   # Make sure these trackers are enabled in the project
-  @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
+  @project.update_attributes :tracker_ids => [story_tracker, task_tracker]
 end
 
 Given /^no versions or issues exist$/ do
@@ -160,10 +160,10 @@ Given /^I select the (.*) project$/ do |project_id|
   @project = get_project(project_id)
 end
 
-Given /^the project has the following sprints:$/ do |table|
+Given /^I have defined the following sprints:$/ do |table|
   @project.shared_versions.each {|s| s.destroy }
   table.hashes.each do |version|
-    version['project_id'] = @project.id
+    version['project_id'] = Project.find(version['project_id'] || @project.id).id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
     end
@@ -171,11 +171,11 @@ Given /^the project has the following sprints:$/ do |table|
   end
 end
 
-Given /^the project has the following stories in the product backlog:$/ do |table|
+Given /^I have defined the following stories in the product backlog:$/ do |table|
   prev_id = ''
 
   table.hashes.each do |story|
-    params = initialize_story_params
+    params = initialize_story_params(story['project_id'])
     params['subject'] = story['subject']
     params['prev_id'] = prev_id
 
@@ -187,14 +187,14 @@ Given /^the project has the following stories in the product backlog:$/ do |tabl
   end
 end
 
-Given /^the project has the following stories in the following sprints:$/ do |table|
+Given /^I have defined the following stories in the following sprints:$/ do |table|
   prev_id = ''
 
   table.hashes.each do |story|
-    params = initialize_story_params
+    params = initialize_story_params(story['project_id'])
     params['subject'] = story['subject']
     params['prev_id'] = prev_id
-    params['fixed_version_id'] = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    params['fixed_version_id'] = sprint_id_from_name(story['sprint'])
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
@@ -204,9 +204,9 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
   end
 end
 
-Given /^the project has the following tasks:$/ do |table|
+Given /^I have defined the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task['parent'] })
+    story = RbStory.find_by_subject(task['parent'])
     params = initialize_task_params(story.id)
     params['subject'] = task['subject']
 
@@ -217,9 +217,9 @@ Given /^the project has the following tasks:$/ do |table|
   end
 end
 
-Given /^the project has the following impediments:$/ do |table|
+Given /^I have defined the following impediments:$/ do |table|
   table.hashes.each do |impediment|
-    sprint = RbSprint.find(:first, :conditions => { :name => impediment['sprint'] })
+    sprint = RbSprint.find_by_name(impediment['sprint'])
     blocks = RbStory.find(:all, :conditions => { :subject => impediment['blocks'].split(', ')  }).map{ |s| s.id }
     params = initialize_impediment_params(sprint.id)
     params['subject'] = impediment['subject']

@@ -1,24 +1,31 @@
-Feature: Team Member
-  As a team member
-  I want to manage update stories and tasks
-  So that I can update everyone on the status of the project
+Feature: Shared versions
+  As a project manager 
+  I want to use shared versions
+  So that I can manage release over projects
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And the private-child project has the backlogs plugin enabled
+      And the project6 project has the backlogs plugin enabled
+      And the onlinestore project has the backlogs plugin enabled
       And no versions or issues exist
-      And I am a team member of the project
+      And I am a team member of the projects
+
       And I have defined the following sprints:
-        | name       | sprint_start_date | effective_date |
-        | Sprint 001 | 2010-01-01        | 2010-01-31     |
-        | Sprint 002 | 2010-02-01        | 2010-02-28     |
-        | Sprint 003 | 2010-03-01        | 2010-03-31     |
-        | Sprint 004 | 2010-03-01        | 2010-03-31     |
+        | name       | sprint_start_date | effective_date | sharing   | project_id    |
+        | Sprint 001 | 2010-01-01        | 2010-01-31     | hierarchy | ecookbook     |
+        | Sprint 002 | 2010-02-01        | 2010-02-28     | none      | private-child |
+        | Sprint 003 | 2010-03-01        | 2010-03-31     | tree      | project6      |
+        | Sprint 004 | 2010-03-01        | 2010-03-31     | system    | onlinestore   |
+
+      And I select the private-child project
+
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     |
-        | 1        | Story 1 | Sprint 001 |
-        | 2        | Story 2 | Sprint 001 |
-        | 3        | Story 3 | Sprint 001 |
-        | 4        | Story 4 | Sprint 002 |
+        | position | subject | sprint     | project_id    |
+        | 1        | Story 1 | Sprint 001 | ecookbook     |
+        | 2        | Story 2 | Sprint 001 | ecookbook     |
+        | 3        | Story 3 | Sprint 001 | ecookbook     |
+        | 4        | Story 4 | Sprint 002 | private-child |
       And I have defined the following tasks:
         | subject | parent  |
         | Task 1  | Story 1 |

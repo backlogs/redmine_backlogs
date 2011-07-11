@@ -50,7 +50,7 @@ Then /^show me the sprint impediments$/ do
 end
 
 Then /^show me the projects$/ do
-  #show_projects
+  show_projects
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
