@@ -147,8 +147,8 @@ RB.Model = RB.Object.create({
   error: function(xhr, textStatus, error){
     this.markError();
 
-    xhr.responseText = xhr.responseText.toString();
-    var msg = $(xhr.responseText).find('.errors').html();
+    var msg = null;
+    try { msg = $(xhr.responseText).find('.errors').html(); } catch (err) { msg = null; }
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/pre>/i); }
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/h1>/i); }
     if (msg instanceof Array) { msg = msg[0]; }
