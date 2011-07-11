@@ -32,18 +32,45 @@ langdir = File.join(File.dirname(__FILE__), '..', '..', 'config', 'locales')
 template_file = "#{langdir}/en.yml"
 template = YAML::load_file(template_file)['en']
 
-log """---
+log <<EOF
+---
 title: Translations
 layout: default
 categories: en
 ---
 h1. Translations
 
+<script>
+    $(document).ready(function() {
+        $('a.show-instructions').attr('href', '#');
+        $('.instructions').hide();
+
+        $('a.show-instructions').click(function() {
+          $('.instructions').toggle();
+        });
+    });
+</script>
+
+*Want to help out with translating Backlogs? Excellent! Click "(show-instructions)here":http://www.example.com for more info!*
+
+ <div class="instructions">
+Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/relaxdiego/redmine_backlogs/fork the "Backlogs":http://github.com/relaxdiego/redmine_backlogs repository, check it out to your local PC, and change the translation files in config/locales. Check it into your clone, and then issue a "pull request":https://github.com/relaxdiego/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
+
+Alternately, but this won't get you attribution, "download":http://github.com/relaxdiego/redmine_backlogs/tree/master/config/locales the raw translation file, change them as you wish, and then post them in a "gist":https://gist.github.com/, and add an issue in our "issue tracker":https://github.com/relaxdiego/redmine_backlogs/issue with a link to your gist.
+
+The messages below mean the following:
+
+| *Missing* | the key is not present in the translation. |
+| *Obsolete* | the key is present but no longer in use, so it should be removed. |
+| *Old-style variable substitution* | the translation uses { { keyword } } instead of %{keyword}. This works for now, but redmine is in the process of phasing it out. |
+
+ </div>
+
 bq(success). US English
 
 serves as a base for all other translations
 
-"""
+EOF
 
 Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
   next if lang_file == template_file
