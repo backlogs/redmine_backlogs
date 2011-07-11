@@ -142,6 +142,5 @@ gh = GitHub.new 'relaxdiego', 'redmine_backlogs'
 
 gh.labels = gh.labels(:calculate)
 gh.issues.each{|i|
-  puts i.title
   i.labels = i.labels(:calculate)
 }
