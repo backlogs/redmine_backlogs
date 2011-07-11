@@ -5,6 +5,7 @@ nl:
   label_webcal: Agenda
   field_backlogs_issue_type: Backlog type
   error_intro_singular: "De volgende fout is opgetreden:"
+  error_taken: "Naam is al in gebruik"
   field_remaining_hours: Resterende uren
   button_edit_wiki: Wijzig wiki page
   label_points_burn_up: Omhoog

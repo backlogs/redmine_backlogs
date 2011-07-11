@@ -6,6 +6,7 @@ en-GB:
   field_backlogs_issue_type: Backlog type
   field_remaining_hours: Remaining hours
   error_intro_singular: "The following error was encountered:"
+  error_taken: "Name is already in use"
   button_edit_wiki: Edit wiki page
   label_points_burn_up: Up
   label_not_prioritized: not prioritized
