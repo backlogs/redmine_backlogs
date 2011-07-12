@@ -161,19 +161,19 @@ module BacklogsPlugin
             rel.save
           end
 
-          if params[:copy_tasks]
-            params[:copy_tasks] += ':' if params[:copy_tasks] !~ /:/
+          if params[:copy_tasks] =~ /^[a-z]+:[0-9]+$/
             action, id = *(params[:copy_tasks].split(/:/))
 
-            story = (id == '' ? nil : RbStory.find(Integer(id)))
+            story = RbStory.find(Integer(id))
 
-            if ! story.nil? && action != 'none'
-              tasks = story.tasks
+            if action != 'none'
               case action
                 when 'open'
-                  tasks = tasks.select{|t| !t.closed?}
-                when 'all', 'none'
-                  #
+                  tasks = story.tasks.select{|t| !t.closed?}
+                when 'none'
+                  tasks = []
+                when 'all'
+                  tasks = story.tasks
                 else
                   raise "Unexpected value #{params[:copy_tasks]}"
               end
@@ -182,7 +182,7 @@ module BacklogsPlugin
                 nt = RbTask.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
-                nt.save
+                nt.save!
               }
             end
           end
