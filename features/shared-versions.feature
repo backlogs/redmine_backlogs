@@ -18,14 +18,13 @@ Feature: Shared versions
         | Sprint 003 | 2010-03-01        | 2010-03-31     | tree      | project6      |
         | Sprint 004 | 2010-03-01        | 2010-03-31     | system    | onlinestore   |
 
-      And I select the private-child project
-
       And I have defined the following stories in the following sprints:
         | position | subject | sprint     | project_id    |
         | 1        | Story 1 | Sprint 001 | ecookbook     |
         | 2        | Story 2 | Sprint 001 | ecookbook     |
         | 3        | Story 3 | Sprint 001 | ecookbook     |
         | 4        | Story 4 | Sprint 002 | private-child |
+
       And I have defined the following tasks:
         | subject | parent  |
         | Task 1  | Story 1 |
@@ -35,83 +34,89 @@ Feature: Shared versions
         | Impediment 2 | Sprint 001 | Story 2 | 
         
   Scenario: Create a task for a story
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
      When I create the task
-     Then the request should complete successfully
-      And the 2nd task for Story 1 should be A Whole New Task
+      And the 1st task for Story 1 should be A Whole New Task
 
   Scenario: Update a task for a story
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
+     Then show me the list of tasks
       And I want to edit the task named Task 1
       And I set the subject of the task to Whoa there, Sparky
      When I update the task
-     Then the request should complete successfully
-      And the story named Story 1 should have 1 task named Whoa there, Sparky
+     Then the story named Story 1 should have 1 task named Whoa there, Sparky
 
   Scenario: View a taskboard
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+     And I am viewing the taskboard for Sprint 001
      Then I should see the taskboard
 
   Scenario: View the burndown chart
-    Given I am viewing the burndown for Sprint 002
+    Given I have selected the ecookbook project
+      And I am viewing the burndown for Sprint 002
      Then I should see the burndown chart
 
   Scenario: View sprint stories in the issues tab
-    Given I am viewing the master backlog
+    Given I have selected the ecookbook project
+      And I am viewing the master backlog
      When I view the stories of Sprint 001 in the issues tab
      Then I should see the Issues page
 
   Scenario: View the project stories in the issues tab
-    Given I am viewing the master backlog
+    Given I have selected the ecookbook project
+      And I am viewing the master backlog
      When I view the stories in the issues tab
      Then I should see the Issues page
 
   Scenario: Fetch the updated stories
-    Given I am viewing the master backlog
+    Given I have selected the ecookbook project
+      And I am viewing the master backlog
      When the browser fetches stories updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 4 updated stories
+     Then the server should return 4 updated stories
 
   Scenario: Fetch the updated tasks
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
      When the browser fetches tasks updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 1 updated task
+     Then the server should return 1 updated task
 
   Scenario: Fetch the updated impediments
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
      When the browser fetches impediments updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 2 updated impediments
+     Then the server should return 2 updated impediments
 
   Scenario: Fetch zero updated impediments 
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
      When the browser fetches impediments updated since 1 week from now
-     Then the request should complete successfully
-      And the server should return 0 updated impediments
+     Then the server should return 0 updated impediments
       
   Scenario: Copy estimate to remaining
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
       And I set the estimated_hours of the task to 3
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have remaining_hours set to 3
 
   Scenario: Copy remaining to estimate
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
       And I set the remaining_hours of the task to 3
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have estimated_hours set to 3
+     Then task A Whole New Task should have estimated_hours set to 3
 
   Scenario: Set both estimate and remaining
-    Given I am viewing the taskboard for Sprint 001
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
       And I set the remaining_hours of the task to 3
@@ -122,8 +127,7 @@ Feature: Shared versions
       And I set the remaining_hours of the task to 1
       And I set the estimated_hours of the task to 2
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have remaining_hours set to 3
       And task A Whole New Task should have estimated_hours set to 8
       And story Story 1 should have remaining_hours set to 4
       And story Story 1 should have estimated_hours set to 10

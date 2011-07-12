@@ -33,8 +33,7 @@ Feature: Scrum Master
       And I want to set the subject of the impediment to Bad Impediment
       And I want to indicate that the impediment blocks Story B
      When I create the impediment
-     Then the request should complete successfully
-      And the sprint named Sprint 001 should have 2 impediments named Bad Impediment
+     Then the sprint named Sprint 001 should have 2 impediments named Bad Impediment
 
   Scenario: Update an impediment
     Given I am viewing the taskboard for Sprint 001
@@ -42,16 +41,13 @@ Feature: Scrum Master
       And I want to set the subject of the impediment to Good Impediment
       And I want to indicate that the impediment blocks Story B
      When I update the impediment
-     Then the request should complete successfully
-      And the sprint named Sprint 001 should have 1 impediment named Good Impediment
+     Then the sprint named Sprint 001 should have 1 impediment named Good Impediment
 
   Scenario: View impediments
     Given I am viewing the issues list
       And I follow "Sprint 001"
-     Then the request should complete successfully
-     When I follow "Impediments"
-     Then the request should complete successfully
-      And I should see "Impediment 1"
+      And I follow "Impediments"
+     Then I should see "Impediment 1"
 
   Scenario: Create a new sprint
     Given I am viewing the master backlog
@@ -60,8 +56,7 @@ Feature: Scrum Master
       And I want to set the sprint_start_date of the sprint to 2010-03-01
       And I want to set the effective_date of the sprint to 2010-03-20
      When I create the sprint
-     Then the request should complete successfully
-      And I should see "sprint 005"
+     Then I should see "sprint 005"
 
   Scenario: Update sprint details
     Given I am viewing the master backlog
@@ -70,8 +65,7 @@ Feature: Scrum Master
       And I want to set the sprint_start_date of the sprint to 2010-03-01
       And I want to set the effective_date of the sprint to 2010-03-20
      When I update the sprint
-     Then the request should complete successfully
-      And the sprint should be updated accordingly
+     Then the sprint should be updated accordingly
 
   Scenario: Update sprint with no name
     Given I am viewing the master backlog
@@ -83,8 +77,7 @@ Feature: Scrum Master
   Scenario: Move a story from product backlog to sprint backlog
     Given I am viewing the master backlog
      When I move the story named Story 1 up to the 1st position of the sprint named Sprint 001
-     Then the request should complete successfully
-     When I move the story named Story 4 up to the 2nd position of the sprint named Sprint 001
+      And I move the story named Story 4 up to the 2nd position of the sprint named Sprint 001
       And I move the story named Story 2 up to the 1st position of the sprint named Sprint 002
       And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
      Then Story 4 should be in the 1st position of the sprint named Sprint 001
@@ -94,8 +87,7 @@ Feature: Scrum Master
   Scenario: Move a story down in a sprint
     Given I am viewing the master backlog
      When I move the story named Story A below Story B
-     Then the request should complete successfully
-      And Story A should be in the 2nd position of the sprint named Sprint 001
+     Then Story A should be in the 2nd position of the sprint named Sprint 001
       And Story B should be the higher item of Story A
      
   Scenario: Request the project calendar feed
@@ -105,7 +97,7 @@ Feature: Scrum Master
      When I download the calendar feed
      Then the request should complete successfully
     Given I have guessed an API access key
-     When I download the calendar feed
+     When I try to download the calendar feed
      Then the request should fail
      
   Scenario: Download printable cards for the product backlog
@@ -119,8 +111,7 @@ Feature: Scrum Master
       And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
       And I am viewing the issues list
       And I follow "Sprint 001"
-     Then the request should complete successfully
-     When I follow "Sprint cards"
+      And I follow "Sprint cards"
      Then the request should complete successfully
 
   Scenario: view the sprint notes
@@ -128,14 +119,12 @@ Feature: Scrum Master
       And I have made Sprint Template the template page for sprint notes
       And I am viewing the taskboard for Sprint 001
      When I view the sprint notes
-     Then the request should complete successfully
-    Then the wiki page Sprint 001 should contain Sprint Template
+     Then the wiki page Sprint 001 should contain Sprint Template
 
   Scenario: edit the sprint notes
     Given I have set the content for wiki page Sprint Template to Sprint Template
       And I have made Sprint Template the template page for sprint notes
       And I am viewing the taskboard for Sprint 001
      When I edit the sprint notes
-     Then the request should complete successfully
      Then the wiki page Sprint 001 should contain Sprint Template
 

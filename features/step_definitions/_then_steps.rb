@@ -45,6 +45,15 @@ Then /^show me the list of stories$/ do
   show_table(header, data)
 end
 
+Then /^show me the list of tasks$/ do
+  header = [['id', 5], ['status', 12], ['subject', 30], ['sprint', 20]]
+  data = RbTask.find(:all, :conditions => ['tracker_id = ?', RbTask.tracker]).select{|t| t.is_task? }.collect{|task|
+    [task.id, task.status.name, task.subject, task.fixed_version_id.nil? ? 'Product Backlog' : task.fixed_version.name]
+  }
+
+  show_table(header, data)
+end
+
 Then /^show me the sprint impediments$/ do
   puts @sprint.impediments.collect{|i| i.subject}.inspect
 end
@@ -83,7 +92,7 @@ Then /^all positions should be unique$/ do
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find_by_subject(story_subject)
   story.children[position.to_i - 1].subject.should == task_subject
 end
 

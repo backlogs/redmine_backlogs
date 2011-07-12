@@ -32,16 +32,14 @@ Feature: Team Member
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
      When I create the task
-     Then the request should complete successfully
-      And the 2nd task for Story 1 should be A Whole New Task
+     Then the 2nd task for Story 1 should be A Whole New Task
 
   Scenario: Update a task for a story
     Given I am viewing the taskboard for Sprint 001
       And I want to edit the task named Task 1
       And I set the subject of the task to Whoa there, Sparky
      When I update the task
-     Then the request should complete successfully
-      And the story named Story 1 should have 1 task named Whoa there, Sparky
+     Then the story named Story 1 should have 1 task named Whoa there, Sparky
 
   Scenario: View a taskboard
     Given I am viewing the taskboard for Sprint 001
@@ -64,26 +62,22 @@ Feature: Team Member
   Scenario: Fetch the updated stories
     Given I am viewing the master backlog
      When the browser fetches stories updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 4 updated stories
+     Then the server should return 4 updated stories
 
   Scenario: Fetch the updated tasks
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches tasks updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 1 updated task
+     Then the server should return 1 updated task
 
   Scenario: Fetch the updated impediments
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches impediments updated since 1 week ago
-     Then the request should complete successfully
-      And the server should return 2 updated impediments
+     Then the server should return 2 updated impediments
 
   Scenario: Fetch zero updated impediments 
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches impediments updated since 1 week from now
-     Then the request should complete successfully
-      And the server should return 0 updated impediments
+     Then the server should return 0 updated impediments
       
   Scenario: Copy estimate to remaining
     Given I am viewing the taskboard for Sprint 001
@@ -91,8 +85,7 @@ Feature: Team Member
       And I set the subject of the task to A Whole New Task
       And I set the estimated_hours of the task to 3
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have remaining_hours set to 3
 
   Scenario: Copy remaining to estimate
     Given I am viewing the taskboard for Sprint 001
@@ -100,8 +93,7 @@ Feature: Team Member
       And I set the subject of the task to A Whole New Task
       And I set the remaining_hours of the task to 3
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have estimated_hours set to 3
+     Then task A Whole New Task should have estimated_hours set to 3
 
   Scenario: Set both estimate and remaining
     Given I am viewing the taskboard for Sprint 001
@@ -115,8 +107,7 @@ Feature: Team Member
       And I set the remaining_hours of the task to 1
       And I set the estimated_hours of the task to 2
      When I create the task
-     Then the request should complete successfully
-      And task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have remaining_hours set to 3
       And task A Whole New Task should have estimated_hours set to 8
       And story Story 1 should have remaining_hours set to 4
       And story Story 1 should have estimated_hours set to 10

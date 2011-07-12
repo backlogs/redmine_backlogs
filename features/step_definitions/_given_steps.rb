@@ -142,6 +142,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
+  @impediment_tracker = (Tracker.find_by_name('Impediment') || Tracker.create!(:name => 'Impediment')).id
   story_tracker = (Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id
   task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task')).id
 
@@ -156,7 +157,7 @@ Given /^no versions or issues exist$/ do
   Version.find(:all).each{|v| v.destroy }
 end
 
-Given /^I select the (.*) project$/ do |project_id|
+Given /^I have selected the (.*) project$/ do |project_id|
   @project = get_project(project_id)
 end
 
