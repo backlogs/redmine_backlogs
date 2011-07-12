@@ -50,15 +50,17 @@ class GitHub
       l = @data[:labels].select{|l| !(l =~ /^feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i) }
 
       if comments.size > 0
-        if @gh.committers.include?(comments[-1].user) && !l.include?('featurerequest') && !l.include?('inprogress')
-          l << "feedback"
+        if @gh.committers.include?(comments[-1].user) && !l.include?('feature-request') && !l.include?('in-progress')
+          l << "feedback-required"
 
           date = comments[-1].updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
           case diff
             when 0 then nil
             when 1 then l << '1day'
-            else l << "#{diff}days"
+            else
+              l << "#{diff}days"
+              l << 'no-feedback' if diff > 4
           end
         end
       end
@@ -115,7 +117,7 @@ class GitHub
   def labels(which = :all)
     return YAML::load(get('issues/labels/:user/:repo'))['labels'] if which == :all
     return issues.collect{|i| i.labels}.flatten.compact.uniq if which == :active
-    return issues.collect{|i| i.labels(:calculate)}.flatten.compact.uniq if which == :calculate
+    return (issues.collect{|i| i.labels(:calculate)}.flatten + fixed_states).compact.uniq if which == :calculate
     raise "Unexpected selector #{which.inspect}"
   end
 
@@ -135,6 +137,10 @@ class GitHub
 
   def committers
     return ['friflaj']
+  end
+
+  def fixed_states
+    ['in-progress', 'feedback-required', 'feature-request', 'release-blocker', 'no-feedback']
   end
 end
 
