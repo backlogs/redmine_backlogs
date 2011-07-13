@@ -12,8 +12,6 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :burndown_chart,   :only => :show,               :controller => :rb_burndown_charts,  :as => "burndown_charts/:sprint_id"
     rb.resource   :task,             :except => :index,            :controller => :rb_tasks,            :as => "task/:id"
     rb.resources  :tasks,            :only => :index,              :controller => :rb_tasks,            :as => "tasks/:story_id"
-    rb.resource   :story,            :except => :index,            :controller => :rb_stories,          :as => "story/:id"
-    rb.resources  :stories,          :only => :index,              :controller => :rb_stories,          :as => "stories/:project_id"
     rb.resource   :taskboard,        :only => :show,               :controller => :rb_taskboards,       :as => "taskboards/:sprint_id"
     rb.resource   :release,          :only => :show,               :controller => :rb_releases,         :as => "release/:release_id"
     rb.resources  :release,          :only => :edit,               :controller => :rb_releases,         :as => "release/:release_id"
@@ -26,11 +24,16 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'master_backlog/:project_id',                    :controller => :rb_master_backlogs,  :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.:format',       :controller => :rb_master_backlogs,  :action => 'menu'
 
-    rb.connect    'impediment',                                    :controller => :rb_impediments,      :action => 'create'# ,  :via => :post
-    rb.connect    'impediment/:id',                                :controller => :rb_impediments,      :action => 'update'# ,  :via => :put
+    rb.connect    'impediment/create',                             :controller => :rb_impediments,      :action => 'create'# ,  :via => :post
+    rb.connect    'impediment/update/:id',                         :controller => :rb_impediments,      :action => 'update'# ,  :via => :put
 
-    rb.connect    'sprints',                                       :controller => :rb_sprints,          :action => 'create'#,  :via => :post
-    rb.connect    'sprints/:sprint_id',                            :controller => :rb_sprints,          :action => 'update'#,  :via => :put
+    rb.connect    'sprint/create',                                 :controller => :rb_sprints,          :action => 'create'#,  :via => :post
+    rb.connect    'sprint/update/:sprint_id',                      :controller => :rb_sprints,          :action => 'update'#,  :via => :put
+
+    rb.connect    'stories/:project_id/:sprint_id.:format',        :controller => :rb_stories,          :action => 'index'
+    rb.connect    'stories/:project_id.:format',                   :controller => :rb_stories,          :action => 'index'
+    rb.connect    'story/create',                                  :controller => :rb_stories,          :action => 'create'
+    rb.connect    'story/update/:id',                              :controller => :rb_stories,          :action => 'update'
   end
 
 end

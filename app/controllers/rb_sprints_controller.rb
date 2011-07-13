@@ -15,7 +15,7 @@ class RbSprintsController < RbApplicationController
     begin
       @sprint.save!
     rescue => e
-      render :text => e.to_s, :status => 400
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
@@ -33,7 +33,7 @@ class RbSprintsController < RbApplicationController
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
-      render :text => e.to_s, :status => 400
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 

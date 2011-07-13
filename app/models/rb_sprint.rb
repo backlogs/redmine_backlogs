@@ -211,13 +211,27 @@ class RbSprint < Version
         self.update_attribute(:wiki_page_title, Wiki.titleize(self.name)) if wiki_page_title.blank?
 
         page = project.wiki.find_page(self.wiki_page_title)
-        template = project.wiki.find_page(Setting.plugin_redmine_backlogs[:wiki_template])
+
+        template = Setting.plugin_redmine_backlogs[:wiki_template]
+        template = nil if template.blank?
 
         if template and not page
-            page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
-            page.content = WikiContent.new
-            page.content.text = "h1. #{self.name}\n\n#{template.text}"
-            page.save!
+          if template =~ /:/
+            prj, template = *template.split(':', 2)
+            prj = Project.find(prj)
+          else
+            prj = project
+          end
+
+          if prj && prj.wiki
+            template = prj.wiki.find_page(template)
+            if template
+              page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
+              page.content = WikiContent.new
+              page.content.text = "h1. #{self.name}\n\n#{template.text}"
+              page.save!
+            end
+          end
         end
 
         return wiki_page_title
