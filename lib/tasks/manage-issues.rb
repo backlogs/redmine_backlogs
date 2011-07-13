@@ -47,7 +47,7 @@ class GitHub
     def labels(which = :current)
       return @data[:labels] if which == :current
 
-      l = @data[:labels].select{|l| !(l =~ /^feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i) }
+      l = @data[:labels].select{|l| !(l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i) }
 
       if comments.size > 0
         if @gh.committers.include?(comments[-1].user) && !l.include?('feature-request') && !l.include?('in-progress')
