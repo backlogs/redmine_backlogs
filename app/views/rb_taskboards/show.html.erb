@@ -101,6 +101,7 @@
               <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
           <div class="subject"><%= story.subject %></div>
+          <div class="status"><%= story.status %></div>
         </div>
       </td>
       <td class="add_new">+</td>
