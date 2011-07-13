@@ -14,7 +14,13 @@ class RbStoriesController < RbApplicationController
   
   def create
     params['author_id'] = User.current.id
-    story = RbStory.create_and_position(params)
+    begin
+      story = RbStory.create_and_position(params)
+    rescue => e
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
+
     status = (story.id ? 200 : 400)
     
     respond_to do |format|
@@ -24,7 +30,13 @@ class RbStoriesController < RbApplicationController
 
   def update
     story = RbStory.find(params[:id])
-    result = story.update_and_position!(params)
+    begin
+      result = story.update_and_position!(params)
+    rescue => e
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
+
     story.reload
     status = (result ? 200 : 400)
     
