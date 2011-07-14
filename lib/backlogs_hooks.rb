@@ -169,7 +169,7 @@ module BacklogsPlugin
             if action != 'none'
               case action
                 when 'open'
-                  tasks = story.tasks.select{|t| !t.closed?}
+                  tasks = story.tasks.select{|t| !t.reload.closed?}
                 when 'none'
                   tasks = []
                 when 'all'
