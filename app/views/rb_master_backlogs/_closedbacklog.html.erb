@@ -1,0 +1,9 @@
+<div class="closedbacklog">
+  <div class="header">
+      <%= render :partial => "rb_sprints/sprint", :object => closedbacklog[:sprint] %>
+      <div class="velocity"> </div>
+  </div>
+  <ul class="stories">
+    <%= render :partial => "rb_stories/story", :collection => closedbacklog[:stories] %>
+  </ul>
+</div>
