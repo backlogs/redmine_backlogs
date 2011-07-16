@@ -10,8 +10,6 @@ module Backlogs
         unloadable
 
         alias_method_chain :move_to_project_without_transaction, :autolink
-        alias_method_chain :recalculate_attributes_for, :remaining_hours
-        before_validation :backlogs_before_validation
         after_save  :backlogs_after_save
 
         before_save :backlogs_scrub_position_journal
@@ -90,27 +88,6 @@ module Backlogs
         return Integer(self.story_points * dpp)
       end
 
-      def recalculate_attributes_for_with_remaining_hours(issue_id)
-        recalculate_attributes_for_without_remaining_hours(issue_id)
-
-        return unless self.project.module_enabled? 'backlogs'
-
-        if issue_id && p = Issue.find_by_id(issue_id)
-          if p.left != (p.right + 1) # this node has children
-            p.update_attribute(:remaining_hours, p.leaves.sum(:remaining_hours).to_f)
-          end
-        end
-      end
-
-      def backlogs_before_validation
-        return unless self.project.module_enabled? 'backlogs'
-
-        if self.tracker_id == RbTask.tracker
-          self.estimated_hours = self.remaining_hours if self.estimated_hours.blank? && ! self.remaining_hours.blank?
-          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank? && ! self.estimated_hours.blank?
-        end
-      end
-
       def backlogs_scrub_position_journal
         @issue_before_change.position = self.position if @issue_before_change
       end
@@ -124,8 +101,6 @@ module Backlogs
 
         return unless self.project.module_enabled? 'backlogs'
 
-        touched_sprints = []
-
         if self.is_story?
           # raw sql here because it's efficient and not
           # doing so causes an update loop when Issue calls
@@ -138,25 +113,32 @@ module Backlogs
             end
           end
 
-          touched_sprints = [self.fixed_version_id, self.fixed_version_id_was].compact.uniq
-          touched_sprints = touched_sprints.collect{|s| RbSprint.find(s)}.compact
-
         elsif not RbTask.tracker.nil?
           begin
             story = self.story
             if not story.blank?
               connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
             end
-
-            touched_sprints = [self.parent_id, self.parent_id_was].compact.uniq.collect{|t| RbTask.find(t).story }.compact.uniq.collect{|s| s.fixed_version}.compact
           end
         end
-
-        touched_sprints.each {|sprint|
-          sprint.touch_burndown
-        }
       end
 
+      def historic(date, property)
+        case date
+          when :last
+            return self.send(property.intern)
+
+          when :first
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
+
+          else
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
+        end
+
+        obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
+        return obj.old_value if obj
+        return self.send(property.intern)
+      end
     end
   end
 end

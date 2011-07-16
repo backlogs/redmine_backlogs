@@ -20,7 +20,7 @@ RB.showCharts = function(event){
   $('#charts').load( RB.urlFor('show_burndown_chart', { id: RB.constants.sprint_id }) );
   $('#charts').dialog({ 
                         buttons: { "Close": function() { $(this).dialog("close") } },
-                        height: 790,
+                        height: 590,
                         modal: true, 
                         title: 'Charts', 
                         width: 710 

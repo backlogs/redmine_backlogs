@@ -85,13 +85,13 @@ Feature: Team Member
       And I set the subject of the task to A Whole New Task
       And I set the estimated_hours of the task to 3
      When I create the task
-     Then task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have estimated_hours set to 3
 
   Scenario: Copy remaining to estimate
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
-      And I set the remaining_hours of the task to 3
+      And I set the estimated_hours of the task to 3
      When I create the task
      Then task A Whole New Task should have estimated_hours set to 3
 
@@ -99,15 +99,12 @@ Feature: Team Member
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
-      And I set the remaining_hours of the task to 3
       And I set the estimated_hours of the task to 8
      When I create the task
       And I want to create a task for Story 1
       And I set the subject of the task to A Second New Task
-      And I set the remaining_hours of the task to 1
       And I set the estimated_hours of the task to 2
      When I create the task
-     Then task A Whole New Task should have remaining_hours set to 3
+     Then task A Whole New Task should have estimated_hours set to 3
       And task A Whole New Task should have estimated_hours set to 8
-      And story Story 1 should have remaining_hours set to 4
       And story Story 1 should have estimated_hours set to 10

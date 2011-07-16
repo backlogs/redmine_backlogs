@@ -1,5 +1,5 @@
 <%- charts = (burndown.is_a?(Array) ? burndown : [burndown]) %>
-<%- dataseries = charts[0].series(:all).collect{|series| series.name } %>
+<%- dataseries = charts.collect{|c| c.series}.flatten.sort %>
 
   <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
 
@@ -31,14 +31,14 @@
     <%- charts.each do |chart| %>
       burndown_charts[<%= chart.sprint_id%>] = {
         chart: null,
-        dataset_position: {<%= chart.series.enum_for(:each_with_index).collect{|s, i| "#{s.name}: #{i}"}.join(', ') %>},
-        datasets: [<%= chart.series.collect{|s| "[#{s.join(',')}]"}.join(', ') %>],
-        series: [<%= chart.series.collect{|s| "{ label: '#{escape_javascript(l(s.name))}', yaxis: 'y#{s.units == :points ? '' : '2'}axis' }"}.join(',') %>],
-        xticks: [<%= chart.days.enum_for(:each_with_index).collect{|d,i| "[#{i+1}, '#{escape_javascript(::I18n.t('date.abbr_day_names')[d.wday % 7])}']"}.join(',') %>],
+        dataset_position: <%= Hash[*chart.series.enum_for(:each_with_index).collect{|series, i| [series, i]}.flatten].to_json %>,
+        datasets: <%= chart.series.collect{|series| chart[series]}.to_json %>,
+        series: <%= chart.series.collect{|series| {:label => l("label_#{series}"), :yaxis => (series.to_s =~ /^points/ ? 'y2axis' : 'yaxis')}}.to_json %>,
+        xticks: <%= chart.days.enum_for(:each_with_index).collect{|d,i| [i+1, ::I18n.t('date.abbr_day_names')[d.wday % 7]]}.to_json %>,
 
         // add a little clearance to the chart
-        max_y: <%= chart.max[:points] == 0 ? 1 : 1.01 * chart.max[:points] %>,
-        max_y2: <%= chart.max[:hours] == 0 ? 1 : 1.01 * chart.max[:hours] %>,
+        max_y: <%= chart[:max_hours] == 0 ? 1 : 1.01 * chart[:max_hours] %>,
+        max_y2: <%= chart[:max_points] == 0 ? 1 : 1.01 * chart[:max_points] %>,
 
         initialize: function() {
           decoration = !(burndown_charts.jquery('#<%= "#{div}#{chart.sprint_id}" %>').hasClass('minimal'));
@@ -63,7 +63,7 @@
 
         reconfigure: function(disabled) {
           if (this.chart) {
-            <%- dataseries.each do |series| %>
+            <%- chart.series.each do |series| %>
               p = this.dataset_position['<%= "#{series}" %>'];
               if (!(p == undefined)) { this.chart.series[p].show = (disabled.indexOf('|<%= "#{series}" %>|') == -1); };
             <%- end %>

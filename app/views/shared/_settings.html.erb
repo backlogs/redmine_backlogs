@@ -1,4 +1,13 @@
     <%= javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs' %>
+    <%- content_for :header_tags do %>
+      <style>
+        table { border-collapse: collapse; }
+        td, th { padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top; border: 1px solid black; }
+        th { font-weight: bold; }
+        td.unfit { text-decoration: line-through; }
+        td.selected { font-weight: bold; }
+      </style>
+    <%- end %>
 
     <script type="text/javascript">
         var $j = jQuery.noConflict();
@@ -32,6 +41,28 @@
     <p>
         <%= content_tag(:label, l(:backlogs_story_tracker)) %>
         <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, RbStory.trackers), :multiple => true) %>
+        <table>
+          <thead>
+            <tr>
+              <th>Tracker</th>
+              <th>To&nbsp;do</th>
+              <th>In&nbsp;progress</th>
+              <th>Accepted</th>
+              <th>Rejected</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% Tracker.all.each do |tracker| %>
+              <% states = tracker.issue_statuses.group_by {|status| status.backlog} %>
+              <tr>
+                <td class="<%= RbStory.trackers.include?(tracker.id) ? 'selected' : 'not-selected' %> <%= tracker.backlog? ? 'fit' : 'unfit' %>"><%= h(tracker.name) %></span></td>
+                <td><%= h((states[:new] || []).join(', ')) %></td>
+                <td><%= h((states[:in_progress] || []).join(', ')) %></td>
+                <td><%= h((states[:success] || []).join(', ')) %></td>
+                <td><%= h((states[:failure] || []).join(', ')) %></td>
+            <% end %>
+          </tbody>
+        </table>
     </p>
     <p>
         <%= content_tag(:label, l(:backlogs_task_tracker)) %>

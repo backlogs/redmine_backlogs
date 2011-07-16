@@ -216,7 +216,7 @@ RB.Backlog = RB.Object.create({
     $('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
     $('#charts').dialog({ 
                           buttons: { "Close": function() { $(this).dialog("close") } },
-                          height: 790,
+                          height: 590,
                           modal: true, 
                           title: 'Charts', 
                           width: 710 

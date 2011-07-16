@@ -46,10 +46,6 @@ module BacklogsPlugin
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
         end
 
-        if issue.is_task? || (issue.is_story? && issue.descendants.length == 0)
-          snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
-        end
-
         return snippet
       end
 
@@ -87,13 +83,6 @@ module BacklogsPlugin
               </script>
             generatedscript
           end
-        end
-
-        if issue.is_task? || (issue.is_story? && issue.descendants.length == 0)
-          snippet += '<p>'
-          #snippet += context[:form].label(:remaining_hours)
-          snippet += context[:form].text_field(:remaining_hours, :size => 3)
-          snippet += '</p>'
         end
 
         params = context[:controller].params

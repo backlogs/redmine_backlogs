@@ -122,8 +122,8 @@ module RbCommonHelper
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
   end
 
-  def remaining_hours(item)
-    item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
+  def estimated_hours(item)
+    item.estimated_hours.blank? || item.estimated_hours==0 ? "" : item.estimated_hours
   end
 
   def workdays(start_day, end_day)

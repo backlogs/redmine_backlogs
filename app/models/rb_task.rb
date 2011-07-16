@@ -15,7 +15,6 @@ class RbTask < Issue
     else
       attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
     end
-    attribs[:remaining_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
     attribs['project_id'] = project_id
@@ -63,7 +62,6 @@ class RbTask < Issue
     else
       attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
     end
-    attribs[:remaining_hours] = 0 if IssueStatus.find(params[:status_id]).is_closed?
 
     valid_relationships = if is_impediment && params[:blocks] #if blocks param was not sent, that means the impediment was just dragged
                             validate_blocks_list(params[:blocks])
@@ -129,5 +127,15 @@ class RbTask < Issue
       :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?',
                       RbTask.tracker, s.root_id, s.lft, self.lft])
     return @rank
+  end
+
+  def burndown(dates)
+    bd = {}
+
+    bd[:open] = dates.collect{|d| !IssueStatus.find(Integer(historic(d, 'status_id'))).is_closed? }
+    bd[:hours] = dates.collect{|d| historic(d, 'estimated_hours')}
+    bd[:hours] = (0..dates.size-1).collect{|d| bd[:hours][d].nil? ? nil : (bd[:open][d] ? Float(bd[:hours][d]) : 0.0) }
+
+    return bd
   end
 end

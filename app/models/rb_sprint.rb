@@ -1,170 +1,80 @@
 require 'date'
 
 class Burndown
-  class Series < Array
-    def initialize(*args)
-      @units = args.pop
-      @name = args.pop
-      @display = true
-
-      raise "Unsupported unit '#{@units}'" unless [:points, :hours].include? @units
-      raise "Name '#{@name}' must be a symbol" unless @name.is_a?  Symbol
-      super(*args)
-    end
-
-    attr_reader :units
-    attr_reader :name
-    attr_accessor :display
-  end
-
   def initialize(sprint, burn_direction = nil)
     burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
 
     @days = sprint.days
     @sprint_id = sprint.id
 
-    # end date for graph
-    days = @days
-    daycount = days.size
-    days = sprint.days(Date.today) if sprint.effective_date > Date.today
+    now = Time.now
+    days = @days.collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }.select{|d| d <= now }
+    days[0] = :first
+    days << :last
 
-    _series = ([nil] * days.size)
+    data = sprint.stories.collect{|s| s.burndown(days) }
 
-    # load cache
-    day_index = to_h(days, (0..(days.size - 1)).to_a)
-    starts = sprint.sprint_start_date
-    BurndownDay.find(:all, :order=>'created_at', :conditions => ["version_id = ?", sprint.id]).each {|data|
-      day = day_index[data.created_at.to_date]
-      next if !day
+    filler = [nil] * ((@days.size + 1) - days.size)
 
-      _series[day] = [data.points_committed.to_f, data.points_resolved.to_f, data.points_accepted.to_f, data.remaining_hours.to_f]
-    }
+    alldays = (0 .. @days.size)
+    ndays = days.size
+    days = (0..days.size)
 
-    backlog = nil
+    @data = {}
 
-    # calculate first day if not loaded from cache
-    if !_series[0]
-      assume = (days[0] != Date.today)
+    @data[:points_committed] = days.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}} + filler
+    @data[:hours_remaining] = days.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}} + filler
+    @data[:hours_ideal] = alldays.collect{|i| (@data[:hours_remaining][0] / ndays) * i}.reverse
 
-      backlog ||= sprint.stories
-      _series[0] = [
-        backlog.inject(0) {|sum, story| sum + story.story_points.to_f }, # committed
-        (assume ? 0 : backlog.select {|s| s.descendants.select{|t| !t.closed?}.size == 0 }.inject(0) {|sum, story| sum + story.story_points.to_f }),
-        (assume ? 0 : backlog.select {|s| s.closed? }.inject(0) {|sum, story| sum + story.story_points.to_f }),
-        backlog.inject(0) {|sum, story| sum + story.estimated_hours.to_f } # remaining
-      ]
-      cache(days[0], _series[0])
-    end
+    @data[:points_accepted] = days.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}} + filler
+    @data[:points_resolved] = days.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}} + filler
 
-    # calculate last day if not loaded from cache
-    if !_series[-1]
-      backlog ||= sprint.stories
-      _series[-1] = [
-        backlog.inject(0) {|sum, story| sum + story.story_points.to_f },
-        backlog.select {|s| s.descendants.select{|t| !t.closed?}.size == 0}.inject(0) {|sum, story| sum + story.story_points.to_f },
-        backlog.select {|s| s.closed? }.inject(0) {|sum, story| sum + story.story_points.to_f },
-        backlog.select {|s| not s.closed? && s.descendants.select{|t| !t.closed?}.size != 0}.inject(0) {|sum, story| sum + story.remaining_hours.to_f } 
-      ]
-      cache(days[-1], _series[-1])
-    end
+    @data[:points_to_resolve] = days.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] } + filler
+    @data[:points_to_accept] = days.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] } + filler
 
-    # fill out series
-    last = nil
-    _series = _series.enum_for(:each_with_index).collect{|v, i| v.nil? ? last : (last = v; v) }
+    @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) } + filler
+    @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) } + filler
 
-    # make registered series
-    points_committed, points_resolved, points_accepted, remaining_hours = _series.transpose
-    make_series :points_committed, :points, points_committed
-    make_series :points_resolved, :points, points_resolved
-    make_series :points_accepted, :points, points_accepted
-    make_series :remaining_hours, :hours, remaining_hours
-
-    # calculate burn-up ideal
-    if daycount == 1 # should never happen
-      make_series :ideal, :points, [points_committed]
-    else
-      make_series :ideal, :points, points_committed.enum_for(:each_with_index).collect{|c, i| c * i * (1.0 / (daycount - 1)) }
-    end
-
-    # burn-down equivalents to the burn-up chart
-    make_series :points_to_resolve, :points, points_committed.zip(points_resolved).collect{|c, r| c - r}
-    make_series :points_to_accept, :points, points_committed.zip(points_accepted).collect{|c, a| c - a}
-
-    # required burn-rate
-    make_series :required_burn_rate_points, :points, @points_to_resolve.enum_for(:each_with_index).collect{|p, i| p / (daycount - i) }
-    make_series :required_burn_rate_hours, :hours, remaining_hours.enum_for(:each_with_index).collect{|r, i| r / (daycount-i) }
-
-    # mark series to be displayed if they're not constant-zero, or
-    # just constant in case of points-committed
-    @available_series.values.each{|s|
-      const_val = (s.name == :points_committed ? s[0] : 0)
-      @available_series[s.name].display = (s.select{|v| v != const_val}.size != 0)
-    }
-
-    # decide whether you want burn-up or down
     if burn_direction == 'down'
-      @ideal.each_with_index{|v, i| @ideal[i] = @points_committed[i] - v}
-      @points_accepted.display = false
-      @points_resolved.display = false
-      @available_series.delete(:points_accepted)
-      @available_series.delete(:points_resolved)
+      @data.delete(:points_to_resolve)
+      @data.delete(:points_to_accept)
     else
-      @points_to_accept.display = false
-      @points_to_resolve.display = false
-      @available_series.delete(:points_to_accept)
-      @available_series.delete(:points_to_resolve)
+      @data.delete(:points_resolved)
+      @data.delete(:points_accepted)
     end
 
-    @max = {
-      :points => @available_series.values.select{|s| s.units == :points}.flatten.compact.max,
-      :hours => @available_series.values.select{|s| s.units == :hours}.flatten.compact.max
+    # delete any series that is flat-line 0/nil
+    max = {'hours' => nil, 'points' => nil}
+    @data.keys.each{|series|
+      units = series.to_s.gsub(/_.*/, '')
+      next unless ['points', 'hours'].include?(units)
+
+      max[units] = ([max[units]] + @data[series]).compact.max
+
+      next if series == :points_committed
+
+      @data.delete(series) if @data[series].collect{|d| d.to_f }.uniq == [0.0]
     }
+
+    @data[:max_points] = max['points']
+    @data[:max_hours] = max['hours']
+
+    # delete :points:committed if flatline
+    @data.delete(:points_committed) if @data[:points_committed].uniq.compact.size < 1
+  end
+
+  def [](i)
+    i = i.intern if i.is_a?(String)
+    return @data[i]
+  end
+
+  def series
+    return @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
   end
 
   attr_reader :days
   attr_reader :sprint_id
-  attr_reader :max
-
-  attr_reader :points_committed
-  attr_reader :points_resolved
-  attr_reader :points_accepted
-  attr_reader :remaining_hours
-  attr_reader :ideal
-  attr_reader :points_to_resolve
-  attr_reader :points_to_accept
-  attr_reader :required_burn_rate_points
-  attr_reader :required_burn_rate_hours
-
-  def series(select = :active)
-    return @available_series.values.select{|s| (select == :all) || s.display }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
-  end
-
-  private
-
-  def cache(day, datapoint)
-    datapoint = {
-      :points_committed => datapoint[0],
-      :points_resolved => datapoint[1],
-      :points_accepted => datapoint[2],
-      :remaining_hours => datapoint[3],
-      :created_at => day,
-      :version_id => @sprint_id
-    }
-    bdd = BurndownDay.new datapoint
-    bdd.save!
-  end
-
-  def make_series(name, units, data)
-    @available_series ||= {}
-    s = Burndown::Series.new(data, name, units)
-    @available_series[name] = s
-    instance_variable_set("@#{name}", s)
-  end
-
-  def to_h(keys, values)
-    return Hash[*keys.zip(values).flatten]
-  end
-
+  attr_reader :data
 end
 
 class RbSprint < Version
@@ -266,7 +176,7 @@ class RbSprint < Version
         return false if !bd
 
         # assume a sprint is active if it's only 2 days old
-        return true if bd.remaining_hours.size <= 2
+        return true if bd[:hours_remaining].compact.size <= 2
 
         return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
     end
@@ -275,18 +185,6 @@ class RbSprint < Version
         return nil if not self.has_burndown
         @cached_burndown ||= Burndown.new(self, burn_direction)
         return @cached_burndown
-    end
-
-    def self.generate_burndown(only_current = true)
-        if only_current
-            conditions = ["? between sprint_start_date and effective_date", Date.today]
-        else
-            conditions = "1 = 1"
-        end
-
-        Version.find(:all, :conditions => conditions).each { |sprint|
-            sprint.burndown
-        }
     end
 
     def impediments
