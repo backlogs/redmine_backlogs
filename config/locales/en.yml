@@ -20,15 +20,17 @@ en:
   backlogs_product_backlog: "Product backlog"
   label_impediments: Impediments
   backlogs_wiki_template: "Template for sprint wiki page"
-  points_committed: "points committed"
-  required_burn_rate_points: "required burn rate (points)"
-  required_burn_rate_hours: "required burn rate (hours)"
-  points_to_accept: "points not accepted"
-  points_accepted: "points accepted"
-  ideal: "ideal"
-  points_to_resolve: "points not resolved"
-  points_resolved: "points resolved"
-  remaining_hours: "remaining hours"
+
+  label_points_committed: "points committed"
+  label_points_required_burn_rate: "required burn rate (points)"
+  label_hours_required_burn_rate: "required burn rate (hours)"
+  label_points_to_accept: "points not accepted"
+  label_points_accepted: "points accepted"
+  label_hours_ideal: "ideal"
+  label_points_to_resolve: "points not resolved"
+  label_points_resolved: "points resolved"
+  label_hours_remaining: "remaining hours"
+
   field_velocity_based_estimate: "Velocity based estimate"
 
   backlogs_active: active

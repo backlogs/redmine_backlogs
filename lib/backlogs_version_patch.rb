@@ -11,15 +11,6 @@ module Backlogs
     end
   
     module InstanceMethods
-      def touch_burndown
-        BurndownDay.find(:all,
-          :joins => :version,
-          :conditions => ['burndown_days.version_id = ? and (burndown_days.created_at >= ? or burndown_days.created_at >= versions.effective_date)', self.id, Date.today]
-        ).each {|bdd|
-          BurndownDay.destroy(bdd.id)
-        }
-      end
-  
       def burndown
         return RbSprint.find_by_id(self.id).burndown
       end

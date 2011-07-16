@@ -68,8 +68,8 @@ RB.Task = RB.Object.create(RB.Issue, {
       // This is only for the purpose of making the Remaining Hours reset
       // instantaneously after dragging to a closed status. The server should
       // still make sure to reset the value to be sure.
-      this.$.children('.remaining_hours.editor').val('');
-      this.$.children('.remaining_hours.editable').text('');
+      this.$.children('.estimated_hours.editor').val('');
+      this.$.children('.estimated_hours.editable').text('');
     }
   }
   

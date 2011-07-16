@@ -13,7 +13,7 @@
     <div class="t"><%= task.priority.name %></div>
     <div class="v"><%= task.priority_id %></div>
   </div>
-  <div class="remaining_hours editable" fieldname="remaining_hours"><%= remaining_hours(task) %></div>
+  <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(task) %></div>
   <div class="indicator"> </div>
   <div class="meta">
     <div class="story_id"><%= task.story ? task.story.id : '' %></div>

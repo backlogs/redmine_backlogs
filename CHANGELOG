@@ -1,0 +1,6 @@
+== 2011-07-16 v0.6.1
+
+Reworked the burndown generation. It had become a tangled, hard-to-fix mess.
+No longer requires the rake task to keep the burndown up-to-date.
+
+Tasks and stories can now be properly rejected (see website for docs)

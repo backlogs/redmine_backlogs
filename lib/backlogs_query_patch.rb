@@ -21,7 +21,6 @@ module Backlogs
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
         base.add_available_column(QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points"))
-        base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
 
         # couldn't get HAVING to work, so a subselect will have to

@@ -186,4 +186,21 @@ class RbStory < Issue
                       :limit => 1,
                       :offset => rank - 1)
   end
+
+  def burndown(dates)
+    bd = {}
+
+    bd[:status] = dates.collect{|d| IssueStatus.find(Integer(historic(d, 'status_id'))) }
+    bd[:points] = dates.collect{|d| historic(d, 'story_points')}.collect{|p| p.nil? ? nil : Integer(p) }
+
+    bd[:points_accepted] = (0..dates.size - 1).collect{|i| bd[:status][i].backlog == :accepted ? bd[:points][i] : 0 }
+
+    taskdata = tasks.collect{|t| t.burndown(dates) }
+    bd[:hours] = (0..dates.size - 1).collect{|i| taskdata.collect{|t| t[:hours][i] }.compact.inject(0) {|total, h| total + h}}
+
+    bd[:points_resolved] = (0..dates.size - 1).collect{|i| bd[:hours][i] == 0 ? bd[:points][i] : 0}
+
+    return bd
+  end
+
 end
