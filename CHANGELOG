@@ -1,3 +1,7 @@
+== 2011-07-17 v0.6.2
+
+Statistics page fixed after burndown reimplementation
+
 == 2011-07-16 v0.6.1
 
 Reworked the burndown generation. It had become a tangled, hard-to-fix mess.
