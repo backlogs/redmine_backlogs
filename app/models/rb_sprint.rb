@@ -35,7 +35,7 @@ class Burndown
     @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) } + filler
     @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) } + filler
 
-    if burn_direction == 'down'
+    if burn_direction == 'up'
       @data.delete(:points_to_resolve)
       @data.delete(:points_to_accept)
     else
@@ -43,33 +43,38 @@ class Burndown
       @data.delete(:points_accepted)
     end
 
-    # delete any series that is flat-line 0/nil
     max = {'hours' => nil, 'points' => nil}
     @data.keys.each{|series|
       units = series.to_s.gsub(/_.*/, '')
       next unless ['points', 'hours'].include?(units)
-
       max[units] = ([max[units]] + @data[series]).compact.max
-
-      next if series == :points_committed
-
-      @data.delete(series) if @data[series].collect{|d| d.to_f }.uniq == [0.0]
     }
 
     @data[:max_points] = max['points']
     @data[:max_hours] = max['hours']
-
-    # delete :points:committed if flatline
-    @data.delete(:points_committed) if @data[:points_committed].uniq.compact.size < 1
   end
 
   def [](i)
     i = i.intern if i.is_a?(String)
+    raise "No burndown data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
-  def series
-    return @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
+  def series(remove_empty = true)
+    @series ||= {}
+    return @series[remove_empty] if @series[remove_empty]
+
+    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
+    return @series[remove_empty] unless remove_empty
+
+    # delete :points_committed if flatline
+    @series[remove_empty].delete('points_committed') if @data[:points_committed].uniq.compact.size < 1
+
+    # delete any series that is flat-line 0/nil
+    @series[remove_empty].each {|k|
+      @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect{|d| d.to_f }.uniq == [0.0]
+    }
+    return @series[remove_empty]
   end
 
   attr_reader :days

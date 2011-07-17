@@ -140,12 +140,12 @@ module Backlogs
           days = 0
           closed_sprints.each {|sprint|
             bd = sprint.burndown('up')
-            accepted = (bd.points_accepted || [0])[-1]
-            committed = (bd.points_committed || [0])[0]
+            accepted = (bd[:points_accepted] || [0])[-1]
+            committed = (bd[:points_committed] || [0])[0]
             error += (1 - (accepted.to_f / committed.to_f)).abs
   
             points += accepted
-            days += bd.ideal.size
+            days += bd[:hours_ideal].size
           }
           error = (error / closed_sprints.size)
           # magic constant
