@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'nokogiri'
+require 'time'
 
 module BacklogsSpreadsheet
   class WorkSheet
@@ -74,7 +75,15 @@ module BacklogsSpreadsheet
             xml.Row('ss:Index' => (row+1).to_s) {
               @cells[row].keys.sort.each {|col|
                 xml.Cell('ss:Index' => (col+1).to_s) {
-                  xml.Data(@cells[row][col].to_s, 'ss:Type' => (@cells[row][col].is_a?(Integer) || @cells[row][col].is_a?(Float) ? 'Number' : 'String'))
+                  v = @cells[row][col]
+                  if v.is_a?(Float) || v.is_a?(Integer)
+                    t = 'Number'
+                  elsif v.is_a?(Date) || v.is_a?(DateTime) || v.is_a?(Time)
+                    t = 'DateTime'
+                  else
+                    t = 'String'
+                  end
+                  xml.Data(v.to_s, 'ss:Type' => t)
                 }
               }
             }
@@ -135,6 +144,8 @@ module BacklogsSpreadsheet
                 v = (v.text =~ /^[0-9]+(\.0+)?$/ ? Integer(v.text) : Float(v.text))
               when 'String', nil
                 v = v.text
+              when 'DateTime'
+                v = Time.parse(v.text)
               else
                 raise "Unsupported cell format '#{data['Type']}'"
             end
