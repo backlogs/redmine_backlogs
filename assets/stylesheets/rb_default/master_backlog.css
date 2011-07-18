@@ -72,6 +72,8 @@
   margin:0 0 10px 0;
   position:relative;
   width:100%;
+  /* IE only*/
+  border: 1px solid #CCCCCC\9;
 }
 
 #product_backlog_container .closedbacklog,
@@ -84,7 +86,7 @@
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
   border-radius:5px 5px 0px 0px;
-  background-color:pink;
+  background-color: pink;
   height:30px;
   position:relative;
   width:100%;
