@@ -1,7 +1,7 @@
 require 'date'
 
 class Burndown
-  def initialize(sprint, burn_direction = nil)
+  def initialize(sprint, burn_direction)
     burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
 
     @days = sprint.days
