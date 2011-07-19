@@ -14,26 +14,24 @@ class Burndown
 
     data = sprint.stories.collect{|s| s.burndown(days) }
 
-    filler = [nil] * ((@days.size + 1) - days.size)
-
     alldays = (0 .. @days.size)
     ndays = days.size
     days = (0..days.size)
 
     @data = {}
 
-    @data[:points_committed] = days.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}} + filler
-    @data[:hours_remaining] = days.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}} + filler
+    @data[:points_committed] = days.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}}
+    @data[:hours_remaining] = days.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}}
     @data[:hours_ideal] = alldays.collect{|i| (@data[:hours_remaining][0] / ndays) * i}.reverse
 
-    @data[:points_accepted] = days.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}} + filler
-    @data[:points_resolved] = days.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}} + filler
+    @data[:points_accepted] = days.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}}
+    @data[:points_resolved] = days.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}}
 
-    @data[:points_to_resolve] = days.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] } + filler
-    @data[:points_to_accept] = days.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] } + filler
+    @data[:points_to_resolve] = days.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
+    @data[:points_to_accept] = days.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
 
-    @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) } + filler
-    @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) } + filler
+    @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) }
+    @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) }
 
     if burn_direction == 'up'
       @data.delete(:points_to_resolve)

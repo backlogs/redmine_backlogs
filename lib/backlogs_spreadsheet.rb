@@ -1,8 +1,40 @@
 require 'rubygems'
 require 'nokogiri'
 require 'time'
+require 'date'
+require 'delegate'
 
 module BacklogsSpreadsheet
+  module Cell
+    def initialize(value, options={})
+      super(value)
+
+      @style = options.delete(:style)
+      @comment = options.delete(:comment)
+      raise "Unsupported options #{options.keys.inspect}" unless options.size == 0
+    end
+
+    attr_accessor :style
+    attr_accessor :comment
+  end
+
+  class FloatCell < DelegateClass(Float)
+    include Cell
+
+    def is_a?(c)
+      return true if c == Float
+      return super(c)
+    end
+  end
+
+  class StringCell < String
+    include Cell
+  end
+
+  class TimeCell < DelegateClass(Time)
+    include Cell
+  end
+
   class WorkSheet
     def initialize(workbook, name)
       @workbook = workbook
@@ -29,13 +61,34 @@ module BacklogsSpreadsheet
     end
 
     def [](row, col)
+      return nil unless @cells[row]
       return @cells[row][col]
     end
 
     def []=(row, col, c)
       if c
+        if c.class.included_modules.include?(BacklogsSpreadsheet::Cell)
+          c = c.clone
+        else
+          options = {}
+          if c.is_a?(Hash)
+            options = c.clone
+            c = options.delete(:value)
+          end
+
+          if c.is_a?(Float) || c.is_a?(Integer)
+            c = FloatCell.new(c, options)
+          elsif c.is_a?(String)
+            c = StringCell.new(c, options)
+          elsif c.is_a?(Date) || c.is_a?(DateTime) || c.is_a?(Time)
+            c = TimeCell.new(c, options)
+          else
+            raise "Unsupported cell type '#{c.class}'"
+          end
+        end
         @cells[row] ||= {}
         @cells[row][col] = c
+
       else
         @cells[row].delete(col) if @cells[row]
         @cells.delete(row) if @cells[row] && @cells[row].size == 0
