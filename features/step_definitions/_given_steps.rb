@@ -236,14 +236,14 @@ Given /^I have selected card label stock (.+)$/ do |stock|
 end
 
 Given /^I have set my API access key$/ do
-  Setting[:rest_api_enabled] = 1
+  Setting.rest_api_enabled = '1'
   @user.reload
   @user.api_key.should_not be_nil
   @api_key = @user.api_key
 end
 
 Given /^I have guessed an API access key$/ do
-  Setting[:rest_api_enabled] = 1
+  Setting.rest_api_enabled = '1'
   @api_key = 'guess'
 end
 
