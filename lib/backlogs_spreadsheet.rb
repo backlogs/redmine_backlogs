@@ -21,9 +21,8 @@ module BacklogsSpreadsheet
   class FloatCell < DelegateClass(Float)
     include Cell
 
-    def is_a?(c)
-      return true if c == Float
-      return super(c)
+    def is_a?(x)
+      return (x == FloatCell) || Float.ancestors.include?(x)
     end
   end
 
@@ -33,6 +32,10 @@ module BacklogsSpreadsheet
 
   class TimeCell < DelegateClass(Time)
     include Cell
+
+    def is_a?(x)
+      return (x == TimeCell) || Time.ancestors.include?(x)
+    end
   end
 
   class WorkSheet

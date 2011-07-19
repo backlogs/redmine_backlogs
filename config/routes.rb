@@ -8,7 +8,6 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :query,            :only => :impediments,        :controller => :rb_queries,          :as => "queries/:project_id/:sprint_id"
     rb.resource   :wiki,             :only => [:show, :edit],      :controller => :rb_wikis,            :as => "wikis/:sprint_id"
     rb.resource   :statistics,       :only => :show,               :controller => :rb_statistics
-    rb.resource   :calendars,        :only => :show,               :controller => :rb_calendars,        :as => "calendars/:project_id"
     rb.resource   :burndown_chart,   :only => :show,               :controller => :rb_burndown_charts,  :as => "burndown_charts/:sprint_id"
     rb.resource   :task,             :except => :index,            :controller => :rb_tasks,            :as => "task/:id"
     rb.resources  :tasks,            :only => :index,              :controller => :rb_tasks,            :as => "tasks/:story_id"
@@ -34,6 +33,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'stories/:project_id.:format',                   :controller => :rb_stories,          :action => 'index'
     rb.connect    'story/create',                                  :controller => :rb_stories,          :action => 'create'
     rb.connect    'story/update/:id',                              :controller => :rb_stories,          :action => 'update'
+    rb.connect    'calendar/:key/:project_id.:format',             :controller => :rb_calendars,        :action => 'show'
   end
 
 end

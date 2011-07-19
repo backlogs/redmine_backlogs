@@ -20,7 +20,7 @@ namespace :redmine do
 
       corruption_test = (ENV['corruptiontest'] != 'false')
 
-      raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.0 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.0/
+      raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.x is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.[0-9]+/
 
       begin
         RbStory.trackers
