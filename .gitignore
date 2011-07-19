@@ -5,3 +5,8 @@ assets/styles
 lib/labels.yaml
 lib/labels-malformed.yaml
 graph.dot
+
+*.BAK
+.idea
+*.bak
+
