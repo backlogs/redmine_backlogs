@@ -19,6 +19,7 @@ Dispatcher.to_prepare do
   require_dependency 'backlogs_project_patch'
   require_dependency 'backlogs_user_patch'
   require_dependency 'backlogs_my_controller_patch'
+  require_dependency 'backlogs_issue_patch_ex'
 end
 
 require_dependency 'backlogs_hooks'
