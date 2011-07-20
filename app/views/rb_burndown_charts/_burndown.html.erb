@@ -51,8 +51,8 @@
             series: this.series,
             axes:{
               xaxis:{min:1, max:<%= chart.days.length %>, tickInterval:1, ticks: this.xticks}, 
-              yaxis:{min:0, max: this.max_y, tickOptions:{formatString:'%d'}},
-              y2axis:{min:0, max: this.max_y2, tickOptions:{formatString:'%d'}}
+              yaxis:{min:0, max: this.max_y, tickOptions:{formatString:'%.1f'}},
+              y2axis:{min:0, max: this.max_y2, tickOptions:{formatString:'%.1f'}}
               },
             highlighter:{
               tooltipAxes: 'y',
