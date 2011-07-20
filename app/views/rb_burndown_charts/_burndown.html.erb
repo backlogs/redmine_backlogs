@@ -34,7 +34,7 @@
         dataset_position: <%= Hash[*chart.series.enum_for(:each_with_index).collect{|series, i| [series, i]}.flatten].to_json %>,
         datasets: <%= chart.series.collect{|series| chart[series]}.to_json %>,
         series: <%= chart.series.collect{|series| {:label => l("label_#{series}"), :yaxis => (series.to_s =~ /^points/ ? 'y2axis' : 'yaxis')}}.to_json %>,
-        xticks: <%= chart.days.enum_for(:each_with_index).collect{|d,i| [i+1, ::I18n.t('date.abbr_day_names')[d.wday % 7]]}.to_json %>,
+        xticks: <%= chart.days.enum_for(:each_with_index).collect{|d,i| [i+1, "#{d.day}(#{::I18n.t('date.abbr_day_names')[d.wday % 7]})"]}.to_json %>,
 
         // add a little clearance to the chart
         max_y: <%= chart[:max_hours] == 0 ? 1 : 1.01 * chart[:max_hours] %>,
