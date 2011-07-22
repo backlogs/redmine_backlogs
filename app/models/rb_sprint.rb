@@ -8,15 +8,15 @@ class Burndown
     @sprint_id = sprint.id
 
     now = Time.now
-    days = @days.collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }.select{|d| d <= now }
+    days = @days.collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
     days[0] = :first
     days << :last
 
     data = sprint.stories.collect{|s| s.burndown(days) }
 
     alldays = (0 .. @days.size)
-    ndays = days.size
-    days = (0..days.size)
+    ndays = (days.size) - 1
+    days = (0..(days.size) - 1)
 
     @data = {}
 
@@ -30,8 +30,8 @@ class Burndown
     @data[:points_to_resolve] = days.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
     @data[:points_to_accept] = days.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
 
-    @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) }
-    @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) }
+    @data[:points_required_burn_rate] = days.collect{|i| if ndays == i then 0.0 else  Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) end}
+    @data[:hours_required_burn_rate] = days.collect{|i| if ndays == i then 0.0 else Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) end}
 
     if burn_direction == 'up'
       @data.delete(:points_to_resolve)
