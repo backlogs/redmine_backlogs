@@ -46,26 +46,21 @@ class RbSprintsController < RbApplicationController
     bold = {:font => {:bold => true}}
     dump = BacklogsSpreadsheet::WorkBook.new
     ws = dump[@sprint.name]
-    ws << [nil, @sprint.id, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
+    ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
     bd = @sprint.burndown
     bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-      ws << [ nil, nil, l("label_#{k}") ] + bd[k]
+      ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
     }
 
     @sprint.stories.each{|s|
-      ws << [s.tracker.name, s.id, {:value => s.subject, :style => bold}]
+      ws << [s.tracker.name, s.id, nil, nil, {:value => s.subject, :style => bold}]
       bd = s.burndown
       bd.delete(:status)
       bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-        ws << [ nil, nil, l("label_#{k}") ] + bd[k]
-        s.tasks.each {|t|
-          ws << [nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}]
-          tbd = t.burndown
-          tbd.delete(:open)
-          tbd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-            ws << [nil, nil, l("label_#{k}") ] + tbd[k]
-          }
-        }
+        ws << [nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
+      }
+      s.tasks.each {|t|
+        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown[:hours]
       }
     }
 
