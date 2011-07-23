@@ -1,3 +1,10 @@
+== 2011-07-23 v0.6.3
+
+* Burndown fixed
+* IME enter-to-submit and escape-to-cancel fixed
+* Copy open tasks fixed
+* Download sprint data to excel
+
 == 2011-07-17 v0.6.2
 
 Statistics page fixed after burndown reimplementation
@@ -8,3 +15,5 @@ Reworked the burndown generation. It had become a tangled, hard-to-fix mess.
 No longer requires the rake task to keep the burndown up-to-date.
 
 Tasks and stories can now be properly rejected (see website for docs)
+
+This version adds a migration -- make sure you run it!
