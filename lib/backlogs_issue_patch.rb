@@ -136,7 +136,8 @@ module Backlogs
         end
 
         obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
-        return obj.old_value if obj
+        return obj.old_value if obj && obj.old_value
+        return obj.value if obj && obj.value
         return self.send(property.intern)
       end
     end
