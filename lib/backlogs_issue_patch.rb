@@ -113,13 +113,13 @@ module Backlogs
             end
           end
 
-        elsif not RbTask.tracker.nil?
-          begin
-            story = self.story
-            if not story.blank?
-              connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
-            end
+        elsif self.is_task?
+          story = self.story
+          if not story.blank?
+            connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
           end
+
+          connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}") if self.status.backlog == :success
         end
       end
 
