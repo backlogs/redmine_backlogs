@@ -64,7 +64,7 @@ module Backlogs
         return nil unless self.id && self.is_task?
 
         return Issue.find(:first, :order => 'lft DESC',
-          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ])
+          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ]).becomes(RbStory)
       end
 
       def blocks
@@ -113,13 +113,13 @@ module Backlogs
             end
           end
 
-        elsif not RbTask.tracker.nil?
-          begin
-            story = self.story
-            if not story.blank?
-              connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
-            end
+        elsif self.is_task?
+          story = self.story
+          if not story.blank?
+            connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
           end
+
+          connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}") if self.status.backlog == :success
         end
       end
 

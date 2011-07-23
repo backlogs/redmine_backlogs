@@ -83,7 +83,7 @@ RB.routes = {
   show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
   show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
 
-  backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => :json, :only_path => false) %>'
+  backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => :json, :only_path => true) %>'
 }
 
 if(typeof console != "undefined" && console != null) console.log('*** server variables loaded ***');

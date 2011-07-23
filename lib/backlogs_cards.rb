@@ -205,7 +205,11 @@ module BacklogsCards
     end
 
     def image
-      return open(@url)
+      begin
+        return open(@url)
+      rescue
+        return nil
+      end
     end
 
     attr_reader :url
@@ -333,7 +337,8 @@ module BacklogsCards
               if data['owner.email']
                 dim = box(obj)
 
-                pdf.image Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image, :at => [dim[:x], dim[:y]], :width => dim[:w]
+                img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
+                pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w] if img
               end
 
             else

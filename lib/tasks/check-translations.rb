@@ -1,140 +1,242 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'yaml'
+require 'cmess/guess_encoding'
+require 'iconv'
+require 'nokogiri'
+require 'fileutils'
 
-language_name = {
-  'de' => 'German', 
-  'en-GB' => 'UK English',
-  'en' => 'US English',
-  'fr' => 'French',
-  'nl' => 'Dutch',
-  'pt-BR' => 'Brazilian Portuguese',
-  'ru' => 'Russian',
-  'zh' => 'Chinese',
-}
+class TranslationManager
+  def initialize
+    @webdir = File.expand_path(File.join('..', '..', '..', 'www.redminebacklogs.net'), File.dirname(__FILE__))
+    @rmtrans = File.expand_path(File.join('..', '..', '..', 'redmine', 'config', 'locales'), File.dirname(__FILE__))
+    @rbltrans = File.expand_path(File.join('..', '..', 'config', 'locales'), File.dirname(__FILE__))
 
-webdir = File.join(File.dirname(__FILE__), '..', '..', '..', 'www.redminebacklogs.net')
+    raise "Website not found at '#{@webdir}'" unless File.directory?(@webdir)
+    raise "Redmine translations not found at '#{@rmtrans}'" unless File.directory?(@rmtrans)
+    raise "Backlogs translations not found at '#{@rbltrans}'" unless File.directory?(@rbltrans)
 
-diffs = File.join(File.dirname(__FILE__), 'lang-diffs')
+    @webpage = File.join(@webdir, '_posts', 'en', '1992-01-01-translations.textile')
 
-$logfile = nil
-if File.directory? webdir
-    $logfile = File.open(File.join(webdir, '_posts', 'en', '1992-01-01-translations.textile'), 'w')
-end
+    @translation = {}
+    @status = {}
+    @name = {}
 
-def log(s)
-    puts s
-    $logfile.puts(s) if $logfile
-end
+    Dir.glob(File.join(@rbltrans, "*.yml")).sort.each {|trans|
+      strings = YAML::load_file(trans)
+      lang = strings.keys[0]
 
-langdir = File.join(File.dirname(__FILE__), '..', '..', 'config', 'locales')
+      @translation[lang] = strings[lang]
 
-template_file = "#{langdir}/en.yml"
-template = YAML::load_file(template_file)['en']
-
-log <<EOF
----
-title: Translations
-layout: default
-categories: en
----
-h1. Translations
-
-<script>
-    $(document).ready(function() {
-        $('a.show-instructions').attr('href', '#');
-        $('.instructions').hide();
-
-        $('a.show-instructions').click(function() {
-          $('.instructions').toggle();
-        });
-    });
-</script>
-
-*Want to help out with translating Backlogs? Excellent! Click "(show-instructions)here":http://www.example.com for more info!*
-
- <div class="instructions">
-Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/relaxdiego/redmine_backlogs/fork the "Backlogs":http://github.com/relaxdiego/redmine_backlogs repository, check it out to your local PC, and change the translation files in config/locales. Check it into your clone, and then issue a "pull request":https://github.com/relaxdiego/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
-
-Alternately, but this won't get you attribution, "download":http://github.com/relaxdiego/redmine_backlogs/tree/master/config/locales the raw translation file, change them as you wish, and then post them in a "gist":https://gist.github.com/, and add an issue in our "issue tracker":https://github.com/relaxdiego/redmine_backlogs/issue with a link to your gist.
-
-The messages below mean the following:
-
-| *Missing* | the key is not present in the translation. |
-| *Obsolete* | the key is present but no longer in use, so it should be removed. |
-| *Old-style variable substitution* | the translation uses { { keyword } } instead of %{keyword}. This works for now, but redmine is in the process of phasing it out. |
-
- </div>
-
-bq(success). US English
-
-serves as a base for all other translations
-
-EOF
-
-Dir.glob("#{langdir}/*.yml").sort.each {|lang_file|
-  next if lang_file == template_file
-
-  lang = YAML::load_file(lang_file)
-  l = lang.keys[0]
-  language = language_name[l] || l
-
-  missing = []
-  obsolete = []
-  varstyle = []
-
-  missing = (template.keys - lang[l].keys) + template.keys.select{|k| lang[l][k] && lang[l][k] =~ /^\[\[.*\]\]$/}
-  obsolete = lang[l].keys - template.keys
-  varstyle = template.keys.select{|k| lang[l][k] && lang[l][k].include?('{{') }
-
-  if File.directory? diffs
-    diff = {}
-    missing.each {|key|
-      diff[key] = template[key]
+      rmsource = File.join(@rmtrans, File.basename(trans))
+      charset = CMess::GuessEncoding::Automatic.guess(File.open(rmsource).read)
+      @name[lang] = Iconv.iconv('UTF-8', charset, YAML::load_file(rmsource)[lang]['general_lang_name'])
+      raise "Cannot find name for '#{lang}'" unless @name[lang]
     }
-    File.open("#{diffs}/#{l}.yaml", 'w') do |out|
-      out.write(diff.to_yaml)
+
+    raise "Source translation 'en' not found" unless @translation['en']
+
+    @translation.keys.each {|l|
+      @status[l] = {
+        :missing => (@translation['en'].keys - @translation[l].keys) + @translation['en'].keys.select{|k| @translation[l][k] && @translation[l][k] =~ /^\[\[.*\]\]$/},
+        :obsolete => @translation[l].keys - @translation['en'].keys,
+        :varstyle => @translation['en'].keys.select{|k| @translation[l][k] && @translation[l][k].include?('{{') }
+      }
+    }
+  end
+
+  def make_page(type)
+    header = File.open(@webpage).read
+    header, rest = header.split(/bq\(success\)\. /, 2)
+    raise "'#{@webpage}' is not a proper template" if header.size == 0 || rest.size == 0
+    header = header.strip + "\n\n"
+
+    File.open(@webpage, 'w') do |page|
+      page.write(header)
+      page.write("\nbq(success). \"#{@name['en']}\":#{url('en', type)}\n\nserves as a base for all other translations\n\n")
+
+      @translation.keys.reject{|lang| lang == 'en'}.sort{|a, b| @name[a] <=> @name[b] }.each {|l|
+        if @status[l][:missing].size > 0 || @status[l][:varstyle].size > 0
+          pct = ((@translation['en'].keys.size - (@status[l][:varstyle] + @status[l][:missing]).uniq.size) * 100) / @translation['en'].keys.size
+          pct = "(#{pct}%)"
+        else
+          pct = ''
+        end
+
+        columns = 2
+
+        if @status[l][:missing].size > 0
+          status = 'error'
+        elsif @status[l][:obsolete].size > 0 || @status[l][:varstyle].size > 0
+          status = 'warning'
+        else
+          status = 'success'
+        end
+
+        page.write("bq(#{status}). \"#{@name[l]}\":#{url(l, type)} #{pct}\n\n")
+
+        [[:missing, 'Missing'], [:obsolete, 'Obsolete'], [:varstyle, 'Old-style variable substitution']].each {|cat|
+          keys, title = *cat
+          keys = @status[l][keys]
+          next if keys.size == 0
+
+          page.write("*#{title}*\n\n")
+          keys.sort!
+          while keys.size > 0
+            row = (keys.shift(columns) + ['', ''])[0..columns-1]
+            page.write("|" + row.join("|") + "|\n")
+          end
+
+          page.write("\n")
+        }
+      }
     end
   end
 
-  if missing.size > 0
-    pct = ((template.keys.size - (varstyle + missing).uniq.size) * 100) / template.keys.size
-    pct = " (#{pct}%)"
-  else
-    pct = ''
+  def xliff
+    @translation.each_pair {|l, strings|
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.xliff(:version => '1.2') {
+          xml.file(:original => 'Redmine Backlogs', "source-language" => 'en', "target-language" => l.gsub('_', '-'))
+          xml.header
+          xml.body {
+            @translation['en'].each_pair {|id, str|
+              xml.send(:"trans-unit", :id => id) {
+                if l == 'en'
+                  state='final'
+                elsif @status[l][:missing].include?(id)
+                  state = 'needs-translation'
+                elsif @status[l][:varstyle].include?(id)
+                  state = 'needs-adaptation'
+                else
+                  state = 'final'
+                end
+
+                xml.source(str, 'xml:lang' => 'en-US')
+
+                if state
+                  xml.target(@translation[l][id] || str, 'xml:lang' => l.gsub('_', '-'), 'state' => state)
+                else
+                  xml.target(@translation[l][id] || str, 'xml:lang' => l.gsub('_', '-'))
+                end
+
+                xml.note('Needs translation') if @status[l][:missing].include?(id)
+                xml.note('Uses {{...}} variable substitution, please change to %{...}') if @status[l][:varstyle].include?(id)
+              }
+            }
+            @status[l][:obsolete].each {|id|
+              xml.send(:"trans-unit", :id => id) {
+                xml.source("Obsolete key '#{id}' -- use for reference, or delete", 'xml:lang' => 'en-US')
+                xml.target(@translation[l][id], 'xml:lang' => l.gsub('_', '-'), 'state' => 'needs-review-translation')
+                xml.note('Obsolete -- only kept for reference')
+              }
+            }
+          }
+        }
+      end
+
+      File.open(File.join(@webdir, 'translations', "#{l}.xliff"), 'w') do |xliff|
+        xliff.write(builder.to_xml)
+      end
+    }
   end
 
-  columns = 2
+  def qts
+    FileUtils.mkdir_p(File.join(@webdir, 'translations'))
 
-  if missing.size > 0
-    status = 'error'
-  elsif obsolete.size > 0 || varstyle.size > 0
-    status = 'warning'
-  else
-    status = 'success'
+    @translation.each_pair {|l, strings|
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.doc.create_internal_subset('TS', nil, "qtlinguist.dtd")
+        xml.TS('sourcelanguage' => 'en', 'language' => l) {
+          xml.context_ {
+            xml.name('Redmine Backlogs')
+            @translation['en'].each_pair {|id, str|
+              xml.message('id' => id) {
+                xml.source(str)
+  
+                attrs = {}
+                attrs['type'] = 'unfinished' if @status[l][:varstyle].include?(id) || @status[l][:missing].include?(id)
+                xml.translation(@translation[l][id] || str, attrs)
+  
+                xml.translatorcomment('Please replace {{...}} variables with %{...} variables') if @status[l][:varstyle].include?(id)
+              }
+            }
+            @status[l][:obsolete].each {|id|
+              xml.message {
+                xml.source("Obsolete key '#{id}' -- use for reference, or delete")
+                xml.translation(@translation[l][id], 'type' => 'obsolete')
+                xml.translatorcomment('Obsolete -- only kept for reference')
+              }
+            }
+          }
+        }
+      end
+
+      File.open(File.join(@webdir, 'translations', "#{l}.ts"), 'w') do |ts|
+        ts.write(builder.to_xml)
+      end
+    }
   end
 
-  log "bq(#{status}). #{language}#{pct}\n\n"
-  [[missing, 'Missing'], [obsolete, 'Obsolete'], [varstyle, 'Old-style variable substitution']].each {|cat|
-    keys, title = *cat
-    next if keys.size == 0
+  def android
+    @translation.each_pair {|l, strings|
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.resources {
+          @translation['en'].each_pair {|id, str|
+            str = @translation[l][id] || str
+            str = "!varstyle #{str}" if @status[l][:varstyle].include?(id)
+            str = "!needs-translation #{str}" if @status[l][:missing].include?(id)
 
-    log "*#{title}*\n\n"
-    keys.sort!
-    while keys.size > 0
-      row = (keys.shift(columns) + ['', ''])[0..columns-1]
-      log "|" + row.join("|") + "|\n"
+            xml.string(str, 'name' => id)
+          }
+        }
+      end
+
+      tgt = File.join(@webdir, 'translations', 'res', "values-#{l}", 'strings.xml')
+      FileUtils.mkdir_p(File.dirname(tgt))
+      File.open(tgt, 'w') do |l|
+        l.write(builder.to_xml)
+      end
+    }
+  end
+
+  def url(l, type)
+    u = "http://www.redminebacklogs.net/translations/"
+
+    case type
+      when :xliff
+        return "#{u}#{l}.xliff"
+      when :android
+        return "#{u}res/values-#{l}/strings.xml"
+      when :qts
+        return "#{u}#{l}.ts"
+      else
+        raise "Unsupported translation type #{type.inspect}"
     end
+  end
 
-    log "\n"
-  }
-}
+  def save_site
+    dirty = false
+    @status.values.each{|s|
+      s.each{|e|
+        dirty = true
+        break
+      }
+    }
 
-$logfile.close if $logfile
+    return unless dirty
 
-if File.directory? webdir
-  Dir.chdir(webdir)
-  `git add .`
-  `git commit -m "Translation updates"`
-  `git push`
+    Dir.chdir(@webdir)
+    `git add .`
+    `git commit -m "Translation updates"`
+    `git push`
+  end
 end
+
+tm = TranslationManager.new
+#tm.xliff
+#tm.android
+tm.qts
+tm.make_page(:qts)
+#tm.save_site

@@ -4,6 +4,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     this.$.addClass("editing");
     editor.find(".editor").bind('keyup', this.handleKeyup).bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
     this.isEnter = false;
+    this.isEscape = false;
   },
 
   getEditor: function(){
@@ -19,10 +20,12 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
 
   handleKeydown: function(event) {
     this.isEnter = (event.which == 13);
+    this.isEscape = (event.which == 27);
     return true;
   },
   handleKeypress: function(event) {
     this.isEnter = this.isEnter && (event.which == 13);
+    this.isEscape = this.isEscape && (event.which == 27);
     return true;
   },
   handleKeyup: function(event) {
@@ -31,6 +34,8 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
 
     var isEnter = this.isEnter;
     this.isEnter = false;
+    var isEscape = this.isEscape;
+    this.isEscape = false;
 
     switch(event.which) {
       case 13:
@@ -41,7 +46,10 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
         break;
 
       case 27:
-        that.cancelEdit();     // ESC
+        if (isEscape) { that.cancelEdit();     // ESC
+        } else {
+            return true;
+        }
         break;
 
       default:

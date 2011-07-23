@@ -1,41 +1,39 @@
 require 'date'
 
 class Burndown
-  def initialize(sprint, burn_direction = nil)
+  def initialize(sprint, burn_direction)
     burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
 
-    @days = sprint.days
     @sprint_id = sprint.id
+    @days = sprint.days(:all)
 
-    now = Time.now
-    days = @days.collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }.select{|d| d <= now }
-    days[0] = :first
-    days << :last
+    # these dates are actually :first (= value at start of sprint, x * end of day, :last (= value at end of sprint)
+    active = sprint.days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
+    active[0] = :first
+    active << :last
 
-    data = sprint.stories.collect{|s| s.burndown(days) }
+    data = sprint.stories.collect{|s| s.burndown }
 
-    filler = [nil] * ((@days.size + 1) - days.size)
-
-    alldays = (0 .. @days.size)
-    ndays = days.size
-    days = (0..days.size)
+    # active has the start value added, so subtract one
+    days = active.size - 1
+    active = (0..days)
 
     @data = {}
 
-    @data[:points_committed] = days.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}} + filler
-    @data[:hours_remaining] = days.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}} + filler
-    @data[:hours_ideal] = alldays.collect{|i| (@data[:hours_remaining][0] / ndays) * i}.reverse
+    @data[:points_committed] = active.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}}
+    @data[:hours_remaining] = active.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}}
+    @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
 
-    @data[:points_accepted] = days.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}} + filler
-    @data[:points_resolved] = days.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}} + filler
+    @data[:points_accepted] = active.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}}
+    @data[:points_resolved] = active.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}}
 
-    @data[:points_to_resolve] = days.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] } + filler
-    @data[:points_to_accept] = days.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] } + filler
+    @data[:points_to_resolve] = active.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
+    @data[:points_to_accept] = active.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
 
-    @data[:points_required_burn_rate] = days.collect{|i| Float(@data[:points_to_resolve][i]) / ((ndays - i) + 0.01) } + filler
-    @data[:hours_required_burn_rate] = days.collect{|i| Float(@data[:hours_remaining][i]) / ((ndays - i) + 0.01) } + filler
+    @data[:points_required_burn_rate] = active.collect{|i| Float(@data[:points_to_resolve][i]) / ((days - i) + 0.001) }
+    @data[:hours_required_burn_rate] = active.collect{|i| Float(@data[:hours_remaining][i]) / ((days - i) + 0.001) }
 
-    if burn_direction == 'down'
+    if burn_direction == 'up'
       @data.delete(:points_to_resolve)
       @data.delete(:points_to_accept)
     else
@@ -43,33 +41,38 @@ class Burndown
       @data.delete(:points_accepted)
     end
 
-    # delete any series that is flat-line 0/nil
     max = {'hours' => nil, 'points' => nil}
     @data.keys.each{|series|
       units = series.to_s.gsub(/_.*/, '')
       next unless ['points', 'hours'].include?(units)
-
       max[units] = ([max[units]] + @data[series]).compact.max
-
-      next if series == :points_committed
-
-      @data.delete(series) if @data[series].collect{|d| d.to_f }.uniq == [0.0]
     }
 
     @data[:max_points] = max['points']
     @data[:max_hours] = max['hours']
-
-    # delete :points:committed if flatline
-    @data.delete(:points_committed) if @data[:points_committed].uniq.compact.size < 1
   end
 
   def [](i)
     i = i.intern if i.is_a?(String)
+    raise "No burndown data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
-  def series
-    return @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
+  def series(remove_empty = true)
+    @series ||= {}
+    return @series[remove_empty] if @series[remove_empty]
+
+    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
+    return @series[remove_empty] unless remove_empty
+
+    # delete :points_committed if flatline
+    @series[remove_empty].delete('points_committed') if @data[:points_committed].uniq.compact.size < 1
+
+    # delete any series that is flat-line 0/nil
+    @series[remove_empty].each {|k|
+      @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect{|d| d.to_f }.uniq == [0.0]
+    }
+    return @series[remove_empty]
   end
 
   attr_reader :days
@@ -150,11 +153,19 @@ class RbSprint < Version
         return wiki_page_title
     end
 
-    def days(cutoff = nil)
-        # assumes mon-fri are working days, sat-sun are not. this
-        # assumption is not globally right, we need to make this configurable.
-        cutoff = self.effective_date if cutoff.nil?
-        return (self.sprint_start_date .. cutoff).select {|d| (d.wday > 0 and d.wday < 6) }
+    def days(cutoff)
+      case cutoff
+        when :active
+          d = (self.sprint_start_date .. [self.effective_date, Date.today].min)
+        when :all
+          d = (self.sprint_start_date .. self.effective_date)
+        else
+          raise "Unexpected day range '#{cutoff.inspect}'"
+      end
+
+      # assumes mon-fri are working days, sat-sun are not. this
+      # assumption is not globally right, we need to make this configurable.
+      return d.select {|d| (d.wday > 0 and d.wday < 6) }
     end
 
     def eta

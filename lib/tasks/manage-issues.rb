@@ -144,9 +144,13 @@ class GitHub
   end
 end
 
-gh = GitHub.new 'relaxdiego', 'redmine_backlogs'
+begin
+  gh = GitHub.new 'relaxdiego', 'redmine_backlogs'
 
-gh.labels = gh.labels(:calculate)
-gh.issues.each{|i|
-  i.labels = i.labels(:calculate)
-}
+  gh.labels = gh.labels(:calculate)
+  gh.issues.each{|i|
+    i.labels = i.labels(:calculate)
+  }
+rescue
+  #
+end
