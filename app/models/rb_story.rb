@@ -187,20 +187,25 @@ class RbStory < Issue
                       :offset => rank - 1)
   end
 
-  def burndown(dates)
-    bd = {}
+  def burndown
+    return @burndown if @burndown
+    @burndown = {}
 
-    bd[:status] = dates.collect{|d| IssueStatus.find(Integer(historic(d, 'status_id'))) }
-    bd[:points] = dates.collect{|d| historic(d, 'story_points')}.collect{|p| p.nil? ? nil : Integer(p) }
+    dates = fixed_version.becomes(RbSprint).days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
+    dates[0] = :first
+    dates << :last
 
-    bd[:points_accepted] = (0..dates.size - 1).collect{|i| bd[:status][i].backlog == :accepted ? bd[:points][i] : 0 }
+    @burndown[:status] = dates.collect{|d| IssueStatus.find(Integer(historic(d, 'status_id'))) }
+    @burndown[:points] = dates.collect{|d| historic(d, 'story_points')}.collect{|p| p.nil? ? nil : Integer(p) }
 
-    taskdata = tasks.collect{|t| t.burndown(dates) }
-    bd[:hours] = (0..dates.size - 1).collect{|i| taskdata.collect{|t| t[:hours][i] }.compact.inject(0) {|total, h| total + h}}
+    @burndown[:points_accepted] = (0..dates.size - 1).collect{|i| @burndown[:status][i].backlog == :accepted ? @burndown[:points][i] : 0 }
 
-    bd[:points_resolved] = (0..dates.size - 1).collect{|i| bd[:hours][i] == 0 ? bd[:points][i] : 0}
+    taskdata = tasks.collect{|t| t.burndown }
+    @burndown[:hours] = (0..dates.size - 1).collect{|i| taskdata.collect{|t| t[:hours][i] }.compact.inject(0) {|total, h| total + h}}
 
-    return bd
+    @burndown[:points_resolved] = (0..dates.size - 1).collect{|i| @burndown[:hours][i] == 0 ? @burndown[:points][i] : 0}
+
+    return @burndown
   end
 
 end

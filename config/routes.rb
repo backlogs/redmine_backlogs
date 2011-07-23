@@ -23,11 +23,12 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'master_backlog/:project_id',                    :controller => :rb_master_backlogs,  :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.:format',       :controller => :rb_master_backlogs,  :action => 'menu'
 
-    rb.connect    'impediment/create',                             :controller => :rb_impediments,      :action => 'create'# ,  :via => :post
-    rb.connect    'impediment/update/:id',                         :controller => :rb_impediments,      :action => 'update'# ,  :via => :put
+    rb.connect    'impediment/create',                             :controller => :rb_impediments,      :action => 'create'
+    rb.connect    'impediment/update/:id',                         :controller => :rb_impediments,      :action => 'update'
 
-    rb.connect    'sprint/create',                                 :controller => :rb_sprints,          :action => 'create'#,  :via => :post
-    rb.connect    'sprint/update/:sprint_id',                      :controller => :rb_sprints,          :action => 'update'#,  :via => :put
+    rb.connect    'sprint/create',                                 :controller => :rb_sprints,          :action => 'create'
+    rb.connect    'sprint/update/:sprint_id',                      :controller => :rb_sprints,          :action => 'update'
+    rb.connect    'sprint/download/:sprint_id.:format',            :controller => :rb_sprints,          :action => 'download'
 
     rb.connect    'stories/:project_id/:sprint_id.:format',        :controller => :rb_stories,          :action => 'index'
     rb.connect    'stories/:project_id.:format',                   :controller => :rb_stories,          :action => 'index'

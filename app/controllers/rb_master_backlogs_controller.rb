@@ -33,6 +33,7 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_sprint_cards), :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :sprint_id => @sprint, :format => :pdf, :only_path => true) } if @sprint && BacklogsCards::LabelStock.selected_label && @sprint.stories.size > 0
     links << {:label => l(:label_product_cards), :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :format => :pdf, :only_path => true) } unless @sprint
     links << {:label => l(:label_wiki), :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint, :only_path => true) } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
+    links << {:label => 'Download', :url => url_for(:controller => 'rb_sprints', :action => 'download', :sprint_id => @sprint, :format => 'xml', :only_path => true) } if @sprint
 
     respond_to do |format|
       format.json { render :json => links }

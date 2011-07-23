@@ -5,24 +5,108 @@ require 'date'
 require 'delegate'
 
 module BacklogsSpreadsheet
+  class StyleManager
+    def initialize
+      @styles = []
+    end
+
+    def add(s)
+      ns = Style.new(s)
+      @styles.each {|s|
+        next unless s == ns
+        return s if s.id == ns.id || ns.auto
+      }
+      @styles << ns
+      return ns
+    end
+
+    def to_xml(xml)
+      xml.Styles { @styles.each{|s| s.to_xml(xml) }}
+    end
+  end
+
+  class Style
+    def initialize(options)
+      # make a deep clone to avoid other people messing with out data
+      options = Marshal.load( Marshal.dump( options ) )
+
+      @id = options.delete(:id)
+      @auto = false
+      unless @id
+        @auto = true
+        @id = "s#{self.object_id.abs.to_s}"
+      end
+
+      if options[:font] && options[:font].size > 0
+        @font = {
+          'ss:FontName' => options[:font][:name] || 'Calibri',
+          'x:Family' => options[:font][:name] || 'Swiss',
+          'ss:Size' => options[:font][:size] || 11,
+          'ss:Color' => options[:font][:color] || '#000000',
+        }
+        @font['ss:Bold'] = '1' if options[:font][:bold]
+        @font['ss:Italic'] = '1' if options[:font][:italic]
+      end
+
+      @numberformat = options[:numberformat]
+    end
+
+    attr_reader :id, :auto, :font, :numberformat
+
+    def ==(other)
+      return font == other.font && numberformat == other.numberformat
+    end
+
+    def to_xml(xml)
+      xml.Style('ss:ID' => @id) {
+        xml.Font(@font) if @font
+        xml.NumberFormat(@numberformat) if @numberformat
+      }
+    end
+  end
+
   module Cell
-    def initialize(value, options={})
+    def initialize(value, worksheet, options={})
       super(value)
 
-      @style = options.delete(:style)
-      @comment = options.delete(:comment)
-      raise "Unsupported options #{options.keys.inspect}" unless options.size == 0
+      @worksheet = worksheet
+
+      style = default_style.merge(options[:style] || {})
+      @style = worksheet.workbook.stylemanager.add(style) if style.size > 0
+      @comment = options[:comment]
+    end
+
+    def default_style
+      return {}
     end
 
     attr_accessor :style
     attr_accessor :comment
+
+    def to_xml(xml, col)
+      cellopts = {'ss:Index' => (col+1).to_s}
+      cellopts['ss:StyleID'] = @style.id if @style
+      xml.Cell(cellopts) {
+        xml.Data(self.to_s, 'ss:Type' => celltype)
+        if @comment
+          xml.Comment {
+            xml.send(:"ss:Data", @comment, 'xmlns' => "http://www.w3.org/TR/REC-html40") {
+            }
+          }
+        end
+      }
+    end
+
+    def celltype
+      return self.class.name.gsub(/^.*::/, '').gsub(/Cell$/, '')
+    end
   end
 
-  class FloatCell < DelegateClass(Float)
+  class NumberCell < DelegateClass(Float)
     include Cell
 
     def is_a?(x)
-      return (x == FloatCell) || Float.ancestors.include?(x)
+      return (x == NumberCell) || Float.ancestors.include?(x)
     end
   end
 
@@ -30,11 +114,21 @@ module BacklogsSpreadsheet
     include Cell
   end
 
-  class TimeCell < DelegateClass(Time)
+  #class DateTimeCell < DateTime # < DelegateClass(Time)
+  class DateTimeCell < DelegateClass(DateTime)
     include Cell
 
     def is_a?(x)
-      return (x == TimeCell) || Time.ancestors.include?(x)
+      return (x == DateTimeCell) || DateTime.ancestors.include?(x)
+    end
+
+    def to_s
+      return self.strftime('%FT%T.%L')
+    end
+
+    def default_style
+      return {:numberformat => {'ss:Format' => 'Short Date'}} if self.hour == 0 && self.min == 0 && self.sec == 0
+      return {:numberformat => {'ss:Format' => 'General Date'}}
     end
   end
 
@@ -48,11 +142,15 @@ module BacklogsSpreadsheet
       @col = 0
     end
 
+    attr_reader :workbook
+
     def <<(data)
       if data.is_a?(Array)
-        @row += 1 if @row != 0 && @col != 0
+        @row += 1 if @col != 0
         @col = 0
         data.each {|c| self[@row, @col] = c }
+        @row += 1
+        @col = 0
       else
         self[@row, @col] = data
       end
@@ -69,6 +167,9 @@ module BacklogsSpreadsheet
     end
 
     def []=(row, col, c)
+      @row = row
+      @col = col + 1
+
       if c
         if c.class.included_modules.include?(BacklogsSpreadsheet::Cell)
           c = c.clone
@@ -79,25 +180,32 @@ module BacklogsSpreadsheet
             c = options.delete(:value)
           end
 
+          c = DateTime.civil(c.year, c.month, c.mday) if c.is_a?(Date)
+          if c.is_a?(Time)
+            seconds = sec + Rational(usec, 10**6)
+            offset = Rational(utc_offset, 60 * 60 * 24)
+            c = DateTime.new(year, month, day, hour, min, seconds, offset)
+          end
+
           if c.is_a?(Float) || c.is_a?(Integer)
-            c = FloatCell.new(c, options)
+            c = NumberCell.new(c, self, options)
           elsif c.is_a?(String)
-            c = StringCell.new(c, options)
-          elsif c.is_a?(Date) || c.is_a?(DateTime) || c.is_a?(Time)
-            c = TimeCell.new(c, options)
+            c = StringCell.new(c, self, options)
+          elsif c.is_a?(DateTime)
+            c = DateTimeCell.new(c, self, options)
           else
             raise "Unsupported cell type '#{c.class}'"
           end
         end
+
         @cells[row] ||= {}
         @cells[row][col] = c
 
       else
         @cells[row].delete(col) if @cells[row]
         @cells.delete(row) if @cells[row] && @cells[row].size == 0
+
       end
-      @row = row
-      @col = col + 1
     end
 
     def dimensions
@@ -130,17 +238,7 @@ module BacklogsSpreadsheet
           @cells.keys.sort.each {|row|
             xml.Row('ss:Index' => (row+1).to_s) {
               @cells[row].keys.sort.each {|col|
-                xml.Cell('ss:Index' => (col+1).to_s) {
-                  v = @cells[row][col]
-                  if v.is_a?(Float) || v.is_a?(Integer)
-                    t = 'Number'
-                  elsif v.is_a?(Date) || v.is_a?(DateTime) || v.is_a?(Time)
-                    t = 'DateTime'
-                  else
-                    t = 'String'
-                  end
-                  xml.Data(v.to_s, 'ss:Type' => t)
-                }
+                @cells[row][col].to_xml(xml, col)
               }
             }
           }
@@ -152,7 +250,10 @@ module BacklogsSpreadsheet
   class WorkBook
     def initialize
       @worksheets = []
+      @stylemanager = StyleManager.new
     end
+
+    attr_reader :stylemanager, :worksheets
 
     def [](i)
       return @worksheets[i] if i.is_a?(Integer)
@@ -172,8 +273,6 @@ module BacklogsSpreadsheet
     def sheetnames
       return @worksheets.collect{|w| w.name }
     end
-
-    attr_accessor :worksheets
 
     def load(data)
       if data.is_a?(String)
@@ -222,6 +321,7 @@ module BacklogsSpreadsheet
                      'xmlns:ss' => "urn:schemas-microsoft-com:office:spreadsheet",
                      'xmlns:html' => "http://www.w3.org/TR/REC-html40") {
           xml.ExcelWorkbook('xmlns' => "urn:schemas-microsoft-com:office:excel")
+          @stylemanager.to_xml(xml)
           @worksheets.each{ |w| w.to_xml(xml) }
         }
       end
