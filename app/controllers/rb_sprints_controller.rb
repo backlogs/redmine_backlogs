@@ -49,7 +49,7 @@ class RbSprintsController < RbApplicationController
     ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
     bd = @sprint.burndown
     bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-      ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
+      ws << [ nil, nil, nil, nil, {:value => l("label_#{k}"), :comment => k.to_s} ] + bd[k]
     }
 
     @sprint.stories.each{|s|
@@ -57,14 +57,14 @@ class RbSprintsController < RbApplicationController
       bd = s.burndown
       bd.delete(:status)
       bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-        ws << [nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
+        ws << [nil, nil, nil, nil, {:value => l("label_#{k}"), :comment => k.to_s} ] + bd[k]
       }
       s.tasks.each {|t|
         ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown[:hours]
       }
     }
 
-    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-exce')
+    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-exce', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
   
 end
