@@ -27,7 +27,7 @@ module BacklogsSpreadsheet
 
   class Style
     def initialize(options)
-      # make a deep clone to avoid other people messing with out data
+      # make a deep clone to avoid other people messing with our data
       options = Marshal.load( Marshal.dump( options ) )
 
       @id = options.delete(:id)
@@ -181,10 +181,11 @@ module BacklogsSpreadsheet
           end
 
           c = DateTime.civil(c.year, c.month, c.mday) if c.is_a?(Date)
+
           if c.is_a?(Time)
-            seconds = sec + Rational(usec, 10**6)
-            offset = Rational(utc_offset, 60 * 60 * 24)
-            c = DateTime.new(year, month, day, hour, min, seconds, offset)
+            seconds = c.sec + Rational(c.usec, 10**6)
+            offset = Rational(c.utc_offset, 60 * 60 * 24)
+            c = DateTime.new(c.year, c.month, c.day, c.hour, c.min, seconds, offset)
           end
 
           if c.is_a?(Float) || c.is_a?(Integer)
@@ -223,12 +224,6 @@ module BacklogsSpreadsheet
       return data
     end
 
-    def load(rows)
-      rows.each{|row|
-        self << row
-      }
-    end
-
     attr_accessor :name
 
     def to_xml(xml)
@@ -248,9 +243,10 @@ module BacklogsSpreadsheet
   end
 
   class WorkBook
-    def initialize
+    def initialize(file = nil)
       @worksheets = []
       @stylemanager = StyleManager.new
+      self.load(file) if file
     end
 
     attr_reader :stylemanager, :worksheets
@@ -258,7 +254,7 @@ module BacklogsSpreadsheet
     def [](i)
       return @worksheets[i] if i.is_a?(Integer)
 
-      raise "Index can only be a number or a name" unless i.is_a?(String)
+      raise "Index can only be a number or a name, not a #{i.class.name}" unless i.is_a?(String)
 
       i.strip!
 
@@ -275,6 +271,9 @@ module BacklogsSpreadsheet
     end
 
     def load(data)
+      @worksheets = []
+      @stylemanager = StyleManager.new
+
       if data.is_a?(String)
         data = File.open(data)
         close = true
@@ -286,17 +285,19 @@ module BacklogsSpreadsheet
       doc.remove_namespaces!
 
       doc.xpath('//Worksheet').each {|ws|
-        _ws = self[ws['name']]
+        _ws = self[ws['Name']]
 
         ws.xpath('Table/Row').each_with_index {|row, i|
           rownum = Integer(row['Index'] || (i+1)) - 1
           row.xpath('Cell').each_with_index {|cell, i|
-            colnum = Integer(row['Index'] || (i+1)) - 1
+            colnum = Integer(cell['Index'] || (i+1)) - 1
             v = cell.at('Data')
+
+            raise "No cell data" unless v
 
             case v['Type']
               when 'Number'
-                v = (v.text =~ /^[0-9]+(\.0+)?$/ ? Integer(v.text) : Float(v.text))
+                v = (v.text =~ /^[0-9]+(\.0+)?$/ ? Integer(v.text.gsub(/\.0+/, '')) : Float(v.text))
               when 'String', nil
                 v = v.text
               when 'DateTime'
@@ -304,6 +305,9 @@ module BacklogsSpreadsheet
               else
                 raise "Unsupported cell format '#{data['Type']}'"
             end
+
+            c = cell.at('Comment//Data')
+            v = {:value => v, :comment => c.text} if c
 
             _ws[rownum, colnum] = v
           }
