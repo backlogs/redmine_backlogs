@@ -40,7 +40,6 @@ Feature: Shared versions
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
      When I create the task
-      Then show me the list of tasks
       And the 2nd task for Story 1 should be A Whole New Task
 
   Scenario: Update a task for a story
@@ -75,10 +74,9 @@ Feature: Shared versions
 
   Scenario: Fetch the updated stories
     Given I have selected the ecookbook project
-      And show me the list of stories
       And I am viewing the master backlog
      When the browser fetches stories updated since 1 week ago
-     Then the server should return 4 updated stories
+     Then the server should return 3 updated stories
 
   Scenario: Fetch the updated tasks
     Given I have selected the ecookbook project
