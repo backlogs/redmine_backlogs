@@ -74,7 +74,7 @@ RB.Backlog = RB.Object.create({
         for (var i = 0; i < data.length; i++) {
           li = $('<li class="item"><a href="#"></a></li>');
           $('a', li).attr('href', data[i].url).text(data[i].label);
-          if (data[i].class) { $('a', li).attr('class', data[i].class); }
+          if (data[i].classname) { $('a', li).attr('class', data[i].classname); }
           menu.append(li);
         }
         menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
