@@ -27,9 +27,11 @@ class RbTask < Issue
                             true
                           end
 
-    if valid_relationships && task.save
+    if valid_relationships && task.save!
       task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
+    else
+      raise "Could not save task"
     end
 
     return task
