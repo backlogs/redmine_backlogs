@@ -49,7 +49,7 @@ class RbSprintsController < RbApplicationController
     ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
     bd = @sprint.burndown
     bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-      ws << [ nil, nil, nil, nil, {:value => l("label_#{k}"), :comment => k.to_s} ] + bd[k]
+      ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
     }
 
     @sprint.stories.each{|s|
@@ -57,7 +57,9 @@ class RbSprintsController < RbApplicationController
       bd = s.burndown
       bd.delete(:status)
       bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-        ws << [nil, nil, nil, nil, {:value => l("label_#{k}"), :comment => k.to_s} ] + bd[k]
+        label = l("label_#{k}")
+        label = {:value => label, :comment => k.to_s} if [:points, :points_accepted].include?(k)
+        ws << [nil, nil, nil, nil, label ] + bd[k]
       }
       s.tasks.each {|t|
         ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown[:hours]

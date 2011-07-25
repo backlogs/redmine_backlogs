@@ -30,8 +30,8 @@ class Burndown
     @data[:points_to_resolve] = active.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
     @data[:points_to_accept] = active.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
 
-    @data[:points_required_burn_rate] = active.collect{|i| Float(@data[:points_to_resolve][i]) / ((days - i) + 0.001) }
-    @data[:hours_required_burn_rate] = active.collect{|i| Float(@data[:hours_remaining][i]) / ((days - i) + 0.001) }
+    @data[:points_required_burn_rate] = active.collect{|i| if days == i then Float(@data[:points_to_resolve][i]) else Float(@data[:points_to_resolve][i]) / (days - i) end}
+    @data[:hours_required_burn_rate] = active.collect{|i|  if days == i then Float(@data[:hours_remaining][i]) else Float(@data[:hours_remaining][i]) / (days - i) end}
 
     if burn_direction == 'up'
       @data.delete(:points_to_resolve)
