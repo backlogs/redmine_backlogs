@@ -67,6 +67,9 @@
   margin:0 0 10px 0;
   position:relative;
   width:100%;
+
+  /* IE only*/
+  border: 1px solid #CCCCCC\9;
 }
 #product_backlog_container .backlog{ /* Overrides style above */
   position:absolute;
