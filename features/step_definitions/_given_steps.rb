@@ -214,7 +214,7 @@ Given /^I have defined the following tasks:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, story.project.id)
   end
 end
 

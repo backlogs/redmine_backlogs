@@ -28,6 +28,7 @@ Feature: Shared versions
       And I have defined the following tasks:
         | subject | parent  |
         | Task 1  | Story 1 |
+
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story 1 |
@@ -39,12 +40,12 @@ Feature: Shared versions
       And I want to create a task for Story 1
       And I set the subject of the task to A Whole New Task
      When I create the task
-      And the 1st task for Story 1 should be A Whole New Task
+      Then show me the list of tasks
+      And the 2nd task for Story 1 should be A Whole New Task
 
   Scenario: Update a task for a story
     Given I have selected the ecookbook project
       And I am viewing the taskboard for Sprint 001
-     Then show me the list of tasks
       And I want to edit the task named Task 1
       And I set the subject of the task to Whoa there, Sparky
      When I update the task
@@ -74,6 +75,7 @@ Feature: Shared versions
 
   Scenario: Fetch the updated stories
     Given I have selected the ecookbook project
+      And show me the list of stories
       And I am viewing the master backlog
      When the browser fetches stories updated since 1 week ago
      Then the server should return 4 updated stories
