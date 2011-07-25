@@ -154,6 +154,8 @@ class RbSprint < Version
     end
 
     def days(cutoff)
+      return nil unless has_burndown
+
       case cutoff
         when :active
           d = (self.sprint_start_date .. [self.effective_date, Date.today].min)
