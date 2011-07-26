@@ -72,12 +72,14 @@ RB.Backlog = RB.Object.create({
       data: (id ? { sprint_id: id } : {}),
       dataType: 'json',
       success   : function(data,t,x) {
-        menu.empty() 
-        for (var i = 0; i < data.length; i++) {
-          li = $('<li class="item"><a href="#"></a></li>');
-          $('a', li).attr('href', data[i].url).text(data[i].label);
-          if (data[i].classname) { $('a', li).attr('class', data[i].classname); }
-          menu.append(li);
+        menu.empty();
+        if (data) {
+          for (var i = 0; i < data.length; i++) {
+            li = $('<li class="item"><a href="#"></a></li>');
+            $('a', li).attr('href', data[i].url).text(data[i].label);
+            if (data[i].classname) { $('a', li).attr('class', data[i].classname); }
+            menu.append(li);
+          }
         }
         menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
         menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
