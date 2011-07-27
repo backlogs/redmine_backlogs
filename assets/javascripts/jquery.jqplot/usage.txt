@@ -15,12 +15,13 @@ Many more examples of dynamically rendered plots can be seen on the test and exa
 
 Include the Files:
 
-jqPlot requires jQuery (tested with 1.3.2 or better). jQuery 1.3.2 is included in the distribution.  
+jqPlot requires jQuery (1.4+ required for certain features). jQuery 1.4.4 is included in the distribution.  
 To use jqPlot include jquery, the jqPlot jQuery plugin, jqPlot css file and optionally the excanvas 
-script for IE support in your web page:
+script for IE support in your web page.  Note, excanvas is required only for IE versions below 9.  IE 9 includes
+native support for the canvas element and does not require excanvas:
 
-> <!--[if IE]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-> <script language="javascript" type="text/javascript" src="jquery-1.3.2.min.js"></script>
+> <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
+> <script language="javascript" type="text/javascript" src="jquery-1.4.4.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jquery.jqplot.min.js"></script>
 > <link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
 
@@ -66,9 +67,15 @@ after you include the jqPlot plugin.  Here is how to include the log axis plugin
 
 > <link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
 > <!--[if IE]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-> <script language="javascript" type="text/javascript" src="jquery-1.3.2.min.js"></script>
+> <script language="javascript" type="text/javascript" src="jquery-1.4.4.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jquery.jqplot.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jqplot.logAxisRenderer.js"></script>
+
+Important note:  For jqplot builds r529 and above (0.9.7r529 and higher), you must explicitly 
+enable plugins via either the { show: true } plugin option to the plot or by using 
+the $.jqplot.config.enablePlugins = true; config options set on the page before plot creation.
+Only plugins that can be immediately active upon loading are affected.  This includes 
+non-renderer plugins like cursor, dragable, highlighter, and trendline.
 
 Here is a the same $.jqplot call 
 but with a log y axis:
@@ -114,6 +121,6 @@ you would first include the plugin after jqPlot:
 Then you would create 
 a chart like:
 
-> $.jqplot('chartdiv',  [[34.53, 56.32, 25.1, 18.6]], series:[{renderer:$.jqplot.BarRenderer}]);
+> $.jqplot('chartdiv',  [[34.53, 56.32, 25.1, 18.6]], {series:[{renderer:$.jqplot.BarRenderer}]});
 
 Here the default LineRenderer is replaced by a BarRenderer to generate a bar graph for the first (an only) series.
