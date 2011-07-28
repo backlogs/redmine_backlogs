@@ -1,16 +1,12 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
 <script type="text/javascript" language="javascript">
   <%-
-      # replace by setting
-      format = ::I18n.t('date.formats.short')
-
       burndown = sprint.burndown
       series = burndown.series.sort{|a, b| l("label_#{a}") <=> l("label_#{b}") }
       dates = sprint.days(:all)
-      ticks = (0..dates.size * 2)
-        .collect{|i| [i, (i % 2 == 0 ? nil : dates[(i-1)/2])]}
-        .collect{|t| [t[0], (t[1] ? Time.new(t[1].year, t[1].mon, t[1].mday) : nil)] }
-        .collect{|t| [t[0], (t[1] ? t[1].strftime('%a')[0, 1] + ' ' + t[1].strftime(format) + ' ' : ' ')] }
+
+      ticks = dates.collect{|d| Time.local(d.year, d.mon, d.mday) }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
+      ticks = (0..dates.size * 2).collect{|i| [i, (i % 2 == 0 ? ' ' : ticks[(i-1)/2] + ' ')] }
 
       chart = {
         :mode => mode,
