@@ -4,10 +4,11 @@
       burndown = sprint.burndown
       series = burndown.series.sort{|a, b| l("label_#{a}") <=> l("label_#{b}") }
       dates = sprint.days(:all)
-      dates = [dates[0] - 1] + dates
+      ticks = (0..dates.size * 2).collect{|i| [i, (i % 2 == 0 ? '' : ::I18n.t('date.abbr_day_names')[dates[(i - 1)/2].wday % 7]) + ' ']}
 
       chart = {
-        :series => series.collect{|s| burndown[s]},
+        :mode => mode,
+        :series => series.collect{|s| burndown[s].enum_for(:each_with_index).collect{|d,i| [i*2, d]}},
         :position => Hash[*(0.upto(series.size - 1).collect{|i| [series[i], i]}.flatten)],
         :options => {
           :series => series.collect{|s| {:label => l("label_#{s}"), :yaxis => (s.to_s =~ /^points/ ? 'y2axis' : 'yaxis')}},
@@ -17,10 +18,10 @@
           :axesDefaults =>  {:showTick => (mode == :full)},
           :axes => {
               :xaxis => {
-                :min => 1,
-                :max => dates.size,
-                :tickInterval => 1,
-                :ticks => dates.enum_for(:each_with_index).collect{|d,i| [i+1, ::I18n.t('date.abbr_day_names')[d.wday % 7]]}
+                :min => 0,
+                :max => dates.size * 2,
+                :ticks => ticks,
+                :tickOptions => {:angle => -90, :fontSize => '8pt'}
               },
               :yaxis => {:min => 0, :max => burndown[:max_hours], :tickOptions => {:formatString => '%d'}},
               :y2axis => {:min => 0, :max => burndown[:max_points], :tickOptions => {:formatString => '%d'}}
@@ -30,5 +31,7 @@
       }
   %>
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json %>;
+  RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = $.jqplot.CanvasAxisTickRenderer;
+  RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: $.jqplot.CanvasAxisTickRenderer};
   RB.burndown.initialize();
 </script>

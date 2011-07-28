@@ -37,7 +37,7 @@ RB.burndown.redraw = function() {
     if (legend == 'off') {
       chart.options.legend.show = false;
     } else {
-      chart.options.legend.show = true;
+      chart.options.legend.show = (chart.mode == 'full');
       chart.options.legend.location = legend;
     }
 
