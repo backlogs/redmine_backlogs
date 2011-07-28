@@ -1,5 +1,5 @@
 <% if @sprint.has_burndown %>
-  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full} %>
+  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => 'width:650px; height: 300px' } %>
 
   <fieldset>
       <legend><%= l(:label_chart_options) %></legend>
