@@ -1,14 +1,21 @@
-<% if @burndown %>
-  <%= render :partial => 'burndown', :locals => {:div => 'burndown_', :burndown => @burndown } %>
-
-  <div class="burndown_chart" id="burndown_<%= @burndown.sprint_id %>"><div class="loading">Generating chart...</div></div>
+<% if @sprint.has_burndown %>
+  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => 'width:650px; height: 300px' } %>
 
   <fieldset>
       <legend><%= l(:label_chart_options) %></legend>
-      <% @burndown.series.each do |series| %>
-          <input class="series_enabled" type="checkbox" onclick="burndown_configure(this)" id="<%= series %>_enabled" name="<%= series %>_enabled" value="<%= series %>"><%= l("label_#{series}") %><br/>
+      
+      Legend:
+      <%- ['Off', 'NW', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W'].each do |legend| %>
+        <input type="radio" name="legend" id="burndown_legend_<%= legend.downcase %>" value="<%= legend.downcase %>" onclick="RB.burndown.change_legend(this)">&nbsp;<%= legend %>&nbsp;&nbsp;
+      <%- end %><br/>
+
+      <% @sprint.burndown.series.sort{|a, b| l("label_#{a}") <=>  l("label_#{b}")}.each do |series| %>
+          <input class="series_enabled" id="burndown_series_<%= series %>" type="checkbox" checked="checked" onclick="RB.burndown.change_series(this)" value="<%= series %>"><%= l("label_#{series}") %><br/>
       <% end %>
   </fieldset>
+  <script type="text/javascript">
+    RB.burndown.configure();
+  </script>
 <% else %>
   No burndown data available -- are the sprint start- and end dates set?
 <% end %>
