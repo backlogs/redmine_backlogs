@@ -6,6 +6,7 @@ class Burndown
 
     @sprint_id = sprint.id
     @days = sprint.days(:all)
+    ndays = @days.size
 
     # these dates are actually :first (= value at start of sprint, x * end of day, :last (= value at end of sprint)
     active = sprint.days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
@@ -22,7 +23,7 @@ class Burndown
 
     @data[:points_committed] = active.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}}
     @data[:hours_remaining] = active.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}}
-    @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
+    @data[:hours_ideal] = (0 .. ndays).collect{|i| (@data[:hours_remaining][0] / ndays) * i}.reverse
 
     @data[:points_accepted] = active.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}}
     @data[:points_resolved] = active.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}}
@@ -30,8 +31,8 @@ class Burndown
     @data[:points_to_resolve] = active.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
     @data[:points_to_accept] = active.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
 
-    @data[:points_required_burn_rate] = active.collect{|i| if days == i then Float(@data[:points_to_resolve][i]) else Float(@data[:points_to_resolve][i]) / (days - i) end}
-    @data[:hours_required_burn_rate] = active.collect{|i|  if days == i then Float(@data[:hours_remaining][i]) else Float(@data[:hours_remaining][i]) / (days - i) end}
+    @data[:points_required_burn_rate] = active.collect{|i| if ndays == i then Float(@data[:points_to_resolve][i]) else Float(@data[:points_to_resolve][i]) / (ndays - i) end}
+    @data[:hours_required_burn_rate] = active.collect{|i|  if ndays == i then Float(@data[:hours_remaining][i]) else Float(@data[:hours_remaining][i]) / (ndays - i) end}
 
     if burn_direction == 'up'
       @data.delete(:points_to_resolve)
