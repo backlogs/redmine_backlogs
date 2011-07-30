@@ -46,6 +46,10 @@ module BacklogsPlugin
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
         end
 
+        if issue.is_task?
+          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.historic(:first, 'estimated_hours')}</td></tr>"
+        end
+
         return snippet
       end
 
@@ -94,6 +98,12 @@ module BacklogsPlugin
           snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], true)} #{l(:rb_label_copy_tasks_open)}<br />"
           snippet += "#{radio_button_tag('copy_tasks', 'none', false)} #{l(:rb_label_copy_tasks_none)}<br />"
           snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
+        end
+
+        if issue.is_task?
+          snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
+          snippet += text_field_tag('initial_estimate', issue.historic(:first, 'estimated_hours'), :size => 3)
+          snippet += '</p>'
         end
 
         return snippet
@@ -173,6 +183,35 @@ module BacklogsPlugin
                 nt.parent_issue_id = issue.id
                 nt.save!
               }
+            end
+          end
+        end
+      end
+
+      def controller_issues_edit_after_save(context={ })
+        params = context[:params]
+        issue = context[:issue]
+
+        if issue.is_task?
+          begin
+            initial_estimate = Float(params[:initial_estimate])
+          rescue ArgumentError, TypeError
+            initial_estimate = nil
+          end
+
+          if initial_estimate
+            jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
+              :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ?", issue.id])
+            if jd
+              if Float(jd.old_value) != initial_estimate
+                JournalDetail.connection.execute("update journal_details set old_value='#{initial_estimate.to_s.gsub(/\.0+$/, '')}' where id = #{jd.id}")
+              end
+            else
+              if initial_estimate != issue.estimated_hours
+                j = Journal.new(:journalized => issue, :user => User.current)
+                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => issue.estimated_hours, :old_value => initial_estimate)
+                j.save!
+              end
             end
           end
         end

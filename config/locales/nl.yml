@@ -6,7 +6,7 @@ nl:
   field_backlogs_issue_type: Backlog type
   error_intro_singular: "De volgende fout is opgetreden:"
   error_taken: "is al in gebruik"
-  field_remaining_hours: Resterende uren
+  field_initial_estimate: Initiele schatting
   button_edit_wiki: Wijzig wiki page
   label_points_burn_up: Omhoog
   label_not_prioritized: geen prioriteit

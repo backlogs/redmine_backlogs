@@ -4,7 +4,7 @@ en-GB:
   label_webcal: Webcal Feed
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
-  field_remaining_hours: Remaining hours
+  field_initial_estimate: Initial estimate
   error_intro_singular: "The following error was encountered:"
   error_taken: "is already in use"
   button_edit_wiki: Edit wiki page

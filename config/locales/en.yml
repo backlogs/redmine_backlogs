@@ -6,7 +6,7 @@ en:
   backlogs_sprints: "Sprints"
   field_story_points: "Story points"
   remaining_story_points: "remaining story points"
-  field_remaining_hours: "Remaining hours"
+  field_initial_estimate: "Initial estimate"
   button_edit_wiki: "Edit wiki page"
   field_backlogs_issue_type: "Backlog type"
   backlogs_story: Story
