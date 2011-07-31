@@ -35,14 +35,14 @@ RB.burndown.redraw = function() {
 
     for (name in chart.position) {
       pos = chart.position[name];
-      chart.options.series[pos].show = (disabled.indexOf(name) == -1);
+      chart.chart.series[pos].show = (disabled.indexOf(name) == -1);
     }
 
     if (legend == 'off') {
-      chart.options.legend.show = false;
+      chart.chart.legend.show = false;
     } else {
-      chart.options.legend.show = (chart.mode == 'full');
-      chart.options.legend.location = legend;
+      chart.chart.legend.show = (chart.mode == 'full');
+      chart.chart.legend.location = legend;
     }
 
     chart.chart.replot();
