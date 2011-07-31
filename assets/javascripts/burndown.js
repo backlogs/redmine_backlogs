@@ -1,10 +1,14 @@
 if (RB == null) { var RB = {}; }
 if (RB.burndown == null) { RB.burndown = {options: {}, charts: {}}; }
 
-RB.burndown.options.disabled_series = function() {
-  var disabled = RB.UserPreferences.get('disabled_burndown_series');
-  if (!disabled) { return ''; }
-  return disabled;
+RB.burndown.options.disabled_series = function(new_value) {
+  if (new_value == undefined) {
+    var v = RB.UserPreferences.get('disabled_burndown_series');
+    if (!v || v.indexOf(',') == -1) { v = ''; }
+    return v.split(',');
+  } else {
+    RB.UserPreferences.set('disabled_burndown_series', new_value.join(','));
+  }
 }
 RB.burndown.options.show_legend = function() {
   var legend = RB.UserPreferences.get('burndown_show_legend');
@@ -31,7 +35,7 @@ RB.burndown.redraw = function() {
 
     for (name in chart.position) {
       pos = chart.position[name];
-      chart.options.series[pos].show = (disabled.indexOf('=' + name + '=') == -1);
+      chart.options.series[pos].show = !($.inArray(name, disabled));
     }
 
     if (legend == 'off') {
@@ -52,19 +56,18 @@ RB.burndown.change_legend = function(rb) {
 
 RB.burndown.change_series = function(cb) {
   var disabled = RB.burndown.options.disabled_series();
-  var series = cb.value;
 
-  disabled = disabled.replace('=' + series + '=', '=');
-  if (!cb.checked) { disabled += (series + '='); }
-  if (!(disabled =~ /^=/)) { disabled = ('=' + disabled); }
-  if (!(disabled =~ /=$/)) { disabled += '='; }
-  RB.UserPreferences.set('disabled_burndown_series', disabled);
+  i = disabled.indexOf(cb.value);
+  if (i != -1) { disabled.splice(i, 1); }
+  if (!cb.checked) { disabled.push(cb.value); }
+  RB.burndown.options.disabled_series(disabled);
   RB.burndown.redraw();
 }
 
 RB.burndown.configure = function() {
-  var disabled = RB.burndown.options.disabled_series().split('=');
+  var disabled = RB.burndown.options.disabled_series();
   var cb;
+
   for (i in disabled) {
     cb = $('#burndown_series_' + disabled[i]);
     if (cb) { cb.attr('checked', false); }
