@@ -1,12 +1,12 @@
 if (RB == null) { var RB = {}; }
-if (RB.burndown == null) { RB.burndown = {charts: {}}; }
+if (RB.burndown == null) { RB.burndown = {options: {}, charts: {}}; }
 
-RB.burndown.disabled_series = function() {
+RB.burndown.options.disabled_series = function() {
   var disabled = RB.UserPreferences.get('disabled_burndown_series');
   if (!disabled) { return ''; }
   return disabled;
 }
-RB.burndown.show_legend = function() {
+RB.burndown.options.show_legend = function() {
   var legend = RB.UserPreferences.get('burndown_show_legend');
   if (!legend) { return 'sw'; }
   return legend;
@@ -22,8 +22,8 @@ RB.burndown.initialize = function() {
 }
 
 RB.burndown.redraw = function() {
-  var disabled = RB.burndown.disabled_series();
-  var legend = RB.burndown.show_legend();
+  var disabled = RB.burndown.options.disabled_series();
+  var legend = RB.burndown.options.show_legend();
 
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
@@ -51,8 +51,9 @@ RB.burndown.change_legend = function(rb) {
 }
 
 RB.burndown.change_series = function(cb) {
-  var disabled = RB.burndown.disabled_series();
+  var disabled = RB.burndown.options.disabled_series();
   var series = cb.value;
+
   disabled = disabled.replace('=' + series + '=', '=');
   if (!cb.checked) { disabled += (series + '='); }
   if (!(disabled =~ /^=/)) { disabled = ('=' + disabled); }
@@ -62,13 +63,13 @@ RB.burndown.change_series = function(cb) {
 }
 
 RB.burndown.configure = function() {
-  var disabled = RB.burndown.disabled_series().split('=');
+  var disabled = RB.burndown.options.disabled_series().split('=');
   var cb;
   for (i in disabled) {
     cb = $('#burndown_series_' + disabled[i]);
     if (cb) { cb.attr('checked', false); }
   }
 
-  var legend = RB.burndown.show_legend();
+  var legend = RB.burndown.options.show_legend();
   $('#burndown_legend_' + legend).attr('checked', true);
 }

@@ -1,10 +1,21 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
+
+<%= javascript_include_tag 'jquery-1.4.2.min.js', 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery.cookie.js', :plugin => 'redmine_backlogs' %>
+<!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
+<%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs' %>
+
 <script type="text/javascript" language="javascript">
   <%-
       burndown = sprint.burndown
       series = burndown.series.sort{|a, b| l("label_#{a}") <=> l("label_#{b}") }
       dates = sprint.days(:all)
-      ticks = (0..dates.size * 2).collect{|i| [i, (i % 2 == 0 ? '' : ::I18n.t('date.abbr_day_names')[dates[(i - 1)/2].wday % 7]) + ' ']}
+
+      ticks = dates.collect{|d| Time.local(d.year, d.mon, d.mday) }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
+      ticks = (0..dates.size * 2).collect{|i| [i, (i % 2 == 0 ? ' ' : ticks[(i-1)/2] + ' ')] }
 
       chart = {
         :mode => mode,

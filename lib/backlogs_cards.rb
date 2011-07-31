@@ -447,7 +447,7 @@ module BacklogsCards
         data['subject'] = issue.subject.to_s.strip
         data['description'] = issue.description.to_s.strip; data['description'] = data['subject'] if data['description'] == ''
         data['category'] = issue.category ? issue.category.name : ''
-        data['hours.estimated'] = (issue.estimated_hours ? "#{issue.estimated_hours}" : '?') + ' ' + l(:label_hours)
+        data['hours.estimated'] = (issue.historic(:first, 'estimated_hours') || '?').to_s + ' ' + l(:label_hours)
         data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
         data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
         data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
