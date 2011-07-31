@@ -30,6 +30,7 @@ class RbTask < Issue
     if valid_relationships && task.save!
       task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
+      task.time_entry_add(params)
     else
       raise "Could not save task"
     end
@@ -59,6 +60,7 @@ class RbTask < Issue
   end
 
   def update_with_relationships(params, is_impediment = false)
+    time_entry_add(params)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
       attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
     else
@@ -160,6 +162,34 @@ class RbTask < Issue
         j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => self.estimated_hours, :old_value => hours)
         j.save!
       end
+    end
+  end
+
+  def time_entry_add(params)
+    if !params[:time_entry_hours].blank?
+	@time_entry = TimeEntry.new(:issue => self, :project => self.project) 
+	# Make sure user has permission to edit time entries to allow 
+	# logging time for other users
+	if User.current.allowed_to?(:edit_time_entries, self.project)
+		@time_entry.user_id = params[:time_entry_user_id]
+	else
+		# Otherwise log time for current user
+		@time_entry.user_id = User.current.id
+	end
+	if !params[:time_entry_spent_on].blank?
+		@time_entry.spent_on = params[:time_entry_spent_on]
+	else
+		@time_entry.spent_on = Date.today
+	end
+	@time_entry.hours = params[:time_entry_hours]
+	# Choose default activity
+	# If default is not defined first activity will be chosen
+	if default_activity = TimeEntryActivity.default
+		@time_entry.activity_id = default_activity.id
+	else
+		@time_entry.activity_id = TimeEntryActivity.first.id
+	end
+	self.time_entries << @time_entry
     end
   end
 end

@@ -320,6 +320,9 @@ See RB.Taskboard.initialize()
   width:272px;
 }
 #task_editor .estimated_hours,
+#task_editor .time_entry_hours,
+#task_editor .time_entry_user_id,
+#task_editor .time_entry_spent_on,
 #task_editor .blocks{
   width:268px;
 }

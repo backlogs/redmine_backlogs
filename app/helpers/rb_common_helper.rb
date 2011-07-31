@@ -182,4 +182,16 @@ module RbCommonHelper
       s
     end
   end
+
+  # Returns a collection of users for a select field.
+  def user_collection_for_select_options
+    users = @projects = User.find(:all)
+    collection = []
+    users.each do |a|
+      roles = a.roles_for_project(@project)
+      collection << [a.name, a.id] if roles and roles.detect {|role| role.member? && role.allowed_to?(:log_time)}
+    end
+    collection
+  end
+
 end

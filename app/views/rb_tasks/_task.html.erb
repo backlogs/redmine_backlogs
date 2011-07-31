@@ -14,6 +14,15 @@
     <div class="v"><%= task.priority_id %></div>
   </div>
   <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(task) %></div>
+  <% if User.current.allowed_to?(:log_time, @project) %>
+    <div class="time_entry_hours editable" style="display: none" fieldname="time_entry_hours"></div>
+    <% if User.current.allowed_to?(:edit_time_entries, @project) %>
+      <div class="time_entry_user_id editable" fieldtype="select" fieldname="time_entry_user_id">
+        <div class="v" style="display: none" ><%= assignee_id_or_empty(task) %></div>
+      </div>
+    <% end %>
+    <div class="Time_entry_spent_on editable date" fieldname="time_entry_spent_on" style="display:none"><%= Date.today %></div>
+  <% end %>
   <div class="indicator"> </div>
   <div class="meta">
     <div class="story_id"><%= task.story ? task.story.id : '' %></div>
