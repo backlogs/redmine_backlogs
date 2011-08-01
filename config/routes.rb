@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'calendar/:key/:project_id.:format',             :controller => :rb_calendars,        :action => 'show'
 
     rb.connect    'burndown/:sprint_id',                           :controller => :rb_burndown_charts,  :action => 'show'
+    rb.connect    'burndown/print/:sprint_id',                     :controller => :rb_burndown_charts,  :action => 'print'
   end
 
 end

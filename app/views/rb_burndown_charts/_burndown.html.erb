@@ -7,6 +7,7 @@
 <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs' %>
 
 <script type="text/javascript" language="javascript">
   <%-
@@ -40,7 +41,9 @@
           :highlighter => { :tooltipAxes => 'y', :formatString => '%s' }
         }
       }
+      jqplot_css = Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery.jqplot/jquery.jqplot.min.css')
   %>
+  $('head').append('<link rel="stylesheet" href="<%= jqplot_css %>" type="text/css" />');
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json %>;
   RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = $.jqplot.CanvasAxisTickRenderer;
   RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: $.jqplot.CanvasAxisTickRenderer};
