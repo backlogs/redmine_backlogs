@@ -16,7 +16,7 @@ RB.Backlog = RB.Object.create({
     var j;  // This ensures that we use a local 'j' variable, not a global one.
     var self = this;
     
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
 
     // Associate this object with the element for later retrieval
@@ -75,9 +75,9 @@ RB.Backlog = RB.Object.create({
         menu.empty();
         if (data) {
           for (var i = 0; i < data.length; i++) {
-            li = $('<li class="item"><a href="#"></a></li>');
-            $('a', li).attr('href', data[i].url).text(data[i].label);
-            if (data[i].classname) { $('a', li).attr('class', data[i].classname); }
+            li = RB.$('<li class="item"><a href="#"></a></li>');
+            RB.$('a', li).attr('href', data[i].url).text(data[i].label);
+            if (data[i].classname) { RB.$('a', li).attr('class', data[i].classname); }
             menu.append(li);
           }
         }
@@ -151,7 +151,7 @@ RB.Backlog = RB.Object.create({
   },
   
   getSprint: function(){
-    return $(this.el).find(".model.sprint").first();
+    return RB.$(this.el).find(".model.sprint").first();
   },
     
   getStories: function(){
@@ -164,38 +164,38 @@ RB.Backlog = RB.Object.create({
 
   handleNewStoryClick: function(event){
     event.preventDefault();
-    $(this).parents('.backlog').data('this').newStory();
+    RB.$(this).parents('.backlog').data('this').newStory();
   },
 
   handleNewSprintClick: function(event){
     event.preventDefault();
-    $(this).parents('.backlog').data('this').newSprint();
+    RB.$(this).parents('.backlog').data('this').newSprint();
   },
 
   isSprintBacklog: function(){
-    return $(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
+    return RB.$(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
   },
     
   newStory: function() {
-    var story = $('#story_template').children().first().clone();
+    var story = RB.$('#story_template').children().first().clone();
     
     this.getList().prepend(story);
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();
-    $('html,body').animate({
+    RB.$('html,body').animate({
         scrollTop: story.find('.editor').first().offset().top-100
         }, 200);
   },
   
   newSprint: function(){
-    var sprint_backlog = $('#sprint_template').children().first().clone();
+    var sprint_backlog = RB.$('#sprint_template').children().first().clone();
 
-    $("*#sprint_backlogs_container").append(sprint_backlog);
+    RB.$("*#sprint_backlogs_container").append(sprint_backlog);
     o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
     o.edit();
     sprint_backlog.find('.editor' ).first().focus();
-    $('html,body').animate({
+    RB.$('html,body').animate({
         scrollTop: sprint_backlog.find('.editor').first().offset().top
         }, 200);
   },
@@ -204,20 +204,20 @@ RB.Backlog = RB.Object.create({
     if( !this.isSprintBacklog() ) return true;
     total = 0;
     this.getStories().each(function(index){
-      total += $(this).data('this').getPoints();
+      total += RB.$(this).data('this').getPoints();
     });
     this.$.children('.header').children('.velocity').text(total);
   },
 
   showBurndownChart: function(event){
     event.preventDefault();
-    if($("#charts").length==0){
-      $( document.createElement("div") ).attr('id', "charts").appendTo("body");
+    if(RB.$("#charts").length==0){
+      RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
     }
-    $('#charts').html( "<div class='loading'>Loading data...</div>");
-    $('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
-    $('#charts').dialog({ 
-                          buttons: { "Close": function() { $(this).dialog("close") } },
+    RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
+    RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
+    RB.$('#charts').dialog({ 
+                          buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
                           height: 590,
                           modal: true, 
                           title: 'Charts', 

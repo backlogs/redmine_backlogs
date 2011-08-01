@@ -8,4 +8,10 @@ class RbServerVariablesController < RbApplicationController
       format.js { render :layout => false }
     end
   end
+
+  def jquery
+    respond_to do |format|
+      format.js { render :layout => false }
+    end
+  end
 end

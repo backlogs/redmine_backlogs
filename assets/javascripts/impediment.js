@@ -7,7 +7,7 @@ RB.Impediment = RB.Object.create(RB.Task, {
   initialize: function(el){
     var j;  // This ensures that we use a local 'j' variable, not a global one.
     
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
     
     j.addClass("impediment"); // If node is based on #task_template, it doesn't have the impediment class yet

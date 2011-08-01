@@ -1,6 +1,7 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
 
-<%= javascript_include_tag 'jquery-1.4.2.min.js', 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
+<script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'jquery', :project_id => @project.identifier) %>"></script>
+<%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery.cookie.js', :plugin => 'redmine_backlogs' %>
 <!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
 <%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
@@ -43,9 +44,9 @@
       }
       jqplot_css = Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery.jqplot/jquery.jqplot.min.css')
   %>
-  $('head').append('<link rel="stylesheet" href="<%= jqplot_css %>" type="text/css" />');
+  RB.$('head').append('<link rel="stylesheet" href="<%= jqplot_css %>" type="text/css" />');
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json %>;
-  RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = $.jqplot.CanvasAxisTickRenderer;
-  RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: $.jqplot.CanvasAxisTickRenderer};
+  RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
+  RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: RB.$.jqplot.CanvasAxisTickRenderer};
   RB.burndown.initialize();
 </script>

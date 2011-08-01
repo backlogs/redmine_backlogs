@@ -6,7 +6,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var j;  // This ensures that we use a local 'j' variable, not a global one.
     var self = this;
     
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
     
     // Associate this object with the element for later retrieval
@@ -57,7 +57,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
 
     status.empty();
     for (var i = 0; i < states.length; i++) {
-      option = $('<option/>');
+      option = RB.$('<option/>');
       state = RB.constants.story_states['states'][states[i]];
       option.attr('value', states[i]).addClass(state.closed).text(state.name);
       if (states[i] == status_id) { option.attr('selected', 'selected'); }

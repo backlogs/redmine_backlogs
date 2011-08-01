@@ -1,5 +1,3 @@
-require 'benchmark'
-
 class BurndownFromJournal < ActiveRecord::Migration
   def self.up
     # estimated_hours final value set to remaining hours, cache estimated_hours (=initial estimate) in remaining hours for later use
