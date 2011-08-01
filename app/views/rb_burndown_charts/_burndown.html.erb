@@ -1,6 +1,7 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
 
-<%= javascript_include_tag 'jquery-1.4.2.min.js', 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
+<%= conditional_javascript("typeof(jQuery) == 'undefined'", ['jquery-1.4.2.min.js', 'jquery-ui-1.8rc3.custom.min.js']) %>
+<%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery.cookie.js', :plugin => 'redmine_backlogs' %>
 <!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
 <%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>

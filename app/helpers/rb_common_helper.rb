@@ -1,6 +1,15 @@
 module RbCommonHelper
   unloadable
   
+  def conditional_javascript(condition, path)
+    path = [path] unless path.is_a?(Array)
+    scripts = path.collect{|p|
+      "document.write('<scr' + 'ipt type=\\'text/javascript\\' src=\\'#{Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', p)}\\'></scr' + 'ipt>');"
+    }.join("\n")
+
+    return "<script type='text/javascript'> if (#{condition}) { #{scripts} } </script>"
+  end
+
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
   end
