@@ -199,21 +199,7 @@ module BacklogsPlugin
             initial_estimate = nil
           end
 
-          if initial_estimate
-            jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
-              :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ?", issue.id])
-            if jd
-              if Float(jd.old_value) != initial_estimate
-                JournalDetail.connection.execute("update journal_details set old_value='#{initial_estimate.to_s.gsub(/\.0+$/, '')}' where id = #{jd.id}")
-              end
-            else
-              if initial_estimate != issue.estimated_hours
-                j = Journal.new(:journalized => issue, :user => User.current)
-                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => issue.estimated_hours, :old_value => initial_estimate)
-                j.save!
-              end
-            end
-          end
+          issue.becomes(RbTask).set_initial_estimate(initial_estimate) if initial_estimate
         end
       end
 

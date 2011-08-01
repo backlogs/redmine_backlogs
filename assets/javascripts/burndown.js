@@ -19,7 +19,10 @@ RB.burndown.options.show_legend = function() {
 RB.burndown.initialize = function() {
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
-    if (!chart.chart) { chart.chart = $.jqplot('burndown_' + id, chart.series, chart.options); }
+    if (!chart.chart) {
+      $('#burndown_' + id).empty();
+      chart.chart = $.jqplot('burndown_' + id, chart.series, chart.options);
+    }
   }
 
   RB.burndown.redraw();
