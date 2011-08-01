@@ -26,7 +26,18 @@
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
       <!--TIB backlogs des sprints terminés -->
-      <div id="closed_sprint_backlogs_container">
+      <!--script for collapsing closed backlog div-->
+      <script language="javascript">
+		  function toggleDiv(divid){
+		    if(document.getElementById(divid).style.display == 'none'){
+		      document.getElementById(divid).style.display = 'block';
+		    }else{
+		      document.getElementById(divid).style.display = 'none';
+		    }
+		  }
+	  </script>
+	  <a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');">Toggle Completed Sprints Visibility<br></a>
+      <div id="closed_sprint_backlogs_container" style="display:none">
         <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
       </div>
       <div id="dummy_backlog_container"></div>

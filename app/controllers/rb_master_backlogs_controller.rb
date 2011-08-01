@@ -21,7 +21,7 @@ class RbMasterBacklogsController < RbApplicationController
     
     #TIB (ajout de @c_sprint_backlogs)
     @c_sprint_backlogs = c_sprints.map{|s| { :sprint => s, :stories => s.stories } }
-
+    
     respond_to do |format|
       format.html { render :layout => "rb"}
     end
