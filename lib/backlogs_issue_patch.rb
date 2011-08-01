@@ -140,6 +140,12 @@ module Backlogs
         return obj.value if obj && obj.value
         return self.send(property.intern)
       end
+
+      def initial_estimate
+        e = self.historic(:first, 'estimated_hours')
+        return nil if e.nil?
+        return Float(e)
+      end
     end
   end
 end

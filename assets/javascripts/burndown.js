@@ -20,8 +20,8 @@ RB.burndown.initialize = function() {
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
     if (!chart.chart) {
-      $('#burndown_' + id).empty();
-      chart.chart = $.jqplot('burndown_' + id, chart.series, chart.options);
+      RB.$('#burndown_' + id).empty();
+      chart.chart = RB.$.jqplot('burndown_' + id, chart.series, chart.options);
     }
   }
 
@@ -72,10 +72,10 @@ RB.burndown.configure = function() {
   var cb;
 
   for (i in disabled) {
-    cb = $('#burndown_series_' + disabled[i]);
+    cb = RB.$('#burndown_series_' + disabled[i]);
     if (cb) { cb.attr('checked', false); }
   }
 
   var legend = RB.burndown.options.show_legend();
-  $('#burndown_legend_' + legend).attr('checked', true);
+  RB.$('#burndown_legend_' + legend).attr('checked', true);
 }

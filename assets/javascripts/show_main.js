@@ -1,25 +1,25 @@
 // Initialize everything after DOM is loaded
-$(function() {  
-  var board = RB.Factory.initialize(RB.Taskboard, $('#taskboard'));
+RB.$(function() {  
+  var board = RB.Factory.initialize(RB.Taskboard, RB.$('#taskboard'));
   RB.TaskboardUpdater.start();
 
   // Capture 'click' instead of 'mouseup' so we can preventDefault();
-  $('#show_charts').bind('click', RB.showCharts);
+  RB.$('#show_charts').bind('click', RB.showCharts);
   
-  $('#assigned_to_id_options').bind('change', function(){
-    $(this).parents('.ui-dialog').css('background-color', $(this).children(':selected').attr('color'));
+  RB.$('#assigned_to_id_options').bind('change', function(){
+    RB.$(this).parents('.ui-dialog').css('background-color', RB.$(this).children(':selected').attr('color'));
   });
 });
 
 RB.showCharts = function(event){
   event.preventDefault();
-  if($("#charts").length==0){
-    $( document.createElement("div") ).attr('id', "charts").appendTo("body");
+  if(RB.$("#charts").length==0){
+    RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
   }
-  $('#charts').html( "<div class='loading'>Loading data...</div>");
-  $('#charts').load( RB.urlFor('show_burndown_chart', { id: RB.constants.sprint_id }) );
-  $('#charts').dialog({ 
-                        buttons: { "Close": function() { $(this).dialog("close") } },
+  RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
+  RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: RB.constants.sprint_id }) );
+  RB.$('#charts').dialog({ 
+                        buttons: { "Close": function() { RB.$(this).dialog("close") } },
                         height: 590,
                         modal: true, 
                         title: 'Charts', 

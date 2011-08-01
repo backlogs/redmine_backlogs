@@ -1,0 +1,7 @@
+<%-
+path = ['jquery-1.4.2.min.js', 'jquery-ui-1.8rc3.custom.min.js']
+scripts = path.collect{|p|
+  "document.write('<scr' + 'ipt type=\\'text/javascript\\' src=\\'#{Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', p)}\\'></scr' + 'ipt>');"
+}.join("\n")
+%>
+if (typeof(jQuery) == 'undefined') { <%= scripts %> }

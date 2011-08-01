@@ -58,6 +58,7 @@ module Backlogs
                                       ],
                                       :default_order => 'asc'))
 
+        base.add_available_column(QueryColumn.new(:initial_estimate))
   
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type

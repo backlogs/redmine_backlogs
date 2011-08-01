@@ -8,7 +8,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     var j;  // This ensures that we use a local 'j' variable, not a global one.
     var self = this;
     
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
     
     // Associate this object with the element for later retrieval
@@ -57,7 +57,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   },
 
   getBacklog: function(){
-    return $(this.el).parents(".backlog").first();
+    return RB.$(this.el).parents(".backlog").first();
   },
 
   afterCreate: function(data, textStatus, xhr){

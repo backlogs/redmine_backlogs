@@ -9,7 +9,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     // Create the model editor if it does not yet exist
     var editor = this.$.children(".editors").first();
     if(editor.length==0){
-      editor = $( document.createElement("div") )
+      editor = RB.$( document.createElement("div") )
                  .addClass("editors")
                  .appendTo(this.$);
     }
@@ -20,7 +20,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     // handle keys on keypress instead of keyup, so IME will not fire enter.
     // https://github.com/ether/pad/pull/168
     if(event.which == 13){
-      j = $(this).parents('.model').first();
+      j = RB.$(this).parents('.model').first();
       that = j.data('this');
       that.saveEdits();
     } else {
@@ -32,7 +32,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     // handle escape key on keydown, since it doesn't fire keypress on chrome/safari
     // http://stackoverflow.com/questions/3901063/jquerys-keypress-doesnt-work-for-some-keys-in-chrome-how-to-work-around
     if(event.which == 27){
-      j = $(this).parents('.model').first();
+      j = RB.$(this).parents('.model').first();
       that = j.data('this');
       that.cancelEdit();
     } else {
