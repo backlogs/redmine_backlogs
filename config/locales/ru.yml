@@ -121,3 +121,4 @@ ru:
   rb_label_copy_tasks_none: "Нет (Не копировать задания)"
   rb_label_copy_tasks_all: "Все (Копировать все задания)"
   rb_label_copy_tasks_open: "Открыть"
+  current_open_story_points: "Current open story points:"
