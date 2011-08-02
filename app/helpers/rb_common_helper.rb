@@ -93,18 +93,6 @@ module RbCommonHelper
     story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
 
-  def theme_name
-    'rb_default'
-  end
-
-  def theme_stylesheet_link_tag(*args)
-    themed_args = args.select{ |a| a.class!=Hash }.map{ |s| "#{theme_name}/#{s.to_s}"}
-    options = args.select{ |a| a.class==Hash}.first || { }
-    options[:plugin] = 'redmine_backlogs'
-    themed_args << options
-    stylesheet_link_tag *themed_args
-  end
-
   def tracker_id_or_empty(story)
     story.new_record? ? "" : story.tracker_id
   end
