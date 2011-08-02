@@ -1,9 +1,8 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
   <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
-  <%= theme_stylesheet_link_tag 'taskboard.css', :media => 'print,screen' %>
-  <%= theme_stylesheet_link_tag 'taskboard_print.css', :media => 'print' %>
+  <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+  <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
   <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.identifier, :sprint_id => @sprint.id, :format => :js, :section => 'taskboard') %>"></script>
 <% end %>
 

@@ -1,15 +1,5 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
 
-<script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'jquery', :project_id => @project.identifier) %>"></script>
-<%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery.cookie.js', :plugin => 'redmine_backlogs' %>
-<!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
-<%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs' %>
-
 <script type="text/javascript" language="javascript">
   <%-
       burndown = sprint.burndown
@@ -42,9 +32,7 @@
           :highlighter => { :tooltipAxes => 'y', :formatString => '%s' }
         }
       }
-      jqplot_css = Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery.jqplot/jquery.jqplot.min.css')
   %>
-  RB.$('head').append('<link rel="stylesheet" href="<%= jqplot_css %>" type="text/css" />');
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json %>;
   RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
   RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: RB.$.jqplot.CanvasAxisTickRenderer};
