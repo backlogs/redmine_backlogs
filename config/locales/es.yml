@@ -119,3 +119,4 @@ es:
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
+  current_open_story_points: "Current open story points:"
