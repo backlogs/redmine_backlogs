@@ -167,5 +167,5 @@ end
 
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
   issue = Issue.find_by_subject(subject)
-  issue[attribute].should == value.to_i
+  issue.send(attribute.intern).should == value.to_i
 end

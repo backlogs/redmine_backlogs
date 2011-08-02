@@ -13,6 +13,7 @@ When /^I (try to )?create the story$/ do |attempt|
 end
 
 When /^I (try to )?create the task$/ do |attempt|
+  initial_estimate = @task_params.delete('initial_estimate')
   page.driver.process :post, 
                       url_for(:controller => :rb_tasks, :action => :create),
                       @task_params
