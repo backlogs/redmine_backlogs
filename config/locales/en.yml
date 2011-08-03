@@ -130,3 +130,7 @@ en:
   rb_task_cards_story_follows_tasks: Tasks followed by their story
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_task_cards_stories_then_tasks: First all stories, then all tasks
+
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"

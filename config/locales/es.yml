@@ -120,3 +120,7 @@ es:
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
   current_open_story_points: "Current open story points:"
+
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"

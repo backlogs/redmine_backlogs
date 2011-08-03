@@ -218,3 +218,6 @@ zh:
     6ZSZ6K+v44CC
 
   current_open_story_points: "Current open story points:"
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"

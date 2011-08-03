@@ -113,3 +113,6 @@ en-GB:
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_task_cards_stories_then_tasks: First all stories, then all tasks
   current_open_story_points: "Current open story points:"
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"

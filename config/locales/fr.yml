@@ -85,3 +85,6 @@ fr:
   remaining_hours: heures restantes
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau."
   current_open_story_points: "Current open story points:"
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"

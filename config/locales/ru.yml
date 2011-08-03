@@ -122,3 +122,6 @@ ru:
   rb_label_copy_tasks_all: "Все (Копировать все задания)"
   rb_label_copy_tasks_open: "Открыть"
   current_open_story_points: "Current open story points:"
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: "Disable"
