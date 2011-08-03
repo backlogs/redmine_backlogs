@@ -7,9 +7,6 @@
         td.selected { font-weight: bold; }
       </style>
     <%- end %>
-    <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'jquery', :project_id => @project.identifier) %>"></script>
-    <%= javascript_include_tag 'common.js', :plugin => 'redmine_backlogs' %>
-
     <script type="text/javascript">
         function enable_apply()
         {

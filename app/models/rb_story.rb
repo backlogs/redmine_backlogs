@@ -53,6 +53,19 @@ class RbStory < Issue
       return RbStory.backlog(sprint.project.id, sprint.id, options)
     end
 
+    def self.stories_open(project)
+      stories = []
+
+      RbStory.find(:all,
+            :order => RbStory::ORDER,
+            :conditions => ["project_id = ? AND tracker_id in (?) and is_closed = ?",project.id,RbStory.trackers,false],
+            :joins => :status).each_with_index {|story, i|
+        story.rank = i + 1
+        stories << story
+      }
+      return stories
+    end
+
     def self.create_and_position(params)
       attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and RbStory.column_names.include? k }
       attribs = Hash[*attribs.flatten]
