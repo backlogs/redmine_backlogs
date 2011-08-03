@@ -7,6 +7,8 @@
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
 
 <%= render :partial => 'shared/head' %>
+<%= stylesheet_link_tag 'global.css', 'jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+<%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
 <%= yield :head_tags -%>
 </head>

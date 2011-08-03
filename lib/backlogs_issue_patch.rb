@@ -142,9 +142,17 @@ module Backlogs
       end
 
       def initial_estimate
-        e = self.historic(:first, 'estimated_hours')
-        return nil if e.nil?
-        return Float(e)
+        return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
+
+        if self.leaf?
+          e = self.historic(:first, 'estimated_hours')
+          return nil if e.nil?
+          return Float(e)
+        else
+          e = self.leaves.collect{|t| t.initial_estimate}.compact
+          return nil if e.size == 0
+          return e.sum
+        end
       end
     end
   end
