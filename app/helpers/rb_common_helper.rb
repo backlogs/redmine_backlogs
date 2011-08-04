@@ -183,9 +183,9 @@ module RbCommonHelper
     end
   end
 
-  # Returns a collection of users for a select field.
+  # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
   def user_collection_for_select_options
-    users = @projects = User.find(:all)
+    users = User.find(:all)
     collection = []
     users.each do |a|
       roles = a.roles_for_project(@project)

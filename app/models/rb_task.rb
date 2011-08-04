@@ -167,29 +167,29 @@ class RbTask < Issue
 
   def time_entry_add(params)
     if !params[:time_entry_hours].blank?
-	@time_entry = TimeEntry.new(:issue => self, :project => self.project) 
-	# Make sure user has permission to edit time entries to allow 
-	# logging time for other users
-	if User.current.allowed_to?(:edit_time_entries, self.project)
-		@time_entry.user_id = params[:time_entry_user_id]
-	else
-		# Otherwise log time for current user
-		@time_entry.user_id = User.current.id
-	end
-	if !params[:time_entry_spent_on].blank?
-		@time_entry.spent_on = params[:time_entry_spent_on]
-	else
-		@time_entry.spent_on = Date.today
-	end
-	@time_entry.hours = params[:time_entry_hours]
-	# Choose default activity
-	# If default is not defined first activity will be chosen
-	if default_activity = TimeEntryActivity.default
-		@time_entry.activity_id = default_activity.id
-	else
-		@time_entry.activity_id = TimeEntryActivity.first.id
-	end
-	self.time_entries << @time_entry
+      @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
+      # Make sure user has permission to edit time entries to allow 
+      # logging time for other users
+      if User.current.allowed_to?(:edit_time_entries, self.project)
+        @time_entry.user_id = params[:time_entry_user_id]
+      else
+        # Otherwise log time for current user
+        @time_entry.user_id = User.current.id
+      end
+      if !params[:time_entry_spent_on].blank?
+        @time_entry.spent_on = params[:time_entry_spent_on]
+      else
+        @time_entry.spent_on = Date.today
+      end
+      @time_entry.hours = params[:time_entry_hours]
+      # Choose default activity
+      # If default is not defined first activity will be chosen
+      if default_activity = TimeEntryActivity.default
+        @time_entry.activity_id = default_activity.id
+      else
+        @time_entry.activity_id = TimeEntryActivity.first.id
+      end
+      self.time_entries << @time_entry
     end
   end
 end
