@@ -135,10 +135,18 @@ module Backlogs
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
         end
 
-        obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
-        return obj.old_value if obj && obj.old_value
-        return obj.value if obj && obj.value
-        return self.send(property.intern)
+        d = d.is_a?(Symbol) ? nil : Date.civil(date.year, date.mon, date.mday)
+
+        return Rails.cache.fetch("RbIssue(#{self.id})#historic(#{date},#{property})", :force => !d || d < Date.today) {
+          obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
+          if obj && obj.old_value
+            obj.old_value
+          elsif obj && obj.value
+            obj.value
+          else
+            self.send(property.intern)
+          end
+        }
       end
 
       def initial_estimate
