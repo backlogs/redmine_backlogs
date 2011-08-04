@@ -20,26 +20,31 @@
 <%- content_for :main do %>
   <div id="backlogs_container">
     <div id="product_backlog_container">
-      <%= render :partial => 'backlog', :object => @product_backlog %>
+      <%= render :partial => 'product_backlog', :object => @product_backlog %>
     </div>
     <div id="top_sprint_backlogs_container">
       <div id="sprint_backlogs_container">
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
-      <!--TIB backlogs des sprints terminés -->
       <!--script for collapsing closed backlog div-->
       <script language="javascript">
 		  function toggleDiv(divid){
 		    if(document.getElementById(divid).style.display == 'none'){
 		      document.getElementById(divid).style.display = 'block';
+		      document.getElementById('toggle').innerHTML = 'Hide Completed Sprints'
 		    }else{
 		      document.getElementById(divid).style.display = 'none';
+		      document.getElementById('toggle').innerHTML = 'Show Completed Sprints'
 		    }
 		  }
 	  </script>
-	  <a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');">Toggle Completed Sprints Visibility<br></a>
+	  <br><a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');" id="toggle">Show Completed Sprints</a><br><br>
       <div id="closed_sprint_backlogs_container" style="display:none">
-        <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
+      	<%if @c_sprint_backlogs.empty? %>
+      	  <div>No data to show</div>
+      	<%else%>
+          <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
+        <% end %>
       </div>
       <div id="dummy_backlog_container"></div>
     </div>

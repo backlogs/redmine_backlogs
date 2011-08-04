@@ -183,7 +183,6 @@ class Sprint < Version
         }
     }
     
-    #TIB ajout du named_scope :closed_sprints
     named_scope :closed_sprints, lambda { |project|
         {
             :order => 'sprint_start_date ASC, effective_date ASC',

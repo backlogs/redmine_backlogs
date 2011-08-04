@@ -1,5 +1,4 @@
 include RbCommonHelper
-#TIB
 include ProjectsHelper
 
 # Responsible for exposing release CRUD.
