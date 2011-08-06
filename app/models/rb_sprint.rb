@@ -180,8 +180,8 @@ class RbSprint < Version
         dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
         dy = nil if issue.created_on >= dy + day
         dy = (first.delete(:first) || dy) if dy
-        dy = nil if dy && issue.historic(dy, 'fixed_version_id'){|id| Integer(id)} != self.id
-        dy = nil if dy && IssueStatus.find(Integer(issue.historic(dy, 'status_id'))).is_closed?
+        dy = nil if dy && issue.historic(dy, 'fixed_version_id') != self.id
+        dy = nil if dy && IssueStatus.find(issue.historic(dy, 'status_id')).is_closed?
         dy
       }
       dates << (dates[-1] ? :last : nil)

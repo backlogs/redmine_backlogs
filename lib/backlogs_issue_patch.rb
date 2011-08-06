@@ -138,25 +138,40 @@ module Backlogs
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
         end
 
-        obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
-        v = if obj && obj.old_value
-              obj.old_value
-            elsif obj && obj.value
-              obj.value
-            else
-              self.send(property.intern)
+        Rails.cache.fetch("RbIssue(#{id}).historic(#{date}, #{property})", :force => date.is_a?(Symbol) || date.to_date == Date.today) {
+          j = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
+
+          if j.nil?
+            v = self.send(property.intern)
+          else
+            v = j.old_value || j.value
+
+            if v
+              @@backlogs_column_type ||= {}
+              @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == property}.collect{|c| c.type}[0]
+
+              case @@backlogs_column_type[property]
+                when :integer
+                  v = Integer(v)
+                when :float
+                  v = Float(v)
+                when :string
+                  v = v.to_s
+                else
+                  raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
+              end
             end
+          end
 
-        v = yield(v) if v && block_given?
-
-        return v
+          v
+        }
       end
 
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
         if self.leaf?
-          return self.historic(:first, 'estimated_hours'){|h| Float(h)}
+          return self.historic(:first, 'estimated_hours')
         else
           e = self.leaves.collect{|t| t.initial_estimate}.compact
           return nil if e.size == 0

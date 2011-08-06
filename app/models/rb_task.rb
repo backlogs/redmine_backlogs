@@ -133,7 +133,7 @@ class RbTask < Issue
     unless @burndown
       sprint ||= story.fixed_version.becomes(RbSprint)
       if sprint
-        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours'){|h| Float(h) }}
+        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours')}
       else
         @burndown = nil
       end
