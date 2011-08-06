@@ -12,7 +12,7 @@ class BurndownFromJournal < ActiveRecord::Migration
       converted = 0
       if issues.size != 0
         puts "Setting initial value for #{issues.size} issues. This will take a while. Sorry."
-        while ((chunk = issues.slice!(1, 100)).size != 0) do
+        issues.in_groups_of(100, false) do |chunk|
           b = Benchmark.measure {
             chunk.each {|issue|
               issue = RbTask.find(issue.id)
@@ -29,20 +29,23 @@ class BurndownFromJournal < ActiveRecord::Migration
         end
       end
 
-      ids = ids.join(',')
-      if ids != ''
-        # remove journal entries for estimated_hours for converted journals (shouldn't have changed much since remaining was kept in a separate column)
-        execute "delete from journal_details where prop_key = 'estimated_hours'
-                 and journal_id in (select id from journals
-                                    where journalized_type='Issue'
-                                    and journalized_id in (#{ids}))"
+      issues = ids
+      if issues.size != 0
+        ids.in_groups_of(50, false) do |ids|
+          ids = ids.join(',')
+          # remove journal entries for estimated_hours for converted journals (shouldn't have changed much since remaining was kept in a separate column)
+          execute "delete from journal_details where prop_key = 'estimated_hours'
+                  and journal_id in (select id from journals
+                                      where journalized_type='Issue'
+                                      and journalized_id in (#{ids}))"
 
-        # change journal for remaining_hours into estimated_hours
-        execute "update journal_details set prop_key='estimated_hours'
-                 where prop_key='remaining_hours'
-                 and journal_id in (select id from journals
-                                where journalized_type='Issue'
-                                and journalized_id in (#{ids}))"
+          # change journal for remaining_hours into estimated_hours
+          execute "update journal_details set prop_key='estimated_hours'
+                  where prop_key='remaining_hours'
+                  and journal_id in (select id from journals
+                                  where journalized_type='Issue'
+                                  and journalized_id in (#{ids}))"
+        end
       end
     end
 
