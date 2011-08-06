@@ -127,18 +127,17 @@ module Backlogs
         case date
           when :last
             return self.send(property.intern)
-
-          when :first
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
-
           when nil
             return nil
-
-          else
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
         end
 
         Rails.cache.fetch("RbIssue(#{id}).historic(#{date}, #{property})", :force => date.is_a?(Symbol) || date.to_date == Date.today) {
+          if date == :first
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
+          else
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
+          end
+
           j = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
 
           if j.nil?
