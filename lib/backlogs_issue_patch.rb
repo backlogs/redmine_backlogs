@@ -131,23 +131,32 @@ module Backlogs
           when :first
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
 
+          when nil
+            return nil
+
           else
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
         end
 
         obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
-        return obj.old_value if obj && obj.old_value
-        return obj.value if obj && obj.value
-        return self.send(property.intern)
+        v = if obj && obj.old_value
+              obj.old_value
+            elsif obj && obj.value
+              obj.value
+            else
+              self.send(property.intern)
+            end
+
+        v = yield(v) if v && block_given?
+
+        return v
       end
 
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
         if self.leaf?
-          e = self.historic(:first, 'estimated_hours')
-          return nil if e.nil?
-          return Float(e)
+          return self.historic(:first, 'estimated_hours'){|h| Float(h)}
         else
           e = self.leaves.collect{|t| t.initial_estimate}.compact
           return nil if e.size == 0

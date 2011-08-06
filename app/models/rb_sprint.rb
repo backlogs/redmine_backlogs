@@ -7,31 +7,32 @@ class Burndown
     @sprint_id = sprint.id
     @days = sprint.days(:all)
 
-    # these dates are actually :first (= value at start of sprint, x * end of day, :last (= value at end of sprint)
-    active = sprint.days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
-    active[0] = :first
-    active << :last
+    stories = sprint.stories | Journal.find(:all, :joins => :details,
+                                            :conditions => ["journalized_type = 'Issue'
+                                                            and property = 'attr' and prop_key = 'fixed_version_id'
+                                                            and (value = ? or old_value = ?)", sprint.id, sprint.id]).collect{|j| j.journalized.becomes(RbStory) }
 
-    data = sprint.stories.collect{|s| s.burndown }
-
-    # active has the start value added, so subtract one
-    days = active.size - 1
-    active = (0..days)
+    data = stories.collect{|s| s.burndown(sprint) }
+    if data.size == 0
+      data = []
+      [:points, :hours, :points_accepted, :points_resolved].each {|key| data[key] = [nil] * (@days.size + 1) }
+    end
 
     @data = {}
 
-    @data[:points_committed] = active.collect{|i| data.collect{|s| s[:points][i] }.compact.inject(0) {|total, p| total + p}}
-    @data[:hours_remaining] = active.collect{|i| data.collect{|s| s[:hours][i] }.compact.inject(0) {|total, h| total + h}}
+    [:points, :hours, :points_accepted, :points_resolved].each {|key|
+      @data[key] = data.collect{|d| d[key]}.transpose.collect{|d| d.compact.sum}
+    }
+    @data[:points_committed] = @data.delete(:points)
+    @data[:hours_remaining] = @data.delete(:hours)
+
     @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
 
-    @data[:points_accepted] = active.collect{|i| data.collect{|s| s[:points_accepted][i] }.compact.inject(0) {|total, p| total + p}}
-    @data[:points_resolved] = active.collect{|i| data.collect{|s| s[:points_resolved][i] }.compact.inject(0) {|total, p| total + p}}
+    @data[:points_to_resolve] = @data[:points_committed].zip(@data[:points_resolved]).collect{|cr| cr[0] - cr[1]}
+    @data[:points_to_accept] = @data[:points_committed].zip(@data[:points_accepted]).collect{|cr| cr[0] - cr[1]}
 
-    @data[:points_to_resolve] = active.collect{|i| @data[:points_committed][i] - @data[:points_resolved][i] }
-    @data[:points_to_accept] = active.collect{|i| @data[:points_accepted][i] - @data[:points_resolved][i] }
-
-    @data[:points_required_burn_rate] = active.collect{|i| if @days.size == i then Float(@data[:points_to_resolve][i]) else Float(@data[:points_to_resolve][i]) / (@days.size - i) end}
-    @data[:hours_required_burn_rate] = active.collect{|i|  if @days.size == i then Float(@data[:hours_remaining][i]) else Float(@data[:hours_remaining][i]) / (@days.size - i) end}
+    @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
+    @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}
 
     if burn_direction == 'up'
       @data.delete(:points_to_resolve)
@@ -156,7 +157,7 @@ class RbSprint < Version
         return wiki_page_title
     end
 
-    def days(cutoff)
+    def days(cutoff, issue=nil)
       return nil unless has_burndown
 
       case cutoff
@@ -170,7 +171,21 @@ class RbSprint < Version
 
       # assumes mon-fri are working days, sat-sun are not. this
       # assumption is not globally right, we need to make this configurable.
-      return d.select {|d| (d.wday > 0 and d.wday < 6) }
+      d = d.select {|d| (d.wday > 0 and d.wday < 6) }
+      return d unless issue
+
+      first = {:first => :first}
+      day = 60 * 60 * 24
+      dates = d.collect{|dy|
+        dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
+        dy = nil if issue.created_on >= dy + day
+        dy = (first.delete(:first) || dy) if dy
+        dy = nil if dy && issue.historic(dy, 'fixed_version_id'){|id| Integer(id)} != self.id
+        dy = nil if dy && IssueStatus.find(Integer(issue.historic(dy, 'status_id'))).is_closed?
+        dy
+      }
+      dates << (dates[-1] ? :last : nil)
+      return dates
     end
 
     def eta
