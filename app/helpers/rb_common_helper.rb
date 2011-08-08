@@ -184,7 +184,7 @@ module RbCommonHelper
   end
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
-  def user_collection_for_select_options
+  def users_allowed_to_log_on_task
     users = User.find(:all)
     collection = []
     users.each do |a|

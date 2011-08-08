@@ -70,7 +70,7 @@
 
 <%- content_for :helpers do %>
   <select class="time_entry_user_id template" id="time_entry_user_id_options">
-    <%- user_collection_for_select_options.each do |u| %>
+    <%- users_allowed_to_log_on_task.each do |u| %>
       <option value="<%= u[1] %>"><%= u[0] %></option>
     <%- end %>
   </select>
