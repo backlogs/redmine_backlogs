@@ -5,7 +5,7 @@
 RB.Taskboard = RB.Object.create(RB.Model, {
     
   initialize: function(el){
-    var j = $(el);
+    var j = RB.$(el);
     var self = this; // So we can bind the event handlers to this object
     
     self.$ = j;
@@ -15,11 +15,11 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     j.data('this', self);
 
     // Initialize column widths
-    self.colWidthUnit = $(".swimlane").width();
+    self.colWidthUnit = RB.$(".swimlane").width();
     self.defaultColWidth = 2;
     self.loadColWidthPreference();
     self.updateColWidths();
-    $("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
+    RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
 
     // Initialize task lists
     j.find("#tasks .list").sortable({ 
@@ -74,13 +74,13 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
 
   handleAddNewImpedimentClick: function(event){
-    var row = $(this).parents("tr").first();
-    $('#taskboard').data('this').newImpediment(row);
+    var row = RB.$(this).parents("tr").first();
+    RB.$('#taskboard').data('this').newImpediment(row);
   },
   
   handleAddNewTaskClick: function(event){
-    var row = $(this).parents("tr").first();
-    $('#taskboard').data('this').newTask(row);
+    var row = RB.$(this).parents("tr").first();
+    RB.$('#taskboard').data('this').newTask(row);
   },
 
   loadColWidthPreference: function(){
@@ -89,30 +89,30 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       w = this.defaultColWidth;
       RB.UserPreferences.set('taskboardColWidth', w);
     }
-    $("#col_width input").val(w);
+    RB.$("#col_width input").val(w);
   },
 
   newImpediment: function(row){
-    var impediment = $('#impediment_template').children().first().clone();
+    var impediment = RB.$('#impediment_template').children().first().clone();
     row.find(".list").first().prepend(impediment);
     var o = RB.Factory.initialize(RB.Impediment, impediment);
     o.edit();
   },
         
   newTask: function(row){
-    var task = $('#task_template').children().first().clone();
+    var task = RB.$('#task_template').children().first().clone();
     row.find(".list").first().prepend(task);
     var o = RB.Factory.initialize(RB.Task, task);
     o.edit();
   },
   
   updateColWidths: function(){
-    var w = parseInt($("#col_width input").val());
+    var w = parseInt(RB.$("#col_width input").val());
     if(w==null || isNaN(w)){
       w = this.defaultColWidth;
     }
-    $("#col_width input").val(w)
+    RB.$("#col_width input").val(w)
     RB.UserPreferences.set('taskboardColWidth', w);
-    $(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
+    RB.$(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
   }
 });

@@ -2,8 +2,8 @@
 <% content_for :head_tags do %>
   <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery.qtip.pack.js', 'jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jqplot.css', 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
-  <%= theme_stylesheet_link_tag 'taskboard.css',  :media => 'print,screen' %>
-  <%= theme_stylesheet_link_tag 'taskboard_print.css', :media => 'print' %>
+  <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+  <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
   <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.id, :sprint_id => @sprint.id) %>"></script>
 <% end %>
 
@@ -49,8 +49,9 @@
     <%- @sprint.stories.each do |story| %>  
     <tr>
       <td>
-        <div class="story <%= mark_if_closed(story) %>">
+        <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
           <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
+            <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
           <div class="subject"><%= story.subject %></div>
@@ -69,6 +70,12 @@
 <%- end %>
 
 <%- content_for :helpers do %>
+  <select class="priority_id template" id="priority_id_options">
+    <%- IssuePriority.all.each do |p| %>
+    <option value="<%= p.id %>"><%= p.name %></option>
+    <%- end %>
+  </select>
+
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value=""> </option>
     <%- @project.members.each do |member| %>
@@ -76,10 +83,10 @@
     <%- end %>
   </select>
   <div id="task_template">
-    <%= render :partial => "rb_tasks/task", :object => Task.new %>
+    <%= render :partial => "rb_tasks/task", :object => RbTask.new %>
   </div>
   <div id="impediment_template">
-    <%= render :partial => "rb_impediments/impediment", :object => Task.new %>
+    <%= render :partial => "rb_impediments/impediment", :object => RbTask.new %>
   </div>
   <!-- end of templates -->
   <div id="issue_editor"> </div>

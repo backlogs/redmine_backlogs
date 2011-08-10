@@ -1,4 +1,4 @@
-$.qtipMakeOptions = function(container) {
+jQuery.qtipMakeOptions = function(container) {
     return {
         content: {
             text: container.attr('title')
@@ -6,7 +6,7 @@ $.qtipMakeOptions = function(container) {
         position: {
             my: 'top left',
             target: 'mouse',
-            viewport: $(window), // Keep it on-screen at all times if possible
+            viewport: jQuery(window), // Keep it on-screen at all times if possible
             adjust: {
                 x: 10,  y: 10
             }
@@ -17,9 +17,9 @@ $.qtipMakeOptions = function(container) {
     }
 }
 
-$(function() {
-    $('div.story_tooltip').each(function(el) {
-        var _ = $(this);
-        _.qtip($.qtipMakeOptions(_));
+jQuery(function() {
+    jQuery('div.story_tooltip').each(function(el) {
+        var _ = jQuery(this);
+        _.qtip(jQuery.qtipMakeOptions(_));
     });
 });

@@ -9,9 +9,12 @@
     <div class="t"><%= assignee_name_or_empty(impediment) %></div>
     <div class="v"><%= assignee_id_or_empty(impediment) %></div>
   </div>
-  <div class="remaining_hours editable" fieldname="remaining_hours"><%= remaining_hours(impediment) %></div>
+  <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(impediment) %></div>
   <div class="indicator"> </div>
   <div class="meta">
+    <!-- friflaj:
+      TODO: I don't get this -- impediments aren't tied to a story, and Task explicitly assumes they're top-level issues 
+    -->
     <div class="story_id"><%= impediment.parent_id %></div>
     <div class="status_id"><%= impediment.status_id %></div>
     <%= render :partial => "shared/model_errors", :object => impediment.errors %>

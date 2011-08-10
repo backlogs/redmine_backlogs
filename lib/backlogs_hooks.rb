@@ -7,7 +7,7 @@ module BacklogsPlugin
 
       def view_issues_sidebar_planning_bottom(context={ })
         locals = {}
-        locals[:sprints] = context[:project] ? Sprint.open_sprints(context[:project]) : []
+        locals[:sprints] = context[:project] ? RbSprint.open_sprints(context[:project]) : []
         locals[:project] = context[:project]
         locals[:sprint] = nil
         locals[:webcal] = (context[:request].ssl? ? 'webcals' : 'webcal')
@@ -23,7 +23,7 @@ module BacklogsPlugin
         if q && q[:filters]
           sprint = q[:filters]['fixed_version_id']
           if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-            locals[:sprint] = Sprint.find_by_id(sprint[:values][0])
+            locals[:sprint] = RbSprint.find_by_id(sprint[:values][0])
           end
         end
 
@@ -41,13 +41,13 @@ module BacklogsPlugin
         snippet = ''
 
         if issue.is_story?
-          snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{Story.find(issue.id).points_display}</td></tr>"
+          snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td></tr>"
           vbe = issue.velocity_based_estimate
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
         end
 
-        if issue.is_task? || (issue.is_story? && issue.descendants.length == 0)
-          snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
+        if issue.is_task?
+          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.historic(:first, 'estimated_hours')}</td></tr>"
         end
 
         return snippet
@@ -89,13 +89,6 @@ module BacklogsPlugin
           end
         end
 
-        if issue.is_task? || (issue.is_story? && issue.descendants.length == 0)
-          snippet += '<p>'
-          #snippet += context[:form].label(:remaining_hours)
-          snippet += context[:form].text_field(:remaining_hours, :size => 3)
-          snippet += '</p>'
-        end
-
         params = context[:controller].params
         if issue.is_story? && params[:copy_from]
           snippet += "<p><label for='link_to_original'>#{l(:rb_label_link_to_original)}</label>"
@@ -105,6 +98,12 @@ module BacklogsPlugin
           snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], true)} #{l(:rb_label_copy_tasks_open)}<br />"
           snippet += "#{radio_button_tag('copy_tasks', 'none', false)} #{l(:rb_label_copy_tasks_none)}<br />"
           snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
+        end
+
+        if issue.is_task?
+          snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
+          snippet += text_field_tag('initial_estimate', issue.historic(:first, 'estimated_hours'), :size => 3)
+          snippet += '</p>'
         end
 
         return snippet
@@ -161,34 +160,52 @@ module BacklogsPlugin
             rel.save
           end
 
-          if params[:copy_tasks]
-            params[:copy_tasks] += ':' if params[:copy_tasks] !~ /:/
+          if params[:copy_tasks] =~ /^[a-z]+:[0-9]+$/
             action, id = *(params[:copy_tasks].split(/:/))
 
-            story = (id == '' ? nil : Story.find(Integer(id)))
+            story = RbStory.find(Integer(id))
 
-            if ! story.nil? && action != 'none'
-              tasks = story.tasks
+            if action != 'none'
               case action
                 when 'open'
-                  tasks = tasks.select{|t| !t.closed?}
-                when 'all', 'none'
-                  #
+                  tasks = story.tasks.select{|t| !t.reload.closed?}
+                when 'none'
+                  tasks = []
+                when 'all'
+                  tasks = story.tasks
                 else
                   raise "Unexpected value #{params[:copy_tasks]}"
               end
 
               tasks.each {|t|
-                nt = Task.new
+                nt = RbTask.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
-                nt.save
+                nt.save!
               }
             end
           end
         end
       end
 
+      def controller_issues_edit_after_save(context={ })
+        params = context[:params]
+        issue = context[:issue]
+
+        if issue.is_task?
+          begin
+            initial_estimate = Float(params[:initial_estimate])
+          rescue ArgumentError, TypeError
+            initial_estimate = nil
+          end
+
+          issue.becomes(RbTask).set_initial_estimate(initial_estimate) if initial_estimate
+        end
+      end
+
+      def view_layouts_base_html_head(context={ })
+        return context[:controller].send(:render_to_string, { :partial => 'shared/head' })
+      end
     end
   end
 end

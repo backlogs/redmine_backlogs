@@ -17,6 +17,10 @@ module RbCommonHelper
     task.blank? || task.assigned_to.blank? ? '' : "style='background-color:#{task.assigned_to.backlogs_preference(:task_color)}'"
   end
 
+  def build_inline_style_color(task)
+    task.blank? || task.assigned_to.blank? ? '' : "#{task.assigned_to.backlogs_preference(:task_color)}"
+  end 
+  
   def breadcrumb_separator
     "<span class='separator'>&gt;</span>"
   end
@@ -93,18 +97,6 @@ module RbCommonHelper
     textile.nil? ? "" : Redmine::WikiFormatting::Textile::Formatter.new(textile).to_html
   end
 
-  def theme_name
-    'rb_default'
-  end
-
-  def theme_stylesheet_link_tag(*args)
-    themed_args = args.select{ |a| a.class!=Hash }.map{ |s| "#{theme_name}/#{s.to_s}"}
-    options = args.select{ |a| a.class==Hash}.first || { }
-    options[:plugin] = 'redmine_backlogs'
-    themed_args << options
-    stylesheet_link_tag *themed_args
-  end
-
   def tracker_id_or_empty(story)
     story.new_record? ? "" : story.tracker_id
   end
@@ -122,8 +114,8 @@ module RbCommonHelper
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
   end
 
-  def remaining_hours(item)
-    item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
+  def estimated_hours(item)
+    item.estimated_hours.blank? || item.estimated_hours==0 ? "" : item.estimated_hours
   end
 
   def workdays(start_day, end_day)
@@ -172,5 +164,26 @@ module RbCommonHelper
       end
     end
     export
+  end
+
+  # Renders the project quick-jump box
+  def render_backlog_project_jump_box
+    projects = EnabledModule.find(:all,
+                             :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
+                             :include => :project,
+                             :joins => :project).collect { |mod| mod.project}
+
+    projects = Member.find(:all, :conditions => ["user_id = ? and project_id IN (?)", User.current.id, projects.collect(&:id)]).collect{ |m| m.project}
+
+    if projects.any?
+      s = '<select onchange="if (this.value != \'\') { window.location = this.value; }">' +
+            "<option value=''>#{ l(:label_jump_to_a_project) }</option>" +
+            '<option value="" disabled="disabled">---</option>'
+      s << project_tree_options_for_select(projects, :selected => @project) do |p|
+        { :value => url_for(:controller => 'rb_master_backlogs', :action => 'show', :project_id => p, :jump => current_menu_item) }
+      end
+      s << '</select>'
+      s
+    end
   end
 end

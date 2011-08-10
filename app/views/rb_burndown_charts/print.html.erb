@@ -1,0 +1,10 @@
+<html><head>
+  <title><%= h(@sprint.name) %></title>
+  <%= render :partial => 'shared/head' %>
+</head><body>
+<% if @sprint.has_burndown %>
+  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => 'width:1300px; height: 600px' } %>
+<% else %>
+  No burndown data available -- are the sprint start- and end dates set?
+<% end %>
+</body>

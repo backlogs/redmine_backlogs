@@ -1,9 +1,7 @@
 <%- charts = (burndown.is_a?(Array) ? burndown : [burndown]) %>
 <%- dataseries = charts[0].series(:all).collect{|series| series.name } %>
 
-  <%= stylesheet_link_tag 'jqplot.css', :plugin => 'redmine_backlogs' %>
-
-  <%= javascript_include_tag 'jquery-1.4.2.min.js', :plugin => 'redmine_backlogs' %>
+  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'jquery', :project_id => @project.identifier) %>"></script>
   <!--[if IE]><%= javascript_include_tag 'jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %><![endif]-->
   <%= javascript_include_tag 'jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
   <%= javascript_include_tag 'jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>

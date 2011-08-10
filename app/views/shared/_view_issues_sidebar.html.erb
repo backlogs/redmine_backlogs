@@ -18,7 +18,7 @@
               :action => 'show',
               :project_id => project.id
               }) %><br/>
-      <% if Cards::TaskboardCards.selected_label %>
+      <% if BacklogsCards::LabelStock.selected_label %>
         <%= link_to(l(:label_product_cards), {
                 :controller => 'rb_stories',
                 :action => 'index',
@@ -56,7 +56,7 @@
                 })
         %><br/>
 
-        <% if Cards::TaskboardCards.selected_label %>
+        <% if BacklogsCards::LabelStock.selected_label %>
           <%= link_to(l(:label_sprint_cards), {
                   :controller => 'rb_stories',
                   :action => 'index',
@@ -75,8 +75,12 @@
                     })
             %><br/>
         <% end %>
-
-        <div id="burndown_<%= sprint.id %>" class="minimal" style="margin-left:0px; margin-top:20px; width:250px; height:192px;"></div>
-        <%= render :partial => "rb_burndown_charts/burndown", :locals => {:div => 'burndown_', :burndown => sprint.burndown } %>
+        <%= link_to(l(:label_impediments), {
+                :controller => 'rb_queries',
+                :action => 'impediments',
+                :project_id => project.id,
+                :sprint_id => sprint.id
+                }) %><br/>
+        <%= render :partial => "rb_burndown_charts/burndown", :locals => {:sprint => sprint, :mode => :minimal, :style => 'margin-left:0px; margin-top:20px; width:250px; height:192px;' } %>
     <% end %>
 </div>

@@ -5,7 +5,7 @@ RB.Issue = RB.Object.create(RB.Model, {
   
   initialize: function(el){
     var j;
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
   },
   

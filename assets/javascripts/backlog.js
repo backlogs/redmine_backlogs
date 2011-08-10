@@ -16,7 +16,7 @@ RB.Backlog = RB.Object.create({
     var j;  // This ensures that we use a local 'j' variable, not a global one.
     var self = this;
     
-    this.$ = j = $(el);
+    this.$ = j = RB.$(el);
     this.el = el;
     
     // Associate this object with the element for later retrieval
@@ -33,13 +33,11 @@ RB.Backlog = RB.Object.create({
                     update: function(e,u){ self.dragComplete(e, u) }
                     });
 
-    // Observe menu items
-    j.find('.new_story').bind('mouseup', this.handleMenuClick);
-    j.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) }); // capture 'click' instead of 'mouseup' so we can preventDefault();
-
     if(this.isSprintBacklog()){
       sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
     }
+
+    this.drawMenu();
 
     // Initialize each item in the backlog
     this.getStories().each(function(index){
@@ -47,9 +45,46 @@ RB.Backlog = RB.Object.create({
     });
     
     if (this.isSprintBacklog()) this.recalcVelocity();
-    
-    // Handle New Story clicks
-    j.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
+  },
+
+  afterCreate: function(data, textStatus, xhr){
+    this.drawMenu();
+  },
+
+  afterUpdate: function(data, textStatus, xhr){
+    this.drawMenu();
+  },
+
+  drawMenu: function()
+  {
+    var menu = this.$.find('ul.items');
+    var id = null;
+    var self = this;
+    if (this.isSprintBacklog()) {
+      id = this.getSprint().data('this').getID();
+    }
+    if (id == '') { return; } // template sprint
+
+    RB.ajax({
+      url: RB.routes.backlog_menu,
+      data: (id ? { sprint_id: id } : {}),
+      dataType: 'json',
+      success   : function(data,t,x) {
+        menu.empty();
+        if (data) {
+          for (var i = 0; i < data.length; i++) {
+            li = RB.$('<li class="item"><a href="#"></a></li>');
+            RB.$('a', li).attr('href', data[i].url).text(data[i].label);
+            if (data[i].classname) { RB.$('a', li).attr('class', data[i].classname); }
+            menu.append(li);
+          }
+        }
+        menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
+        menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
+        // capture 'click' instead of 'mouseup' so we can preventDefault();
+        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) });
+      }
+    });
   },
   
   dragComplete: function(event, ui) {
@@ -63,6 +98,7 @@ RB.Backlog = RB.Object.create({
     }
 
     this.recalcVelocity();
+    this.drawMenu();
   },
   
   dragStart: function(event, ui){ 
@@ -74,7 +110,7 @@ RB.Backlog = RB.Object.create({
   },
   
   getSprint: function(){
-    return $(this.el).find(".model.sprint").first();
+    return RB.$(this.el).find(".model.sprint").first();
   },
     
   getStories: function(){
@@ -87,41 +123,61 @@ RB.Backlog = RB.Object.create({
 
   handleNewStoryClick: function(event){
     event.preventDefault();
-    $(this).parents('.backlog').data('this').newStory();
+    RB.$(this).parents('.backlog').data('this').newStory();
+  },
+
+  handleNewSprintClick: function(event){
+    event.preventDefault();
+    RB.$(this).parents('.backlog').data('this').newSprint();
   },
 
   isSprintBacklog: function(){
-    return $(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
+    return RB.$(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
   },
     
-  newStory: function(){
-    var story = $('#story_template').children().first().clone();
+  newStory: function() {
+    var story = RB.$('#story_template').children().first().clone();
     
     this.getList().prepend(story);
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();
+    RB.$('html,body').animate({
+        scrollTop: story.find('.editor').first().offset().top-100
+        }, 200);
   },
   
+  newSprint: function(){
+    var sprint_backlog = RB.$('#sprint_template').children().first().clone();
+
+    RB.$("*#sprint_backlogs_container").append(sprint_backlog);
+    o = RB.Factory.initialize(RB.Backlog, sprint_backlog);
+    o.edit();
+    sprint_backlog.find('.editor' ).first().focus();
+    RB.$('html,body').animate({
+        scrollTop: sprint_backlog.find('.editor').first().offset().top
+        }, 200);
+  },
+
   recalcVelocity: function(){
     if( !this.isSprintBacklog() ) return true;
     total = 0;
     this.getStories().each(function(index){
-      total += $(this).data('this').getPoints();
+      total += RB.$(this).data('this').getPoints();
     });
     this.$.children('.header').children('.velocity').text(total);
   },
 
   showBurndownChart: function(event){
     event.preventDefault();
-    if($("#charts").length==0){
-      $( document.createElement("div") ).attr('id', "charts").appendTo("body");
+    if(RB.$("#charts").length==0){
+      RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
     }
-    $('#charts').html( "<div class='loading'>Loading data...</div>");
-    $('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
-    $('#charts').dialog({ 
-                          buttons: { "Close": function() { $(this).dialog("close") } },
-                          height: 790,
+    RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
+    RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
+    RB.$('#charts').dialog({ 
+                          buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
+                          height: 590,
                           modal: true, 
                           title: 'Charts', 
                           width: 710 

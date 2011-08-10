@@ -26,16 +26,16 @@ class RbApplicationController < ApplicationController
     settings = Setting.plugin_redmine_backlogs
     if settings[:story_trackers].blank? || settings[:task_tracker].blank?
       respond_to do |format|
-        format.html { render :file => "rb_common/not_configured" }
+        format.html { render :file => "shared/not_configured" }
       end
     end
   end
 
   def load_sprint
-    @sprint = Sprint.find(params[:sprint_id])
+    @sprint = RbSprint.find(params[:sprint_id])
   end  
 
   def load_release
-    @release = Release.find(params[:release_id])
+    @release = RbRelease.find(params[:release_id])
   end
 end

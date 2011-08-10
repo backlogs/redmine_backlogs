@@ -7,7 +7,41 @@ RB.constants = {
   sprint_id: <%= @sprint ? @sprint.id : "null" %>,
   protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
   request_forgery_protection_token: '<%= request_forgery_protection_token %>',
-  form_authenticity_token: '<%= form_authenticity_token %>'
+  form_authenticity_token: '<%= form_authenticity_token %>',
+  <%
+    default_status = IssueStatus.default
+    default_status = default_status.id.to_s if default_status
+
+    roles = User.current.roles_for_project(@project)
+    transitions = {:states => {}, :transitions => {} , :default => default_status }
+
+    RbStory.trackers.each {|tracker_id|
+      tracker = Tracker.find(tracker_id)
+      tracker_id = tracker_id.to_s
+
+      transitions[:transitions][tracker_id] = {}
+
+      tracker.issue_statuses.each {|status|
+        status_id = status.id.to_s
+
+        transitions[:states][status_id] = {:name => status.name, :closed => (status.is_closed? ? l(:label_closed_issues) + ' ' : "")}
+
+        [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
+          key = "#{creator ? '+' : '-'}c#{assignee ? '+' : '-'}a"
+
+          transitions[:transitions][tracker_id][key] ||= {}
+
+          allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id.to_s}
+          transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
+
+          allowed.unshift(status_id)
+
+          transitions[:transitions][tracker_id][key][status_id] = allowed.compact.uniq
+        }
+      }
+    }
+  %>
+  story_states: <%= transitions.to_json %>
 }
 
 RB.buildImageTag = function(name){
@@ -23,6 +57,7 @@ RB.urlFor = function(route_name, options){
 }
 
 RB.routes = {
+  create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
   update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',
   
   create_story: '<%= url_for(:controller => 'rb_stories', :action => 'create') %>',
@@ -35,7 +70,9 @@ RB.routes = {
   update_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'update', :id => ":id") %>',
 
   show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
-  show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>'
+  show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
+
+  backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => :json, :only_path => true) %>'
 }
 
 if(typeof console != "undefined" && console != null) console.log('*** server variables loaded ***');

@@ -6,27 +6,32 @@ en:
   backlogs_sprints: "Sprints"
   field_story_points: "Story points"
   remaining_story_points: "remaining story points"
-  field_remaining_hours: "Remaining hours"
+  field_initial_estimate: "Initial estimate"
   button_edit_wiki: "Edit wiki page"
   field_backlogs_issue_type: "Backlog type"
   backlogs_story: Story
   backlogs_task: Task
   backlogs_any: any
+  backlogs_impediment: Impediment
   backlogs_points_burn_direction: "Points burn up/down"
   label_points_burn_up: Up
   label_points_burn_down: Down
   field_position: Position
+  field_initial_estimate: Initial estimate
   backlogs_product_backlog: "Product backlog"
+  label_impediments: Impediments
   backlogs_wiki_template: "Template for sprint wiki page"
-  points_committed: "points committed"
-  required_burn_rate_points: "required burn rate (points)"
-  required_burn_rate_hours: "required burn rate (hours)"
-  points_to_accept: "points not accepted"
-  points_accepted: "points accepted"
-  ideal: "ideal"
-  points_to_resolve: "points not resolved"
-  points_resolved: "points resolved"
-  remaining_hours: "remaining hours"
+
+  label_points_committed: "points committed"
+  label_points_required_burn_rate: "required burn rate (points)"
+  label_hours_required_burn_rate: "required burn rate (hours)"
+  label_points_to_accept: "points not accepted"
+  label_points_accepted: "points accepted"
+  label_hours_ideal: "ideal"
+  label_points_to_resolve: "points not resolved"
+  label_points_resolved: "points resolved"
+  label_hours_remaining: "remaining hours"
+
   field_velocity_based_estimate: "Velocity based estimate"
 
   backlogs_active: active
@@ -40,7 +45,7 @@ en:
   label_select_all: "Select all"
 
   label_back_to_project: "Back to project page"
-  label_sprint_name: "Sprint \"{{name}}\""
+  label_sprint_name: "Sprint \"%{name}\""
   label_backlogs: Backlogs
   label_scrum_statistics: "Scrum statistics"
 
@@ -62,20 +67,22 @@ en:
   label_points: points
   label_not_prioritized: "not prioritized"
 
-  label_backlogs_unconfigured: "You have not configured Backlogs yet. Please go to {{administration}} > {{plugins}}, then click on the {{configure}} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
+  label_backlogs_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
 
-  label_sprint_velocity: "Velocity {{velocity}}, based on {{sprints}} sprints with an average {{days}} days"
+  label_sprint_velocity: "Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days"
 
-  event_sprint_summary: "{{project}}: {{summary}}"
-  event_sprint_description: "{{summary}}: {{url}}\n{{description}}"
-  todo_issue_summary: "{{type}}: {{summary}}"
-  todo_issue_description: "{{summary}}: {{url}}\n{{description}}"
+  event_sprint_summary: "%{project}: %{summary}"
+  event_sprint_description: "%{summary}: %{url}\n%{description}"
+  todo_issue_summary: "%{type}: %{summary}"
+  todo_issue_description: "%{summary}: %{url}\n%{description}"
 
   label_chart_options: "Chart Options"
 
   error_intro_singular: "The following error was encountered:"
   error_intro_plural: "The following errors were encountered:"
   error_outro: "Please correct the above errors before submitting again."
+
+  error_taken: "is already in use"
 
   label_sprint_impediments: "Sprint Impediments"
 
@@ -85,7 +92,7 @@ en:
   error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
 
   field_tracker_id: Tracker ID
-  inclusion: "is not included in the list"
+  error_inclusion: "is not included in the list"
   
   label_webcal: Webcal Feed
   label_master_backlog: Master Backlog
@@ -95,8 +102,8 @@ en:
   label_release_new: New release
   field_release_start_date: Release start date
   field_release_end_date: Release end date
-  label_release_start_date: [[field_release_start_date]]
-  label_release_end_date: [[field_release_start_date]]
+  label_release_start_date: Release start date
+  label_release_end_date: Release end date
   field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
@@ -104,6 +111,7 @@ en:
   field_number_of_snapshots: Saved point snapshots
   release_update_snapshot_today: Update story point snapshot for today
   release_create_snapshot_today: Save story point snapshot for today
+  current_open_story_points: "Current open story points:"
 
   # Version fields
   field_name: "Name"
@@ -117,7 +125,6 @@ en:
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
-  
   # Tooltips
   story_description: "Description"
   story_status: "Status"
@@ -125,3 +132,7 @@ en:
   story_estimation_hours: "Estimation (hours)"
   story_remaining_hours: "Remaining (hours)"
   story_spent_time: "Spent Time"
+  rb_taskboard_card_order: Card print order
+  rb_task_cards_story_follows_tasks: Tasks followed by their story
+  rb_task_cards_tasks_follow_story: Story followed by their tasks
+  rb_task_cards_stories_then_tasks: First all stories, then all tasks

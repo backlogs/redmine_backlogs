@@ -39,11 +39,11 @@ class MigrateLegacy < ActiveRecord::Migration
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
     if legacy
-      Story.reset_column_information
+      RbStory.reset_column_information
       Issue.reset_column_information
-      Task.reset_column_information
+      RbTask.reset_column_information
 
-      if Story.trackers.nil? || Story.trackers.size == 0 || Task.tracker.nil?
+      if RbStory.trackers.nil? || RbStory.trackers.size == 0 || RbTask.tracker.nil?
         raise "Please configure the Backlogs Story and Task trackers before migrating.
 
         You do this by starting Redmine and going to \"Administration -> Plugins -> Redmine Scrum Plugin -> Configure\"
@@ -64,8 +64,8 @@ class MigrateLegacy < ActiveRecord::Migration
         project_id, tracker_id = MigrateLegacy.row(row, [:int, :int])
 
         trackers[project_id] ||= {}
-        trackers[project_id][:story] = tracker_id if Story.trackers.include?(tracker_id)
-        trackers[project_id][:task] = tracker_id if Task.tracker == tracker_id
+        trackers[project_id][:story] = tracker_id if RbStory.trackers.include?(tracker_id)
+        trackers[project_id][:task] = tracker_id if RbTask.tracker == tracker_id
       }
 
       # close existing transactions and turn on autocommit
@@ -94,9 +94,9 @@ class MigrateLegacy < ActiveRecord::Migration
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
           say "Updating story #{id}"
-          story = Story.find(id)
+          story = RbStory.find(id)
 
-          if ! Story.trackers.include?(story.tracker_id)
+          if ! RbStory.trackers.include?(story.tracker_id)
             raise "Project #{project} does not have a story tracker configured" unless trackers[project][:story]
             story.tracker_id = trackers[project][:story]
             story.save!
@@ -127,9 +127,9 @@ class MigrateLegacy < ActiveRecord::Migration
 
           say "Updating task #{id}"
 
-          task = Task.find(id)
+          task = RbTask.find(id)
 
-          if ! Task.tracker == task.tracker_id
+          if ! RbTask.tracker == task.tracker_id
             raise "Project #{project} does not have a task tracker configured" unless trackers[project][:task]
             task.tracker_id = trackers[project][:task]
             task.save!

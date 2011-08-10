@@ -4,13 +4,13 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
     var self = this;
     
     // Process tasks
-    var items = $(data).find('.task');
+    var items = RB.$(data).find('.task');
     items.each(function(i, v){
       self.processItem(v, false);
     });
 
     // Process impediments
-    var items = $(data).find('.impediment');
+    var items = RB.$(data).find('.impediment');
     items.each(function(i, v){
       self.processItem(v, true);
     });
@@ -23,16 +23,16 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
     var newCell;
     var idPrefix = '#issue_';
     
-    if($(idPrefix + update.getID()).length==0){
+    if(RB.$(idPrefix + update.getID()).length==0){
       target = update;                                     // Create a new item
     } else {
-      target = $(idPrefix + update.getID()).data('this');  // Re-use existing item
+      target = RB.$(idPrefix + update.getID()).data('this');  // Re-use existing item
       target.refresh(update);
-      oldCellID = target.$.parent('td').first().attr('id');
+      oldCellID = target.$.parents('td').first().attr('id');
     }
 
     // Find the correct cell for the item
-    newCell = isImpediment ? $('#impcell_' + target.$.find('.meta .status_id').text()) : $('#' + target.$.find('.meta .story_id').text() + '_' + target.$.find('.meta .status_id').text());
+    newCell = isImpediment ? RB.$('#impcell_' + target.$.find('.meta .status_id').text()) : RB.$('#' + target.$.find('.meta .story_id').text() + '_' + target.$.find('.meta .status_id').text());
 
     // Prepend to the cell if it's not already there
     if(oldCellID != newCell.attr('id')){

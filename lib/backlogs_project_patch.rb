@@ -102,7 +102,7 @@ module Backlogs
     module InstanceMethods
     
       def active_sprint
-        return Sprint.find(:first,
+        return RbSprint.find(:first,
           :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", self.id, Time.now])
       end
     
@@ -113,9 +113,9 @@ module Backlogs
         @scrum_statistics = Backlogs::Statistics.new
     
         # magic constant
-        backlog = Story.product_backlog(self, 10)
+        backlog = RbStory.product_backlog(self, 10)
         active_sprint = self.active_sprint
-        closed_sprints = Sprint.find(:all,
+        closed_sprints = RbSprint.find(:all,
           :conditions => ["project_id = ? and status in ('closed', 'locked') and not(effective_date is null or sprint_start_date is null)", self.id],
           :order => "effective_date desc",
           :limit => 5)
@@ -127,8 +127,8 @@ module Backlogs
         @scrum_statistics[:error, :product_backlog, :is_empty] = (self.status == Project::STATUS_ACTIVE && backlog.length == 0)
         @scrum_statistics[:error, :product_backlog, :unsized] = backlog.inject(false) {|unsized, story| unsized || story.story_points.blank? }
   
-        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and parent_id is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, Story.trackers])
-        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and not parent_id is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, Task.tracker])
+        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, RbStory.trackers])
+        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, RbTask.tracker])
         @scrum_statistics[:error, :sprint, :notes_missing] = closed_sprints.inject(false){|missing, sprint| missing || !sprint.has_wiki_page}
   
         @scrum_statistics[:error, :inactive] = (self.status == Project::STATUS_ACTIVE && !(active_sprint && active_sprint.activity))
@@ -140,12 +140,12 @@ module Backlogs
           days = 0
           closed_sprints.each {|sprint|
             bd = sprint.burndown('up')
-            accepted = (bd.points_accepted || [0])[-1]
-            committed = (bd.points_committed || [0])[0]
+            accepted = (bd[:points_accepted] || [0])[-1]
+            committed = (bd[:points_committed] || [0])[0]
             error += (1 - (accepted.to_f / committed.to_f)).abs
   
             points += accepted
-            days += bd.ideal.size
+            days += bd[:hours_ideal].size
           }
           error = (error / closed_sprints.size)
           # magic constant
@@ -184,22 +184,21 @@ module Backlogs
         sizing_is_consistent = false
   
         sprint_ids = all_sprints.collect{|s| "#{s.id}"}.join(',')
-        story_trackers = Story.trackers.collect{|t| "#{t}"}.join(',')
+        story_trackers = RbStory.trackers.collect{|t| "#{t}"}.join(',')
         if sprint_ids != '' && story_trackers != ''
           select_stories = "
             not (story_points is null or story_points = 0)
             and not (estimated_hours is null or estimated_hours = 0)
             and fixed_version_id in (#{sprint_ids})
             and project_id = #{self.id}
-            and not parent_id is null
             and tracker_id in (#{story_trackers})
           "
   
-          points_per_hour = Story.find_by_sql("select avg(story_points) / avg(estimated_hours) as points_per_hour from issues where #{select_stories}")[0].points_per_hour
+          points_per_hour = RbStory.find_by_sql("select avg(story_points) / avg(estimated_hours) as points_per_hour from issues where #{select_stories}")[0].points_per_hour
   
           if points_per_hour
             points_per_hour = Float(points_per_hour)
-            stories = Story.find(:all, :conditions => [select_stories])
+            stories = RbStory.find(:all, :conditions => [select_stories])
             error = stories.inject(0) {|err, story|
               err + (1 - (points_per_hour / (story.story_points / story.estimated_hours)))
             }

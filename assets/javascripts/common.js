@@ -2,6 +2,8 @@ if(RB==null){
   var RB = {};
 }
 
+if (typeof(jQuery) != 'undefined') { RB.$ = jQuery.noConflict(); }
+
 RB.Object = {
   // Douglas Crockford's technique for object extension
   // http://javascript.crockford.com/prototypal.html
@@ -37,10 +39,10 @@ RB.Factory = RB.Object.create({
 // Utilities
 RB.Dialog = RB.Object.create({
   msg: function(msg){
-    dialog = $('#msgBox').size()==0 ? $(document.createElement('div')).attr('id', 'msgBox').appendTo('body') : $('#msgBox');
+    dialog = RB.$('#msgBox').size()==0 ? RB.$(document.createElement('div')).attr('id', 'msgBox').appendTo('body') : RB.$('#msgBox');
     dialog.html(msg);
     dialog.dialog({ title: 'Backlogs Plugin',
-                    buttons: { "OK": function() { $(this).dialog("close"); } },
+                    buttons: { "OK": function() { RB.$(this).dialog("close"); } },
                     modal: true
                  });
   },
@@ -63,17 +65,17 @@ RB.processAjaxQueue = function(){
 
   if(options!=null){
     RB.ajaxOngoing = true;
-    $.ajax(options);
+    RB.$.ajax(options);
   }
 }
 
-$(document).ajaxComplete(function(event, xhr, settings){
+RB.$(document).ajaxComplete(function(event, xhr, settings){
   RB.ajaxOngoing = false;
   RB.processAjaxQueue();
 });
 
 // Modify the ajax request before being sent to the server
-$(document).ajaxSend(function(event, request, settings) {
+RB.$(document).ajaxSend(function(event, request, settings) {
   var c = RB.constants;
 
   settings.data = settings.data || "";
@@ -88,10 +90,10 @@ $(document).ajaxSend(function(event, request, settings) {
 // so that we can change the underlying implementation as needed
 RB.UserPreferences = RB.Object.create({
   get: function(key){
-    return $.cookie(key);
+    return RB.$.cookie(key);
   },
   
   set: function(key, value){
-    $.cookie(key, value, { expires: 365 * 10 });
+    RB.$.cookie(key, value, { expires: 365 * 10 });
   }
 });

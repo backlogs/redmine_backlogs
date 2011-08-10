@@ -14,6 +14,7 @@
   </div>
   <div class="story_points editable story_field" fieldname="story_points"><%= story_points_or_empty(story) %></div>
   <div class="fixed_version_id story_field"><%= story.fixed_version_id %></div>
+  <div class="user_status story_field"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>  
   <div class="higher_item_id story_field"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
   <div class="meta">
     <%= render :partial => "shared/model_errors", :object => story.errors %>

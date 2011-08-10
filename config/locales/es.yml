@@ -1,0 +1,122 @@
+# Spanish strings go here for Rails i18n
+es:
+  backlogs_story_tracker: "Seguimiento de Historias"
+  backlogs_task_tracker: "Seguimiento de Tareas"
+  backlogs_card_specification: "Etiquetas para impresion de tarjetas"
+  backlogs_sprints: "Sprints"
+  field_story_points: "Puntos de historia"
+  remaining_story_points: "Puntos de historia pendientes"
+  field_remaining_hours: "Horas pendientes"
+  button_edit_wiki: "Editar wiki"
+  field_backlogs_issue_type: "Tipo de backlog"
+  backlogs_story: Historia
+  backlogs_task: Tarea
+  backlogs_any: todos
+  backlogs_impediment: Impedimento
+  backlogs_points_burn_direction: "Burn up/down de puntos"
+  label_points_burn_up: Up
+  label_points_burn_down: Down
+  field_position: Posición
+  backlogs_product_backlog: "Backlog de producto"
+  label_impediments: Impedimentos
+  backlogs_wiki_template: "Plantilla para página de Spring"
+  points_committed: "puntos comprometidos"
+  required_burn_rate_points: "burn rate (puntos) necesaria"
+  required_burn_rate_hours: "burn rate (horas) necesaria"
+  points_to_accept: "puntos no aceptados"
+  points_accepted: "puntos aceptados"
+  ideal: "ideal"
+  points_to_resolve: "puntos no resueltos"
+  points_resolved: "puntos resueltos"
+  remaining_hours: "horas pendientes"
+  field_velocity_based_estimate: "Estimación basada en la velocidad"
+
+  backlogs_active: activo
+
+  label_task_board: "Tablero de tareas"
+  label_stories_tasks: "Historias/Tareas"
+  label_stories: "Historias"
+  label_burndown: "Burndown"
+  label_product_cards: "Tarjetas del Product backlog"
+  label_sprint_cards: "Tarjetas del Sprint"
+  label_select_all: "Seleccionar todas"
+
+  label_back_to_project: "Volver al proyecto"
+  label_sprint_name: "Sprint \"%{name}\""
+  label_backlogs: Backlogs
+  label_scrum_statistics: "Estadísticas de Scrum"
+
+  label_sprint_backlog: "sprint backlog"
+  label_product_backlog: "product backlog"
+  label_Product_backlog: "Product backlog"
+
+  backlogs_sizing_inconsistent: "Story sizes vary against their estimates"
+  backlogs_velocity_missing: "No velocity could be calculated for this project"
+  backlogs_product_backlog_is_empty: "Product backlog is empty"
+  backlogs_inactive: "Project shows no activity"
+  backlogs_sprint_unestimated: "Closed or active sprints with unestimated stories"
+  backlogs_sprint_notes_missing: "Closed sprints without retrospective/review notes"
+  backlogs_product_backlog_unsized: "The top of the product backlog has unsized stories"
+  backlogs_velocity_varies: "Velocity varies significantly over sprints"
+  backlogs_sprint_unsized: "Project has stories on active or recently closed sprints that were not sized"
+
+  label_hours: hours
+  label_points: points
+  label_not_prioritized: "not prioritized"
+
+  label_backlogs_unconfigured: "You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool."
+
+  label_sprint_velocity: "Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days"
+
+  event_sprint_summary: "%{project}: %{summary}"
+  event_sprint_description: "%{summary}: %{url}\n%{description}"
+  todo_issue_summary: "%{type}: %{summary}"
+  todo_issue_description: "%{summary}: %{url}\n%{description}"
+
+  label_chart_options: "Chart Options"
+
+  error_intro_singular: "The following error was encountered:"
+  error_intro_plural: "The following errors were encountered:"
+  error_outro: "Please correct the above errors before submitting again."
+
+  label_sprint_impediments: "Sprint Impediments"
+
+  field_subject: "Subject"
+
+  field_blocks: "Blocks"
+  error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
+
+  field_tracker_id: Tracker ID
+  inclusion: "is not included in the list"
+  
+  label_webcal: Webcal Feed
+  label_master_backlog: Master Backlog
+  label_release_planning: Release Planning
+  label_release: Release
+  label_release_plural: Releases
+  label_release_new: New release
+  field_release_start_date: Release start date
+  field_release_end_date: Release end date
+  label_release_start_date: [[field_release_start_date]]
+  label_release_end_date: [[field_release_start_date]]
+  field_initial_story_points: Initial story points
+  error_release_end_after_start: Release end date has to be after start date
+  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  today_not_in_release_warning: "Warning: current date is not within release date range."
+  field_number_of_snapshots: Saved point snapshots
+  release_update_snapshot_today: Update story point snapshot for today
+  release_create_snapshot_today: Save story point snapshot for today
+
+  # Version fields
+  field_name: "Name"
+  
+  # Error messages
+  error_blank: "cannot be blank"
+  error_greater_than_start_date: "cannot be earlier than Start Date"
+
+  rb_label_link_to_original: "Include link to original story"
+  rb_label_copy_tasks: "Copy tasks"
+  rb_label_copy_tasks_none: "None"
+  rb_label_copy_tasks_all: "All"
+  rb_label_copy_tasks_open: "Open"
+  current_open_story_points: "Current open story points:"
