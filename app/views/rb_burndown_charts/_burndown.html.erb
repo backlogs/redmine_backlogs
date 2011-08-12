@@ -29,7 +29,7 @@
               :yaxis => {:min => 0, :max => burndown[:max_hours], :tickOptions => {:formatString => '%d'}},
               :y2axis => {:min => 0, :max => burndown[:max_points], :tickOptions => {:formatString => '%d'}}
           },
-          :highlighter => { :tooltipAxes => 'y', :formatString => '%s' }
+          :highlighter => { :tooltipAxes => 'y', :formatString => '%s', :show => true }
         }
       }
   %>
