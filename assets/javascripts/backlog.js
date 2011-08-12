@@ -105,7 +105,7 @@ RB.Backlog = RB.Object.create({
   
   dragReceive: function(event, ui) {
     if (!ui.item.data('dragging')) {
-      $(ui.sender).sortable('cancel');
+      RB.$(ui.sender).sortable('cancel');
     }
   },
 
@@ -117,10 +117,10 @@ RB.Backlog = RB.Object.create({
 
     var storyProject = ui.item.find(".story_project").text();
     // disable invalid drag targets
-    $('#sprint_backlogs_container .stories').sortable('disable');
+    RB.$('#sprint_backlogs_container .stories').sortable('disable');
     if (RB.constants.project_versions[storyProject]) {
       for (var i = 0; i < RB.constants.project_versions[storyProject].length; i++) {
-        $('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
+        RB.$('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
       }
     }
   },
@@ -136,9 +136,9 @@ RB.Backlog = RB.Object.create({
 
     var validDrop = true;
     validDrop = validDrop && RB.constants.project_versions[storyProject];
-    validDrop = validDrop && ($.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0);
+    validDrop = validDrop && (RB.$.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0);
 
-    if (RB.constants.project_versions[storyProject] && $.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0) { return; }
+    if (RB.constants.project_versions[storyProject] && RB.$.inArray(targetSprint, RB.constants.project_versions[storyProject]) >= 0) { return; }
 
     ui.item.removeData('dragging');
   },
@@ -147,7 +147,7 @@ RB.Backlog = RB.Object.create({
     ui.item.removeClass("dragging");  
 
     // enable all backlogs as drop targets
-    $('.stories').sortable('enable');
+    RB.$('.stories').sortable('enable');
   },
   
   getSprint: function(){
