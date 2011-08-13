@@ -339,6 +339,9 @@
   top:1px;
   width:28px;
 }
+#backlogs_container .stories .story .story_points .v {
+  display:none;
+}
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
 #backlogs_container .stories .story .user_status {
@@ -462,7 +465,17 @@
   top:4px;
   width:68px;
 }
-#backlogs_container .stories .story.editing .story_points.editor{
+#backlogs_container .stories .story.editing select.story_points.editor {
+  display:block;
+  left:540px;
+  margin:0;
+  padding: 0px;
+  height: inherit;
+  top: 4px;
+  width: 40px;
+  overflow: visible;
+}
+#backlogs_container .stories .story.editing input.story_points.editor {
   display:block;
   height:10px;
   left:540px;
