@@ -255,7 +255,7 @@
   background-position:center;
 }
 #backlogs_container .stories .story:nth-child(even){
-  background-color:#DEDED5;
+  background-color:#EEEEE5;
 }
 #backlogs_container .stories .story:hover{
   background-color:rgb(254,248,168);
