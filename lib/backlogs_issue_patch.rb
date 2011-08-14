@@ -55,7 +55,7 @@ module Backlogs
       end
 
       def is_task?
-        return (self.parent_id && self.tracker_id == RbTask.tracker)
+        return self.tracker_id == RbTask.tracker
       end
 
       def story
@@ -119,6 +119,7 @@ module Backlogs
             connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
           end
 
+          connection.execute("update issues set position = NULL where id = #{connection.quote(self.id)}")
           connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}") if self.status.backlog == :success
         end
       end
