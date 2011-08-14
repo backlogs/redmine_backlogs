@@ -89,3 +89,9 @@
         <%= content_tag(:label, l(:backlogs_wiki_template)) %>
         <%= text_field_tag("settings[wiki_template]", Setting.plugin_redmine_backlogs[:wiki_template]) %>
     </p>
+	<p>
+		<%= content_tag(:label, l(:field_story_points)) %>
+		<%= l(:comma_delimited_numbers) %><br>
+		<%= l(:use_free_text_if_empty) %><br>
+		<%= text_field_tag("settings[story_points]", Setting.plugin_redmine_backlogs[:story_points]) %>
+	</p>
