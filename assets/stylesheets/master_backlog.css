@@ -304,6 +304,9 @@
   width:375px;
   white-space:nowrap;
 }
+#backlogs_container .stories .story.closed .subject{
+  text-decoration:line-through;
+}
 #backlogs_container .stories .story.too_long .subject{
   width:333px;
 }
