@@ -125,24 +125,19 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count(
-      :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?',
-                      RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
     return @rank
   end
 
-  def burndown
-    return @burndown if @burndown
-
-    dates = story.fixed_version.becomes(RbSprint).days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
-    dates[0] = :first
-    dates << :last
-
-    @burndown = {}
-
-    @burndown[:open] = dates.collect{|d| !IssueStatus.find(Integer(historic(d, 'status_id'))).is_closed? }
-    @burndown[:hours] = dates.collect{|d| historic(d, 'estimated_hours')}
-    @burndown[:hours] = (0..dates.size-1).collect{|d| @burndown[:hours][d].nil? ? nil : (@burndown[:open][d] ? Float(@burndown[:hours][d]) : 0.0) }
+  def burndown(sprint = nil)
+    unless @burndown
+      sprint ||= story.fixed_version.becomes(RbSprint)
+      if sprint
+        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours')}
+      else
+        @burndown = nil
+      end
+    end
 
     return @burndown
   end

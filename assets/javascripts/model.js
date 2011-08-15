@@ -78,10 +78,13 @@ RB.Model = RB.Object.create({
 
   edit: function(){
     var editor = this.getEditor();
+
+    this.$.data('changed',false);
     
     // 'this' can change below depending on the context.
     var self = this;
     
+	var input_elements=[];
     this.$.find('.editable').each(function(index){
       var field = RB.$(this);
       var fieldType = field.attr('fieldtype')!=null ? field.attr('fieldtype') : 'input';
@@ -122,9 +125,35 @@ RB.Model = RB.Object.create({
       // focus after the element has been refreshed with info from the server.
       input.focus( function(){ self.$.data('focus', RB.$(this).attr('name')) } )
             .blur( function(){ self.$.data('focus', '') } );
+
+      // Set the flag when value is changed
+      input.change( function(){ self.$.data('changed',true); });
+
+      // For Opera 11.50, sometimes blur event is not fired.
+      // So memory input's focus state manually and use to check editor has focus.
+      input.focus( function(){ RB._focusedElement=input; })
+      input.blur( function(){ RB._focusedElement=null; })
       
       input.appendTo(editor);
+      input_elements.push(input);
     });
+
+    // Watch the focus, cancel edit if editor is unmodified and unfocused
+    var watcher_id=setInterval(function(){
+      if(self.isSaving()) {
+        clearInterval(watcher_id);
+      } else if(!self.$.hasClass('editing')) {
+        clearInterval(watcher_id);
+      } else if(!self.$.data('changed')) {
+        // Check the editor is focused
+        for(var i=0,l=input_elements.length; i<l; i++){
+          if(input_elements[i]==RB._focusedElement)
+            return;
+        }
+        self.cancelEdit();
+        clearInterval(watcher_id);
+      }
+    },100);
 
     this.displayEditor(editor);
     this.editorDisplayed(editor);
@@ -223,6 +252,10 @@ RB.Model = RB.Object.create({
   
   markSaving: function(){
     this.$.addClass('saving');
+  },
+
+  isSaving: function(){
+    return this.$.hasClass('saving');
   },
 
   // Override this method to change the dialog title

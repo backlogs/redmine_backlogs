@@ -55,7 +55,7 @@ module Backlogs
       end
 
       def is_task?
-        return (self.parent_id && self.tracker_id == RbTask.tracker)
+        return self.tracker_id == RbTask.tracker
       end
 
       def story
@@ -63,8 +63,9 @@ module Backlogs
         # unsaved issue object
         return nil unless self.id && self.is_task?
 
-        return Issue.find(:first, :order => 'lft DESC',
-          :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ]).becomes(RbStory)
+        s = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ])
+        s = s.becomes(RbStory) if s
+        return s
       end
 
       def blocks
@@ -113,12 +114,19 @@ module Backlogs
             end
           end
 
+          unless self.position
+            max = 0
+            connection.execute('select max(position) from issues where not position is null').each {|i| max = i[0] }
+            connection.execute("update issues set position = #{connection.quote(max)} + 1 where id = #{connection.quote(self.id)}")
+          end
+
         elsif self.is_task?
           story = self.story
           if not story.blank?
             connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
           end
 
+          connection.execute("update issues set position = NULL where id = #{connection.quote(self.id)}") if self.position
           connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}") if self.status.backlog == :success
         end
       end
@@ -127,27 +135,50 @@ module Backlogs
         case date
           when :last
             return self.send(property.intern)
-
-          when :first
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
-
-          else
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
+          when nil
+            return nil
         end
 
-        obj = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
-        return obj.old_value if obj && obj.old_value
-        return obj.value if obj && obj.value
-        return self.send(property.intern)
+        Rails.cache.fetch("RbIssue(#{id}).historic(#{date}, #{property})", :force => date.is_a?(Symbol) || date.to_date == Date.today) {
+          if date == :first
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
+          else
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
+          end
+
+          j = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
+
+          if j.nil?
+            v = self.send(property.intern)
+          else
+            v = j.old_value || j.value
+
+            if v
+              @@backlogs_column_type ||= {}
+              @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == property}.collect{|c| c.type}[0]
+
+              case @@backlogs_column_type[property]
+                when :integer
+                  v = Integer(v)
+                when :float
+                  v = Float(v)
+                when :string
+                  v = v.to_s
+                else
+                  raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
+              end
+            end
+          end
+
+          v
+        }
       end
 
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
         if self.leaf?
-          e = self.historic(:first, 'estimated_hours')
-          return nil if e.nil?
-          return Float(e)
+          return self.historic(:first, 'estimated_hours')
         else
           e = self.leaves.collect{|t| t.initial_estimate}.compact
           return nil if e.size == 0

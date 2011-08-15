@@ -37,7 +37,7 @@ namespace :redmine do
         tested = 0
         if issues.size != 0
           puts "Testing #{issues.size} issues for database corruption..."
-          while ((chunk = issues.slice!(1, 100)).size != 0) do
+          issues.in_groups_of(100, false) do |chunk|
             b = Benchmark.measure {
               chunk.each {|issue|
                 begin
