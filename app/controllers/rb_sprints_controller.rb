@@ -62,7 +62,7 @@ class RbSprintsController < RbApplicationController
         ws << [nil, nil, nil, nil, label ] + bd[k]
       }
       s.tasks.each {|t|
-        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown[:hours]
+        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown
       }
     }
 
