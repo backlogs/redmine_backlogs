@@ -92,6 +92,10 @@ module RbCommonHelper
   def textile_description_or_empty(story)
     story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
+  
+  def textile_to_html(textile)
+    textile.nil? ? "" : Redmine::WikiFormatting::Textile::Formatter.new(textile).to_html
+  end
 
   def tracker_id_or_empty(story)
     story.new_record? ? "" : story.tracker_id

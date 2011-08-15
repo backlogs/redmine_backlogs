@@ -320,14 +320,35 @@ RB.Model = RB.Object.create({
 
     self.unmarkError();
     self.markSaving();
-    RB.ajax({
-      type: "POST",
-      url: saveDir.url,
-      data: saveDir.data,
-      success   : function(d,t,x){ self.afterSave(d,t,x) },
-      error     : function(x,t,e){ self.error(x,t,e) }
+    
+    jQuery.ajax({
+       type: "POST",
+       url: saveDir.url,
+       data: saveDir.data,
+       success: function(d, t, x){
+          self.afterSave(d,t,x);
+          self.refreshTooltip();
+       }
     });
+    
+//    RB.ajax({
+//      type: "POST",
+//      url: saveDir.url,
+//      data: saveDir.data,
+//      success   : function(d,t,x){
+//          alert('Request complete');
+//          self.afterSave(d,t,x);
+//          self.refreshTooltip();
+//      },
+//      error     : function(x,t,e){ self.error(x,t,e); console.log([x, t, e]) }
+//    });
     self.endEdit();
+  },
+
+  refreshTooltip: function() {
+    if (typeof $.qtipMakeOptions != 'function') return false;	
+    var _ = this.$.find('div.story_tooltip');
+    _.qtip($.qtipMakeOptions(_));
   },
   
   unmarkError: function(){
