@@ -176,9 +176,10 @@ class RbSprint < Version
       dates = d.collect{|dy|
         dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
         dy = nil if issue.created_on >= dy + day
+        # the order is important here! only assign :first to a real day the issue was active.
+        # If at that point the story was part of a different sprint or closed, we don't want :first to appear at all
         dy = (first.delete(:first) || dy) if dy
         dy = nil if dy && issue.historic(dy, 'fixed_version_id') != self.id
-        dy = nil if dy && IssueStatus.find(issue.historic(dy, 'status_id')).is_closed?
         dy
       }
       dates << (dates[-1] ? :last : nil)

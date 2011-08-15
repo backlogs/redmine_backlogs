@@ -222,9 +222,12 @@ class RbStory < Issue
         @burndown = {}
         dates = sprint.days(:active, self)
 
-        accepted = dates.collect{|d| d ? (IssueStatus.find(historic(d, 'status_id')).backlog == :accepted) : false}
+        status = dates.collect{|d| d ? IssueStatus.find(historic(d, 'status_id')) : nil}
+        accepted = status.collect{|s| s ? (s.backlog == :accepted) : false}
+        active = status.collect{|s| s ? !s.is_closed? : false}
+
         @burndown[:points] = dates.collect{|d| historic(d, 'story_points')}
-        @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
+        @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}.zip(active).collect{|ha| ha[1] ? ha[0] : nil }
         @burndown[:hours] = [nil] * dates.size if @burndown[:hours].size == 0
         @burndown[:points_accepted] = @burndown[:points].zip(accepted).collect{|pa| pa[1] ? pa[0] : nil}
         @burndown[:points_resolved] = @burndown[:points].zip(@burndown[:hours]).collect{|ph| ph[1] == 0 ? ph[0] : 0}
