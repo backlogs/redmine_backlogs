@@ -82,7 +82,7 @@ class GitHub
     end
   end
 
-  CONFIGFILE = File.join(File.dirname(__FILE__), File.basename(__FILE__, File.extname(__FILE__))) + '.yaml'
+  CONFIGFILE = File.join(File.dirname(__FILE__), File.basename(__FILE__, File.extname(__FILE__))) + '.rc'
   CONFIG = File.exists?(CONFIGFILE) ? YAML::load(File.open(CONFIGFILE)) : {}
   ROOT = 'http://github.com/api/v2/yaml/'
 
