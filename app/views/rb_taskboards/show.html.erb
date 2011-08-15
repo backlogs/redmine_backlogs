@@ -1,9 +1,10 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
-  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery.qtip.pack.js', 'jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jqplot.css', 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
-  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.identifier, :sprint_id => @sprint.id) %>"></script>
+  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.id, :sprint_id => @sprint.id) %>"></script>
 <% end %>
 
 <% content_for :breadcrumbs do %>
@@ -45,13 +46,13 @@
   </table>
 
   <table id="tasks" class="board" cellspacing="0">
-    <%- @sprint.stories.each do |story| %>
+    <%- @sprint.stories.each do |story| %>  
     <tr>
       <td>
         <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
-          <div class="id">
-              <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
-              <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+          <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
+            <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
+            <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
           <div class="subject"><%= story.subject %></div>
         </div>
