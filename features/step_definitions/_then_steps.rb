@@ -55,7 +55,7 @@ Then /^show me the list of stories$/ do
 end
 
 Then /^show me the sprint impediments$/ do
-  puts @sprint.impediments.collect{|i| i.subject}.inspect
+  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -101,10 +101,22 @@ Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
 end
 
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
-  sprints = RbSprint.find(:all, :conditions => { :name => sprint_name })
-  sprints.length.should == 1
-  
-  sprints.first.impediments.map{ |i| i.subject==impediment_subject}.length.should == count.to_i
+  sprint = RbSprint.find(:all, :conditions => { :name => sprint_name })
+  sprint.length.should == 1
+  sprint = sprint.first
+
+  impediments = sprint.impediments
+  impediments.size.should == count.to_i
+
+  subjects = {}
+  impediment_subject.split(/(?:\s+and\s+)|(?:\s*,\s*)/).each {|s|
+    subjects[s] = 0
+  }
+  sprint.impediments.each{|i|
+    subjects[i.subject].should_not be_nil
+    subjects[i.subject] += 1 if subjects[i.subject]
+  }
+  subjects.values.select{|v| v == 0}.size.should == 0
 end
 
 Then /^the sprint should be updated accordingly$/ do

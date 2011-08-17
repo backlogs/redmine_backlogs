@@ -21,18 +21,12 @@ class RbTask < Issue
 
     task = new(attribs)
 
-    valid_relationships = if is_impediment
-                            task.validate_blocks_list(params[:blocks])
-                          else
-                            true
-                          end
+    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(params[:blocks])
 
-    if valid_relationships && task.save!
-      task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
-      task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
-    else
-      raise "Could not save task"
-    end
+    task.save!
+
+    task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
+    task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks] && is_impediment
 
     return task
   end
