@@ -164,15 +164,16 @@ class TranslationManager
   def initialize
     @root = File.expand_path(File.join('..', '..', '..'), File.dirname(__FILE__))
     @webdir = File.join(@root, 'www.redminebacklogs.net')
-    @translations = File.join(@root, 'redmine_backlogs', 'config', 'locales')
-    @submitted = File.join(@root, 'translations', 'config', 'locales')
+    @translations = File.join(@root, 'translations', 'config', 'locales')
 
     raise "Website not found at '#{@webdir}'" unless File.directory?(@webdir)
-    raise "Backlogs translations not found at '#{@translations}'" unless File.directory?(@translations)
-    raise "Submitted translations not found at '#{@submitted}'" unless File.directory?(@submitted)
+    raise "Translations not found at '#{@translations}'" unless File.directory?(@translations)
 
     @webpage = File.join(@webdir, '_posts', 'en', '1992-01-01-translations.textile')
 
+    Dir.chdir(@translations)
+    `git checkout master`
+    `git pull`
     Dir.glob(File.join(@translations, "*.yml")).sort.each {|trans|
       Translation.new(trans, :source => (File.basename(trans) == 'en.yml'))
     }
@@ -180,17 +181,24 @@ class TranslationManager
     raise "Source translation 'en' not found" unless Translation.source
   end
 
-  def save
-    Translation.translations.values.each {|t|
-      File.open(File.join(@webdir, 'translations', "#{t.lang}.ts"), 'w') do |out|
-        out.write(t.to_qts)
-      end
-      File.open(File.join(@submitted, "#{t.lang}.yml"), 'w') do |out|
-        out.write(t.to_yaml)
-      end
-    }
+  def fetch
+    Dir.chdir(@translations)
+    `git checkout transifex`
+    `git merge master`
 
-    make_page(:qts)
+  end
+
+  def save
+    #Translation.translations.values.each {|t|
+    #  File.open(File.join(@webdir, 'translations', "#{t.lang}.ts"), 'w') do |out|
+    #    out.write(t.to_qts)
+    #  end
+      #File.open(File.join(@translations, "#{t.lang}.yml"), 'w') do |out|
+      #  out.write(t.to_yaml)
+      #end
+    #}
+
+    #make_page(:qts)
 
     #Dir.chdir(@webdir)
     #`git add translations`
