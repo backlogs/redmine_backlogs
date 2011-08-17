@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'timecop'
+
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
@@ -156,8 +159,19 @@ Given /^the project has the following sprints?:$/ do |table|
   table.hashes.each do |version|
     version['project_id'] = @project.id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+      if version[date_attr] == 'today'
+        version[date_attr] = Date.today.strftime("%Y-%m-%d")
+      elsif version[date_attr].blank?
+        version[date_attr] = nil
+      elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
+        # we're OK as-is
+      elsif version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+        version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d")
+      else
+        raise "Unexpected date value '#{version[date_attr]}'"
+      end
     end
+
     RbSprint.create! version
   end
 end
@@ -220,6 +234,7 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
+    s = nil
     Timecop.travel(sprint.sprint_start_date.to_time) do
       s = RbStory.create_and_position params
     end
@@ -229,7 +244,7 @@ end
 
 Given /^the project has the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task['parent'] })
+    story = RbStory.find(:first, :conditions => { :subject => task['story'] }).should_not be_nil
     params = initialize_task_params(story.id)
     params['subject'] = task['subject']
 
