@@ -181,7 +181,7 @@ class RbTask < Issue
       else
         @time_entry.spent_on = Date.today
       end
-      @time_entry.hours = params[:time_entry_hours]
+      @time_entry.hours = params[:time_entry_hours].gsub(',', '.').to_f
       # Choose default activity
       # If default is not defined first activity will be chosen
       if default_activity = TimeEntryActivity.default
