@@ -151,7 +151,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
-Given /^the project has the following sprints:$/ do |table|
+Given /^the project has the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
     version['project_id'] = @project.id
@@ -159,6 +159,33 @@ Given /^the project has the following sprints:$/ do |table|
       version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
     end
     RbSprint.create! version
+  end
+end
+
+Given /^I have the following issue statuses available:$/ do
+  table.hashes.echo do |status|
+    s = IssueStatus.find_by_name(status['name'])
+    unless s
+      s = IssueStatus.new
+      s.name = status['name']
+    end
+
+    s.is_closed = status['is_closed'] == '1'
+    s.is_default = status['is_default'] == '1'
+    s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].blank
+
+    s.save!
+  end
+end
+
+Given /^I have made the following task mutations:$/ do |table|
+  table.hashes.each_with_index do |mutation, i|
+    task = task.find_by_name(mutation['task'])
+    Timecop.travel((@sprint.sprint_start_date + (mutation['day'].to_i - 1)).to_time + i) do
+      task.estimated_hours = mutation['estimated_hours'].to_f unless task.estimated_hours.blank?
+      task.status_id = IssueStatus.find_by_name(mutation['status']).id
+      task.save!
+    end
   end
 end
 
@@ -187,12 +214,15 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     params = initialize_story_params
     params['subject'] = story['subject']
     params['prev_id'] = prev_id
-    params['fixed_version_id'] = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    sprint = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ])
+    params['fixed_version_id'] = sprint.id
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = RbStory.create_and_position params
+    Timecop.travel(sprint.sprint_start_date.to_time) do
+      s = RbStory.create_and_position params
+    end
     prev_id = s.id
   end
 end
@@ -206,7 +236,9 @@ Given /^the project has the following tasks:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    Timecop.travel(story.created_on) do
+      RbTask.create_with_relationships(params, @user.id, @project.id)
+    end
   end
 end
 
