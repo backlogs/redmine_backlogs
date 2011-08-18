@@ -2,6 +2,16 @@ def get_project(identifier)
   Project.find(:first, :conditions => "identifier='#{identifier}'")
 end
 
+def time_offset(o)
+  o = o.to_s.strip
+  return nil if o == ''
+
+  m = o.match(/^(-?)([0-9]+d)?([0-9]+h)?$/)
+  raise "Not a valid offset spec '#{o}'" unless m
+
+  return ((o.match(/([0-9]+)d/) || [0, 0])[1].to_i * 24) + ((o.match(/([0-9]+)h/) || [0, 0])[1].to_i) * 60 * 60 * (o =~ /^-/ ? -1 : 1)
+end
+
 def initialize_story_params
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
   @story['project_id'] = @project.id

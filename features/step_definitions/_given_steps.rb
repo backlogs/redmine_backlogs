@@ -161,7 +161,7 @@ Given /^the project has the following sprints?:$/ do |table|
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       if version[date_attr] == 'today'
         version[date_attr] = Date.today.strftime("%Y-%m-%d")
-      elsif version[date_attr].blank?
+      elsif version[date_attr].to_s == ''
         version[date_attr] = nil
       elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
         # we're OK as-is
@@ -176,9 +176,9 @@ Given /^the project has the following sprints?:$/ do |table|
   end
 end
 
-Given /^I have the following issue statuses available:$/ do
-  table.hashes.echo do |status|
-    s = IssueStatus.find_by_name(status['name'])
+Given /^I have the following issue statuses available:$/ do |table|
+  table.hashes.each do |status|
+    s = IssueStatus.find(:first, :conditions => ['name = ?', status['name']])
     unless s
       s = IssueStatus.new
       s.name = status['name']
@@ -186,18 +186,29 @@ Given /^I have the following issue statuses available:$/ do
 
     s.is_closed = status['is_closed'] == '1'
     s.is_default = status['is_default'] == '1'
-    s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].blank
+    s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].to_s == ''
 
     s.save!
   end
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  table.hashes.each_with_index do |mutation, i|
-    task = task.find_by_name(mutation['task'])
-    Timecop.travel((@sprint.sprint_start_date + (mutation['day'].to_i - 1)).to_time + i) do
-      task.estimated_hours = mutation['estimated_hours'].to_f unless task.estimated_hours.blank?
-      task.status_id = IssueStatus.find_by_name(mutation['status']).id
+  table.hashes.each do |mutation|
+    task = RbTask.find(:first, :conditions => ['subject = ?', mutation['task']])
+    task.should_not be_nil
+
+    status = mutation['status'].to_s
+    if status == ''
+      status = nil
+    else
+      status = IssueStatus.find(:first, :conditions => ['name = ?', status])
+      raise "No such status '#{status}'" unless status
+      status = status.id
+    end
+
+    Timecop.travel(@sprint.sprint_start_date.to_time + time_offset("#{mutation['day'].to_i - 1}d1h")) do
+      task.estimated_hours = mutation['estimated_hours'].to_f unless task.estimated_hours.to_s == ''
+      task.status_id = status if status
       task.save!
     end
   end
@@ -234,8 +245,14 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
+
     s = nil
-    Timecop.travel(sprint.sprint_start_date.to_time) do
+    offset = time_offset(story['offset'])
+    if offset
+      Timecop.travel(sprint.sprint_start_date.to_time + offset) do
+        s = RbStory.create_and_position params
+      end
+    else
       s = RbStory.create_and_position params
     end
     prev_id = s.id
@@ -244,14 +261,20 @@ end
 
 Given /^the project has the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task['story'] }).should_not be_nil
+    story = RbStory.find(:first, :conditions => { :subject => task['story'] })
+    story.should_not be_nil
     params = initialize_task_params(story.id)
     params['subject'] = task['subject']
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    Timecop.travel(story.created_on) do
+    offset = time_offset(story['offset'])
+    if offset
+      Timecop.travel(story.created_on + offset) do
+        RbTask.create_with_relationships(params, @user.id, @project.id)
+      end
+    else
       RbTask.create_with_relationships(params, @user.id, @project.id)
     end
   end

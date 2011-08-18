@@ -6,6 +6,15 @@ Feature: Scrum master
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
+      And I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                    |
+        | Assigned    |         0 |          0 |                    |
+        | In Progress |         0 |          0 |                    |
+        | Resolved    |         0 |          0 |                    |
+        | Feedback    |         0 |          0 |                    |
+        | Closed      |         1 |          0 |                    |
+        | Rejected    |         1 |          0 |                  1 |
       And the project has the following sprint:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | today             | 1.week.from_now |
@@ -16,15 +25,15 @@ Feature: Scrum master
         | 3        | Story 3 |
         | 4        | Story 4 |
       And the project has the following stories in the following sprints:
-        | position | subject | sprint     | story_points |
-        | 1        | Story A | Sprint 001 | 1            |
-        | 2        | Story B | Sprint 001 | 2            |
-        | 3        | Story C | Sprint 001 | 4            |
+        | position | subject | sprint     | story_points | offset |
+        | 1        | Story A | Sprint 001 | 1            | 0d     |
+        | 2        | Story B | Sprint 001 | 2            | 0d     |
+        | 3        | Story C | Sprint 001 | 4            | 0d     |
       And the project has the following tasks:
-        | subject      | story     | estimated_time | status |
-        | A.1          | Story A   | 10             | new    |
-        | B.1          | Story B   | 20             | new    |
-        | C.1          | Story C   | 40             | new    |
+        | subject      | story     | estimated_time | status | offset |
+        | A.1          | Story A   | 10             | new    | 1h     |
+        | B.1          | Story B   | 20             | new    | 1h     |
+        | C.1          | Story C   | 40             | new    | 1h     |
 
   Scenario: Tasks closed AFTER remaining hours is set to 0 
     Given I am viewing the taskboard for Sprint 001

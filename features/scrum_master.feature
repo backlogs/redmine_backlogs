@@ -6,15 +6,6 @@ Feature: Scrum Master
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
-      And I have the following issue statuses available:
-        | name        | is_closed | is_default | default_done_ratio |
-        | New         |         0 |          1 |                    |
-        | Assigned    |         0 |          0 |                    |
-        | In Progress |         0 |          0 |                    |
-        | Resolved    |         0 |          0 |                    |
-        | Feedback    |         0 |          0 |                    |
-        | Closed      |         1 |          0 |                    |
-        | Rejected    |         1 |          0 |                  1 |
       And the project has the following sprints:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
