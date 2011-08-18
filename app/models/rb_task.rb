@@ -11,22 +11,29 @@ class RbTask < Issue
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
-      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
+      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) && !RbTask.column_names.include?(k) }
     else
-      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
+      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) && !RbTask.column_names.include?(k)}
     end
+
+    params.delete('action')
+    params.delete('controller')
+
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
     attribs['project_id'] = project_id
 
+    blocks = params.delete('blocks')
+
+    raise "unsupported initialization parameters #{(params.keys - attribs.keys).inspect}" if (params.keys - attribs.keys).size != 0
+
     task = new(attribs)
-
-    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(params[:blocks])
-
     task.save!
 
+    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
+
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
-    task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks] && is_impediment
+    task.update_blocked_list blocks.split(/\D+/) if is_impediment
 
     return task
   end

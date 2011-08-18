@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'timecop'
+
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
@@ -30,28 +33,19 @@ Then /^I should see (\d+) stories in the product backlog$/ do |count|
 end
 
 Then /^show me the list of sprints$/ do
-  sprints = RbSprint.find(:all, :conditions => ["project_id=?", @project.id])
+  header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
+  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
 
-  puts "\n"
-  puts "\t| #{'id'.ljust(3)} | #{'name'.ljust(18)} | #{'sprint_start_date'.ljust(18)} | #{'effective_date'.ljust(18)} | #{'updated_on'.ljust(20)}"
-  sprints.each do |sprint|  
-    puts "\t| #{sprint.id.to_s.ljust(3)} | #{sprint.name.to_s.ljust(18)} | #{sprint.sprint_start_date.to_s.ljust(18)} | #{sprint.effective_date.to_s.ljust(18)} | #{sprint.updated_on.to_s.ljust(20)} |"
-  end
-  puts "\n\n"
+  show_table(header, data)
 end
 
 Then /^show me the list of stories$/ do
-  stories = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC")
-  subject_max = (stories.map{|s| s.subject} << "subject").sort{|a,b| a.length <=> b.length}.last.length
-  sprints = @project.versions.find(:all)
-  sprint_max = (sprints.map{|s| s.name} << "sprint").sort{|a,b| a.length <=> b.length}.last.length
+  header = [['id', 5], ['position', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
+  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
+    [story.id, story.position, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+  }
 
-  puts "\n"
-  puts "\t| #{'id'.ljust(5)} | #{'position'.ljust(8)} | #{'status'.ljust(12)} | #{'rank'.ljust(4)} | #{'subject'.ljust(subject_max)} | #{'sprint'.ljust(sprint_max)} |"
-  stories.each do |story|
-    puts "\t| #{story.id.to_s.ljust(5)} | #{story.position.to_s.ljust(8)} | #{story.status.name[0,12].ljust(12)} | #{story.rank.to_s.ljust(4)} | #{story.subject.ljust(subject_max)} | #{(story.fixed_version_id.nil? ? RbSprint.new : Sprint.find(story.fixed_version_id)).name.ljust(sprint_max)} |"
-  end
-  puts "\n\n"
+  show_table(header, data)
 end
 
 Then /^show me the sprint impediments$/ do
@@ -179,14 +173,51 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
 end
 
 Then /^the sprint burndown should be:$/ do |table|
-  bd = @sprint.burndown
+  bd = nil
+  Timecop.travel((@sprint.effective_date + 1).to_time) do
+    bd = @sprint.burndown('down')
+  end
+
   table.hashes.each do |metrics|
     day = metrics.delete('day')
     day = (day == 'start' ? 0 : day.to_i)
 
-    metrics.each_pair do |k, v|
-      v = (v =~ /\./ ? v.to_f : v.to_i)
-      bd[k.intern][day].should == v
+    metrics.each_pair do |k, expected|
+      got = bd[k.intern][day]
+
+      # If we get a nil, leave expected alone -- if expected is '' or nil, it'll match, otherwise it's a mismatch anyhow
+      expected = got.to_s.match(/\./) ? expected.to_f : expected.to_i unless got.nil?
+
+      "day #{day}, #{k}: #{got}".should == "day #{day}, #{k}: #{expected}"
     end
   end
+end
+
+Then /^show me the burndown$/ do
+  bd = nil
+  Timecop.travel((@sprint.effective_date + 1).to_time) do
+    bd = @sprint.burndown('down')
+  end
+
+  header = ['day'] + bd.series(false).sort
+
+  data = []
+  days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
+  0.upto(days - 1) do |day|
+    data << [day] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
+  end
+
+  show_table(header, data)
+end
+
+Then /^show me the (.+) journal for (.+)$/ do |property, issue|
+  issue = Issue.find(:first, :conditions => ['subject = ?', issue])
+  puts "\n"
+  puts "#{issue.subject}, created: #{issue.created_on}"
+  issue.journals.each {|j|
+    j.details.select {|detail| detail.prop_key == property}.each {|detail|
+      puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
+    }
+  }
+  puts "  #{issue.updated_on}: #{issue.send(property.intern)}"
 end

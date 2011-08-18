@@ -176,7 +176,7 @@ class RbSprint < Version
       return d unless issue
 
       first = {:first => :first}
-      day = 60 * 60 * 24
+      day = 24 * 60 * 60
       dates = d.collect{|dy|
         dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
         dy = nil if issue.created_on >= dy + day

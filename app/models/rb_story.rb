@@ -32,7 +32,6 @@ class RbStory < Issue
     def self.backlog(project_id, sprint_id, options={})
       stories = []
 
-
       RbStory.find(:all,
             :order => RbStory::ORDER,
             :conditions => RbStory.condition(project_id, sprint_id),
@@ -101,10 +100,10 @@ class RbStory < Issue
       # remove so the potential 'prev' has a correct position
       remove_from_list
 
-      begin
-        prev = self.class.find(prev_id)
-      rescue ActiveRecord::RecordNotFound
+      if prev_id.to_s == ''
         prev = nil
+      else
+        prev = RbStory.find(prev_id)
       end
 
       # if it's the first story, move it to the 1st position
@@ -219,6 +218,7 @@ class RbStory < Issue
         @burndown[:points_accepted] = @burndown[:points].zip(accepted).collect{|pa| pa[1] ? pa[0] : nil}
         @burndown[:points_resolved] = @burndown[:points].zip(@burndown[:hours]).collect{|ph| ph[1] == 0 ? ph[0] : 0}
         @burndown[:hours] = burndown[:hours].zip(active).collect{|ha| ha[1] ? ha[0] : nil }
+
       else
         @burndown = nil
       end
