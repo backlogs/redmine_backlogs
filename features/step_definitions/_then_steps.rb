@@ -177,3 +177,16 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
   issue = Issue.find_by_subject(subject)
   issue[attribute].should == value.to_i
 end
+
+Then /^the sprint burndown should be:$/ do |table|
+  bd = @sprint.burndown
+  table.hashes.each do |metrics|
+    day = metrics.delete('day')
+    day = (day == 'start' ? 0 : day.to_i)
+
+    metrics.each_pair do |k, v|
+      v = (v =~ /\./ ? v.to_f : v.to_i)
+      bd[k.intern][day].should == v
+    end
+  end
+end

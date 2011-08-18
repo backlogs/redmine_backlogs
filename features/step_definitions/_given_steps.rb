@@ -233,14 +233,22 @@ end
 
 Given /^the project has the following stories in the following sprints:$/ do |table|
   @project.issues.delete_all
-  prev_id = ''
-
   table.hashes.each do |story|
     params = initialize_story_params
     params['subject'] = story['subject']
-    params['prev_id'] = prev_id
     sprint = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ])
     params['fixed_version_id'] = sprint.id
+    params['story_points'] = story['points'].to_i if params['points'].to_s != ''
+
+    pos = params['position'].to_s
+
+    if pos == ''
+      prev = Issue.find(:first, :conditions => ['fixed_version_id = ? and not position is null', sprint.id], :order => 'position desc')
+      params['prev_id'] = prev ? prev.id : nil
+    else
+      pos = pos.to_i
+      params['prev_id'] = pos == 1 ? nil : sprint.stories[pos - 2].id
+    end
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
@@ -255,7 +263,6 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     else
       s = RbStory.create_and_position params
     end
-    prev_id = s.id
   end
 end
 

@@ -70,7 +70,8 @@ class RbStory < Issue
       attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and RbStory.column_names.include? k }
       attribs = Hash[*attribs.flatten]
       s = RbStory.new(attribs)
-      s.move_after(params['prev_id']) if s.save!
+      s.save!
+      s.move_after(params['prev_id'])
       return s
     end
 
