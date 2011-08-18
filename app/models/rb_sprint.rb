@@ -14,8 +14,9 @@ class Burndown
 
     data = stories.collect{|s| s.burndown(sprint) }
     if data.size == 0
-      data = []
-      [:points, :hours, :points_accepted, :points_resolved].each {|key| data[key] = [nil] * (@days.size + 1) }
+      story = {}
+      [:points, :hours, :points_accepted, :points_resolved].each {|key| story[key] = [nil] * (@days.size + 1) }
+      data = [story]
     end
 
     @data = {}
