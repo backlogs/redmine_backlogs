@@ -166,7 +166,9 @@ class RbTask < Issue
   end
 
   def time_entry_add(params)
-    if !params[:time_entry_hours].blank?
+    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user 
+    # to loose a precious comment if hours is accidently left blank.
+    if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
       @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
       # Make sure user has permission to edit time entries to allow 
       # logging time for other users
@@ -189,6 +191,7 @@ class RbTask < Issue
       else
         @time_entry.activity_id = TimeEntryActivity.first.id
       end
+      @time_entry.comments = params[:time_entry_comments]
       self.time_entries << @time_entry
     end
   end

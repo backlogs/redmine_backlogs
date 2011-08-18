@@ -326,6 +326,10 @@ See RB.Taskboard.initialize()
 #task_editor .blocks{
   width:268px;
 }
+#task_editor .time_entry_comments{
+  height:30px;
+  width:268px;
+}
 
 /* compact view */
 .compact .story,
