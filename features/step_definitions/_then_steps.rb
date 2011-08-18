@@ -213,7 +213,7 @@ end
 Then /^show me the (.+) journal for (.+)$/ do |property, issue|
   issue = Issue.find(:first, :conditions => ['subject = ?', issue])
   puts "\n"
-  puts "#{issue.subject}, created: #{issue.created_on}"
+  puts "#{issue.subject}(#{issue.id}), created: #{issue.created_on}"
   issue.journals.each {|j|
     j.details.select {|detail| detail.prop_key == property}.each {|detail|
       puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
