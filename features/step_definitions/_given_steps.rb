@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'timecop'
+
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
@@ -151,14 +154,63 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
-Given /^the project has the following sprints:$/ do |table|
+Given /^the project has the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
     version['project_id'] = @project.id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+      if version[date_attr] == 'today'
+        version[date_attr] = Date.today.strftime("%Y-%m-%d")
+      elsif version[date_attr].to_s == ''
+        version[date_attr] = nil
+      elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
+        # we're OK as-is
+      elsif version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+        version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d")
+      else
+        raise "Unexpected date value '#{version[date_attr]}'"
+      end
     end
+
     RbSprint.create! version
+  end
+end
+
+Given /^I have the following issue statuses available:$/ do |table|
+  table.hashes.each do |status|
+    s = IssueStatus.find(:first, :conditions => ['name = ?', status['name']])
+    unless s
+      s = IssueStatus.new
+      s.name = status['name']
+    end
+
+    s.is_closed = status['is_closed'] == '1'
+    s.is_default = status['is_default'] == '1'
+    s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].to_s == ''
+
+    s.save!
+  end
+end
+
+Given /^I have made the following task mutations:$/ do |table|
+  table.hashes.each do |mutation|
+    task = RbTask.find(:first, :conditions => ['subject = ?', mutation['task']])
+    task.should_not be_nil
+
+    status = mutation['status'].to_s
+    if status == ''
+      status = nil
+    else
+      status = IssueStatus.find(:first, :conditions => ['name = ?', status])
+      raise "No such status '#{status}'" unless status
+      status = status.id
+    end
+
+    Timecop.travel(@sprint.sprint_start_date.to_time + time_offset("#{mutation['day'].to_i - 1}d1h")) do
+      task.estimated_hours = mutation['estimated_hours'].to_f unless task.estimated_hours.to_s == ''
+      task.status_id = status if status
+      task.save!
+    end
   end
 end
 
@@ -181,32 +233,57 @@ end
 
 Given /^the project has the following stories in the following sprints:$/ do |table|
   @project.issues.delete_all
-  prev_id = ''
-
   table.hashes.each do |story|
     params = initialize_story_params
     params['subject'] = story['subject']
-    params['prev_id'] = prev_id
-    params['fixed_version_id'] = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    sprint = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ])
+    params['fixed_version_id'] = sprint.id
+    params['story_points'] = story['points'].to_i if params['points'].to_s != ''
+
+    pos = params['position'].to_s
+
+    if pos == ''
+      prev = Issue.find(:first, :conditions => ['fixed_version_id = ? and not position is null', sprint.id], :order => 'position desc')
+      params['prev_id'] = prev ? prev.id : nil
+    else
+      pos = pos.to_i
+      params['prev_id'] = pos == 1 ? nil : sprint.stories[pos - 2].id
+    end
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = RbStory.create_and_position params
-    prev_id = s.id
+
+    s = nil
+    offset = time_offset(story['offset'])
+    if offset
+      Timecop.travel(sprint.sprint_start_date.to_time + offset) do
+        s = RbStory.create_and_position params
+      end
+    else
+      s = RbStory.create_and_position params
+    end
   end
 end
 
 Given /^the project has the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task['parent'] })
+    story = RbStory.find(:first, :conditions => { :subject => task['story'] })
+    story.should_not be_nil
     params = initialize_task_params(story.id)
     params['subject'] = task['subject']
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    offset = time_offset(story['offset'])
+    if offset
+      Timecop.travel(story.created_on + offset) do
+        RbTask.create_with_relationships(params, @user.id, @project.id)
+      end
+    else
+      RbTask.create_with_relationships(params, @user.id, @project.id)
+    end
   end
 end
 
@@ -221,8 +298,9 @@ Given /^the project has the following impediments:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, @project.id, true).should_not be_nil
   end
+
 end
 
 Given /^I am viewing the issues list$/ do

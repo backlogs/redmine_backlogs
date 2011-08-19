@@ -4,8 +4,14 @@ class RbImpedimentsController < RbApplicationController
   unloadable
 
   def create
-    @impediment = RbTask.create_with_relationships(params, User.current.id, @project.id, true)
     @settings = Setting.plugin_redmine_backlogs
+    begin
+      @impediment = RbTask.create_with_relationships(params, User.current.id, @project.id, true)
+    rescue => e
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
+
     result = @impediment.errors.length
     status = (result == 0 ? 200 : 400)
     @include_meta = true
@@ -18,7 +24,12 @@ class RbImpedimentsController < RbApplicationController
   def update
     @impediment = RbTask.find_by_id(params[:id])
     @settings = Setting.plugin_redmine_backlogs
-    result = @impediment.update_with_relationships(params)
+    begin
+      result = @impediment.update_with_relationships(params)
+    rescue => e
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
     status = (result ? 200 : 400)
     @include_meta = true
     

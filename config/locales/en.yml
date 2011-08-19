@@ -91,6 +91,9 @@ en:
   field_blocks: "Blocks"
   error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
 
+  comma_delimited_numbers: "Comma delimited numbers"
+  use_free_text_if_empty: "Use text field instead of dropdown if empty"
+
   field_tracker_id: Tracker ID
   error_inclusion: "is not included in the list"
   

@@ -2,6 +2,11 @@
 
 * Javascript consolidated (this should fix the burndown. I know I've said so before)
 
+== 2011-08-01 v0.6.5
+
+* jQuery conflicts resolved
+* Migration fixed
+
 == 2011-08-01 v0.6.4
 
 * Burndown finally fixed

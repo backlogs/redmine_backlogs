@@ -21,19 +21,13 @@ class RbTask < Issue
 
     task = new(attribs)
 
-    valid_relationships = if is_impediment
-                            task.validate_blocks_list(params[:blocks])
-                          else
-                            true
-                          end
+    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(params[:blocks])
 
-    if valid_relationships && task.save!
-      task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
-      task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
-      task.time_entry_add(params)
-    else
-      raise "Could not save task"
-    end
+    task.save!
+
+    task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
+    task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks] && is_impediment
+    task.time_entry_add(params)
 
     return task
   end
@@ -127,24 +121,19 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count(
-      :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?',
-                      RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
     return @rank
   end
 
-  def burndown
-    return @burndown if @burndown
-
-    dates = story.fixed_version.becomes(RbSprint).days(:active).collect{|d| Time.local(d.year, d.mon, d.mday, 0, 0, 0) }
-    dates[0] = :first
-    dates << :last
-
-    @burndown = {}
-
-    @burndown[:open] = dates.collect{|d| !IssueStatus.find(Integer(historic(d, 'status_id'))).is_closed? }
-    @burndown[:hours] = dates.collect{|d| historic(d, 'estimated_hours')}
-    @burndown[:hours] = (0..dates.size-1).collect{|d| @burndown[:hours][d].nil? ? nil : (@burndown[:open][d] ? Float(@burndown[:hours][d]) : 0.0) }
+  def burndown(sprint = nil)
+    unless @burndown
+      sprint ||= story.fixed_version.becomes(RbSprint)
+      if sprint
+        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours')}
+      else
+        @burndown = nil
+      end
+    end
 
     return @burndown
   end

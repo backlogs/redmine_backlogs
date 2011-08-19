@@ -93,3 +93,9 @@
         <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
 	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Setting.plugin_redmine_backlogs[:timelog_from_taskboard]) %>
     </p>
+    <p>
+        <%= content_tag(:label, l(:field_story_points)) %>
+        <%= l(:comma_delimited_numbers) %><br>
+        <%= l(:use_free_text_if_empty) %><br>
+        <%= text_field_tag("settings[story_points]", Setting.plugin_redmine_backlogs[:story_points]) %>
+    </p>

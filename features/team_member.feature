@@ -19,7 +19,7 @@ Feature: Team Member
         | 3        | Story 3 | Sprint 001 |
         | 4        | Story 4 | Sprint 002 |
       And the project has the following tasks:
-        | subject | parent  |
+        | subject | story  |
         | Task 1  | Story 1 |
       And the project has the following impediments:
         | subject      | sprint     | blocks  |
