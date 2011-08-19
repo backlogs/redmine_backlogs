@@ -3,6 +3,15 @@
 require 'rubygems'
 require 'yaml'
 
+def root
+  r = ''
+  File.expand_path('.', __FILE__).gsub(/\\/, '/').split('/').reject{|d| d == ''}.each {|d|
+    r += "/#{d}"
+    return r if File.directory?("#{r}/redmine_backlogs")
+  }
+  return nil
+end
+
 class Translation
   @@source = nil
   @@translations = {}
@@ -23,8 +32,7 @@ class Translation
     @lang = strings.keys[0]
     strings[@lang].each_pair{|k, v| self[k] = v }
 
-    rmtrans = File.expand_path(File.join('..', '..', '..', 'redmine', 'config', 'locales'), File.dirname(__FILE__))
-    rmtrans = File.join(rmtrans, "#{File.basename(source, File.extname(source))}.yml")
+    rmtrans = "#{root}/redmine/config/locales/#{File.basename(source)}"
     @name = YAML::load_file(rmtrans)[@lang]['general_lang_name']
 
     raise "Translation '#{@lang}' already registered" if options[:register] && @@translations[@lang]
@@ -117,9 +125,8 @@ class TranslationManager
   @@config = File.exists?(@@configfile) ? YAML::load(File.open(@@configfile)) : {}
 
   def initialize
-    @root = File.expand_path(File.join('..', '..', '..'), File.dirname(__FILE__))
-    @webdir = File.join(@root, 'www.redminebacklogs.net')
-    @translations = File.join(@root, 'redmine_backlogs', 'config', 'locales')
+    @webdir = File.join(root, 'www.redminebacklogs.net')
+    @translations = File.join(root, 'redmine_backlogs', 'config', 'locales')
 
     raise "Website not found at '#{@webdir}'" unless File.directory?(@webdir)
     raise "Translations not found at '#{@translations}'" unless File.directory?(@translations)
@@ -141,14 +148,14 @@ class TranslationManager
       end
     }
     Dir.chdir(@translations)
-    #`git add .`
-    #`git commit -m "Translation updates"`
+    `git add .`
+    `git commit -m "Translation updates"`
     #`git push`
 
     make_page
     Dir.chdir(File.dirname(@webpage))
-    #`git add #{File.basename(@webpage)}`
-    #`git commit -m "Translation updates"`
+    `git add #{File.basename(@webpage)}`
+    `git commit -m "Translation updates"`
     #`git push`
   end
 
