@@ -10,12 +10,13 @@ class Burndown
     stories = sprint.stories | Journal.find(:all, :joins => :details,
                                             :conditions => ["journalized_type = 'Issue'
                                                             and property = 'attr' and prop_key = 'fixed_version_id'
-                                                            and (value = ? or old_value = ?)", sprint.id, sprint.id]).collect{|j| j.journalized.becomes(RbStory) }
+                                                            and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).collect{|j| j.journalized.becomes(RbStory) }
 
     data = stories.collect{|s| s.burndown(sprint) }
     if data.size == 0
-      data = []
-      [:points, :hours, :points_accepted, :points_resolved].each {|key| data[key] = [nil] * (@days.size + 1) }
+      story = {}
+      [:points, :hours, :points_accepted, :points_resolved].each {|key| story[key] = [nil] * (@days.size + 1) }
+      data = [story]
     end
 
     @data = {}
@@ -172,7 +173,7 @@ class RbSprint < Version
       return d unless issue
 
       first = {:first => :first}
-      day = 60 * 60 * 24
+      day = 24 * 60 * 60
       dates = d.collect{|dy|
         dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
         dy = nil if issue.created_on >= dy + day

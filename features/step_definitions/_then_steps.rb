@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'timecop'
+
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
@@ -45,17 +48,8 @@ Then /^show me the list of stories$/ do
   show_table(header, data)
 end
 
-Then /^show me the list of tasks$/ do
-  header = [['id', 5], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbTask.find(:all, :conditions => ['tracker_id = ?', RbTask.tracker]).select{|t| t.is_task? }.collect{|task|
-    [task.id, task.status.name, task.subject, task.fixed_version_id.nil? ? 'Product Backlog' : task.fixed_version.name]
-  }
-
-  show_table(header, data)
-end
-
 Then /^show me the sprint impediments$/ do
-  puts @sprint.impediments.collect{|i| i.subject}.inspect
+  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
 end
 
 Then /^show me the projects$/ do
@@ -105,10 +99,22 @@ Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
 end
 
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
-  sprints = RbSprint.find(:all, :conditions => { :name => sprint_name })
-  sprints.length.should == 1
-  
-  sprints.first.impediments.map{ |i| i.subject==impediment_subject}.length.should == count.to_i
+  sprint = RbSprint.find(:all, :conditions => { :name => sprint_name })
+  sprint.length.should == 1
+  sprint = sprint.first
+
+  impediments = sprint.impediments
+  impediments.size.should == count.to_i
+
+  subjects = {}
+  impediment_subject.split(/(?:\s+and\s+)|(?:\s*,\s*)/).each {|s|
+    subjects[s] = 0
+  }
+  sprint.impediments.each{|i|
+    subjects[i.subject].should_not be_nil
+    subjects[i.subject] += 1 if subjects[i.subject]
+  }
+  subjects.values.select{|v| v == 0}.size.should == 0
 end
 
 Then /^the sprint should be updated accordingly$/ do
@@ -168,4 +174,55 @@ end
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
   issue = Issue.find_by_subject(subject)
   issue.send(attribute.intern).should == value.to_i
+end
+
+Then /^the sprint burndown should be:$/ do |table|
+  bd = nil
+  Timecop.travel((@sprint.effective_date + 1).to_time) do
+    bd = @sprint.burndown('down')
+  end
+
+  table.hashes.each do |metrics|
+    day = metrics.delete('day')
+    day = (day == 'start' ? 0 : day.to_i)
+
+    metrics.keys.sort.each do |k|
+      expected = metrics[k]
+      got = bd[k.intern][day]
+
+      # If we get a nil, leave expected alone -- if expected is '' or nil, it'll match, otherwise it's a mismatch anyhow
+      expected = got.to_s.match(/\./) ? expected.to_f : expected.to_i unless got.nil?
+
+      "day #{day}, #{k}: #{got}".should == "day #{day}, #{k}: #{expected}"
+    end
+  end
+end
+
+Then /^show me the burndown$/ do
+  bd = nil
+  Timecop.travel((@sprint.effective_date + 1).to_time) do
+    bd = @sprint.burndown('down')
+  end
+
+  header = ['day'] + bd.series(false).sort
+
+  data = []
+  days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
+  0.upto(days - 1) do |day|
+    data << [day] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
+  end
+
+  show_table(header, data)
+end
+
+Then /^show me the (.+) journal for (.+)$/ do |property, issue|
+  issue = Issue.find(:first, :conditions => ['subject = ?', issue])
+  puts "\n"
+  puts "#{issue.subject}(#{issue.id}), created: #{issue.created_on}"
+  issue.journals.each {|j|
+    j.details.select {|detail| detail.prop_key == property}.each {|detail|
+      puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
+    }
+  }
+  puts "  #{issue.updated_on}: #{issue.send(property.intern)}"
 end

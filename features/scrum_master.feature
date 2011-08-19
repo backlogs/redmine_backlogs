@@ -7,7 +7,8 @@ Feature: Scrum Master
     Given the ecookbook project has the backlogs plugin enabled
       And no versions or issues exist
       And I am a scrum master of the project
-      And I have defined the following sprints:
+      And I have deleted all existing issues
+      And the project has the following sprints:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
         | Sprint 002 | 2010-02-01        | 2010-02-28      |
@@ -33,7 +34,8 @@ Feature: Scrum Master
       And I want to set the subject of the impediment to Bad Impediment
       And I want to indicate that the impediment blocks Story B
      When I create the impediment
-     Then the sprint named Sprint 001 should have 2 impediments named Bad Impediment
+     Then the request should complete successfully
+      And the sprint named Sprint 001 should have 2 impediments named Bad Impediment and Impediment 1
 
   Scenario: Update an impediment
     Given I am viewing the taskboard for Sprint 001

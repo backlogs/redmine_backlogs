@@ -7,7 +7,8 @@ Feature: Team Member
     Given the ecookbook project has the backlogs plugin enabled
       And no versions or issues exist
       And I am a team member of the project
-      And I have defined the following sprints:
+      And I have deleted all existing issues
+      And the project has the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
@@ -19,8 +20,8 @@ Feature: Team Member
         | 2        | Story 2 | Sprint 001 |
         | 3        | Story 3 | Sprint 001 |
         | 4        | Story 4 | Sprint 002 |
-      And I have defined the following tasks:
-        | subject | parent  |
+      And the project has the following tasks:
+        | subject | story  |
         | Task 1  | Story 1 |
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |

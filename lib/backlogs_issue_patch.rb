@@ -131,19 +131,19 @@ module Backlogs
         end
       end
 
-      def historic(date, property)
-        case date
+      def historic(timestamp, property)
+        case timestamp
           when :last
             return self.send(property.intern)
           when nil
             return nil
         end
 
-        Rails.cache.fetch("RbIssue(#{id}).historic(#{date}, #{property})", :force => date.is_a?(Symbol) || date.to_date == Date.today) {
-          if date == :first
+        Rails.cache.fetch("RbIssue(#{id}).historic(#{timestamp}, #{property})", :force => timestamp.is_a?(Symbol) || timestamp.to_date == Date.today) {
+          if timestamp == :first
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
           else
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, date]
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, timestamp]
           end
 
           j = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
