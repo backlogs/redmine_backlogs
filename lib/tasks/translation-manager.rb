@@ -2,10 +2,6 @@
 
 require 'rubygems'
 require 'yaml'
-require 'cmess/guess_encoding'
-require 'iconv'
-require 'nokogiri'
-require 'fileutils'
 
 class Translation
   @@source = nil
@@ -52,20 +48,6 @@ class Translation
 
   attr_reader :lang, :name, :strings, :source
   attr_reader :missing, :obsolete, :varstyle
-
-  def merge(qts)
-    doc = Nokogiri::XML(qts)
-
-    lang = doc.at('//TS')['language']
-    raise "Cannot load '#{lang}' over '#{@lang}'" unless @lang == lang
-
-    doc.xpath('//message').each {|message|
-      id = message['id']
-      t = message.at('translation')
-      next if t['type'] == 'unfinished'
-      self[id] = t.text
-    }
-  end
 
   def [](k)
     return @strings[k]
@@ -128,33 +110,6 @@ class Translation
     @@keys.each {|k| strings[k] = @strings[k]}
     return {@lang => strings}.to_yaml(opts)
   end
-  
-  def to_qts
-    builder = Nokogiri::XML::Builder.new do |xml|
-      xml.doc.create_internal_subset('TS', nil, "qtlinguist.dtd")
-      xml.TS({'sourcelanguage' => @@source.lang.gsub('-', '_'), 'language' => @lang.gsub('-', '_')}.merge(@author ? {'extra-rbl-author' => @author} : {})) {
-        xml.context_ {
-          xml.name('Redmine Backlogs')
-          @@keys.each {|id|
-            xml.message('id' => id) {
-              xml.source(@@source.strings[id])
-              xml.translation(@strings[id] || '', {}.merge(@varstyle.include?(id) || @missing.include?(id) ? {'type' => 'unfinished'} : {}))
-              xml.translatorcomment('Please replace {{...}} variables with %{...} variables') if @varstyle.include?(id)
-            }
-          }
-          #@obsolete.each {|id|
-          #  xml.message {
-          #    xml.source("Obsolete key '#{id}' -- use for reference, or delete")
-          #    xml.translation(@strings[id], 'type' => 'obsolete')
-          #    xml.translatorcomment('Obsolete -- only kept for reference')
-          #  }
-          #}
-        }
-      }
-    end
-
-    return builder.to_xml
-  end
 end
 
 class TranslationManager
@@ -164,7 +119,7 @@ class TranslationManager
   def initialize
     @root = File.expand_path(File.join('..', '..', '..'), File.dirname(__FILE__))
     @webdir = File.join(@root, 'www.redminebacklogs.net')
-    @translations = File.join(@root, 'translations', 'config', 'locales')
+    @translations = File.join(@root, 'redmine_backlogs', 'config', 'locales')
 
     raise "Website not found at '#{@webdir}'" unless File.directory?(@webdir)
     raise "Translations not found at '#{@translations}'" unless File.directory?(@translations)
@@ -172,8 +127,6 @@ class TranslationManager
     @webpage = File.join(@webdir, '_posts', 'en', '1992-01-01-translations.textile')
 
     Dir.chdir(@translations)
-    `git checkout master`
-    `git pull`
     Dir.glob(File.join(@translations, "*.yml")).sort.each {|trans|
       Translation.new(trans, :source => (File.basename(trans) == 'en.yml'))
     }
@@ -181,32 +134,25 @@ class TranslationManager
     raise "Source translation 'en' not found" unless Translation.source
   end
 
-  def fetch
-    Dir.chdir(@translations)
-    `git checkout transifex`
-    `git merge master`
-
-  end
-
   def save
-    #Translation.translations.values.each {|t|
-    #  File.open(File.join(@webdir, 'translations', "#{t.lang}.ts"), 'w') do |out|
-    #    out.write(t.to_qts)
-    #  end
-      #File.open(File.join(@translations, "#{t.lang}.yml"), 'w') do |out|
-      #  out.write(t.to_yaml)
-      #end
-    #}
+    Translation.translations.values.each {|t|
+      File.open(File.join(@translations, "#{t.lang}.yml"), 'w') do |out|
+        out.write(t.to_yaml)
+      end
+    }
+    Dir.chdir(@translations)
+    #`git add .`
+    #`git commit -m "Translation updates"`
+    #`git push`
 
-    #make_page(:qts)
-
-    #Dir.chdir(@webdir)
-    #`git add translations`
+    make_page
+    Dir.chdir(File.dirname(@webpage))
+    #`git add #{File.basename(@webpage)}`
     #`git commit -m "Translation updates"`
     #`git push`
   end
 
-  def make_page(type)
+  def make_page
     header = File.open(@webpage).read
     header, rest = header.split(/bq\(success\)\. /, 2)
     raise "'#{@webpage}' is not a proper template" if header.size == 0 || rest.size == 0
@@ -214,7 +160,7 @@ class TranslationManager
 
     File.open(@webpage, 'w') do |page|
       page.write(header)
-      page.write("\nbq(success). \"#{Translation.source.name}\":#{url(Translation.source.lang, type)}\n\nserves as a base for all other translations\n\n")
+      page.write("\nbq(success). #{Translation.source.name}\n\nserves as a base for all other translations\n\n")
 
       Translation.translations.values.reject{|t| t.lang == Translation.source.lang}.sort{|a, b| a.name <=> b.name }.each {|t|
         if t.missing.size > 0 || t.varstyle.size > 0
@@ -234,7 +180,7 @@ class TranslationManager
           status = 'success'
         end
 
-        page.write("bq(#{status}). \"#{t.name}\":#{url(t.lang, type)} #{pct}\n\n")
+        page.write("bq(#{status}). #{t.name} #{pct}\n\n")
 
         [[:missing, 'Missing'], [:obsolete, 'Obsolete'], [:varstyle, 'Old-style variable substitution']].each {|cat|
           keys, title = *cat
@@ -253,35 +199,6 @@ class TranslationManager
       }
     end
   end
-
-  def url(l, type)
-    u = "http://www.redminebacklogs.net/translations/"
-
-    case type
-      when :xliff
-        return "#{u}#{l}.xlf"
-      when :qts
-        return "#{u}#{l}.ts"
-      else
-        raise "Unsupported translation type #{type.inspect}"
-    end
-  end
-
-  def import(source, author)
-    t = Translation.new(source, :register => false, :author => author)
-
-    if Translation.translations[t.lang]
-      t = Translation.translations[t.lang]
-      t.load(source, :author => author)
-    end
-
-    queue(t)
-  end
-
-  def queue(translation)
-    
-  end
-
 end
 
 class Hash
@@ -300,4 +217,3 @@ end
 
 tm = TranslationManager.new
 tm.save
-#tm.save_site
