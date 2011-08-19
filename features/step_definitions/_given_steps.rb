@@ -195,7 +195,7 @@ end
 Given /^I have made the following task mutations:$/ do |table|
   days = @sprint.days(:all).collect{|d| d.to_time}
 
-  table.hashes.each do |mutation|
+  table.hashes.each_with_index do |mutation, h|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
     task.should_not be_nil
     task.init_journal(User.current)
@@ -211,7 +211,7 @@ Given /^I have made the following task mutations:$/ do |table|
 
     remaining = mutation.delete('remaining')
 
-    Timecop.travel(days[mutation.delete('day').to_i - 1] + time_offset("1h")) do
+    Timecop.travel(days[mutation.delete('day').to_i - 1] + time_offset("#{h+1}h")) do
       task.estimated_hours = remaining.to_f unless remaining.blank?
       task.status_id = status if status
       task.save!

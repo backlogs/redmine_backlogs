@@ -182,7 +182,8 @@ Then /^the sprint burndown should be:$/ do |table|
     day = metrics.delete('day')
     day = (day == 'start' ? 0 : day.to_i)
 
-    metrics.each_pair do |k, expected|
+    metrics.keys.sort.each do |k|
+      expected = metrics[k]
       got = bd[k.intern][day]
 
       # If we get a nil, leave expected alone -- if expected is '' or nil, it'll match, otherwise it's a mismatch anyhow

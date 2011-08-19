@@ -16,16 +16,11 @@ class RbTask < Issue
       attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) && !RbTask.column_names.include?(k)}
     end
 
-    params.delete('action')
-    params.delete('controller')
-
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
     attribs['project_id'] = project_id
 
     blocks = params.delete('blocks')
-
-    raise "unsupported initialization parameters #{(params.keys - attribs.keys).inspect}" if (params.keys - attribs.keys).size != 0
 
     task = new(attribs)
     task.save!
