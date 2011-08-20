@@ -6,10 +6,11 @@ def time_offset(o)
   o = o.to_s.strip
   return nil if o == ''
 
-  m = o.match(/^(-?)([0-9]+d)?([0-9]+h)?$/)
-  raise "Not a valid offset spec '#{o}'" unless m
+  m = o.match(/^(-?)(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?$/)
+  raise "Not a valid offset spec '#{o}'" unless m && o != '-'
+  _, sign, _, d, _, h, _, m = m.to_a
 
-  return (((o.match(/([0-9]+)d/) || [0, 0])[1].to_i) * 24 + ((o.match(/([0-9]+)h/) || [0, 0])[1].to_i)) * 60 * 60 * (o =~ /^-/ ? -1 : 1)
+  return ((((d.to_i * 24) + h.to_i) * 60) + m.to_i) * 60 * (sign == '-' ? -1 : 1)
 end
 
 def initialize_story_params
@@ -99,7 +100,7 @@ def logout
   @user = nil
 end
 
-def show_table(header, data)
+def show_table(title, header, data)
   sizes = data.transpose.collect{|d| d.collect{|s| s.to_s.length}.max }
   sizes = header.zip(sizes).collect{|hs| [hs[0].length, hs[1]].max }
   sizes = sizes.zip(header).collect{|sh| sh[1].is_a?(Array) ? sh[1][1] : sh[0] }
@@ -108,7 +109,7 @@ def show_table(header, data)
 
   header = header.zip(sizes).collect{|hs| hs[0].ljust(hs[1]) }
 
-  puts "\n"
+  puts "\n#{title}"
   puts "\t| #{header.join(' | ')} |"
 
   data.each {|row|

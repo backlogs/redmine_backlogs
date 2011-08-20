@@ -29,8 +29,8 @@ class Burndown
 
     @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
 
-    @data[:points_to_resolve] = @data[:points_committed].zip(@data[:points_resolved]).collect{|cr| cr[0] - cr[1]}
-    @data[:points_to_accept] = @data[:points_committed].zip(@data[:points_accepted]).collect{|cr| cr[0] - cr[1]}
+    @data[:points_to_resolve] = {:points => @data[:points_committed], :resolved => @data[:points_resolved]}.transpose.collect{|pr| pr[:points] - pr[:resolved]}
+    @data[:points_to_accept] = {:points => @data[:points_committed], :accepted => @data[:points_accepted]}.transpose.collect{|p| p[:points] - p[:accepted]}
 
     @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
     @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}

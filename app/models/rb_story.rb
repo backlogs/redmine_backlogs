@@ -215,9 +215,11 @@ class RbStory < Issue
         @burndown[:points] = dates.collect{|d| historic(d, 'story_points')}
         @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
         @burndown[:hours] = [nil] * dates.size if @burndown[:hours].size == 0
-        @burndown[:points_accepted] = @burndown[:points].zip(accepted).collect{|pa| pa[1] ? pa[0] : nil}
-        @burndown[:points_resolved] = @burndown[:points].zip(@burndown[:hours], accepted).collect{|pha| (pha[1] == 0 || pha[2]) ? pha[0] : 0}
-        @burndown[:hours] = burndown[:hours].zip(active).collect{|ha| ha[1] ? ha[0] : nil }
+
+        @burndown[:points_accepted] = {:points => @burndown[:points], :accepted => accepted}.transpose.collect{|p| p[:accepted] ? p[:points] : nil }
+        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours] == 0 || p[:accepted]) ? p[:points] : 0}
+
+        @burndown[:hours] = {:hours => @burndown[:hours], :active => active}.transpose.collect{|h| h[:active] ? h[:hours] : 0}
 
       else
         @burndown = nil

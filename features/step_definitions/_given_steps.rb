@@ -195,7 +195,7 @@ end
 Given /^I have made the following task mutations:$/ do |table|
   days = @sprint.days(:all).collect{|d| d.to_time}
 
-  table.hashes.each_with_index do |mutation, h|
+  table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
     task.should_not be_nil
     task.init_journal(User.current)
@@ -211,7 +211,13 @@ Given /^I have made the following task mutations:$/ do |table|
 
     remaining = mutation.delete('remaining')
 
-    Timecop.travel(days[mutation.delete('day').to_i - 1] + time_offset("#{h+1}h")) do
+    mutated = days[mutation.delete('day').to_i - 1]
+
+    mutated.to_date.should be >= task.created_on.to_date
+
+    mutated = task.created_on if (mutated.to_date == task.created_on.to_date)
+    mutated += time_offset("#{(no + 1)*10}m")
+    Timecop.travel(mutated) do
       task.estimated_hours = remaining.to_f unless remaining.blank?
       task.status_id = status if status
       task.save!
@@ -361,5 +367,5 @@ end
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
   data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.estimated_hours.inspect]}
-  show_table(header, data)
+  show_table("Task hours", header, data)
 end

@@ -127,7 +127,21 @@ module Backlogs
           end
 
           connection.execute("update issues set position = NULL where id = #{connection.quote(self.id)}") if self.position
-          connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}") if self.status.backlog == :success
+          # once again, a simple journalized_update throws RM in an update loop
+          if self.status.backlog == :success && self.estimated_hours != 0
+            connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}")
+
+            j = Journal.find(:first, :order => "journals.created_on desc" , :conditions => ["journalized_type = 'Issue' and journalized_id = ?", self.id])
+
+            jd = JournalDetail.new
+            jd.property = 'attr'
+            jd.prop_key = 'estimated_hours'
+            jd.old_value = self.estimated_hours.to_s
+            jd.value = "0.0"
+
+            j.details << jd
+            j.save!
+          end
         end
       end
 
@@ -143,15 +157,15 @@ module Backlogs
           if timestamp == :first
             conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
           else
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on > ?", id, timestamp]
+            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on >= ?", id, timestamp]
           end
 
-          j = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal, :conditions => conditions)
+          j = JournalDetail.find(:first, :order => "journals.created_on asc" , :joins => :journal, :conditions => conditions)
 
           if j.nil?
             v = self.send(property.intern)
           else
-            v = j.old_value || j.value
+            v = j.old_value
 
             if v
               @@backlogs_column_type ||= {}
