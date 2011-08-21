@@ -76,6 +76,7 @@ Feature: Scrum master
         | 4       | C.1  | 10        |             |
         | 5       | C.1  |           | Closed      |
         | 5       | C.1  | 0         |             |
+
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -97,11 +98,11 @@ Feature: Scrum master
 
       And the project has the following stories in the following sprints:
         | subject | sprint     | points | offset |
-        | story d | Sprint 001 | 1      | 3d     |
+        | Story d | Sprint 001 | 1      | 3d     |
 
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
-        | D.1          | story d   | 40       | New    | 1h     |
+        | D.1          | Story d   | 40       | New    | 1h     |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |
@@ -114,6 +115,15 @@ Feature: Scrum master
         | 5       | C.1  |           | Closed      |
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
+
+      Then show me the story_points journal for Story A
+      Then show me the story burndown for Story A
+      Then show me the story_points journal for Story B
+      Then show me the story burndown for Story B
+      Then show me the story_points journal for Story C
+      Then show me the story burndown for Story C
+      Then show me the story_points journal for Story D
+      Then show me the story burndown for Story D
 
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
