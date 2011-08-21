@@ -98,7 +98,7 @@ Feature: Scrum master
 
       And the project has the following stories in the following sprints:
         | subject | sprint     | points | day |
-        | Story D | Sprint 001 | 1      | 3   |
+        | Story D | Sprint 001 | 4      | 3   |
 
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
