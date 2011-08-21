@@ -28,9 +28,9 @@ Feature: Scrum master
         | 4        | Story 4 |
       And the project has the following stories in the following sprints:
         | position | subject | sprint     | points | day |
-        | 1        | Story A | Sprint 001 | 1      | 1   |
-        | 2        | Story B | Sprint 001 | 2      | 1   |
-        | 3        | Story C | Sprint 001 | 4      | 1   |
+        | 1        | Story A | Sprint 001 | 1      |     |
+        | 2        | Story B | Sprint 001 | 2      |     |
+        | 3        | Story C | Sprint 001 | 4      |     |
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
         | A.1          | Story A   | 10       | New    | 1h     |
@@ -98,11 +98,11 @@ Feature: Scrum master
 
       And the project has the following stories in the following sprints:
         | subject | sprint     | points | day |
-        | Story d | Sprint 001 | 1      | 3   |
+        | Story D | Sprint 001 | 1      | 3   |
 
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
-        | D.1          | Story d   | 40       | New    | 1h     |
+        | D.1          | Story D   | 40       | New    | 1h     |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |
@@ -116,14 +116,23 @@ Feature: Scrum master
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
 
-      Then show me the story_points journal for Story A
-      Then show me the story burndown for Story A
-      Then show me the story_points journal for Story B
-      Then show me the story burndown for Story B
-      Then show me the story_points journal for Story C
-      Then show me the story burndown for Story C
-      Then show me the story_points journal for Story D
-      Then show me the story burndown for Story D
+      Then show me the estimated_hours journal for A.1
+      Then show me the burndown for task A.1
+      Then show me the estimated_hours journal for B.1
+      Then show me the burndown for task B.1
+      Then show me the estimated_hours journal for C.1
+      Then show me the burndown for task C.1
+      Then show me the estimated_hours journal for D.1
+      Then show me the burndown for task D.1
+      #Then show me the story_points journal for Story A
+      #Then show me the story burndown for Story A
+      #Then show me the story_points journal for Story B
+      #Then show me the story burndown for Story B
+      #Then show me the story_points journal for Story C
+      #Then show me the story burndown for Story C
+      #Then show me the story_points journal for Story D
+      #Then show me the story burndown for Story D
+      Then show me the sprint burndown
 
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |

@@ -255,18 +255,27 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
     params['prev_id'] = story_before(story.delete('position'))
 
-    offset = time_offset(story.delete('offset'))
     day_added = story.delete('day')
-    day_added = time_offset("#{Integer(day_added) - 1}d1h") if day_added
-    offset = day_added || offset
+    offset = story.delete('offset')
+    created_on = nil
+
+    if day_added
+      if day_added == ''
+        created_on = (sprint.sprint_start_date - 1).to_time
+      else
+        created_on = sprint.days(:all)[Integer(day_added)-1].to_time + time_offset('1h')
+      end
+    elsif offset
+      created_on = sprint.sprint_start_date.to_time + time_offset(offset)
+    end
 
     story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    if offset
-      Timecop.travel(sprint.sprint_start_date.to_time + offset) do
+    if created_on
+      Timecop.travel(created_on) do
         RbStory.create_and_position params
       end
     else
