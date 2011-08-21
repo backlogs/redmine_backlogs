@@ -10,9 +10,9 @@ module Backlogs
         unloadable
 
         alias_method_chain :move_to_project_without_transaction, :autolink
-        after_save  :backlogs_after_save
 
-        before_save :backlogs_scrub_position_journal
+        before_save :backlogs_before_save
+        after_save  :backlogs_after_save
       end
     end
 
@@ -21,11 +21,10 @@ module Backlogs
 
     module InstanceMethods
       def move_to_project_without_transaction_with_autolink(new_project, new_tracker = nil, options = {})
-
         newissue = move_to_project_without_transaction_without_autolink(new_project, new_tracker, options)
         return newissue if newissue.blank? || !self.project.module_enabled?('backlogs')
 
-        if self.project_id == newissue.project_id and self.is_story? and newissue.is_story? and self.id != newissue.id
+        if project_id == newissue.project_id and is_story? and newissue.is_story? and id != newissue.id
           relation = IssueRelation.new :relation_type => IssueRelation::TYPE_DUPLICATES
           relation.issue_from = self
           relation.issue_to = newissue
@@ -51,21 +50,22 @@ module Backlogs
       end
 
       def is_story?
-        return RbStory.trackers.include?(self.tracker_id)
+        return RbStory.trackers.include?(tracker_id)
       end
 
       def is_task?
-        return self.tracker_id == RbTask.tracker
+        return (tracker_id == RbTask.tracker)
       end
 
       def story
-        # the self.id test verifies we're not looking at a new,
-        # unsaved issue object
-        return nil unless self.id && self.is_task?
+        # the self.id test verifies we're not looking at a new, unsaved issue object
+        return nil unless self.id
 
-        s = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", self.root_id, self.lft, RbStory.trackers ])
-        s = s.becomes(RbStory) if s
-        return s
+        unless @rb_story
+          @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", root_id, lft, RbStory.trackers ])
+          @rb_story = @rb_story.becomes(RbStory) if @rb_story
+        end
+        return @rb_story
       end
 
       def blocks
@@ -89,8 +89,17 @@ module Backlogs
         return Integer(self.story_points * dpp)
       end
 
-      def backlogs_scrub_position_journal
-        @issue_before_change.position = self.position if @issue_before_change
+      def backlogs_before_save
+        if @issue_before_change && self.project.module_enabled?('backlogs')
+          @issue_before_change.position = self.position # don't log position updates
+
+          if self.is_task?
+            estimated_hours = 0 if status.backlog == :success
+            position = @issue_before_change.position = nil
+            fixed_version_id = story.fixed_version_id if story
+          end
+        end
+        return true
       end
 
       def backlogs_after_save
@@ -103,96 +112,92 @@ module Backlogs
         return unless self.project.module_enabled? 'backlogs'
 
         if self.is_story?
-          # raw sql here because it's efficient and not
+          # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
-          # update_parent
+          # update_parent :<
+          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and fixed_version_id<>?
+                                            and exists(select 1 from journals j join journal_details jd on j.id = jd.journal_id
+                                                           where j.journalized_id = issues.id and j.journalized_type = 'Issue'
+                                                           and jd.property='attr' and jd.prop_key='fixed_version_id')", root_id, lft, rgt, fixed_version_id]).each{ |task|
+            j = Journal.new
+            j.journalized = task
+            j.created_on = Time.now
+            j.user = User.current
+            j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
+            j.save!
+          }
+          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{descendants.collect{|t| "#{t.id}"}.join(',')})") unless leaf?
 
-          if not RbTask.tracker.nil?
-            tasks = self.descendants.collect{|t| connection.quote(t.id)}.join(",")
-            if tasks != ""
-              connection.execute("update issues set tracker_id=#{connection.quote(RbTask.tracker)}, fixed_version_id=#{connection.quote(self.fixed_version_id)} where id in (#{tasks})")
-            end
-          end
-
+          # safe to do by sql since we don't want any of this logged
           unless self.position
             max = 0
             connection.execute('select max(position) from issues where not position is null').each {|i| max = i[0] }
-            connection.execute("update issues set position = #{connection.quote(max)} + 1 where id = #{connection.quote(self.id)}")
-          end
-
-        elsif self.is_task?
-          story = self.story
-          if not story.blank?
-            connection.execute "update issues set tracker_id = #{connection.quote(RbTask.tracker)}, fixed_version_id = #{connection.quote(story.fixed_version_id)} where id = #{connection.quote(self.id)}"
-          end
-
-          connection.execute("update issues set position = NULL where id = #{connection.quote(self.id)}") if self.position
-          # once again, a simple journalized_update throws RM in an update loop
-          if self.status.backlog == :success && self.estimated_hours != 0
-            connection.execute("update issues set estimated_hours = 0 where id = #{connection.quote(self.id)}")
-
-            j = Journal.find(:first, :order => "journals.created_on desc" , :conditions => ["journalized_type = 'Issue' and journalized_id = ?", self.id])
-
-            jd = JournalDetail.new
-            jd.property = 'attr'
-            jd.prop_key = 'estimated_hours'
-            jd.old_value = self.estimated_hours.to_s
-            jd.value = "0.0"
-
-            j.details << jd
-            j.save!
+            connection.execute("update issues set position = #{connection.quote(max)} + 1 where id = #{id}")
           end
         end
       end
 
-      def historic(timestamp, property)
-        case timestamp
-          when :last
-            return self.send(property.intern)
-          when nil
-            return nil
+      def initial_value_for(property)
+        jd = JournalDetail.find(:first, :order => "journals.created_on asc" , :joins => :journal,
+                                        :conditions => ["property = 'attr' and prop_key = '#{property}'
+                                                         and journalized_type = 'Issue' and journalized_id = ?", id])
+        return jd ? jd.old_value : self.send(property)
+      end
+
+      def history(property, days)
+        created_day = created_on.to_date
+        active_days = days.select{|d| d >= created_day}
+
+        values = [nil] * active_days.size
+
+        first = nil
+        if active_days.size != 0
+          first = initial_value_for(property)
+          values.fill(first)
+          first = nil if active_days.size != days.size
+
+          JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
+                                   :conditions => ["created_on between ? and ?
+                                                    and property = 'attr' and prop_key = '#{property}'
+                                                    and journalized_type = 'Issue' and journalized_id = ?",
+                                                    active_days[0].to_time, (active_days[-1] + 1).to_time, id]).each {|detail|
+            jdate = detail.journal.created_on.to_date
+            i = active_days.index{|d| d >= jdate}
+            break unless i
+
+            values.fill(detail.value, i)
+          }
+          values[-1] = self.send(property)
         end
 
-        Rails.cache.fetch("RbIssue(#{id}).historic(#{timestamp}, #{property})", :force => timestamp.is_a?(Symbol) || timestamp.to_date == Date.today) {
-          if timestamp == :first
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ?", id]
+        values = ([nil] * (days.size - active_days.size)) + [first] + values
+
+        @@backlogs_column_type ||= {}
+        @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == "#{property}"}.collect{|c| c.type}[0]
+
+        return values.collect{|v|
+          if v.nil?
+            v
           else
-            conditions = ["property = 'attr' and prop_key = '#{property}' and journalized_type = 'Issue' and journalized_id = ? and journals.created_on >= ?", id, timestamp]
-          end
-
-          j = JournalDetail.find(:first, :order => "journals.created_on asc" , :joins => :journal, :conditions => conditions)
-
-          if j.nil?
-            v = self.send(property.intern)
-          else
-            v = j.old_value
-
-            if v
-              @@backlogs_column_type ||= {}
-              @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == property}.collect{|c| c.type}[0]
-
-              case @@backlogs_column_type[property]
-                when :integer
-                  v = Integer(v)
-                when :float
-                  v = Float(v)
-                when :string
-                  v = v.to_s
-                else
-                  raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
-              end
+            case @@backlogs_column_type[property]
+              when :integer
+                Integer(v)
+              when :float
+                Float(v)
+              when :string
+                v.to_s
+              else
+                raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
             end
           end
-
-          v
         }
       end
 
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
-        if self.leaf?
-          return self.historic(:first, 'estimated_hours')
+        if leaf?
+          return initial_value_for(:estimated_hours)
         else
           e = self.leaves.collect{|t| t.initial_estimate}.compact
           return nil if e.size == 0

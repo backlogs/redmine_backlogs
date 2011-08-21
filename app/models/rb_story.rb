@@ -206,19 +206,27 @@ class RbStory < Issue
 
       if sprint
         @burndown = {}
-        dates = sprint.days(:active, self)
+        days = sprint.days(:active)
 
-        status = dates.collect{|d| d ? IssueStatus.find(historic(d, 'status_id')) : nil}
+        status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
         accepted = status.collect{|s| s ? (s.backlog == :accepted) : false}
         active = status.collect{|s| s ? !s.is_closed? : false}
+        in_sprint = history(:fixed_version_id, days).collect{|s| s == sprint.id}
 
-        @burndown[:points] = dates.collect{|d| historic(d, 'story_points')}
+        # collect points on this sprint
+        @burndown[:points] = {:points => history(:story_points, days), :active => in_sprint}.transpose.collect{|p| p[:active] ? p[:points] : nil}
+
+        # collect hours on this sprint
         @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
-        @burndown[:hours] = [nil] * dates.size if @burndown[:hours].size == 0
+        @burndown[:hours] = [nil] * (days.size + 1) if @burndown[:hours].size == 0
+        @burndown[:hours] = {:h => @burndown[:hours], :a => in_sprint}.transpose.collect{|h| h[:a] ? h[:h] : nil}
 
+        # points are accepted when the state is accepted
         @burndown[:points_accepted] = {:points => @burndown[:points], :accepted => accepted}.transpose.collect{|p| p[:accepted] ? p[:points] : nil }
-        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours] == 0 || p[:accepted]) ? p[:points] : 0}
+        # points are resolved when the state is accepted _or_ the hours are at zero
+        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours].to_i == 0 || p[:accepted]) ? p[:points] : 0}
 
+        # set hours to zero after the above when the story is not active, would affect resolved when done before this
         @burndown[:hours] = {:hours => @burndown[:hours], :active => active}.transpose.collect{|h| h[:active] ? h[:hours] : 0}
 
       else

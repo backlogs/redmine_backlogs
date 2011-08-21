@@ -158,7 +158,7 @@ class RbSprint < Version
         return wiki_page_title
     end
 
-    def days(cutoff, issue=nil)
+    def days(cutoff)
       return nil unless has_burndown
 
       case cutoff
@@ -172,22 +172,7 @@ class RbSprint < Version
 
       # assumes mon-fri are working days, sat-sun are not. this
       # assumption is not globally right, we need to make this configurable.
-      d = d.select {|d| (d.wday > 0 and d.wday < 6) }
-      return d unless issue
-
-      first = {:first => :first}
-      day = 24 * 60 * 60
-      dates = d.collect{|dy|
-        dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
-        dy = nil if issue.created_on >= dy + day
-        # the order is important here! only assign :first to a real day the issue was active.
-        # If at that point the story was part of a different sprint or closed, we don't want :first to appear at all
-        dy = (first.delete(:first) || dy) if dy
-        dy = nil if dy && issue.historic(dy, 'fixed_version_id') != self.id
-        dy
-      }
-      dates << (dates[-1] ? :last : nil)
-      return dates
+      return d.select {|d| (d.wday > 0 and d.wday < 6) }
     end
 
     def eta

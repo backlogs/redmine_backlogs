@@ -47,7 +47,7 @@ module BacklogsPlugin
         end
 
         if issue.is_task?
-          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.historic(:first, 'estimated_hours')}</td></tr>"
+          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.initial_value_for(:estimated_hours)}</td></tr>"
         end
 
         return snippet
@@ -102,7 +102,7 @@ module BacklogsPlugin
 
         if issue.is_task?
           snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
-          snippet += text_field_tag('initial_estimate', issue.historic(:first, 'estimated_hours'), :size => 3)
+          snippet += text_field_tag('initial_estimate', issue.initial_value_for(:estimated_hours), :size => 3)
           snippet += '</p>'
         end
 

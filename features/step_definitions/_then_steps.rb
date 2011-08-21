@@ -186,14 +186,14 @@ Then /^the sprint burndown should be:$/ do |table|
     day = (day == 'start' ? 0 : day.to_i)
     date = days[day]
 
-    metrics.keys.sort.each do |k|
+    metrics.keys.sort{|a, b| a.to_s <=> b.to_s}.each do |k|
       expected = metrics[k]
       got = bd[k.intern][day]
 
       # If we get a nil, leave expected alone -- if expected is '' or nil, it'll match, otherwise it's a mismatch anyhow
       expected = got.to_s.match(/\./) ? expected.to_f : expected.to_i unless got.nil?
 
-      "day #{date}, #{k}: #{got}".should == "day #{date}, #{k}: #{expected}"
+      "#{date}, #{k}: #{got}".should == "#{date}, #{k}: #{expected}"
     end
   end
 end
@@ -207,7 +207,7 @@ Then /^show me the sprint burndown$/ do
   dates = @sprint.days(:all)
   dates = [:first] + dates
 
-  header = ['day'] + bd.series(false).sort
+  header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
 
   data = []
   days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
@@ -222,18 +222,29 @@ Then /^show me the burndown for task (.+)$/ do |subject|
   task = RbTask.find_by_subject(subject)
   sprint = task.fixed_version.becomes(RbSprint)
   Timecop.travel((sprint.effective_date + 1).to_time) do
-    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days(:active, task).zip(task.burndown))
+    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], (['start'] + sprint.days(:active)).zip(task.burndown))
   end
 end
 
 Then /^show me the (.+) journal for (.+)$/ do |property, issue|
   issue = Issue.find(:first, :conditions => ['subject = ?', issue])
   puts "\n"
-  puts "#{issue.subject}(#{issue.id}), created: #{issue.created_on}"
+  puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
   issue.journals.each {|j|
     j.details.select {|detail| detail.prop_key == property}.each {|detail|
       puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
     }
   }
   puts "  #{issue.updated_on}: #{issue.send(property.intern)}"
+end
+
+Then /^show me the story burndown for (.+)$/ do |story|
+  Timecop.travel((@sprint.effective_date + 1).to_time) do
+    story = RbStory.find(:first, :conditions => ['subject = ?', story])
+    bd = story.burndown
+    header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
+    bd['day'] = ['start'] + @sprint.days(:active)
+    data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
+    show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
+  end
 end
