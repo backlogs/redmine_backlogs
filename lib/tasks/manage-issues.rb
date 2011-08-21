@@ -50,8 +50,7 @@ class GitHub
       l = @data[:labels].reject{|l| l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i }
 
       if comments.size > 0
-        if @gh.committers.include?(comments[-1].user) &&
-        !l.include?('feature-request') && !l.include?('in-progress') && !l.include('on-hold')
+        if @gh.committers.include?(comments[-1].user) && (l - ['feature-request', 'in-progress', 'on-hold']) == l
           l << "awaiting-feedback"
 
           date = comments[-1].updated_at
@@ -145,13 +144,13 @@ class GitHub
   end
 end
 
-begin
+#begin
   gh = GitHub.new 'relaxdiego', 'redmine_backlogs'
 
   gh.labels = gh.labels(:calculate)
   gh.issues.each{|i|
     i.labels = i.labels(:calculate)
   }
-rescue
+#rescue
   #
-end
+#end
