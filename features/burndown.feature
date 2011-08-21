@@ -27,10 +27,10 @@ Feature: Scrum master
         | 3        | Story 3 |
         | 4        | Story 4 |
       And the project has the following stories in the following sprints:
-        | position | subject | sprint     | points | offset |
-        | 1        | Story A | Sprint 001 | 1      | 0d     |
-        | 2        | Story B | Sprint 001 | 2      | 0d     |
-        | 3        | Story C | Sprint 001 | 4      | 0d     |
+        | position | subject | sprint     | points | day |
+        | 1        | Story A | Sprint 001 | 1      | 1   |
+        | 2        | Story B | Sprint 001 | 2      | 1   |
+        | 3        | Story C | Sprint 001 | 4      | 1   |
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
         | A.1          | Story A   | 10       | New    | 1h     |
@@ -97,8 +97,8 @@ Feature: Scrum master
         | 2       | C.1  | 30        | In progress |
 
       And the project has the following stories in the following sprints:
-        | subject | sprint     | points | offset |
-        | Story d | Sprint 001 | 1      | 3d     |
+        | subject | sprint     | points | day |
+        | Story d | Sprint 001 | 1      | 3   |
 
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |

@@ -256,6 +256,9 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
     params['prev_id'] = story_before(story.delete('position'))
 
     offset = time_offset(story.delete('offset'))
+    day_added = story.delete('day')
+    day_added = time_offset("#{Integer(day_added) - 1}d1h") if day_added
+    offset = day_added || offset
 
     story.should == {}
 
