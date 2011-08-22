@@ -111,4 +111,7 @@ de:
     {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: 
-  field_relative_gain: "Relativer Vorteil"  field_relative_penalty: "Relative Strafe"  field_relative_risk: "Relatives Risiko"  field_relative_priority: "Relative Prioriät"
+  field_relative_gain: "Relativer Vorteil"  
+  field_relative_penalty: "Relative Strafe"  
+  field_relative_risk: "Relatives Risiko"  
+  field_relative_priority: "Relative Prioriät"

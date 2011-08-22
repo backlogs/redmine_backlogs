@@ -1,4 +1,4 @@
-#backlogs_container{
+﻿#backlogs_container{
   display:block;
   margin:10px auto;
   position:relative;
@@ -483,9 +483,9 @@
 }
 #backlogs_container .stories .story.editing .story_points.editor{
   display:block;
-  left:540px;
+  /*left:540px;*/
+  right:10px;
   margin:0;
-  padding: 0px;
   height: inherit;
   top: 4px;
   width: 40px;
@@ -497,9 +497,17 @@
   /*left:540px;*/
   right:10px;
   margin:0;
+  padding: 5px 2px 4px 2px;  
   top:1px;
 }
 
+#backlogs_container .stories .story.editing select.story_points.editor {
+  display:block;
+  right:10px;
+  margin:0;
+  padding: 0px;  
+  top:4px;
+}
 
 #helpers{
   display:none;
