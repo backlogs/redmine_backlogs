@@ -80,6 +80,14 @@ module Backlogs
         relations_to.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_from.closed? ? ir.issue_from : nil}.compact
       end
 
+      def relative_priority
+        if ((relative_gain == nil || relative_gain.blank?) && (relative_penalty == nil || relative_penalty.blank?) && (relative_risk == nil || relative_risk.blank?) && (story_points == nil || story_points.blank?))
+          @relative_priority = 0
+        else
+          @relative_priority = ((relative_gain.to_f + relative_penalty.to_f) / (story_points.to_f + relative_risk.to_f)).to_f.round(2)
+        end
+      end
+    
       def velocity_based_estimate
         return nil if !self.is_story? || ! self.story_points || self.story_points <= 0
 

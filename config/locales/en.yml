@@ -109,3 +109,7 @@ en:
     %{description}
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
+  field_relative_gain: "relative gain"
+  field_relative_penalty: "relative penalty"
+  field_relative_risk: "relative risk"
+  field_relative_priority: "relative priority"

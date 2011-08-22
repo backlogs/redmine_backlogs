@@ -44,10 +44,14 @@ module BacklogsPlugin
           snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td></tr>"
           vbe = issue.velocity_based_estimate
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
+	  snippet += "<tr><th>#{l(:field_relative_gain)}</th><td>#{RbStory.find(issue.id).relative_gain.to_s}</td></tr>"
+	  snippet += "<tr><th>#{l(:field_relative_penalty)}</th><td>#{RbStory.find(issue.id).relative_penalty.to_s}</td></tr>"
+	  snippet += "<tr><th>#{l(:field_relative_risk)}</th><td>#{RbStory.find(issue.id).relative_risk.to_s}</td></tr>"
+	  snippet += "<tr><th>#{l(:field_relative_priority)}</th><td>#{RbStory.find(issue.id).relative_priority_display}</td></tr>"
         end
 
         if issue.is_task?
-          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.initial_value_for(:estimated_hours)}</td></tr>"
+          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.historic(:first, 'estimated_hours')}</td></tr>"
         end
 
         return snippet
@@ -66,10 +70,23 @@ module BacklogsPlugin
         #developers = developers.gsub(/\n/, '')
 
         if issue.is_story?
-          snippet += '<p>'
+          snippet += '<div class="splitcontentleft">'
+	  snippet += '<p>'
           #snippet += context[:form].label(:story_points)
           snippet += context[:form].text_field(:story_points, :size => 3)
-          snippet += '</p>'
+	  snippet += '</p>'
+	  snippet += '<p>'
+	  snippet += context[:form].text_field(:relative_risk, :size => 3)
+	  snippet += '</p>'
+	  snippet += '</div>'
+	  snippet += '<div class="splitcontentright">'
+	  snippet += '<p>'
+	  snippet += context[:form].text_field(:relative_gain, :size => 3)
+	  snippet += '</p>'
+	  snippet += '<p>'
+	  snippet += context[:form].text_field(:relative_penalty, :size => 3)
+	  snippet += '</p>'
+	  snippet += '</div>'
 
           if issue.descendants.length != 0
             snippet += javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs'

@@ -152,6 +152,17 @@ class RbStory < Issue
         return story_points.to_s
     end
 
+    def relative_priority_display(notsized='-')
+      return notsized if (relative_gain == nil || relative_gain.blank?) && (relative_penalty == nil || relative_penalty.blank?) && (relative_risk == nil || relative_risk.blank?) && (story_points == nil || story_points.blank?)
+      return 'S' if relative_gain == 0 && relative_penalty == 0 && relative_risk == 0 && story_points == 0
+      gain = Integer(relative_gain)
+      penalty = Integer(relative_penalty)
+      stp = Integer(story_points)
+      risk = Integer(relative_risk)
+      return ((gain.to_f + penalty.to_f) / (stp.to_f + risk.to_f)).to_f.round(2).to_s
+      #return (relative_gain.to_f + relative_penalty.to_f) / (story_points.to_f + relative_risk.to_f).to_s
+    end
+    
     def task_status
         closed = 0
         open = 0
