@@ -22,6 +22,10 @@ module Backlogs
         unloadable # Send unloadable so it will not be unloaded in development
         base.add_available_column(QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points"))
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
+        base.add_available_column(QueryColumn.new(:relative_gain, :sortable => "#{Issue.table_name}.relative_gain"))
+        base.add_available_column(QueryColumn.new(:relative_penalty, :sortable => "#{Issue.table_name}.relative_penalty"))
+        base.add_available_column(QueryColumn.new(:relative_risk, :sortable => "#{Issue.table_name}.relative_risk"))
+        base.add_available_column(QueryColumn.new(:relative_priority, :sortable => "(#{Issue.table_name}.relative_gain + #{Issue.table_name}.relative_penalty) / IF(#{Issue.table_name}.relative_risk + #{Issue.table_name}.story_points = 0,1,#{Issue.table_name}.relative_risk + #{Issue.table_name}.story_points)"))
 
         # couldn't get HAVING to work, so a subselect will have to
         # do
