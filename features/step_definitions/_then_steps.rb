@@ -172,10 +172,10 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
   issue[attribute].should == value.to_i
 end
 
-Then /^the sprint burndown should be:$/ do |table|
+Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   bd = nil
   Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown('down')
+    bd = @sprint.burndown(direction)
   end
 
   days = @sprint.days(:all)

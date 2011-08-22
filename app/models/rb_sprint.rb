@@ -1,9 +1,8 @@
 require 'date'
 
 class Burndown
-  def initialize(sprint, burn_direction)
-    burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
-
+  def initialize(sprint, direction)
+    @direction = direction
     @sprint_id = sprint.id
     @days = sprint.days(:all)
 
@@ -35,12 +34,15 @@ class Burndown
     @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
     @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}
 
-    if burn_direction == 'up'
-      @data.delete(:points_to_resolve)
-      @data.delete(:points_to_accept)
-    else
-      @data.delete(:points_resolved)
-      @data.delete(:points_accepted)
+    case direction
+      when 'up'
+        @data.delete(:points_to_resolve)
+        @data.delete(:points_to_accept)
+      when 'down'
+        @data.delete(:points_resolved)
+        @data.delete(:points_accepted)
+      else
+        raise "Unexpected burn direction #{direction.inspect}"
     end
 
     max = {'hours' => nil, 'points' => nil}
@@ -56,7 +58,7 @@ class Burndown
 
   def [](i)
     i = i.intern if i.is_a?(String)
-    raise "No burndown data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
+    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
@@ -80,6 +82,7 @@ class Burndown
   attr_reader :days
   attr_reader :sprint_id
   attr_reader :data
+  attr_reader :direction
 end
 
 class RbSprint < Version
@@ -199,10 +202,15 @@ class RbSprint < Version
         return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
     end
 
-    def burndown(burn_direction = nil)
+    def burndown(direction=nil)
         return nil if not self.has_burndown
-        @cached_burndown ||= Burndown.new(self, burn_direction)
-        return @cached_burndown
+
+        direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
+        direction = 'down' if direction.blank?
+
+        @cached_burndown ||= {}
+        @cached_burndown[direction] ||= Burndown.new(self, direction)
+        return @cached_burndown[direction]
     end
 
     def impediments
