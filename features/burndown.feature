@@ -27,10 +27,10 @@ Feature: Scrum master
         | 3        | Story 3 |
         | 4        | Story 4 |
       And the project has the following stories in the following sprints:
-        | position | subject | sprint     | points | offset |
-        | 1        | Story A | Sprint 001 | 1      | 0d     |
-        | 2        | Story B | Sprint 001 | 2      | 0d     |
-        | 3        | Story C | Sprint 001 | 4      | 0d     |
+        | position | subject | sprint     | points | day |
+        | 1        | Story A | Sprint 001 | 1      |     |
+        | 2        | Story B | Sprint 001 | 2      |     |
+        | 3        | Story C | Sprint 001 | 4      |     |
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
         | A.1          | Story A   | 10       | New    | 1h     |
@@ -60,6 +60,14 @@ Feature: Scrum master
         | 3       | 7                | 4                 | 25              |
         | 4       | 7                | 4                 | 10              |
         | 5       | 7                | 0                 | 0               |
+       And the sprint burnup should be:
+        | day     | points_committed | points_resolved | hours_remaining |
+        | start   | 7                | 0               | 70              |
+        | 1       | 7                | 0               | 55              |
+        | 2       | 7                | 1               | 40              |
+        | 3       | 7                | 3               | 25              |
+        | 4       | 7                | 3               | 10              |
+        | 5       | 7                | 7               | 0               |
 
   Scenario: Tasks closed BEFORE remaining hours is set to 0
     Given I am viewing the taskboard for Sprint 001
@@ -97,12 +105,12 @@ Feature: Scrum master
         | 2       | C.1  | 30        | In progress |
 
       And the project has the following stories in the following sprints:
-        | subject | sprint     | points | offset |
-        | Story d | Sprint 001 | 1      | 3d     |
+        | subject | sprint     | points | day |
+        | Story D | Sprint 001 | 4      | 3   |
 
       And the project has the following tasks:
         | subject      | story     | estimate | status | offset |
-        | D.1          | Story d   | 40       | New    | 1h     |
+        | D.1          | Story D   | 40       | New    | 1h     |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |
@@ -116,20 +124,11 @@ Feature: Scrum master
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
 
-      Then show me the story_points journal for Story A
-      Then show me the story burndown for Story A
-      Then show me the story_points journal for Story B
-      Then show me the story burndown for Story B
-      Then show me the story_points journal for Story C
-      Then show me the story burndown for Story C
-      Then show me the story_points journal for Story D
-      Then show me the story burndown for Story D
-
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
         | 1       | 7                | 7                 | 55              |
         | 2       | 7                | 6                 | 40              |
         | 3       | 11               | 8                 | 65              |
-        | 4       | 11               | 4                 | 30              |
+        | 4       | 11               | 8                 | 30              |
         | 5       | 11               | 0                 | 0               |
