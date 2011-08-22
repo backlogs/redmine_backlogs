@@ -7,7 +7,9 @@
     <div class="t"><%= tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
-  <div class="subject editable" fieldname="subject"><%=h story.subject %></div>
+  <div class="subject editable" fieldname="subject" title="<%=h story.subject %>
+-----------------------------------------------------------
+<%=h story.description %>"><%=h story.subject %></div>
   <div class="status_id editable" fieldtype="select" fieldname="status_id">
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
