@@ -140,16 +140,29 @@ class RbTask < Issue
   end
 
   def set_initial_estimate(hours)
-    jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
-      :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ?", self.id])
+    if fixed_version_id
+      time = [fixed_version.sprint_start_date.to_time, created_on].max
+    else
+      time = created_on
+    end
+
+    jd = JournalDetail.find(:first, :order => "journals.created_on desc", :joins => :journal,
+      :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on <= ?", id, time])
+
     if jd
-      if !jd.old_value || Float(jd.old_value) != hours
-        JournalDetail.connection.execute("update journal_details set old_value='#{hours.to_s.gsub(/\.0+$/, '')}' where id = #{jd.id}")
+      if jd.value.blank? || Float(jd.value) != hours
+        hours = hours.to_s.gsub(/\.0+$/, '')
+
+        JournalDetail.connection.execute("update journal_details set value='#{hours}' where id = #{jd.id}")
+
+        jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
+          :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on >= ?", id, jd.created_on])
+        JournalDetail.connection.execute("update journal_details set old_value='#{hours}' where id = #{jd.id}") if jd
       end
     else
-      if hours != self.estimated_hours
-        j = Journal.new(:journalized => self, :user => User.current, :created_on => self.created_on)
-        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => self.estimated_hours, :old_value => hours)
+      if hours != estimated_hours
+        j = Journal.new(:journalized => self, :user => User.current, :created_on => time)
+        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => estimated_hours, :old_value => hours)
         j.save!
       end
     end

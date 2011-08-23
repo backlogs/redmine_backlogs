@@ -209,14 +209,14 @@ Then /^show me the sprint burndown$/ do
   end
 
   dates = @sprint.days(:all)
-  dates = [:first] + dates
+  dates = [:start] + dates
 
   header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
 
   data = []
   days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
   0.upto(days - 1) do |day|
-    data << [dates[day]] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
+    data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
   end
 
   show_table("Burndown for #{@sprint.name} (#{@sprint.sprint_start_date} - #{@sprint.effective_date})", header, data)
