@@ -11,22 +11,24 @@ class RbTask < Issue
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
-      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
+      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) && !RbTask.column_names.include?(k) }
     else
-      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
+      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) && !RbTask.column_names.include?(k)}
     end
+
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
     attribs['project_id'] = project_id
 
+    blocks = params.delete('blocks')
+
     task = new(attribs)
-
-    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(params[:blocks])
-
     task.save!
 
+    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
+
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
-    task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks] && is_impediment
+    task.update_blocked_list blocks.split(/\D+/) if is_impediment
     task.time_entry_add(params)
 
     return task
@@ -129,7 +131,8 @@ class RbTask < Issue
     unless @burndown
       sprint ||= story.fixed_version.becomes(RbSprint)
       if sprint
-        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours')}
+        days = sprint.days(:active)
+        @burndown = {:hr => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days)}.transpose.collect{|h| h[:sprint] == sprint.id ? h[:hr] : nil}
       else
         @burndown = nil
       end
