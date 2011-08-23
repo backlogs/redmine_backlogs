@@ -35,18 +35,21 @@ module Backlogs
       end
 
       def journalized_update_attributes!(attribs)
-        self.init_journal(User.current)
-        return self.update_attributes!(attribs)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        return update_attributes!(attribs)
       end
 
       def journalized_update_attributes(attribs)
-        self.init_journal(User.current)
-        return self.update_attributes(attribs)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        return update_attributes(attribs)
       end
 
       def journalized_update_attribute(attrib, v)
-        self.init_journal(User.current)
-        self.update_attribute(attrib, v)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        update_attribute(attrib, v)
       end
 
       def is_story?
@@ -90,14 +93,12 @@ module Backlogs
       end
 
       def backlogs_before_save
-        if @issue_before_change && self.project.module_enabled?('backlogs')
-          @issue_before_change.position = self.position # don't log position updates
+        @issue_before_change.position = self.position if @issue_before_change # don't log position updates
 
-          if self.is_task?
-            estimated_hours = 0 if status.backlog == :success
-            position = @issue_before_change.position = nil
-            fixed_version_id = story.fixed_version_id if story
-          end
+        if project.module_enabled?('backlogs') && is_task?
+          estimated_hours = 0 if status.backlog == :success
+          position = @issue_before_change.position = nil
+          fixed_version_id = story.fixed_version_id if story
         end
         return true
       end
