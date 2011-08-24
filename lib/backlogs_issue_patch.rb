@@ -139,11 +139,7 @@ module Backlogs
       end
 
       def value_at(property, time)
-        jd = JournalDetail.find(:first, :order => "journals.created_on desc" , :joins => :journal,
-                                        :conditions => ["property = 'attr' and prop_key = '#{property}'
-                                                         and journalized_type = 'Issue' and journalized_id = ?
-                                                         and created_on <= ?", id, time])
-        return jd ? jd.value : send(property)
+        return history(property, [time.to_date])[0]
       end
 
       def history(property, days)
@@ -163,10 +159,9 @@ module Backlogs
 
         journals = false
         JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                 :conditions => ["created_on <= ?
-                                                  and property = 'attr' and prop_key = '#{property}'
+                                 :conditions => ["property = 'attr' and prop_key = '#{property}'
                                                   and journalized_type = 'Issue' and journalized_id = ?",
-                                                  active_days[-1].to_time, id]).each {|detail|
+                                                  id]).each {|detail|
           # if this is the first journal, fill up with initial old_value
           values.fill(detail.old_value) unless values[0]
 
@@ -176,11 +171,10 @@ module Backlogs
             i = 0
           else
             i = active_days.index{|d| d > jdate}
-            break unless i
           end
 
           journals = true
-          values.fill(detail.value, i)
+          values.fill(detail.value, i) if i
         }
 
         # if no journals was found, the current value is what all the days have
