@@ -139,7 +139,7 @@ module Backlogs
       end
 
       def value_at(property, time)
-        return history(property, [time.to_date, time.to_date])[0]
+        return history(property, [time.to_date])[0]
       end
 
       def history(property, days)
@@ -171,11 +171,10 @@ module Backlogs
             i = 0
           else
             i = active_days.index{|d| d > jdate}
-            break unless i
           end
 
           journals = true
-          values.fill(detail.value, i)
+          values.fill(detail.value, i) if i
         }
 
         # if no journals was found, the current value is what all the days have
