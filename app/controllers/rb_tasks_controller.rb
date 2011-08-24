@@ -4,8 +4,15 @@ class RbTasksController < RbApplicationController
   unloadable
 
   def create
-    @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
     @settings = Setting.plugin_redmine_backlogs
+    @task = nil
+    begin
+      @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
+    rescue => e
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
+
     result = @task.errors.length
     status = (result == 0 ? 200 : 400)
     @include_meta = true

@@ -35,18 +35,21 @@ module Backlogs
       end
 
       def journalized_update_attributes!(attribs)
-        self.init_journal(User.current)
-        return self.update_attributes!(attribs)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        return update_attributes!(attribs)
       end
 
       def journalized_update_attributes(attribs)
-        self.init_journal(User.current)
-        return self.update_attributes(attribs)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        return update_attributes(attribs)
       end
 
       def journalized_update_attribute(attrib, v)
-        self.init_journal(User.current)
-        self.update_attribute(attrib, v)
+        init_journal(User.current)
+        @issue_before_change.position = position
+        update_attribute(attrib, v)
       end
 
       def is_story?
@@ -90,14 +93,12 @@ module Backlogs
       end
 
       def backlogs_before_save
-        if @issue_before_change && self.project.module_enabled?('backlogs')
-          @issue_before_change.position = self.position # don't log position updates
+        @issue_before_change.position = (is_task? ? nil : position) if @issue_before_change # don't log position updates
 
-          if self.is_task?
-            estimated_hours = 0 if status.backlog == :success
-            position = @issue_before_change.position = nil
-            fixed_version_id = story.fixed_version_id if story
-          end
+        if project.module_enabled?('backlogs') && is_task?
+          estimated_hours = 0 if status.backlog == :success
+          position = nil
+          fixed_version_id = story.fixed_version_id if story
         end
         return true
       end
@@ -137,40 +138,63 @@ module Backlogs
         end
       end
 
-      def initial_value_for(property)
-        jd = JournalDetail.find(:first, :order => "journals.created_on asc" , :joins => :journal,
-                                        :conditions => ["property = 'attr' and prop_key = '#{property}'
-                                                         and journalized_type = 'Issue' and journalized_id = ?", id])
-        return jd ? jd.old_value : self.send(property)
+      def value_at(property, time)
+        return history(property, [time.to_date])[0]
       end
 
       def history(property, days)
         created_day = created_on.to_date
         active_days = days.select{|d| d >= created_day}
 
+        # if not active, don't do anything
+        return [nil] * (days.size + 1) if active_days.size == 0
+
+        # anything before the creation date is nil
+        prefix = [nil] * (days.size - active_days.size)
+
+        # add one extra day as end-of-last-day
+        active_days << (active_days[-1] + 1)
+
         values = [nil] * active_days.size
 
-        first = nil
-        if active_days.size != 0
-          first = initial_value_for(property)
-          values.fill(first)
-          first = nil if active_days.size != days.size
+        journals = false
+        JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
+                                 :conditions => ["property = 'attr' and prop_key = '#{property}'
+                                                  and journalized_type = 'Issue' and journalized_id = ?",
+                                                  id]).each {|detail|
+          # if this is the first journal, fill up with initial old_value
+          values.fill(detail.old_value) unless values[0]
 
-          JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                   :conditions => ["created_on between ? and ?
-                                                    and property = 'attr' and prop_key = '#{property}'
-                                                    and journalized_type = 'Issue' and journalized_id = ?",
-                                                    active_days[0].to_time, (active_days[-1] + 1).to_time, id]).each {|detail|
-            jdate = detail.journal.created_on.to_date
-            i = active_days.index{|d| d >= jdate}
-            break unless i
+          # get the date from which this value is current up to now, and fill the remainder (might be overwritten later)
+          jdate = detail.journal.created_on.to_date
+          if jdate < active_days[0]
+            i = 0
+          else
+            i = active_days.index{|d| d > jdate}
+          end
 
-            values.fill(detail.value, i)
-          }
-          values[-1] = self.send(property)
+          journals = true
+          values.fill(detail.value, i) if i
+        }
+
+        # if no journals was found, the current value is what all the days have
+        if journals
+          values[-1] = send(property)
+        else
+          # otherwise, just set the last day to whatever the current value is.
+          # I _know_ this isn't entirely right, and could just be skipped and it would be the real truth,
+          # but fact of the matter is people don't update the stories/tasks exactly on the last day of the sprint;
+          # often, it happens just after. This makes the burndown look OK. You shouldn't be re-using tasks/stories
+          # over sprints anyhow.
+          values.fill(send(property))
         end
 
-        values = ([nil] * (days.size - active_days.size)) + [first] + values
+        # ignore the start-of-day value for issues created mid-sprint
+        values[0] = nil if created_day > days[0]
+
+        values = prefix + values
+
+        # and convert to the proper type (the journal holds only strings)
 
         @@backlogs_column_type ||= {}
         @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == "#{property}"}.collect{|c| c.type}[0]
@@ -196,8 +220,14 @@ module Backlogs
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
+        if fixed_version_id
+          time = [fixed_version.sprint_start_date.to_time, created_on].max
+        else
+          time = created_on
+        end
+
         if leaf?
-          return initial_value_for(:estimated_hours)
+          return value_at(:estimated_hours, time)
         else
           e = self.leaves.collect{|t| t.initial_estimate}.compact
           return nil if e.size == 0
