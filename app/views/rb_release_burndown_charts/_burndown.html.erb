@@ -2,6 +2,7 @@
 <%- dataseries = charts[0].series(:all).collect{|series| series.name } %>
 
   <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'jquery', :project_id => @project.identifier) %>"></script>
+  <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
   <style type="text/css" media="screen">
     .jqplot-axis {
       font-size: 0.85em;
