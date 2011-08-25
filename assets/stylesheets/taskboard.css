@@ -105,7 +105,7 @@ See RB.Taskboard.initialize()
   display:block;
   float:left;
   font-size:10px;
-  height:80px;
+  min-height:80px;
   margin:5px;
   padding:5px;
   position:relative;
@@ -119,10 +119,9 @@ See RB.Taskboard.initialize()
   font-size:9px;
   opacity:0.8;
   overflow:hidden;
-  padding-bottom:1px;
-  padding-right:3px;
+  padding:1px 3px 1px 3px;
   text-align:right;
-  width:187px;
+  width:95%;
 }
 .story .subject{
   height:63px;
@@ -131,6 +130,9 @@ See RB.Taskboard.initialize()
   overflow:hidden;
   padding:2px;
   width:186px;
+}
+.story .project {
+  text-align:left;
 }
 .story.closed .subject{
   text-decoration:line-through;
