@@ -99,6 +99,7 @@ en:
   rb_task_cards_story_follows_tasks: Tasks followed by their story
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_taskboard_card_order: Card print order
+  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
