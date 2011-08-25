@@ -142,7 +142,7 @@ class RbTask < Issue
   end
 
   def set_initial_estimate(hours)
-    if fixed_version_id
+    if fixed_version_id and fixed_version.sprint_start_date
       time = [fixed_version.sprint_start_date.to_time, created_on].max
     else
       time = created_on
@@ -158,7 +158,7 @@ class RbTask < Issue
         JournalDetail.connection.execute("update journal_details set value='#{hours}' where id = #{jd.id}")
 
         jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
-          :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on >= ?", id, jd.created_on])
+          :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on >= ?", id, jd.journal.created_on])
         JournalDetail.connection.execute("update journal_details set old_value='#{hours}' where id = #{jd.id}") if jd
       end
     else

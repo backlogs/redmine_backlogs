@@ -65,7 +65,7 @@ class BurndownFromJournal < ActiveRecord::Migration
 
     # sum up all leaf issues
     execute "insert into backlogs_tmp_estimated_hours (id, estimated_hours)
-             select story.id, sum(tasks.estimated_hours)
+             select story.id, coalesce(sum(tasks.estimated_hours), 0)
              from issues story
              join issues tasks on tasks.root_id = story.root_id and tasks.lft > story.lft and tasks.rgt < story.rgt and tasks.lft = tasks.rgt - 1
              group by story.id"
