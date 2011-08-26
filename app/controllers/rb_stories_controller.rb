@@ -30,6 +30,8 @@ class RbStoriesController < RbApplicationController
 
   def update
     story = RbStory.find(params[:id])
+    YAML::dump(story)
+    YAML::dump(params)
     begin
       result = story.update_and_position!(params)
     rescue => e

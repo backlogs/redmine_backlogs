@@ -32,7 +32,6 @@ class RbStory < Issue
     def self.backlog(project_id, sprint_id, options={})
       stories = []
 
-
       RbStory.find(:all,
             :order => RbStory::ORDER,
             :conditions => RbStory.condition(project_id, sprint_id),
@@ -70,7 +69,8 @@ class RbStory < Issue
       attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and RbStory.column_names.include? k }
       attribs = Hash[*attribs.flatten]
       s = RbStory.new(attribs)
-      s.move_after(params['prev_id']) if s.save!
+      s.save!
+      s.move_after(params['prev_id'])
       return s
     end
 
@@ -100,10 +100,10 @@ class RbStory < Issue
       # remove so the potential 'prev' has a correct position
       remove_from_list
 
-      begin
-        prev = self.class.find(prev_id)
-      rescue ActiveRecord::RecordNotFound
+      if prev_id.to_s == ''
         prev = nil
+      else
+        prev = RbStory.find(prev_id)
       end
 
       # if it's the first story, move it to the 1st position
@@ -166,7 +166,7 @@ class RbStory < Issue
     end
 
     def update_and_position!(params)
-      attribs = params.select{|k,v| k != 'id' and RbStory.column_names.include? k }
+      attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
       attribs = Hash[*attribs.flatten]
       result = journalized_update_attributes attribs
       if result and params[:prev]
@@ -206,18 +206,29 @@ class RbStory < Issue
 
       if sprint
         @burndown = {}
-        dates = sprint.days(:active, self)
+        days = sprint.days(:active)
 
-        status = dates.collect{|d| d ? IssueStatus.find(historic(d, 'status_id')) : nil}
+        status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
         accepted = status.collect{|s| s ? (s.backlog == :accepted) : false}
         active = status.collect{|s| s ? !s.is_closed? : false}
+        in_sprint = history(:fixed_version_id, days).collect{|s| s == sprint.id}
 
-        @burndown[:points] = dates.collect{|d| historic(d, 'story_points')}
+        # collect points on this sprint
+        @burndown[:points] = {:points => history(:story_points, days), :active => in_sprint}.transpose.collect{|p| p[:active] ? p[:points] : nil}
+
+        # collect hours on this sprint
         @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
-        @burndown[:hours] = [nil] * dates.size if @burndown[:hours].size == 0
-        @burndown[:points_accepted] = @burndown[:points].zip(accepted).collect{|pa| pa[1] ? pa[0] : nil}
-        @burndown[:points_resolved] = @burndown[:points].zip(@burndown[:hours]).collect{|ph| ph[1] == 0 ? ph[0] : 0}
-        @burndown[:hours] = burndown[:hours].zip(active).collect{|ha| ha[1] ? ha[0] : nil }
+        @burndown[:hours] = [nil] * (days.size + 1) if @burndown[:hours].size == 0
+        @burndown[:hours] = {:h => @burndown[:hours], :a => in_sprint}.transpose.collect{|h| h[:a] ? h[:h] : nil}
+
+        # points are accepted when the state is accepted
+        @burndown[:points_accepted] = {:points => @burndown[:points], :accepted => accepted}.transpose.collect{|p| p[:accepted] ? p[:points] : nil }
+        # points are resolved when the state is accepted _or_ the hours are at zero
+        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours].to_i == 0 || p[:accepted]) ? p[:points] : 0}
+
+        # set hours to zero after the above when the story is not active, would affect resolved when done before this
+        @burndown[:hours] = {:hours => @burndown[:hours], :active => active}.transpose.collect{|h| h[:active] ? h[:hours] : 0}
+
       else
         @burndown = nil
       end
