@@ -500,6 +500,10 @@
   float: right;
 }
 
+#backlogs_container .stories .editing .story_points {
+    display: none;
+} 
+
 
 #helpers{
   display:none;
