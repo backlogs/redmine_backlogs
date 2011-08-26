@@ -47,7 +47,8 @@ RB.constants = {
 
         catch (:done) do
           [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
-            Tracker.find(RbTask.tracker).issue_statuses.each {|status|
+            tracker = Tracker.find(RbTask.tracker)
+            tracker.issue_statuses.each {|status|
               status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
                 transitions = true
                 throw :done
