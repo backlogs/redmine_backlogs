@@ -86,10 +86,11 @@
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
   border-radius:5px 5px 0px 0px;
-  background-color: pink;
+  background-color: #CCCCCC;
   height:30px;
   position:relative;
   width:100%;
+  border-bottom: 1px solid #AAAAAA
 }
 
 
@@ -101,6 +102,7 @@
   height:30px;
   position:relative;
   width:100%;
+  border-bottom: 1px solid #AAAAAA
 }
 .closedbacklog .header .menu,
 .backlog .header .menu{
@@ -297,6 +299,7 @@
   overflow:hidden;
   position:relative;
   width:100%;
+  border-bottom: #AAAAAA 1px solid;
 }
 #backlogs_container .stories .story.saving{
   background-image:url('images/ajax.gif');
@@ -308,10 +311,11 @@
   background-repeat:no-repeat;
   background-position:center;
 }
+/*
 #backlogs_container .stories .story:nth-child(even){
-  background-color:#EEEEE5;
-}
-#backlogs_container .stories .story:hover{
+  background-color:#DEDED5;
+}*/
+#backlogs_container .stories .story:hover {
   background-color:rgb(254,248,168);
 }
 #backlogs_container .stories .story .tracker_id{
@@ -343,6 +347,7 @@
   width:52px;
   -moz-border-radius:4px;
   -webkit-border-radius:4px;
+  border: 1px solid #AAAAAA
 }
 #backlogs_container .stories .story .id .v {
   display:none;
@@ -558,7 +563,50 @@
 .debug #new_story{
   background-color:red;
 }
-/*TIB*/
+
 #closed_sprint_backlogs_container{
   width:590px;
 }
+<<<<<<< HEAD
+=======
+
+
+#backlogs_container .stories .story .category_id .v {
+  display:none;
+}
+#backlogs_container .stories .story.editing .category_id.editor{
+  display:block;
+  left:456px;
+  margin:0;
+  top:4px;
+  width:68px;
+}
+/* Naive but light handling of colors by user stories tracker */
+
+#backlogs_container .stories .tracker0{
+  background-color:#FFFFFF;
+}
+#backlogs_container .stories .tracker1{
+  background-color:#EDD5EE;
+}
+#backlogs_container .stories .tracker2{
+  background-color:#E0E3FA;
+}
+#backlogs_container .stories .tracker3{
+  background-color:#EAD6C8;
+}
+#backlogs_container .stories .tracker4{
+  background-color:#E7FAE0;
+}
+#backlogs_container .stories .tracker5{
+  background-color:#DAFEF8;
+}
+#backlogs_container .stories .tracker6{
+  background-color:#EFF0BF;
+}
+#backlogs_container .stories .tracker7{
+  background-color:#FED0D0;
+}
+
+
+>>>>>>> 1513480... By-Color user-stories tracker visualization

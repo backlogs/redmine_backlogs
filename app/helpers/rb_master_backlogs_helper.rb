@@ -58,4 +58,5 @@ module RbMasterBacklogsHelper
   def stories(backlog)
     backlog[:stories] || backlog.stories
   end
+  
 end
