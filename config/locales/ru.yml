@@ -308,10 +308,14 @@ ru:
     0LLQutC70Y7Rh9C40YLRjCDRgdGB0YvQu9C60YMg0L3QsCDQvtGA0LjQs9C4
     0L3QsNC70YzQvdGD0Y4g0LjRgdGC0L7RgNC40Y4=
 
+  rb_label_timelog_disable: "Disable"
+  rb_label_timelog_enable: "Enable"
   rb_task_cards_stories_then_tasks: 
   rb_task_cards_story_follows_tasks: 
   rb_task_cards_tasks_follow_story: 
   rb_taskboard_card_order: 
+  rb_timelog_from_taskboard: "Timelog from taskboard"
+
   release_create_snapshot_today: !binary |
     0KHQvtGF0YDQsNC90LjRgtGMINGB0L3QuNC80L7QuiDQvtGG0LXQvdC60Lgg
     0LjRgdGC0L7RgNC40LggINC90LAg0YHQtdCz0L7QtNC90Y/RiNC90Y7RjiDQ

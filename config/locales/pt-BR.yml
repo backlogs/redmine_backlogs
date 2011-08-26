@@ -97,10 +97,13 @@ pt-BR:
   rb_label_copy_tasks_none: Nenhum
   rb_label_copy_tasks_open: Abertas
   rb_label_link_to_original: "Incluir link para a hist\xC3\xB3ria original"
+  rb_label_timelog_disable: "Disable"
+  rb_label_timelog_enable: "Enable"
   rb_task_cards_stories_then_tasks: 
   rb_task_cards_story_follows_tasks: 
   rb_task_cards_tasks_follow_story: 
   rb_taskboard_card_order: 
+  rb_timelog_from_taskboard: "Timelog from taskboard"
   release_create_snapshot_today: 
   release_update_snapshot_today: 
   remaining_story_points: 

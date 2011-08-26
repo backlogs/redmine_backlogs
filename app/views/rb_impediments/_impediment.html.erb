@@ -11,6 +11,16 @@
   </div>
   <div class="estimated_hours editable" fieldname="estimated_hours"><%= estimated_hours(impediment) %></div>
   <div class="indicator"> </div>
+  <% if User.current.allowed_to?(:log_time, @project) && @settings[:timelog_from_taskboard]=='enabled'  %>
+    <div class="time_entry_hours editable" style="display: none" fieldname="time_entry_hours"></div>
+    <% if User.current.allowed_to?(:edit_time_entries, @project) %>
+      <div class="time_entry_user_id editable" fieldtype="select" fieldname="time_entry_user_id">
+        <div class="v" style="display: none" ><%= assignee_id_or_empty(impediment) %></div>
+      </div>
+    <% end %>
+    <div class="Time_entry_spent_on editable date" fieldname="time_entry_spent_on" style="display:none"><%= Date.today %></div>
+    <div class="Time_entry_comments editable" fieldtype=textarea fieldname="time_entry_comments"></div>
+  <% end %>
   <div class="meta">
     <!-- friflaj:
       TODO: I don't get this -- impediments aren't tied to a story, and Task explicitly assumes they're top-level issues 
