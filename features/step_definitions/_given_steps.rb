@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'timecop'
+
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
@@ -151,78 +154,183 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
-Given /^the project has the following sprints:$/ do |table|
+Given /^the project has the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
     version['project_id'] = @project.id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d") if version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+      if version[date_attr] == 'today'
+        version[date_attr] = Date.today.strftime("%Y-%m-%d")
+      elsif version[date_attr].blank?
+        version[date_attr] = nil
+      elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
+        # we're OK as-is
+      elsif version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
+        version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d")
+      else
+        raise "Unexpected date value '#{version[date_attr]}'"
+      end
     end
+
     RbSprint.create! version
   end
 end
 
-Given /^the project has the following stories in the product backlog:$/ do |table|
-  @project.issues.delete_all
-  prev_id = ''
+Given /^I have the following issue statuses available:$/ do |table|
+  table.hashes.each do |status|
+    s = IssueStatus.find(:first, :conditions => ['name = ?', status['name']])
+    unless s
+      s = IssueStatus.new
+      s.name = status['name']
+    end
 
+    s.is_closed = status['is_closed'] == '1'
+    s.is_default = status['is_default'] == '1'
+    s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].blank?
+
+    s.save!
+  end
+end
+
+Given /^I have made the following task mutations:$/ do |table|
+  days = @sprint.days(:all).collect{|d| d.to_time}
+
+  table.hashes.each_with_index do |mutation, no|
+    task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
+    task.should_not be_nil
+    task.init_journal(User.current)
+
+    status = mutation.delete('status').to_s
+    if status.blank?
+      status = nil
+    else
+      status = IssueStatus.find(:first, :conditions => ['name = ?', status])
+      raise "No such status '#{status}'" unless status
+      status = status.id
+    end
+
+    remaining = mutation.delete('remaining')
+
+    mutated = days[mutation.delete('day').to_i - 1]
+
+    mutated.to_date.should be >= task.created_on.to_date
+
+    mutated = task.created_on if (mutated.to_date == task.created_on.to_date)
+    mutated += time_offset("#{(no + 1)*10}m")
+    Timecop.travel(mutated) do
+      task.estimated_hours = remaining.to_f unless remaining.blank?
+      task.status_id = status if status
+      task.save!
+    end
+
+    mutation.should == {}
+  end
+end
+
+Given /^I have deleted all existing issues$/ do
+  @project.issues.delete_all
+end
+
+Given /^the project has the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
     params = initialize_story_params
-    params['subject'] = story['subject']
-    params['prev_id'] = prev_id
+    params['subject'] = story.delete('subject')
+    params['prev_id'] = story_before(story.delete('position'))
+
+    story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = RbStory.create_and_position params
-    prev_id = s.id
+    RbStory.create_and_position params
   end
 end
 
 Given /^the project has the following stories in the following sprints:$/ do |table|
-  @project.issues.delete_all
-  prev_id = ''
-
   table.hashes.each do |story|
     params = initialize_story_params
-    params['subject'] = story['subject']
-    params['prev_id'] = prev_id
-    params['fixed_version_id'] = RbSprint.find(:first, :conditions => [ "name=?", story['sprint'] ]).id
+    params['subject'] = story.delete('subject')
+    sprint = RbSprint.find(:first, :conditions => [ "name=?", story.delete('sprint') ])
+    params['fixed_version_id'] = sprint.id
+    params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
+    params['prev_id'] = story_before(story.delete('position'))
+
+    day_added = story.delete('day')
+    offset = story.delete('offset')
+    created_on = nil
+
+    if day_added
+      if day_added == ''
+        created_on = (sprint.sprint_start_date - 1).to_time
+      else
+        created_on = sprint.days(:all)[Integer(day_added)-1].to_time + time_offset('1h')
+      end
+    elsif offset
+      created_on = sprint.sprint_start_date.to_time + time_offset(offset)
+    end
+
+    story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    s = RbStory.create_and_position params
-    prev_id = s.id
+    if created_on
+      Timecop.travel(created_on) do
+        RbStory.create_and_position params
+      end
+    else
+      RbStory.create_and_position params
+    end
   end
 end
 
 Given /^the project has the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task['parent'] })
+    story = RbStory.find(:first, :conditions => { :subject => task.delete('story') })
+    story.should_not be_nil
+
     params = initialize_task_params(story.id)
-    params['subject'] = task['subject']
+    params['subject'] = task.delete('subject')
+
+    offset = time_offset(task.delete('offset'))
+
+    status = task.delete('status')
+    params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
+
+    hours = task.delete('estimate')
+    params['estimated_hours'] = hours.to_f unless hours.blank?
+
+    task.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    if offset
+      Timecop.travel(story.created_on + offset) do
+        RbTask.create_with_relationships(params, @user.id, @project.id)
+      end
+    else
+      RbTask.create_with_relationships(params, @user.id, @project.id)
+    end
   end
 end
 
 Given /^the project has the following impediments:$/ do |table|
   table.hashes.each do |impediment|
-    sprint = RbSprint.find(:first, :conditions => { :name => impediment['sprint'] })
-    blocks = RbStory.find(:all, :conditions => { :subject => impediment['blocks'].split(', ')  }).map{ |s| s.id }
+    sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
     params = initialize_impediment_params(sprint.id)
-    params['subject'] = impediment['subject']
-    params['blocks']  = blocks.join(',')
+
+    params['subject'] = impediment.delete('subject')
+    params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
+
+    impediment.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id)
+    RbTask.create_with_relationships(params, @user.id, @project.id, true).should_not be_nil
   end
+
 end
 
 Given /^I am viewing the issues list$/ do
@@ -266,4 +374,10 @@ end
 
 Given /^there are no stories in the project$/ do
   @project.issues.delete_all
+end
+
+Given /^show me the task hours$/ do
+  header = ['task', 'hours']
+  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.estimated_hours.inspect]}
+  show_table("Task hours", header, data)
 end

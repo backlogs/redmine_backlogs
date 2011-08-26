@@ -186,4 +186,16 @@ module RbCommonHelper
       s
     end
   end
+
+  # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
+  def users_allowed_to_log_on_task
+    users = User.find(:all)
+    collection = []
+    users.each do |a|
+      roles = a.roles_for_project(@project)
+      collection << [a.name, a.id] if roles and roles.detect {|role| role.member? && role.allowed_to?(:log_time)}
+    end
+    collection
+  end
+
 end

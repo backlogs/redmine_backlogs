@@ -6,6 +6,7 @@ Feature: Team Member
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And I am a team member of the project
+      And I have deleted all existing issues
       And the project has the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
@@ -19,7 +20,7 @@ Feature: Team Member
         | 3        | Story 3 | Sprint 001 |
         | 4        | Story 4 | Sprint 002 |
       And the project has the following tasks:
-        | subject | parent  |
+        | subject | story  |
         | Task 1  | Story 1 |
       And the project has the following impediments:
         | subject      | sprint     | blocks  |

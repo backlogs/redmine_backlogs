@@ -11,28 +11,25 @@ class RbTask < Issue
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
-      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
+      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) && !RbTask.column_names.include?(k) }
     else
-      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
+      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) && !RbTask.column_names.include?(k)}
     end
+
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
     attribs['project_id'] = project_id
 
+    blocks = params.delete('blocks')
+
     task = new(attribs)
+    task.save!
 
-    valid_relationships = if is_impediment
-                            task.validate_blocks_list(params[:blocks])
-                          else
-                            true
-                          end
+    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
 
-    if valid_relationships && task.save!
-      task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
-      task.update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
-    else
-      raise "Could not save task"
-    end
+    task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
+    task.update_blocked_list blocks.split(/\D+/) if is_impediment
+    task.time_entry_add(params)
 
     return task
   end
@@ -59,6 +56,7 @@ class RbTask < Issue
   end
 
   def update_with_relationships(params, is_impediment = false)
+    time_entry_add(params)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
       attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
     else
@@ -133,7 +131,8 @@ class RbTask < Issue
     unless @burndown
       sprint ||= story.fixed_version.becomes(RbSprint)
       if sprint
-        @burndown = sprint.days(:active, self).collect{|d| self.historic(d, 'estimated_hours')}
+        days = sprint.days(:active)
+        @burndown = {:hr => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days)}.transpose.collect{|h| h[:sprint] == sprint.id ? h[:hr] : nil}
       else
         @burndown = nil
       end
@@ -143,18 +142,62 @@ class RbTask < Issue
   end
 
   def set_initial_estimate(hours)
-    jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
-      :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ?", self.id])
+    if fixed_version_id and fixed_version.sprint_start_date
+      time = [fixed_version.sprint_start_date.to_time, created_on].max
+    else
+      time = created_on
+    end
+
+    jd = JournalDetail.find(:first, :order => "journals.created_on desc", :joins => :journal,
+      :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on <= ?", id, time])
+
     if jd
-      if !jd.old_value || Float(jd.old_value) != hours
-        JournalDetail.connection.execute("update journal_details set old_value='#{hours.to_s.gsub(/\.0+$/, '')}' where id = #{jd.id}")
+      if jd.value.blank? || Float(jd.value) != hours
+        hours = hours.to_s.gsub(/\.0+$/, '')
+
+        JournalDetail.connection.execute("update journal_details set value='#{hours}' where id = #{jd.id}")
+
+        jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
+          :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on >= ?", id, jd.journal.created_on])
+        JournalDetail.connection.execute("update journal_details set old_value='#{hours}' where id = #{jd.id}") if jd
       end
     else
-      if hours != self.estimated_hours
-        j = Journal.new(:journalized => self, :user => User.current, :created_on => self.created_on)
-        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => self.estimated_hours, :old_value => hours)
+      if hours != estimated_hours
+        j = Journal.new(:journalized => self, :user => User.current, :created_on => time)
+        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => estimated_hours, :old_value => hours)
         j.save!
       end
+    end
+  end
+
+  def time_entry_add(params)
+    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user 
+    # to loose a precious comment if hours is accidently left blank.
+    if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
+      @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
+      # Make sure user has permission to edit time entries to allow 
+      # logging time for other users
+      if User.current.allowed_to?(:edit_time_entries, self.project)
+        @time_entry.user_id = params[:time_entry_user_id]
+      else
+        # Otherwise log time for current user
+        @time_entry.user_id = User.current.id
+      end
+      if !params[:time_entry_spent_on].blank?
+        @time_entry.spent_on = params[:time_entry_spent_on]
+      else
+        @time_entry.spent_on = Date.today
+      end
+      @time_entry.hours = params[:time_entry_hours].gsub(',', '.').to_f
+      # Choose default activity
+      # If default is not defined first activity will be chosen
+      if default_activity = TimeEntryActivity.default
+        @time_entry.activity_id = default_activity.id
+      else
+        @time_entry.activity_id = TimeEntryActivity.first.id
+      end
+      @time_entry.comments = params[:time_entry_comments]
+      self.time_entries << @time_entry
     end
   end
 end

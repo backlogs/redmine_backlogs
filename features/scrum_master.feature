@@ -6,6 +6,7 @@ Feature: Scrum Master
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
+      And I have deleted all existing issues
       And the project has the following sprints:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
@@ -33,7 +34,7 @@ Feature: Scrum Master
       And I want to indicate that the impediment blocks Story B
      When I create the impediment
      Then the request should complete successfully
-      And the sprint named Sprint 001 should have 2 impediments named Bad Impediment
+      And the sprint named Sprint 001 should have 2 impediments named Bad Impediment and Impediment 1
 
   Scenario: Update an impediment
     Given I am viewing the taskboard for Sprint 001

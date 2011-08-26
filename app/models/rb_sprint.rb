@@ -1,21 +1,21 @@
 require 'date'
 
 class Burndown
-  def initialize(sprint, burn_direction)
-    burn_direction = burn_direction || Setting.plugin_redmine_backlogs[:points_burn_direction]
-
+  def initialize(sprint, direction)
+    @direction = direction
     @sprint_id = sprint.id
     @days = sprint.days(:all)
 
     stories = sprint.stories | Journal.find(:all, :joins => :details,
                                             :conditions => ["journalized_type = 'Issue'
                                                             and property = 'attr' and prop_key = 'fixed_version_id'
-                                                            and (value = ? or old_value = ?)", sprint.id, sprint.id]).collect{|j| j.journalized.becomes(RbStory) }
+                                                            and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).collect{|j| j.journalized.becomes(RbStory) }
 
     data = stories.collect{|s| s.burndown(sprint) }
     if data.size == 0
-      data = []
-      [:points, :hours, :points_accepted, :points_resolved].each {|key| data[key] = [nil] * (@days.size + 1) }
+      story = {}
+      [:points, :hours, :points_accepted, :points_resolved].each {|key| story[key] = [nil] * (@days.size + 1) }
+      data = [story]
     end
 
     @data = {}
@@ -28,18 +28,21 @@ class Burndown
 
     @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
 
-    @data[:points_to_resolve] = @data[:points_committed].zip(@data[:points_resolved]).collect{|cr| cr[0] - cr[1]}
-    @data[:points_to_accept] = @data[:points_committed].zip(@data[:points_accepted]).collect{|cr| cr[0] - cr[1]}
+    @data[:points_to_resolve] = {:points => @data[:points_committed], :resolved => @data[:points_resolved]}.transpose.collect{|pr| pr[:points] - pr[:resolved]}
+    @data[:points_to_accept] = {:points => @data[:points_committed], :accepted => @data[:points_accepted]}.transpose.collect{|p| p[:points] - p[:accepted]}
 
     @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
     @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}
 
-    if burn_direction == 'up'
-      @data.delete(:points_to_resolve)
-      @data.delete(:points_to_accept)
-    else
-      @data.delete(:points_resolved)
-      @data.delete(:points_accepted)
+    case direction
+      when 'up'
+        @data.delete(:points_to_resolve)
+        @data.delete(:points_to_accept)
+      when 'down'
+        @data.delete(:points_resolved)
+        @data.delete(:points_accepted)
+      else
+        raise "Unexpected burn direction #{direction.inspect}"
     end
 
     max = {'hours' => nil, 'points' => nil}
@@ -55,7 +58,7 @@ class Burndown
 
   def [](i)
     i = i.intern if i.is_a?(String)
-    raise "No burndown data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
+    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
@@ -79,6 +82,7 @@ class Burndown
   attr_reader :days
   attr_reader :sprint_id
   attr_reader :data
+  attr_reader :direction
 end
 
 class RbSprint < Version
@@ -157,7 +161,7 @@ class RbSprint < Version
         return wiki_page_title
     end
 
-    def days(cutoff, issue=nil)
+    def days(cutoff)
       return nil unless has_burndown
 
       case cutoff
@@ -171,21 +175,7 @@ class RbSprint < Version
 
       # assumes mon-fri are working days, sat-sun are not. this
       # assumption is not globally right, we need to make this configurable.
-      d = d.select {|d| (d.wday > 0 and d.wday < 6) }
-      return d unless issue
-
-      first = {:first => :first}
-      day = 60 * 60 * 24
-      dates = d.collect{|dy|
-        dy = Time.local(dy.year, dy.mon, dy.mday, 0, 0, 0)
-        dy = nil if issue.created_on >= dy + day
-        dy = (first.delete(:first) || dy) if dy
-        dy = nil if dy && issue.historic(dy, 'fixed_version_id') != self.id
-        dy = nil if dy && IssueStatus.find(issue.historic(dy, 'status_id')).is_closed?
-        dy
-      }
-      dates << (dates[-1] ? :last : nil)
-      return dates
+      return d.select {|d| (d.wday > 0 and d.wday < 6) }
     end
 
     def eta
@@ -212,10 +202,15 @@ class RbSprint < Version
         return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
     end
 
-    def burndown(burn_direction = nil)
+    def burndown(direction=nil)
         return nil if not self.has_burndown
-        @cached_burndown ||= Burndown.new(self, burn_direction)
-        return @cached_burndown
+
+        direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
+        direction = 'down' if direction.blank?
+
+        @cached_burndown ||= {}
+        @cached_burndown[direction] ||= Burndown.new(self, direction)
+        return @cached_burndown[direction]
     end
 
     def impediments
