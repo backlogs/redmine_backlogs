@@ -25,6 +25,10 @@
       <div id="sprint_backlogs_container">
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
+      <!--TIB backlogs des sprints terminés -->
+      <div id="closed_sprint_backlogs_container">
+        <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
+      </div>
       <div id="dummy_backlog_container"></div>
     </div>
   </div>

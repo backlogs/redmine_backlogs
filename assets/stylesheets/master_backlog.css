@@ -23,6 +23,7 @@
 #sprint_backlogs_container{
   width:590px;
 }
+#product_backlog_container .closedbacklog .header > .add_new_story,
 #product_backlog_container .backlog .header > .add_new_story {
   font-size:11px;
   height:28px;
@@ -34,6 +35,7 @@
   top:1px;
   width:100px;
 }
+#product_backlog_container .closedbacklog .header > .add_new_sprint, 
 #product_backlog_container .backlog .header > .add_new_sprint {
   font-size:11px;
   height:28px;
@@ -45,6 +47,7 @@
   top:1px;
   width:100px;
 }
+#product_backlog_container .closedbacklog .header > .close_sprint,
 #product_backlog_container .backlog .header > .close_sprint {
   font-size:11px;
   height:28px;
@@ -56,6 +59,8 @@
   top:1px;
   width:150px;
 }
+
+#backlogs_container .closedbacklog,
 #backlogs_container .backlog{
   -moz-box-shadow: 3px 3px 4px #A0A0A0;
   -webkit-box-shadow: 3px 3px 4px #A0A0A0;
@@ -71,10 +76,24 @@
   /* IE only*/
   border: 1px solid #CCCCCC\9;
 }
+
+#product_backlog_container .closedbacklog,
 #product_backlog_container .backlog{ /* Overrides style above */
   position:absolute;
   top:0;
 }
+
+#backlogs_container .closedbacklog .header{
+  -moz-border-radius:5px 5px 0px 0px;
+  -webkit-border-radius:5px 5px 0px 0px;
+  border-radius:5px 5px 0px 0px;
+  background-color:pink;
+  height:30px;
+  position:relative;
+  width:100%;
+}
+
+
 #backlogs_container .backlog .header{
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
@@ -84,6 +103,7 @@
   position:relative;
   width:100%;
 }
+.closedbacklog .header .menu,
 .backlog .header .menu{
   -moz-box-shadow: 1px 0px 0px #DEDEDE;
   -webkit-box-shadow: 1px 0px 0px #DEDEDE;
@@ -100,6 +120,8 @@
   top:0;
   width:29px;
 }
+
+.closedbacklog .header .menu:hover,
 .backlog .header .menu:hover{
   -moz-box-shadow: 2px 2px 3px #999999;
   -webkit-box-shadow: 2px 2px 3px #999999;
@@ -109,14 +131,19 @@
   width:30px;
   z-index:1000;
 }
+
+.closedbacklog .header .menu .icon,
 .backlog .header .menu .icon{
   left:7px;
   position:absolute;
   top:7px;
 }
+
+.closedbacklog .header .menu .items,
 .backlog .header .menu .items{
   display:none;
 }
+
 .backlog .header .menu:hover .items{
   -moz-box-shadow: 2px 2px 3px #999999;
   -webkit-box-shadow: 2px 2px 3px #999999;
@@ -154,6 +181,8 @@
   color:#FFFFFF;
   text-decoration:none;
 }
+
+#product_backlog_container .closedbacklog .header .label,
 #product_backlog_container .backlog .header .label{
   font-size:15px;
   font-weight:bold;
@@ -165,6 +194,8 @@
   top:1px;
   width:450px;
 }
+
+#backlogs_container .closedbacklog .header .velocity,
 #backlogs_container .backlog .header .velocity {
   font-size:12px;
   height:28px;
@@ -176,6 +207,8 @@
   top:1px;
   width:28px;
 }
+
+#backlogs_container .closedbacklog .sprint,
 #backlogs_container .backlog .sprint{
   background-color:transparent;
   cursor:pointer;
@@ -186,21 +219,32 @@
   top:0;
   width:560px;
 }
-#backlogs_container .backlog .sprint.saving{
+
+#backlogs_container .backlog .sprint.saving,
+#backlogs_container .closedbacklog .sprint.saving{
   background-image:url('images/ajax.gif');
   background-repeat:no-repeat;
   background-position:center;
 }
+
+#backlogs_container .closedbacklog .sprint.error,
 #backlogs_container .backlog .sprint.error{
   background-image:url('images/error.png');
   background-repeat:no-repeat;
   background-position:center;
 }
+
+
+#backlogs_container .closedbacklog .sprint .id,
+#backlogs_container .closedbacklog .sprint .description,
+#backlogs_container .closedbacklog .sprint .status,
 #backlogs_container .backlog .sprint .id,
 #backlogs_container .backlog .sprint .description,
 #backlogs_container .backlog .sprint .status{
   display:none;
 }
+
+#backlogs_container .closedbacklog .sprint .name,
 #backlogs_container .backlog .sprint .name{
   font-size:15px;
   font-weight:bold;
@@ -212,6 +256,9 @@
   top:1px;
   width:330px;
 }
+
+#backlogs_container .closedbacklog .sprint .sprint_start_date,
+#backlogs_container .closedbacklog .sprint .effective_date,
 #backlogs_container .backlog .sprint .sprint_start_date,
 #backlogs_container .backlog .sprint .effective_date{
   font-size:12px;
@@ -220,12 +267,18 @@
   position:absolute;
   top:2px;
 }
+
+#backlogs_container .closedbacklog .sprint .sprint_start_date,
 #backlogs_container .backlog .sprint .sprint_start_date{
   left:340px;
 }
+
+#backlogs_container .closedbacklog .sprint .effective_date,
 #backlogs_container .backlog .sprint .effective_date{
   left:430px;
 }
+
+#backlogs_container .closedbacklog .stories,
 #backlogs_container .backlog .stories{
   list-style:none;
   min-height:26px;
@@ -233,6 +286,8 @@
   padding:0 0 0px 0;
   z-index:500;
 }
+
+
 #backlogs_container .stories .story{
   background-color:#FFFFF6;
   cursor:move;
@@ -503,4 +558,8 @@
 .debug #product_backlog_container .backlog .header .label,
 .debug #new_story{
   background-color:red;
+}
+/*TIB*/
+#closed_sprint_backlogs_container{
+  width:590px;
 }

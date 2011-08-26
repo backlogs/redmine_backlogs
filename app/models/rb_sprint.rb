@@ -101,6 +101,14 @@ class RbSprint < Version
         }
     }
 
+    #TIB ajout du named_scope :closed_sprints
+    named_scope :closed_sprints, lambda { |project|
+        {
+            :order => 'sprint_start_date ASC, effective_date ASC',
+            :conditions => [ "status = 'closed' and project_id = ?", project.id ]
+        }
+    }
+
     def stories
         return RbStory.sprint_backlog(self)
     end
