@@ -3,6 +3,10 @@
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
+  <div class="project">
+    <div class="t"><%= story.project %></div>
+    <div class="v"><%= story.project_id %></div>
+  </div>
   <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id">
     <div class="t"><%= tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
