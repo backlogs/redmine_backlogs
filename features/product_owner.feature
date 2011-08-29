@@ -12,6 +12,7 @@ Feature: Product Owner
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
         | Sprint 004 | 2010-03-01        | 2010-03-31     |
+      And I have deleted all existing issues
       And the project has the following stories in the product backlog:
         | position | subject |
         | 1        | Story 1 |

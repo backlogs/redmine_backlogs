@@ -1,6 +1,10 @@
 RB.EditableInplace = RB.Object.create(RB.Model, {
 
   displayEditor: function(editor){
+    editor.find('textarea').attr('cols', '5');
+    if (editor.find('div.clearfix').length == 0) {
+        editor.append('<div class="clearfix"></div>');
+    }
     this.$.addClass("editing");
     editor.find(".editor").bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
   },
@@ -8,10 +12,8 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
   getEditor: function(){
     // Create the model editor if it does not yet exist
     var editor = this.$.children(".editors").first();
-    if(editor.length==0){
-      editor = RB.$( document.createElement("div") )
-                 .addClass("editors")
-                 .appendTo(this.$);
+    if (editor.length == 0){
+      editor = RB.$(document.createElement("div")).addClass("editors").appendTo(this.$);
     }
     return editor;
   },
@@ -34,7 +36,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     if(event.which == 27){
       j = RB.$(this).parents('.model').first();
       that = j.data('this');
-      that.cancelEdit();
+      that.cancelEdit(that);
     } else {
       return true;
     }
