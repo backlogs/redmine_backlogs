@@ -19,13 +19,22 @@ module BacklogsPlugin
         user = User.find_by_id(context[:request].session[:user_id])
         locals[:key] = user ? user.api_key : nil
 
-        q = context[:request].session[:query]
-        if q && q[:filters]
-          sprint = q[:filters]['fixed_version_id']
-          if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-            locals[:sprint] = RbSprint.find_by_id(sprint[:values][0])
-          end
+        params = context[:controller].params
+        case "#{params['controller']}##{params['action']}"
+          when 'issues#show'
+            if params['id'] && (issue = Issue.find(params['id'])) && (issue.is_task? || issue.is_story?) && issue.fixed_version
+              locals[:sprint] = issue.fixed_version.becomes(RbSprint)
+            end
+
+          when 'issues#index'
+            q = context[:request].session[:query]
+            sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
+            if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
+              locals[:sprint] = RbSprint.find_by_id(sprint[:values][0])
+            end
         end
+
+        locals[:sprint] = nil if locals[:sprint] && !locals[:sprint].has_burndown?
 
         return context[:controller].send(:render_to_string, {
             :partial => 'shared/view_issues_sidebar',
