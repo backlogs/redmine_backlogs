@@ -4,7 +4,13 @@
   <%= stylesheet_link_tag 'jqplot.css', 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
-  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :project_id => @project.identifier, :sprint_id => @sprint.id, :format => :js, :section => 'taskboard') %>"></script>
+  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :section => 'taskboard', :project_id => @project.identifier, :sprint_id => @sprint.id, :format => 'js') %>"></script>
+  <script type="text/javascript">
+    if(!RB.constants.workflow) {
+      alert('<%= escape_javascript(l(:error_no_workflow_for_task_tracker)) %>');
+      window.location.replace('/trackers'); // '<% url_for(:controller => 'trackers', :action => 'index') %>';
+    }
+  </script>
 <% end %>
 
 <% content_for :breadcrumbs do %>
@@ -70,6 +76,12 @@
 <%- end %>
 
 <%- content_for :helpers do %>
+  <select class="time_entry_user_id template" id="time_entry_user_id_options">
+    <%- users_allowed_to_log_on_task.each do |u| %>
+      <option value="<%= u[1] %>"><%= u[0] %></option>
+    <%- end %>
+  </select>
+
   <select class="priority_id template" id="priority_id_options">
     <%- IssuePriority.all.each do |p| %>
     <option value="<%= p.id %>"><%= p.name %></option>

@@ -3,10 +3,10 @@ if(RB==null){
 }
 
 RB.constants = {
-  <%
-    if @section == 'backlogs'
-      default_status = IssueStatus.default
-      default_status = default_status.id.to_s if default_status
+  <% if @section == 'backlogs'
+
+    default_status = IssueStatus.default
+    default_status = default_status.id.to_s if default_status
 
       roles = User.current.roles_for_project(@project)
       transitions = {:states => {}, :transitions => {} , :default => default_status }
@@ -36,17 +36,29 @@ RB.constants = {
           }
         }
       }
-    %>
-    story_states: <%= transitions.to_json %>,
+    }
+  %>
+  story_states: <%= transitions.to_json %>,
   <% end %>
-  <%
-    if @section == 'backlogs'
-      project_versions = {}
-      RbStory.find(:all, RbStory.find_params( :include_backlog => true, :project_id => @project.id, :sprint_id => @project.shared_versions.collect{|v| v.id})).each {|story|
-        project_versions[story.project.id.to_s] ||= story.project.shared_versions.collect{|v| v.id.to_s }
-      }
-    %>
-    project_versions: <%= project_versions.to_json %>,
+
+  <% if @section == 'taskboard'
+      transitions = false
+      if RbTask.tracker
+        roles = User.current.roles_for_project(@project)
+
+        catch (:done) do
+          [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
+            tracker = Tracker.find(RbTask.tracker)
+            tracker.issue_statuses.each {|status|
+              status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
+                transitions = true
+                throw :done
+              }
+            }
+          }
+        end
+      end %>
+  workflow: <%= transitions.to_json %>,
   <% end %>
   project_id: <%= @project.id %>,
   sprint_id: <%= @sprint ? @sprint.id : "null" %>,

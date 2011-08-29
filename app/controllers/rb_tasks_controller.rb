@@ -4,6 +4,7 @@ class RbTasksController < RbApplicationController
   unloadable
 
   def create
+    @settings = Setting.plugin_redmine_backlogs
     @task = nil
     begin
       @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
@@ -26,6 +27,7 @@ class RbTasksController < RbApplicationController
   def update
     initial_estimate = params.delete('initial_estimate')
     @task = RbTask.find_by_id(params[:id])
+    @settings = Setting.plugin_redmine_backlogs
     result = @task.update_with_relationships(params)
     status = (result ? 200 : 400)
     @include_meta = true

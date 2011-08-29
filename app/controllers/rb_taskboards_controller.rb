@@ -6,6 +6,7 @@ class RbTaskboardsController < RbApplicationController
   def show
     @statuses     = Tracker.find_by_id(RbTask.tracker).issue_statuses
     @story_ids    = @sprint.stories.map{|s| s.id}
+    @settings = Setting.plugin_redmine_backlogs
 
     if @sprint.stories.size == 0
       @last_updated = nil
