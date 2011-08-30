@@ -117,12 +117,12 @@ en:
     YOU ARE ABOUT TO RESET THIS SPRINT!
 
     Are you sure you want to do this? Resetting the sprint
-    will have the following effects on stories and tasks created
-    after the sprint start date:
+    will have the following effects on stories and tasks:
+
     * Creation date will be set to the sprint start date
     * ALL modifications to the stories and tasks except notes
-      will be DELETED
+       will be DELETED
     * The current value will become the initial value for all
-      story/task properties
+       story/task properties
     * State will be set to the default issue state
 

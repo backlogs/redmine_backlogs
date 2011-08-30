@@ -79,7 +79,7 @@ RB.Backlog = RB.Object.create({
             if (data[i].classname) { a.attr('class', data[i].classname); }
             if (data[i].warning) {
               a.data('warning', data[i].warning);
-              a.click(function() { return confirm(RB.$(this).data('warning')); });
+              a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
             }
             menu.append(li);
           }
