@@ -5,7 +5,7 @@ class RbBurndownChartsController < RbApplicationController
 
   def show
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html
     end
   end
 
