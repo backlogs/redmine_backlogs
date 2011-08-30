@@ -219,7 +219,7 @@ class RbStory < Issue
     unless @burndown
       sprint ||= fixed_version.becomes(RbSprint)
 
-      if sprint
+      if sprint && sprint.has_burndown?
         @burndown = {}
         days = sprint.days(:active)
 

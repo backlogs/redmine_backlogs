@@ -1,3 +1,9 @@
+== 2011-08-30 v0.6.9
+
+* Burndown in sidebar conforms to currently selected sprint/story
+* Time entry from task board (thank you bohansen!)
+* And of course, several bugs fixed
+
 == 2011-08-25 v0.6.8
 
 * Warning on the taskboard if no workflow is available
