@@ -27,7 +27,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'impediment/update/:id',                         :controller => :rb_impediments,      :action => 'update'
 
     rb.connect    'sprint/create',                                 :controller => :rb_sprints,          :action => 'create'
-    rb.connect    'sprint/update/:sprint_id',                      :controller => :rb_sprints,          :action => 'update'
+    rb.connect    'sprint/:sprint_id/update',                      :controller => :rb_sprints,          :action => 'update'
+    rb.connect    'sprint/:sprint_id/reset',                       :controller => :rb_sprints,          :action => 'reset'
     rb.connect    'sprint/download/:sprint_id.:format',            :controller => :rb_sprints,          :action => 'download'
 
     rb.connect    'stories/:project_id/:sprint_id.:format',        :controller => :rb_stories,          :action => 'index'
