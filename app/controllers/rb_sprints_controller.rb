@@ -79,12 +79,13 @@ class RbSprintsController < RbApplicationController
     status = IssueStatus.default.id
     Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
       ids << issue.id.to_s
-      issue.update_attributes!(:created_on => @sprint.sprint_start_date, :status_id => status)
+      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
     }
     if ids.size != 0
       ids = ids.join(',')
       Issue.connection.execute("delete from journal_details where journal_id in (select id from journals where journalized_type = 'Issue' and journalized_id in (#{ids}))")
-      Issue.connection.execute("delete from journals where journalized_type = 'Issue' and journalized_id in (#{ids})")
+      Issue.connection.execute("delete from journals where (notes is null or notes = '') and journalized_type = 'Issue' and journalized_id in (#{ids})")
+      Issue.connection.execute("update issues set created_on = (select created_on from journals where journalized_type = 'Issue' and journalized_id = issues.id) where id in (#{ids})")
     end
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier
