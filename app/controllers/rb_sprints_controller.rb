@@ -68,5 +68,25 @@ class RbSprintsController < RbApplicationController
 
     send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-exce', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
-  
+
+  def reset
+    unless @sprint.sprint_start_date
+      render :text => 'Sprint without start date cannot be reset', :status => 400
+      return
+    end
+
+    ids = []
+    status = IssueStatus.default.id
+    Issue.find(:all, :conditions => ['fixed_version_id = ? and created_on > ?', @sprint.id, @sprint.sprint_start_date]).each {|issue|
+      ids << issue.id.to_s
+      issue.update_attributes!(:created_on => @sprint.sprint_start_date, :status_id => status)
+    }
+    if ids.size != 0
+      ids = ids.join(',')
+      Issue.connection.execute("delete from journal_details where journal_id in (select id from journals where journalized_type = 'Issue' and journalized_id in (#{ids}))")
+      Issue.connection.execute("delete from journals where journalized_type = 'Issue' and journalized_id in (#{ids})")
+    end
+
+    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier
+  end
 end
