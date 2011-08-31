@@ -74,9 +74,15 @@ File.open("#{translations}/en.yml").each {|line|
 }
 
 translation = {}
+authors = {}
 Dir.glob("#{translations}/*.yml").each {|trans|
   strings = YAML::load_file(trans)
   translation[strings.keys[0]] = strings[strings.keys[0]]
+  author = `git log #{trans} | grep -i ^author:`
+  author = author.split("\n").collect{|a| a.gsub(/^author:/i, '').gsub(/<.*/, '').strip}
+  author = author.uniq.sort{|a, b| a.downcase <=> b.downcase}.join(', ')
+  author = " (#{author})" if author != ''
+  authors[strings.keys[0]] = author
 }
 
 webpage.write(<<HEADER)
@@ -87,14 +93,13 @@ categories: en
 ---
 h1. Translations
 
-*Want to help out with translating Backlogs? Excellent!
+*Want to help out with translating Backlogs? Excellent!*
 
 Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/relaxdiego/redmine_backlogs/fork the "Backlogs":http://github.com/relaxdiego/redmine_backlogs repository, in that repository browse to Source -> config -> locales, click on the translation you want to adapt, en click the "Edit this file" button. Change what you want, and then issue a "pull request":https://github.com/relaxdiego/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
 
 The messages below mean the following:
 
-| *Missing* | the key is not present in the translation. |
-| *Obsolete* | the key is present but no longer in use, so it should be removed. |
+| *Untranslated* | The translation contains words that aspell thinks don't belong in it. |
 | *Old-style variable substitution* | the translation uses { { keyword } } instead of %{keyword}. This works for now, but redmine is in the process of phasing it out. |
 
 bq(success). English
@@ -154,7 +159,7 @@ translation.keys.sort.each {|t|
     status = 'success'
   end
 
-  webpage.write("bq(#{status}). #{name(t)}#{pct}\n\n")
+  webpage.write("bq(#{status}). #{name(t)}#{pct}#{authors[t]}\n\n")
 
   columns = 2
   [[untranslated, 'Untranslated'], [varstyle, 'Old-style variable substitution']].each {|error|
