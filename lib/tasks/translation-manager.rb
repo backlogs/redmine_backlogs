@@ -77,7 +77,7 @@ class Translation
         t.test
       }
     elsif @@source
-      @missing = (@@source.keys - self.keys) + @@source.keys.select{|k| self[k] && self[k] =~ /^\[\[.*\]\]$/}
+      @missing = (@@source.keys - self.keys) + @@source.keys.select{|k| self[k] && (self[k] =~ /^\[\[.*\]\]$/ || self[k] == @@source[k])}
       @obsolete = self.keys - @@source.keys
       @varstyle = @@source.keys.select{|k| self[k] && self[k].include?('{{') }
     else
@@ -115,7 +115,8 @@ class Translation
 
   def to_yaml(opts = {})
     strings = {}
-    @@keys.each {|k| strings[k] = @strings[k]}
+    strings.each_pair{|k, v| strings.delete(k) if v.nil? || v.strip == ''}
+    @@keys.each {|k| strings[k] = @strings[k] || @@source.strings[k]}
     return {@lang => strings}.to_yaml(opts)
   end
 end
