@@ -34,9 +34,6 @@ en-GB:
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_description: |-
-    %{summary}: %{url}
-    %{description}
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blocks
@@ -56,14 +53,13 @@ en-GB:
   label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
   label_burndown: Burndown
   label_chart_options: Chart Options
-  label_hours: hours
   label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
+  label_hours: hours
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_not_prioritized: not prioritized
-  label_points: points
   label_points_accepted: points accepted
   label_points_burn_down: Down
   label_points_burn_up: Up
@@ -72,16 +68,15 @@ en-GB:
   label_points_resolved: points resolved
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
+  label_points: points
   label_product_backlog: product backlog
   label_product_cards: Product backlog cards
   label_release: Release
-  label_release_end_date: 
-  - - field_release_start_date
+  label_release_end_date: field_release_start_date
   label_release_new: New release
   label_release_planning: Release Planning
   label_release_plural: Releases
-  label_release_start_date: 
-  - - field_release_start_date
+  label_release_start_date: field_release_start_date
   label_scrum_statistics: Scrum statistics
   label_select_all: Select all
   label_sprint_backlog: sprint backlog
@@ -110,12 +105,9 @@ en-GB:
   remaining_story_points: remaining story points
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_description: |-
-    %{summary}: %{url}
-    %{description}
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -127,4 +119,3 @@ en-GB:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

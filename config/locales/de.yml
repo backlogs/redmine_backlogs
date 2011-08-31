@@ -34,9 +34,6 @@ de:
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
   error_taken: is already in use
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Backlog Typ
   field_blocks: "[[Blocks]]"
@@ -75,13 +72,11 @@ de:
   label_product_backlog: Produkt Backlog
   label_product_cards: "[[Product backlog cards]]"
   label_release: Release
-  label_release_end_date: 
-  - - field_release_start_date
+  label_release_end_date: field_release_start_date
   label_release_new: Neues Release
   label_release_planning: Release-Planung
   label_release_plural: Releases
-  label_release_start_date: 
-  - - field_release_start_date
+  label_release_start_date: field_release_start_date
   label_scrum_statistics: Scrum Statistiken
   label_select_all: "Alle ausw\xC3\xA4hlen"
   label_sprint_backlog: Sprint Backlog
@@ -110,12 +105,9 @@ de:
   remaining_story_points: Verbleibende Storypunkte
   today_not_in_release_msg: Heutiges Datum liegt nicht im Release-Zeitraum. Snapshot wirklich speichern?
   today_not_in_release_warning: "Achtung: heutiges Datum liegt nicht im Release-Zeitraum."
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -127,4 +119,3 @@ de:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

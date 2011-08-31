@@ -16,14 +16,14 @@ zh:
   backlogs_points_burn_direction: !binary |
     54K55pWw5raI6ICXIOeHg+i1ty/nh4PlsL0=
 
-  backlogs_product_backlog: !binary |
-    5Lqn5ZOBYmFja2xvZw==
-
   backlogs_product_backlog_is_empty: !binary |
     5Lqn5ZOBYmFja2xvZ+aYr+epuueahA==
 
   backlogs_product_backlog_unsized: !binary |
     5Lqn5ZOBQmFja2xvZ+S4reacieacquehruWumueCueaVsOeahOaVheS6iw==
+
+  backlogs_product_backlog: !binary |
+    5Lqn5ZOBYmFja2xvZw==
 
   backlogs_sizing_inconsistent: !binary |
     5pWF5LqL55qE54K55pWw5LiO5a6D5Lus55qE6aKE5pyf5pe26Ze055u45Yay
@@ -44,17 +44,17 @@ zh:
   backlogs_sprints: !binary |
     5Yay5Yi6
 
-  backlogs_story: !binary |
-    5pWF5LqL
-
   backlogs_story_tracker: !binary |
     5pWF5LqL6Lef6Liq
 
-  backlogs_task: !binary |
-    5Lu75Yqh
+  backlogs_story: !binary |
+    5pWF5LqL
 
   backlogs_task_tracker: !binary |
     5Lu75Yqh6Lef6Liq
+
+  backlogs_task: !binary |
+    5Lu75Yqh
 
   backlogs_velocity_missing: !binary |
     6L+Z5Liq6aG555uu55qE6YCf5bqm5peg5rOV6K6h566X
@@ -90,9 +90,6 @@ zh:
 
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: !binary |
     QmFja2xvZ+exu+Weiw==
@@ -132,21 +129,18 @@ zh:
   label_chart_options: !binary |
     6KGo5Y2V6YCJ6aG5
 
-  label_hours: !binary |
-    5bCP5pe2
-
   label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
+  label_hours: !binary |
+    5bCP5pe2
+
   label_impediments: Impediments
   label_master_backlog: !binary |
     QmFja2xvZ+aOp+WItuadvw==
 
   label_not_prioritized: !binary |
     5pyq5o6I5LqI5LyY5YWI57qn
-
-  label_points: !binary |
-    54K5
 
   label_points_accepted: points accepted
   label_points_burn_down: !binary |
@@ -160,6 +154,9 @@ zh:
   label_points_resolved: points resolved
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
+  label_points: !binary |
+    54K5
+
   label_product_backlog: !binary |
     5Lqn5ZOBIGJhY2tsb2c=
 
@@ -190,11 +187,11 @@ zh:
     6YCf5bqmIHt7dmVsb2NpdHl9fSwg5Z+65LqOIHt7c3ByaW50c319IOWGsuWI
     uueahOW5s+Wdh+WkqeaVsOS4unt7ZGF5c3195aSp
 
-  label_stories: !binary |
-    5Lu75Yqh
-
   label_stories_tasks: !binary |
     5pWF5LqLL+S7u+WKoQ==
+
+  label_stories: !binary |
+    5Lu75Yqh
 
   label_task_board: !binary |
     5Lu75Yqh5p2/
@@ -217,12 +214,9 @@ zh:
   remaining_story_points: remaining story points
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -234,4 +228,3 @@ zh:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

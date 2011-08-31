@@ -23,12 +23,6 @@ ru:
     0Lgg0YHQutC+0LvRjNC60L4g0LXRidGRINC+0YHRgtCw0ZHRgtGB0Y8g0YHQ
     tNC10LvQsNGC0Yw=
 
-  backlogs_product_backlog: !binary |
-    0JHRjdC60LvQvtCzINC/0YDQvtC00YPQutGC0LAgKNGB0L/QuNGB0L7QuiDR
-    gtGA0LXQsdC+0LLQsNC90LjQuSDQuiDRhNGD0L3QutGG0LjQvtC90LDQu9GM
-    0L3QvtGB0YLQuCwg0LrQvtGC0L7RgNGL0LUg0YPQv9C+0YDRj9C00L7Rh9C1
-    0L3RiyDQv9C+INGB0YLQtdC/0LXQvdC4INCy0LDQttC90L7RgdGC0Lgp
-
   backlogs_product_backlog_is_empty: !binary |
     0JHRjdC60LvQvtCzINC/0YDQvtC00YPQutGC0LAg0L/Rg9GB0YI=
 
@@ -36,6 +30,12 @@ ru:
     0JLQtdGA0YUg0LHRjdC60LvQvtCz0LAg0L/RgNC+0LTRg9C60YLQsCDQuNC8
     0LXQtdGCINC40YHRgtC+0YDQuNC4INGBINC90LXQvtC/0YDQtdC00LXQu9GR
     0L3QvdGL0Lwg0YDQsNC30LzQtdGA0L7QvA==
+
+  backlogs_product_backlog: !binary |
+    0JHRjdC60LvQvtCzINC/0YDQvtC00YPQutGC0LAgKNGB0L/QuNGB0L7QuiDR
+    gtGA0LXQsdC+0LLQsNC90LjQuSDQuiDRhNGD0L3QutGG0LjQvtC90LDQu9GM
+    0L3QvtGB0YLQuCwg0LrQvtGC0L7RgNGL0LUg0YPQv9C+0YDRj9C00L7Rh9C1
+    0L3RiyDQv9C+INGB0YLQtdC/0LXQvdC4INCy0LDQttC90L7RgdGC0Lgp
 
   backlogs_sizing_inconsistent: !binary |
     0JjQt9C80LXQvdC10L3QuNC1INGA0LDQt9C80LXRgNC+0LIg0LjRgdGC0L7R
@@ -62,17 +62,17 @@ ru:
   backlogs_sprints: !binary |
     0KHQv9GA0LjQvdGC0Ys=
 
-  backlogs_story: !binary |
-    0JjRgdGC0L7RgNC40Y8=
-
   backlogs_story_tracker: !binary |
     0KLRgNC10LrQtdGA0Ysg0LjRgdGC0L7RgNC40Lg=
 
-  backlogs_task: !binary |
-    0JfQsNC00LDQvdC40LU=
+  backlogs_story: !binary |
+    0JjRgdGC0L7RgNC40Y8=
 
   backlogs_task_tracker: !binary |
     0KLRgNC10LrQtdGAINC30LDQtNCw0L3QuNGP
+
+  backlogs_task: !binary |
+    0JfQsNC00LDQvdC40LU=
 
   backlogs_velocity_missing: !binary |
     0KHQutC+0YDQvtGB0YLRjCDQtNC70Y8g0Y3RgtC+0LPQviDQv9GA0L7QtdC6
@@ -112,7 +112,7 @@ ru:
   error_must_have_comma_delimited_list: !binary |
     0LTQvtC70LbQvdC+INC40LzQtdGC0Ywg0LfQsNC/0Y/RgtGD0Y4sINGA0LDQ
     t9C00LXQu9GP0Y7RidGD0Y4g0YHQv9C40YHQvtC6INC40YHRgtC+0YDQuNC4
-    INC40LvQuCBJRCDQt9Cw0LTQsNC90LjQuSA=
+    INC40LvQuCBJRCDQt9Cw0LTQsNC90LjQuQ==
 
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: !binary |
@@ -126,9 +126,6 @@ ru:
     0LDQu9Cw
 
   error_taken: is already in use
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: !binary |
     0KLQuNC/INCx0Y3QutC70L7Qs9Cw
@@ -175,9 +172,6 @@ ru:
     0J3QsNC30LDQtCDQvdCwINGB0YLRgNCw0L3QuNGG0YMg0L/RgNC+0LXQutGC
     0LA=
 
-  label_backlogs: !binary |
-    0JHRjdC60LvQvtCz0Lg=
-
   label_backlogs_unconfigured: !binary |
     0JLRiyDQtdGJ0ZEg0L3QtSDQvtGC0LrQvtC90YTQuNCz0YPRgNC40YDQvtCy
     0LDQu9C4INCx0Y3QutC70L7Qsy4g0J/QvtC20LDQu9GD0LnRgdGC0LAsINC/
@@ -190,18 +184,21 @@ ru:
     0LUsINGH0YLQvtCx0Ysg0L3QsNGH0LDRgtGMINC40YHQv9C+0LvRjNC30L7Q
     stCw0L3QuNC1INGN0YLQvtCz0L4g0LjQvdGB0YLRgNGD0LzQtdC90YLQsC4=
 
+  label_backlogs: !binary |
+    0JHRjdC60LvQvtCz0Lg=
+
   label_burndown: !binary |
     0JLRi9C/0L7Qu9C90LXQvdC40LU=
 
   label_chart_options: !binary |
     0JLRi9Cx0L7RgNGLINC60LDRgNGC0Ys=
 
-  label_hours: !binary |
-    0YfQsNGB0Ys=
-
   label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
+  label_hours: !binary |
+    0YfQsNGB0Ys=
+
   label_impediments: !binary |
     0JfQsNC00LXRgNC20LrQuA==
 
@@ -210,9 +207,6 @@ ru:
 
   label_not_prioritized: !binary |
     0LHQtdC3INC/0YDQuNC+0YDQuNGC0LXRgtCw
-
-  label_points: !binary |
-    0YLQvtGH0LrQuA==
 
   label_points_accepted: points accepted
   label_points_burn_down: !binary |
@@ -227,19 +221,18 @@ ru:
   label_points_resolved: points resolved
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
+  label_points: !binary |
+    0YLQvtGH0LrQuA==
+
   label_product_backlog: !binary |
     0LHRjdC60LvQvtCzINC/0YDQvtC00YPQutGC0LA=
 
   label_product_cards: !binary |
     0JrQsNGA0YLRiyDQsdGN0LrQu9C+0LPQsCDQv9GA0L7QtNGD0LrRgtCw
 
-  label_release: !binary |
-    0JLQtdGA0YHQuNGP
-
-  label_release_end_date: 
-  - - !binary |
-      0J/QvtC70LVf0LTQsNGC0Ytf0L7QutC+0L3Rh9Cw0L3QuNGPX9Cy0LXRgNGB
-      0LjQuA==
+  label_release_end_date: !binary |
+    0J/QvtC70LVf0LTQsNGC0Ytf0L7QutC+0L3Rh9Cw0L3QuNGPX9Cy0LXRgNGB
+    0LjQuA==
 
   label_release_new: !binary |
     0J3QvtCy0LDRjyDQstC10YDRgdC40Y8=
@@ -250,9 +243,11 @@ ru:
   label_release_plural: !binary |
     0JLQtdGA0YHQuNC4
 
-  label_release_start_date: 
-  - - !binary |
-      0J/QvtC70LVf0LTQsNGC0Ytf0L3QsNGH0LDQu9CwX9Cy0LXRgNGB0LjQuA==
+  label_release_start_date: !binary |
+    0J/QvtC70LVf0LTQsNGC0Ytf0L3QsNGH0LDQu9CwX9Cy0LXRgNGB0LjQuA==
+
+  label_release: !binary |
+    0JLQtdGA0YHQuNGP
 
   label_scrum_statistics: !binary |
     0KHRgtCw0YLQuNGB0YLQuNC60Lgg0YHQutGA0LDQvNCw
@@ -261,7 +256,7 @@ ru:
     0JLRi9Cx0YDQsNGC0Ywg0LLRgdGR
 
   label_sprint_backlog: !binary |
-    INCx0Y3QutC70L7QsyDRgdC/0YDQuNC90YLQsA==
+    0LHRjdC60LvQvtCzINGB0L/RgNC40L3RgtCw
 
   label_sprint_cards: !binary |
     0JrQsNGA0YLRiyDRgdC/0YDQuNC90YLQsA==
@@ -278,11 +273,11 @@ ru:
     INGB0YDQtdC00L3QuNC8INC60L7Qu9C40YfQtdGB0YLQstC+0Lwg0LTQvdC1
     0Lkge3tkYXlzfX0u
 
-  label_stories: !binary |
-    0JjRgdGC0L7RgNC40Lg=
-
   label_stories_tasks: !binary |
     0JjRgdGC0L7RgNC40Lgv0JfQsNC00LDQvdC40Y8=
+
+  label_stories: !binary |
+    0JjRgdGC0L7RgNC40Lg=
 
   label_task_board: !binary |
     0JTQvtGB0LrQsCDQt9Cw0LTQsNC90LjQuQ==
@@ -290,9 +285,6 @@ ru:
   label_webcal: !binary |
     0J/QvtC00LDRh9CwIFdlYi3QutCw0LvQtdC90LTQsNGA0Y8g0YHQvtCx0YvR
     gtC40LkgKFdlYmNhbCk=
-
-  rb_label_copy_tasks: !binary |
-    0JrQvtC/0LjRgNC+0LLQsNGC0Ywg0LfQsNC00LDQvdC40Y8=
 
   rb_label_copy_tasks_all: !binary |
     0JLRgdC1ICjQmtC+0L/QuNGA0L7QstCw0YLRjCDQstGB0LUg0LfQsNC00LDQ
@@ -304,6 +296,9 @@ ru:
 
   rb_label_copy_tasks_open: !binary |
     0J7RgtC60YDRi9GC0Yw=
+
+  rb_label_copy_tasks: !binary |
+    0JrQvtC/0LjRgNC+0LLQsNGC0Ywg0LfQsNC00LDQvdC40Y8=
 
   rb_label_link_to_original: !binary |
     0LLQutC70Y7Rh9C40YLRjCDRgdGB0YvQu9C60YMg0L3QsCDQvtGA0LjQs9C4
@@ -343,12 +338,9 @@ ru:
     stC40YLQtdC70YzQvdC+INC20LXQu9Cw0LXRgtC1INGB0L7RhdGA0LDQvdC4
     0YLRjCDRgdC90LjQvNC+0Lo/
 
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -360,4 +352,3 @@ ru:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

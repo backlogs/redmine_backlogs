@@ -34,9 +34,6 @@ pt-BR:
   error_outro: Por favor corriga os erros antes de enviar novamente.
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Blocos
@@ -110,12 +107,9 @@ pt-BR:
   remaining_story_points: remaining story points
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -127,4 +121,3 @@ pt-BR:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

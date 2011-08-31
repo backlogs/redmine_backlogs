@@ -34,9 +34,6 @@ nl:
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
   error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
   error_taken: is al in gebruik
-  event_sprint_description: |-
-    %{summary}: %{url}
-    %{description}
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
@@ -56,14 +53,13 @@ nl:
   label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u asltublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
   label_burndown: Burndown
   label_chart_options: Grafiek Opties
-  label_hours: uren
   label_hours_ideal: ideaal
   label_hours_remaining: resterende uren
   label_hours_required_burn_rate: benodigde burn rate (hours)
+  label_hours: uren
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_not_prioritized: geen prioriteit
-  label_points: points
   label_points_accepted: points geaccepteerd
   label_points_burn_down: Omlaag
   label_points_burn_up: Omhoog
@@ -72,6 +68,7 @@ nl:
   label_points_resolved: points opgelost
   label_points_to_accept: points niet geaccepteerd
   label_points_to_resolve: points niet opgelost
+  label_points: points
   label_product_backlog: product backlog
   label_product_cards: Product backlog kaarten
   label_release: Release
@@ -108,12 +105,9 @@ nl:
   remaining_story_points: resterende story points
   today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
   today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
-  todo_issue_description: |-
-    %{summary}: %{url}
-    %{description}
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -125,4 +119,3 @@ nl:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-

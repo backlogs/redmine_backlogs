@@ -36,9 +36,6 @@ fr:
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre \xC3\xA0 nouveau."
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Type de carnet
   field_blocks: Blocks
@@ -58,14 +55,13 @@ fr:
   label_backlogs_unconfigured: "Vous n'avez pas encore configur\xC3\xA9 les Carnets. Veuillez aller \xC3\xA0 {{administration}} > {{plugins}}, et cliquez sur le lien {{configure}} pour ce plugin. Une fois que vous aurez d\xC3\xA9fini ces champs, revenez \xC3\xA0 cette page pour utiliser l'outil"
   label_burndown: Progression
   label_chart_options: Options du graphique
-  label_hours: heures
   label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
+  label_hours: heures
   label_impediments: Impediments
   label_master_backlog: "Carnet Ma\xC3\xAEtre"
   label_not_prioritized: "non prioris\xC3\xA9s"
-  label_points: points
   label_points_accepted: points accepted
   label_points_burn_down: Bas
   label_points_burn_up: Haut
@@ -74,6 +70,7 @@ fr:
   label_points_resolved: points resolved
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
+  label_points: points
   label_product_backlog: carnet du produit
   label_product_cards: Cartes de carnet du produit
   label_release: Release
@@ -110,12 +107,9 @@ fr:
   remaining_story_points: remaining story points
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
     Are you sure you want to do this? Resetting the sprint
@@ -127,4 +121,3 @@ fr:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-
