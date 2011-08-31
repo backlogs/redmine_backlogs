@@ -47,7 +47,7 @@ nl:
   field_story_points: Story points
   field_subject: Onderwerp
   field_tracker_id: Tracker ID
-  field_velocity_based_estimate: Schatting obv velocity
+  field_velocity_based_estimate: Schatting op basis van velocity
   label_back_to_project: Terug naar het project
   label_backlogs: Backlogs
   label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u asltublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
@@ -55,7 +55,7 @@ nl:
   label_chart_options: Grafiek Opties
   label_hours_ideal: ideaal
   label_hours_remaining: resterende uren
-  label_hours_required_burn_rate: benodigde burn rate (hours)
+  label_hours_required_burn_rate: benodigde burn rate (uren)
   label_hours: uren
   label_impediments: Impediments
   label_master_backlog: Master Backlog
@@ -93,8 +93,8 @@ nl:
   rb_label_copy_tasks_none: Geen
   rb_label_copy_tasks_open: Open
   rb_label_link_to_original: Relateer aan originele story
-  rb_label_timelog_disable: Disable
-  rb_label_timelog_enable: Enable
+  rb_label_timelog_disable: Uitzetten
+  rb_label_timelog_enable: Aanzetten
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
