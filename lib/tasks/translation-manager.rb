@@ -2,6 +2,30 @@
 
 require 'rubygems'
 require 'yaml'
+require 'raspell'
+require 'iconv'
+
+$jargon = %w{
+  backlog
+  backlogs
+  burn
+  burndown
+  impediments
+  plugin
+  point
+  points
+  product
+  rate
+  retrospective
+  size
+  sizes
+  stories
+  story
+  tracker
+  trackers
+  velocity
+  wiki
+  }
 
 def dir(path=nil)
   path = "/#{path}" if path
@@ -83,6 +107,19 @@ def same(s1, s2)
   return (s1.to_s.strip == s2.to_s.strip) && (s1.to_s.strip.split.size > 2)
 end
 
+def translated(l, s)
+  s = s.gsub(/%\{.+?\}/, ' ').gsub(/\{\{.+?\}\}/, ' ')
+  return true if l == 'zh' # aspell doesn't have a language file for zh
+  speller = Aspell.new(l.gsub('-', '_'))
+  speller.set_option('ignore-case', 'true')
+  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
+    next if $jargon.include?(word.downcase)
+    next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
+    return false unless speller.check(word) 
+  end
+  return true
+end
+
 def name(t)
   return YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
 end
@@ -99,9 +136,8 @@ translation.keys.sort.each {|t|
     nt[k] = translation['en'][k].to_s.strip if nt[k].strip == ''
 
     varstyle << k if nt[k].include?('{{')
-    untranslated << k if same(nt[k], translation['en'][k])
+    untranslated << k unless translated(t, nt[k])
   }
-  untranslated = [] if t == 'en-GB'
   errors = (varstyle + untranslated).uniq
 
   if errors.size > 0

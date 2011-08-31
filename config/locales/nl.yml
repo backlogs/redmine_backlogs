@@ -9,15 +9,15 @@ nl:
   backlogs_product_backlog: Product backlog
   backlogs_product_backlog_is_empty: Product backlog is leeg
   backlogs_product_backlog_unsized: De top van de product backlog heeft stories zonder size
-  backlogs_sizing_inconsistent: Story sizes varieren ten opzichte van hun tijdsschattingen
+  backlogs_sizing_inconsistent: Story sizes varieren ten opzichte van hun tijds schattingen
   backlogs_sprint_notes_missing: Gesloten sprints zonder retrospective/review aantekeningen
-  backlogs_sprint_unestimated: Gesloten of actieve sprints bevatten stories zonder tijdschattingen
-  backlogs_sprint_unsized: Er zijn stories in de active of recent afgesloten sprints zonder sizes
+  backlogs_sprint_unestimated: Gesloten of actieve sprints bevatten stories zonder tijds schattingen
+  backlogs_sprint_unsized: Er zijn stories in de actieve of recent afgesloten sprints zonder sizes
   backlogs_sprints: Sprints
   backlogs_story: Story
   backlogs_story_tracker: Story trackers
-  backlogs_task: Task
-  backlogs_task_tracker: Task tracker
+  backlogs_task: Taak
+  backlogs_task_tracker: Taak tracker
   backlogs_velocity_missing: De velocity voor dit project kan niet worden berekend
   backlogs_velocity_varies: Velocity varieert per sprint
   backlogs_wiki_template: Template voor sprint wiki pagina
@@ -32,25 +32,25 @@ nl:
   error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story of taak IDs hebben
   error_no_workflow_for_task_tracker: Je hebt geen toegang tot de taak tracker. Indien dit een fout is, neem dan contact op met de beheerder om dit te laten corrigeren.
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
-  error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
+  error_release_end_after_start: De einddatum van de release moet na de start datum liggen
   error_taken: is al in gebruik
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_initial_estimate:  Initiële schatting
-  field_initial_story_points: Initiële story points
+  field_initial_estimate: "Initi\xC3\xABle schatting"
+  field_initial_story_points: "Initi\xC3\xABle story points"
   field_name: Naam
   field_number_of_snapshots: Opgeslagen point snapshots
   field_position: Positie
   field_release_end_date: Eind datum van de release
-  field_release_start_date: Startdaum release
+  field_release_start_date: Start datum release
   field_story_points: Story points
   field_subject: Onderwerp
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Schatting op basis van velocity
   label_back_to_project: Terug naar het project
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u asltublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
+  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
   label_burndown: Burndown
   label_chart_options: Grafiek Opties
   label_hours_ideal: ideaal
@@ -76,7 +76,7 @@ nl:
   label_release_new: Nieuwe release
   label_release_planning: Release Planning
   label_release_plural: Releases
-  label_release_start_date: Startdatum release
+  label_release_start_date: Start datum release
   label_scrum_statistics: Scrum statistieken
   label_select_all: Selecteer alles
   label_sprint_backlog: sprint backlog
@@ -86,7 +86,7 @@ nl:
   label_sprint_velocity: Velocity %{velocity}, berekend over %{sprints} sprints met gemiddeld %{days} dagen
   label_stories: Stories
   label_stories_tasks: Stories/Taken
-  label_task_board: Taakbord
+  label_task_board: Taak-bord
   label_webcal: Agenda
   rb_label_copy_tasks: Kopieer taken
   rb_label_copy_tasks_all: Alle
@@ -98,23 +98,23 @@ nl:
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
-  rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
-  rb_timelog_from_taskboard: Tijdschrijven via taakbord
+  rb_taskboard_card_order: Afdruk volgorde taak-bord kaarten
+  rb_timelog_from_taskboard: Tijd-schrijven via taak-bord
   release_create_snapshot_today: Story point snapshot voor vandaag opslaan
   release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
   today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
   today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: Gebruik textveld in plaats van uitklaplijst indien leeg
+  use_free_text_if_empty: Gebruik tekst veld in plaats van drop-down lijst indien leeg
   warning_reset_sprint: |-
     JE STAAT OP HET PUNT DEZE SPRINT TE HER-INITIALISEREN!
     
-    Weet je zeker dat je dit wilt doen? Herinitialisatie
+    Weet je zeker dat je dit wilt doen? Her-initialisatie
     heeft de volgende gevolgen voor de stories en taken
     verbonden aan de sprint:
     
-    * Creatie-datum wordt veranderd in de startdatum van de sprint
+    * Creatie-datum wordt veranderd in de start datum van de sprint
     * ALLE wijzigingen aan de stories en taken, behalve notities,
        zullen worden VERWIJDERD
     * De huidige waarde wordt de startwaarde voor alle
