@@ -99,7 +99,7 @@ Create an account at "GitHub":http://www.github.com if you don't have one yet. "
 
 The messages below mean the following:
 
-| *Untranslated* | The translation contains words that aspell thinks don't belong in it. |
+| *Untranslated* | The translation contains words that aspell thinks doesn't belong to that language. |
 | *Old-style variable substitution* | the translation uses { { keyword } } instead of %{keyword}. This works for now, but redmine is in the process of phasing it out. |
 
 bq(success). English
