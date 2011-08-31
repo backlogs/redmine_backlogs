@@ -3,7 +3,7 @@ de:
   backlogs_active: aktiv
   backlogs_any: beliebig
   backlogs_card_specification: "Etikettenart f\xC3\xBCr den Kartendruck"
-  backlogs_impediment: 
+  backlogs_impediment: Impediment
   backlogs_inactive: "Projekt zeigt keine Aktivit\xC3\xA4t"
   backlogs_points_burn_direction: Burnup/-down Punkte
   backlogs_product_backlog: Produkt Backlog
@@ -22,25 +22,25 @@ de:
   backlogs_velocity_varies: Die Geschwindigkeit variiert stark zwischen den Sprints
   backlogs_wiki_template: "Vorlage f\xC3\xBCr das Sprint-Wiki"
   button_edit_wiki: Wiki Seite bearbeiten
-  comma_delimited_numbers: 
+  comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
   error_blank: "[[cannot be blank]]"
   error_greater_than_start_date: "[[cannot be earlier than Start Date]]"
-  error_inclusion: 
+  error_inclusion: is not included in the list
   error_intro_plural: "Die folgenden Fehler sind aufgetreten:"
   error_intro_singular: "Der folgende Fehler ist aufgetreten:"
   error_must_have_comma_delimited_list: muss eine Kommaseparierte Liste mit Story- oder Aufgaben-IDs enthalten
-  error_no_workflow_for_task_tracker: 
+  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
-  error_taken: 
+  error_taken: is already in use
   event_sprint_description: |-
     {{summary}}: {{url}}
     {{description}}
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Backlog Typ
   field_blocks: "[[Blocks]]"
-  field_initial_estimate: 
+  field_initial_estimate: Initial estimate
   field_initial_story_points: Storypunkte zu Beginn
   field_name: Name
   field_number_of_snapshots: Gespeicherte Punkte-Snapshots
@@ -57,21 +57,21 @@ de:
   label_burndown: Burndown
   label_chart_options: Chart-Optionen
   label_hours: Stunden
-  label_hours_ideal: 
-  label_hours_remaining: 
-  label_hours_required_burn_rate: 
-  label_impediments: 
+  label_hours_ideal: ideal
+  label_hours_remaining: remaining hours
+  label_hours_required_burn_rate: required burn rate (hours)
+  label_impediments: Impediments
   label_master_backlog: "[[Master Backlog]]"
   label_not_prioritized: nicht priorisiert
   label_points: Punkte
-  label_points_accepted: 
+  label_points_accepted: points accepted
   label_points_burn_down: Runter
   label_points_burn_up: Hoch
-  label_points_committed: 
-  label_points_required_burn_rate: 
-  label_points_resolved: 
-  label_points_to_accept: 
-  label_points_to_resolve: 
+  label_points_committed: points committed
+  label_points_required_burn_rate: required burn rate (points)
+  label_points_resolved: points resolved
+  label_points_to_accept: points not accepted
+  label_points_to_resolve: points not resolved
   label_product_backlog: Produkt Backlog
   label_product_cards: "[[Product backlog cards]]"
   label_release: Release
@@ -100,10 +100,10 @@ de:
   rb_label_link_to_original: "[[Include link to original story]]"
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable
-  rb_task_cards_stories_then_tasks: 
-  rb_task_cards_story_follows_tasks: 
-  rb_task_cards_tasks_follow_story: 
-  rb_taskboard_card_order: 
+  rb_task_cards_stories_then_tasks: First all stories, then all tasks
+  rb_task_cards_story_follows_tasks: Tasks followed by their story
+  rb_task_cards_tasks_follow_story: Story followed by their tasks
+  rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: Heutigen Punkte-Snapshot speichern
   release_update_snapshot_today: Heutigen Punkte-Snapshot aktualisieren
@@ -114,5 +114,17 @@ de:
     {{summary}}: {{url}}
     {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
-  use_free_text_if_empty: 
-  warning_reset_sprint: 
+  use_free_text_if_empty: Use text field instead of dropdown if empty
+  warning_reset_sprint: |
+    YOU ARE ABOUT TO RESET THIS SPRINT!
+    
+    Are you sure you want to do this? Resetting the sprint
+    will have the following effects on stories and tasks:
+    
+    * Creation date will be set to the sprint start date
+    * ALL modifications to the stories and tasks except notes
+       will be DELETED
+    * The current value will become the initial value for all
+       story/task properties
+    * State will be set to the default issue state
+

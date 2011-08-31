@@ -22,7 +22,7 @@ nl:
   backlogs_velocity_varies: Velocity varieert per sprint
   backlogs_wiki_template: Template voor sprint wiki pagina
   button_edit_wiki: Wijzig wiki page
-  comma_delimited_numbers: 
+  comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
   error_blank: mag niet leeg zijn
   error_greater_than_start_date: mag niet voor Start Datum liggen
@@ -30,7 +30,7 @@ nl:
   error_intro_plural: "De volgende fouten zijn opgetreden:"
   error_intro_singular: "De volgende fout is opgetreden:"
   error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story of taak IDs hebben
-  error_no_workflow_for_task_tracker: 
+  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
   error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
   error_taken: is al in gebruik
@@ -112,5 +112,17 @@ nl:
     %{summary}: %{url}
     %{description}
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: 
-  warning_reset_sprint: 
+  use_free_text_if_empty: Use text field instead of dropdown if empty
+  warning_reset_sprint: |
+    YOU ARE ABOUT TO RESET THIS SPRINT!
+    
+    Are you sure you want to do this? Resetting the sprint
+    will have the following effects on stories and tasks:
+    
+    * Creation date will be set to the sprint start date
+    * ALL modifications to the stories and tasks except notes
+       will be DELETED
+    * The current value will become the initial value for all
+       story/task properties
+    * State will be set to the default issue state
+

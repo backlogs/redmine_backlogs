@@ -22,25 +22,25 @@ es:
   backlogs_velocity_varies: Velocity varies significantly over sprints
   backlogs_wiki_template: "Plantilla para p\xC3\xA1gina de Spring"
   button_edit_wiki: Editar wiki
-  comma_delimited_numbers: 
+  comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
   error_blank: cannot be blank
   error_greater_than_start_date: cannot be earlier than Start Date
-  error_inclusion: 
+  error_inclusion: is not included in the list
   error_intro_plural: "The following errors were encountered:"
   error_intro_singular: "The following error was encountered:"
   error_must_have_comma_delimited_list: must have a comma delimited list of story or task IDs
-  error_no_workflow_for_task_tracker: 
+  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
-  error_taken: 
+  error_taken: is already in use
   event_sprint_description: |-
     %{summary}: %{url}
     %{description}
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Blocks
-  field_initial_estimate: 
+  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: Name
   field_number_of_snapshots: Saved point snapshots
@@ -57,21 +57,21 @@ es:
   label_burndown: Burndown
   label_chart_options: Chart Options
   label_hours: hours
-  label_hours_ideal: 
-  label_hours_remaining: 
-  label_hours_required_burn_rate: 
+  label_hours_ideal: ideal
+  label_hours_remaining: remaining hours
+  label_hours_required_burn_rate: required burn rate (hours)
   label_impediments: Impedimentos
   label_master_backlog: Master Backlog
   label_not_prioritized: not prioritized
   label_points: points
-  label_points_accepted: 
+  label_points_accepted: points accepted
   label_points_burn_down: Down
   label_points_burn_up: Up
-  label_points_committed: 
-  label_points_required_burn_rate: 
-  label_points_resolved: 
-  label_points_to_accept: 
-  label_points_to_resolve: 
+  label_points_committed: points committed
+  label_points_required_burn_rate: required burn rate (points)
+  label_points_resolved: points resolved
+  label_points_to_accept: points not accepted
+  label_points_to_resolve: points not resolved
   label_product_backlog: product backlog
   label_product_cards: Tarjetas del Product backlog
   label_release: Release
@@ -100,10 +100,10 @@ es:
   rb_label_link_to_original: Include link to original story
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable
-  rb_task_cards_stories_then_tasks: 
-  rb_task_cards_story_follows_tasks: 
-  rb_task_cards_tasks_follow_story: 
-  rb_taskboard_card_order: 
+  rb_task_cards_stories_then_tasks: First all stories, then all tasks
+  rb_task_cards_story_follows_tasks: Tasks followed by their story
+  rb_task_cards_tasks_follow_story: Story followed by their tasks
+  rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
@@ -114,5 +114,17 @@ es:
     %{summary}: %{url}
     %{description}
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: 
-  warning_reset_sprint: 
+  use_free_text_if_empty: Use text field instead of dropdown if empty
+  warning_reset_sprint: |
+    YOU ARE ABOUT TO RESET THIS SPRINT!
+    
+    Are you sure you want to do this? Resetting the sprint
+    will have the following effects on stories and tasks:
+    
+    * Creation date will be set to the sprint start date
+    * ALL modifications to the stories and tasks except notes
+       will be DELETED
+    * The current value will become the initial value for all
+       story/task properties
+    * State will be set to the default issue state
+
