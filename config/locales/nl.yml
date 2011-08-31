@@ -37,8 +37,8 @@ nl:
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_initial_estimate: Initiele schatting
-  field_initial_story_points: Initiele story points
+  field_initial_estimate:  Initiële schatting
+  field_initial_story_points: Initiële story points
   field_name: Naam
   field_number_of_snapshots: Opgeslagen point snapshots
   field_position: Positie
