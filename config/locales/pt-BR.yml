@@ -30,6 +30,7 @@ pt-BR:
   error_intro_plural: "Os seguintes erros foram encontrados:"
   error_intro_singular: "O seguinte erro foi encontrado:"
   error_must_have_comma_delimited_list: "Deve haver uma lista separada por v\xC3\xADrgulas de est\xC3\xB3rias ou dos IDs das tarefas."
+  error_no_workflow_for_task_tracker: 
   error_outro: Por favor corriga os erros antes de enviar novamente.
   error_release_end_after_start: 
   error_taken: 
@@ -97,13 +98,13 @@ pt-BR:
   rb_label_copy_tasks_none: Nenhum
   rb_label_copy_tasks_open: Abertas
   rb_label_link_to_original: "Incluir link para a hist\xC3\xB3ria original"
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
   rb_task_cards_stories_then_tasks: 
   rb_task_cards_story_follows_tasks: 
   rb_task_cards_tasks_follow_story: 
   rb_taskboard_card_order: 
-  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: 
   release_update_snapshot_today: 
   remaining_story_points: 
@@ -114,3 +115,4 @@ pt-BR:
     {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: 
+  warning_reset_sprint: 

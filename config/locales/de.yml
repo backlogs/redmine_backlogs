@@ -30,6 +30,7 @@ de:
   error_intro_plural: "Die folgenden Fehler sind aufgetreten:"
   error_intro_singular: "Der folgende Fehler ist aufgetreten:"
   error_must_have_comma_delimited_list: muss eine Kommaseparierte Liste mit Story- oder Aufgaben-IDs enthalten
+  error_no_workflow_for_task_tracker: 
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
   error_taken: 
@@ -97,13 +98,13 @@ de:
   rb_label_copy_tasks_none: "[[None]]"
   rb_label_copy_tasks_open: "[[Open]]"
   rb_label_link_to_original: "[[Include link to original story]]"
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
   rb_task_cards_stories_then_tasks: 
   rb_task_cards_story_follows_tasks: 
   rb_task_cards_tasks_follow_story: 
   rb_taskboard_card_order: 
-  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: Heutigen Punkte-Snapshot speichern
   release_update_snapshot_today: Heutigen Punkte-Snapshot aktualisieren
   remaining_story_points: Verbleibende Storypunkte
@@ -114,3 +115,4 @@ de:
     {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: 
+  warning_reset_sprint: 

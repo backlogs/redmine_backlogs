@@ -30,6 +30,7 @@ nl:
   error_intro_plural: "De volgende fouten zijn opgetreden:"
   error_intro_singular: "De volgende fout is opgetreden:"
   error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story of taak IDs hebben
+  error_no_workflow_for_task_tracker: 
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
   error_release_end_after_start: De einddatum van de release moet na de startdatum liggen
   error_taken: is al in gebruik
@@ -95,13 +96,13 @@ nl:
   rb_label_copy_tasks_none: Geen
   rb_label_copy_tasks_open: Open
   rb_label_link_to_original: Relateer aan originele story
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
   rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
-  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: Story point snapshot voor vandaag opslaan
   release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
@@ -112,3 +113,4 @@ nl:
     %{description}
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: 
+  warning_reset_sprint: 

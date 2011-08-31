@@ -32,6 +32,7 @@ fr:
   error_intro_plural: "Les erreurs suivantes ont \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9es:"
   error_intro_singular: "L'erreur suivante a \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9e:"
   error_must_have_comma_delimited_list: "doit avoir une liste de sc\xC3\xA9narios ou num\xC3\xA9ros de t\xC3\xA2ches s\xC3\xA9par\xC3\xA9es de virgules"
+  error_no_workflow_for_task_tracker: 
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre \xC3\xA0 nouveau."
   error_release_end_after_start: 
   error_taken: 
@@ -97,13 +98,13 @@ fr:
   rb_label_copy_tasks_none: "[[None]]"
   rb_label_copy_tasks_open: "[[Open]]"
   rb_label_link_to_original: "[[Include link to original story]]"
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
   rb_task_cards_stories_then_tasks: 
   rb_task_cards_story_follows_tasks: 
   rb_task_cards_tasks_follow_story: 
   rb_taskboard_card_order: 
-  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: 
   release_update_snapshot_today: 
   remaining_story_points: 
@@ -114,3 +115,4 @@ fr:
     {{description}}
   todo_issue_summary: "{{type}}: {{summary}}"
   use_free_text_if_empty: 
+  warning_reset_sprint: 
