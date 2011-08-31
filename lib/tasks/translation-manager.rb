@@ -101,7 +101,9 @@ translation.keys.sort.each {|t|
     varstyle << k if nt[k].include?('{{')
     untranslated << k if same(nt[k], translation['en'][k])
   }
+  untranslated = [] if t == 'en-GB'
   errors = (varstyle + untranslated).uniq
+
   if errors.size > 0
     pct = " (#{((nt.keys.size - errors.size) * 100) / nt.keys.size}%)"
   else
@@ -137,7 +139,3 @@ translation.keys.sort.each {|t|
     end
   }
 }
-
-Dir.chdir(webdir)
-puts `pwd`
-puts `git status`
