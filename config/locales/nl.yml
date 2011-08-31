@@ -9,7 +9,7 @@ nl:
   backlogs_product_backlog: Product backlog
   backlogs_product_backlog_is_empty: Product backlog is leeg
   backlogs_product_backlog_unsized: De top van de product backlog heeft stories zonder size
-  backlogs_sizing_inconsistent: Story sizes varieren ten opzichte van hun tijds schattingen
+  backlogs_sizing_inconsistent: Story sizes variëren ten opzichte van hun tijds schattingen
   backlogs_sprint_notes_missing: Gesloten sprints zonder retrospective/review aantekeningen
   backlogs_sprint_unestimated: Gesloten of actieve sprints bevatten stories zonder tijds schattingen
   backlogs_sprint_unsized: Er zijn stories in de actieve of recent afgesloten sprints zonder sizes
