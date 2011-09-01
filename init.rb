@@ -23,6 +23,7 @@ Dispatcher.to_prepare do
   require_dependency 'backlogs_hooks'
 
   require_dependency 'backlogs_hash_patch'
+  require_dependency 'backlogs_version'
 end
 
 
