@@ -202,10 +202,10 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   end
 end
 
-Then /^show me the sprint burndown$/ do
+Then /^show me the sprint burn(.*)$/ do |direction|
   bd = nil
   Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown('down')
+    bd = @sprint.burndown(direction)
   end
 
   dates = @sprint.days(:all)

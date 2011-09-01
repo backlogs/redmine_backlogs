@@ -34,9 +34,6 @@ en:
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_description: |-
-    %{summary}: %{url}
-    %{description}
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blocks
@@ -102,29 +99,26 @@ en:
   rb_label_copy_tasks_none: None
   rb_label_copy_tasks_open: Open
   rb_label_link_to_original: Include link to original story
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
   rb_task_cards_stories_then_tasks: First all stories, then all tasks
   rb_task_cards_story_follows_tasks: Tasks followed by their story
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_taskboard_card_order: Card print order
-  rb_timelog_from_taskboard: "Timelog from taskboard"
+  rb_timelog_from_taskboard: Timelog from taskboard
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_description: |-
-    %{summary}: %{url}
-    %{description}
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint : |
+  warning_reset_sprint: |
     YOU ARE ABOUT TO RESET THIS SPRINT!
-
+    
     Are you sure you want to do this? Resetting the sprint
     will have the following effects on stories and tasks:
-
+    
     * Creation date will be set to the sprint start date
     * ALL modifications to the stories and tasks except notes
        will be DELETED

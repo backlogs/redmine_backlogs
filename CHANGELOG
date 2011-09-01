@@ -1,3 +1,9 @@
+== 2011-08-31 v0.6.10
+
+* Allow resetting a sprint
+  This can be useful for when planning is done offline, and you enter stories/tasks after
+  the sprint start date. Use with care.
+    
 == 2011-08-30 v0.6.9
 
 * Burndown in sidebar conforms to currently selected sprint/story

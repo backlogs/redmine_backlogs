@@ -2,412 +2,50 @@
 
 require 'rubygems'
 require 'yaml'
+require 'raspell'
+require 'iconv'
 
-def root
+$jargon = %w{
+  backlog
+  backlogs
+  burn
+  burndown
+  impediments
+  plugin
+  point
+  points
+  product
+  rate
+  retrospective
+  size
+  sizes
+  stories
+  story
+  tracker
+  trackers
+  velocity
+  wiki
+  }
+
+def dir(path=nil)
+  path = "/#{path}" if path
   r = ''
   File.expand_path('.', __FILE__).gsub(/\\/, '/').split('/').reject{|d| d == ''}.each {|d|
     r += "/#{d}"
-    return r if File.directory?("#{r}/redmine_backlogs")
+    return "#{r}#{path}" if File.directory?("#{r}/redmine_backlogs")
   }
   return nil
 end
 
-class Translation
-  @@source = nil
-  @@translations = {}
-  @@keys = nil
-
-  def initialize(source, options={})
-    @strings = {}
-    @missing = []
-    @obsolete = []
-    @varstyle = []
-    @lang = nil
-    @source = source
-
-    options[:register] = true unless options.include?(:register)
-    options[:register] = true if options[:source]
-
-    strings = YAML::load_file(source)
-    @lang = strings.keys[0]
-    strings[@lang].each_pair{|k, v| self[k] = v }
-
-    rmtrans = "#{root}/redmine/config/locales/#{File.basename(source)}"
-    @name = YAML::load_file(rmtrans)[@lang]['general_lang_name']
-
-    raise "Translation '#{@lang}' already registered" if options[:register] && @@translations[@lang]
-    @@translations[@lang] = self if options[:register]
-
-    raise "Source re-registered!" if @@source && options[:source]
-    if options[:source]
-      @@source = self
-      @@keys = []
-
-      File.open(@@source.source).each {|line|
-        m = line.match(/^\s+[-_a-z0-9]+\s*:/)
-        next unless m
-        key = m[0].strip.gsub(/:$/, '').strip
-        @@keys << key
-      }
-    end
-
-    test
-  end
-
-  attr_reader :lang, :name, :strings, :source
-  attr_reader :missing, :obsolete, :varstyle
-
-  def [](k)
-    return @strings[k]
-  end
-
-  def []=(k, v)
-    @strings[k] = v
-    test
-  end
-
-  def keys
-    @strings.keys.sort
-  end
-
-  def test
-    if self == @@source
-      @@translations.values.each {|t|
-        next if t == self
-        t.test
-      }
-    elsif @@source
-      @missing = (@@source.keys - self.keys) + @@source.keys.select{|k| self[k] && self[k] =~ /^\[\[.*\]\]$/}
-      @obsolete = self.keys - @@source.keys
-      @varstyle = @@source.keys.select{|k| self[k] && self[k].include?('{{') }
-    else
-      @missing = []
-      @obsolete = []
-      @varstyle = []
-    end
-  end
-
-  def self.source
-    @@source
-  end
-
-  def self.keys
-    @@keys
-  end
-
-  def self.cmp(a, b)
-    pa = @@keys.index(a)
-    pb = @@keys.index(b)
-
-    return (pa <=> pb) if pa && pb
-    return pa if pa
-    return pb if pb
-    return a <=> b
-  end
-
-  def self.test
-    @@source.test if @@source
-  end
-
-  def self.translations
-    return @@translations
-  end
-
-  def to_yaml(opts = {})
-    strings = {}
-    @@keys.each {|k| strings[k] = @strings[k]}
-    return {@lang => strings}.to_yaml(opts)
-  end
-end
-
-class Translation
-  @@source = nil
-  @@translations = {}
-
-  def initialize(source, options={})
-    @strings = {}
-    @missing = []
-    @obsolete = []
-    @varstyle = []
-    @lang = nil
-    @source = source
-
-    options[:register] = true unless options.include?(:register)
-    options[:register] = true if options[:source]
-
-    load(source, options)
-
-    raise "Translation '#{@lang}' already registered" if options[:register] && @@translations[@lang]
-    @@translations[@lang] = self if options[:register]
-
-    raise "Source re-registered!" if @@source && options[:source]
-    if options[:source]
-      @@source = self
-      @key_order = {}
-
-      File.open(Translation.source.source).each_with_index {|line, no|
-        m = line.match(/^\s+[-_a-z0-9]+\s*:/)
-        next unless m
-        key = m[0].strip.gsub(/:$/, '').strip
-        @key_order[key] = no
-      }
-    end
-
-    test
-  end
-
-  attr_reader :lang, :name, :strings, :source, :key_order
-  attr_reader :missing, :obsolete, :varstyle
-
-  def load(source, options)
-    @author = options[:author] if options[:author]
-
-    case File.extname(source)
-      when '.qts', '.ts'
-        doc = nil
-        File.open(source) do |f|
-          doc = Nokogiri::XML(f)
-        end
-
-        lang = doc.at('//TS')['language']
-        author = doc.at('//TS')['extra-rbl-author']
-        @author = author if author
-
-        doc.xpath('//message').each {|message|
-          id = message['id']
-          t = message.at('translation')
-          next if t['type'] == 'unfinished'
-          self[id] = t.text
-        }
-
-      when '.yaml', '.yml'
-        strings = YAML::load_file(source)
-        lang = strings.keys[0]
-        strings[lang].each_pair{|k, v| self[k] = v }
-
-      else
-        raise "Unsupported translation format '#{source}'"
-    end
-
-    raise "Cannot load '#{lang}' over '#{@lang}'" if @lang && @lang != lang
-    @lang = lang
-
-    rmtrans = File.expand_path(File.join('..', '..', '..', 'redmine', 'config', 'locales'), File.dirname(__FILE__))
-    rmtrans = File.join(rmtrans, "#{File.basename(source, File.extname(source))}.yml")
-    @name = YAML::load_file(rmtrans)[@lang]['general_lang_name']
-  end
-
-  def [](k)
-    return @strings[k]
-  end
-
-  def []=(k, v)
-    @strings[k] = v
-    test
-  end
-
-  def keys
-    @strings.keys.sort
-  end
-
-  def test
-    if self == @@source
-      @@translations.values.each {|t|
-        next if t == self
-        t.test
-      }
-    elsif @@source
-      @missing = (@@source.keys - self.keys) + @@source.keys.select{|k| self[k] && self[k] =~ /^\[\[.*\]\]$/}
-      @obsolete = self.keys - @@source.keys
-      @varstyle = @@source.keys.select{|k| self[k] && self[k].include?('{{') }
-    else
-      @missing = []
-      @obsolete = []
-      @varstyle = []
-    end
-  end
-
-  def self.source
-    @@source
-  end
-
-  def self.test
-    @@source.test if @@source
-  end
-
-  def self.translations
-    return @@translations
-  end
-
-  def to_yaml(opts = {})
-    if @@source
-      strings = {}
-      @@source.keys.each {|k| strings[k] = @strings[k]}
-    else
-      strings = @strings
-    end
-    return {@lang => strings}.to_yaml(opts)
-  end
-  
-  def to_qts
-    builder = Nokogiri::XML::Builder.new do |xml|
-      xml.doc.create_internal_subset('TS', nil, "qtlinguist.dtd")
-      xml.TS({'sourcelanguage' => @@source.lang.gsub('-', '_'), 'language' => @lang.gsub('-', '_')}.merge(@author ? {'extra-rbl-author' => @author} : {})) {
-        xml.context_ {
-          xml.name('Redmine Backlogs')
-          @@source.strings.each_pair {|id, str|
-            xml.message('id' => id) {
-              xml.source(str)
-
-              attrs = {}
-              attrs['type'] = 'unfinished' if @varstyle.include?(id) || @missing.include?(id)
-              xml.translation(@strings[id] || '', attrs)
-
-              xml.translatorcomment('Please replace {{...}} variables with %{...} variables') if @varstyle.include?(id)
-            }
-          }
-          #@obsolete.each {|id|
-          #  xml.message {
-          #    xml.source("Obsolete key '#{id}' -- use for reference, or delete")
-          #    xml.translation(@strings[id], 'type' => 'obsolete')
-          #    xml.translatorcomment('Obsolete -- only kept for reference')
-          #  }
-          #}
-        }
-      }
-    end
-
-    return builder.to_xml
-  end
-
-  def to_xliff
-    builder = Nokogiri::XML::Builder.new do |xml|
-      xml.xliff(:version => '1.2', 'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance", 'xsi:schemaLocation' => 'urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd') {
-        xml.file(:original => 'Redmine Backlogs', "source-language" => @@source.lang, "target-language" => @lang, 'datatype' =>'plaintext') {
-          xml.header
-          xml.body {
-            @@source.strings.each_pair {|id, str|
-              xml.send(:"trans-unit", :id => id) {
-                attr = {'xml:lang' => @lang}
-                if @missing.include?(id)
-                  attr['state'] = 'needs-translation'
-                elsif @varstyle.include?(id)
-                  attr['state'] = 'needs-adaptation'
-                else
-                  attr['state'] = 'final'
-                end
-
-                xml.source(str, 'xml:lang' => 'en')
-
-                xml.target(@strings[id] || str, attr)
-
-                xml.note('Needs translation') if @missing.include?(id)
-                xml.note('Uses {{...}} variable substitution, please change to %{...}') if @varstyle.include?(id)
-              }
-            }
-            #@obsolete.each {|id|
-            #  xml.send(:"trans-unit", :id => id) {
-            #    xml.source("Obsolete key '#{id}' -- use for reference, or delete", 'xml:lang' => 'en')
-            #    xml.target(@strings[id], 'xml:lang' => @lang, 'state' => 'needs-review-translation')
-            #    xml.note('Obsolete -- only kept for reference')
-            #  }
-            #}
-          }
-        }
-      }
-     end
-
-     return builder.to_xml
-  end
-
-end
-
-class TranslationManager
-  @@configfile = File.join(File.dirname(__FILE__), File.basename(__FILE__, File.extname(__FILE__))) + '.rc'
-  @@config = File.exists?(@@configfile) ? YAML::load(File.open(@@configfile)) : {}
-
-  def initialize
-    @webdir = File.join(root, 'www.redminebacklogs.net')
-    @translations = File.join(root, 'redmine_backlogs', 'config', 'locales')
-
-    raise "Website not found at '#{@webdir}'" unless File.directory?(@webdir)
-    raise "Translations not found at '#{@translations}'" unless File.directory?(@translations)
-
-    @webpage = File.join(@webdir, '_posts', 'en', '1992-01-01-translations.textile')
-
-    Dir.chdir(@translations)
-    Dir.glob(File.join(@translations, "*.yml")).sort.each {|trans|
-      Translation.new(trans, :source => (File.basename(trans) == 'en.yml'))
-    }
-
-    raise "Source translation 'en' not found" unless Translation.source
-  end
-
-  def save
-    Translation.translations.values.each {|t|
-      File.open(File.join(@translations, "#{t.lang}.yml"), 'w') do |out|
-        out.write(t.to_yaml)
-      end
-    }
-    Dir.chdir(@translations)
-    `git add .`
-    `git commit -m "Translation updates"`
-    #`git push`
-
-    make_page
-    Dir.chdir(File.dirname(@webpage))
-    `git add #{File.basename(@webpage)}`
-    `git commit -m "Translation updates"`
-    #`git push`
-  end
-
-  def make_page
-    header = File.open(@webpage).read
-    header, rest = header.split(/bq\(success\)\. /, 2)
-    raise "'#{@webpage}' is not a proper template" if header.size == 0 || rest.size == 0
-    header = header.strip + "\n\n"
-
-    File.open(@webpage, 'w') do |page|
-      page.write(header)
-      page.write("\nbq(success). #{Translation.source.name}\n\nserves as a base for all other translations\n\n")
-
-      Translation.translations.values.reject{|t| t.lang == Translation.source.lang}.sort{|a, b| a.name <=> b.name }.each {|t|
-        if t.missing.size > 0 || t.varstyle.size > 0
-          pct = ((Translation.source.keys.size - (t.varstyle + t.missing).uniq.size) * 100) / Translation.source.keys.size
-          pct = "(#{pct}%)"
-        else
-          pct = ''
-        end
-
-        columns = 2
-
-        if t.missing.size > 0
-          status = 'error'
-        elsif t.obsolete.size > 0 || t.varstyle.size > 0
-          status = 'warning'
-        else
-          status = 'success'
-        end
-
-        page.write("bq(#{status}). #{t.name} #{pct}\n\n")
-
-        [[:missing, 'Missing'], [:obsolete, 'Obsolete'], [:varstyle, 'Old-style variable substitution']].each {|cat|
-          keys, title = *cat
-          keys = t.send(keys)
-          next if keys.size == 0
-
-          page.write("*#{title}*\n\n")
-          keys.sort!
-          while keys.size > 0
-            row = (keys.shift(columns) + ['', ''])[0..columns-1]
-            page.write("|" + row.join("|") + "|\n")
-          end
-
-          page.write("\n")
-        }
-      }
-    end
-  end
+$key_order = []
+def keycomp(a, b)
+  pa = $key_order.index(a)
+  pb = $key_order.index(b)
+
+  return pa <=> pb if pa && pb
+  return 1 if pa
+  return -1 if pb
+  return a.to_s <=> b.to_s
 end
 
 class Hash
@@ -415,7 +53,7 @@ class Hash
   def to_yaml(opts = {})
     YAML::quick_emit(object_id, opts) do |out|
       out.map(taguri, to_yaml_style) do |map|
-        sort{|a, b| Translation.cmp(a, b) }.each do |k, v|
+        sort{|a, b| keycomp(a, b) }.each do |k, v|
           map.add(k, v)
         end
       end
@@ -423,6 +61,122 @@ class Hash
   end
 end
 
+webdir = dir('www.redminebacklogs.net')
+webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
+translations = dir('redmine_backlogs/config/locales')
 
-tm = TranslationManager.new
-tm.save
+$key_order = []
+File.open("#{translations}/en.yml").each {|line|
+  m = line.match(/^\s+[-_a-z0-9]+\s*:/)
+  next unless m
+  key = m[0].strip.gsub(/:$/, '').strip
+  $key_order << key
+}
+
+translation = {}
+authors = {}
+Dir.glob("#{translations}/*.yml").each {|trans|
+  strings = YAML::load_file(trans)
+  translation[strings.keys[0]] = strings[strings.keys[0]]
+  author = `git log #{trans} | grep -i ^author:`
+  author = author.split("\n").collect{|a| a.gsub(/^author:/i, '').gsub(/<.*/, '').strip}
+  author = author.uniq.sort{|a, b| a.downcase <=> b.downcase}.join(', ')
+  author = " (#{author})" if author != ''
+  authors[strings.keys[0]] = author
+}
+
+webpage.write(<<HEADER)
+---
+title: Translations
+layout: default
+categories: en
+---
+h1. Translations
+
+*Want to help out with translating Backlogs? Excellent!*
+
+Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/relaxdiego/redmine_backlogs/fork the "Backlogs":http://github.com/relaxdiego/redmine_backlogs repository, in that repository browse to Source -> config -> locales, click on the translation you want to adapt, en click the "Edit this file" button. Change what you want, and then issue a "pull request":https://github.com/relaxdiego/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
+
+The messages below mean the following:
+
+| *Untranslated* | The translation contains words that aspell thinks doesn't belong to that language. |
+| *Old-style variable substitution* | the translation uses { { keyword } } instead of %{keyword}. This works for now, but redmine is in the process of phasing it out. |
+
+bq(success). English
+
+serves as a base for all other translations
+
+HEADER
+
+def same(s1, s2)
+  return (s1.to_s.strip == s2.to_s.strip) && (s1.to_s.strip.split.size > 2)
+end
+
+def translated(l, s)
+  s = s.gsub(/%\{.+?\}/, ' ').gsub(/\{\{.+?\}\}/, ' ')
+  return true if l == 'zh' # aspell doesn't have a language file for zh
+  speller = Aspell.new(l.gsub('-', '_'))
+  speller.set_option('ignore-case', 'true')
+  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
+    next if $jargon.include?(word.downcase)
+    next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
+    return false unless speller.check(word) 
+  end
+  return true
+end
+
+def name(t)
+  return YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
+end
+
+translation.keys.sort.each {|t|
+  next if t == 'en'
+
+  untranslated = []
+  varstyle = []
+
+  nt = {}
+  translation['en'].keys.each {|k|
+    nt[k] = translation[t][k].to_s.strip
+    nt[k] = translation['en'][k].to_s.strip if nt[k].strip == ''
+
+    varstyle << k if nt[k].include?('{{')
+    untranslated << k unless translated(t, nt[k])
+  }
+  errors = (varstyle + untranslated).uniq
+
+  if errors.size > 0
+    pct = " (#{((nt.keys.size - errors.size) * 100) / nt.keys.size}%)"
+  else
+    pct = ''
+  end
+
+  if untranslated.size > 0
+    status = 'error'
+  elsif varstyle.size > 0
+    status = 'warning'
+  else
+    status = 'success'
+  end
+
+  webpage.write("bq(#{status}). #{name(t)}#{pct}#{authors[t]}\n\n")
+
+  columns = 2
+  [[untranslated, 'Untranslated'], [varstyle, 'Old-style variable substitution']].each {|error|
+    keys, title = *error
+    next if keys.size == 0
+
+    webpage.write("*#{title}*\n\n")
+    keys.sort!
+    while keys.size > 0
+      row = (keys.shift(columns) + ['', ''])[0..columns-1]
+      webpage.write("|" + row.join("|") + "|\n")
+    end
+
+    webpage.write("\n")
+
+    File.open("#{translations}/#{t}.yml", 'w') do |out|
+      out.write({t => nt}.to_yaml)
+    end
+  }
+}

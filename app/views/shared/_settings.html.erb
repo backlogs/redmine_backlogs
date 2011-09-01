@@ -35,6 +35,7 @@
         });
     </script>
 
+    <h2>Backlogs version <%= Backlogs.version %></h2>
     <p>
         <%= content_tag(:label, l(:backlogs_story_tracker)) %>
         <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, RbStory.trackers), :multiple => true) %>

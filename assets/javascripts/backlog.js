@@ -220,7 +220,7 @@ RB.Backlog = RB.Object.create({
       RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
     }
     RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
-    RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
+    RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: this.getSprint().data('this').getID() }) );
     RB.$('#charts').dialog({ 
                           buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
                           height: 590,
