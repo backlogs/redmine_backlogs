@@ -56,7 +56,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_stories          => [:index, :show],
                                         :rb_queries          => [:show, :impediments],
                                         :rb_server_variables => [:show, :jquery],
-                                        :rb_burndown_charts  => [:show, :print],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
 
@@ -66,7 +66,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_wikis            => :show,
                                         :rb_stories          => [:index, :show],
                                         :rb_server_variables => [:show, :jquery],
-                                        :rb_burndown_charts  => [:show, :print],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
     
@@ -78,7 +78,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_impediments      => [:index, :show],
                                         :rb_wikis            => :show,
                                         :rb_server_variables => [:show, :jquery],
-                                        :rb_burndown_charts  => [:show, :print],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
 

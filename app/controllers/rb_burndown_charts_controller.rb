@@ -9,6 +9,12 @@ class RbBurndownChartsController < RbApplicationController
     end
   end
 
+  def embedded
+    respond_to do |format|
+      format.html { render :template => 'rb_burndown_charts/show.html.erb', :layout => false }
+    end
+  end
+
   def print
     respond_to do |format|
       format.html { render :layout => false }
