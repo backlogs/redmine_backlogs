@@ -74,8 +74,13 @@ RB.Backlog = RB.Object.create({
         if (data) {
           for (var i = 0; i < data.length; i++) {
             li = RB.$('<li class="item"><a href="#"></a></li>');
-            RB.$('a', li).attr('href', data[i].url).text(data[i].label);
-            if (data[i].classname) { RB.$('a', li).attr('class', data[i].classname); }
+            a = RB.$('a', li);
+            a.attr('href', data[i].url).text(data[i].label);
+            if (data[i].classname) { a.attr('class', data[i].classname); }
+            if (data[i].warning) {
+              a.data('warning', data[i].warning);
+              a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
+            }
             menu.append(li);
           }
         }
@@ -174,7 +179,7 @@ RB.Backlog = RB.Object.create({
       RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
     }
     RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
-    RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: this.getSprint().data('this').getID() }) );
+    RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: this.getSprint().data('this').getID() }) );
     RB.$('#charts').dialog({ 
                           buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
                           height: 590,

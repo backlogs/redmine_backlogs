@@ -1,3 +1,24 @@
+== 2011-08-31 v0.6.10
+
+* Allow resetting a sprint
+  This can be useful for when planning is done offline, and you enter stories/tasks after
+  the sprint start date. Use with care.
+    
+== 2011-08-30 v0.6.9
+
+* Burndown in sidebar conforms to currently selected sprint/story
+* Time entry from task board (thank you bohansen!)
+* And of course, several bugs fixed
+
+== 2011-08-25 v0.6.8
+
+* Warning on the taskboard if no workflow is available
+* Burndown seems to *finally* be fixed now, major thanks to bohansen for providing the test cases
+* better error reporting for ajax dialogs
+* various bug fixes
+* stories now always get a position
+* journals now reflect all changes (except positions changes, by design)
+
 == 2011-08-02 v0.6.6
 
 * Javascript consolidated (this should fix the burndown. I know I've said so before)

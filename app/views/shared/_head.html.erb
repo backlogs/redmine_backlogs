@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery/jquery.jqplot/jquery.jqplot.min.css') %>" type="text/css" />
+<link rel="stylesheet" href="<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery/jquery.fastconfirm/jquery.fastconfirm.css') %>" type="text/css" />
 
 <%= javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery-ui-1.8rc3.custom.min.js', :plugin => 'redmine_backlogs' %>
@@ -10,5 +11,7 @@
 <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery/jquery.fastconfirm/jquery.fastconfirm.js', :plugin => 'redmine_backlogs' %>
 
 <%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
+

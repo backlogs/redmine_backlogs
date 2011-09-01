@@ -220,8 +220,8 @@ module Backlogs
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
-        if fixed_version_id
-          time = [fixed_version.sprint_start_date.to_time, created_on].max
+        if fixed_version_id && fixed_version.sprint_start_date
+          time = [fixed_version.sprint_start_date.to_time, created_on].compact.max
         else
           time = created_on
         end

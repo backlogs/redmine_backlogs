@@ -23,6 +23,7 @@ Dispatcher.to_prepare do
   require_dependency 'backlogs_hooks'
 
   require_dependency 'backlogs_hash_patch'
+  require_dependency 'backlogs_version'
 end
 
 
@@ -45,41 +46,44 @@ Redmine::Plugin.register :redmine_backlogs do
     # SYNTAX: permission :name_of_permission, { :controller_name => [:action1, :action2] }
         
     # Master backlog permissions
-    permission :view_master_backlog, { 
-                                       :rb_master_backlogs  => [:show, :menu],
-                                       :rb_sprints          => [:index, :show, :download],
-                                       :rb_wikis            => :show,
-                                       :rb_stories          => [:index, :show],
-                                       :rb_queries          => [:show, :impediments],
-                                       :rb_server_variables => [:show, :jquery],
-                                       :rb_burndown_charts  => [:show, :print],
-                                       :rb_updated_items    => :show
-                                     }
+    permission :reset_sprint,         {
+                                        :rb_sprints           => :reset
+                                      }
+    permission :view_master_backlog,  { 
+                                        :rb_master_backlogs  => [:show, :menu],
+                                        :rb_sprints          => [:index, :show, :download],
+                                        :rb_wikis            => :show,
+                                        :rb_stories          => [:index, :show],
+                                        :rb_queries          => [:show, :impediments],
+                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
+                                        :rb_updated_items    => :show
+                                      }
 
-    permission :view_releases,       {
-                                       :rb_releases         => [:index, :show],
-                                       :rb_sprints          => [:index, :show, :download],
-                                       :rb_wikis            => :show,
-                                       :rb_stories          => [:index, :show],
-                                       :rb_server_variables => [:show, :jquery],
-                                       :rb_burndown_charts  => [:show, :print],
-                                       :rb_updated_items    => :show
-                                     }
+    permission :view_releases,        {
+                                        :rb_releases         => [:index, :show],
+                                        :rb_sprints          => [:index, :show, :download],
+                                        :rb_wikis            => :show,
+                                        :rb_stories          => [:index, :show],
+                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
+                                        :rb_updated_items    => :show
+                                      }
     
-    permission :view_taskboards,     { 
-                                       :rb_taskboards       => :show,
-                                       :rb_sprints          => :show,
-                                       :rb_stories          => [:index, :show],
-                                       :rb_tasks            => [:index, :show],
-                                       :rb_impediments      => [:index, :show],
-                                       :rb_wikis            => :show,
-                                       :rb_server_variables => [:show, :jquery],
-                                       :rb_burndown_charts  => [:show, :print],
-                                       :rb_updated_items    => :show
-                                     }
+    permission :view_taskboards,      { 
+                                        :rb_taskboards       => :show,
+                                        :rb_sprints          => :show,
+                                        :rb_stories          => [:index, :show],
+                                        :rb_tasks            => [:index, :show],
+                                        :rb_impediments      => [:index, :show],
+                                        :rb_wikis            => :show,
+                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_burndown_charts  => [:embedded, :show, :print],
+                                        :rb_updated_items    => :show
+                                      }
 
     # Release permissions
-    permission :modify_releases,     { :rb_releases => [:new, :create, :edit, :snapshot, :destroy]  }
+    permission :modify_releases,      { :rb_releases => [:new, :create, :edit, :snapshot, :destroy]  }
 
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission

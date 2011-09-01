@@ -162,7 +162,7 @@ class RbSprint < Version
     end
 
     def days(cutoff)
-      return nil unless has_burndown
+      return nil unless has_burndown?
 
       case cutoff
         when :active
@@ -188,7 +188,7 @@ class RbSprint < Version
         return self.start_date + Integer(self.points * dpp * 7.0/5)
     end
 
-    def has_burndown
+    def has_burndown?
         return !!(self.effective_date and self.sprint_start_date)
     end
 
@@ -203,7 +203,7 @@ class RbSprint < Version
     end
 
     def burndown(direction=nil)
-        return nil if not self.has_burndown
+        return nil if not self.has_burndown?
 
         direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
         direction = 'down' if direction.blank?
