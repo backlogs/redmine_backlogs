@@ -39,8 +39,12 @@ RB.Model = RB.Object.create({
     // Do nothing. Child objects may or may not override this method
   },
 
-  cancelEdit: function(){
+  cancelEdit: function(obj){
     this.endEdit();
+    if (typeof obj == 'undefined') {
+        obj = this;
+    }
+    obj.$.find('.editors').remove();
     if(this.isNew()){
       this.$.hide('blind');
     }
@@ -294,7 +298,7 @@ RB.Model = RB.Object.create({
        data: saveDir.data,
        success: function(d, t, x){
           self.afterSave(d,t,x);
-          self.refreshTooltip();
+          self.refreshTooltip(self);
        }
     });
     
@@ -307,15 +311,21 @@ RB.Model = RB.Object.create({
 //          self.afterSave(d,t,x);
 //          self.refreshTooltip();
 //      },
-//      error     : function(x,t,e){ self.error(x,t,e); console.log([x, t, e]) }
+//      error     : function(x,t,e){ self.error(x,t,e); }
 //    });
+    
     self.endEdit();
   },
 
-  refreshTooltip: function() {
-    if (typeof $.qtipMakeOptions != 'function') return false;	
-    var _ = this.$.find('div.story_tooltip');
-    _.qtip($.qtipMakeOptions(_));
+  refreshTooltip: function(model) {
+    if (typeof jQuery.qtipMakeOptions != 'function') {
+        return false;
+    }
+    if (typeof model == 'undefined') {
+        model = this;
+    }
+    var _ = model.$.find('div.story_tooltip');
+    _.qtip(jQuery.qtipMakeOptions(_));
   },
   
   unmarkError: function(){
