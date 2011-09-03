@@ -61,6 +61,8 @@
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
           <div class="subject"><%= story.subject %></div>
+          <div class="id project"><%= story.project %></div>
+          <div class="story_points editable" fieldname="story_points"><%= story.story_points %></div>
         </div>
       </td>
       <td class="add_new">+</td>
