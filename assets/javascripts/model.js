@@ -299,7 +299,8 @@ RB.Model = RB.Object.create({
        success: function(d, t, x){
           self.afterSave(d,t,x);
           self.refreshTooltip(self);
-       }
+       },
+       error : function(x,t,e){ self.error(x,t,e); }
     });
     
 //    RB.ajax({
