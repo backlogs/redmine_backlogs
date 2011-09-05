@@ -193,6 +193,9 @@ See RB.Taskboard.initialize()
   text-align:right;
   width:82px;
 }
+.issue .id .v{
+  display:none;
+}
 .issue .id a{
   opacity:1.0;
 }
