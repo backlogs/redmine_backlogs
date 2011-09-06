@@ -96,7 +96,7 @@ module Backlogs
         @issue_before_change.position = (is_task? ? nil : position) if @issue_before_change # don't log position updates
 
         if project.module_enabled?('backlogs') && is_task?
-          estimated_hours = 0 if status.backlog == :success
+          estimated_hours = 0 if status.backlog_is?(:success)
           position = nil
           fixed_version_id = story.fixed_version_id if story
         end

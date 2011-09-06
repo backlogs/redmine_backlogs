@@ -17,6 +17,12 @@ module Backlogs
         return :new if is_default? || default_done_ratio == 0
         return :in_progress
       end
+
+      def backlog_is?(states)
+        states = [states] unless states.is_a?(Array)
+        raise "Not a valid state set #{states.inspect}" unless (states - [:success, :failure, :new, :in_progress]) != []
+        return states.include?(backlog)
+      end
     end
   end
 end
