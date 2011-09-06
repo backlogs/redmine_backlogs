@@ -298,6 +298,24 @@
 #backlogs_container .stories .story .id .v {
   display:none;
 }
+#backlogs_container .stories .story .project {
+  display:block;
+  position:relative;
+  float:left;
+  width:55px;
+  margin:1px 0 0 1px;
+  padding-left:2px;
+  padding-top:2px;
+}
+#backlogs_container .stories .story .project .t {
+  overflow:hidden;
+}
+#backlogs_container .stories .story .project .v {
+  display:none;
+}
+#backlogs_container .stories .story.editing .project {
+  display:none;
+}
 #backlogs_container .stories .story .subject {
   display:block;
 /*  height:15px;
@@ -307,7 +325,7 @@
 /*  position:absolute;
   top:1px;*/
   float:left;
-  width:375px;
+  width:340px;
 /*  white-space:nowrap;*/
 }
 #backlogs_container .stories .story.closed .subject{

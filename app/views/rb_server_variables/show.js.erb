@@ -8,32 +8,31 @@ RB.constants = {
     default_status = IssueStatus.default
     default_status = default_status.id.to_s if default_status
 
-      roles = User.current.roles_for_project(@project)
-      transitions = {:states => {}, :transitions => {} , :default => default_status }
+    roles = User.current.roles_for_project(@project)
+    transitions = {:states => {}, :transitions => {} , :default => default_status }
 
-      RbStory.trackers.each {|tracker_id|
-        tracker = Tracker.find(tracker_id)
-        tracker_id = tracker_id.to_s
+    RbStory.trackers.each {|tracker_id|
+      tracker = Tracker.find(tracker_id)
+      tracker_id = tracker_id.to_s
 
-        transitions[:transitions][tracker_id] = {}
+      transitions[:transitions][tracker_id] = {}
 
-        tracker.issue_statuses.each {|status|
-          status_id = status.id.to_s
+      tracker.issue_statuses.each {|status|
+        status_id = status.id.to_s
 
-          transitions[:states][status_id] = {:name => status.name, :closed => (status.is_closed? ? l(:label_closed_issues) + ' ' : "")}
+        transitions[:states][status_id] = {:name => status.name, :closed => (status.is_closed? ? l(:label_closed_issues) + ' ' : "")}
 
-          [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
-            key = "#{creator ? '+' : '-'}c#{assignee ? '+' : '-'}a"
+        [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
+          key = "#{creator ? '+' : '-'}c#{assignee ? '+' : '-'}a"
 
-            transitions[:transitions][tracker_id][key] ||= {}
+          transitions[:transitions][tracker_id][key] ||= {}
 
-            allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id.to_s}
-            transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
+          allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id.to_s}
+          transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
 
-            allowed.unshift(status_id)
+          allowed.unshift(status_id)
 
-            transitions[:transitions][tracker_id][key][status_id] = allowed.compact.uniq
-          }
+          transitions[:transitions][tracker_id][key][status_id] = allowed.compact.uniq
         }
       }
     }
