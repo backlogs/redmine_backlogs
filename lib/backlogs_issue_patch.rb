@@ -205,9 +205,9 @@ module Backlogs
           else
             case @@backlogs_column_type[property]
               when :integer
-                Integer(v)
+                v.blank? ? nil : Integer(v)
               when :float
-                Float(v)
+                v.blank? ? nil : Float(v)
               when :string
                 v.to_s
               else

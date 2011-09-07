@@ -2,91 +2,153 @@ require_dependency 'project'
 
 module Backlogs
   class Statistics
-    def initialize
-      @errors = {}
-      @info = {}
-    end
+    def initialize(project)
+      @project = project
+      @statistics = {:succeeded => [], :failed => [], :warning => [], :values => {}}
 
-    def merge(stats, prefix = '')
-      errors.each {|err|
-        err = "#{prefix}#{err}".intern
-        stats[err] ||= 0
-        stats[err] += 1
-      }
-      return stats
-    end
+      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", @project.id, Date.today])
+      @past_sprints = RbSprint.find(:all,
+        :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
+        :order => "effective_date desc",
+        :limit => 5)
 
-    def []=(cat, key, *args)
-      raise "Unexpected data category #{cat}" unless [:error, :info].include?(cat)
+      @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.sum.to_f / @past_sprints.collect{|s| s.days(:all).size}.sum if @past_sprints.size > 0
 
-      case args.size
-        when 2
-          subkey, value = *args
-        when 1
-          value = args[0]
-          subkey = nil
-        else
-          raise "Unexpected number of argments"
+      @all_sprints = (@past_sprints + [@active_sprint]).compact
+
+      if @all_sprints.size != 0
+        @velocity = @past_sprints.collect{|sprint| sprint.burndown('up')[:points_accepted][-1]}
+        @velocity_stddev = stddev(@velocity)
       end
 
-      case cat
-        when :error
-          if subkey.nil?
-            raise "Already reported #{key.inspect}" if @errors.include?(key)
-            @errors[key] = value.nil? ? nil : (!!value)
+      @product_backlog = RbStory.product_backlog(@project, 10)
 
-          else
-            raise "Already reported #{key.inspect}" if @errors.include?(key) && ! @errors[key].is_a?(Hash)
-            @errors[key] ||= {}
+      hours_per_point = []
+      @all_sprints.each {|sprint|
+        sprint.stories.each {|story|
+          bd = story.burndown
+          h = bd[:hours][0]
+          p = bd[:points][0]
+          next unless h && p && p != 0
+          hours_per_point << (h / p.to_f)
+        }
+      }
+      @hours_per_point_stddev = stddev(hours_per_point)
 
-            raise "Already errors #{key.inspect}/#{subkey.inspect}" if @errors[key].include?(subkey)
-            @errors[key][subkey] = value.nil? ? nil : (!!value)
-          end
+      Statistics.active_tests.sort.each{|m|
+        r = send(m.intern)
+        @statistics[r] << m.gsub(/^test_/, '') + ([:failed, :warning].include?(r) ? '_failed' : '') if r
+      }
+      Statistics.stats.sort.each{|m|
+        v = send(m.intern)
+        @statistics[:values][m.gsub(/^stat_/, '')] = v if v
+      }
 
-        when :info
-          raise "Already added info #{key.inspect}" if @info.include?(key)
-          @info[key] = value
+      if @statistics[:succeeded].size == 0 && @statistics[:failed].size == 0
+        @score = 100 # ?
+      else
+        @score = (@statistics[:succeeded].size * 100) / (@statistics[:succeeded].size + @statistics[:failed].size)
       end
     end
 
-    def score
-      scoring = {}
-      @errors.each_pair{ |k, v|
-        if v.is_a? Hash
-          v = v.values.select{|s| !s.nil?}
-          scoring[k] = v.select{|s| s}.size == 0 if v.size != 0
-        else
-          scoring[k] = !v unless v.nil?
-        end
-      }
-      return ((scoring.values.select{|v| v}.size * 10) / scoring.size)
+    attr_reader :statistics, :score
+    attr_reader :active_sprint, :past_sprints
+
+    def stddev(values)
+      median = values.sum / values.size.to_f
+      variance = 1.0 / (values.size * values.inject(0){|acc, v| acc + (v-median)**2})
+      return Math.sqrt(variance)
     end
 
-    def scores(prefix='')
-      score = {}
-      @errors.each_pair{|k, v|
-        if v.is_a? Hash
-          v.each_pair {|sk, rv|
-            score["#{prefix}#{k}_#{sk}".intern] = rv if !rv.blank?
-          }
-        else
-          score["#{prefix}#{k}".intern] = v if !v.blank?
-        end
-      }
-      return score
+    def self.available
+      return Statistics.instance_methods.select{|m| m =~ /^test_/}.collect{|m| m.split('_', 2).collect{|s| s.intern}}
     end
 
-    def errors(prefix = '')
-      score = scores(prefix)
-      return score.keys.select{|k| score[k]}
+    def self.active_tests
+      # test this!
+      return Statistics.instance_methods.select{|m| m =~ /^test_/}.reject{|m| Setting.plugin_redmine_backlogs["disable_stats_#{m}".intern] }
     end
 
-    def info(prefix='')
-      info = {}
-      @info.each_pair {|k, v|
-        info["#{prefix}#{k}".intern] = v
+    def self.active
+      return Statistics.active_tests.collect{|m| m.split('_', 2).collect{|s| s.intern}}
+    end
+
+    def self.stats
+      return Statistics.instance_methods.select{|m| m =~ /^stat_/}
+    end
+
+    def info_no_active_sprint
+      return !@active_sprint
+    end
+
+    def test_product_backlog_filled
+      return :failed if (@project.status == Project::STATUS_ACTIVE && @product_backlog.length == 0)
+      return :succeeded
+    end
+
+    def test_product_backlog_sized
+      return :failed if @product_backlog.detect{|s| s.story_points.blank? }
+      return :succeeded
+    end
+
+    def test_sprints_sized
+      return :failed if Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", @all_sprints.collect{|s| s.id}, RbStory.trackers])
+      return :succeeded
+    end
+
+    def test_sprints_estimated
+      return :failed if Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
+      return :succeeded
+    end
+
+    def test_sprint_notes_available
+      return :failed if @past_sprints.detect{|s| !s.has_wiki_page}
+      return :succeeded
+    end
+  
+    def test_active
+      return :failed if (@project.status == Project::STATUS_ACTIVE && !(@active_sprint && @active_sprint.activity))
+      return :succeeded
+    end
+
+    def test_low_yield
+      accepted = 0
+      committed = 0
+      @past_sprints.each {|sprint|
+        bd = sprint.burndown('up')
+        accepted += (bd[:points_accepted] || [0])[-1]
+        committed += (bd[:points_committed] || [0])[0]
       }
-      return info
+      return :warning if committed == 0
+      return :warning if (accepted.to_f / committed) < 0.8 # magic number
+      return nil
+    end
+
+    def test_committed_velocity_varies
+      return :warning if @velocity_stddev && @velocity_stddev > 4 # magic number!
+      return nil
+    end
+
+    def test_sizing_consistent
+      return :warning if @hours_per_point_stddev > 4 # magic number
+      return nil
+    end
+
+    def stat_sprints
+      return @past_sprints.size
+    end
+
+    def stat_velocity
+      return nil unless @velocity && @velocity.size > 0
+      return @velocity.sum / @velocity.size
+    end
+
+    def stat_velocity_stddev
+      return @velocity_stddev
+    end
+
+    def stat_sizing_stddev
+      return @hours_per_point_stddev
     end
   end
 
@@ -101,115 +163,10 @@ module Backlogs
     
     module InstanceMethods
     
-      def active_sprint
-        return RbSprint.find(:first,
-          :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", self.id, Time.now])
-      end
-    
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
-        return @scrum_statistics if @scrum_statistics
-  
-        @scrum_statistics = Backlogs::Statistics.new
+        @scrum_statistics = Backlogs::Statistics.new(self) unless @scrum_statistics
     
-        # magic constant
-        backlog = RbStory.product_backlog(self, 10)
-        active_sprint = self.active_sprint
-        closed_sprints = RbSprint.find(:all,
-          :conditions => ["project_id = ? and status in ('closed', 'locked') and not(effective_date is null or sprint_start_date is null)", self.id],
-          :order => "effective_date desc",
-          :limit => 5)
-        all_sprints = ([active_sprint] + closed_sprints).compact
-  
-        @scrum_statistics[:info, :active_sprint] = active_sprint
-        @scrum_statistics[:info, :closed_sprints] = closed_sprints
-  
-        @scrum_statistics[:error, :product_backlog, :is_empty] = (self.status == Project::STATUS_ACTIVE && backlog.length == 0)
-        @scrum_statistics[:error, :product_backlog, :unsized] = backlog.inject(false) {|unsized, story| unsized || story.story_points.blank? }
-  
-        @scrum_statistics[:error, :sprint, :unsized] = Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", all_sprints.collect{|s| s.id}, RbStory.trackers])
-        @scrum_statistics[:error, :sprint, :unestimated] = Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", all_sprints.collect{|s| s.id}, RbTask.tracker])
-        @scrum_statistics[:error, :sprint, :notes_missing] = closed_sprints.inject(false){|missing, sprint| missing || !sprint.has_wiki_page}
-  
-        @scrum_statistics[:error, :inactive] = (self.status == Project::STATUS_ACTIVE && !(active_sprint && active_sprint.activity))
-  
-        velocity = nil
-        begin
-          points = 0
-          error = 0
-          days = 0
-          closed_sprints.each {|sprint|
-            bd = sprint.burndown('up')
-            accepted = (bd[:points_accepted] || [0])[-1]
-            committed = (bd[:points_committed] || [0])[0]
-            error += (1 - (accepted.to_f / committed.to_f)).abs
-  
-            points += accepted
-            days += bd[:hours_ideal].size
-          }
-          error = (error / closed_sprints.size)
-          # magic constant
-          @scrum_statistics[:error, :velocity, :varies] = (error > 0.1)
-          @scrum_statistics[:error, :velocity, :missing] = false
-  
-          velocity = (points / closed_sprints.size)
-          @scrum_statistics[:info, :velocity_divergance] = error * 100
-  
-        rescue ZeroDivisionError
-          @scrum_statistics[:error, :velocity, :varies] = nil
-          @scrum_statistics[:error, :velocity, :missing] = true
-  
-          @scrum_statistics[:info, :velocity_divergance] = nil
-        end
-        @scrum_statistics[:info, :velocity] = velocity
-  
-        if all_sprints.size != 0 && velocity && velocity != 0
-          begin
-            dps = (all_sprints.inject(0){|d, s| d + s.days.size} / all_sprints.size)
-            @scrum_statistics[:info, :average_days_per_sprint] = dps
-            @scrum_statistics[:info, :average_days_per_point] = (velocity ? (dps.to_f / velocity) : nil)
-          rescue ZeroDivisionError
-            dps = nil
-          end
-        else
-          dps = nil
-        end
-
-        if dps.nil?
-          @scrum_statistics[:info, :average_days_per_sprint] = nil
-          @scrum_statistics[:info, :average_days_per_point] = nil
-        end
-  
-        sizing_divergance = nil
-        sizing_is_consistent = false
-  
-        sprint_ids = all_sprints.collect{|s| "#{s.id}"}.join(',')
-        story_trackers = RbStory.trackers.collect{|t| "#{t}"}.join(',')
-        if sprint_ids != '' && story_trackers != ''
-          select_stories = "
-            not (story_points is null or story_points = 0)
-            and not (estimated_hours is null or estimated_hours = 0)
-            and fixed_version_id in (#{sprint_ids})
-            and project_id = #{self.id}
-            and tracker_id in (#{story_trackers})
-          "
-  
-          points_per_hour = RbStory.find_by_sql("select avg(story_points) / avg(estimated_hours) as points_per_hour from issues where #{select_stories}")[0].points_per_hour
-  
-          if points_per_hour
-            points_per_hour = Float(points_per_hour)
-            stories = RbStory.find(:all, :conditions => [select_stories])
-            error = stories.inject(0) {|err, story|
-              err + (1 - (points_per_hour / (story.story_points / story.estimated_hours)))
-            }
-            sizing_divergance = error * 100
-            # magic constant
-            sizing_is_consistent = (error < 0.1)
-          end
-        end
-        @scrum_statistics[:info, :sizing_divergance] = sizing_divergance
-        @scrum_statistics[:error, :sizing_inconsistent] = !sizing_is_consistent
-  
         return @scrum_statistics
       end
     

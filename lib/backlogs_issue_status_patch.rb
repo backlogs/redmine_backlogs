@@ -20,7 +20,7 @@ module Backlogs
 
       def backlog_is?(states)
         states = [states] unless states.is_a?(Array)
-        raise "Not a valid state set #{states.inspect}" unless (states - [:success, :failure, :new, :in_progress]) != []
+        raise "Not a valid state set #{states.inspect}" unless (states - [:success, :failure, :new, :in_progress]) == []
         return states.include?(backlog)
       end
     end
