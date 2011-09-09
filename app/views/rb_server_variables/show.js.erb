@@ -41,13 +41,13 @@ RB.constants = {
   <% end %>
 
   <% if @section == 'taskboard'
-      transitions = false
-      if RbTask.tracker
+      transitions = User.current.admin?
+      if !transitions && RbTask.tracker
         roles = User.current.roles_for_project(@project)
+        tracker = Tracker.find(RbTask.tracker)
 
         catch (:done) do
           [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
-            tracker = Tracker.find(RbTask.tracker)
             tracker.issue_statuses.each {|status|
               status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
                 transitions = true
