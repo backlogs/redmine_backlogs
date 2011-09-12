@@ -15,14 +15,16 @@
       scrum_statistics = project.scrum_statistics
       succeeded = scrum_statistics.statistics[:succeeded]
       failed = scrum_statistics.statistics[:failed]
-      warnings = scrum_statistics.statistics[:warning]
       stats = scrum_statistics.statistics[:values]
       score = scrum_statistics.score
       active_sprint = scrum_statistics.active_sprint
       past_sprints = scrum_statistics.past_sprints
 
-      (succeeded + failed).each {|k| global[k] ||= 0 }
+      failed.each {|k|
+        global[k.to_s.gsub(/_failed$/, '')] ||= 0
+      }
       succeeded.each {|k|
+        global[k] ||= 0
         global[k] += 1
       }
     %>
@@ -54,11 +56,6 @@
           <li><%= l("backlogs_statistics_#{e}".intern) %></li>
         </ul>
       <% end %>
-      <% warnings.each do |w| %>
-        <ul>
-          <li><%= l("backlogs_statistics_#{w}".intern) %></li>
-        </ul>
-      <% end %>
       <% stats.keys.sort.each do |k| %>
         <ul>
           <li><%= l("backlogs_statistics_#{k}".intern, :value => stats[k]) %></li>
@@ -70,11 +67,11 @@
 <% if @projects.size > 0 %>
   <h3>Overall</h3>
   <table>
-  <% global.each_pair do |e, n| %>
+  <% global.each_pair do |measure, n| %>
     <tr>
-    <td><%= l(e) %></td>
+    <td><%= l("backlogs_statistics_#{measure}".intern) %></td>
     <td><b><%= (n * 100) / @projects.size %>%</b></td>
-    <td><span class="score_<%= 10 - ((n * 10) / @projects.size) %>">&nbsp;&nbsp;</td>
+    <td><span class="score_<%= (n * 10) / @projects.size %>">&nbsp;&nbsp;</td>
     </tr>
   <% end %>
   </table>
