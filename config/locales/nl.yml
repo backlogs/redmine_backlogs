@@ -83,7 +83,7 @@ nl:
   label_sprint_cards: Sprint kaarten
   label_sprint_impediments: Sprint Impediments
   label_sprint_name: Sprint "%{name}"
-  label_sprint_velocity: Velocity %{velocity}, berekend over %{sprints} sprints met gemiddeld %{days} dagen
+  label_sprint_velocity: Velocity %{velocity}, berekend over %{sprints} sprints met gemiddeld %{average_days_per_sprint} dagen
   label_stories: Stories
   label_stories_tasks: Stories/Taken
   label_task_board: Taak-bord

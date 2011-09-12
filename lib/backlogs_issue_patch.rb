@@ -86,17 +86,17 @@ module Backlogs
       def velocity_based_estimate
         return nil if !self.is_story? || ! self.story_points || self.story_points <= 0
 
-        dpp = self.project.scrum_statistics.info[:average_days_per_point]
-        return nil if ! dpp
+        hpp = self.project.scrum_statistics.hours_per_point
+        return nil if ! hpp
 
-        return Integer(self.story_points * dpp)
+        return Integer(self.story_points * (hpp / 8))
       end
 
       def backlogs_before_save
         @issue_before_change.position = (is_task? ? nil : position) if @issue_before_change # don't log position updates
 
         if project.module_enabled?('backlogs') && is_task?
-          estimated_hours = 0 if status.backlog == :success
+          estimated_hours = 0 if status.backlog_is?(:success)
           position = nil
           fixed_version_id = story.fixed_version_id if story
         end
@@ -205,9 +205,9 @@ module Backlogs
           else
             case @@backlogs_column_type[property]
               when :integer
-                Integer(v)
+                v.blank? ? nil : Integer(v)
               when :float
-                Float(v)
+                v.blank? ? nil : Float(v)
               when :string
                 v.to_s
               else

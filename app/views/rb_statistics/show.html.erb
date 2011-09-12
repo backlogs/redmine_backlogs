@@ -3,61 +3,79 @@
 <%- end %>
 
 <script>
-    RB.$(document).ready(function(){
-        RB.$("#projects").accordion({ collapsible: true, header: 'h3'});
-    });
+  RB.$(document).ready(function(){
+    RB.$("#projects").accordion({ collapsible: true, header: 'h3'});
+  });
 </script>
 
 <div id="projects">
-    <% global = {} %>
-    <% @projects.each do |project| %>
-        <%
-          stats = project.scrum_statistics
-          scores = stats.scores
-          errors = stats.errors('backlogs_')
-          info = stats.info
-          global = stats.merge(global, 'backlogs_')
-        %>
-        <h3><a href="#"><span class="score score_<%= stats.score %>"><%= stats.score %></span> <%= project.name %></a> </h3>
-        <div>
-            <% if !scores[:velocity_missing] %>
-                <%= l(:label_sprint_velocity, { :velocity => info[:velocity], :sprints => info[:closed_sprints].length, :days => info[:average_days_per_sprint]}) %><br/>
-            <% end %>
-            <h4><%= l(:backlogs_product_backlog) %></h4>
-            <%= link_to(l(:backlogs_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
-            <% if info[:active_sprint] || info[:closed_sprints] %>
-                <h4><%= l(:backlogs_sprints) %></h4>
-                <% if info[:active_sprint] %>
-                    <%= link_to(info[:active_sprint].name, {
-                        :controller => 'rb_queries',
-                        :action => 'show',
-                        :project_id => project,
-                        :sprint_id => info[:active_sprint].id }) %> (<%= l(:backlogs_active) %>)<br/>
-                <% end %>
-                <% if info[:closed_sprints] %>
-                    <% info[:closed_sprints].each do |sprint| %>
-                        <%= link_to(sprint.name, { :controller => 'rb_queries', :action => 'show', :project_id => project, :sprint_id => sprint.id }) %><br/>
-                    <% end %>
-                <% end %>
-            <% end %>
+  <% global = {} %>
+  <% @projects.each do |project| %>
+    <%
+      scrum_statistics = project.scrum_statistics
+      succeeded = scrum_statistics.statistics[:succeeded]
+      failed = scrum_statistics.statistics[:failed]
+      warnings = scrum_statistics.statistics[:warning]
+      stats = scrum_statistics.statistics[:values]
+      score = scrum_statistics.score
+      active_sprint = scrum_statistics.active_sprint
+      past_sprints = scrum_statistics.past_sprints
 
-            <% errors.each do |e| %>
-                <ul>
-                    <li><%= l(e) %></li>
-                </ul>
-            <% end %>
-        </div>
-    <% end %>
-</div>
-    <% if @projects.size > 0 %>
-      <h3>Overall</h3>
-      <table>
-        <% global.each_pair do |e, n| %>
-          <tr>
-            <td><%= l(e) %></td>
-            <td><b><%= (n * 100) / @projects.size %>%</b></td>
-            <td><span class="score_<%= 10 - ((n * 10) / @projects.size) %>">&nbsp;&nbsp;</td>
-          </tr>
+      (succeeded + failed).each {|k| global[k] ||= 0 }
+      succeeded.each {|k|
+        global[k] += 1
+      }
+    %>
+    <h3><a href="#"><span class="score score_<%= score %>"><%= score %></span> <%= project.name %></a> </h3>
+    <div>
+      <% if stats[:velocity] %>
+        <%= l(:label_sprint_velocity, stats) %><br/>
+      <% end %>
+      <h4><%= l(:backlogs_product_backlog) %></h4>
+      <%= link_to(l(:backlogs_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
+      <% if active_sprint || past_sprints.size > 0 %>
+        <h4><%= l(:backlogs_sprints) %></h4>
+        <% if active_sprint %>
+          <%= link_to(active_sprint.name, {
+            :controller => 'rb_queries',
+            :action => 'show',
+            :project_id => project,
+            :sprint_id => active_sprint.id }) %> (<%= l(:backlogs_active) %>)<br/>
         <% end %>
-      </table>
-    <% end %>
+        <% if past_sprints.size > 0 %>
+          <% past_sprints.each do |sprint| %>
+            <%= link_to(sprint.name, { :controller => 'rb_queries', :action => 'show', :project_id => project, :sprint_id => sprint.id }) %><br/>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% failed.each do |e| %>
+        <ul>
+          <li><%= l("backlogs_statistics_#{e}".intern) %></li>
+        </ul>
+      <% end %>
+      <% warnings.each do |w| %>
+        <ul>
+          <li><%= l("backlogs_statistics_#{w}".intern) %></li>
+        </ul>
+      <% end %>
+      <% stats.keys.sort.each do |k| %>
+        <ul>
+          <li><%= l("backlogs_statistics_#{k}".intern, :value => stats[k]) %></li>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<% if @projects.size > 0 %>
+  <h3>Overall</h3>
+  <table>
+  <% global.each_pair do |e, n| %>
+    <tr>
+    <td><%= l(e) %></td>
+    <td><b><%= (n * 100) / @projects.size %>%</b></td>
+    <td><span class="score_<%= 10 - ((n * 10) / @projects.size) %>">&nbsp;&nbsp;</td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

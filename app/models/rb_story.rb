@@ -224,7 +224,7 @@ class RbStory < Issue
         days = sprint.days(:active)
 
         status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
-        accepted = status.collect{|s| s ? (s.backlog == :accepted) : false}
+        accepted = status.collect{|s| s ? (s.backlog_is?(:success)) : false}
         active = status.collect{|s| s ? !s.is_closed? : false}
         in_sprint = history(:fixed_version_id, days).collect{|s| s == sprint.id}
 

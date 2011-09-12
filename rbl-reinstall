@@ -29,6 +29,10 @@ if [ -z "$DBPW" ]; then
     echo "DBPW not set"
     exit
 fi
+if [ -z "$DBUSER" ]; then
+    echo "DBUSER not set, defaulting to redmine"
+fi
+
 if [ ! -d ~/redmine ]; then
     echo "~/redmine does not exist"
     exit
@@ -38,11 +42,15 @@ cd ~/redmine
 
 if [ ! -f ~/redmine/setup/database-redmine.yml ]; then
     echo "~/redmine/setup/database-redmine.yml does not exist"
-    exit
+    if [ "$GEMSET" = "redmine" ]; then
+        exit
+    fi
 fi
 if [ ! -f ~/redmine/setup/database-chiliproject.yml ]; then
     echo "~/redmine/setup/database-chiliproject.yml does not exist"
-    exit
+    if [ "$GEMSET" = "chiliproject" ]; then
+        exit
+    fi
 fi
 
 if [ ! -d ~/redmine/redmine_backlogs ]; then
@@ -63,23 +71,25 @@ if [[ $RVM =~ [Yy] ]]; then
     echo 'Downgrading rubygems'
     rvm rubygems 1.3.7 
 
-    gem install mysql
-    gem install icalendar
-    gem install prawn -v=0.8.4
-    gem install holidays
-    gem install open-uri-cached
-    gem install nokogiri
-
     if [[ "$GEMSET" = "redmine" ]]; then
 
       echo 'Installing base gems'
       gem install rack -v=1.1.0
       gem install rails -v=2.3.11
       gem install i18n -v=0.4.2
+
+      echo 'Installing gems for redmine-backlogs'
+      gem install mysql
+      gem install icalendar
+      gem install prawn -v=0.8.4
+      gem install holidays
+      gem install open-uri-cached
+      gem install nokogiri
     fi
 
     if [[ "$GEMSET" = "chiliproject" ]]; then
       gem install bundler
+      # rest is installed through bundler install
     fi
 fi
 
@@ -93,7 +103,7 @@ elif [ -z "$RM" ]; then
 fi
 if [[ $RM =~ [Yy] ]]; then
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
-    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/redmine
     cd ~/redmine
     git clone git://github.com/edavis10/redmine.git
@@ -117,7 +127,7 @@ elif [ -z "$CP" ]; then
 fi
 if [[ $CP =~ [Yy] ]]; then
     echo "create database chiliproject character set utf8;" | mysql -u root -p$DBROOTPW mysql
-    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/chiliproject
     cd ~/redmine
     git clone https://github.com/chiliproject/chiliproject.git
@@ -172,7 +182,7 @@ fi
 if [[ $RMDB =~ [Yy] ]]; then
     mysqladmin -u root -p$DBROOTPW drop redmine
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
-    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
 
     cd ~/redmine/redmine
@@ -205,7 +215,7 @@ fi
 if [[ $CPDB =~ [Yy] ]]; then
     mysqladmin -u root -p$DBROOTPW drop chiliproject
     echo "create database chiliproject character set utf8;" | mysql -u root -p$DBROOTPW mysql
-    echo "create user 'redmine'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+    echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on chiliproject.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
 
     cd ~/redmine/chiliproject
@@ -217,15 +227,15 @@ if [[ $CPDB =~ [Yy] ]]; then
     fi
 
     echo "Let's go!"
-    rake db:migrate
-    rake generate_session_store
-    rake redmine:load_default_data
-    rake db:migrate:upgrade_plugin_migrations
-    rake db:migrate_plugins
-    rake redmine:backlogs:install
+    bundle exec rake db:migrate
+    bundle exec rake generate_session_store
+    bundle exec rake redmine:load_default_data
+    bundle exec rake db:migrate:upgrade_plugin_migrations
+    bundle exec rake db:migrate_plugins
+    bundle exec rake redmine:backlogs:install
 
     if [ ! -z "$ADMINPW" ]; then
-      ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
+      bundle exec script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
     fi
 fi
 fi
