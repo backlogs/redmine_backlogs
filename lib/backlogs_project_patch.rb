@@ -34,6 +34,7 @@ module Backlogs
         }
       }
       @hours_per_point_stddev = stddev(hours_per_point)
+      @hours_per_point = hours_per_point.sum.to_f / hours_per_point.size unless hours_per_point.size == 0
 
       Statistics.active_tests.sort.each{|m|
         r = send(m.intern)
@@ -53,6 +54,7 @@ module Backlogs
 
     attr_reader :statistics, :score
     attr_reader :active_sprint, :past_sprints
+    attr_reader :hours_per_point
 
     def stddev(values)
       median = values.sum / values.size.to_f
