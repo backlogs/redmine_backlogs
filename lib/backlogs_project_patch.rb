@@ -4,7 +4,7 @@ module Backlogs
   class Statistics
     def initialize(project)
       @project = project
-      @statistics = {:succeeded => [], :failed => [], :warning => [], :values => {}}
+      @statistics = {:succeeded => [], :failed => [], :values => {}}
 
       @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", @project.id, Date.today])
       @past_sprints = RbSprint.find(:all,
@@ -38,7 +38,7 @@ module Backlogs
 
       Statistics.active_tests.sort.each{|m|
         r = send(m.intern)
-        @statistics[r] << m.gsub(/^test_/, '') + ([:failed, :warning].include?(r) ? '_failed' : '') if r
+        @statistics[r] << m.gsub(/^test_/, '') + (r == :failed ? '_failed' : '') if r
       }
       Statistics.stats.sort.each{|m|
         v = send(m.intern)
@@ -113,27 +113,29 @@ module Backlogs
       return :succeeded
     end
 
-    def test_low_yield
-      accepted = 0
-      committed = 0
+    def test_yield
+      accepted = []
       @past_sprints.each {|sprint|
         bd = sprint.burndown('up')
-        accepted += (bd[:points_accepted] || [0])[-1]
-        committed += (bd[:points_committed] || [0])[0]
+        c = bd[:points_committed][-1]
+        a = bd[:points_accepted][-1]
+        next unless c && a && c != 0
+
+        accepted << [(a * 100.0) / c, 100.0].min
       }
-      return :warning if committed == 0
-      return :warning if (accepted.to_f / committed) < 0.8 # magic number
-      return nil
+      return :failed if accepted == []
+      return :failed if stddev(accepted) > 10 # magic number
+      return :succeeded
     end
 
-    def test_committed_velocity_varies
-      return :warning if @velocity_stddev && @velocity_stddev > 4 # magic number!
-      return nil
+    def test_committed_velocity_stable
+      return :failed if @velocity_stddev && @velocity_stddev < 4 # magic number!
+      return :succeeded
     end
 
     def test_sizing_consistent
-      return :warning if @hours_per_point_stddev > 4 # magic number
-      return nil
+      return :failed if @hours_per_point_stddev > 4 # magic number
+      return :succeeded
     end
 
     def stat_sprints
