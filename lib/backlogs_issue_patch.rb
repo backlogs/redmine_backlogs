@@ -127,7 +127,8 @@ module Backlogs
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
             j.save!
           }
-          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{descendants.collect{|t| "#{t.id}"}.join(',')})") unless leaf?
+          tasks = descendants.collect{|t| "#{t.id}"}.join(',')
+          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{tasks})") unless tasks == ''
 
           # safe to do by sql since we don't want any of this logged
           unless self.position
