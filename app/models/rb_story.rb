@@ -224,7 +224,7 @@ class RbStory < Issue
         # points are accepted when the state is accepted
         @burndown[:points_accepted] = {:points => @burndown[:points], :accepted => accepted}.transpose.collect{|p| p[:accepted] ? p[:points] : nil }
         # points are resolved when the state is accepted _or_ the hours are at zero
-        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours].to_i == 0 || p[:accepted]) ? p[:points] : 0}
+        @burndown[:points_resolved] = {:points => @burndown[:points], :hours => @burndown[:hours], :accepted => accepted}.transpose.collect{|p| (p[:hours].to_f == 0 || p[:accepted]) ? p[:points] : 0}
 
         # set hours to zero after the above when the story is not active, would affect resolved when done before this
         @burndown[:hours] = {:hours => @burndown[:hours], :active => active}.transpose.collect{|h| h[:active] ? h[:hours] : 0}
