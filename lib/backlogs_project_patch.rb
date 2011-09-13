@@ -38,7 +38,9 @@ module Backlogs
 
       Statistics.active_tests.sort.each{|m|
         r = send(m.intern)
-        @statistics[r] << m.gsub(/^test_/, '') + (r == :failed ? '_failed' : '') if r
+        next if r.nil? # this test deems itself irrelevant
+        m.gsub!(/^test_/, '')
+        @statistics[r ? :succeeded : :failed] << (m.gsub(/^test_/, '') + (r ? '' : '_failed'))
       }
       Statistics.stats.sort.each{|m|
         v = send(m.intern)
@@ -84,33 +86,27 @@ module Backlogs
     end
 
     def test_product_backlog_filled
-      return :failed if (@project.status == Project::STATUS_ACTIVE && @product_backlog.length == 0)
-      return :succeeded
+      return (@project.status != Project::STATUS_ACTIVE || @product_backlog.length != 0)
     end
 
     def test_product_backlog_sized
-      return :failed if @product_backlog.detect{|s| s.story_points.blank? }
-      return :succeeded
+      return !@product_backlog.detect{|s| s.story_points.blank? }
     end
 
     def test_sprints_sized
-      return :failed if Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", @all_sprints.collect{|s| s.id}, RbStory.trackers])
-      return :succeeded
+      return !Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", @all_sprints.collect{|s| s.id}, RbStory.trackers])
     end
 
     def test_sprints_estimated
-      return :failed if Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
-      return :succeeded
+      return !Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
     end
 
     def test_sprint_notes_available
-      return :failed if @past_sprints.detect{|s| !s.has_wiki_page}
-      return :succeeded
+      return !@past_sprints.detect{|s| !s.has_wiki_page}
     end
   
     def test_active
-      return :failed if (@project.status == Project::STATUS_ACTIVE && !(@active_sprint && @active_sprint.activity))
-      return :succeeded
+      return (@project.status != Project::STATUS_ACTIVE || (@active_sprint && @active_sprint.activity))
     end
 
     def test_yield
@@ -123,19 +119,16 @@ module Backlogs
 
         accepted << [(a * 100.0) / c, 100.0].min
       }
-      return :failed if accepted == []
-      return :failed if stddev(accepted) > 10 # magic number
-      return :succeeded
+      return false if accepted == []
+      return (stddev(accepted) < 10) # magic number
     end
 
     def test_committed_velocity_stable
-      return :failed if @velocity_stddev && @velocity_stddev < 4 # magic number!
-      return :succeeded
+      return (@velocity_stddev && @velocity_stddev < 4) # magic number!
     end
 
     def test_sizing_consistent
-      return :failed if @hours_per_point_stddev > 4 # magic number
-      return :succeeded
+      return (@hours_per_point_stddev < 4) # magic number
     end
 
     def stat_sprints
