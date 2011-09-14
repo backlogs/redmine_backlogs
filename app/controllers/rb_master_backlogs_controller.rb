@@ -8,7 +8,7 @@ class RbMasterBacklogsController < RbApplicationController
     sprints = RbSprint.open_sprints(@project)
 
     #TIB (ajout des sprints fermés)
-    c_sprints = Sprint.closed_sprints(@project)
+    c_sprints = RbSprint.closed_sprints(@project)
 
     last_story = RbStory.find(
                           :first, 
