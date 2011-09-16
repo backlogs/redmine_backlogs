@@ -28,8 +28,12 @@ class Burndown
 
     @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
 
-    @data[:points_to_resolve] = {:pts => @data[:points_committed], :resolved => @data[:points_resolved]}.transpose.collect{|pr| (pr[:pts] && pr[:resolved]) ? (pr[:pts] - pr[:resolved]) : nil}
-    @data[:points_to_accept] = {:pts => @data[:points_committed], :accepted => @data[:points_accepted]}.transpose.collect{|p| (p[:pts] && p[:accepted]) ? (p[:pts] - p[:accepted]) : nil}
+    series = Backlogs::MergedArray.new
+    series.add(:points => @data[:points_committed])
+    series.add(:resolved => @data[:points_resolved])
+    series.add(:accepted => @data[:points_accepted])
+    @data[:points_to_resolve] = series.collect{|pr| pr.points && pr.resolved ? pr.points - pr.resolved : nil}
+    @data[:points_to_accept] = series.collect{|p| p.points && p.accepted ? p.points - p.accepted : nil}
 
     @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
     @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}
