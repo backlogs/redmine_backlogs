@@ -10,40 +10,37 @@ zh:
     5omT5Y2w5Y2h54mH55qE5qCH562+57G75Z6L
 
   backlogs_impediment: Impediment
-  backlogs_inactive: !binary |
-    6aG555uu5bCa5pyq5pyJ5rS75Yqo6L+b6KGM
-
   backlogs_points_burn_direction: !binary |
     54K55pWw5raI6ICXIOeHg+i1ty/nh4PlsL0=
-
-  backlogs_product_backlog_is_empty: !binary |
-    5Lqn5ZOBYmFja2xvZ+aYr+epuueahA==
-
-  backlogs_product_backlog_unsized: !binary |
-    5Lqn5ZOBQmFja2xvZ+S4reacieacquehruWumueCueaVsOeahOaVheS6iw==
 
   backlogs_product_backlog: !binary |
     5Lqn5ZOBYmFja2xvZw==
 
-  backlogs_sizing_inconsistent: !binary |
-    5pWF5LqL55qE54K55pWw5LiO5a6D5Lus55qE6aKE5pyf5pe26Ze055u45Yay
-    56qB
-
-  backlogs_sprint_notes_missing: !binary |
-    5bey5YWz6Zet55qE5Yay5Yi65rKh5pyJIOWbnumhvi/or4TlrqEg55qE5aSH
-    5b+Y5b2V
-
-  backlogs_sprint_unestimated: !binary |
-    5bey5YWz6Zet5LqG55qE77yI5oiW5rS76LeD55qE77yJ5Yay5Yi66YeM5a2Y
-    5Zyo5pyq5Lyw6YeP55qE5pWF5LqL
-
-  backlogs_sprint_unsized: !binary |
-    6aG555uu6L+Y5pyJ5q2j5aSE5LqO5rS76LeD55qE5pWF5LqL5oiW6ICF5pyA
-    6L+R5YWz6Zet5LqG5pyq56Gu5a6a54K55pWw55qE5Yay5Yi6
-
   backlogs_sprints: !binary |
     5Yay5Yi6
 
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story_tracker: !binary |
     5pWF5LqL6Lef6Liq
 
@@ -55,12 +52,6 @@ zh:
 
   backlogs_task: !binary |
     5Lu75Yqh
-
-  backlogs_velocity_missing: !binary |
-    6L+Z5Liq6aG555uu55qE6YCf5bqm5peg5rOV6K6h566X
-
-  backlogs_velocity_varies: !binary |
-    5Yay5Yi65Lit55qE6YeN6KaB6YCf5bqm5Y+Y5YyW
 
   backlogs_wiki_template: !binary |
     5Yay5Yi655qEd2lraemhtemdoueahOaooeadvw==
@@ -183,10 +174,6 @@ zh:
   label_sprint_name: !binary |
     5Yay5Yi6ICJ7e25hbWV9fSI=
 
-  label_sprint_velocity: !binary |
-    6YCf5bqmIHt7dmVsb2NpdHl9fSwg5Z+65LqOIHt7c3ByaW50c319IOWGsuWI
-    uueahOW5s+Wdh+WkqeaVsOS4unt7ZGF5c3195aSp
-
   label_stories_tasks: !binary |
     5pWF5LqLL+S7u+WKoQ==
 
@@ -212,6 +199,12 @@ zh:
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
+  story_description: Description
+  story_estimation_hours: Estimation (hours)
+  story_points: Points
+  story_remaining_hours: Remaining (hours)
+  story_spent_time: Spent Time
+  story_status: Status
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "{{type}}: {{summary}}"

@@ -4,22 +4,35 @@ en-GB:
   backlogs_any: any
   backlogs_card_specification: Label types for card printing
   backlogs_impediment: Impediment
-  backlogs_inactive: Project shows no activity
   backlogs_points_burn_direction: Points burn up/down
   backlogs_product_backlog: Product backlog
-  backlogs_product_backlog_is_empty: Product backlog is empty
-  backlogs_product_backlog_unsized: The top of the product backlog has unsized stories
-  backlogs_sizing_inconsistent: Story sizes vary against their estimates
-  backlogs_sprint_notes_missing: Closed sprints without retrospective/review notes
-  backlogs_sprint_unestimated: Closed or active sprints with unestimated stories
-  backlogs_sprint_unsized: Project has stories on active or recently closed sprints that were not sized
   backlogs_sprints: Sprints
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: Story
   backlogs_story_tracker: Story trackers
   backlogs_task: Task
   backlogs_task_tracker: Task tracker
-  backlogs_velocity_missing: No velocity could be calculated for this project
-  backlogs_velocity_varies: Velocity varies significantly over sprints
   backlogs_wiki_template: Template for sprint wiki page
   button_edit_wiki: Edit wiki page
   comma_delimited_numbers: Comma delimited numbers
@@ -83,7 +96,6 @@ en-GB:
   label_sprint_cards: Sprint cards
   label_sprint_impediments: Sprint Impediments
   label_sprint_name: Sprint "%{name}"
-  label_sprint_velocity: Velocity %{velocity}, based on %{sprints} sprints with an average %{days} days
   label_stories: Stories
   label_stories_tasks: Stories/Tasks
   label_task_board: Task board
@@ -103,6 +115,12 @@ en-GB:
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
+  story_description: Description
+  story_estimation_hours: Estimation (hours)
+  story_points: Points
+  story_remaining_hours: Remaining (hours)
+  story_spent_time: Spent Time
+  story_status: Status
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"

@@ -4,22 +4,35 @@ nl:
   backlogs_any: alle
   backlogs_card_specification: Label type voor kaartjes
   backlogs_impediment: Impediment
-  backlogs_inactive: Project lijkt inactief
   backlogs_points_burn_direction: Points burn omhoog/omlaag
   backlogs_product_backlog: Product backlog
-  backlogs_product_backlog_is_empty: Product backlog is leeg
-  backlogs_product_backlog_unsized: De top van de product backlog heeft stories zonder size
-  backlogs_sizing_inconsistent: Story sizes variëren ten opzichte van hun tijds schattingen
-  backlogs_sprint_notes_missing: Gesloten sprints zonder retrospective/review aantekeningen
-  backlogs_sprint_unestimated: Gesloten of actieve sprints bevatten stories zonder tijds schattingen
-  backlogs_sprint_unsized: Er zijn stories in de actieve of recent afgesloten sprints zonder sizes
   backlogs_sprints: Sprints
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: Story
   backlogs_story_tracker: Story trackers
   backlogs_task: Taak
   backlogs_task_tracker: Taak tracker
-  backlogs_velocity_missing: De velocity voor dit project kan niet worden berekend
-  backlogs_velocity_varies: Velocity varieert per sprint
   backlogs_wiki_template: Template voor sprint wiki pagina
   button_edit_wiki: Wijzig wiki page
   comma_delimited_numbers: Komma-gescheiden getallen
@@ -83,7 +96,6 @@ nl:
   label_sprint_cards: Sprint kaarten
   label_sprint_impediments: Sprint Impediments
   label_sprint_name: Sprint "%{name}"
-  label_sprint_velocity: Velocity %{velocity}, berekend over %{sprints} sprints met gemiddeld %{average_days_per_sprint} dagen
   label_stories: Stories
   label_stories_tasks: Stories/Taken
   label_task_board: Taak-bord
@@ -103,6 +115,12 @@ nl:
   release_create_snapshot_today: Story point snapshot voor vandaag opslaan
   release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
+  story_description: Description
+  story_estimation_hours: Estimation (hours)
+  story_points: Points
+  story_remaining_hours: Remaining (hours)
+  story_spent_time: Spent Time
+  story_status: Status
   today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
   today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
   todo_issue_summary: "%{type}: %{summary}"

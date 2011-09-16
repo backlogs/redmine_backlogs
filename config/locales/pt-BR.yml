@@ -4,22 +4,35 @@ pt-BR:
   backlogs_any: Nenhum
   backlogs_card_specification: "Tipo de r\xC3\xB3tulo para impress\xC3\xA3o no cart\xC3\xA3o"
   backlogs_impediment: Impediment
-  backlogs_inactive: Mostrar projetos inativos
   backlogs_points_burn_direction: Pontos usados subir/descer
   backlogs_product_backlog: Product backlog
-  backlogs_product_backlog_is_empty: Product backlog esta vazio
-  backlogs_product_backlog_unsized: "O topo do Product Backlog possui est\xC3\xB3rias sem estimativas."
-  backlogs_sizing_inconsistent: "Tamanho das est\xC3\xB3rias muda de acordo com suas estimativas"
-  backlogs_sprint_notes_missing: Sprints fechados sem notas de retrospectiva
-  backlogs_sprint_unestimated: "Ativar ou desativar sprints com est\xC3\xB3rias sem estimativas"
-  backlogs_sprint_unsized: "Projeto possui est\xC3\xB3rias ativas ou recentemente fechadas durante o Sprint sem estimativas"
   backlogs_sprints: Sprints
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: "Est\xC3\xB3ria"
   backlogs_story_tracker: "Seq\xC3\xBC\xC3\xAAncia da est\xC3\xB3ria"
   backlogs_task: Tarefas
   backlogs_task_tracker: "Seq\xC3\xBC\xC3\xAAncia da tarefa"
-  backlogs_velocity_missing: "A velocidade n\xC3\xA3o pode ser calculada para este projeto."
-  backlogs_velocity_varies: "Varia\xC3\xA7\xC3\xA3o Significativa da Velocidade durante as Sprints"
   backlogs_wiki_template: "Modelo para a p\xC3\xA1gina wiki sprint"
   button_edit_wiki: "Editar a p\xC3\xA1gina no wiki"
   comma_delimited_numbers: Comma delimited numbers
@@ -85,7 +98,6 @@ pt-BR:
   label_sprint_cards: "Cart\xC3\xB5es de Sprint"
   label_sprint_impediments: Impedimentos do sprint
   label_sprint_name: Sprint "{{name}}"
-  label_sprint_velocity: "Velocidade {{velocity}}, baseada no {{sprints}} com a m\xC3\xA9dia de {{days}} Dias"
   label_stories: "Est\xC3\xB3rias"
   label_stories_tasks: "Est\xC3\xB3rias/Tarefas"
   label_task_board: Quadro de tarefas
@@ -105,6 +117,12 @@ pt-BR:
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
+  story_description: Description
+  story_estimation_hours: Estimation (hours)
+  story_points: Points
+  story_remaining_hours: Remaining (hours)
+  story_spent_time: Spent Time
+  story_status: Status
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "{{type}}: {{summary}}"
