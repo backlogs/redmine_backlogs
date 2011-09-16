@@ -7,28 +7,28 @@ nl:
   backlogs_points_burn_direction: Points burn omhoog/omlaag
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
-  backlogs_statistics_active: Project show activity
-  backlogs_statistics_active_failed: Project shows no activity
-  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
-  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
-  backlogs_statistics_product_backlog_filled: Product backlog has stories
-  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
-  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
-  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
-  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
-  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
-  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
-  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
-  backlogs_statistics_sprints: Measured over %{value} sprints
-  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
-  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
-  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
-  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_active: Project is actief
+  backlogs_statistics_active_failed: Project is niet actief
+  backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over de sprints heen
+  backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet stabiel over de sprints heen
+  backlogs_statistics_product_backlog_filled: Product backlog heeft stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is leeg
+  backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog hebben sizes
+  backlogs_statistics_product_backlog_sized_failed: Er zijn stories bovenaan de product backlog zonder sizes
+  backlogs_statistics_sizing_consistent: Story sizes zijn niet stabiel ten opzichte van de schattingen
+  backlogs_statistics_sizing_consistent_failed: Story sizes zijn stabiel ten opzichte van de schattingen
+  backlogs_statistics_sizing_stddev: "Standaard deviatie uren t.o.v. points: %{value} uren"
+  backlogs_statistics_sprint_notes_available: De recent afgesloten sprints hebben retrospective/review verslagen
+  backlogs_statistics_sprint_notes_available_failed: Recent afgesloten sprints missen retrospective/review verslagen
+  backlogs_statistics_sprints: Gemeten over %{value} sprints
+  backlogs_statistics_sprints_estimated: De actieve en recent gesloten sprints hebben uren schattingen
+  backlogs_statistics_sprints_estimated_failed: De actieve of recent gesloten sprints hebben niet overal uren schattingen
+  backlogs_statistics_sprints_sized: De stories op de actieve en recent gesloten sprints hebben sizes
+  backlogs_statistics_sprints_sized_failed: Stories op de actieve of recent gesloten sprints missen sizes
   backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
-  backlogs_statistics_yield: Project has good average yield
-  backlogs_statistics_yield_failed: Project has low average yield
+  backlogs_statistics_velocity_stddev: "Velocity standaard deviatie: %{value} points"
+  backlogs_statistics_yield: Project heeft een goede gemiddelde opbrengst
+  backlogs_statistics_yield_failed: Project heeft een lage gemiddelde opbrengst
   backlogs_story: Story
   backlogs_story_tracker: Story trackers
   backlogs_task: Taak
@@ -115,11 +115,11 @@ nl:
   release_create_snapshot_today: Story point snapshot voor vandaag opslaan
   release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
-  story_description: Description
-  story_estimation_hours: Estimation (hours)
+  story_description: Omschrijving
+  story_estimation_hours: Schatting (uren)
   story_points: Points
-  story_remaining_hours: Remaining (hours)
-  story_spent_time: Spent Time
+  story_remaining_hours: Resterend (uren)
+  story_spent_time: Tijd besteed
   story_status: Status
   today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
   today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
