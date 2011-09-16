@@ -4,63 +4,75 @@ es:
   backlogs_any: cualquiera
   backlogs_card_specification: Tipos de etiqueta para impresion de tarjetas
   backlogs_impediment: Impedimento
-  backlogs_inactive: Proyecto no muestra actividad
   backlogs_points_burn_direction: Burn up/down de puntos
   backlogs_product_backlog: Backlog del producto
-  backlogs_product_backlog_is_empty: Backlog del producto esta vacio
-  backlogs_product_backlog_unsized: La parte superior del Backlog del producto tiene historias sin peso
-  backlogs_sizing_inconsistent: El peso de las historias varian en contra de sus estimaciones
-  backlogs_sprint_notes_missing: Sprint cerrado sin anotaciones de retroespectiva/revisiones
-  backlogs_sprint_unestimated: Sprint cerrado o activo con historias sin estimación
-  backlogs_sprint_unsized: El proyecto tiene historias activas o recientemente se han cerrado sprints que no tenían tamaño
   backlogs_sprints: Sprints
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: Historia
   backlogs_story_tracker: Seguimiento de Historias
   backlogs_task: Tarea
   backlogs_task_tracker: Seguimiento de Tarea
-  backlogs_velocity_missing: No se pudo calcular la velocidad para este proyecto
-  backlogs_velocity_varies: La velocidad varía significativamente en los sprints
-  backlogs_wiki_template: Plantilla para página de Spring
+  backlogs_wiki_template: "Plantilla para p\xC3\xA1gina de Spring"
   button_edit_wiki: Editar wiki
-  comma_delimited_numbers: Números delimitados por comas
-  current_open_story_points: "Current open story points:"
-  error_blank: cannot be blank
-  error_greater_than_start_date: cannot be earlier than Start Date
-  error_inclusion: no está incluido en la lista
+  comma_delimited_numbers: "N\xC3\xBAmeros delimitados por comas"
+  current_open_story_points: "Puntos de la actual historia abierta:"
+  error_blank: No puede estar vacio
+  error_greater_than_start_date: no puede ser anterior a la fecha de inicio
+  error_inclusion: "no est\xC3\xA1 incluido en la lista"
   error_intro_plural: "Los siguientes errores se encontraron:"
-  error_intro_singular: "El siguiente error se encontró:"
+  error_intro_singular: "El siguiente error se encontr\xC3\xB3:"
   error_must_have_comma_delimited_list: la lista de historias o IDs de tareas debe estar separada por comas
   error_no_workflow_for_task_tracker: Usted no tiene acceso al seguimiento de tareas. Si cree que esto es un error, por favor solicite al administrador que actualice el flujo de trabajo.
   error_outro: Por favor, corrija los errores antes de volver a realizar la solicitud.
-  error_release_end_after_start: Release end date has to be after start date
+  error_release_end_after_start: "Fecha del release final tiene que ser despu\xC3\xA9s de la fecha de inicio"
   error_taken: ya se encuentra en uso
   event_sprint_summary: "%{projecto}: %{resumen}"
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Bloques
-  field_initial_estimate: Estimación inicial
-  field_initial_story_points: Initial story points
-  field_name: Name
-  field_number_of_snapshots: Saved point snapshots
-  field_position: Posición
+  field_initial_estimate: "Estimaci\xC3\xB3n inicial"
+  field_initial_story_points: Puntos iniciales de la historia
+  field_name: Nombre
+  field_number_of_snapshots: Puntos ahorrados en la instantanea
+  field_position: "Posici\xC3\xB3n"
   field_release_end_date: Fecha final del release
   field_release_start_date: Fecha inicial del release
   field_story_points: Puntos de historia
   field_subject: Tema
   field_tracker_id: Tracker ID
-  field_velocity_based_estimate: Estimación basada en la velocidad
-  label_back_to_project: Volver a la página del proyecto
+  field_velocity_based_estimate: "Estimaci\xC3\xB3n basada en la velocidad"
+  label_back_to_project: "Volver a la p\xC3\xA1gina del proyecto"
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: Usted no ha configurado Backlogs aún, Por favor dirijase a %{administration} > %{plugins}, luego pulse en el enlace %{configure} para este plugin. Una vez que haya configurado los valores, regrese a esta página para empezar a usar esta herramienta.
+  label_backlogs_unconfigured: "Usted no ha configurado Backlogs a\xC3\xBAn, Por favor dirijase a %{administration} > %{plugins}, luego pulse en el enlace %{configure} para este plugin. Una vez que haya configurado los valores, regrese a esta p\xC3\xA1gina para empezar a usar esta herramienta."
   label_burndown: Burndown
-  label_chart_options: Opciones de gráfico
-  label_hours: horas
+  label_chart_options: "Opciones de gr\xC3\xA1fico"
   label_hours_ideal: ideal
   label_hours_remaining: horas faltantes
   label_hours_required_burn_rate: es necesario el burn rate (horas)
+  label_hours: horas
   label_impediments: Impedimentos
   label_master_backlog: Principal Backlog
   label_not_prioritized: no priorizado
-  label_points: puntos
   label_points_accepted: puntos aceptados
   label_points_burn_down: Abajo
   label_points_burn_up: Arriba
@@ -69,51 +81,21 @@ es:
   label_points_resolved: puntos resueltos
   label_points_to_accept: puntos no aceptados
   label_points_to_resolve: puntos no resueltos
+  label_points: puntos
   label_product_backlog: backlog del producto
   label_product_cards: Tarjetas del Product backlog
   label_release: Release
-  label_release_end_date: Release end date
+  label_release_end_date: Fecha final del Release
   label_release_new: Nuevo release
-  label_release_planning: Planificación del release
+  label_release_planning: "Planificaci\xC3\xB3n del release"
   label_release_plural: Releases
   label_release_start_date: Fecha inicial del Release
-  label_release_end_date: Fecha final del Release
-  field_initial_story_points: Puntos iniciales de la historia
-  error_release_end_after_start: Fecha del release final tiene que ser después de la fecha de inicio
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
-  today_not_in_release_warning: "Warning: current date is not within release date range."
-  field_number_of_snapshots: Puntos ahorrados en la instantanea
-  release_update_snapshot_today: Update story point snapshot for today
-  release_create_snapshot_today: Save story point snapshot for today
-  current_open_story_points: "Puntos de la actual historia abierta:"
-
-  # Version fields
-  field_name: "Nombre"
-  
-  # Error messages
-  error_blank: "No puede estar vacio"
-  error_greater_than_start_date: "no puede ser anterior a la fecha de inicio"
-
-  rb_label_link_to_original: "Include link to original story"
-  rb_label_copy_tasks: "Copy tasks"
-  rb_label_copy_tasks_none: "None"
-  rb_label_copy_tasks_all: "All"
-  rb_label_copy_tasks_open: "Open"
-  # Tooltips
-  story_description: "Descripción"
-  story_status: "Estado"
-  story_points: "Puntos"
-  story_estimation_hours: "Estimación (horas)"
-  story_remaining_hours: "Faltante (horas)"
-  story_spent_time: "Tiempo gastado"
-  rb_taskboard_card_order: Card print order
-  label_scrum_statistics: Estadísticas de Scrum
+  label_scrum_statistics: "Estad\xC3\xADsticas de Scrum"
   label_select_all: Seleccionar todas
   label_sprint_backlog: Backlog del sprint
   label_sprint_cards: Tarjetas del sprint
   label_sprint_impediments: Impedimentos del Sprint
   label_sprint_name: Sprint "%{name}"
-  label_sprint_velocity: Velocidad %{velocity}, basada en %{sprints} sprints con un promedio de %{days} dias
   label_stories: Historias
   label_stories_tasks: Historias/Tareas
   label_task_board: Tablero de tareas
@@ -128,25 +110,25 @@ es:
   rb_task_cards_stories_then_tasks: Primero todas las historias, luego todas las tareas
   rb_task_cards_story_follows_tasks: Tareas seguidas por sus historias
   rb_task_cards_tasks_follow_story: Historia seguida por sus tareas
-  rb_taskboard_card_order: Orden de la impresión de tarjetas
+  rb_taskboard_card_order: "Orden de la impresi\xC3\xB3n de tarjetas"
   rb_timelog_from_taskboard: Timelog para el tablero de tareas
-  release_create_snapshot_today: Guardar los puntos de historia de la instantánea de hoy
-  release_update_snapshot_today: Actualizar los puntos de historia de la instantánea de hoy
+  release_create_snapshot_today: "Guardar los puntos de historia de la instant\xC3\xA1nea de hoy"
+  release_update_snapshot_today: "Actualizar los puntos de historia de la instant\xC3\xA1nea de hoy"
   remaining_story_points: Puntos de historia pendientes
-  today_not_in_release_msg: Fecha actual no está dentro del rango del release. Realmente desea salvar la instantánea?
+  story_description: "Descripci\xC3\xB3n"
+  story_estimation_hours: "Estimaci\xC3\xB3n (horas)"
+  story_points: Puntos
+  story_remaining_hours: Faltante (horas)
+  story_spent_time: Tiempo gastado
+  story_status: Estado
+  today_not_in_release_msg: "Fecha actual no est\xC3\xA1 dentro del rango del release. Realmente desea salvar la instant\xC3\xA1nea?"
   today_not_in_release_warning: "Advertencia: la fecha actual no se encuentra dentro del rango de fecha del release."
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: Use un campo de texto en lugar de la lista desplegable si está vacío
-  warning_reset_sprint: |
-    ¡Usted está a punto de reiniciar este SPRINT!
-    
-    ¿Estás seguro de que desea hacer esto? Reiniciando el sprint
-    tendrá los siguientes efectos sobre las historias y las tareas
-    
-    * La fecha de creación será establecida en la fecha inicial del sprint
-    * TODAS las modificaciones de las historias y las tareas excepto 
-       las notas serán ELMINADAS
-    * El valor actual será el valor inicial para todas  
-       propiedades de las historias o tareas
-    * El estado se establecerá en el valor por defecto de la petición.
-
+  use_free_text_if_empty: "Use un campo de texto en lugar de la lista desplegable si est\xC3\xA1 vac\xC3\xADo"
+  warning_reset_sprint: "\xC2\xA1Usted est\xC3\xA1 a punto de reiniciar este SPRINT!\n\n\
+    \xC2\xBFEst\xC3\xA1s seguro de que desea hacer esto? Reiniciando el sprint\n\
+    tendr\xC3\xA1 los siguientes efectos sobre las historias y las tareas\n\n\
+    * La fecha de creaci\xC3\xB3n ser\xC3\xA1 establecida en la fecha inicial del sprint\n\
+    * TODAS las modificaciones de las historias y las tareas excepto \n   las notas ser\xC3\xA1n ELMINADAS\n\
+    * El valor actual ser\xC3\xA1 el valor inicial para todas  \n   propiedades de las historias o tareas\n\
+    * El estado se establecer\xC3\xA1 en el valor por defecto de la petici\xC3\xB3n."
