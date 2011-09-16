@@ -3,7 +3,7 @@ fr:
   backlogs_active: actif
   backlogs_any: tous
   backlogs_card_specification: "Types d'\xC3\xA9tiquettes pour impression de cartes"
-  backlogs_impediment: Impediment
+  backlogs_impediment: Obstacle
   backlogs_inactive: "Le projet ne montre aucune activit\xC3\xA9"
   backlogs_points_burn_direction: progression des points
   backlogs_product_backlog: Carnet de produit
@@ -24,28 +24,28 @@ fr:
   backlogs_velocity_varies: "La v\xC3\xA9locit\xC3\xA9 varie de fa\xC3\xA7on significative \xC3\xA0 travers les diff\xC3\xA9rents sprints"
   backlogs_wiki_template: "Maquette pour page wiki de sc\xC3\xA9anario"
   button_edit_wiki: Modifier la page wiki
-  comma_delimited_numbers: Comma delimited numbers
-  current_open_story_points: "Current open story points:"
+  comma_delimited_numbers: Nombres d\xC3\xA9limit\xC3\xA9s par des virgules
+  current_open_story_points: "Points des sc\xC3\xA9narii ouverts :"
   error_blank: "ne peut \xC3\xAAtre vide"
   error_greater_than_start_date: "ne peut pas \xC3\xAAtre plus t\xC3\xB4t que la date de d\xC3\xA9but"
-  error_inclusion: is not included in the list
+  error_inclusion: "n'est pas inclus dans la liste"
   error_intro_plural: "Les erreurs suivantes ont \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9es:"
   error_intro_singular: "L'erreur suivante a \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9e:"
   error_must_have_comma_delimited_list: "doit avoir une liste de sc\xC3\xA9narios ou num\xC3\xA9ros de t\xC3\xA2ches s\xC3\xA9par\xC3\xA9es de virgules"
-  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
+  error_no_workflow_for_task_tracker: "Vous n'avez pas accès au tracker de t\xC3\xA2ches. Si vous pensez que c'est une erreur, demandez à votre administrateur de mettre à jour le workflow."
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre \xC3\xA0 nouveau."
-  error_release_end_after_start: Release end date has to be after start date
-  error_taken: is already in use
+  error_release_end_after_start: "La date de fin de la release doit \xC3\xAAtre après la date de d\xC3\xA9but."
+  error_taken: "est d\xC3\xA9jà utilis\xC3\xA9"
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Type de carnet
   field_blocks: Blocks
-  field_initial_estimate: Initial estimate
-  field_initial_story_points: Initial story points
+  field_initial_estimate: Estimation initiale
+  field_initial_story_points: "Nombre de points initial du sc\xC3\xA9nario"
   field_name: Nom
   field_number_of_snapshots: Saved point snapshots
   field_position: Position
-  field_release_end_date: Release end date
-  field_release_start_date: Release start date
+  field_release_end_date: Date de fin de la release
+  field_release_start_date: "Date de d\xC3\xA9but de la release"
   field_story_points: "Points de sc\xC3\xA9narios"
   field_subject: Sujet
   field_tracker_id: Tracker ID
@@ -55,30 +55,30 @@ fr:
   label_backlogs_unconfigured: "Vous n'avez pas encore configur\xC3\xA9 les Carnets. Veuillez aller \xC3\xA0 {{administration}} > {{plugins}}, et cliquez sur le lien {{configure}} pour ce plugin. Une fois que vous aurez d\xC3\xA9fini ces champs, revenez \xC3\xA0 cette page pour utiliser l'outil"
   label_burndown: Progression
   label_chart_options: Options du graphique
-  label_hours_ideal: ideal
-  label_hours_remaining: remaining hours
-  label_hours_required_burn_rate: required burn rate (hours)
+  label_hours_ideal: "Heures id\xC3\xA9ales"
+  label_hours_remaining: Heures restantes
+  label_hours_required_burn_rate: Taux de consommation requis (heures)
   label_hours: heures
-  label_impediments: Impediments
+  label_impediments: Obstacles
   label_master_backlog: "Carnet Ma\xC3\xAEtre"
   label_not_prioritized: "non prioris\xC3\xA9s"
-  label_points_accepted: points accepted
+  label_points_accepted: "points accept\xC3\xA9s"
   label_points_burn_down: Bas
   label_points_burn_up: Haut
-  label_points_committed: points committed
-  label_points_required_burn_rate: required burn rate (points)
-  label_points_resolved: points resolved
-  label_points_to_accept: points not accepted
-  label_points_to_resolve: points not resolved
+  label_points_committed: "points engag\xC3\xA9s"
+  label_points_required_burn_rate: Taux de consommation requis (points)
+  label_points_resolved: "points r\xC3\xA9solus"
+  label_points_to_accept: "points non accept\xC3\xA9s"
+  label_points_to_resolve: "points non r\xC3\xA9solus"
   label_points: points
   label_product_backlog: carnet du produit
   label_product_cards: Cartes de carnet du produit
   label_release: Release
-  label_release_end_date: Release end date
-  label_release_new: New release
-  label_release_planning: Release Planning
+  label_release_end_date: Date de fin de release
+  label_release_new: Nouvelle release
+  label_release_planning: Planification des releases
   label_release_plural: Releases
-  label_release_start_date: Release start date
+  label_release_start_date: "Date de d\xC3\xA9but de la release"
   label_scrum_statistics: Statistiques du Scrum
   label_select_all: "S\xC3\xA9lectionner tout"
   label_sprint_backlog: carnet du sprint
@@ -90,34 +90,34 @@ fr:
   label_stories_tasks: "Sc\xC3\xA9narios/T\xC3\xA2ches"
   label_task_board: "Tableau des t\xC3\xA2ches"
   label_webcal: Fil Calendrier Web
-  rb_label_copy_tasks: "[[Copy tasks]]"
-  rb_label_copy_tasks_all: "[[All]]"
-  rb_label_copy_tasks_none: "[[None]]"
-  rb_label_copy_tasks_open: "[[Open]]"
-  rb_label_link_to_original: "[[Include link to original story]]"
-  rb_label_timelog_disable: Disable
-  rb_label_timelog_enable: Enable
-  rb_task_cards_stories_then_tasks: First all stories, then all tasks
-  rb_task_cards_story_follows_tasks: Tasks followed by their story
-  rb_task_cards_tasks_follow_story: Story followed by their tasks
-  rb_taskboard_card_order: Card print order
-  rb_timelog_from_taskboard: Timelog from taskboard
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
-  today_not_in_release_warning: "Warning: current date is not within release date range."
+  rb_label_copy_tasks: "[[Copier t\xC3\xA2ches]]"
+  rb_label_copy_tasks_all: "[[Toutes]]"
+  rb_label_copy_tasks_none: "[[Aucune]]"
+  rb_label_copy_tasks_open: "[[Ouvertes]]"
+  rb_label_link_to_original: "[[Inclure le lien vers le sc\xC3\xA9nario original]]"
+  rb_label_timelog_disable: "D\xC3\xA9sactiver"
+  rb_label_timelog_enable: Activer
+  rb_task_cards_stories_then_tasks: "Tous les sc\xC3\xA9narii d'abord, les t\xC3\xA2ches ensuite"
+  rb_task_cards_story_follows_tasks: "T\xC3\xA2ches suivies par leur sc\xC3\xA9nario"
+  rb_task_cards_tasks_follow_story: "Sc\xC3\xA9narii suivis par leur t\xC3\xA2che"
+  rb_taskboard_card_order: "Ordre d'impression des cartes"
+  rb_timelog_from_taskboard: "Journal depuis le tableau des t\xC3\xA2ches"
+  release_create_snapshot_today: "Sauvegarder les points de sc\xC3\xA9nario du jour"
+  release_update_snapshot_today: "Mettre à jour les points de sc\xC3\xA9nario du jour"
+  remaining_story_points: "points de sc\xC3\xA9nario restants"
+  today_not_in_release_msg: "La date actuelle n'est pas dans l'intervalle des dates de la release. Voulez-vous vraiment sauvegarder un snapshot ?"
+  today_not_in_release_warning: "Avertissement : la date actuelle n'est dans l'intervalle des dates de la release."
   todo_issue_summary: "{{type}}: {{summary}}"
-  use_free_text_if_empty: Use text field instead of dropdown if empty
+  use_free_text_if_empty: "Utiliser un champ texte au lieu d'une liste d\xC3\xA9roulante si c'est vide"
   warning_reset_sprint: |-
-    YOU ARE ABOUT TO RESET THIS SPRINT!
+    VOUS ALLEZ RÉINITIALISER CE SPRINT !
     
-    Are you sure you want to do this? Resetting the sprint
-    will have the following effects on stories and tasks:
+    \xC3\xAAtes-vous certain de vouloir faire cela ? R\xC3\xA9initialiser un sprint
+    aura les effets suivants sur les sc\xC3\xA9narii et les t\xC3\xA2ches :
     
-    * Creation date will be set to the sprint start date
-    * ALL modifications to the stories and tasks except notes
-       will be DELETED
-    * The current value will become the initial value for all
-       story/task properties
-    * State will be set to the default issue state
+    * La date de cr\xC3\xA9ation sera r\xC3\xA9initialis\xC3\xA9e à la date de d\xC3\xA9but du sprint
+    * TOUTES les modifications aux sc\xC3\xA9narii et aux t\xC3\xA2ches sauf les notes
+       seront SUPPRIMÉES
+    * La valeur actuelle deviendra la valeur initiale pour toutes les 
+       propri\xC3\xA9t\xC3\xA9s des sc\xC3\xA9narii/t\xC3\xA2ches
+    * L'\xC3\xA9tat sera r\xC3\xA9initialis\xC3\xA9 à l'\xC3\xA9tat par d\xC3\xA9faut de la demande
