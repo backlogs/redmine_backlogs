@@ -17,7 +17,7 @@ RB.showCharts = function(event){
     RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
   }
   RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
-  RB.$('#charts').load( RB.urlFor('show_burndown_chart', { id: RB.constants.sprint_id }) );
+  RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: RB.constants.sprint_id }) );
   RB.$('#charts').dialog({ 
                         buttons: { "Close": function() { RB.$(this).dialog("close") } },
                         height: 590,

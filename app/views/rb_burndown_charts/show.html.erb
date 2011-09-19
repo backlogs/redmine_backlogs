@@ -1,4 +1,4 @@
-<% if @sprint.has_burndown %>
+<% if @sprint.has_burndown? %>
   <a href="<%= url_for(:controller => 'rb_burndown_charts', :action => 'print', :sprint_id => @sprint.id) %>">print</a>
   <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => 'width:650px; height: 300px' } %>
 

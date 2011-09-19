@@ -41,13 +41,14 @@ RB.constants = {
   <% end %>
 
   <% if @section == 'taskboard'
-      transitions = false
-      if RbTask.tracker
+      transitions = User.current.admin?
+      if !transitions && RbTask.tracker
         roles = User.current.roles_for_project(@project)
+        tracker = Tracker.find(RbTask.tracker)
 
         catch (:done) do
           [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
-            Tracker.find(RbTask.tracker).issue_statuses.each {|status|
+            tracker.issue_statuses.each {|status|
               status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
                 transitions = true
                 throw :done
@@ -92,6 +93,7 @@ RB.routes = {
 
   show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
   show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
+  show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>',
 
   backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => :json, :only_path => true) %>'
 }

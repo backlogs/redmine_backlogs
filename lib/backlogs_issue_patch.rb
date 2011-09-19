@@ -86,19 +86,19 @@ module Backlogs
       def velocity_based_estimate
         return nil if !self.is_story? || ! self.story_points || self.story_points <= 0
 
-        dpp = self.project.scrum_statistics.info[:average_days_per_point]
-        return nil if ! dpp
+        hpp = self.project.scrum_statistics.hours_per_point
+        return nil if ! hpp
 
-        return Integer(self.story_points * dpp)
+        return Integer(self.story_points * (hpp / 8))
       end
 
       def backlogs_before_save
-        @issue_before_change.position = (is_task? ? nil : position) if @issue_before_change # don't log position updates
+        @issue_before_change.position = (self.is_task? ? nil : self.position) if @issue_before_change # don't log position updates
 
-        if project.module_enabled?('backlogs') && is_task?
-          estimated_hours = 0 if status.backlog == :success
-          position = nil
-          fixed_version_id = story.fixed_version_id if story
+        if project.module_enabled?('backlogs') && self.is_task?
+          self.estimated_hours = 0 if self.status.backlog_is?(:success)
+          self.position = nil
+          self.fixed_version_id = self.story.fixed_version_id if self.story
         end
         return true
       end
@@ -127,7 +127,8 @@ module Backlogs
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
             j.save!
           }
-          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{descendants.collect{|t| "#{t.id}"}.join(',')})") unless leaf?
+          tasks = descendants.collect{|t| "#{t.id}"}.join(',')
+          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{tasks})") unless tasks == ''
 
           # safe to do by sql since we don't want any of this logged
           unless self.position
@@ -205,9 +206,9 @@ module Backlogs
           else
             case @@backlogs_column_type[property]
               when :integer
-                Integer(v)
+                v.blank? ? nil : Integer(v)
               when :float
-                Float(v)
+                v.blank? ? nil : Float(v)
               when :string
                 v.to_s
               else
@@ -220,8 +221,8 @@ module Backlogs
       def initial_estimate
         return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
 
-        if fixed_version_id
-          time = [fixed_version.sprint_start_date.to_time, created_on].max
+        if fixed_version_id && fixed_version.sprint_start_date
+          time = [fixed_version.sprint_start_date.to_time, created_on].compact.max
         else
           time = created_on
         end
