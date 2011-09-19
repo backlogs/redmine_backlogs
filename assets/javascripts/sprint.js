@@ -15,16 +15,6 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     j.data('this', this);
 
     j.find(".editable").bind('mouseup', this.handleClick);
-    
-    jQuery('#sprint_backlogs_container')
-        .find('div.backlog')
-        .each(function() {
-            var countItems = jQuery(this).find('ul.ui-sortable > li');
-            var ul = jQuery(this).find('ul.ui-sortable');
-            if (countItems.length == 0) {
-                ul.html('<li style="font-style:italic;text-align:center" class="empty_list_item">List is empty</li>');
-            }
-        });
   },
 
   beforeSave: function(){
@@ -72,10 +62,6 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
 
   afterCreate: function(data, textStatus, xhr){
     this.getBacklog().data('this').drawMenu();
-    jQuery(this.$).parent()
-                  .parent()
-                  .find('ul.ui-sortable')
-                  .html('<li style="font-style:italic;text-align:center" class="empty_list_item">List is empty</li>')
   },
 
   afterUpdate: function(data, textStatus, xhr){

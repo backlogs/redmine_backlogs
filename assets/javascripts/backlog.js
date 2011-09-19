@@ -24,14 +24,14 @@ RB.Backlog = RB.Object.create({
 
     // Make the list sortable
     list = this.getList();
-    list.sortable({ connectWith: '.stories',
-                    placeholder: 'placeholder',
-                    forcePlaceholderSize: true,
-                    dropOnEmpty: true,
-                    start: this.dragStart,
-                    stop: this.dragStop,
-                    update: function(e,u){ self.dragComplete(e, u) }
-                    });
+    list.sortable({connectWith: '.stories',
+                   placeholder: 'placeholder',
+                   forcePlaceholderSize: true,
+                   dropOnEmpty: true,
+                   start: this.dragStart,
+                   stop: this.dragStop,
+                   update: function(e,u){ self.dragComplete(e, u) }
+                  });
 
     if(this.isSprintBacklog()){
       sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());

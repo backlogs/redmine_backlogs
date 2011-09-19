@@ -23,6 +23,11 @@
 		var hide;
 		var show;
 		var filter;
+        
+        var getPlaceholder = function() {
+            
+        }    
+            
 		
 		// Input element event
 		$('input.filter').keyup(function() {
