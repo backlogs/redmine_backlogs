@@ -303,18 +303,6 @@ RB.Model = RB.Object.create({
        error : function(x,t,e){ self.error(x,t,e); }
     });
     
-//    RB.ajax({
-//      type: "POST",
-//      url: saveDir.url,
-//      data: saveDir.data,
-//      success   : function(d,t,x){
-//          alert('Request complete');
-//          self.afterSave(d,t,x);
-//          self.refreshTooltip();
-//      },
-//      error     : function(x,t,e){ self.error(x,t,e); }
-//    });
-    
     self.endEdit();
   },
 
