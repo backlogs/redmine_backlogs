@@ -107,8 +107,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   },
 
   beforeSaveDragResult: function(){
-    console.log(this.$.parent());
-    this.$.parent().find('li.empty_list_item').remove();
+
   }
 });
   
