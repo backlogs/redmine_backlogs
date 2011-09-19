@@ -93,12 +93,12 @@ module Backlogs
       end
 
       def backlogs_before_save
-        @issue_before_change.position = (is_task? ? nil : position) if @issue_before_change # don't log position updates
+        @issue_before_change.position = (self.is_task? ? nil : self.position) if @issue_before_change # don't log position updates
 
-        if project.module_enabled?('backlogs') && is_task?
-          estimated_hours = 0 if status.backlog_is?(:success)
-          position = nil
-          fixed_version_id = story.fixed_version_id if story
+        if project.module_enabled?('backlogs') && self.is_task?
+          self.estimated_hours = 0 if self.status.backlog_is?(:success)
+          self.position = nil
+          self.fixed_version_id = self.story.fixed_version_id if self.story
         end
         return true
       end
