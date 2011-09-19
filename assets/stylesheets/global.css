@@ -80,3 +80,7 @@ body.loading #refresh{
 .ui-dialog .editor{
   display:block;
 }
+
+ul.ui-sortable {
+    min-height: 20px!important;
+}
