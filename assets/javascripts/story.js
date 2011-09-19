@@ -91,7 +91,15 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var data = "prev=" + (prev.length==1 ? this.$.prev().data('this').getID() : '') +
                "&fixed_version_id=" + sprint_id;
     
-    if(j.find('.editor').length > 0) data += "&" + j.find('.editor').serialize();
+    j.find('.editor').each(function() {
+        var value = '';  
+        if (jQuery.trim(jQuery(this).val()) == '') {
+            value = 'no subject';    
+        } else {
+            value = jQuery(this).val();  
+        }         
+        data += "&" + this.name + '=' + value;
+    });    
     
     if( this.isNew() ){
       var url = RB.urlFor( 'create_story' );
@@ -107,8 +115,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   },
 
   beforeSaveDragResult: function(){
-    console.log(this.$.parent());
-    this.$.parent().find('li.empty_list_item').remove();
+
   }
 });
   

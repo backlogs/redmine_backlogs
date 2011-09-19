@@ -24,16 +24,14 @@ RB.Backlog = RB.Object.create({
 
     // Make the list sortable
     list = this.getList();
-    list.sortable({ connectWith: '.stories',
-                    placeholder: 'placeholder',
-                    forcePlaceholderSize: true,
-                    dropOnEmpty: true,
-                    start: this.dragStart,
-                    receive: this.dragReceive,
-                    stop: this.dragStop,
-                    beforeStop: this.dragBeforeStop,
-                    update: function(e,u){ self.dragComplete(e, u) }
-                    });
+    list.sortable({connectWith: '.stories',
+                   placeholder: 'placeholder',
+                   forcePlaceholderSize: true,
+                   dropOnEmpty: true,
+                   start: this.dragStart,
+                   stop: this.dragStop,
+                   update: function(e,u){ self.dragComplete(e, u) }
+                  });
 
     if(this.isSprintBacklog()){
       sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
@@ -108,12 +106,6 @@ RB.Backlog = RB.Object.create({
     this.drawMenu();
   },
   
-  dragReceive: function(event, ui) {
-    if (!ui.item.data('dragging')) {
-      RB.$(ui.sender).sortable('cancel');
-    }
-  },
-
   dragStart: function(event, ui) {
     ui.item.addClass("dragging");
 
