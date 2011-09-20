@@ -282,22 +282,23 @@
 #backlogs_container .closedbacklog .stories,
 #backlogs_container .backlog .stories{
   list-style:none;
-  min-height:26px;
+/*  min-height:26px;*/
   margin:0;
-  padding:0 0 0px 0;
-  z-index:500;
+  padding:0;
+  position:relative;
+/*  z-index:500;*/
 }
 
 
 #backlogs_container .stories .story{
   background-color:#FFFFF6;
   cursor:move;
-  display:block;
+/*  display:block;*/
   font-size:11px;
-  height:26px;
+/*  height:26px;*/
   margin:0;
-  overflow:hidden;
-  position:relative;
+/*  overflow:hidden;*/
+/*  position:relative;*/
   width:100%;
   border-bottom: #AAAAAA 1px solid;
 }
@@ -323,26 +324,30 @@
 }
 #backlogs_container .stories .story .id{
   display:block;
-  height:24px;
-  left:10px;
+/*  height:24px;*/
+/*  left:10px;
   position:absolute;
-  top:1px;
+  top:1px;*/
+  position:relative;
+  float:left;
   width:55px;
-  white-space:nowrap;
+  margin-top:3px;
+/*  white-space:nowrap;*/
 }
 #backlogs_container .stories .story .id .t * {
   background-color:#cfc;
   display:block;
   font-size:10px;
   height:14px;
-  left:0px;
+/*  left:0px; */
   line-height:14px;
-  overflow:hidden;
+/*  overflow:hidden;*/
   padding-right:3px;
-  position:absolute;
+/*  position:absolute;*/
   text-align:right;
   text-decoration:none;
-  top:5px;
+  position: relative;
+/*  top:5px;*/
   vertical-align:middle;
   width:52px;
   -moz-border-radius:4px;
@@ -354,14 +359,15 @@
 }
 #backlogs_container .stories .story .subject {
   display:block;
-  height:15px;
+/*  height:15px;
   left:70px;
-  overflow:hidden;
-  padding:5px 2px 4px 2px;
-  position:absolute;
-  top:1px;
+  overflow:hidden;*/
+  padding:5px 2px 4px 10px;
+/*  position:absolute;
+  top:1px;*/
+  float:left;
   width:375px;
-  white-space:nowrap;
+/*  white-space:nowrap;*/
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
@@ -373,32 +379,34 @@
   display:none;
 }
 #backlogs_container .stories .story.too_long .elipses{
-  display:block;
-  left:409px;
+/*  display:block;*/
+/*  left:409px;
   position:absolute;
-  top:4px;
+  top:4px;*/
 }
 #backlogs_container .stories .story .status_id.editable {
-  display:block;
-  height:15px;
-  left:455px;
-  padding:5px 2px 4px 9px;
-  position:absolute;
-  top:1px;
+/*  display:block;*/
+/*  height:15px;
+  left:455px;*/
+/*  padding:5px 2px 4px 9px;*/
+/*  position:absolute;
+  top:1px;*/
+  float:left;
   width:68px;
 }
 #backlogs_container .stories .story .status_id .v {
   display:none;
 }
 #backlogs_container .stories .story .story_points {
-  display:block;
-  height:15px;
+/*  display:block;*/
+/*  height:15px;
   right:10px;
-  overflow:hidden;
-  padding:5px 3px 4px 9px;
-  position:absolute;
+  overflow:hidden;*/
+  padding:5px 15px 4px 9px;
+/*  position:absolute;*/
   text-align:right;
-  top:1px;
+/*  top:1px;*/
+  float: right;
   width:28px;
 }
 #backlogs_container .stories .story .story_points .v {
@@ -408,6 +416,11 @@
 #backlogs_container .stories .story .higher_item_id,
 #backlogs_container .stories .story .user_status {
   display:none;
+}
+
+#backlogs_container .stories .story .clearfix {
+    zoom:1;
+    clear:both;
 }
 
 /* dialog */
@@ -449,6 +462,7 @@
   position:absolute;
   top:0;
 }
+
 #backlogs_container .sprint.editing .editor{
   display:block;
   font-family:Verdana, Arial, sans-serif;
@@ -466,6 +480,7 @@
   margin:0;
   top:2px;
   width:320px;
+  float: left;
 }
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
   display:block;
@@ -494,38 +509,38 @@
 #backlogs_container .stories .story.editing .id{
   display:none;
 }
+
+#backlogs_container .stories .story.editing .story_field {
+    display: none;
+}
+
 #backlogs_container .stories .story.editing .editors{
   display:block;
-  position:absolute;
-  top:0;
 }
 #backlogs_container .stories .story.editing .editors label{
   display:none;
 }
 #backlogs_container .stories .story.editing .editor{
   font-family:Verdana, Arial, sans-serif;
-  position:absolute;
 }
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
-  left:10px;
   margin:0;
-  top:4px;
   width:55px;
+  float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
   display:block;
-  height:10px;
-  left:67px;
+  font-size: 11px;
   margin:0;
-  top:1px;
+  float: left;
 }
 #backlogs_container .stories .story.editing .status_id.editor{
   display:block;
-  left:456px;
   margin:0;
-  top:4px;
-  width:68px;
+  width:84px;
+  float: left;
+
 }
 #backlogs_container .stories .story.editing select.story_points.editor {
   display:block;
@@ -540,10 +555,13 @@
 #backlogs_container .stories .story.editing input.story_points.editor {
   display:block;
   height:10px;
-  left:540px;
   margin:0;
-  top:1px;
+  float: right;
 }
+
+#backlogs_container .stories .editing .story_points {
+    display: none;
+} 
 
 
 #helpers{

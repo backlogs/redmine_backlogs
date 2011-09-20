@@ -3,51 +3,62 @@ pt-BR:
   backlogs_active: Ativo
   backlogs_any: Nenhum
   backlogs_card_specification: "Tipo de r\xC3\xB3tulo para impress\xC3\xA3o no cart\xC3\xA3o"
-  backlogs_impediment: 
-  backlogs_inactive: Mostrar projetos inativos
+  backlogs_impediment: Impediment
   backlogs_points_burn_direction: Pontos usados subir/descer
   backlogs_product_backlog: Product backlog
-  backlogs_product_backlog_is_empty: Product backlog esta vazio
-  backlogs_product_backlog_unsized: "O topo do Product Backlog possui est\xC3\xB3rias sem estimativas."
-  backlogs_sizing_inconsistent: "Tamanho das est\xC3\xB3rias muda de acordo com suas estimativas"
-  backlogs_sprint_notes_missing: Sprints fechados sem notas de retrospectiva
-  backlogs_sprint_unestimated: "Ativar ou desativar sprints com est\xC3\xB3rias sem estimativas"
-  backlogs_sprint_unsized: "Projeto possui est\xC3\xB3rias ativas ou recentemente fechadas durante o Sprint sem estimativas"
   backlogs_sprints: Sprints
+  backlogs_statistics_active: Project show activity
+  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
+  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
+  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sprints: Measured over %{value} sprints
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_yield: Project has good average yield
+  backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: "Est\xC3\xB3ria"
   backlogs_story_tracker: "Seq\xC3\xBC\xC3\xAAncia da est\xC3\xB3ria"
   backlogs_task: Tarefas
   backlogs_task_tracker: "Seq\xC3\xBC\xC3\xAAncia da tarefa"
-  backlogs_velocity_missing: "A velocidade n\xC3\xA3o pode ser calculada para este projeto."
-  backlogs_velocity_varies: "Varia\xC3\xA7\xC3\xA3o Significativa da Velocidade durante as Sprints"
   backlogs_wiki_template: "Modelo para a p\xC3\xA1gina wiki sprint"
   button_edit_wiki: "Editar a p\xC3\xA1gina no wiki"
-  comma_delimited_numbers: 
+  comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
   error_blank: "n\xC3\xA3o pode ser branco"
   error_greater_than_start_date: "n\xC3\xA3o pode ser anterior \xC3\xA0 data de in\xC3\xADcio"
-  error_inclusion: 
+  error_inclusion: is not included in the list
   error_intro_plural: "Os seguintes erros foram encontrados:"
   error_intro_singular: "O seguinte erro foi encontrado:"
   error_must_have_comma_delimited_list: "Deve haver uma lista separada por v\xC3\xADrgulas de est\xC3\xB3rias ou dos IDs das tarefas."
+  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Por favor corriga os erros antes de enviar novamente.
-  error_release_end_after_start: 
-  error_taken: 
-  event_sprint_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+  error_release_end_after_start: Release end date has to be after start date
+  error_taken: is already in use
   event_sprint_summary: "{{project}}: {{summary}}"
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Blocos
-  field_initial_estimate: 
-  field_initial_story_points: 
+  field_initial_estimate: Initial estimate
+  field_initial_story_points: Initial story points
   field_name: Nome
-  field_number_of_snapshots: 
+  field_number_of_snapshots: Saved point snapshots
   field_position: !binary |
     UG9zacOnw6Nv
 
-  field_release_end_date: 
-  field_release_start_date: 
+  field_release_end_date: Release end date
+  field_release_start_date: Release start date
   field_story_points: "Pontos de est\xC3\xB3ria"
   field_subject: Assunto
   field_tracker_id: "[[Tracker ID]]"
@@ -58,36 +69,35 @@ pt-BR:
   label_burndown: Burndown
   label_chart_options: "Op\xC3\xA7\xC3\xB5es do gr\xC3\xA1fico"
   label_hours: Horas
-  label_hours_ideal: 
-  label_hours_remaining: 
-  label_hours_required_burn_rate: 
-  label_impediments: 
+  label_hours_ideal: ideal
+  label_hours_remaining: remaining hours
+  label_hours_required_burn_rate: required burn rate (hours)
+  label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_not_prioritized: "N\xC3\xA3o priorizadas"
   label_points: Pontos
-  label_points_accepted: 
+  label_points_accepted: points accepted
   label_points_burn_down: Descer
   label_points_burn_up: Subir
-  label_points_committed: 
-  label_points_required_burn_rate: 
-  label_points_resolved: 
-  label_points_to_accept: 
-  label_points_to_resolve: 
+  label_points_committed: points committed
+  label_points_required_burn_rate: required burn rate (points)
+  label_points_resolved: points resolved
+  label_points_to_accept: points not accepted
+  label_points_to_resolve: points not resolved
   label_product_backlog: Product backlog
   label_product_cards: "Cart\xC3\xB5es do Product backlog"
-  label_release: 
-  label_release_end_date: 
-  label_release_new: 
-  label_release_planning: 
-  label_release_plural: 
-  label_release_start_date: 
+  label_release: Release
+  label_release_end_date: Release end date
+  label_release_new: New release
+  label_release_planning: Release Planning
+  label_release_plural: Releases
+  label_release_start_date: Release start date
   label_scrum_statistics: "Estat\xC3\xADsticas do scrum"
   label_select_all: Selecinar Todos
   label_sprint_backlog: Sprint backlog
   label_sprint_cards: "Cart\xC3\xB5es de Sprint"
   label_sprint_impediments: Impedimentos do sprint
   label_sprint_name: Sprint "{{name}}"
-  label_sprint_velocity: "Velocidade {{velocity}}, baseada no {{sprints}} com a m\xC3\xA9dia de {{days}} Dias"
   label_stories: "Est\xC3\xB3rias"
   label_stories_tasks: "Est\xC3\xB3rias/Tarefas"
   label_task_board: Quadro de tarefas
@@ -97,20 +107,35 @@ pt-BR:
   rb_label_copy_tasks_none: Nenhum
   rb_label_copy_tasks_open: Abertas
   rb_label_link_to_original: "Incluir link para a hist\xC3\xB3ria original"
-  rb_label_timelog_disable: "Disable"
-  rb_label_timelog_enable: "Enable"
-  rb_task_cards_stories_then_tasks: 
-  rb_task_cards_story_follows_tasks: 
-  rb_task_cards_tasks_follow_story: 
-  rb_taskboard_card_order: 
-  rb_timelog_from_taskboard: "Timelog from taskboard"
-  release_create_snapshot_today: 
-  release_update_snapshot_today: 
-  remaining_story_points: 
-  today_not_in_release_msg: 
-  today_not_in_release_warning: 
-  todo_issue_description: |-
-    {{summary}}: {{url}}
-    {{description}}
+  rb_label_timelog_disable: Disable
+  rb_label_timelog_enable: Enable
+  rb_task_cards_stories_then_tasks: First all stories, then all tasks
+  rb_task_cards_story_follows_tasks: Tasks followed by their story
+  rb_task_cards_tasks_follow_story: Story followed by their tasks
+  rb_taskboard_card_order: Card print order
+  rb_timelog_from_taskboard: Timelog from taskboard
+  release_create_snapshot_today: Save story point snapshot for today
+  release_update_snapshot_today: Update story point snapshot for today
+  remaining_story_points: remaining story points
+  story_description: Description
+  story_estimation_hours: Estimation (hours)
+  story_points: Points
+  story_remaining_hours: Remaining (hours)
+  story_spent_time: Spent Time
+  story_status: Status
+  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "{{type}}: {{summary}}"
-  use_free_text_if_empty: 
+  use_free_text_if_empty: Use text field instead of dropdown if empty
+  warning_reset_sprint: |-
+    YOU ARE ABOUT TO RESET THIS SPRINT!
+    
+    Are you sure you want to do this? Resetting the sprint
+    will have the following effects on stories and tasks:
+    
+    * Creation date will be set to the sprint start date
+    * ALL modifications to the stories and tasks except notes
+       will be DELETED
+    * The current value will become the initial value for all
+       story/task properties
+    * State will be set to the default issue state

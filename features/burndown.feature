@@ -132,3 +132,15 @@ Feature: Scrum master
         | 3       | 11               | 8                 | 65              |
         | 4       | 11               | 8                 | 30              |
         | 5       | 11               | 0                 | 0               |
+
+  Scenario: Change sprint start date
+    Given I am viewing the taskboard for Sprint 001
+      And I have changed the sprint start date to tomorrow
+      And the project has the following stories in the following sprints:
+        | position | subject | sprint     | points |
+        | 4        | Story D | Sprint 001 | 1      |
+      And I have changed the sprint start date to today
+     Then the sprint burnup should be:
+        | day     | points_resolved |
+        | start   | 1                |
+        | 1       | 1                |

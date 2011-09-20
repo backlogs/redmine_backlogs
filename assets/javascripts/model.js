@@ -39,8 +39,12 @@ RB.Model = RB.Object.create({
     // Do nothing. Child objects may or may not override this method
   },
 
-  cancelEdit: function(){
+  cancelEdit: function(obj){
     this.endEdit();
+    if (typeof obj == 'undefined') {
+        obj = this;
+    }
+    obj.$.find('.editors').remove();
     if(this.isNew()){
       this.$.hide('blind');
     }
@@ -287,14 +291,30 @@ RB.Model = RB.Object.create({
 
     self.unmarkError();
     self.markSaving();
-    RB.ajax({
-      type: "POST",
-      url: saveDir.url,
-      data: saveDir.data,
-      success   : function(d,t,x){ self.afterSave(d,t,x) },
-      error     : function(x,t,e){ self.error(x,t,e) }
+    
+    jQuery.ajax({
+       type: "POST",
+       url: saveDir.url,
+       data: saveDir.data,
+       success: function(d, t, x){
+          self.afterSave(d,t,x);
+          self.refreshTooltip(self);
+       },
+       error : function(x,t,e){ self.error(x,t,e); }
     });
+    
     self.endEdit();
+  },
+
+  refreshTooltip: function(model) {
+    if (typeof jQuery.qtipMakeOptions != 'function') {
+        return false;
+    }
+    if (typeof model == 'undefined') {
+        model = this;
+    }
+    var _ = model.$.find('div.story_tooltip');
+    _.qtip(jQuery.qtipMakeOptions(_));
   },
   
   unmarkError: function(){

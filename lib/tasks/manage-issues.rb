@@ -3,9 +3,20 @@
 require 'yaml'
 require 'net/http'
 require 'uri'
+require 'cgi'
 require 'time'
 
 class GitHub
+  STATES = {
+    'IMPORTANT-READ'    =>  [:keep, :no_feedback],
+    'on-hold'           =>  [:keep, :no_feedback],
+    'in-progress'       =>  [:keep, :no_feedback],
+    'feedback-required' =>  :keep,
+    'feature-request'   =>  [:keep, :no_feedback],
+    'release-blocker'   =>  :keep,
+    'no-feedback'       =>  :keep
+    }
+
   class HashClass
     def initialize(gh, data)
       @gh = gh
@@ -33,7 +44,7 @@ class GitHub
 
   class Issue < HashClass
     def comments
-      @comments ||= YAML::load(@gh.get("issues/comments/:user/:repo/#{number}"))['comments'].collect { |c| Comment.new(@gh, c) }
+      @comments ||= [YAML::load(@gh.get("issues/comments/:user/:repo/#{number}"))['comments']].compact.flatten.collect { |c| Comment.new(@gh, c) }
     end
 
     def state
@@ -50,10 +61,18 @@ class GitHub
       l = @data[:labels].reject{|l| l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i }
 
       if comments.size > 0
-        if @gh.committers.include?(comments[-1].user) && (l - ['feature-request', 'in-progress', 'on-hold']) == l
-          l << "awaiting-feedback"
+        # last comment by a repo committer and not labeled with a
+        # 'no-feedback' label
+        if @gh.committers.include?(comments[-1].user) && (l & GitHub.states(:no_feedback)).size == 0
+          l << "feedback-required"
 
-          date = comments[-1].updated_at
+          req = nil
+          comments.reverse.each{|c|
+            break unless @gh.committers.include?(c.user)
+            req = c
+          }
+
+          date = req.updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
           case diff
             when 0 then nil
@@ -64,6 +83,17 @@ class GitHub
           end
         end
       end
+      prio = nil
+      comments.each {|c|
+        next unless @gh.committers.include?(c.user)
+        prio = 
+        m = c.body.match(/\s:([0-9]+):\s/)
+        m = c.body.match(/^:([0-9]+):\s/) unless m
+        m = c.body.match(/\s:([0-9]+):$/) unless m
+        m = c.body.match(/^:([0-9]+):$/) unless m
+        prio = m[1] if m
+      }
+      l << "prio-#{prio}" if prio
       return l.compact.uniq.collect{|lb| lb.downcase}
     end
 
@@ -74,10 +104,10 @@ class GitHub
 
       # post user and api key here
       remove.each {|l|
-        @gh.post("issues/label/remove/:user/:repo/#{l}/#{number}")
+        @gh.post("issues/label/remove/:user/:repo/#{CGI::escape(l)}/#{number}")
       }
       add.each {|l|
-        @gh.post("issues/label/add/:user/:repo/#{l}/#{number}")
+        @gh.post("issues/label/add/:user/:repo/#{CGI::escape(l)}/#{number}")
       }
     end
   end
@@ -117,7 +147,7 @@ class GitHub
   def labels(which = :all)
     return YAML::load(get('issues/labels/:user/:repo'))['labels'] if which == :all
     return issues.collect{|i| i.labels}.flatten.compact.uniq if which == :active
-    return (issues.collect{|i| i.labels(:calculate)}.flatten + fixed_states).compact.uniq if which == :calculate
+    return (issues.collect{|i| i.labels(:calculate)}.flatten + GitHub.states(:keep)).compact.uniq if which == :calculate
     raise "Unexpected selector #{which.inspect}"
   end
 
@@ -139,8 +169,8 @@ class GitHub
     return ['friflaj']
   end
 
-  def fixed_states
-    ['on-hold', 'in-progress', 'awaiting-feedback', 'feature-request', 'release-blocker', 'no-feedback']
+  def self.states(cond)
+    return GitHub::STATES.keys.select{|k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond))}
   end
 end
 
