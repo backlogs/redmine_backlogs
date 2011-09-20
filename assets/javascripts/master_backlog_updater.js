@@ -38,7 +38,7 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     }
 
     var _ = target.$.find('div.story_tooltip');
-    _.qtip($.qtipMakeOptions(_));
+    _.qtip(jQuery.qtipMakeOptions(_));
 
     if(oldParent!=null) oldParent.recalcVelocity();
     target.$.parents(".backlog").first().data('this').recalcVelocity();
