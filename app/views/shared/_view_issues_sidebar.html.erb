@@ -39,7 +39,7 @@
                     :key        => key }) %>"><%= l(:label_webcal) %></a><br>
     <% end %>
 
-    <% if sprint && sprint.has_burndown %>
+    <% if sprint && sprint.has_burndown? %>
         <h3><%= l(:label_sprint_name, {:name => sprint.name}) %></h3>
         <%= link_to(l(:label_task_board), {
                 :controller => 'rb_taskboards',
@@ -51,7 +51,6 @@
         <%= link_to(l(:label_burndown), {
                 :controller => 'rb_burndown_charts',
                 :action => 'show',
-                :project_id => project.id,
                 :sprint_id => sprint.id
                 })
         %><br/>

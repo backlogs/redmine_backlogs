@@ -130,9 +130,10 @@ class RbTask < Issue
   def burndown(sprint = nil)
     unless @burndown
       sprint ||= story.fixed_version.becomes(RbSprint)
-      if sprint
+      if sprint && sprint.has_burndown?
         days = sprint.days(:active)
-        @burndown = {:hr => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days)}.transpose.collect{|h| h[:sprint] == sprint.id ? h[:hr] : nil}
+        series = Backlogs::MergedArray.new(:hours => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days))
+        @burndown = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
       else
         @burndown = nil
       end

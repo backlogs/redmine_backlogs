@@ -19,17 +19,8 @@ class RbCalendarsController < RbApplicationController
     # current + future sprints
     RbSprint.find(:all, :conditions => ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
       summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
-      description_text = l(:event_sprint_description, {
-                            :summary => sprint.name,
-                            :description => sprint.description,
-                            :url => url_for({
-                              :controller => 'rb_queries',
-                              :only_path => false,
-                              :action => 'show',
-                              :project_id => @project.id,
-                              :sprint_id => sprint.id
-                              })
-                            })
+      description_text = "#{sprint.name}: #{url_for(:controller => 'rb_queries', :only_path => false, :action => 'show', :project_id => @project.id, :sprint_id => sprint.id)}\n#{sprint.description}"
+
       cal.event do
         dtstart     sprint.sprint_start_date
         dtend       sprint.effective_date
@@ -89,16 +80,7 @@ class RbCalendarsController < RbApplicationController
 
     issues = Issue.find(:all, :include => :status, :conditions => conditions).each {|issue|
       summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
-      description_text = l(:todo_issue_description, {
-                            :summary => issue.subject,
-                            :description => issue.description,
-                            :url => url_for({
-                              :controller => 'issues',
-                              :only_path => false,
-                              :action => 'show',
-                              :id => issue.id
-                              })
-                            })
+      description_text = "#{issue.subject}: #{url_for(:controller => 'issues', :only_path => false, :action => 'show', :id => issue.id)}\n#{issue.description}"
       # I know this should be "cal.todo do", but outlook in it's
       # infinite stupidity doesn't support VTODO
       cal.event do

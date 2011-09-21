@@ -381,3 +381,16 @@ Given /^show me the task hours$/ do
   data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.estimated_hours.inspect]}
   show_table("Task hours", header, data)
 end
+
+Given /^I have changed the sprint start date to (.*)$/ do |date|
+  case date
+    when 'today'
+      date = Date.today.to_time
+    when 'tomorrow'
+      date = (Date.today + 1).to_time
+    else
+      raise "Unsupported date '#{date}'"
+  end
+  @sprint.created_on = date
+  @sprint.save!
+end
