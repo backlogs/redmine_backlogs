@@ -1,13 +1,13 @@
---- 
-en: 
+
+ja: 
   backlogs_active: active
   backlogs_any: any
-  backlogs_card_specification: Label types for card printing
-  backlogs_impediment: Impediment
-  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_card_specification: カード印刷のラベルタイプ
+  backlogs_impediment: 残チケット
+  backlogs_statistics_active_failed: プロジェクトにはアクティビティがありません
   backlogs_statistics_active: Project show activity
-  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
-  backlogs_statistics_product_backlog_filled: Product backlog has stories
+  backlogs_statistics_product_backlog_filled_failed: プロダクトバックログが見つかりません
+  backlogs_statistics_product_backlog_filled: プロダクトバックログはストーリーを持っています
   backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
   backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
   backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
@@ -27,11 +27,11 @@ en:
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
   backlogs_points_burn_direction: Points burn up/down
-  backlogs_product_backlog: Product backlog
-  backlogs_sprints: Sprints
-  backlogs_story: Story
+  backlogs_product_backlog: プロダクトバックログ
+  backlogs_sprints: スプリント
+  backlogs_story: ストーリー
   backlogs_story_tracker: Story trackers
-  backlogs_task: Task
+  backlogs_task: タスク
   backlogs_task_tracker: Task tracker
   backlogs_wiki_template: Template for sprint wiki page
   button_edit_wiki: Edit wiki page
@@ -48,11 +48,11 @@ en:
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
   event_sprint_summary: "%{project}: %{summary}"
-  field_backlogs_issue_type: Backlog type
-  field_blocks: Blocks
-  field_initial_estimate: Initial estimate
-  field_initial_story_points: Initial story points
-  field_name: Name
+  field_backlogs_issue_type: バックログタイプ
+  field_blocks: ブロック
+  field_initial_estimate: 初期見積もり
+  field_initial_story_points: 初期ストーリーポイント
+  field_name: 名前
   field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_release_end_date: Release end date
@@ -61,48 +61,37 @@ en:
   field_subject: Subject
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Velocity based estimate
-  label_back_to_project: Back to project page
-  label_backlogs: Backlogs
+  label_back_to_project: プロジェクトページへ戻る
+  label_backlogs: バックログ
   label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
-  label_burndown: Burndown
-  label_chart_options: Chart Options
-  label_hours: hours
+  label_burndown: バーンダウン
+  label_chart_options: チャートオプション
+  label_hours: 時間
   label_hours_ideal: ideal
-  label_hours_remaining: remaining hours
-  label_hours_required_burn_rate: required burn rate (hours)
-  label_impediments: Impediments
-  label_master_backlog: Master Backlog
+  label_hours_remaining: 残り時間
+  label_hours_required_burn_rate: 必要なバーンレート(時間)
+  label_impediments: 残チケット
+  label_master_backlog: マスターバックログ
   label_not_prioritized: not prioritized
-  label_points: points
+  label_points: ポイント
   label_points_accepted: points accepted
   label_points_burn_down: Down
   label_points_burn_up: Up
-  label_points_committed: points committed
-  label_points_required_burn_rate: required burn rate (points)
-  label_points_resolved: points resolved
-  label_points_to_accept: points not accepted
-  label_points_to_resolve: points not resolved
-  label_product_backlog: product backlog
-  label_product_cards: Product backlog cards
-  label_release: Release
-  label_release_end_date: Release end date
-  label_release_new: New release
-  label_release_planning: Release Planning
-  label_release_plural: Releases
-  label_release_start_date: Release start date
-  label_release_end_date: Release end date
-  label_new_story: New Story
-  label_new_sprint: New Sprint
-  label_download: Download
-  label_reset: Reset
-  label_close_completed_sprints: Close completed Sprints
-  label_no_start: no start
-  label_no_end: no end
-  label_hide_completed_sprints: Hide Completed Sprints
-  label_show_completed_sprints: Show Completed Sprints
-  label_no_data_to_show: No data to show
-  label_column_width: Column width
-  field_initial_story_points: Initial story points
+  label_points_committed: 完了したポイント
+  label_points_required_burn_rate: 必要なバーンレート((ポイント)
+  label_points_resolved: 完了したポイント
+  label_points_to_accept: 着手していないポイント
+  label_points_to_resolve: 未完了のポイント
+  label_product_backlog: プロダクトバックログ
+  label_product_cards: プロダクトバックログカード
+  label_release: リリース
+  label_release_end_date: リリースと日付
+  label_release_new: 新しいリリース
+  label_release_planning: リリース計画
+  label_release_plural: リリース
+  label_release_start_date: リリース開始日
+  label_release_end_date: リリース日
+  field_initial_story_points: 初期ストーリーポイント
   error_release_end_after_start: Release end date has to be after start date
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
@@ -131,16 +120,27 @@ en:
   story_remaining_hours: "Remaining (hours)"
   story_spent_time: "Spent Time"
   rb_taskboard_card_order: Card print order
-  label_scrum_statistics: Scrum statistics
-  label_select_all: Select all
-  label_sprint_backlog: sprint backlog
-  label_sprint_cards: Sprint cards
-  label_sprint_impediments: Sprint Impediments
+  label_scrum_statistics: スクラム統計
+  label_select_all: 全て選択
+  label_sprint_backlog: スプリントバックログ
+  label_sprint_cards: スプリントカード
+  label_sprint_impediments: スプリントの残チケット
   label_sprint_name: Sprint "%{name}"
-  label_stories: Stories
-  label_stories_tasks: Stories/Tasks
-  label_task_board: Task board
+  label_stories: ストーリー
+  label_stories_tasks: ストーリー/タスク
+  label_task_board: タスクボード
   label_webcal: Webcal Feed
+  label_new_story: 新しいストーリー
+  label_new_sprint: 新しいスプリント
+  label_download: ダウンロード
+  label_reset: リセット
+  label_close_completed_sprints: 完了したスプリントをクローズ
+  label_no_start: 開始日未設定
+  label_no_end: 終了日未設定
+  label_hide_completed_sprints: 完了したスプリントを隠す
+  label_show_completed_sprints: 完了したスプリントを表示
+  label_no_data_to_show: 表示するデータがありません
+  label_column_width: 列の幅
   rb_label_copy_tasks: Copy tasks
   rb_label_copy_tasks_all: All
   rb_label_copy_tasks_none: None
