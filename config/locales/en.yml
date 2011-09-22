@@ -91,6 +91,17 @@ en:
   label_release_plural: Releases
   label_release_start_date: Release start date
   label_release_end_date: Release end date
+  label_new_story: New Story
+  label_new_sprint: New Sprint
+  label_download: Download
+  label_reset: Reset
+  label_close_completed_sprints: Close completed Sprints
+  label_no_start: no start
+  label_no_end: no end
+  label_hide_completed_sprints: Hide Completed Sprints
+  label_show_completed_sprints: Show Completed Sprints
+  label_no_data_to_show: No data to show
+  label_column_width: Column width
   field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
