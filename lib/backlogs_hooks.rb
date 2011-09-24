@@ -66,7 +66,7 @@ module BacklogsPlugin
         snippet = ''
         issue = context[:issue]
 
-        return '' unless issue.project.module_enabled? 'backlogs' && issue.id
+        return '' unless issue.project.module_enabled?('backlogs') && issue.id
 
         #project = context[:project]
 

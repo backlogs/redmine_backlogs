@@ -1,5 +1,4 @@
 # Ignore any accidental remnants from gh-pages branch
-.gitignore
 _site
 _posts
 assets/styles
