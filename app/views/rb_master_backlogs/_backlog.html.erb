@@ -10,7 +10,7 @@
       <div class="velocity"> </div>
     <%- else %>
       <div class="label"><%=l(:label_product_backlog).titleize %></div>
-      <%= link_to "Close completed Sprints", close_completed_project_versions_path(@project), :class => "close_sprint", :method => :put, :target => "_blank" %>
+      <%= link_to l(:label_close_completed_sprints), close_completed_project_versions_path(@project), :class => "close_sprint", :method => :put, :target => "_blank" %>
     <%- end %>
   </div>
   <ul id="stories-for-<%= backlog[:sprint] ? backlog[:sprint].id : 'product-backlog' %>" class="stories">

@@ -1,4 +1,5 @@
 include RbCommonHelper
+include ProjectsHelper
 
 # Responsible for exposing release CRUD.
 class RbReleasesController < RbApplicationController
