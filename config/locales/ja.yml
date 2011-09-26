@@ -4,28 +4,28 @@ ja:
   backlogs_any: any
   backlogs_card_specification: カード印刷のラベルタイプ
   backlogs_impediment: 残チケット
-  backlogs_statistics_active_failed: プロジェクトにはアクティビティがありません
-  backlogs_statistics_active: Project show activity
-  backlogs_statistics_product_backlog_filled_failed: プロダクトバックログが見つかりません
-  backlogs_statistics_product_backlog_filled: プロダクトバックログはストーリーを持っています
-  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_active_failed: "プロジェクトにはアクティビティがありません"
+  backlogs_statistics_active: "プロジェクトには幾つかのアクティビティがあります"
+  backlogs_statistics_product_backlog_filled_failed: "プロダクトバックログが見つかりません"
+  backlogs_statistics_product_backlog_filled: "プロダクトバックログはストーリーを持っています"
+  backlogs_statistics_sprints_estimated_failed: "クローズされたもしくはアクティブなスプリントは見積もりがないストーリーが存在します"
   backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
   backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
-  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
-  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
+  backlogs_statistics_sprint_notes_available_failed: スプリントは、振り返り/レビューノートを入力せずにクローズされました
+  backlogs_statistics_sprint_notes_available: 最近クローズされたスプリントは、振り返り/レビューノートがあります
   backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
-  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
-  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
-  backlogs_statistics_yield_failed: Project has low average yield
-  backlogs_statistics_yield: Project has good average yield
-  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
-  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sprints_sized: アクティブで最近クローズされたスプリントは達成しています
+  backlogs_statistics_sizing_consistent_failed: "ストーリーサイズは見積もりに対して乖離しています"
+  backlogs_statistics_sizing_consistent: "ストーリーサイズは、見積もりに対して安定しています"
+  backlogs_statistics_yield_failed: "プロジェクトは低い平均値を出しています"
+  backlogs_statistics_yield: "プロジェクトは良い平均値を出しています"
+  backlogs_statistics_committed_velocity_stable_failed: "承認されたベロシティはスプリントをまたがって安定していません"
+  backlogs_statistics_committed_velocity_stable: "承認されたベロシティはスプリントをまたがって安定しています"
+  backlogs_statistics_sizing_stddev: "ポイントに対する時間の標準偏差 %{value} 時間"
   backlogs_statistics_sprints: Measured over %{value} sprints
   backlogs_statistics_velocity: "ベロシティ: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_velocity_stddev: "ベロシティの標準偏差: %{value} ポイント"
   backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
   backlogs_product_backlog: "プロダクトバックログ"
   backlogs_sprints: "スプリント"
@@ -58,8 +58,8 @@ ja:
   field_release_end_date: Release end date
   field_release_start_date: Release start date
   field_story_points: ストーリーポイント
-  field_subject: Subject
-  field_tracker_id: Tracker ID
+  field_subject: 題名
+  field_tracker_id: トラッカーID
   field_velocity_based_estimate: Velocity based estimate
   label_back_to_project: プロジェクトページへ戻る
   label_backlogs: バックログ
@@ -75,13 +75,13 @@ ja:
   label_not_prioritized: not prioritized
   label_points: ポイント
   label_points_accepted: points accepted
-  label_points_burn_down: Down
-  label_points_burn_up: Up
-  label_points_committed: 完了したポイント
-  label_points_required_burn_rate: 必要なバーンレート((ポイント)
+  label_points_burn_down: ダウン
+  label_points_burn_up: アップ
+  label_points_committed: 承諾したポイント
+  label_points_required_burn_rate: 必要なバーンレート(ポイント)
   label_points_resolved: 完了したポイント
   label_points_to_accept: 着手していないポイント
-  label_points_to_resolve: 未完了のポイント
+  label_points_to_resolve: 解決したポイント
   label_product_backlog: プロダクトバックログ
   label_product_cards: プロダクトバックログカード
   label_release: リリース
@@ -131,12 +131,12 @@ ja:
   permission_view_scrum_statistics: "スクラム統計の閲覧"
 
   # Tooltips
-  story_description: "Description"
-  story_status: "Status"
-  story_points: "Points"
-  story_estimation_hours: "Estimation (hours)"
-  story_remaining_hours: "Remaining (hours)"
-  story_spent_time: "Spent Time"
+  story_description: "説明"
+  story_status: "ステータス"
+  story_points: "ストーリーポイント"
+  story_estimation_hours: "見積もり(時間)"
+  story_remaining_hours: "残り時間(時間)"
+  story_spent_time: "消費時間"
   rb_taskboard_card_order: カードの印刷順
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
