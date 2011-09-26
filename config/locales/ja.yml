@@ -24,18 +24,18 @@ ja:
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
   backlogs_statistics_sprints: Measured over %{value} sprints
-  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity: "ベロシティ: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
-  backlogs_points_burn_direction: Points burn up/down
-  backlogs_product_backlog: プロダクトバックログ
-  backlogs_sprints: スプリント
-  backlogs_story: ストーリー
-  backlogs_story_tracker: Story trackers
-  backlogs_task: タスク
-  backlogs_task_tracker: Task tracker
-  backlogs_wiki_template: Template for sprint wiki page
-  button_edit_wiki: Edit wiki page
-  comma_delimited_numbers: Comma delimited numbers
+  backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
+  backlogs_product_backlog: "プロダクトバックログ"
+  backlogs_sprints: "スプリント"
+  backlogs_story: "ストーリー"
+  backlogs_story_tracker: "ストーリーに利用するトラッカー"
+  backlogs_task: "タスク"
+  backlogs_task_tracker: "タスクとして利用のトラッカー"
+  backlogs_wiki_template: "スプリントのテンプレートのWikiページ"
+  button_edit_wiki: "Wikiページの編集"
+  comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
   current_open_story_points: "Current open story points:"
   error_blank: cannot be blank
   error_greater_than_start_date: cannot be earlier than Start Date
@@ -57,7 +57,7 @@ ja:
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
-  field_story_points: Story points
+  field_story_points: ストーリーポイント
   field_subject: Subject
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Velocity based estimate
@@ -137,7 +137,7 @@ ja:
   story_estimation_hours: "Estimation (hours)"
   story_remaining_hours: "Remaining (hours)"
   story_spent_time: "Spent Time"
-  rb_taskboard_card_order: Card print order
+  rb_taskboard_card_order: カードの印刷順
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
   label_sprint_backlog: スプリントバックログ
@@ -166,18 +166,18 @@ ja:
   rb_label_link_to_original: Include link to original story
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable
-  rb_task_cards_stories_then_tasks: First all stories, then all tasks
-  rb_task_cards_story_follows_tasks: Tasks followed by their story
-  rb_task_cards_tasks_follow_story: Story followed by their tasks
-  rb_taskboard_card_order: Card print order
-  rb_timelog_from_taskboard: Timelog from taskboard
+  rb_task_cards_stories_then_tasks: 全てのストーリーを印刷した後、全てのタスクを印刷
+  rb_task_cards_story_follows_tasks: ストーリー、タスクの順に印刷
+  rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
+  rb_taskboard_card_order: カードの印刷順
+  rb_timelog_from_taskboard: タスクボードのタイムログ
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
+  remaining_story_points: 残りのストーリーポイント
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: Use text field instead of dropdown if empty
+  use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"
   warning_reset_sprint: |
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
