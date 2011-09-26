@@ -112,6 +112,24 @@ ja:
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "All"
   rb_label_copy_tasks_open: "Open"
+
+  # Permission
+  permission_reset_sprint: "スプリントのリセット"
+  permission_view_master_backlog: "マスターバックログの閲覧"
+  permission_view_releases: "リリースの閲覧"
+  permission_view_taskboards: "タスクボードの閲覧"
+  permission_modify_releases: "リリースの編集"
+  permission_create_sprints: "スプリントの作成"
+  permission_update_sprints: "スプリントの更新"
+  permission_create_stories: "ストーリーの作成"
+  permission_update_stories: "ストーリーの更新"
+  permission_create_tasks: "タスクの作成"
+  permission_update_tasks: "タスクの更新"
+  permission_create_impediments: "障害の作成"
+  permission_update_impediments: "障害の更新"
+  permission_subscribe_to_calendars: "カレンダーへの取り込み"
+  permission_view_scrum_statistics: "スクラム統計の閲覧"
+
   # Tooltips
   story_description: "Description"
   story_status: "Status"
