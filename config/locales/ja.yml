@@ -4,66 +4,66 @@ ja:
   backlogs_any: any
   backlogs_card_specification: カード印刷のラベルタイプ
   backlogs_impediment: 残チケット
-  backlogs_statistics_active_failed: プロジェクトにはアクティビティがありません
-  backlogs_statistics_active: Project show activity
-  backlogs_statistics_product_backlog_filled_failed: プロダクトバックログが見つかりません
-  backlogs_statistics_product_backlog_filled: プロダクトバックログはストーリーを持っています
-  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
-  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
-  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
-  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
-  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
-  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
-  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
-  backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
-  backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
-  backlogs_statistics_yield_failed: Project has low average yield
-  backlogs_statistics_yield: Project has good average yield
-  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
-  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
-  backlogs_statistics_sprints: Measured over %{value} sprints
-  backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
-  backlogs_points_burn_direction: Points burn up/down
-  backlogs_product_backlog: プロダクトバックログ
-  backlogs_sprints: スプリント
-  backlogs_story: ストーリー
-  backlogs_story_tracker: Story trackers
-  backlogs_task: タスク
-  backlogs_task_tracker: Task tracker
-  backlogs_wiki_template: Template for sprint wiki page
-  button_edit_wiki: Edit wiki page
-  comma_delimited_numbers: Comma delimited numbers
-  current_open_story_points: "Current open story points:"
-  error_blank: cannot be blank
-  error_greater_than_start_date: cannot be earlier than Start Date
-  error_inclusion: is not included in the list
-  error_intro_plural: "The following errors were encountered:"
-  error_intro_singular: "The following error was encountered:"
-  error_must_have_comma_delimited_list: must have a comma delimited list of story or task IDs
-  error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
-  error_outro: Please correct the above errors before submitting again.
-  error_release_end_after_start: Release end date has to be after start date
-  error_taken: is already in use
+  backlogs_statistics_active_failed: "プロジェクトにはアクティビティがありません"
+  backlogs_statistics_active: "プロジェクトには幾つかのアクティビティがあります"
+  backlogs_statistics_product_backlog_filled_failed: "プロダクトバックログが見つかりません"
+  backlogs_statistics_product_backlog_filled: "プロダクトバックログはストーリーを持っています"
+  backlogs_statistics_sprints_estimated_failed: "クローズされたもしくはアクティブなスプリントは見積もりがないストーリーが存在します"
+  backlogs_statistics_sprints_estimated: アクティブで最近クローズされたスプリントはタスクの見積もりが設定されています
+  backlogs_statistics_product_backlog_sized_failed: プロダクトバックログはサイズが合っていないストーリーを持っています
+  backlogs_statistics_product_backlog_sized: プロダクトバックログのストーリーはサイズが合っています
+  backlogs_statistics_sprint_notes_available_failed: スプリントは、振り返り/レビューノートを入力せずにクローズされました
+  backlogs_statistics_sprint_notes_available: 最近クローズされたスプリントは、振り返り/レビューノートがあります
+  backlogs_statistics_sprints_sized_failed: プロジェクトはアクティブなもしくは最近クローズされたスプリントに対しサイズが合っていないストーリーを含んでいます
+  backlogs_statistics_sprints_sized: アクティブで最近クローズされたスプリントは達成しています
+  backlogs_statistics_sizing_consistent_failed: "ストーリーサイズは見積もりに対して乖離しています"
+  backlogs_statistics_sizing_consistent: "ストーリーサイズは、見積もりに対して安定しています"
+  backlogs_statistics_yield_failed: "プロジェクトは低い平均値を出しています"
+  backlogs_statistics_yield: "プロジェクトは良い平均値を出しています"
+  backlogs_statistics_committed_velocity_stable_failed: "承認されたベロシティはスプリントをまたがって安定していません"
+  backlogs_statistics_committed_velocity_stable: "承認されたベロシティはスプリントをまたがって安定しています"
+  backlogs_statistics_sizing_stddev: "ポイントに対する時間の標準偏差 %{value} 時間"
+  backlogs_statistics_sprints: %{value} スプリントに渡って測定されています
+  backlogs_statistics_velocity: "ベロシティ: %{value}"
+  backlogs_statistics_velocity_stddev: "ベロシティの標準偏差: %{value} ポイント"
+  backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
+  backlogs_product_backlog: "プロダクトバックログ"
+  backlogs_sprints: "スプリント"
+  backlogs_story: "ストーリー"
+  backlogs_story_tracker: "ストーリーに利用するトラッカー"
+  backlogs_task: "タスク"
+  backlogs_task_tracker: "タスクとして利用のトラッカー"
+  backlogs_wiki_template: "スプリントのテンプレートのWikiページ"
+  button_edit_wiki: "Wikiページの編集"
+  comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
+  current_open_story_points: "現在オープンしているストーリーポイント:"
+  error_blank: "ブランクにしないでください"
+  error_greater_than_start_date: 開始日より前にできません
+  error_inclusion: はリストに含まれていません
+  error_intro_plural: "下記のエラーが発生しました:"
+  error_intro_singular: "下記のエラーが発生しました:"
+  error_must_have_comma_delimited_list: "ストーリーもしくはタスクのIDはカンマ「,」で区切ってください"
+  error_no_workflow_for_task_tracker: "タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください"
+  error_outro: 送信する前に、上記のエラーを訂正してください
+  error_release_end_after_start: リリース終了日は開始日の後に設定してください
+  error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: バックログタイプ
   field_blocks: ブロック
   field_initial_estimate: 初期見積もり
   field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
-  field_number_of_snapshots: Saved point snapshots
+  field_number_of_snapshots: ポイントをスナップショットとして保存
   field_position: Position
-  field_release_end_date: Release end date
-  field_release_start_date: Release start date
-  field_story_points: Story points
-  field_subject: Subject
-  field_tracker_id: Tracker ID
-  field_velocity_based_estimate: Velocity based estimate
+  field_release_end_date: リリース終了日
+  field_release_start_date: リリース開始日
+  field_story_points: ストーリーポイント
+  field_subject: 題名
+  field_tracker_id: トラッカーID
+  field_velocity_based_estimate: 見積もりに基づくベロシティ
   label_back_to_project: プロジェクトページへ戻る
   label_backlogs: バックログ
-  label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
+  label_backlogs_unconfigured: "バックログが設定されていません。設定画面 %{administration} > %{plugins}, からリンク %{configure} をクリックして設定してください。フィールドを設定⑤、このページへ戻りツールを利用してください。"
   label_burndown: バーンダウン
   label_chart_options: チャートオプション
   label_hours: 時間
@@ -74,14 +74,14 @@ ja:
   label_master_backlog: マスターバックログ
   label_not_prioritized: not prioritized
   label_points: ポイント
-  label_points_accepted: points accepted
-  label_points_burn_down: Down
-  label_points_burn_up: Up
-  label_points_committed: 完了したポイント
-  label_points_required_burn_rate: 必要なバーンレート((ポイント)
+  label_points_accepted: アクセプトされたポイント
+  label_points_burn_down: ダウン
+  label_points_burn_up: アップ
+  label_points_committed: 承諾したポイント
+  label_points_required_burn_rate: 必要なバーンレート(ポイント)
   label_points_resolved: 完了したポイント
-  label_points_to_accept: 着手していないポイント
-  label_points_to_resolve: 未完了のポイント
+  label_points_to_accept: 未完了なポイント
+  label_points_to_resolve: 解決したポイント
   label_product_backlog: プロダクトバックログ
   label_product_cards: プロダクトバックログカード
   label_release: リリース
@@ -92,40 +92,53 @@ ja:
   label_release_start_date: リリース開始日
   label_release_end_date: リリース日
   field_initial_story_points: 初期ストーリーポイント
-  error_release_end_after_start: Release end date has to be after start date
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
-  today_not_in_release_warning: "Warning: current date is not within release date range."
-  field_number_of_snapshots: Saved point snapshots
-  release_update_snapshot_today: Update story point snapshot for today
-  release_create_snapshot_today: Save story point snapshot for today
-  current_open_story_points: "Current open story points:"
+  error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
+  field_number_of_snapshots: ポイントのスナップショットを保存
 
   # Version fields
-  field_name: "Name"
+  field_name: "名前"
   
   # Error messages
-  error_blank: "cannot be blank"
-  error_greater_than_start_date: "cannot be earlier than Start Date"
+  error_blank: "ブランクにできません"
+  error_greater_than_start_date: "開始日より前にできません"
 
   rb_label_link_to_original: "Include link to original story"
-  rb_label_copy_tasks: "Copy tasks"
+  rb_label_copy_tasks: "タスクをコピー"
   rb_label_copy_tasks_none: "None"
-  rb_label_copy_tasks_all: "All"
-  rb_label_copy_tasks_open: "Open"
+  rb_label_copy_tasks_all: "全て"
+  rb_label_copy_tasks_open: "開く"
+
+  # Permission
+  permission_reset_sprint: "スプリントのリセット"
+  permission_view_master_backlog: "マスターバックログの閲覧"
+  permission_view_releases: "リリースの閲覧"
+  permission_view_taskboards: "タスクボードの閲覧"
+  permission_modify_releases: "リリースの編集"
+  permission_create_sprints: "スプリントの作成"
+  permission_update_sprints: "スプリントの更新"
+  permission_create_stories: "ストーリーの作成"
+  permission_update_stories: "ストーリーの更新"
+  permission_create_tasks: "タスクの作成"
+  permission_update_tasks: "タスクの更新"
+  permission_create_impediments: "障害の作成"
+  permission_update_impediments: "障害の更新"
+  permission_subscribe_to_calendars: "カレンダーへの取り込み"
+  permission_view_scrum_statistics: "スクラム統計の閲覧"
+
   # Tooltips
-  story_description: "Description"
-  story_status: "Status"
-  story_points: "Points"
-  story_estimation_hours: "Estimation (hours)"
-  story_remaining_hours: "Remaining (hours)"
-  story_spent_time: "Spent Time"
-  rb_taskboard_card_order: Card print order
+  story_description: "説明"
+  story_status: "ステータス"
+  story_points: "ストーリーポイント"
+  story_estimation_hours: "見積もり(時間)"
+  story_remaining_hours: "残り時間(時間)"
+  story_spent_time: "消費時間"
+  rb_taskboard_card_order: カードの印刷順
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
   label_sprint_backlog: スプリントバックログ
   label_sprint_cards: スプリントカード
   label_sprint_impediments: スプリントの残チケット
-  label_sprint_name: Sprint "%{name}"
+  label_sprint_name: "スプリント: %{name}"
   label_stories: ストーリー
   label_stories_tasks: ストーリー/タスク
   label_task_board: タスクボード
@@ -141,25 +154,25 @@ ja:
   label_show_completed_sprints: 完了したスプリントを表示
   label_no_data_to_show: 表示するデータがありません
   label_column_width: 列の幅
-  rb_label_copy_tasks: Copy tasks
-  rb_label_copy_tasks_all: All
-  rb_label_copy_tasks_none: None
-  rb_label_copy_tasks_open: Open
-  rb_label_link_to_original: Include link to original story
-  rb_label_timelog_disable: Disable
-  rb_label_timelog_enable: Enable
-  rb_task_cards_stories_then_tasks: First all stories, then all tasks
-  rb_task_cards_story_follows_tasks: Tasks followed by their story
-  rb_task_cards_tasks_follow_story: Story followed by their tasks
-  rb_taskboard_card_order: Card print order
-  rb_timelog_from_taskboard: Timelog from taskboard
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
-  today_not_in_release_warning: "Warning: current date is not within release date range."
+  rb_label_copy_tasks: タスクをコピー
+  rb_label_copy_tasks_all: 全て
+  rb_label_copy_tasks_none: なし
+  rb_label_copy_tasks_open: 開く
+  rb_label_link_to_original: 元のストーリーへのリンクを含める
+  rb_label_timelog_disable: 無効
+  rb_label_timelog_enable: 有効
+  rb_task_cards_stories_then_tasks: 全てのストーリーを印刷した後、全てのタスクを印刷
+  rb_task_cards_story_follows_tasks: ストーリー、タスクの順に印刷
+  rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
+  rb_taskboard_card_order: カードの印刷順
+  rb_timelog_from_taskboard: タスクボードのタイムログ
+  release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
+  release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新
+  remaining_story_points: 残りのストーリーポイント
+  today_not_in_release_msg: "今日はリリース日の範囲に入っています。本当にスナップショットを保存しますか?"
+  today_not_in_release_warning: "警告: 今日はリリース日の範囲に入っています"
   todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: Use text field instead of dropdown if empty
+  use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"
   warning_reset_sprint: |
     YOU ARE ABOUT TO RESET THIS SPRINT!
     
