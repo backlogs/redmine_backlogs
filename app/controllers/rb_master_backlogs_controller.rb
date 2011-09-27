@@ -5,7 +5,7 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
-    sprints = RbSprint.open_sprints(@project)
+    sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
 
     #TIB (ajout des sprints fermés)
     c_sprints = RbSprint.closed_sprints(@project)
