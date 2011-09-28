@@ -19,11 +19,11 @@ class RbStory < Issue
 
       conditions = []
       parameters = []
+      options[:joins] << :project
 
       if project_id
         conditions << "(tracker_id in (?) and fixed_version_id is NULL and #{IssueStatus.table_name}.is_closed = ? and (#{Project.find(project_id).project_condition(true)}))"
         parameters += [RbStory.trackers, false]
-        options[:joins] << :project
         options[:joins] << :status
       end
 
@@ -33,6 +33,11 @@ class RbStory < Issue
       end
 
       conditions = conditions.join(' or ')
+
+      visible = Issue.visible_condition(User.current, :project => Project.find(project_id), :with_subprojects => true)
+      visible = '1=1' unless visible
+
+      conditions = "#{visible} and (#{conditions})"
 
       options[:conditions] = [options[:conditions]] if options[:conditions] && !options[:conditions].is_a?(Array)
       if options[:conditions]

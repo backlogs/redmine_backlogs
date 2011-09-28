@@ -69,7 +69,15 @@ RB.constants = {
   sprint_id: <%= @sprint ? @sprint.id : "null" %>,
   protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
   request_forgery_protection_token: '<%= request_forgery_protection_token %>',
-  form_authenticity_token: '<%= form_authenticity_token %>'
+  form_authenticity_token: '<%= form_authenticity_token %>',
+  <%
+    autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
+    autorefresh_wait = '1000' if autorefresh_wait.blank?
+    autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
+    autorefresh_wait = Integer(autorefresh_wait)
+    autorefresh_wait = 1000 if autorefresh_wait < 1000
+  %>
+  autorefresh_wait: <%= autorefresh_wait.to_json %>
 }
 
 RB.buildImageTag = function(name){
