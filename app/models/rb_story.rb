@@ -4,17 +4,20 @@ class RbStory < Issue
     acts_as_list
 
     def self.condition(project_id, sprint_id, extras=[])
+      visible = Issue.visible_condition(User.current, :project => Project.find(project_id))
+      visible = '1=1' unless visible
+
       if sprint_id.nil?  
         c = ["
           project_id = ?
           and tracker_id in (?)
           and fixed_version_id is NULL
-          and is_closed = ?", project_id, RbStory.trackers, false]
+          and is_closed = ? and #{visible}", project_id, RbStory.trackers, false]
       else
         c = ["
           project_id = ?
           and tracker_id in (?)
-          and fixed_version_id = ?",
+          and fixed_version_id = ? and #{visible}",
           project_id, RbStory.trackers, sprint_id]
       end
 
@@ -35,7 +38,7 @@ class RbStory < Issue
       RbStory.find(:all,
             :order => RbStory::ORDER,
             :conditions => RbStory.condition(project_id, sprint_id),
-            :joins => :status,
+            :joins => [:status, :project],
             :limit => options[:limit]).each_with_index {|story, i|
         story.rank = i + 1
         stories << story
@@ -186,7 +189,7 @@ class RbStory < Issue
       extras = ['and not issues.position is NULL and issues.position <= ?', self.position]
     end
 
-    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => :status)
+    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => [:status, :project])
 
     return @rank
   end
@@ -195,7 +198,7 @@ class RbStory < Issue
     return RbStory.find(:first,
                       :order => RbStory::ORDER,
                       :conditions => RbStory.condition(project_id, sprint_id),
-                      :joins => :status,
+                      :joins => [:status, :project],
                       :limit => 1,
                       :offset => rank - 1)
   end
