@@ -31,5 +31,15 @@ newversion[level] += 1
 
 newversion = 'v' + newversion.collect{|p| p.to_s}.join('.')
 
+init_rb = nil
+File.open('init.rb') do |f|
+  init_rb = f.read
+end
+init_rb.gsub!(/version\s+'[^']+'/m, "version '#{newversion}'")
+File.open('init.rb', 'w') do |f|
+  f.write(init_rb)
+end
+`git add init.rb`
+`git commit -m #{newversion}`
 `git tag #{newversion}`
 `git push --tags`
