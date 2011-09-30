@@ -5,15 +5,15 @@ class RbStory < Issue
 
     def self.find_params(options)
       project_id = options.delete(:project_id)
-      sprint_id = options.delete(:sprint_id)
+      sprint_ids = options.delete(:sprint_id)
       include_backlog = options.delete(:include_backlog)
 
-      sprint_id = RbSprint.open_sprints(Project.find(project_id)).collect{|s| s.id} if project_id && sprint_id == :open
+      sprint_ids = RbSprint.open_sprints(Project.find(project_id)).collect{|s| s.id} if project_id && sprint_ids == :open
 
-      project_id = nil if !include_backlog && sprint_id
-      sprint_id = [sprint_id] if sprint_id && !sprint_id.is_a?(Array)
+      project_id = nil if !include_backlog && sprint_ids
+      sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
 
-      raise "Specify either sprint or project id" unless (sprint_id || project_id)
+      raise "Specify either sprint or project id" unless (sprint_ids || project_id)
 
       options[:joins] = [options[:joins]] unless options[:joins].is_a?(Array)
 
@@ -27,17 +27,20 @@ class RbStory < Issue
         options[:joins] << :status
       end
 
-      if sprint_id
+      if sprint_ids
         conditions << "(tracker_id in (?) and fixed_version_id in (?))"
-        parameters += [RbStory.trackers, sprint_id]
+        parameters += [RbStory.trackers, sprint_ids]
       end
 
       conditions = conditions.join(' or ')
 
-      visible = Issue.visible_condition(User.current, :project => (project_id ? Project.find(project_id) : Version.find(sprint_id).project), :with_subprojects => true)
-      visible = '1=1' unless visible
+      visible = []
+      visible = sprint_ids.collect{|s| Issue.visible_condition(User.current, :project => Version.find(s).project, :with_subprojects => true) } if sprint_ids
+      visible << Issue.visible_condition(User.current, :project => Project.find(project_id), :with_subprojects => true) if project_id
+      visible = visible.join(' or ')
+      visible = " and (#{visible})" unless visible == ''
 
-      conditions = "#{visible} and (#{conditions})"
+      conditions += visible
 
       options[:conditions] = [options[:conditions]] if options[:conditions] && !options[:conditions].is_a?(Array)
       if options[:conditions]
