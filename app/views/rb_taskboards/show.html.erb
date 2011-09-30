@@ -1,6 +1,6 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
-  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery.qtip.pack.js', 'jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>

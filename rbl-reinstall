@@ -199,7 +199,7 @@ if [[ $RMDB =~ [Yy] ]]; then
     rake redmine:load_default_data
     rake db:migrate:upgrade_plugin_migrations
     rake db:migrate_plugins
-    rake redmine:backlogs:install
+    rake redmine:backlogs:install corruptiontest=false
 
     if [ ! -z "$ADMINPW" ]; then
       ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"

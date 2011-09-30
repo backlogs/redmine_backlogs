@@ -13,7 +13,7 @@ RB.BoardUpdater = RB.Object.create({
     RB.$('#disable_autorefresh').bind('click', function(e,u){ self.handleDisableAutorefreshClick(e,u) });
 
     this.loadPreferences();
-    this.pollWait = 1000;
+    this.pollWait = RB.constants.autorefresh_wait;
     this.poll()
   },
 
@@ -23,7 +23,7 @@ RB.BoardUpdater = RB.Object.create({
     if(itemsReceived==0 && this.pollWait < 300000 && !RB.$('body').hasClass('no_autorefresh')){
       this.pollWait += 250;
     } else {
-      this.pollWait = 1000;
+      this.pollWait = RB.constants.autorefresh_wait;
     }
   },
 
@@ -46,7 +46,7 @@ RB.BoardUpdater = RB.Object.create({
     RB.$('body').toggleClass('no_autorefresh');
     RB.UserPreferences.set('autorefresh', !RB.$('body').hasClass('no_autorefresh'));
     if(!RB.$('body').hasClass('no_autorefresh')){
-      this.pollWait = 1000;
+      this.pollWait = RB.constants.autorefresh_wait;
       this.poll();
     }
     this.updateAutorefreshText();

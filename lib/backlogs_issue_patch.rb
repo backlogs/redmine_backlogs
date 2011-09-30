@@ -93,13 +93,15 @@ module Backlogs
       end
 
       def backlogs_before_save
-        @issue_before_change.position = (self.is_task? ? nil : self.position) if @issue_before_change # don't log position updates
-
-        if project.module_enabled?('backlogs') && self.is_task?
+        if project.module_enabled?('backlogs') && (self.is_task? || self.story)
           self.estimated_hours = 0 if self.status.backlog_is?(:success)
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
+          self.tracker_id = RbTask.tracker
         end
+
+        @issue_before_change.position = self.position if @issue_before_change # don't log position updates
+
         return true
       end
 
@@ -136,6 +138,10 @@ module Backlogs
             connection.execute('select max(position) from issues where not position is null').each {|i| max = i[0] }
             connection.execute("update issues set position = #{connection.quote(max)} + 1 where id = #{id}")
           end
+        end
+
+        if self.is_story? || self.is_task?
+          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
         end
       end
 
