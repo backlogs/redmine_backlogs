@@ -34,7 +34,7 @@ class RbStory < Issue
 
       conditions = conditions.join(' or ')
 
-      visible = Issue.visible_condition(User.current, :project => Project.find(project_id), :with_subprojects => true)
+      visible = Issue.visible_condition(User.current, :project => (project_id ? Project.find(project_id) : Version.find(sprint_id).project), :with_subprojects => true)
       visible = '1=1' unless visible
 
       conditions = "#{visible} and (#{conditions})"
