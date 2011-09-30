@@ -32,14 +32,12 @@ module Backlogs
       end
     end
 
-    include Enumerable
-
     def initialize(arrays = {})
       @data = nil
-      add(arrays)
+      merge(arrays)
     end
 
-    def add(arrays)
+    def merge(arrays)
       arrays.each_pair do |name, data|
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
@@ -53,8 +51,28 @@ module Backlogs
       end
     end
 
+    def add(arrays)
+      arrays.each_pair do |name, data|
+        raise "#{name} is not a symbol" unless name.is_a?(Symbol)
+        raise "#{name} is not a array" unless data.is_a?(Array)
+        raise "series '#{name}' not initialized" unless @data && @data[0].include?(name)
+
+        0.upto(data.size - 1).each do |i|
+          @data[i][name] += data[i] if @data[i][name] && data[i]
+        end
+      end
+    end
+
+    def [](i)
+      return @data[i]
+    end
+
     def each(&block)
       @data.each {|cell| block.call(cell) }
+    end
+
+    def collect(&block)
+      @data.collect {|cell| block.call(cell) }
     end
 
     def to_s

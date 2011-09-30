@@ -5,7 +5,7 @@ class RbStory < Issue
 
     def self.condition(project_id, sprint_id, extras=[])
       visible = Issue.visible_condition(User.current, :project => Project.find(project_id))
-      visible = '1=1' unless visible
+      visible = '1=1' # unless visible
 
       if sprint_id.nil?  
         c = ["
@@ -214,10 +214,10 @@ class RbStory < Issue
         status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
 
         series = Backlogs::MergedArray.new
-        series.add(:points => history(:story_points, days))
-        series.add(:open => status.collect{|s| s ? !s.is_closed? : false})
-        series.add(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
-        series.add(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
+        series.merge(:points => history(:story_points, days))
+        series.merge(:open => status.collect{|s| s ? !s.is_closed? : false})
+        series.merge(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
+        series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
 
         # collect points on this sprint
         @burndown[:points] = series.collect{|v| v.in_sprint ? v.points : nil }
@@ -226,9 +226,9 @@ class RbStory < Issue
         @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
         @burndown[:hours] = [nil] * (days.size + 1) if @burndown[:hours].size == 0
 
-        series.add(:hours => @burndown[:hours])
+        series.merge(:hours => @burndown[:hours])
         @burndown[:hours] = series.collect{|h| h.in_sprint ? h.hours : nil }
-        series.add(:hours => @burndown[:hours])
+        series.merge(:hours => @burndown[:hours])
 
         # points are accepted when the state is accepted
         @burndown[:points_accepted] = series.collect{|p| p.accepted ? p.points : nil }
