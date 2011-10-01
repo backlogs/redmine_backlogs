@@ -1,3 +1,5 @@
+require 'prawn'
+
 include RbCommonHelper
 
 class RbStoriesController < RbApplicationController
@@ -5,10 +7,21 @@ class RbStoriesController < RbApplicationController
   include BacklogsCards
   
   def index
-    cards = Cards.new(params[:sprint_id] ? @sprint.stories : RbStory.product_backlog(@project), params[:sprint_id], current_language)
-    
+    cards = nil
+    begin
+      cards = Cards.new(params[:sprint_id] ? @sprint.stories : RbStory.product_backlog(@project), params[:sprint_id], current_language)
+    rescue Prawn::Errors::CannotFit
+      cards = nil
+    end
+
     respond_to do |format|
-      format.pdf { send_data(cards.pdf.render, :disposition => 'attachment', :type => 'application/pdf') }
+      format.pdf {
+        if cards
+          send_data(cards.pdf.render, :disposition => 'attachment', :type => 'application/pdf')
+        else
+          render :text => "There was a problem rendering the cards. A possible error could be that the selected font exceeds a render box", :status => 500
+        end
+      }
     end
   end
   
