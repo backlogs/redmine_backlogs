@@ -12,7 +12,7 @@ module Backlogs
         :order => "effective_date desc",
         :limit => 5)
 
-      @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.sum.to_f / @past_sprints.collect{|s| s.days(:all).size}.sum if @past_sprints.size > 0
+      @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.compact.sum / @past_sprints.collect{|s| s.days(:all).size}.compact.sum if @past_sprints.size > 0
 
       @all_sprints = (@past_sprints + [@active_sprint]).compact
 

@@ -11,27 +11,20 @@ class Burndown
                               and property = 'attr' and prop_key = 'fixed_version_id'
                               and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).collect{|j| j.journalized.becomes(RbStory) }
 
+    baseline = [0] * (sprint.days(:active).size + 1)
+    baseline += [nil] * (1 + (@days.size - baseline.size))
+
     series = Backlogs::MergedArray.new
-    series.merge(:points => ([nil] * (@days.size + 1)))
-    series.merge(:hours => ([nil] * (@days.size + 1)))
-    series.merge(:points_accepted => ([nil] * (@days.size + 1)))
-    series.merge(:points_resolved => ([nil] * (@days.size + 1)))
+    series.merge(:hours => baseline.dup)
+    series.merge(:points => baseline.dup)
+    series.merge(:points_resolved => baseline.dup)
+    series.merge(:points_accepted => baseline.dup)
 
-    story = stories.pop
-    if story
-      story.burndown.each_pair do |name, data|
-        data.each_with_index do |v, i|
-          series[i][name] = v
-        end
-      end
-    end
-
-    stories.each do |story|
-      series.add(story.burndown(sprint))
-    end
+    stories.each { |story| series.add(story.burndown(sprint)) }
 
     series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
     series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
+
     series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
 
     @data = {}
@@ -43,7 +36,11 @@ class Burndown
     @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
     @data[:points_to_accept] = series.collect{|s| s.to_accept }
 
-    @data[:hours_ideal] = (0 .. @days.size).collect{|i| series[0].hours ? ((series[0].hours / @days.size) * i) : nil }.reverse
+    if series[0].hours
+      @data[:hours_ideal] = (0 .. @days.size).collect{|i| (series[0].hours / @days.size) * i }.reverse
+    else
+      @data[:hours_ideal] = [nil] * @days.size
+    end
 
     @data[:points_required_burn_rate] = series.collect{|r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
     @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }

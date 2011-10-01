@@ -55,11 +55,12 @@ module Backlogs
       arrays.each_pair do |name, data|
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
-        raise "series '#{name}' not initialized" unless @data && @data[0].include?(name)
+        raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
+        raise "data series '#{name}' is too long (got #{data.size}, expected #{@data.size})" if data.size > @data.size
 
-        0.upto(data.size - 1).each do |i|
-          @data[i][name] += data[i] if @data[i][name] && data[i]
-        end
+        data.each_with_index{|d, i|
+          @data[i][name] += d if d
+        }
       end
     end
 
