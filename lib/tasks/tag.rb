@@ -31,15 +31,23 @@ newversion[level] += 1
 
 newversion = 'v' + newversion.collect{|p| p.to_s}.join('.')
 
-init_rb = nil
+code = nil
 File.open('init.rb') do |f|
-  init_rb = f.read
+  code = f.read
 end
-init_rb.gsub!(/version\s+'[^']+'/m, "version '#{newversion}'")
+code.gsub!(/version\s+'[^']+'/m, "version '#{newversion}'")
 File.open('init.rb', 'w') do |f|
-  f.write(init_rb)
+  f.write(code)
 end
-`git add init.rb`
+code = nil
+File.open('lib/backlogs_version.rb') do |f|
+  code = f.read
+end
+code.gsub!(/tagged_version\s*=\s*[^\n]+/m, "tagged_version = '#{newversion}'")
+File.open('lib/backlogs_version.rb', 'w') do |f|
+  f.write(code)
+end
+`git add init.rb lib/backlogs_version.rb`
 `git commit -m #{newversion}`
 `git tag #{newversion}`
 `git push --tags`
