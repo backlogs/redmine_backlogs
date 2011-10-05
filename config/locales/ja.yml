@@ -1,5 +1,6 @@
 
 ja: 
+  project_module_backlogs: バックログ
   backlogs_active: active
   backlogs_any: any
   backlogs_card_specification: カード印刷のラベルタイプ
@@ -166,6 +167,7 @@ ja:
   rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
   rb_taskboard_card_order: カードの印刷順
   rb_timelog_from_taskboard: タスクボードのタイムログ
+  rb_auto_refresh: バックログとタスクボードの自動リフレッシュの間隔(秒)
   release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
   release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新
   remaining_story_points: 残りのストーリーポイント
