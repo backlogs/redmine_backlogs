@@ -214,30 +214,31 @@ class RbStory < Issue
         status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
 
         series = Backlogs::MergedArray.new
+        series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
         series.merge(:points => history(:story_points, days))
         series.merge(:open => status.collect{|s| s ? !s.is_closed? : false})
         series.merge(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
-        series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
+        series.merge(:hours => ([0] * (days.size + 1)))
+
+        tasks.each{|task| series.add(:hours => task.burndown(sprint)) }
+
+        series.each {|datapoint|
+          if datapoint.in_sprint
+            datapoint.hours = 0 unless datapoint.open
+            datapoint.points_accepted = (datapoint.accepted ? datapoint.points : nil)
+            datapoint.points_resolved = (datapoint.accepted || datapoint.hours.to_f == 0.0 ? datapoint.points : nil)
+          else
+            datapoint.nilify
+            datapoint.points_accepted = nil
+            datapoint.points_resolved = nil
+          end
+        }
 
         # collect points on this sprint
-        @burndown[:points] = series.collect{|v| v.in_sprint ? v.points : nil }
-
-        # collect hours on this sprint
-        @burndown[:hours] = tasks.collect{|t| t.burndown(sprint) }.transpose.collect{|d| d.compact.sum}
-        @burndown[:hours] = [nil] * (days.size + 1) if @burndown[:hours].size == 0
-
-        series.merge(:hours => @burndown[:hours])
-        @burndown[:hours] = series.collect{|h| h.in_sprint ? h.hours : nil }
-        series.merge(:hours => @burndown[:hours])
-
-        # points are accepted when the state is accepted
-        @burndown[:points_accepted] = series.collect{|p| p.accepted ? p.points : nil }
-
-        # points are resolved when the state is accepted _or_ the hours are at zero
-        @burndown[:points_resolved] = series.collect{|p| (p.hours.to_f == 0 || p.accepted) ? p.points : 0}
-
-        # set hours to zero after the above when the story is not active, would affect resolved when done before this
-        @burndown[:hours] = series.collect{|h| h.open ? h.hours : 0}
+        @burndown[:points] = series.series(:points)
+        @burndown[:points_accepted] = series.series(:points_accepted)
+        @burndown[:points_resolved] = series.series(:points_resolved)
+        @burndown[:hours] = series.collect{|datapoint| datapoint.open ? datapoint.hours : nil}
 
       else
         @burndown = nil

@@ -30,6 +30,10 @@ module Backlogs
           super(method_sym, *arguments, &block)
         end
       end
+
+      def nilify
+        keys.each{|k| self[k] = nil}
+      end
     end
 
     def initialize(arrays = {})
@@ -74,6 +78,10 @@ module Backlogs
 
     def collect(&block)
       @data.collect {|cell| block.call(cell) }
+    end
+
+    def series(name)
+      @data.collect{|cell| cell[name]}
     end
 
     def to_s
