@@ -66,7 +66,7 @@ module BacklogsPlugin
         snippet = ''
         issue = context[:issue]
 
-        return '' unless issue.project.module_enabled?('backlogs') && !issue.new_record?
+        return '' unless issue.project.module_enabled?('backlogs')
 
         #project = context[:project]
 
@@ -80,7 +80,7 @@ module BacklogsPlugin
           snippet += context[:form].text_field(:story_points, :size => 3)
           snippet += '</p>'
 
-          if issue.descendants.length != 0
+          if issue.descendants.length != 0 && !issue.new_record?
             snippet += javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs'
             snippet += <<-generatedscript
 
@@ -109,7 +109,7 @@ module BacklogsPlugin
           snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
         end
 
-        if issue.is_task?
+        if issue.is_task? && !issue.new_record?
           snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
           snippet += text_field_tag('initial_estimate', issue.initial_estimate, :size => 3)
           snippet += '</p>'
