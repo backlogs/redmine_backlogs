@@ -6,7 +6,7 @@ module RbCommonHelper
   end
 
   def assignee_name_or_empty(story)
-    story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.firstname} #{story.assigned_to.lastname}"
+    story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.name}"
   end
 
   def blocked_ids(blocked)
