@@ -53,7 +53,7 @@
 
   <table id="tasks" class="board" cellspacing="0">
     <%- @sprint.stories.each do |story| %>  
-    <tr>
+    <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
         <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
           <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
