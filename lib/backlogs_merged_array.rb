@@ -30,16 +30,18 @@ module Backlogs
           super(method_sym, *arguments, &block)
         end
       end
-    end
 
-    include Enumerable
+      def nilify
+        keys.each{|k| self[k] = nil}
+      end
+    end
 
     def initialize(arrays = {})
       @data = nil
-      add(arrays)
+      merge(arrays)
     end
 
-    def add(arrays)
+    def merge(arrays)
       arrays.each_pair do |name, data|
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
@@ -53,8 +55,33 @@ module Backlogs
       end
     end
 
+    def add(arrays)
+      arrays.each_pair do |name, data|
+        raise "#{name} is not a symbol" unless name.is_a?(Symbol)
+        raise "#{name} is not a array" unless data.is_a?(Array)
+        raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
+        raise "data series '#{name}' is too long (got #{data.size}, expected #{@data.size})" if data.size > @data.size
+
+        data.each_with_index{|d, i|
+          @data[i][name] += d if d
+        }
+      end
+    end
+
+    def [](i)
+      return @data[i]
+    end
+
     def each(&block)
       @data.each {|cell| block.call(cell) }
+    end
+
+    def collect(&block)
+      @data.collect {|cell| block.call(cell) }
+    end
+
+    def series(name)
+      @data.collect{|cell| cell[name]}
     end
 
     def to_s

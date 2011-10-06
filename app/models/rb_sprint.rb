@@ -11,32 +11,39 @@ class Burndown
                               and property = 'attr' and prop_key = 'fixed_version_id'
                               and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).collect{|j| j.journalized.becomes(RbStory) }
 
-    data = stories.collect{|s| s.burndown(sprint) }
-    if data.size == 0
-      story = {}
-      [:points, :hours, :points_accepted, :points_resolved].each {|key| story[key] = [nil] * (@days.size + 1) }
-      data = [story]
-    end
+    baseline = [0] * (sprint.days(:active).size + 1)
+    baseline += [nil] * (1 + (@days.size - baseline.size))
+
+    series = Backlogs::MergedArray.new
+    series.merge(:hours => baseline.dup)
+    series.merge(:points => baseline.dup)
+    series.merge(:points_resolved => baseline.dup)
+    series.merge(:points_accepted => baseline.dup)
+
+    stories.each { |story| series.add(story.burndown(sprint)) }
+
+    series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
+    series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
+
+    series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
 
     @data = {}
 
-    [:points, :hours, :points_accepted, :points_resolved].each {|key|
-      @data[key] = data.collect{|d| d[key]}.transpose.collect{|d| d.compact.sum}
-    }
-    @data[:points_committed] = @data.delete(:points)
-    @data[:hours_remaining] = @data.delete(:hours)
+    @data[:points_committed] = series.collect{|s| s.points }
+    @data[:hours_remaining] = series.collect{|s| s.hours }
+    @data[:points_accepted] = series.collect{|s| s.points_accepted }
+    @data[:points_resolved] = series.collect{|s| s.points_resolved }
+    @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
+    @data[:points_to_accept] = series.collect{|s| s.to_accept }
 
-    @data[:hours_ideal] = (0 .. @days.size).collect{|i| (@data[:hours_remaining][0] / @days.size) * i}.reverse
+    if series[0].hours
+      @data[:hours_ideal] = (0 .. @days.size).collect{|i| (series[0].hours / @days.size) * i }.reverse
+    else
+      @data[:hours_ideal] = [nil] * @days.size
+    end
 
-    series = Backlogs::MergedArray.new
-    series.add(:points => @data[:points_committed])
-    series.add(:resolved => @data[:points_resolved])
-    series.add(:accepted => @data[:points_accepted])
-    @data[:points_to_resolve] = series.collect{|pr| pr.points && pr.resolved ? pr.points - pr.resolved : nil}
-    @data[:points_to_accept] = series.collect{|p| p.points && p.accepted ? p.points - p.accepted : nil}
-
-    @data[:points_required_burn_rate] = @data[:points_to_resolve].collect{|p| Float(p)}.enum_for(:each_with_index).collect{|p, i| @days.size == i ? p : p / (@days.size - i)}
-    @data[:hours_required_burn_rate] = @data[:hours_remaining].enum_for(:each_with_index).collect{|h, i| @days.size == i ? h : h / (@days.size - i)}
+    @data[:points_required_burn_rate] = series.collect{|r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
+    @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
 
     case direction
       when 'up'
