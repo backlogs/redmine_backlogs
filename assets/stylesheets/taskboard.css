@@ -40,8 +40,10 @@ See RB.Taskboard.initialize()
 }
 #board_header td{
   background-color:#ccffff;
+  background: -webkit-gradient(linear, left top, right bottom, from(#eff), to(#0ff));
+  background: -moz-linear-gradient(left top, #eff, #0ff);
   border-right:1px dotted #CFCFCF;
-  color:#7E7E7E;
+  color:#4E4E4E;
   font-size:14px;
   font-weight:bold;
   height:30px;
