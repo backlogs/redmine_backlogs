@@ -62,6 +62,13 @@ ja:
   field_subject: 題名
   field_tracker_id: トラッカーID
   field_velocity_based_estimate: 見積もりに基づくベロシティ
+  field_assigned_to: 担当者
+  field_priority: 優先度
+  field_estimated_hours: 見積もり時間
+  field_time_entry_hours: 作業時間
+  field_time_entry_user_id: 作業者のユーザID
+  field_time_entry_spend_on: 作業内容
+  field_time_entry_comments: コメント
   label_back_to_project: プロジェクトページへ戻る
   label_backlogs: バックログ
   label_backlogs_unconfigured: "バックログが設定されていません。設定画面 %{administration} > %{plugins}, からリンク %{configure} をクリックして設定してください。フィールドを設定⑤、このページへ戻りツールを利用してください。"
@@ -113,7 +120,7 @@ ja:
   permission_reset_sprint: "スプリントのリセット"
   permission_view_master_backlog: "マスターバックログの閲覧"
   permission_view_releases: "リリースの閲覧"
-  permission_view_taskboards: "タスクボードの閲覧"
+  permission_view_taskboards: "かんばんの閲覧"
   permission_modify_releases: "リリースの編集"
   permission_create_sprints: "スプリントの作成"
   permission_update_sprints: "スプリントの更新"
@@ -142,7 +149,7 @@ ja:
   label_sprint_name: "スプリント: %{name}"
   label_stories: ストーリー
   label_stories_tasks: ストーリー/タスク
-  label_task_board: タスクボード
+  label_task_board: かんばん
   label_webcal: Webcal Feed
   label_new_story: 新しいストーリー
   label_new_sprint: 新しいスプリント
@@ -166,8 +173,8 @@ ja:
   rb_task_cards_story_follows_tasks: ストーリー、タスクの順に印刷
   rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
   rb_taskboard_card_order: カードの印刷順
-  rb_timelog_from_taskboard: タスクボードのタイムログ
-  rb_auto_refresh: バックログとタスクボードの自動リフレッシュの間隔(秒)
+  rb_timelog_from_taskboard: かんばんのタイムログ
+  rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
   release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
   release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新
   remaining_story_points: 残りのストーリーポイント

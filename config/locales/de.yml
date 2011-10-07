@@ -61,6 +61,13 @@ de:
   field_subject: "[[Subject]]"
   field_tracker_id: "[[Tracker ID]]"
   field_velocity_based_estimate: "Geschwindigkeitsbasierende Absch\xC3\xA4tzung"
+  field_assigned_to: Assigned To
+  field_priority: Priority
+  field_estimated_hours: Estimated Hours
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Zur\xC3\xBCck zur Projektseite"
   label_backlogs: Backlogs
   label_backlogs_unconfigured: "Sie haben noch keine Backlogs konfiguriert. Bitte gehen Sie auf {{administration}} > {{plugins}}, klicken Sie dann auf den {{configure}} Link f\xC3\xBCr dieses Plugin. Kommen Sie hierher zur\xC3\xBCck, sobald sie die Felder konfiguriert haben."
