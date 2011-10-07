@@ -63,6 +63,13 @@ pt-BR:
   field_subject: Assunto
   field_tracker_id: "[[Tracker ID]]"
   field_velocity_based_estimate: Velocidade estimada
+  field_assigned_to: Assigned To
+  field_priority: Priority
+  field_estimated_hours: Estimated Hours
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Voltar \xC3\xA0 p\xC3\xA1gina do projeto"
   label_backlogs: Backlogs
   label_backlogs_unconfigured: "Voc\xC3\xAA n\xC3\xA3o configurou os Backlogs ainda. Por Favor v\xC3\xA1 em, {{administration}} > {{plugins}}, e selecione {{configure}}. Uma vez definidos os campos, retorne para esta p\xC3\xA1gina para come\xC3\xA7ar a usar a ferramenta."
