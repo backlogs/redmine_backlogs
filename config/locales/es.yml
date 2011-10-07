@@ -61,6 +61,13 @@ es:
   field_subject: Tema
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: "Estimaci\xC3\xB3n basada en la velocidad"
+  field_assigned_to: Assigned To
+  field_priority: Priority
+  field_estimated_hours: Estimated Hours
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Volver a la p\xC3\xA1gina del proyecto"
   label_backlogs: Backlogs
   label_backlogs_unconfigured: "Usted no ha configurado Backlogs a\xC3\xBAn, Por favor dirijase a %{administration} > %{plugins}, luego pulse en el enlace %{configure} para este plugin. Una vez que haya configurado los valores, regrese a esta p\xC3\xA1gina para empezar a usar esta herramienta."
