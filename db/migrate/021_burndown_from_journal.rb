@@ -53,7 +53,7 @@ class BurndownFromJournal < ActiveRecord::Migration
     execute "delete from journal_details where prop_key='remaining_hours'"
 
     # clean up any journal entries without details
-    execute "delete from journals where not id in (select journal_id from journal_details)"
+    execute "delete from journals where not id in (select journal_id from journal_details) and (notes is NULL or notes = '')"
     remove_column :issues, :remaining_hours
     drop_table :burndown_days
 

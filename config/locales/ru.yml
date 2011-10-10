@@ -147,6 +147,14 @@ ru:
     0J7RhtC10L3QutCwINC90LAg0L7RgdC90L7QstC1INGB0LrQvtGA0L7RgdGC
     0Lg=
 
+  field_assigned_to: Assigned To
+  field_priority: Priority
+  field_estimated_hours: Estimated Hours
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_comments: Time Entry Comments
+
   label_back_to_project: !binary |
     0J3QsNC30LDQtCDQvdCwINGB0YLRgNCw0L3QuNGG0YMg0L/RgNC+0LXQutGC
     0LA=

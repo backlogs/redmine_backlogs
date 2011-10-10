@@ -224,9 +224,7 @@ class RbSprint < Version
     direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
     direction = 'down' if direction.blank?
 
-    @cached_burndown ||= {}
-    @cached_burndown[direction] ||= Burndown.new(self, direction)
-    return @cached_burndown[direction]
+    return Rails.cache.fetch("RbSprint(#{self.id}).burndown('#{direction}')") { Burndown.new(self, direction) }
   end
 
   def impediments

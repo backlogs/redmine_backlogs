@@ -90,9 +90,10 @@ RB.Model = RB.Object.create({
       var field = RB.$(this);
       var fieldType = field.attr('fieldtype')!=null ? field.attr('fieldtype') : 'input';
       var fieldName = field.attr('fieldname');
+      var fieldLabel = field.attr('fieldlabel');
       var input;
       
-      RB.$(document.createElement("label")).text(fieldName.replace(/_/ig, " ").replace(/ id$/ig,"")).appendTo(editor);
+      RB.$(document.createElement("label")).text(fieldLabel).appendTo(editor);
       input = fieldType=='select' ? RB.$('#' + fieldName + '_options').clone(true) : RB.$(document.createElement(fieldType));
       input.removeAttr('id');
       input.attr('name', fieldName);

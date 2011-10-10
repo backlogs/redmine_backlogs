@@ -65,6 +65,13 @@ fr:
   field_subject: Sujet
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: "Estim\xC3\xA9 bas\xC3\xA9 sur la v\xC3\xA9locit\xC3\xA9"
+  field_assigned_to: Assigned To
+  field_priority: Priority
+  field_estimated_hours: Estimated Hours
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Retour \xC3\xA0 la page produit"
   label_backlogs: Carnets
   label_backlogs_unconfigured: "Vous n'avez pas encore configur\xC3\xA9 les Carnets. Veuillez aller \xC3\xA0 {{administration}} > {{plugins}}, et cliquez sur le lien {{configure}} pour ce plugin. Une fois que vous aurez d\xC3\xA9fini ces champs, revenez \xC3\xA0 cette page pour utiliser l'outil"
