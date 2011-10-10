@@ -13,6 +13,7 @@ module Backlogs
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
+        before_destroy :backlogs_before_destroy
       end
     end
 
@@ -92,12 +93,26 @@ module Backlogs
         return Integer(self.story_points * (hpp / 8))
       end
 
+      def backlogs_before_destroy
+        if project.module_enabled?('backlogs') && (self.is_task? || self.story)
+          if self.fixed_version_id
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
+          end
+        end
+      end
+
       def backlogs_before_save
         if project.module_enabled?('backlogs') && (self.is_task? || self.story)
           self.estimated_hours = 0 if self.status.backlog_is?(:success)
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
+
+          if self.fixed_version_id
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
+          end
         end
 
         @issue_before_change.position = self.position if @issue_before_change # don't log position updates
@@ -142,6 +157,11 @@ module Backlogs
 
         if self.is_story? || self.is_task?
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
+
+          if self.fixed_version_id
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
+            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
+          end
         end
       end
 
