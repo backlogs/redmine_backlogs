@@ -100,9 +100,6 @@ See RB.Taskboard.initialize()
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
   box-shadow: 2px 2px 2px #CCCCCC;;
-  background: -webkit-gradient(linear, left top, left bottom, from(#eef), to(#88f));
-  background: -moz-linear-gradient(top, #eef, #88f);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeff,EndColorStr=#8888ff);
   background-color:#F8F6A5;
   border:none;
   display:block;
@@ -160,9 +157,6 @@ See RB.Taskboard.initialize()
 /* item styles used by .task and .impediment */
 .issue, .placeholder{
   background-color:#AFAFAF;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ffd), to(#fc6));
-  background: -moz-linear-gradient(top, #ffd, #fc6);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#ffffdd,EndColorStr=#ffcc66);
   border:none;
   cursor:move;
   display:block;
