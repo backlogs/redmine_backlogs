@@ -23,6 +23,10 @@ class RbTask < Issue
     blocks = params.delete('blocks')
 
     task = new(attribs)
+    if params['parent_issue_id']
+      parent = Issue.find(params['parent_issue_id'])
+      task.start_date = parent.start_date
+    end
     task.save!
 
     raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
