@@ -224,11 +224,12 @@ class RbStory < Issue
   end
 
   def burndown(sprint=nil)
-    unless @burndown
-      sprint ||= fixed_version.becomes(RbSprint)
+    return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
+      sprint = fixed_version.becomes(RbSprint)
+      bd = nil
 
       if sprint && sprint.has_burndown?
-        @burndown = {}
+        bd = {}
         days = sprint.days(:active)
 
         status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
@@ -255,18 +256,14 @@ class RbStory < Issue
         }
 
         # collect points on this sprint
-        @burndown[:points] = series.series(:points)
-        @burndown[:points_accepted] = series.series(:points_accepted)
-        @burndown[:points_resolved] = series.series(:points_resolved)
-        @burndown[:hours] = series.collect{|datapoint| datapoint.open ? datapoint.hours : nil}
-
-      else
-        @burndown = nil
-
+        bd[:points] = series.series(:points)
+        bd[:points_accepted] = series.series(:points_accepted)
+        bd[:points_resolved] = series.series(:points_resolved)
+        bd[:hours] = series.collect{|datapoint| datapoint.open ? datapoint.hours : nil}
       end
-    end
 
-    return @burndown
+      bd
+    }
   end
 
 end

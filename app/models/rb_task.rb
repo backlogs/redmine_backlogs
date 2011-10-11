@@ -132,18 +132,17 @@ class RbTask < Issue
   end
 
   def burndown(sprint = nil)
-    unless @burndown
+    return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
       sprint ||= story.fixed_version.becomes(RbSprint)
+      bd = nil
       if sprint && sprint.has_burndown?
         days = sprint.days(:active)
         series = Backlogs::MergedArray.new(:hours => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days))
-        @burndown = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
-      else
-        @burndown = nil
+        bd = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
       end
-    end
 
-    return @burndown
+      bd
+    }
   end
 
   def set_initial_estimate(hours)
