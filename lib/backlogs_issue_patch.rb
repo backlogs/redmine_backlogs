@@ -94,11 +94,8 @@ module Backlogs
       end
 
       def backlogs_before_destroy
-        if project.module_enabled?('backlogs') && (self.is_task? || self.story)
-          if self.fixed_version_id
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
-          end
+        if project.module_enabled?('backlogs')
+          Rails.cache.delete("RbIssue(#{self.id}).burndown")
         end
       end
 
@@ -109,10 +106,7 @@ module Backlogs
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
 
-          if self.fixed_version_id
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
-          end
+          Rails.cache.delete("RbIssue(#{self.id}).burndown") unless self.new_record?
         end
 
         @issue_before_change.position = self.position if @issue_before_change # don't log position updates
@@ -157,12 +151,9 @@ module Backlogs
 
         if self.is_story? || self.is_task?
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
-
-          if self.fixed_version_id
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('up')")
-            Rails.cache.delete("RbSprint(#{self.fixed_version_id}).burndown('down')")
-          end
         end
+
+        Rails.cache.delete("RbIssue(#{self.id}).burndown")
       end
 
       def value_at(property, time)
