@@ -4,9 +4,41 @@ class RbTaskboardsController < RbApplicationController
   unloadable
   
   def show
-    @statuses     = Tracker.find_by_id(RbTask.tracker).issue_statuses
-    @story_ids    = @sprint.stories.map{|s| s.id}
+    stories = @sprint.stories
+    @story_ids    = stories.map{|s| s.id}
+
     @settings = Setting.plugin_redmine_backlogs
+
+    ## determine status columns to show
+    tracker = Tracker.find_by_id(RbTask.tracker)
+    statuses = tracker.issue_statuses
+    # disable columns by default
+    if User.current.admin?
+      @statuses = statuses.select{|s| enabled[s.id]}
+    else
+      enabled = {}
+      statuses.each{|s| enabled[s.id] = false}
+      # enable all statuses held by current tasks, regardless of whether the current user has access
+      RbTask.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|task| enabled[task.status_id] = true }
+
+      roles = User.current.roles_for_project(@project)
+      #@transitions = {}
+      statuses.each {|status|
+        next if enabled[status.id]
+
+        # enable all statuses the current user can reach from any task status
+        [false, true].each {|creator|
+          [false, true].each {|assignee|
+            next if enabled[status.id]
+
+            allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id}
+            #@transitions["c#{creator ? 'y' : 'n'}a#{assignee ? 'y' : 'n'}"] = allowed
+            allowed.each{|s| enabled[s] = true}
+          }
+        }
+      }
+      @statuses = statuses.select{|s| enabled[s.id]}
+    end
 
     if @sprint.stories.size == 0
       @last_updated = nil

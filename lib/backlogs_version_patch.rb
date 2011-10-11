@@ -30,7 +30,7 @@ module Backlogs
         end
       end
 
-      def backlogs_before_save
+      def backlogs_after_save
         if project.module_enabled?('backlogs') && !self.new_record?
           self.fixed_issues.each{|i|
             Rails.cache.delete("RbIssue(#{i.id}).burndown")

@@ -162,9 +162,7 @@ module Backlogs
     
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
-        @scrum_statistics = Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) {
-          puts "cache miss"
-          Backlogs::Statistics.new(self) } unless @scrum_statistics
+        @scrum_statistics = Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) } unless @scrum_statistics
     
         return @scrum_statistics
       end
