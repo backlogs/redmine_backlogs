@@ -103,9 +103,9 @@ See RB.Taskboard.initialize()
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
   box-shadow: 2px 2px 2px #CCCCCC;;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fee), to(#fd2));
-  background: -moz-linear-gradient(top, #fee, #fd2);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#ffeeee,EndColorStr=#ffdd22);
+  background: -webkit-gradient(linear, left top, left bottom, from(#FEE), to(#FD2));
+  background: -moz-linear-gradient(top, #FEE, #FD2);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#FFEEEE,EndColorStr=#FFDD22);
   background-color:#F8F6A5;
   border:none;
   display:block;
@@ -162,10 +162,18 @@ See RB.Taskboard.initialize()
 
 /* item styles used by .task and .impediment */
 .issue, .placeholder{
+<<<<<<< HEAD
   background-color:#CCCCCC;
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#AAA));
   background: -moz-linear-gradient(top, #EEE, #AAA);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#AAAAAA);
+=======
+  background-color:#AFAFAF;
+  background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
+  background: -moz-linear-gradient(top, #eee, #aaa);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr=#aaaaaa);
+
+>>>>>>> improve theme.
   border:none;
   cursor:move;
   display:block;
