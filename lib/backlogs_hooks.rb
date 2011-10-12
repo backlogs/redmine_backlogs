@@ -34,7 +34,7 @@ module BacklogsPlugin
             end
         end
 
-        locals[:sprint] = nil if locals[:sprint] && !locals[:sprint].has_burndown?
+        locals[:sprint] = nil if (Setting.plugin_redmine_backlogs[:show_burndown_in_sidebar] != 'enabled') || (locals[:sprint] && !locals[:sprint].has_burndown?)
 
         return context[:controller].send(:render_to_string, {
             :partial => 'shared/view_issues_sidebar',

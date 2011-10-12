@@ -114,7 +114,7 @@ end
 
 def translated(l, s)
   s = s.gsub(/%\{.+?\}/, ' ').gsub(/\{\{.+?\}\}/, ' ')
-  return true if l == 'zh' # aspell doesn't have a language file for zh
+  return true if ['zh', 'ja'].include?(l) # aspell doesn't have a language file for these
   speller = Aspell.new(l.gsub('-', '_'))
   speller.set_option('ignore-case', 'true')
   s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 

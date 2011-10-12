@@ -35,11 +35,12 @@ Redmine::Plugin.register :redmine_backlogs do
   version 'v0.6.14'
 
   settings :default => { 
-                         :story_trackers  => nil, 
-                         :task_tracker    => nil, 
-                         :card_spec       => nil,
-                         :taskboard_card_order => 'story_follows_tasks',
-                         :story_points    => "1,2,3,5,8"
+                         :story_trackers            => nil, 
+                         :task_tracker              => nil, 
+                         :card_spec                 => nil,
+                         :taskboard_card_order      => 'story_follows_tasks',
+                         :story_points              => "1,2,3,5,8",
+                         :show_burndown_in_sidebar  => 'enabled'
                        }, 
            :partial => 'shared/settings'
 
