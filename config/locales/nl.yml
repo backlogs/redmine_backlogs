@@ -48,24 +48,24 @@ nl:
   error_release_end_after_start: De einddatum van de release moet na de start datum liggen
   error_taken: is al in gebruik
   event_sprint_summary: "%{project}: %{summary}"
-  field_assigned_to: Assigned To
+  field_assigned_to: Toegekend aan
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_estimated_hours: Estimated Hours
+  field_estimated_hours: Geschatte uren
   field_initial_estimate: "Initi\xC3\xABle schatting"
   field_initial_story_points: "Initi\xC3\xABle story points"
   field_name: Naam
   field_number_of_snapshots: Opgeslagen point snapshots
   field_position: Positie
-  field_priority: Priority
+  field_priority: Prioriteit
   field_release_end_date: Eind datum van de release
   field_release_start_date: Start datum release
   field_story_points: Story points
   field_subject: Onderwerp
-  field_time_entry_comments: Time Entry Comments
-  field_time_entry_hours: Time Entry Hours
-  field_time_entry_spend_on: Time Entry Spend on
-  field_time_entry_user_id: Time Entry User Id
+  field_time_entry_comments: Tijd registratie commentaar
+  field_time_entry_hours: Tijd registratie uren
+  field_time_entry_spend_on: Tijd registratie spendeer aan
+  field_time_entry_user_id: Tijd registratie gebruiker
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Schatting op basis van velocity
   label_back_to_project: Terug naar het project
@@ -73,10 +73,10 @@ nl:
   label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
   label_burndown: Burndown
   label_chart_options: Grafiek Opties
-  label_close_completed_sprints: Close completed Sprints
-  label_column_width: Column width
+  label_close_completed_sprints: Sluit gecompleteerde sprints
+  label_column_width: Kolom breedte
   label_download: Download
-  label_hide_completed_sprints: Hide Completed Sprints
+  label_hide_completed_sprints: Verberg gecompleteerde sprints
   label_hours_ideal: ideaal
   label_hours_remaining: resterende uren
   label_hours_required_burn_rate: benodigde burn rate (uren)
@@ -118,7 +118,7 @@ nl:
   label_stories_tasks: Stories/Taken
   label_task_board: Taak-bord
   label_webcal: Agenda
-  rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
+  rb_auto_refresh: Automatische verversing backlogs/taskboard (seconden)
   rb_label_copy_tasks: Kopieer taken
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Geen
@@ -126,7 +126,7 @@ nl:
   rb_label_link_to_original: Relateer aan originele story
   rb_label_timelog_disable: Uitzetten
   rb_label_timelog_enable: Aanzetten
-  rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
+  rb_show_burndown_in_sidebar: Toon burndown chart in de issues zijbalk
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
