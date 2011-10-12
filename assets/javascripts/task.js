@@ -24,7 +24,13 @@ RB.Task = RB.Object.create(RB.Issue, {
   },
   
   editorDisplayed: function(dialog){
-    dialog.parents('.ui-dialog').css('background-color', this.$.css('background-color'));
+    dialog_bgcolor=this.$.css('background-color');
+    if(dialog_bgcolor=='initial'||dialog_bgcolor=='rgba(0, 0, 0, 0)'){
+      // Chrome could not handling background-color css when use -webkit-gradient.
+      dialog.parents('.ui-dialog').css('background-color', '#FEB');   
+    } else {
+      dialog.parents('.ui-dialog').css('background-color', dialog_bgcolor);
+    }
   },
 
   getType: function(){
