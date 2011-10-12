@@ -166,7 +166,6 @@ See RB.Taskboard.initialize()
   background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
   background: -moz-linear-gradient(top, #eee, #aaa);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr=#aaaaaa);
-
   border:none;
   cursor:move;
   display:block;
