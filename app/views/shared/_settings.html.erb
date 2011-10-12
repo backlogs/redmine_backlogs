@@ -103,6 +103,11 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:rb_show_burndown_in_sidebar)) %>
+	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',Setting.plugin_redmine_backlogs[:show_burndown_in_sidebar]) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:field_story_points)) %>
   <%= l(:comma_delimited_numbers) %><br>
   <%= l(:use_free_text_if_empty) %><br>

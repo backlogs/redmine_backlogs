@@ -106,12 +106,14 @@ ru:
 
   error_taken: is already in use
   event_sprint_summary: "{{project}}: {{summary}}"
+  field_assigned_to: Assigned To
   field_backlogs_issue_type: !binary |
     0KLQuNC/INCx0Y3QutC70L7Qs9Cw
 
   field_blocks: !binary |
     0JHQu9C+0LrQuNGA0L7QstC60Lg=
 
+  field_estimated_hours: Estimated Hours
   field_initial_estimate: Initial estimate
   field_initial_story_points: !binary |
     0J3QsNGH0LDQu9GM0L3QsNGPINC+0YbQtdC90LrQsCDQuNGB0YLQvtGA0LjQ
@@ -127,6 +129,7 @@ ru:
   field_position: !binary |
     0J/QvtC70L7QttC10L3QuNC1
 
+  field_priority: Priority
   field_release_end_date: !binary |
     0JTQsNGC0LAg0L7QutC+0L3Rh9Cw0L3QuNGPINCy0LXRgNGB0LjQuA==
 
@@ -140,20 +143,16 @@ ru:
   field_subject: !binary |
     0KHQvtC00LXRgNC20LDQvdC40LU=
 
+  field_time_entry_comments: Time Entry Comments
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_user_id: Time Entry User Id
   field_tracker_id: !binary |
     SUQg0YLRgNC10LrQtdGA0LA=
 
   field_velocity_based_estimate: !binary |
     0J7RhtC10L3QutCwINC90LAg0L7RgdC90L7QstC1INGB0LrQvtGA0L7RgdGC
     0Lg=
-
-  field_assigned_to: Assigned To
-  field_priority: Priority
-  field_estimated_hours: Estimated Hours
-  field_time_entry_hours: Time Entry Hours
-  field_time_entry_user_id: Time Entry User Id
-  field_time_entry_spend_on: Time Entry Spend on
-  field_time_entry_comments: Time Entry Comments
 
   label_back_to_project: !binary |
     0J3QsNC30LDQtCDQvdCwINGB0YLRgNCw0L3QuNGG0YMg0L/RgNC+0LXQutGC
@@ -180,6 +179,10 @@ ru:
   label_chart_options: !binary |
     0JLRi9Cx0L7RgNGLINC60LDRgNGC0Ys=
 
+  label_close_completed_sprints: Close completed Sprints
+  label_column_width: Column width
+  label_download: Download
+  label_hide_completed_sprints: Hide Completed Sprints
   label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
@@ -192,6 +195,11 @@ ru:
   label_master_backlog: !binary |
     0JHRjdC60LvQvtCzINCg0YPQutC+0LLQvtC00LjRgtC10LvRjw==
 
+  label_new_sprint: New Sprint
+  label_new_story: New Story
+  label_no_data_to_show: No data to show
+  label_no_end: no end
+  label_no_start: no start
   label_not_prioritized: !binary |
     0LHQtdC3INC/0YDQuNC+0YDQuNGC0LXRgtCw
 
@@ -236,12 +244,14 @@ ru:
   label_release: !binary |
     0JLQtdGA0YHQuNGP
 
+  label_reset: Reset
   label_scrum_statistics: !binary |
     0KHRgtCw0YLQuNGB0YLQuNC60Lgg0YHQutGA0LDQvNCw
 
   label_select_all: !binary |
     0JLRi9Cx0YDQsNGC0Ywg0LLRgdGR
 
+  label_show_completed_sprints: Show Completed Sprints
   label_sprint_backlog: !binary |
     0LHRjdC60LvQvtCzINGB0L/RgNC40L3RgtCw
 
@@ -267,6 +277,7 @@ ru:
     0J/QvtC00LDRh9CwIFdlYi3QutCw0LvQtdC90LTQsNGA0Y8g0YHQvtCx0YvR
     gtC40LkgKFdlYmNhbCk=
 
+  rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
   rb_label_copy_tasks_all: !binary |
     0JLRgdC1ICjQmtC+0L/QuNGA0L7QstCw0YLRjCDQstGB0LUg0LfQsNC00LDQ
     vdC40Y8p
@@ -287,6 +298,7 @@ ru:
 
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable
+  rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_task_cards_stories_then_tasks: First all stories, then all tasks
   rb_task_cards_story_follows_tasks: Tasks followed by their story
   rb_task_cards_tasks_follow_story: Story followed by their tasks
