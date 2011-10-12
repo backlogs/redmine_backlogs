@@ -25,6 +25,7 @@ $jargon = %w{
   trackers
   velocity
   wiki
+  taakbord
   }
 
 def dir(path=nil)

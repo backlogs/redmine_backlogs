@@ -109,16 +109,16 @@ nl:
   label_reset: Reset
   label_scrum_statistics: Scrum statistieken
   label_select_all: Selecteer alles
-  label_show_completed_sprints: Show Completed Sprints
+  label_show_completed_sprints: Toon gecompleteerde sprints
   label_sprint_backlog: sprint backlog
   label_sprint_cards: Sprint kaarten
   label_sprint_impediments: Sprint Impediments
   label_sprint_name: Sprint "%{name}"
   label_stories: Stories
   label_stories_tasks: Stories/Taken
-  label_task_board: Taak-bord
+  label_task_board: Taakbord
   label_webcal: Agenda
-  rb_auto_refresh: Automatische verversing backlogs/taskboard (seconden)
+  rb_auto_refresh: Automatische verversing backlogs/taakbord (seconden)
   rb_label_copy_tasks: Kopieer taken
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Geen
@@ -126,12 +126,12 @@ nl:
   rb_label_link_to_original: Relateer aan originele story
   rb_label_timelog_disable: Uitzetten
   rb_label_timelog_enable: Aanzetten
-  rb_show_burndown_in_sidebar: Toon burndown chart in de issues zijbalk
+  rb_show_burndown_in_sidebar: Toon burndown grafiek in de issues zijbalk
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
-  rb_taskboard_card_order: Afdruk volgorde taak-bord kaarten
-  rb_timelog_from_taskboard: Tijd-schrijven via taak-bord
+  rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
+  rb_timelog_from_taskboard: Tijd-schrijven via taakbord
   release_create_snapshot_today: Story point snapshot voor vandaag opslaan
   release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
