@@ -224,7 +224,7 @@ class RbStory < Issue
   end
 
   def burndown(sprint=nil)
-    return bd if self.fixed_version_id.nil?
+    return nil if self.fixed_version_id.nil?
 
     return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
       bd = {}

@@ -132,6 +132,8 @@ class RbTask < Issue
   end
 
   def burndown(sprint = nil)
+    return nil if self.fixed_version_id.nil?
+
     return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
       sprint ||= story.fixed_version.becomes(RbSprint)
       bd = nil
