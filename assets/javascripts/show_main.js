@@ -7,7 +7,11 @@ RB.$(function() {
   RB.$('#show_charts').bind('click', RB.showCharts);
   
   RB.$('#assigned_to_id_options').bind('change', function(){
-    RB.$(this).parents('.ui-dialog').css('background-color', RB.$(this).children(':selected').attr('color'));
+    c = RB.$(this).children(':selected').attr('color');
+    RB.$(this).parents('.ui-dialog').css('background-color', c);
+    RB.$(this).parents('.ui-dialog').css('background', '-webkit-gradient(linear, left top, left bottom, from(#eee), to('+c+'))');
+    RB.$(this).parents('.ui-dialog').css('background', '-moz-linear-gradient(top, #eee, '+c+')');    
+    RB.$(this).parents('.ui-dialog').css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr='+c+')');
   });
 });
 

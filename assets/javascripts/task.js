@@ -21,6 +21,9 @@ RB.Task = RB.Object.create(RB.Issue, {
   beforeSave: function(){
     var c = this.$.find('select.assigned_to_id').children(':selected').attr('color');
     this.$.css('background-color', c);
+    this.$.css('background', '-webkit-gradient(linear, left top, left bottom, from(#eee), to('+c+'))');
+    this.$.css('background', '-moz-linear-gradient(top, #eee, '+c+')');
+    this.$.css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr='+c+')');
   },
   
   editorDisplayed: function(dialog){
