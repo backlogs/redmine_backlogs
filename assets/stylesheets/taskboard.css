@@ -104,7 +104,7 @@ See RB.Taskboard.initialize()
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
   box-shadow: 2px 2px 2px #CCCCCC;;
   background: -webkit-gradient(linear, left top, left bottom, from(#fee), to(#fd2));
-  background: -moz-linear-gradient(top, #eef, #88f);
+  background: -moz-linear-gradient(top, #fee, #fd2);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeff,EndColorStr=#8888ff);
   background-color:#F8F6A5;
   border:none;
