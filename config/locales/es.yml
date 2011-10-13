@@ -48,37 +48,46 @@ es:
   error_release_end_after_start: "Fecha del release final tiene que ser despu\xC3\xA9s de la fecha de inicio"
   error_taken: ya se encuentra en uso
   event_sprint_summary: "%{projecto}: %{resumen}"
+  field_assigned_to: Assigned To
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Bloques
+  field_estimated_hours: Estimated Hours
   field_initial_estimate: "Estimaci\xC3\xB3n inicial"
   field_initial_story_points: Puntos iniciales de la historia
   field_name: Nombre
   field_number_of_snapshots: Puntos ahorrados en la instantanea
   field_position: "Posici\xC3\xB3n"
+  field_priority: Priority
   field_release_end_date: Fecha final del release
   field_release_start_date: Fecha inicial del release
   field_story_points: Puntos de historia
   field_subject: Tema
+  field_time_entry_comments: Time Entry Comments
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_user_id: Time Entry User Id
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: "Estimaci\xC3\xB3n basada en la velocidad"
-  field_assigned_to: Assigned To
-  field_priority: Priority
-  field_estimated_hours: Estimated Hours
-  field_time_entry_hours: Time Entry Hours
-  field_time_entry_user_id: Time Entry User Id
-  field_time_entry_spend_on: Time Entry Spend on
-  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Volver a la p\xC3\xA1gina del proyecto"
   label_backlogs: Backlogs
   label_backlogs_unconfigured: "Usted no ha configurado Backlogs a\xC3\xBAn, Por favor dirijase a %{administration} > %{plugins}, luego pulse en el enlace %{configure} para este plugin. Una vez que haya configurado los valores, regrese a esta p\xC3\xA1gina para empezar a usar esta herramienta."
   label_burndown: Burndown
   label_chart_options: "Opciones de gr\xC3\xA1fico"
+  label_close_completed_sprints: Close completed Sprints
+  label_column_width: Column width
+  label_download: Download
+  label_hide_completed_sprints: Hide Completed Sprints
   label_hours_ideal: ideal
   label_hours_remaining: horas faltantes
   label_hours_required_burn_rate: es necesario el burn rate (horas)
   label_hours: horas
   label_impediments: Impedimentos
   label_master_backlog: Principal Backlog
+  label_new_sprint: New Sprint
+  label_new_story: New Story
+  label_no_data_to_show: No data to show
+  label_no_end: no end
+  label_no_start: no start
   label_not_prioritized: no priorizado
   label_points_accepted: puntos aceptados
   label_points_burn_down: Abajo
@@ -97,8 +106,10 @@ es:
   label_release_planning: "Planificaci\xC3\xB3n del release"
   label_release_plural: Releases
   label_release_start_date: Fecha inicial del Release
+  label_reset: Reset
   label_scrum_statistics: "Estad\xC3\xADsticas de Scrum"
   label_select_all: Seleccionar todas
+  label_show_completed_sprints: Show Completed Sprints
   label_sprint_backlog: Backlog del sprint
   label_sprint_cards: Tarjetas del sprint
   label_sprint_impediments: Impedimentos del Sprint
@@ -107,6 +118,7 @@ es:
   label_stories_tasks: Historias/Tareas
   label_task_board: Tablero de tareas
   label_webcal: Webcal Feed
+  rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
   rb_label_copy_tasks: Copiar tareas
   rb_label_copy_tasks_all: Todos
   rb_label_copy_tasks_none: Ninguno
@@ -114,6 +126,7 @@ es:
   rb_label_link_to_original: Incluir el enlace de la historia original
   rb_label_timelog_disable: Desactivado
   rb_label_timelog_enable: Activo
+  rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_task_cards_stories_then_tasks: Primero todas las historias, luego todas las tareas
   rb_task_cards_story_follows_tasks: Tareas seguidas por sus historias
   rb_task_cards_tasks_follow_story: Historia seguida por sus tareas

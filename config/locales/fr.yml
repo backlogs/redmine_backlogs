@@ -52,37 +52,46 @@ fr:
     ZXN0IGTDqWrDoCB1dGlsaXPDqQ==
 
   event_sprint_summary: "{{project}}: {{summary}}"
+  field_assigned_to: Assigned To
   field_backlogs_issue_type: Type de carnet
   field_blocks: Blocks
+  field_estimated_hours: Estimated Hours
   field_initial_estimate: Estimation initiale
   field_initial_story_points: "Nombre de points initial du sc\xC3\xA9nario"
   field_name: Nom
   field_number_of_snapshots: Saved point snapshots
   field_position: Position
+  field_priority: Priority
   field_release_end_date: Date de fin de la release
   field_release_start_date: "Date de d\xC3\xA9but de la release"
   field_story_points: "Points de sc\xC3\xA9narios"
   field_subject: Sujet
+  field_time_entry_comments: Time Entry Comments
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_user_id: Time Entry User Id
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: "Estim\xC3\xA9 bas\xC3\xA9 sur la v\xC3\xA9locit\xC3\xA9"
-  field_assigned_to: Assigned To
-  field_priority: Priority
-  field_estimated_hours: Estimated Hours
-  field_time_entry_hours: Time Entry Hours
-  field_time_entry_user_id: Time Entry User Id
-  field_time_entry_spend_on: Time Entry Spend on
-  field_time_entry_comments: Time Entry Comments
   label_back_to_project: "Retour \xC3\xA0 la page produit"
   label_backlogs: Carnets
   label_backlogs_unconfigured: "Vous n'avez pas encore configur\xC3\xA9 les Carnets. Veuillez aller \xC3\xA0 {{administration}} > {{plugins}}, et cliquez sur le lien {{configure}} pour ce plugin. Une fois que vous aurez d\xC3\xA9fini ces champs, revenez \xC3\xA0 cette page pour utiliser l'outil"
   label_burndown: Progression
   label_chart_options: Options du graphique
+  label_close_completed_sprints: Close completed Sprints
+  label_column_width: Column width
+  label_download: Download
+  label_hide_completed_sprints: Hide Completed Sprints
   label_hours_ideal: "Heures id\xC3\xA9ales"
   label_hours_remaining: Heures restantes
   label_hours_required_burn_rate: Taux de consommation requis (heures)
   label_hours: heures
   label_impediments: Obstacles
   label_master_backlog: "Carnet Ma\xC3\xAEtre"
+  label_new_sprint: New Sprint
+  label_new_story: New Story
+  label_no_data_to_show: No data to show
+  label_no_end: no end
+  label_no_start: no start
   label_not_prioritized: "non prioris\xC3\xA9s"
   label_points_accepted: "points accept\xC3\xA9s"
   label_points_burn_down: Bas
@@ -101,8 +110,10 @@ fr:
   label_release_planning: Planification des releases
   label_release_plural: Releases
   label_release_start_date: "Date de d\xC3\xA9but de la release"
+  label_reset: Reset
   label_scrum_statistics: Statistiques du Scrum
   label_select_all: "S\xC3\xA9lectionner tout"
+  label_show_completed_sprints: Show Completed Sprints
   label_sprint_backlog: carnet du sprint
   label_sprint_cards: Cartes de sprint
   label_sprint_impediments: Bloquants du Sprint
@@ -111,6 +122,7 @@ fr:
   label_stories_tasks: "Sc\xC3\xA9narios/T\xC3\xA2ches"
   label_task_board: "Tableau des t\xC3\xA2ches"
   label_webcal: Fil Calendrier Web
+  rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
   rb_label_copy_tasks: "Copier t\xC3\xA2ches"
   rb_label_copy_tasks_all: Toutes
   rb_label_copy_tasks_none: Aucune
@@ -118,6 +130,7 @@ fr:
   rb_label_link_to_original: "Inclure le lien vers le sc\xC3\xA9nario original"
   rb_label_timelog_disable: "D\xC3\xA9sactiver"
   rb_label_timelog_enable: Activer
+  rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_task_cards_stories_then_tasks: "Tous les sc\xC3\xA9narii d'abord, les t\xC3\xA2ches ensuite"
   rb_task_cards_story_follows_tasks: "T\xC3\xA2ches suivies par leur sc\xC3\xA9nario"
   rb_task_cards_tasks_follow_story: "Sc\xC3\xA9narii suivis par leur t\xC3\xA2che"

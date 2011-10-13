@@ -14,7 +14,7 @@ class RbTaskboardsController < RbApplicationController
     statuses = tracker.issue_statuses
     # disable columns by default
     if User.current.admin?
-      @statuses = statuses.select{|s| enabled[s.id]}
+      @statuses = statuses
     else
       enabled = {}
       statuses.each{|s| enabled[s.id] = false}

@@ -25,6 +25,14 @@ $jargon = %w{
   trackers
   velocity
   wiki
+
+  #nl
+  taakbord
+
+  #de
+  Storypunkte
+  Erfassungsdatum
+  Standartwert
   }
 
 def dir(path=nil)
@@ -113,16 +121,20 @@ def same(s1, s2)
 end
 
 def translated(l, s)
+  status = true
   s = s.gsub(/%\{.+?\}/, ' ').gsub(/\{\{.+?\}\}/, ' ')
-  return true if l == 'zh' # aspell doesn't have a language file for zh
+  return true if ['zh', 'ja'].include?(l) # aspell doesn't have a language file for these
   speller = Aspell.new(l.gsub('-', '_'))
   speller.set_option('ignore-case', 'true')
   s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
     next if $jargon.include?(word.downcase)
     next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
-    return false unless speller.check(word) 
+    unless speller.check(word)
+      status = false
+      puts "#{l}: #{word}"
+    end
   end
-  return true
+  return status
 end
 
 def name(t)
@@ -141,7 +153,7 @@ translation.keys.sort.each {|t|
     nt[k] = translation['en'][k].to_s.strip if nt[k].strip == ''
 
     varstyle << k if nt[k].include?('{{')
-    untranslated << k unless translated(t, nt[k])
+    untranslated << k unless translation['en'][k] != nt[k] || translated(t, nt[k])
   }
   errors = (varstyle + untranslated).uniq
 

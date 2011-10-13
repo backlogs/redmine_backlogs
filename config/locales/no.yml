@@ -48,37 +48,46 @@
   error_release_end_after_start: "Sluttdato for utgivelse m\xC3\xA5 v\xC3\xA6re etter startdato"
   error_taken: er allerede i bruk
   event_sprint_summary: "%{project}: %{summary}"
+  field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokker
+  field_estimated_hours: Estimated Hours
   field_initial_estimate: "F\xC3\xB8rsteestimat"
   field_initial_story_points: Initielle storypoenger
   field_name: Navn
   field_number_of_snapshots: Antall lagrede poengsnapshots
   field_position: Posisjon
+  field_priority: Priority
   field_release_end_date: Utgivelse sluttdato
   field_release_start_date: Utgivelse startdato
   field_story_points: Storypoeng
   field_subject: Emne
+  field_time_entry_comments: Time Entry Comments
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_user_id: Time Entry User Id
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Hastighetbasert estimat
-  field_assigned_to: Assigned To
-  field_priority: Priority
-  field_estimated_hours: Estimated Hours
-  field_time_entry_hours: Time Entry Hours
-  field_time_entry_user_id: Time Entry User Id
-  field_time_entry_spend_on: Time Entry Spend on
-  field_time_entry_comments: Time Entry Comments
   label_back_to_project: Tilbake til prosjektsiden
   label_backlogs: Backlogs
   label_backlogs_unconfigured: "Ingen backlogs er konfigurert enn\xC3\xA5. Vennligst g\xC3\xA5 til %{administration} > %{plugins}, klikk s\xC3\xA5 %{configure} - lenken for dette innstikket. S\xC3\xA5 snart feltene er satt kan dette verkt\xC3\xB8yet tas i bruk."
   label_burndown: Burndown
   label_chart_options: Valg for Charts
+  label_close_completed_sprints: Close completed Sprints
+  label_column_width: Column width
+  label_download: Download
+  label_hide_completed_sprints: Hide Completed Sprints
   label_hours_ideal: ideal
   label_hours_remaining: "gjenv\xC3\xA6rende timer"
   label_hours_required_burn_rate: "p\xC3\xA5krevet burn rate (timer)"
   label_hours: timer
   label_impediments: Hindringer
   label_master_backlog: Master Backlog
+  label_new_sprint: New Sprint
+  label_new_story: New Story
+  label_no_data_to_show: No data to show
+  label_no_end: no end
+  label_no_start: no start
   label_not_prioritized: uprioritert
   label_points_accepted: aksepterte poeng
   label_points_burn_down: Ned
@@ -97,8 +106,10 @@
   label_release_planning: Planlegging av utgivelse
   label_release_plural: Utgivelser
   label_release_start_date: Utgivelse startdato
+  label_reset: Reset
   label_scrum_statistics: Scrum statistikk
   label_select_all: Velg alle
+  label_show_completed_sprints: Show Completed Sprints
   label_sprint_backlog: sprint-backlog
   label_sprint_cards: Sprintkort
   label_sprint_impediments: Sprint Hindringer
@@ -107,6 +118,7 @@
   label_stories_tasks: Stories/Tasks
   label_task_board: Oppgavetavle
   label_webcal: Webkalender-Feed
+  rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
   rb_label_copy_tasks: Kopier tasks
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Ingen
@@ -116,6 +128,7 @@
   rb_label_link_to_original: Inkluder lenke til orginal story
   rb_label_timelog_disable: Deaktiver
   rb_label_timelog_enable: Aktiver
+  rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_task_cards_stories_then_tasks: "F\xC3\xB8rst alle, deretter alle tasks"
   rb_task_cards_story_follows_tasks: "Tasks etterfulgt av tilh\xC3\xB8rende story"
   rb_task_cards_tasks_follow_story: "Story etterfulgt av tilh\xC3\xB8rende tasks"
