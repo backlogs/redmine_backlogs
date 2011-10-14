@@ -56,6 +56,7 @@ module Backlogs
     end
 
     def add(arrays)
+      return unless arrays
       arrays.each_pair do |name, data|
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
