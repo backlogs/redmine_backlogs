@@ -24,12 +24,10 @@ class RbTaskboardsController < RbApplicationController
       roles = User.current.roles_for_project(@project)
       #@transitions = {}
       statuses.each {|status|
-        next if enabled[status.id]
 
         # enable all statuses the current user can reach from any task status
         [false, true].each {|creator|
           [false, true].each {|assignee|
-            next if enabled[status.id]
 
             allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id}
             #@transitions["c#{creator ? 'y' : 'n'}a#{assignee ? 'y' : 'n'}"] = allowed
