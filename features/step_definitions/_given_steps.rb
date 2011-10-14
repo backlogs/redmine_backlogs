@@ -139,6 +139,7 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
 end
 
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
+  Rails.cache.clear
   @project = get_project(project_id)
 
   # Enable the backlogs plugin
