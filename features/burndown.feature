@@ -154,6 +154,6 @@ Feature: Scrum master
 
   Scenario: Closed sprint burndown
     Given I am viewing the taskboard for Sprint 001
-     Then the sprint burnup should be:
-        | day     | points_resolved |
-        | start   | 0               |
+      And I have made the following task mutations:
+        | day     | task | remaining | status      |
+        | 3       | S.1  | 0         |             |
