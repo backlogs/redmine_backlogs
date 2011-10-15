@@ -135,45 +135,26 @@ class RbTask < Issue
     return nil if self.fixed_version_id.nil?
 
     return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
-      sprint ||= story.fixed_version.becomes(RbSprint)
+      sprint ||= self.fixed_version.becomes(RbSprint)
       bd = nil
       if sprint && sprint.has_burndown?
         days = sprint.days(:active)
-        series = Backlogs::MergedArray.new(:hours => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days))
-        bd = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
+        series = Backlogs::MergedArray.new
+        series.merge(:hours => history(:remaining_hours, days))
+        series.merge(:sprint => history(:fixed_version_id, days))
+        series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)}
+        series.each{|d|
+          if d.sprint != sprint.id
+            d.hours = nil
+          elsif d.sprint_start
+            d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
+          end
+        }
+        bd = series.series(:hours)
       end
 
       bd
     }
-  end
-
-  def set_initial_estimate(hours)
-    if fixed_version_id and fixed_version.sprint_start_date
-      time = [fixed_version.sprint_start_date.to_time, created_on].max
-    else
-      time = created_on
-    end
-
-    jd = JournalDetail.find(:first, :order => "journals.created_on desc", :joins => :journal,
-      :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on <= ?", id, time])
-
-    if jd
-      if jd.value.blank? || Float(jd.value) != hours
-        hours = hours.to_s.gsub(/\.0+$/, '')
-
-        JournalDetail.connection.execute("update journal_details set value='#{hours}' where id = #{jd.id}")
-
-        jd = JournalDetail.find(:first, :order => "journals.created_on asc", :joins => :journal,
-          :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ? and created_on >= ?", id, jd.journal.created_on])
-        JournalDetail.connection.execute("update journal_details set old_value='#{hours}' where id = #{jd.id}") if jd
-      end
-    else
-      if hours != estimated_hours
-        j = Journal.new(:journalized => self, :user => User.current, :created_on => time)
-        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :value => estimated_hours, :old_value => hours)
-        j.save!
-      end
-    end
   end
 
   def time_entry_add(params)

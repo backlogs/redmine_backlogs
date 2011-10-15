@@ -51,8 +51,6 @@ es:
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Bloques
-  field_estimated_hours: Estimated Hours
-  field_initial_estimate: "Estimaci\xC3\xB3n inicial"
   field_initial_story_points: Puntos iniciales de la historia
   field_name: Nombre
   field_number_of_snapshots: Puntos ahorrados en la instantanea

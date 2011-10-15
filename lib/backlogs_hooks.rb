@@ -56,7 +56,7 @@ module BacklogsPlugin
         end
 
         if issue.is_task?
-          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.initial_estimate}</td></tr>"
+          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.remaining_hours}</td></tr>"
         end
 
         return snippet
@@ -111,7 +111,7 @@ module BacklogsPlugin
 
         if issue.is_task? && !issue.new_record?
           snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
-          snippet += text_field_tag('initial_estimate', issue.initial_estimate, :size => 3)
+          snippet += text_field_tag('initial_estimate', issue.remaining_hours, :size => 3)
           snippet += '</p>'
         end
 
@@ -203,12 +203,11 @@ module BacklogsPlugin
 
         if issue.is_task?
           begin
-            initial_estimate = Float(params[:initial_estimate])
+            issue.remaining_hours = Float(params[:remaining_hours])
           rescue ArgumentError, TypeError
-            initial_estimate = nil
+            issue.remaining_hours = nil
           end
-
-          issue.becomes(RbTask).set_initial_estimate(initial_estimate) if initial_estimate
+          issue.save
         end
       end
 
