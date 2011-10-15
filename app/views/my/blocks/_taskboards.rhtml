@@ -16,6 +16,7 @@
     <tbody>
      <% cnt = 0
         project.versions.each do |sprint|
+          next if sprint.closed?
      %>
       <tr class="<%= cnt%2==0?'even':'odd' %>">
        <td><a href='../rb/taskboards/<%= sprint.id %>'><%= sprint %></a></td>
