@@ -1,0 +1,30 @@
+<h3><%= l(:label_task_board) %></h3>
+<%
+  require 'set'
+  projs = Set.new()
+  roles_projs = User.current.projects_by_role
+  roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
+ -%>
+<div class="mypage-box">
+ <table class="list issues">
+  <% projs.each do |project| %>
+    <thead>
+     <tr>
+      <th colspan="3"><%= l(:label_project) %>:<%= project %></th>
+     </tr>
+    </thead>
+    <tbody>
+     <% cnt = 0
+        project.versions.each do |sprint|
+     %>
+      <tr class="<%= cnt%2==0?'even':'odd' %>">
+       <td><a href='../rb/taskboards/<%= sprint.id %>'><%= sprint %></a></td>
+       <td width="20%"><%= sprint.effective_date %> - <%= sprint.sprint_start_date %></td>
+      </tr>
+     <% cnt=cnt+1
+        end
+     -%>
+    </tbody>
+  <% end -%>
+ </table>
+</div>
