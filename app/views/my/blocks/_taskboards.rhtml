@@ -20,7 +20,7 @@
      %>
       <tr class="<%= cnt%2==0?'even':'odd' %>">
        <td><a href='../rb/taskboards/<%= sprint.id %>'><%= sprint %></a></td>
-       <td width="20%"><%= sprint.effective_date %> - <%= sprint.sprint_start_date %></td>
+       <td style="width:15em;text-align:right;"><%= sprint.effective_date %> - <%= sprint.sprint_start_date %></td>
       </tr>
      <% cnt=cnt+1
         end
