@@ -28,10 +28,16 @@ RB.Task = RB.Object.create(RB.Issue, {
   
   editorDisplayed: function(dialog){
     dialog_bgcolor=this.$.css('background-color');
+    dialog_bg=this.$.css('background');
     if(dialog_bgcolor=='initial'||dialog_bgcolor=='rgba(0, 0, 0, 0)'||dialog_bgcolor=='transparent'){
       // Chrome could not handling background-color css when use -webkit-gradient.
-      dialog.parents('.ui-dialog').css('background', '');
-      dialog.parents('.ui-dialog').css('background-color', '#FEB');
+      if((dialog_bg!=null)&&(dialog_bg!='')){
+        dialog.parents('.ui-dialog').css('background', dialog_bg);      
+      } else {
+        dialog.parents('.ui-dialog').css('background', '-webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa))');
+        dialog.parents('.ui-dialog').css('background', '-moz-linear-gradient(top, #eee, #aaa)');
+        dialog.parents('.ui-dialog').css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr=#aaaaaa)');
+      }
     } else {
       dialog.parents('.ui-dialog').css('background-color', dialog_bgcolor);
     }
