@@ -5,6 +5,8 @@
   roles_projs = User.current.projects_by_role
   roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
   RAILS_DEFAULT_LOGGER.info "in my project"
+  tracker = Tracker.find_by_id(RbTask.tracker)
+  statuses = tracker.issue_statuses
  -%>
 <div class="mypage-box">
  <table class="list issues">
@@ -29,10 +31,9 @@
           done = 0
           sprint.stories.each do |story|
             story.tasks.each do |task|
-              RAILS_DEFAULT_LOGGER.info "#{task} #{task.status.name}(#{task.status_id},#{task.status.is_closed},#{task.status.is_default})"
-	      if task.status.is_closed==1
+	      if statuses[task.status_id].is_closed?
                 done+=1
-              elsif task.status.is_default==1
+              elsif task.status_id == IssueStatus.default.id
                 todo+=1
               else 
                 progress+=1
@@ -50,19 +51,24 @@
       <tr class="<%= cnt%2==0?'even':'odd' %>">
        <td><a href='../rb/taskboards/<%= sprint.id %>'><%= sprint %></a></td>
        <td><!-- /
+
        <%
-       tracker = Tracker.find_by_id(RbTask.tracker)
-       statuses = tracker.issue_statuses
        statuses.each do |status|
        -%>
         <nobr><%= status.name %>:<%= stat.has_key?(status.id)?stat[status.id]:0 %></nobr>/
       <% end -%>
  -->
-      <table class="progress" style="width: 15em;">
+      <table class="progress" style="width: 100%;">
        <tbody>
-         <td class="closed" style="width:<%= total!=0?100*progress/total:0 %>%"></td>
-         <td class="done" style="width:<%= total!=0?100*done/total:0 %>%"></td>
-         <td class="open" style="width:<%= total!=0?100*todo/total:100 %>%"></td>
+         <% if done!=0 %>
+         <td class="closed" style="width:<%= 100*done/total %>%"></td>
+         <%end -%>
+         <% if progress!=0 %>
+         <td class="done" style="width:<%= 100*progress/total %>%"></td>
+         <% end -%>
+         <% if todo!=0 %>
+         <td class="open" style="width:<%= 100*todo/total %>%"></td>
+         <% end -%>
        </tbody>
       </table>
       </td>
