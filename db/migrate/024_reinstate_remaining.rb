@@ -20,13 +20,11 @@ class ReinstateRemaining < ActiveRecord::Migration
   def self.up
     catch (:done) do
       begin
-        execute "select count(remaining_hours) from backlogs"
-        throw :done
+        execute "select count(remaining_hours) from issues"
+        throw :done        
       rescue
+        add_column :issues, :remaining_hours, :float            
       end
-
-# TODO: migrating old table to new table may not work
-#      add_column :issues, :remaining_hours, :float      
 
       projects = Project.all.select{|p| p.module_enabled?('backlogs')}.collect{|p| p.id }
       trackers = (RbStory.trackers + [RbTask.tracker]).compact
