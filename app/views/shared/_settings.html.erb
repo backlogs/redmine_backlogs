@@ -69,6 +69,11 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_story_close_status)) %>
+  <%= select_tag("settings[story_close_status_id]", options_from_collection_for_select(IssueStatus.all, :id, :name, Setting.plugin_redmine_backlogs[:story_close_status_id].to_i)) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:backlogs_points_burn_direction)) %>
   <%= select_tag("settings[points_burn_direction]",
             options_for_select([

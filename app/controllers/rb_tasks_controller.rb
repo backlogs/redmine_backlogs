@@ -35,17 +35,12 @@ class RbTasksController < RbApplicationController
     story = @task.story
     if story !=nil
       chk = true
-      RAILS_DEFAULT_LOGGER.info "story: #{story}"
       story.tasks.each{|task| 
-        RAILS_DEFAULT_LOGGER.info "task: #{task}(#{task.status.is_closed?})"
         chk == false if task.status.is_closed?
       }
       if chk == true
-        tracker = Tracker.find_by_id(RbTask.tracker)
-        statuses = tracker.issue_statuses
-        RAILS_DEFAULT_LOGGER.info "close status: #{statuses[5]}"
-#        story.status_id = 4
-        story.update_and_position!({'status_id' => "5"})
+        RAILS_DEFAULT_LOGGER.info "story auto close: #{story}(#{Setting.plugin_redmine_backlogs[:story_close_status_id]})"
+        story.update_and_position!({'status_id' => Setting.plugin_redmine_backlogs[:story_close_status_id]})
         story.reload
       end
     end

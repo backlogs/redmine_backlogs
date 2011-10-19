@@ -5,6 +5,7 @@ es:
   backlogs_card_specification: Tipos de etiqueta para impresion de tarjetas
   backlogs_impediment: Impedimento
   backlogs_points_burn_direction: Burn up/down de puntos
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Backlog del producto
   backlogs_sprints: Sprints
   backlogs_statistics_active: Project show activity

@@ -5,6 +5,7 @@ en-GB:
   backlogs_card_specification: Label types for card printing
   backlogs_impediment: Impediment
   backlogs_points_burn_direction: Points burn up/down
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
   backlogs_statistics_active: Project show activity
