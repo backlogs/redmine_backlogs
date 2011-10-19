@@ -5,6 +5,7 @@ de:
   backlogs_card_specification: "Etikettenart f\xC3\xBCr den Kartendruck"
   backlogs_impediment: Impediment
   backlogs_points_burn_direction: Burnup/-down Punkte
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Produkt Backlog
   backlogs_sprints: Sprints
   backlogs_statistics_active: "Projektaktivit\xC3\xA4t anzeigen"

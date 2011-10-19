@@ -38,6 +38,7 @@ Redmine::Plugin.register :redmine_backlogs do
                          :story_trackers            => nil, 
                          :task_tracker              => nil, 
                          :card_spec                 => nil,
+                         :story_close_status_id     => 5,
                          :taskboard_card_order      => 'story_follows_tasks',
                          :story_points              => "1,2,3,5,8",
                          :show_burndown_in_sidebar  => 'enabled'

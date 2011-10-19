@@ -5,6 +5,7 @@ fr:
   backlogs_card_specification: "Types d'\xC3\xA9tiquettes pour impression de cartes"
   backlogs_impediment: Obstacle
   backlogs_points_burn_direction: progression des points
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Carnet de produit
   backlogs_sprints: Sprints
   backlogs_statistics_active: Project show activity
