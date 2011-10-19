@@ -149,7 +149,7 @@ class RbTask < Issue
       bd = nil
       if sprint && sprint.has_burndown?
         days = sprint.days(:active)
-        series = Backlogs::MergedArray.new(:hours => history(:estimated_hours, days), :sprint => history(:fixed_version_id, days))
+        series = Backlogs::MergedArray.new(:hours => history(:remaining_hours, days), :sprint => history(:fixed_version_id, days))
         bd = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
 #        TODO: (mikoto20000)Why do you make this modification, friflaj?
 #        It's not work and I rollbacked master branch.
@@ -194,7 +194,7 @@ class RbTask < Issue
     else
       if hours != remaining_hours
         j = Journal.new(:journalized => self, :user => User.current, :created_on => time)
-        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'remaining_hours', :value => remaining_hours_hours, :old_value => hours)
+        j.details << JournalDetail.new(:property => 'attr', :prop_key => 'remaining_hours', :value => remaining_hours, :old_value => hours)
         j.save!
       end
     end
