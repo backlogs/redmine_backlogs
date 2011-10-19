@@ -62,6 +62,7 @@ en-GB:
   field_release_start_date: Release start date
   field_story_points: Story points
   field_subject: Subject
+  field_remaining_hours: Remaining (hours)
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on

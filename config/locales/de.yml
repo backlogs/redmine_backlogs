@@ -52,6 +52,7 @@ de:
   field_backlogs_issue_type: Backlog Typ
   field_blocks: blockiert
   field_estimated_hours: Gesch%C3%A4zte Stunden
+  field_remaining_hours: Remaining (hours)
   field_initial_estimate: Initiale Sch%C3%A4tzung
   field_initial_story_points: Storypunkte zu Beginn
   field_name: Name
