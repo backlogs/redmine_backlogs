@@ -25,7 +25,7 @@ class ReinstateRemaining < ActiveRecord::Migration
       rescue
       end
 
-      add_column :issues, :remaining_hours, :float
+#      add_column :issues, :float
 
       projects = Project.all.select{|p| p.module_enabled?('backlogs')}.collect{|p| p.id }
       trackers = (RbStory.trackers + [RbTask.tracker]).compact
