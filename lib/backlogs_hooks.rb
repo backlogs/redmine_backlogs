@@ -207,6 +207,7 @@ module BacklogsPlugin
           rescue ArgumentError, TypeError
             issue.remaining_hours = nil
           end
+          issue.becomes(RbTask).set_initial_estimate(issue.remaining_hours) if issue.remaining_hours
           issue.save
         end
       end
