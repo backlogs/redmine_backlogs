@@ -27,6 +27,7 @@ class RbTask < Issue
       parent = Issue.find(params['parent_issue_id'])
       task.start_date = parent.start_date
     end
+    task.estimated_hours = task.remaining_hours
     task.save!
 
     raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
@@ -80,10 +81,12 @@ class RbTask < Issue
       if params.has_key?(:remaining_hours)
         begin
           self.remaining_hours = Float(params[:remaining_hours])
-          save
         rescue ArgumentError, TypeError
-          RAILS_DEFAULT_LOGGER.info "#{params[:remaining_hours]} is wrong format for remaining hours."
+          RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
+        sprint_start = self.story.fixed_version.becomes(RbSprint).sprint_start_date
+        self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
+        save
       end
                                     
       result
