@@ -246,7 +246,7 @@ See RB.Taskboard.initialize()
   display:none;
 }
 
-.issue .estimated_hours.editable{
+.issue .remaining_hours.editable{
   -moz-border-radius:15px 15px 15px 15px;
   -webkit-border-radius:15px 15px 15px 15px;
   border-radius:15px 15px 15px 15px;
@@ -264,7 +264,7 @@ See RB.Taskboard.initialize()
 .issue .blocks{
   display:none;
 }
-.issue .estimated_hours.editable:empty{
+.issue .remaining_hours.editable:empty{
   display:none;
 }
 .issue .indicator{
@@ -340,7 +340,7 @@ See RB.Taskboard.initialize()
   height:65px;
   width:272px;
 }
-#task_editor .estimated_hours,
+#task_editor .remaining_hours,
 #task_editor .time_entry_hours,
 #task_editor .time_entry_user_id,
 #task_editor .time_entry_spent_on,

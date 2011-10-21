@@ -56,7 +56,7 @@ module BacklogsPlugin
         end
 
         if issue.is_task?
-          snippet += "<tr><th>#{l(:field_initial_estimate)}</th><td>#{issue.remaining_hours}</td></tr>"
+          snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
         end
 
         return snippet
@@ -110,8 +110,8 @@ module BacklogsPlugin
         end
 
         if issue.is_task? && !issue.new_record?
-          snippet += "<p><label for='initial_estimate'>#{l(:field_initial_estimate)}</label>"
-          snippet += text_field_tag('initial_estimate', issue.remaining_hours, :size => 3)
+          snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
+          snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3)
           snippet += '</p>'
         end
 

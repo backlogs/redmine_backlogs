@@ -62,6 +62,7 @@ nl:
   field_release_start_date: Start datum release
   field_story_points: Story points
   field_subject: Onderwerp
+  field_remaining_hours: Remaining (hours)
   field_time_entry_comments: Tijd registratie commentaar
   field_time_entry_hours: Tijd registratie uren
   field_time_entry_spend_on: Tijd registratie spendeer aan
