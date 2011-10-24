@@ -27,7 +27,14 @@ RB.constants = {
 
           transitions[:transitions][tracker_id][key] ||= {}
 
-          allowed = status.new_statuses_allowed_to(roles, tracker, creator, assignee).collect{|s| s.id.to_s}
+          begin
+            allowed_statues = status.new_statuses_allowed_to(roles, tracker, creator, assignee)
+          rescue
+            allowed_statues = status.new_statuses_allowed_to(roles, tracker)
+          end
+          
+          allowed = allowed_statues.collect{|s| s.id.to_s}
+          
           transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
 
           allowed.unshift(status_id)
