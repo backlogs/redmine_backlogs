@@ -33,13 +33,12 @@ class RbTasksController < RbApplicationController
       format.html { render :partial => "task", :object => @task, :status => status }
     end
     story = @task.story
-    if story !=nil
+    if (story !=nil) && (Setting.plugin_redmine_backlogs[:story_close_status_id] != '0')
       chk = true
       story.tasks.each{|task| 
         chk == false if task.status.is_closed?
       }
       if chk == true
-        RAILS_DEFAULT_LOGGER.info "story auto close: #{story}(#{Setting.plugin_redmine_backlogs[:story_close_status_id]})"
         story.update_and_position!({'status_id' => Setting.plugin_redmine_backlogs[:story_close_status_id]})
         story.reload
       end
