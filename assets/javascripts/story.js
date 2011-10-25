@@ -98,7 +98,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
         } else {
             value = jQuery(this).val();  
         }         
-        data += "&" + this.name + '=' + value;
+        data += "&" + this.name + '=' + encodeURIComponent(value);
     });    
     
     if( this.isNew() ){
