@@ -64,7 +64,6 @@ ja:
   field_velocity_based_estimate: 残り時間に基づくベロシティ
   field_assigned_to: 担当者
   field_priority: 優先度
-  field_estimated_hours: 予定工数
   field_remaining_hours: 残り時間
   field_time_entry_hours: 作業時間
   field_time_entry_user_id: 作業者のユーザID

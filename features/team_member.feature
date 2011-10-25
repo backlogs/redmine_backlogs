@@ -92,7 +92,7 @@ Feature: Team Member
       And I set the estimated_hours of the task to 3
      When I create the task
      Then the request should complete successfully
-      And task A Whole New Task should have estimated_hours set to 3
+      And task A Whole New Task should have remaining_hours set to 3
 
   Scenario: Copy remaining to estimate
     Given I am viewing the taskboard for Sprint 001
