@@ -73,10 +73,10 @@ de:
   label_backlogs_unconfigured: "Sie haben noch keine Backlogs konfiguriert. Bitte gehen Sie auf {{administration}} > {{plugins}}, klicken Sie dann auf den {{configure}} Link für dieses Plugin. Kommen Sie hierher zurück, sobald sie die Felder konfiguriert haben."
   label_burndown: Burndown
   label_chart_options: Chart-Optionen
-  label_close_completed_sprints: Schließe abgeschlossene Sprints
+  label_close_completed_sprints: "Schließe abgeschlossene Sprints"
   label_column_width: Spaltenbreite
   label_download: Download
-  label_hide_completed_sprints: Hide Completed Sprints
+  label_hide_completed_sprints: Verstecke abgeschlossene Sprints
   label_hours: Stunden
   label_hours_ideal: ideal
   label_hours_remaining: restliche Stunden
