@@ -70,6 +70,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       ui.item.addClass("dragging");
     } else {
       // for IE
+      ui.item.addClass("dragging");      
       ui.item.draggable('enabled');
     }
   },
@@ -80,6 +81,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     } else {
       // for IE
       ui.item.draggable('disable');
+      ui.item.removeClass("dragging");      
     }
   },
 
