@@ -51,11 +51,6 @@ See RB.Taskboard.initialize()
   text-align:center;
   vertical-align:middle;
 }
-#board_header td:first-child{
-  min-width:231px;
-  padding:10px;
-  width:231px;
-}
 #board_header td:last-child{
   border-right:none;
 }
@@ -75,6 +70,8 @@ See RB.Taskboard.initialize()
   border-bottom:1px dotted #CFCFCF;
   vertical-align:top;
 }
+
+#board_header td:first-child,
 .board td:first-child{
   min-width:210px;
   padding:5px;
@@ -87,12 +84,14 @@ See RB.Taskboard.initialize()
   border-bottom:none;
 }
 .board .add_new{
-  margin:0;
   min-width:30px;
   padding:0;
   text-align:center;
   vertical-align:middle;
   width:30px;
+}
+.board .story_tooltip .add_new{
+  margin-left:-0.5em;
 }
 .board .add_new:hover{
   cursor:pointer;
