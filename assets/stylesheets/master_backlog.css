@@ -379,8 +379,9 @@
 #backlogs_container .stories .story .subject {
   display:block;
 /*  height:15px;
-  left:70px;
-  overflow:hidden;*/
+  left:70px; */
+  overflow:hidden;
+  margin-right:2em;
   padding:5px 2px 4px 10px;
 /*  position:absolute;
   top:1px;*/
