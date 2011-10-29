@@ -37,14 +37,12 @@ See RB.Taskboard.initialize()
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
-  top: 31px;
-  left: 0px;
-  position: fixed;
+  position: relative;
   z-index: 1000;
 }
 #board_header td{
   background-color:#EEEEEE;
-  background: -webkit-gradient(linear, left top, right bottom, from(#FFF), to(#DDD);
+  background: -webkit-gradient(linear, left top, right bottom, from(#FFF), to(#DDD));
   background: -moz-linear-gradient(left top, #FFF, #DDD);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=1,StartColorStr=#FFFFFF,EndColorStr=#DDDDDD);
   border-right:1px dotted #CFCFCF;
@@ -57,10 +55,6 @@ See RB.Taskboard.initialize()
 }
 #board_header td:last-child{
   border-right:none;
-}
-
-#impediments {
-  margin-top:71px;
 }
 
 /* shared #impediments and #tasks */
