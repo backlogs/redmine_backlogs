@@ -9,16 +9,16 @@ ja:
   backlogs_statistics_active: "プロジェクトには幾つかのアクティビティがあります"
   backlogs_statistics_product_backlog_filled_failed: "プロダクトバックログが見つかりません"
   backlogs_statistics_product_backlog_filled: "プロダクトバックログはストーリーを持っています"
-  backlogs_statistics_sprints_estimated_failed: "クローズされたもしくはアクティブなスプリントは見積もりがないストーリーが存在します"
-  backlogs_statistics_sprints_estimated: アクティブで最近クローズされたスプリントはタスクの見積もりが設定されています
+  backlogs_statistics_sprints_estimated_failed: "クローズされたもしくはアクティブなスプリントは残り時間がないストーリーが存在します"
+  backlogs_statistics_sprints_estimated: アクティブで最近クローズされたスプリントはタスクの残り時間が設定されています
   backlogs_statistics_product_backlog_sized_failed: プロダクトバックログはサイズが合っていないストーリーを持っています
   backlogs_statistics_product_backlog_sized: プロダクトバックログのストーリーはサイズが合っています
   backlogs_statistics_sprint_notes_available_failed: スプリントは、振り返り/レビューノートを入力せずにクローズされました
   backlogs_statistics_sprint_notes_available: 最近クローズされたスプリントは、振り返り/レビューノートがあります
   backlogs_statistics_sprints_sized_failed: プロジェクトはアクティブなもしくは最近クローズされたスプリントに対しサイズが合っていないストーリーを含んでいます
   backlogs_statistics_sprints_sized: アクティブで最近クローズされたスプリントは達成しています
-  backlogs_statistics_sizing_consistent_failed: "ストーリーサイズは見積もりに対して乖離しています"
-  backlogs_statistics_sizing_consistent: "ストーリーサイズは、見積もりに対して安定しています"
+  backlogs_statistics_sizing_consistent_failed: "ストーリーサイズは残り時間に対して乖離しています"
+  backlogs_statistics_sizing_consistent: "ストーリーサイズは、残り時間に対して安定しています"
   backlogs_statistics_yield_failed: "プロジェクトは低い平均値を出しています"
   backlogs_statistics_yield: "プロジェクトは良い平均値を出しています"
   backlogs_statistics_committed_velocity_stable_failed: "承認されたベロシティはスプリントをまたがって安定していません"
@@ -61,11 +61,10 @@ ja:
   field_story_points: ストーリーポイント
   field_subject: 題名
   field_tracker_id: トラッカーID
-  field_velocity_based_estimate: 見積もりに基づくベロシティ
+  field_velocity_based_estimate: 残り時間に基づくベロシティ
   field_assigned_to: 担当者
   field_priority: 優先度
-  field_estimated_hours: 予定工数
-  field_remaining_hours: 残り時間
+  field_estimated_hours: 残り時間
   field_time_entry_hours: 作業時間
   field_time_entry_user_id: 作業者のユーザID
   field_time_entry_spend_on: 作業内容
@@ -76,7 +75,7 @@ ja:
   label_burndown: バーンダウン
   label_chart_options: チャートオプション
   label_hours: 時間
-  label_hours_ideal: ideal
+  label_hours_ideal: 理想時間
   label_hours_remaining: 残り時間
   label_hours_required_burn_rate: 必要なバーンレート(時間)
   label_impediments: 残チケット
@@ -175,6 +174,7 @@ ja:
   rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
   rb_taskboard_card_order: カードの印刷順
   rb_timelog_from_taskboard: かんばんのタイムログ
+  rb_show_burndown_in_sidebar: バーンダウンチャートをチケットのサイドバーに表示
   rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
   release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
   release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新

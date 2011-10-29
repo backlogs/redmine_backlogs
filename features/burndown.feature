@@ -18,8 +18,10 @@ Feature: Scrum master
         | Accepted    |         1 |          0 |                    |
         | Rejected    |         1 |          0 |                  1 |
       And the project has the following sprint:
-        | name       | sprint_start_date | effective_date  |
-        | Sprint 001 | today             | 1.week.from_now |
+        | name           | sprint_start_date | effective_date  |
+        | Sprint 001     | today             | 1.week.from_now |
+        | Sprint siegerv | 2011-08-19        | 2011-09-02      |
+
       And the project has the following stories in the product backlog:
         | position | subject | 
         | 1        | Story 1 |
@@ -27,15 +29,20 @@ Feature: Scrum master
         | 3        | Story 3 |
         | 4        | Story 4 |
       And the project has the following stories in the following sprints:
-        | position | subject | sprint     | points | day |
-        | 1        | Story A | Sprint 001 | 1      |     |
-        | 2        | Story B | Sprint 001 | 2      |     |
-        | 3        | Story C | Sprint 001 | 4      |     |
+        | position | subject         | sprint         | points | day |
+        | 1        | Story A         | Sprint 001     | 1      |     |
+        | 2        | Story B         | Sprint 001     | 2      |     |
+        | 3        | Story C         | Sprint 001     | 4      |     |
+
+        | 4        | Siegerv story 1 | Sprint siegerv | 1      |     |
+
       And the project has the following tasks:
-        | subject      | story     | estimate | status | offset |
-        | A.1          | Story A   | 10       | New    | 1h     |
-        | B.1          | Story B   | 20       | New    | 1h     |
-        | C.1          | Story C   | 40       | New    | 1h     |
+        | subject      | story            | estimate | status | offset |
+        | A.1          | Story A          | 10       | New    | 1h     |
+        | B.1          | Story B          | 20       | New    | 1h     |
+        | C.1          | Story C          | 40       | New    | 1h     |
+
+        | S.1          | Siegerv story 1  | 10       | New    | 1h     |
 
   Scenario: Tasks closed AFTER remaining hours is set to 0 
     Given I am viewing the taskboard for Sprint 001
@@ -133,14 +140,20 @@ Feature: Scrum master
         | 4       | 11               | 8                 | 30              |
         | 5       | 11               | 0                 | 0               |
 
-  #Scenario: Change sprint start date
-    #Given I am viewing the taskboard for Sprint 001
-      #And I have changed the sprint start date to tomorrow
-      #And the project has the following stories in the following sprints:
-        #| position | subject | sprint     | points |
-        #| 4        | Story D | Sprint 001 | 1      |
-      #And I have changed the sprint start date to today
-     #Then the sprint burnup should be:
-        #| day     | points_resolved |
-        #| start   | 1                |
-        #| 1       | 1                |
+  Scenario: Change sprint start date
+    Given I am viewing the taskboard for Sprint 001
+      And I have changed the sprint start date to tomorrow
+      And the project has the following stories in the following sprints:
+        | position | subject | sprint     | points |
+        | 4        | Story D | Sprint 001 | 1      |
+      And I have changed the sprint start date to today
+     Then the sprint burnup should be:
+        | day     | points_resolved |
+        | start   | 1               |
+        | 1       | 1               |
+
+  Scenario: Closed sprint burndown
+    Given I am viewing the taskboard for Sprint 001
+      And I have made the following task mutations:
+        | day     | task | remaining | status      |
+        | 3       | S.1  | 0         |             |

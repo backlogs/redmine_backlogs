@@ -4,7 +4,11 @@ class RbStory < Issue
     acts_as_list
 
     def self.condition(project_id, sprint_id, extras=[])
-      visible = Issue.visible_condition(User.current, :project => Project.find(project_id))
+      if Issue.respond_to? :visible_condition
+        visible = Issue.visible_condition(User.current, :project => Project.find(project_id))
+      else
+      	visible = Project.allowed_to_condition(User.current, :view_issues)
+      end
       visible = '1=1' # unless visible
 
       if sprint_id.nil?  

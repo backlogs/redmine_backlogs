@@ -81,7 +81,7 @@ module BacklogsPlugin
           snippet += '</p>'
 
           if issue.descendants.length != 0 && !issue.new_record?
-            snippet += javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs'
+            snippet += javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'
             snippet += <<-generatedscript
 
               <script type="text/javascript">
@@ -133,7 +133,7 @@ module BacklogsPlugin
 
           # this wouldn't be necesary if the schedules plugin
           # didn't disable the contextual hook
-          snippet += javascript_include_tag 'jquery/jquery-1.4.2.min.js', :plugin => 'redmine_backlogs'
+          snippet += javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'
           snippet += <<-generatedscript
 
             <script type="text/javascript">
