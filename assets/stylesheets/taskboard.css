@@ -43,10 +43,10 @@ See RB.Taskboard.initialize()
   z-index: 1000;
 }
 #board_header td{
-  background-color:#ccffff;
-  background: -webkit-gradient(linear, left top, right bottom, from(#eff), to(#0ff));
-  background: -moz-linear-gradient(left top, #eff, #0ff);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=1,StartColorStr=#eeeeff,EndColorStr=#00ffff);
+  background-color:#EEEEEE;
+  background: -webkit-gradient(linear, left top, right bottom, from(#FFF), to(#DDD);
+  background: -moz-linear-gradient(left top, #FFF, #DDD);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=1,StartColorStr=#FFFFFF,EndColorStr=#DDDDDD);
   border-right:1px dotted #CFCFCF;
   color:#4E4E4E;
   font-size:14px;
