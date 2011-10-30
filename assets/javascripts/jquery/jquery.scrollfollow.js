@@ -55,8 +55,8 @@
 			var viewportHeight = parseInt( $( window ).height() );	
 			var pageScroll =  parseInt( $( document ).scrollTop() );
 			var parentTop =  parseInt( box.cont.offset().top );
-			var parentHeight = parseInt( box.cont.attr( 'offsetHeight' ) );
-			var boxHeight = parseInt( box.attr( 'offsetHeight' ) + ( parseInt( box.css( 'marginTop' ) ) || 0 ) + ( parseInt( box.css( 'marginBottom' ) ) || 0 ) );
+			var parentHeight = parseInt(box.cont.css('padding-top')) + parseInt(box.cont.css('height')); 
+			var boxHeight = parseInt( (parseInt(box.css('padding-top')) + parseInt(box.css('height'))) + ( parseInt( box.css( 'marginTop' ) ) || 0 ) + ( parseInt( box.css( 'marginBottom' ) ) || 0 ) );			
 			var aniTop;
 			
 			// Make sure the user wants the animation to happen
