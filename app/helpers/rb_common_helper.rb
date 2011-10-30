@@ -119,8 +119,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
   end
 
-  def estimated_hours(item)
-    item.estimated_hours.blank? || item.estimated_hours==0 ? "" : item.estimated_hours
+  def remaining_hours(item)
+    item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
   end
 
   def workdays(start_day, end_day)
