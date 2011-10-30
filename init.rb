@@ -7,8 +7,9 @@ Dispatcher.to_prepare do
   if Issue.const_defined? "SAFE_ATTRIBUTES"
     Issue::SAFE_ATTRIBUTES << "story_points"
     Issue::SAFE_ATTRIBUTES << "position"
+    Issue::SAFE_ATTRIBUTES << "remaining_hours"
   else
-    Issue.safe_attributes "story_points", "position"
+    Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
   require_dependency 'backlogs_query_patch'
