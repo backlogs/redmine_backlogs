@@ -261,7 +261,7 @@
   overflow:hidden;
   position:absolute;
   top:1px;
-  width:330px;
+  width:21em;
 }
 
 #backlogs_container .closedbacklog .sprint .sprint_start_date,
