@@ -102,7 +102,7 @@ module Backlogs
       def backlogs_before_save
         if project.module_enabled?('backlogs') && (self.is_task? || self.story)
           self.remaining_hours = 0 if self.status.backlog_is?(:success)
-          self.remaining_hours = self.estimated_hours if self.remaining_hours.nil?
+          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
