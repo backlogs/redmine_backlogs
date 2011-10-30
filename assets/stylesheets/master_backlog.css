@@ -258,10 +258,11 @@
   height:28px;
   left:5px;
   line-height:28px;
-  overflow:hidden;
+  overflow: hidden;
   position:absolute;
   top:1px;
-  width:21em;
+  margin-right:2em;
+  width:19em;
 }
 
 #backlogs_container .closedbacklog .sprint .sprint_start_date,
@@ -379,13 +380,14 @@
 #backlogs_container .stories .story .subject {
   display:block;
 /*  height:15px;
-  left:70px;
-  overflow:hidden;*/
+  left:70px;*/
+  overflow:hidden;
   padding:5px 2px 4px 10px;
 /*  position:absolute;
   top:1px;*/
   float:left;
-  width:375px;
+  width:30em;
+  margin-right:2em;
 /*  white-space:nowrap;*/
 }
 #backlogs_container .stories .story.closed .subject{
@@ -503,7 +505,8 @@
   line-height:15px;
   margin:0;
   top:2px;
-  width:320px;
+  width:19em;
+  overflow:hidden;
   float: left;
 }
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
