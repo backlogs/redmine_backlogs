@@ -18,48 +18,12 @@ namespace :redmine do
         end
       }
 
-      corruption_test = (ENV['corruptiontest'] != 'false')
-
-#      raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.1 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.[0-9]/
       puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.1 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.1/
 
       begin
         RbStory.trackers
       rescue NoMethodError
         raise "Looks like there's a conflicting plugin that redefines the Story class"
-      end
-
-      if !corruption_test
-        puts "Assuming no database corruption"
-      else
-        issues = Issue.all + []
-        problems = []
-        tested = 0
-        if issues.size != 0
-          puts "Testing #{issues.size} issues for database corruption..."
-          issues.in_groups_of(100, false) do |chunk|
-            b = Benchmark.measure {
-              chunk.each {|issue|
-                begin
-                  issue.save!
-                rescue => e
-                  problems << [issue.id, "#{e}"]
-                end
-              }
-            }
-            tested += chunk.size
-            speed = chunk.size.to_f / b.real
-            puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
-          end
-        end
-        if problems.size == 0
-          puts "Database OK!"
-        else
-          puts "The following issues have problems (how ironic is that?):"
-          problems.each do |issue|
-            puts "* #{issue[0]}: #{issue[1]}"
-          end
-        end
       end
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
