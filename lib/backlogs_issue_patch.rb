@@ -101,11 +101,11 @@ module Backlogs
 
       def backlogs_before_save
         if project.module_enabled?('backlogs') && (self.is_task? || self.story)
-          self.estimated_hours = 0 if self.status.backlog_is?(:success)
+          self.remaining_hours = 0 if self.status.backlog_is?(:success)
+          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
-
           Rails.cache.delete("RbIssue(#{self.id}).burndown") unless self.new_record?
         end
 
@@ -233,24 +233,6 @@ module Backlogs
             end
           end
         }
-      end
-
-      def initial_estimate
-        return nil unless (RbStory.trackers + [RbTask.tracker]).include?(tracker_id)
-
-        if fixed_version_id && fixed_version.sprint_start_date
-          time = [fixed_version.sprint_start_date.to_time, created_on].compact.max
-        else
-          time = created_on
-        end
-
-        if leaf?
-          return value_at(:estimated_hours, time)
-        else
-          e = self.leaves.collect{|t| t.initial_estimate}.compact
-          return nil if e.size == 0
-          return e.sum
-        end
       end
     end
   end

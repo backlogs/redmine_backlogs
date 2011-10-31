@@ -70,11 +70,23 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStart: function(event, ui){ 
-    ui.item.addClass("dragging");
+    if (jQuery.support.noCloneEvent){
+      ui.item.addClass("dragging");
+    } else {
+      // for IE
+      ui.item.addClass("dragging");      
+      ui.item.draggable('enabled');
+    }
   },
   
   dragStop: function(event, ui){ 
-    ui.item.removeClass("dragging");  
+    if (jQuery.support.noCloneEvent){
+      ui.item.removeClass("dragging");
+    } else {
+      // for IE
+      ui.item.draggable('disable');
+      ui.item.removeClass("dragging");      
+    }
   },
 
   handleAddNewImpedimentClick: function(event){

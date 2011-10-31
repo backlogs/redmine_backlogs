@@ -181,7 +181,7 @@ if [ -z "$RMDB" ]; then
   read -p "Reinstall RM database? " RMDB
 fi
 if [[ $RMDB =~ [Yy] ]]; then
-    mysqladmin -u root -p$DBROOTPW drop redmine
+    mysqladmin -f -u root -p$DBROOTPW drop redmine
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
@@ -199,8 +199,8 @@ if [[ $RMDB =~ [Yy] ]]; then
     rake generate_session_store
     rake redmine:load_default_data
     rake db:migrate:upgrade_plugin_migrations
-    rake db:migrate_plugins
-    rake redmine:backlogs:install corruptiontest=false
+    rake --trace db:migrate_plugins
+    #rake redmine:backlogs:install corruptiontest=false
 
     if [ ! -z "$ADMINPW" ]; then
       ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"

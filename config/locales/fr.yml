@@ -66,6 +66,7 @@ fr:
   field_release_start_date: "Date de d\xC3\xA9but de la release"
   field_story_points: "Points de sc\xC3\xA9narios"
   field_subject: Sujet
+  field_remaining_hours: Remaining (hours)
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on
