@@ -79,7 +79,7 @@ class RbTask < Issue
 
       if params.has_key?(:remaining_hours)
         begin
-          self.remaining_hours = Float(params[:remaining_hours])
+          self.remaining_hours = Float(params[:remaining_hours].gsub(',', '.'))
         rescue ArgumentError, TypeError
           RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
