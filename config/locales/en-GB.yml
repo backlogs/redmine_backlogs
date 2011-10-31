@@ -51,8 +51,6 @@ en-GB:
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
   field_blocks: Blocks
-  field_estimated_hours: Estimated Hours
-  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: Name
   field_number_of_snapshots: Saved point snapshots

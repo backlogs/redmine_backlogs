@@ -51,7 +51,6 @@ ja:
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: バックログタイプ
   field_blocks: ブロック
-  field_initial_estimate: 初期見積もり
   field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
   field_number_of_snapshots: ポイントをスナップショットとして保存
