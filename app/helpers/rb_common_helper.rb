@@ -14,7 +14,12 @@ module RbCommonHelper
   end
 
   def build_inline_style(task)
-    task.blank? || task.assigned_to.blank? ? '' : "style='background-color:#{task.assigned_to.backlogs_preference(:task_color)}'"
+    task.blank? || task.assigned_to.blank? ? '' : "style='
+background-color:#{task.assigned_to.backlogs_preference(:task_color)}; 
+background: -webkit-gradient(linear, left top, left bottom, from(\#eee), to(#{task.assigned_to.backlogs_preference(:task_color)}));
+background: -moz-linear-gradient(top, \#eee, #{task.assigned_to.backlogs_preference(:task_color)});
+filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr=#{task.assigned_to.backlogs_preference(:task_color)});
+'"
   end
 
   def build_inline_style_color(task)

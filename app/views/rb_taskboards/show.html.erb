@@ -41,8 +41,7 @@
 
   <table id="impediments" class="board" cellspacing="0">
     <tr>
-      <td><div class="label_sprint_impediments"><%= l(:label_sprint_impediments) %></div></td>
-      <td class="add_new">+</td>
+      <td><div class="label_sprint_impediments"><span class="add_new"><img src="../../images/add.png" alt="+" /></span><%= l(:label_sprint_impediments) %></div></td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
         <%= render :partial => "rb_impediments/impediment", :collection => @sprint.impediments.select{|impediment| impediment.status_id==status.id} %>
@@ -55,9 +54,9 @@
     <%- @sprint.stories.each do |story| %>  
     <tr>
       <td>
-        <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
+        <div class="story <%= mark_if_closed(story) %>" style="<%= build_inline_style_color(story) %>">
           <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
-            <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
+            <div style="float:left; padding-left:3px; font-weight:bold;"><span class="add_new"><img src="../../images/add.png" alt="+" /></span><%= assignee_name_or_empty(story) %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
           <div class="subject"><%= story.subject %></div>
@@ -65,7 +64,6 @@
           <div class="story_points editable" fieldname="story_points" fieldlabel="<%=l(:field_story_points)%>"><%= story.story_points %></div>
         </div>
       </td>
-      <td class="add_new">+</td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>">
         <%= render :partial => "rb_tasks/task", :collection => story.descendants.select{|task| task.status.id==status.id} %>

@@ -37,21 +37,21 @@ See RB.Taskboard.initialize()
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
+  position: relative;
+  z-index: 1000;
 }
 #board_header td{
-  background-color:#ccffff;
+  background-color:#EEEEEE;
+  background: -webkit-gradient(linear, left top, right bottom, from(#FFF), to(#DDD));
+  background: -moz-linear-gradient(left top, #FFF, #DDD);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=1,StartColorStr=#FFFFFF,EndColorStr=#DDDDDD);
   border-right:1px dotted #CFCFCF;
-  color:#7E7E7E;
+  color:#4E4E4E;
   font-size:14px;
   font-weight:bold;
   height:30px;
   text-align:center;
   vertical-align:middle;
-}
-#board_header td:first-child{
-  min-width:231px;
-  padding:10px;
-  width:231px;
 }
 #board_header td:last-child{
   border-right:none;
@@ -72,6 +72,8 @@ See RB.Taskboard.initialize()
   border-bottom:1px dotted #CFCFCF;
   vertical-align:top;
 }
+
+#board_header td:first-child,
 .board td:first-child{
   min-width:210px;
   padding:5px;
@@ -84,12 +86,14 @@ See RB.Taskboard.initialize()
   border-bottom:none;
 }
 .board .add_new{
-  margin:0;
   min-width:30px;
   padding:0;
   text-align:center;
   vertical-align:middle;
   width:30px;
+}
+.board .story_tooltip .add_new{
+  margin-left:-0.5em;
 }
 .board .add_new:hover{
   cursor:pointer;
@@ -100,6 +104,9 @@ See RB.Taskboard.initialize()
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
   box-shadow: 2px 2px 2px #CCCCCC;;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fee), to(#fd2));
+  background: -moz-linear-gradient(top, #fee, #fd2);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#ffeeee,EndColorStr=#ffdd22);
   background-color:#F8F6A5;
   border:none;
   display:block;
@@ -157,6 +164,9 @@ See RB.Taskboard.initialize()
 /* item styles used by .task and .impediment */
 .issue, .placeholder{
   background-color:#AFAFAF;
+  background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
+  background: -moz-linear-gradient(top, #eee, #aaa);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#eeeeee,EndColorStr=#aaaaaa);
   border:none;
   cursor:move;
   display:block;
