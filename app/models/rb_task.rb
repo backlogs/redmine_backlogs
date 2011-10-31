@@ -27,7 +27,6 @@ class RbTask < Issue
       parent = Issue.find(params['parent_issue_id'])
       task.start_date = parent.start_date
     end
-    task.estimated_hours = task.remaining_hours
     task.save!
 
     raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
@@ -80,11 +79,11 @@ class RbTask < Issue
 
       if params.has_key?(:remaining_hours)
         begin
-          self.remaining_hours = Float(params[:remaining_hours])
+          self.remaining_hours = Float(params[:remaining_hours].gsub(',', '.'))
         rescue ArgumentError, TypeError
           RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
-        sprint_start = self.story.fixed_version.becomes(RbSprint).sprint_start_date
+        sprint_start = self.story.fixed_version.becomes(RbSprint).sprint_start_date if self.story
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
         save
       end
@@ -152,22 +151,18 @@ class RbTask < Issue
       bd = nil
       if sprint && sprint.has_burndown?
         days = sprint.days(:active)
-        series = Backlogs::MergedArray.new(:hours => history(:remaining_hours, days), :sprint => history(:fixed_version_id, days))
-        bd = series.collect{|h| h.sprint == sprint.id ? h.hours : nil}
-#        TODO: (mikoto20000)Why do you make this modification, friflaj?
-#        It's not work and I rollbacked master branch.
-#        series = Backlogs::MergedArray.new
-#        series.merge(:hours => history(:remaining_hours, days))
-#        series.merge(:sprint => history(:fixed_version_id, days))
-#        series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)})
-#        series.each{|d|
-#          if d.sprint != sprint.id
-#            d.hours = nil
-#          elsif d.sprint_start
-#            d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
-#          end
-#        }
-#        bd = series.series(:hours)
+        series = Backlogs::MergedArray.new
+        series.merge(:hours => history(:remaining_hours, days))
+        series.merge(:sprint => history(:fixed_version_id, days))
+        series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
+        series.each{|d|
+          if d.sprint != sprint.id
+            d.hours = nil
+          elsif d.sprint_start
+            d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
+          end
+        }
+        bd = series.series(:hours)
       end
 
       bd
