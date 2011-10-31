@@ -20,6 +20,9 @@ RB.Task = RB.Object.create(RB.Issue, {
 
   beforeSave: function(){
     var c = this.$.find('select.assigned_to_id').children(':selected').attr('color');
+    if(c==undefined){
+      c = "#CCCCCC";
+    }    
     this.$.css('background-color', c);
     this.$.css('background', '-webkit-gradient(linear, left top, left bottom, from(#eee), to('+c+'))');
     this.$.css('background', '-moz-linear-gradient(top, #eee, '+c+')');
