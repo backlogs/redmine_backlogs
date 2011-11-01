@@ -51,8 +51,7 @@ de:
   field_assigned_to: Zugeordnet zu
   field_backlogs_issue_type: Backlog Typ
   field_blocks: blockiert
-  field_estimated_hours: Geschätzte Stunden
-  field_initial_estimate: Initiale Schätzung
+  field_remaining_hours: Remaining (hours)
   field_initial_story_points: Storypunkte zu Beginn
   field_name: Name
   field_number_of_snapshots: Gespeicherte Punkte-Snapshots

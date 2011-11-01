@@ -87,9 +87,7 @@ zh:
     QmFja2xvZ+exu+Weiw==
 
   field_blocks: "[[Blocks]]"
-  field_estimated_hours: Estimated Hours
   field_remaining_hours: Remaining (hours)
-  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: "[[Name]]"
   field_number_of_snapshots: Saved point snapshots
