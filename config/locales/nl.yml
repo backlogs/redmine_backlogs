@@ -51,8 +51,6 @@ nl:
   field_assigned_to: Toegekend aan
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_estimated_hours: Geschatte uren
-  field_initial_estimate: "Initi\xC3\xABle schatting"
   field_initial_story_points: "Initi\xC3\xABle story points"
   field_name: Naam
   field_number_of_snapshots: Opgeslagen point snapshots

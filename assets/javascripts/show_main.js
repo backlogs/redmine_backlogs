@@ -7,7 +7,16 @@ RB.$(function() {
   RB.$('#show_charts').bind('click', RB.showCharts);
   
   RB.$('#assigned_to_id_options').bind('change', function(){
-    RB.$(this).parents('.ui-dialog').css('background-color', RB.$(this).children(':selected').attr('color'));
+    c = RB.$(this).children(':selected').attr('color');
+    c_light = RB.$(this).children(':selected').attr('color_light');
+    if(c==undefined){
+      c = "#AAAAAA";
+      c_light = "#E0E0E0";
+    }
+    RB.$(this).parents('.ui-dialog').css('background-color', c);
+    RB.$(this).parents('.ui-dialog').css('background', '-webkit-gradient(linear, left top, left bottom, from('+c_light+'), to('+c+'))');
+    RB.$(this).parents('.ui-dialog').css('background', '-moz-linear-gradient(top, '+c_light+', '+c+')');    
+    RB.$(this).parents('.ui-dialog').css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr='+c_light+',EndColorStr='+c+')');
   });
 });
 
