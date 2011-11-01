@@ -658,9 +658,9 @@
   background-color:#E7FAE0;
 }
 #backlogs_container .stories .tracker5{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFF#DAFEF8));
-  background: -moz-linear-gradient(top, #EEE, #FFF#DAFEF8);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FFFFFF#DAFEF8);
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#DAFEF8));
+  background: -moz-linear-gradient(top, #EEE, #DAFEF8);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#DAFEF8);
   background-color:#DAFEF8;
 }
 #backlogs_container .stories .tracker6{
