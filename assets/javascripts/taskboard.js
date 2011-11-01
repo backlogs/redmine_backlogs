@@ -132,6 +132,6 @@ RB.Taskboard = RB.Object.create(RB.Model, {
 jQuery(document).ready(function(){
   jQuery("#board_header").scrollFollow({
     speed: 100,
-    offset: 0,
+    offset: 0
   });
 });
