@@ -164,9 +164,9 @@ See RB.Taskboard.initialize()
 /* item styles used by .task and .impediment */
 .issue, .placeholder{
   background-color:#CCCCCC;
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#AAA));
-  background: -moz-linear-gradient(top, #EEE, #AAA);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#AAAAAA);
+  background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#AAA));
+  background: -moz-linear-gradient(top, #E0E0E0, #AAA);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#E0E0E0,EndColorStr=#AAAAAA);
   border:none;
   cursor:move;
   display:block;
