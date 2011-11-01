@@ -50,7 +50,6 @@ en:
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
   field_blocks: Blocks
-  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: Name
   field_number_of_snapshots: Saved point snapshots
@@ -63,7 +62,6 @@ en:
   field_velocity_based_estimate: Velocity based estimate
   field_assigned_to: Assigned To
   field_priority: Priority
-  field_estimated_hours: Estimated Hours
   field_remaining_hours: Remaining (hours)
   field_time_entry_hours: Time Entry Hours
   field_time_entry_user_id: Time Entry User Id

@@ -113,9 +113,7 @@ ru:
   field_blocks: !binary |
     0JHQu9C+0LrQuNGA0L7QstC60Lg=
 
-  field_estimated_hours: Estimated Hours
   field_remaining_hours: Remaining (hours)
-  field_initial_estimate: Initial estimate
   field_initial_story_points: !binary |
     0J3QsNGH0LDQu9GM0L3QsNGPINC+0YbQtdC90LrQsCDQuNGB0YLQvtGA0LjQ
     uA==

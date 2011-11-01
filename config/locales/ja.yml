@@ -1,4 +1,4 @@
-
+---
 ja: 
   project_module_backlogs: バックログ
   backlogs_active: active
@@ -51,7 +51,6 @@ ja:
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: バックログタイプ
   field_blocks: ブロック
-  field_initial_estimate: 初期見積もり
   field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
   field_number_of_snapshots: ポイントをスナップショットとして保存
@@ -64,7 +63,7 @@ ja:
   field_velocity_based_estimate: 残り時間に基づくベロシティ
   field_assigned_to: 担当者
   field_priority: 優先度
-  field_estimated_hours: 残り時間
+  field_remaining_hours: 残り時間
   field_time_entry_hours: 作業時間
   field_time_entry_user_id: 作業者のユーザID
   field_time_entry_spend_on: 作業内容
