@@ -55,8 +55,6 @@ fr:
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Type de carnet
   field_blocks: Blocks
-  field_estimated_hours: Estimated Hours
-  field_initial_estimate: Estimation initiale
   field_initial_story_points: "Nombre de points initial du sc\xC3\xA9nario"
   field_name: Nom
   field_number_of_snapshots: Saved point snapshots

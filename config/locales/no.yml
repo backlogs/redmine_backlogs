@@ -51,9 +51,7 @@
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokker
-  field_estimated_hours: Estimated Hours
   field_remaining_hours: Remaining (hours)
-  field_initial_estimate: "F\xC3\xB8rsteestimat"
   field_initial_story_points: Initielle storypoenger
   field_name: Navn
   field_number_of_snapshots: Antall lagrede poengsnapshots
