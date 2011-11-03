@@ -94,9 +94,21 @@ module Backlogs
       end
 
       def backlogs_before_destroy
-        if project.module_enabled?('backlogs')
-          Rails.cache.delete("RbIssue(#{self.id}).burndown")
-        end
+        clear_burndown_cache if project.module_enabled?('backlogs')
+      end
+
+      def clear_burndown_cache
+        return if self.new_record?
+
+        sprints = JournalDetail.find(:all,
+                               :joins => :journal,
+                               :conditions => ["journalized_id = ? and journalized_type = 'Issue'
+                                                and property = 'attr' and prop_key = 'fixed_version_id'", self.id]).collect{|jd| [jd.value, jd.old_value]}
+        sprints.flatten!
+        sprints << self.fixed_version_id.to_s
+        sprints.reject{|v| v.blank?}.uniq.each{|sprint|
+          Rails.cache.delete("RbIssue(#{self.id}).burndown(#{sprint})")
+        }
       end
 
       def backlogs_before_save
@@ -106,7 +118,8 @@ module Backlogs
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
-          Rails.cache.delete("RbIssue(#{self.id}).burndown") unless self.new_record?
+
+          clear_burndown_cache
         end
 
         @issue_before_change.position = self.position if @issue_before_change # don't log position updates
@@ -153,7 +166,7 @@ module Backlogs
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
         end
 
-        Rails.cache.delete("RbIssue(#{self.id}).burndown")
+        clear_burndown_cache
       end
 
       def value_at(property, time)

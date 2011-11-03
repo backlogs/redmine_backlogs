@@ -61,7 +61,7 @@ module Backlogs
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
         raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
-        raise "data series '#{name}' is too long (got #{data.size}, expected #{@data.size})" if data.size > @data.size
+        raise "data series '#{name}' is too long (got #{data.size}, maximum accepted #{@data.size})" if data.size > @data.size
 
         data.each_with_index{|d, i|
           @data[i][name] += d if d
