@@ -400,3 +400,6 @@ See RB.Taskboard.initialize()
 #warning{
   background-image:url('images/warning.png');
 }
+#ui-datepicker-div{
+  display: none;
+}
