@@ -15,6 +15,10 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     j.find(".editable").live('mouseup', this.handleClick);
   },
 
+  afterUpdate: function(data, textStatus, xhr){
+    this.$.parents('.backlog').data('this').recalcVelocity();
+  },
+
   beforeSave: function(){
     // Do nothing
   },
@@ -68,6 +72,10 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   getPoints: function(){
     points = parseInt( this.$.find('.story_points').first().text() );
     return ( isNaN(points) ? 0 : points );
+  },
+
+  getTracker: function(){
+	return this.$.find('.tracker_id .t').text();
   },
 
   getType: function(){
