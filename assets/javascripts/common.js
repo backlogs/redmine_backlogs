@@ -79,7 +79,10 @@ RB.$(document).ajaxSend(function(event, request, settings) {
   var c = RB.constants;
 
   settings.data = settings.data || "";
-  settings.data += (settings.data ? "&" : "") + "project_id=" + c.project_id;
+
+  if (settings.data.indexOf("project_id=") == -1) {
+    settings.data += (settings.data ? "&" : "") + "project_id=" + c.project_id;
+  }
 
   if(c.protect_against_forgery){
       settings.data += "&" + c.request_forgery_protection_token + "=" + encodeURIComponent(c.form_authenticity_token);
