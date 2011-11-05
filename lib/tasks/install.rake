@@ -10,6 +10,12 @@ namespace :redmine do
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
+      begin
+        Rails.cache.clear
+      rescue NoMethodError
+        puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
+      end
+
       ['nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
         begin
           require gem

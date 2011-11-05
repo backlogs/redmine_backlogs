@@ -208,6 +208,7 @@ class RbStory < Issue
   end
 
   def burndown(sprint=nil)
+    return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil?
 

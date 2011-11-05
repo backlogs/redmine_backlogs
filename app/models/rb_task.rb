@@ -144,6 +144,7 @@ class RbTask < Issue
   end
 
   def burndown(sprint = nil)
+    return nil unless self.is_task?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil?
 

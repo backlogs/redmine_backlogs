@@ -222,7 +222,7 @@ class RbSprint < Version
   end
 
   def burndown(direction=nil)
-    return nil if not self.has_burndown?
+    return nil if not self.has_burndown? || !self.is_story?
 
     direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
     direction = 'down' if direction != 'up'
