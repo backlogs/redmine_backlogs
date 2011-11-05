@@ -51,9 +51,7 @@ pt-BR:
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Blocos
-  field_estimated_hours: Estimated Hours
   field_remaining_hours: Remaining (hours)
-  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: Nome
   field_number_of_snapshots: Saved point snapshots

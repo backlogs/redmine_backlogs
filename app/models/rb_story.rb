@@ -224,13 +224,14 @@ class RbStory < Issue
   end
 
   def burndown(sprint=nil)
-    return nil if self.fixed_version_id.nil?
+    return nil unless self.is_story?
+    sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
+    return nil if sprint.nil?
 
-    return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
+    return Rails.cache.fetch("RbIssue(#{self.id}).burndown(#{sprint.id})") {
       bd = {}
 
-      sprint = fixed_version.becomes(RbSprint)
-      if sprint && sprint.has_burndown?
+      if sprint.has_burndown?
         days = sprint.days(:active)
 
         status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}

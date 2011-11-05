@@ -132,3 +132,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     RB.$(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
   }
 });
+
+jQuery(document).ready(function(){
+  jQuery("#board_header").scrollFollow({
+    speed: 100,
+    offset: 0
+  });
+});

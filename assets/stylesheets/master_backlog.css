@@ -175,9 +175,10 @@
   width:160px;
 }
 .backlog .header .menu .item:hover{
-  background-color:#CC0000;
+  background-color:#DDDDDD;
 }
 .backlog .header .menu .item a{
+  color:#000000;
   display:block;
   font-size:12px;
   height:100%;
@@ -185,8 +186,8 @@
   width:100%;
 }
 .backlog .header .menu .item:hover a{
-  color:#FFFFFF;
   text-decoration:none;
+  font-weight:bold;
 }
 
 #product_backlog_container .closedbacklog .header .label,
@@ -258,10 +259,11 @@
   height:28px;
   left:5px;
   line-height:28px;
-  overflow:hidden;
+  overflow: hidden;
   position:absolute;
   top:1px;
-  width:330px;
+  margin-right:2em;
+  width:19em;
 }
 
 #backlogs_container .closedbacklog .sprint .sprint_start_date,
@@ -350,7 +352,7 @@
   height:14px;
 /*  left:0px; */
   line-height:14px;
-/*  overflow:hidden;*/
+  overflow:hidden;
   padding-right:3px;
   margin-left:3px;
 /*  position:absolute;*/
@@ -404,8 +406,9 @@
 /*  position:absolute;
   top:1px;*/
   float:left;
-  width:340px;
-/*  white-space:nowrap;*/
+  width:32em;
+  margin-right:2em;
+  white-space:nowrap;
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
@@ -450,7 +453,7 @@
   text-align:right;
 /*  top:1px;*/
   float: right;
-  width:28px;
+  width:2em;
 }
 #backlogs_container .stories .story .story_points .v {
   display:none;
@@ -523,7 +526,8 @@
   line-height:15px;
   margin:0;
   top:2px;
-  width:320px;
+  width:19em;
+  overflow:hidden;
   float: left;
 }
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
@@ -673,9 +677,9 @@
   background-color:#E7FAE0;
 }
 #backlogs_container .stories .tracker5{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFF#DAFEF8));
-  background: -moz-linear-gradient(top, #EEE, #FFF#DAFEF8);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FFFFFF#DAFEF8);
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#DAFEF8));
+  background: -moz-linear-gradient(top, #EEE, #DAFEF8);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#DAFEF8);
   background-color:#DAFEF8;
 }
 #backlogs_container .stories .tracker6{

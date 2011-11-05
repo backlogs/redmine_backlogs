@@ -79,7 +79,7 @@ class RbTask < Issue
 
       if params.has_key?(:remaining_hours)
         begin
-          self.remaining_hours = Float(params[:remaining_hours].gsub(',', '.'))
+          self.remaining_hours = Float(params[:remaining_hours].to_s.gsub(',', '.'))
         rescue ArgumentError, TypeError
           RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
@@ -144,12 +144,13 @@ class RbTask < Issue
   end
 
   def burndown(sprint = nil)
-    return nil if self.fixed_version_id.nil?
+    return nil unless self.is_task?
+    sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
+    return nil if sprint.nil?
 
-    return Rails.cache.fetch("RbIssue(#{self.id}).burndown") {
-      sprint ||= story.fixed_version.becomes(RbSprint)
+    return Rails.cache.fetch("RbIssue(#{self.id}).burndown(#{sprint.id})") {
       bd = nil
-      if sprint && sprint.has_burndown?
+      if sprint.has_burndown?
         days = sprint.days(:active)
         series = Backlogs::MergedArray.new
         series.merge(:hours => history(:remaining_hours, days))
