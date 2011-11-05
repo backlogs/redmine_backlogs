@@ -44,7 +44,7 @@ RB.Backlog = RB.Object.create({
       story = RB.Factory.initialize(RB.Story, this); // 'this' refers to an element with class="story"
     });
     
-    if (this.isSprintBacklog()) this.recalcVelocity();
+    this.recalcVelocity();
   },
 
   afterCreate: function(data, textStatus, xhr){
@@ -175,7 +175,6 @@ RB.Backlog = RB.Object.create({
   },
 
   recalcVelocity: function(){
-    if( !this.isSprintBacklog() ) return true;
     var tracker_total = new Array();
     total = 0;
     this.getStories().each(function(index){
