@@ -198,6 +198,7 @@ if [[ $RMDB =~ [Yy] ]]; then
     rake generate_session_store
     rake redmine:load_default_data
     rake db:migrate:upgrade_plugin_migrations
+    rake db:migrate_plugins
     rake redmine:backlogs:install labels=no
 
     if [ ! -z "$ADMINPW" ]; then
