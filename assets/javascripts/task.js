@@ -61,6 +61,7 @@ RB.Task = RB.Object.create(RB.Issue, {
   saveDirectives: function(){
     var j = this.$;
     var nxt = this.$.next();
+    var project = j.parents('tr').find('.story .project .v')
     var cellID = j.parents('td').first().attr('id').split("_");
 
     var data = j.find('.editor').serialize() +
@@ -68,6 +69,10 @@ RB.Task = RB.Object.create(RB.Issue, {
                "&status_id=" + cellID[1] +
                "&next=" + (nxt.length==1 ? nxt.data('this').getID() : '') +
                (this.isNew() ? "" : "&id=" + j.children('.id').text());
+
+    if( project.length){
+      data += "&project_id=" + project.text();
+    }
 
     if( this.isNew() ){
       var url = RB.urlFor( 'create_task' );
