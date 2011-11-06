@@ -62,12 +62,20 @@ module Backlogs
       end
 
       def story
-        # the self.id test verifies we're not looking at a new, unsaved issue object
-        return nil unless self.id
-
-        unless @rb_story
-          @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", root_id, lft, RbStory.trackers ])
-          @rb_story = @rb_story.becomes(RbStory) if @rb_story
+        if @rb_story.nil?
+          if self.new_record?
+            parent = self.parent_id.blank? ? nil : Issue.find(self.parent_id)
+            if parent.nil?
+              @rb_story = nil
+            elsif parent.is_story?
+              @rb_story = parent.becomes(RbStory)
+            else
+              @rb_story = parent.story
+            end
+          else
+            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and tracker_id in (?)", root_id, lft, RbStory.trackers ])
+            @rb_story = @rb_story.becomes(RbStory) if @rb_story
+          end
         end
         return @rb_story
       end
@@ -151,8 +159,7 @@ module Backlogs
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
             j.save!
           }
-          tasks = descendants.collect{|t| "#{t.id}"}.join(',')
-          connection.execute("update issues set fixed_version_id = #{connection.quote(fixed_version_id)} where id in (#{tasks})") unless tasks == ''
+          connection.execute("update issues set tracker_id = #{RbTask.tracker}, fixed_version_id = #{connection.quote(fixed_version_id)} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
 
           # safe to do by sql since we don't want any of this logged
           unless self.position
@@ -162,8 +169,8 @@ module Backlogs
           end
         end
 
-        if self.is_story? || self.is_task?
-          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
+        if self.story || self.is_task?
+          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
 
         clear_burndown_cache
