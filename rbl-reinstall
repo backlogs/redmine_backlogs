@@ -83,7 +83,7 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install mysql
       gem install icalendar
       gem install prawn -v=0.8.4
-      gem install holidays
+      gem install holidays --version 1.0.3
       gem install open-uri-cached
       gem install nokogiri
     fi

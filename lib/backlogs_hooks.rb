@@ -212,9 +212,7 @@ module BacklogsPlugin
         end
       end
 
-      def view_layouts_base_html_head(context={ })
-        return context[:controller].send(:render_to_string, { :partial => 'shared/head' })
-      end
+      render_on :view_layouts_base_html_head, :partial => 'shared/head'
     end
   end
 end
