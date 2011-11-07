@@ -3,7 +3,7 @@
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
-  <div class="project">
+  <div class="project editable" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
     <div class="t"><%= story.project %></div>
     <div class="v"><%= story.project_id %></div>
   </div>

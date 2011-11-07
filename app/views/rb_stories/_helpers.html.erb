@@ -19,6 +19,10 @@
   <%- end %>
 </select>
 
+<select class="project_id helper" id="project_id_options">
+  <option value="<%= @project.id %>"><%= @project.name %></option>
+</select>
+
 <div id="story_template">
   <%= render :partial => 'rb_stories/story', :object => RbStory.new %>
 </div>
