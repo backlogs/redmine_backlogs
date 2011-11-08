@@ -212,7 +212,25 @@ module BacklogsPlugin
         end
       end
 
-      render_on :view_layouts_base_html_head, :partial => 'shared/head'
+      def view_layouts_base_html_head(context={})
+        return %{
+          <link rel="stylesheet" href="#{Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery/jquery.jqplot/jquery.jqplot.min.css')}" type="text/css" />
+
+          #{javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery-ui-1.8.16.custom.min.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.jeditable.mini.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.cookie.js' ,:plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.scrollfollow.js' ,:plugin => 'redmine_backlogs'}
+          <!--[if IE]>#{javascript_include_tag 'jquery/jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs'}<![endif]-->
+          #{javascript_include_tag 'jquery/jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs'}
+          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs'}
+
+          #{javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs'}
+        }
+      end
     end
   end
 end
