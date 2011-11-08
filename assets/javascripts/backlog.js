@@ -65,25 +65,43 @@ RB.Backlog = RB.Object.create({
     }
     if (id == '') { return; } // template sprint
 
+    var createMenu = function(data, list)
+    {
+      list.empty();
+      if (data) {
+        for (var i = 0; i < data.length; i++) {
+          li = RB.$('<li class="item"><a href="#"></a></li>');
+          a = RB.$('a', li);
+          a.attr('href', data[i].url).text(data[i].label);
+          if (data[i].classname) { a.attr('class', data[i].classname); }
+          if (data[i].warning) {
+            a.data('warning', data[i].warning);
+            a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
+          }
+          list.append(li);
+        }
+      }
+    };
+
     RB.ajax({
       url: RB.routes.backlog_menu,
       data: (id ? { sprint_id: id } : {}),
       dataType: 'json',
       success   : function(data,t,x) {
-        menu.empty();
-        if (data) {
-          for (var i = 0; i < data.length; i++) {
-            li = RB.$('<li class="item"><a href="#"></a></li>');
-            a = RB.$('a', li);
-            a.attr('href', data[i].url).text(data[i].label);
-            if (data[i].classname) { a.attr('class', data[i].classname); }
-            if (data[i].warning) {
-              a.data('warning', data[i].warning);
-              a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
-            }
-            menu.append(li);
+        createMenu(data, menu);
+
+        // Loop through all the <li> elements to see if
+        // one of them has a submenu
+        menu.find('li').each(function(i, element) {
+          if(data[i].sub) {
+            // Add an arrow
+            RB.$(element).append('<div class="icon ui-icon ui-icon-carat-1-e"></div>');
+            // Add a sublist
+            RB.$(element).append('<ul></ul>');
+            createMenu(data[i].sub, RB.$('ul', element));
           }
-        }
+        });
+
         menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
         menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
         // capture 'click' instead of 'mouseup' so we can preventDefault();
@@ -171,7 +189,14 @@ RB.Backlog = RB.Object.create({
 
   handleNewStoryClick: function(event){
     event.preventDefault();
-    RB.$(this).parents('.backlog').data('this').newStory();
+
+    var project_id = null;
+    var project_id_class = RB.$(this).attr('class').match(/project_id_([0-9]+)/);
+    if(project_id_class != null && project_id_class.length == 2) {
+      project_id = project_id_class[1];
+    }
+
+    RB.$(this).parents('.backlog').data('this').newStory(project_id);
   },
 
   handleNewSprintClick: function(event){
@@ -183,8 +208,12 @@ RB.Backlog = RB.Object.create({
     return RB.$(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
   },
     
-  newStory: function() {
+  newStory: function(project_id) {
     var story = RB.$('#story_template').children().first().clone();
+    if(project_id != null) {
+      RB.$('#project_id_options').empty();
+      RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
+    }
     
     this.getList().prepend(story);
     o = RB.Factory.initialize(RB.Story, story[0]);
