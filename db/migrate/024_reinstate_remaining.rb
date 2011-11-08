@@ -18,13 +18,8 @@ class ReinstateRemaining < ActiveRecord::Migration
   end
 
   def self.up
-    catch (:done) do
-      begin
-        execute "select count(remaining_hours) from issues"
-        throw :done        
-      rescue
-        add_column :issues, :remaining_hours, :float            
-      end
+    unless Issue.column_names.include?('remaining_hours')
+      add_column :issues, :remaining_hours, :float            
 
       execute "update issues set created_on = updated_on where created_on is NULL"
 
