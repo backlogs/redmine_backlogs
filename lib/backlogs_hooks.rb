@@ -6,40 +6,57 @@ module BacklogsPlugin
       # custom queries
 
       def view_issues_sidebar_planning_bottom(context={ })
-        locals = {}
-        locals[:sprints] = context[:project] ? RbSprint.open_sprints(context[:project]) : []
-        locals[:project] = context[:project]
-        locals[:sprint] = nil
-        locals[:webcal] = (context[:request].ssl? ? 'webcals' : 'webcal')
+        project = context[:project]
 
-        return '' unless locals[:project]
-        return '' if locals[:project].blank?
-        return '' unless locals[:project].module_enabled?('backlogs')
+        return '' unless project && !project.blank?
+        return '' unless project.module_enabled?('backlogs')
 
-        user = User.find_by_id(context[:request].session[:user_id])
-        locals[:key] = user ? user.api_key : nil
+        sprint_id = nil
 
         params = context[:controller].params
         case "#{params['controller']}##{params['action']}"
           when 'issues#show'
             if params['id'] && (issue = Issue.find(params['id'])) && (issue.is_task? || issue.is_story?) && issue.fixed_version
-              locals[:sprint] = issue.fixed_version.becomes(RbSprint)
+              sprint_id = issue.fixed_version_id
             end
 
           when 'issues#index'
             q = context[:request].session[:query]
             sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
             if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-              locals[:sprint] = RbSprint.find_by_id(sprint[:values][0])
+              sprint_id = sprint[:values][0]
             end
         end
 
-        locals[:sprint] = nil if (locals[:sprint] && !locals[:sprint].has_burndown?)
+        url_options = {
+          :only_path  => false,
+          :controller => :rb_hooks_render,
+          :action     => :view_issues_sidebar,
+          :project_id => project.identifier,
+          :host => context[:request].host_with_port
+        }
+        url_options[:sprint_id] = sprint_id if sprint_id
 
-        return context[:controller].send(:render_to_string, {
-            :partial => 'shared/view_issues_sidebar',
-            :locals => locals
-          })
+        # Why can't I access protect_against_forgery?
+        return %{
+          <div id="backlogs_view_issues_sidebar"></div>
+          <script type="text/javascript">
+
+            if(RB == null) { var RB = {}; }
+
+            if (RB.constants == null) {
+              RB.constants = {
+                project_id: #{project.id},
+                protect_against_forgery: true,
+                request_forgery_protection_token: '#{context[:controller].request_forgery_protection_token}'
+              };
+            }
+
+            jQuery(document).ready(function() {
+              jQuery('#backlogs_view_issues_sidebar').load('#{url_for(url_options)}');
+            });
+          </script>
+        }
       end
 
       def view_issues_show_details_bottom(context={ })
@@ -147,10 +164,15 @@ module BacklogsPlugin
       end
 
       def view_my_account(context={ })
-        return context[:controller].send(:render_to_string, {
-            :partial => 'shared/view_my_account',
-            :locals => {:user => context[:user], :color => context[:user].backlogs_preference(:task_color) }
-          })
+        return %{
+          <h3>#{l(:label_backlogs)}</h3>
+          <div class="box tabular">
+          <p>
+            #{label :backlogs, :task_color}
+            #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference(:task_color)}
+          </p>
+          </div>
+        }
       end
 
       def controller_issues_new_after_save(context={ })

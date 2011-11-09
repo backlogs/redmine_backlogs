@@ -1,0 +1,85 @@
+<% if sprints && sprints.size > 0 %>
+  <h3><%= l(:backlogs_sprints) %></h3>
+  <% sprints.each do |sp| %>
+    <%= link_to(sp.name, {
+        :controller => 'rb_queries',
+        :action => 'show',
+        :project_id => project.id,
+        :sprint_id => sp.id
+        }) %><br/>
+  <% end %>
+<% end %>
+
+<% if project %>
+  <h3><%= project.name %></h3>
+  <%= link_to(l(:backlogs_product_backlog), {
+      :controller => 'rb_queries',
+      :action => 'show',
+      :project_id => project.id
+      }) %><br/>
+  <% if BacklogsCards::LabelStock.selected_label %>
+  <%= link_to(l(:label_product_cards), {
+      :controller => 'rb_stories',
+      :action => 'index',
+      :project_id => project.id,
+      :format => 'pdf'
+      }) %><br/>
+  <% end %>
+<% end %>
+
+<% if Setting.rest_api_enabled? && key %>
+  <a href="<%= url_for({
+        :only_path  => false,
+        :protocol   => webcal,
+        :controller => :rb_calendars,
+        :action   => :show,
+        :project_id => project,
+        :format   => 'xml',
+        :key    => key }) %>"><%= l(:label_webcal) %></a><br>
+<% end %>
+
+<% if sprint && sprint.has_burndown? %>
+  <h3><%= l(:label_sprint_name, {:name => sprint.name}) %></h3>
+  <%= link_to(l(:label_task_board), {
+      :controller => 'rb_taskboards',
+      :action => 'show',
+      :sprint_id => sprint.id
+      })
+  %><br/>
+
+  <%= link_to(l(:label_burndown), {
+      :controller => 'rb_burndown_charts',
+      :action => 'show',
+      :sprint_id => sprint.id
+      })
+  %><br/>
+
+  <% if BacklogsCards::LabelStock.selected_label %>
+    <%= link_to(l(:label_sprint_cards), {
+        :controller => 'rb_stories',
+        :action => 'index',
+        :project_id => project.id,
+        :sprint_id => sprint.id,
+        :format => 'pdf'
+        })
+    %><br/>
+  <% end %>
+  <% if project.enabled_modules.any? {|m| m.name=="wiki"} %>
+    <%= link_to(l(:label_wiki), {
+        :controller => 'rb_wikis',
+        :action => 'show',
+        :project_id => project.id,
+        :sprint_id => sprint.id
+        })
+    %><br/>
+  <% end %>
+  <%= link_to(l(:label_impediments), {
+      :controller => 'rb_queries',
+      :action => 'impediments',
+      :project_id => project.id,
+      :sprint_id => sprint.id
+      }) %><br/>
+  <% if Setting.plugin_redmine_backlogs[:show_burndown_in_sidebar] == 'enabled' %>
+    <%= render :partial => "rb_burndown_charts/burndown", :locals => {:sprint => sprint, :mode => :minimal, :style => 'margin-left:0px; margin-top:20px; width:250px; height:192px;' } %>
+  <% end %>
+<% end %>
