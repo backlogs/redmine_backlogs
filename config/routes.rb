@@ -41,6 +41,9 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'burndown/:sprint_id',                           :controller => :rb_burndown_charts,  :action => 'show'
     rb.connect    'burndown/:sprint_id/embed',                     :controller => :rb_burndown_charts,  :action => 'embedded'
     rb.connect    'burndown/:sprint_id/print',                     :controller => :rb_burndown_charts,  :action => 'print'
+
+    rb.connect    'hooks/sidebar/:project_id/:sprint_id',          :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
+    rb.connect    'hooks/sidebar/:project_id',                     :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
   end
 
 end
