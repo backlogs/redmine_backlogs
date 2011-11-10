@@ -98,6 +98,16 @@
 </p>
 
 <p>
+  <%= content_tag(:label, "Burndown print width") %>
+  <%= text_field_tag("settings[burndown_print_width]", Setting.plugin_redmine_backlogs[:burndown_print_width]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, "Burndown print height") %>
+  <%= text_field_tag("settings[burndown_print_height]", Setting.plugin_redmine_backlogs[:burndown_print_height]) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
 	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Setting.plugin_redmine_backlogs[:timelog_from_taskboard]) %>
 </p>
