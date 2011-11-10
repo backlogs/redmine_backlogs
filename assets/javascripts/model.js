@@ -303,8 +303,9 @@ RB.Model = RB.Object.create({
        },
        error : function(x,t,e){ self.error(x,t,e); }
     });
-    
+
     self.endEdit();
+    self.$.find('.editors').remove();
   },
 
   refreshTooltip: function(model) {
