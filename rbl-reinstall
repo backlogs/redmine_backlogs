@@ -64,6 +64,7 @@ if [ -z "$RVM" ]; then
   read -p "Reinstall RVM? " RVM
 fi
 if [[ $RVM =~ [Yy] ]]; then
+    echo "re-creating $GEMSET"
     rvm use 1.8.7
     rvm gemset create $GEMSET
     rvm --force gemset empty $GEMSET

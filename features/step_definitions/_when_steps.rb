@@ -107,7 +107,7 @@ When /^I update the task$/ do
 end
 
 Given /^I visit the scrum statistics page$/ do
-  visit url_for(:controller => :rb_statistics, :action => :show)
+  visit url_for(:controller => 'rb_all_projects', :action => 'statistics')
 end
 
 When /^I download the calendar feed$/ do
