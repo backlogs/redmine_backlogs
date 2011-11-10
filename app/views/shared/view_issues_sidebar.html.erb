@@ -21,8 +21,7 @@
   <%= link_to(l(:label_product_cards), {
       :controller => 'rb_stories',
       :action => 'index',
-      :project_id => project.id,
-      :format => 'pdf'
+      :project_id => project.id
       }) %><br/>
   <% end %>
 <% end %>
@@ -34,7 +33,6 @@
         :controller => :rb_calendars,
         :action   => :show,
         :project_id => project,
-        :format   => 'xml',
         :key    => key }) %>"><%= l(:label_webcal) %></a><br>
 <% end %>
 
@@ -59,8 +57,7 @@
         :controller => 'rb_stories',
         :action => 'index',
         :project_id => project.id,
-        :sprint_id => sprint.id,
-        :format => 'pdf'
+        :sprint_id => sprint.id
         })
     %><br/>
   <% end %>
