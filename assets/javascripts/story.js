@@ -100,12 +100,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
                "&fixed_version_id=" + sprint_id;
     
     j.find('.editor').each(function() {
-        var value = '';  
-        if (jQuery.trim(jQuery(this).val()) == '') {
-            value = 'no subject';    
-        } else {
-            value = jQuery(this).val();  
-        }         
+        var value = jQuery(this).val();  
         data += "&" + this.name + '=' + encodeURIComponent(value);
     });    
     
