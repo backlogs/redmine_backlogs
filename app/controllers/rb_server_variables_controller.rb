@@ -2,7 +2,7 @@ class RbServerVariablesController < RbApplicationController
   unloadable
 
   def show
-    @section = params['section']
+    @caller = params['caller']
     respond_to do |format|
       format.js { render :layout => false }
     end

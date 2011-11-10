@@ -41,17 +41,6 @@ module BacklogsPlugin
         return %{
           <div id="backlogs_view_issues_sidebar"></div>
           <script type="text/javascript">
-
-            if(RB == null) { var RB = {}; }
-
-            if (RB.constants == null) {
-              RB.constants = {
-                project_id: #{project.id},
-                protect_against_forgery: true,
-                request_forgery_protection_token: '#{context[:controller].request_forgery_protection_token}'
-              };
-            }
-
             jQuery(document).ready(function() {
               jQuery('#backlogs_view_issues_sidebar').load('#{url_for(url_options)}');
             });
@@ -250,6 +239,7 @@ module BacklogsPlugin
           #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs'}
           #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs'}
 
+          <script type="text/javascript" src="#{url_for(:controller => 'rb_all_projects', :action => 'server_variables')}"></script>
           #{javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs'}
         }
       end

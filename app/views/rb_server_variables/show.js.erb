@@ -1,10 +1,61 @@
-if(RB==null){
-  var RB = {};
+if (RB == null) {
+  var RB = {
+    buildImageTag: function(name) {
+      return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
+    },
+
+    urlFor: function(route_name, options) {
+      route = RB.routes[route_name];
+      if(options != null && options['id'] != null){
+        route = route.replace(":id", options['id']);
+      }
+      return route;
+    },
+
+    routes: {
+      create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
+      update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',
+
+      create_story: '<%= url_for(:controller => 'rb_stories', :action => 'create') %>',
+      update_story: '<%= url_for(:controller => 'rb_stories', :action => 'update', :id => ":id") %>',
+  
+      create_task: '<%= url_for(:controller => 'rb_tasks', :action => 'create') %>',
+      update_task: '<%= url_for(:controller => 'rb_tasks', :action => 'update', :id => ":id") %>',
+
+      create_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'create') %>',
+      update_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'update', :id => ":id") %>',
+
+      show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
+      show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
+      show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>'
+    },
+
+    constants: {
+      protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
+      request_forgery_protection_token: '<%= request_forgery_protection_token %>',
+      form_authenticity_token: '<%= form_authenticity_token %>',
+      <%
+        autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
+        autorefresh_wait = '1000' if autorefresh_wait.blank?
+        autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
+        autorefresh_wait = Integer(autorefresh_wait)
+        autorefresh_wait = 1000 if autorefresh_wait < 1000
+      %>
+      autorefresh_wait: <%= autorefresh_wait.to_json %>
+    }
+  };
 }
 
-RB.constants = {
-  <% if @section == 'backlogs'
+<% if @project %>
+  RB.constants.project_id = <%= @project.id %>;
+<% end %>
 
+<% if @sprint %>
+  RB.constants.sprint_id = <%= @sprint.id %>;
+<% end %>
+
+<%
+  if @caller == 'rb_master_backlogs#show'
     default_status = IssueStatus.default
     default_status = default_status.id.to_s if default_status
 
@@ -49,18 +100,22 @@ RB.constants = {
       project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
     }
   %>
-  project_versions: <%= project_versions.to_json %>,
-  story_states: <%= transitions.to_json %>,
-  <% end %>
+  RB.project_versions: <%= project_versions.to_json %>;
+  RB.constants.story_states: <%= transitions.to_json %>;
+  RB.routes.backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
+<% end %>
 
-  <% if @section == 'taskboard'
-      transitions = User.current.admin?
-      if !transitions && RbTask.tracker
-        roles = User.current.roles_for_project(@project)
-        tracker = Tracker.find(RbTask.tracker)
+<%
+  if @caller == 'rb_taskboards#show'
+    transitions = User.current.admin?
 
-        catch (:done) do
-          [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
+    if !transitions && RbTask.tracker
+      roles = User.current.roles_for_project(@project)
+      tracker = Tracker.find(RbTask.tracker)
+
+      catch (:done) do
+        [false, true].each{|creator|
+          [false, true].each{|assignee|
             tracker.issue_statuses.each {|status|
               status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
                 transitions = true
@@ -68,55 +123,8 @@ RB.constants = {
               }
             }
           }
-        end
-      end %>
-  workflow: <%= transitions.to_json %>,
-  <% end %>
-  project_id: <%= @project.id %>,
-  sprint_id: <%= @sprint ? @sprint.id : "null" %>,
-  protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
-  request_forgery_protection_token: '<%= request_forgery_protection_token %>',
-  form_authenticity_token: '<%= form_authenticity_token %>',
-  <%
-    autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
-    autorefresh_wait = '1000' if autorefresh_wait.blank?
-    autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
-    autorefresh_wait = Integer(autorefresh_wait)
-    autorefresh_wait = 1000 if autorefresh_wait < 1000
-  %>
-  autorefresh_wait: <%= autorefresh_wait.to_json %>
-}
-
-RB.buildImageTag = function(name){
-  return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>"
-}
-
-RB.urlFor = function(route_name, options){
-  route = RB.routes[route_name];
-  if(options != null && options['id'] != null){
-    route = route.replace(":id", options['id']);
-  }
-  return route;
-}
-
-RB.routes = {
-  create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
-  update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',
-  
-  create_story: '<%= url_for(:controller => 'rb_stories', :action => 'create') %>',
-  update_story: '<%= url_for(:controller => 'rb_stories', :action => 'update', :id => ":id") %>',
-  
-  create_task: '<%= url_for(:controller => 'rb_tasks', :action => 'create') %>',
-  update_task: '<%= url_for(:controller => 'rb_tasks', :action => 'update', :id => ":id") %>',
-
-  create_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'create') %>',
-  update_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'update', :id => ":id") %>',
-
-  show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
-  show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
-  show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>',
-
-  backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => :json, :only_path => true) %>'
-}
-
-if(typeof console != "undefined" && console != null) console.log('*** server variables loaded ***');
+        }
+      end
+    end %>
+  RB.constants.workflow = <%= transitions.to_json %>;
+<% end %>

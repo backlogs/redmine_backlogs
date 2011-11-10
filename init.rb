@@ -33,7 +33,7 @@ Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
   author 'relaxdiego, friflaj'
   description 'A plugin for agile teams'
-  version 'v0.6.18'
+  version 'v0.6.19'
 
   settings :default => { 
                          :story_trackers            => nil, 
@@ -59,7 +59,8 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_wikis            => :show,
                                         :rb_stories          => [:index, :show],
                                         :rb_queries          => [:show, :impediments],
-                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_server_variables => :show,
+                                        :rb_all_projects     => :server_variables,
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
@@ -69,7 +70,8 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_sprints          => [:index, :show, :download],
                                         :rb_wikis            => :show,
                                         :rb_stories          => [:index, :show],
-                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_server_variables => :show,
+                                        :rb_all_projects     => :server_variables,
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
@@ -81,7 +83,8 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_tasks            => [:index, :show],
                                         :rb_impediments      => [:index, :show],
                                         :rb_wikis            => :show,
-                                        :rb_server_variables => [:show, :jquery],
+                                        :rb_server_variables => :show,
+                                        :rb_all_projects     => :server_variables,
                                         :rb_hooks_render     => [:view_issues_sidebar],
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
@@ -114,7 +117,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :update_impediments,     { :rb_impediments => [:edit, :update] }
 
     permission :subscribe_to_calendars,  { :rb_calendars  => :show }
-    permission :view_scrum_statistics,   { :rb_statistics => :show }
+    permission :view_scrum_statistics,   { :rb_all_projects => :statistics }
   end
 
   menu :project_menu, :rb_master_backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
