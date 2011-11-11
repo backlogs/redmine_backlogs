@@ -76,16 +76,14 @@ RB.$(document).ajaxComplete(function(event, xhr, settings){
 
 // Modify the ajax request before being sent to the server
 RB.$(document).ajaxSend(function(event, request, settings) {
-  var c = RB.constants;
-
   settings.data = settings.data || "";
 
   if (settings.data.indexOf("project_id=") == -1) {
-    settings.data += (settings.data ? "&" : "") + "project_id=" + c.project_id;
+    settings.data += (settings.data ? "&" : "") + "project_id=" + RB.constants.project_id;
   }
 
-  if(c.protect_against_forgery){
-      settings.data += "&" + c.request_forgery_protection_token + "=" + encodeURIComponent(c.form_authenticity_token);
+  if(RB.constants.protect_against_forgery){
+      settings.data += "&" + RB.constants.request_forgery_protection_token + "=" + encodeURIComponent(RB.constants.form_authenticity_token);
   }
 });
 
