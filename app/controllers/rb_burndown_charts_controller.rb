@@ -16,7 +16,12 @@ class RbBurndownChartsController < RbApplicationController
   end
 
   def print
-    @settings = Setting.plugin_redmine_backlogs
+    @width = @settings[:burndown_print_width].to_s
+    @height = @settings[:burndown_print_height].to_s
+    if @width.blank? || @height.blank?
+      @width = '1300'
+      @height = '600'
+    end
     respond_to do |format|
       format.html { render :layout => false }
     end

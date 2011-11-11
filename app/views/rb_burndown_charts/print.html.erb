@@ -3,7 +3,7 @@
   <%= render :partial => 'shared/head' %>
 </head><body>
 <% if @sprint.has_burndown? %>
-  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => 'width: ' + @settings[:burndown_print_width].to_s + 'px; height: '+ @settings[:burndown_print_height].to_s + 'px' } %>
+  <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => "width: #{@width}px; height: #{@height}px" } %>
 <% else %>
   No burndown data available -- are the sprint start- and end dates set?
 <% end %>
