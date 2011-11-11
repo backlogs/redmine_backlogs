@@ -33,7 +33,8 @@ module BacklogsPlugin
           :controller => :rb_hooks_render,
           :action     => :view_issues_sidebar,
           :project_id => project.identifier,
-          :host => context[:request].host_with_port
+          :host => context[:request].host_with_port,
+          :protocol => context[:request].ssl? ? 'https' : 'http'
         }
         url_options[:sprint_id] = sprint_id if sprint_id
 

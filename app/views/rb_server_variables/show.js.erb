@@ -4,12 +4,18 @@ if (RB == null) {
       return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
     },
 
-    urlFor: function(route_name, options) {
-      route = RB.routes[route_name];
-      if(options != null && options['id'] != null){
-        route = route.replace(":id", options['id']);
-      }
-      return route;
+    constants: {
+      protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
+      request_forgery_protection_token: '<%= request_forgery_protection_token %>',
+      form_authenticity_token: '<%= form_authenticity_token %>',
+      <%
+        autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
+        autorefresh_wait = '1000' if autorefresh_wait.blank?
+        autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
+        autorefresh_wait = Integer(autorefresh_wait)
+        autorefresh_wait = 1000 if autorefresh_wait < 1000
+      %>
+      autorefresh_wait: <%= autorefresh_wait.to_json %>
     },
 
     routes: {
@@ -30,18 +36,12 @@ if (RB == null) {
       show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>'
     },
 
-    constants: {
-      protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
-      request_forgery_protection_token: '<%= request_forgery_protection_token %>',
-      form_authenticity_token: '<%= form_authenticity_token %>',
-      <%
-        autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
-        autorefresh_wait = '1000' if autorefresh_wait.blank?
-        autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
-        autorefresh_wait = Integer(autorefresh_wait)
-        autorefresh_wait = 1000 if autorefresh_wait < 1000
-      %>
-      autorefresh_wait: <%= autorefresh_wait.to_json %>
+    urlFor: function(route_name, options) {
+      route = RB.routes[route_name];
+      if(options != null && options['id'] != null){
+        route = route.replace(":id", options['id']);
+      }
+      return route;
     }
   };
 }
@@ -100,9 +100,9 @@ if (RB == null) {
       project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
     }
   %>
-  RB.project_versions: <%= project_versions.to_json %>;
-  RB.constants.story_states: <%= transitions.to_json %>;
-  RB.routes.backlog_menu: '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
+  RB.project_versions = <%= project_versions.to_json %>;
+  RB.constants.story_states = <%= transitions.to_json %>;
+  RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
 <% end %>
 
 <%
