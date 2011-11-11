@@ -21,7 +21,7 @@ tags.each {|version|
   versions[key] = {:string => version, :parts => parts}
 
   `git tag -d #{version}`
-  `git push origin :refs/tags/#{version}`
+  #`git push origin :refs/tags/#{version}`
 }
 
 newversion = versions[versions.keys.sort[-1]][:parts]
