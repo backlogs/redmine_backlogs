@@ -16,6 +16,7 @@ class RbBurndownChartsController < RbApplicationController
   end
 
   def print
+    @settings = Setting.plugin_redmine_backlogs
     respond_to do |format|
       format.html { render :layout => false }
     end
