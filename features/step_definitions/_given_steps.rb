@@ -350,6 +350,16 @@ Given /^I am viewing the issues list$/ do
   page.driver.response.status.should == 200
 end
 
+Given /^I am viewing the issues sidebar$/ do
+  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project)
+  page.driver.response.status.should == 200
+end
+
+Given /^I am viewing the issues sidebar for (.+)$/ do |name|
+  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :sprint_id => RbSprint.find_by_name(name).id)
+  page.driver.response.status.should == 200
+end
+
 Given /^I have selected card label stock (.+)$/ do |stock|
   Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:card_spec => stock } )
   BacklogsCards::LabelStock.selected_label.should_not be_nil

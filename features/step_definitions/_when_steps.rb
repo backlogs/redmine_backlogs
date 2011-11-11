@@ -121,7 +121,7 @@ When /^I (try to )?update the task$/ do |attempt|
 end
 
 Given /^I visit the scrum statistics page$/ do
-  visit url_for(:controller => :rb_statistics, :action => :show)
+  visit url_for(:controller => 'rb_all_projects', :action => 'statistics')
 end
 
 When /^I (try to )?download the calendar feed$/ do |attempt|
