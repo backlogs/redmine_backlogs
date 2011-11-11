@@ -43,7 +43,7 @@ class MigrateLegacy < ActiveRecord::Migration
       Issue.reset_column_information
       RbTask.reset_column_information
 
-      if RbStory.trackers.nil? || RbStory.trackers.size == 0 || RbTask.tracker.nil?
+      if RbStory.trackers.size == 0 || RbTask.tracker.nil?
         raise "Please configure the Backlogs Story and Task trackers before migrating.
 
         You do this by starting Redmine and going to \"Administration -> Plugins -> Redmine Scrum Plugin -> Configure\"
