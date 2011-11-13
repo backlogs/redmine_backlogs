@@ -4,20 +4,12 @@ class AddStoryPositions < ActiveRecord::Migration
     # from same-table subselect
 
     unless RbStory.trackers.size == 0
-      create_table :backlogs_tmp_issue_position do |t|
-        t.column :id, :integer, :null => false
-        t.column :position, :integer, :null => false
-      end
-
-      execute "insert into backlogs_tmp_issue_position
-               select id, max(position) + id from issues
-               where position is null and tracker_id in (#{RbStory.trackers(:string)})"
+      max = 0
+      execute("select max(position) from issues").each{|row| max = row[0]}
 
       execute "update issues
-               set position = (select position from backlogs_tmp_issue_position where backlogs_tmp_issue_position.id = issues.id)
+               set position = #{max} + id
                where position is null and tracker_id in (#{RbStory.trackers(:string)})"
-
-      drop_table :backlogs_tmp_issue_position
     end
   end
 
