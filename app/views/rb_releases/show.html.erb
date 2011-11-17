@@ -35,11 +35,11 @@
 
 <% content_for :sidebar do %>
   <h3><%= l(:label_release) %></h3>
-  <p><b>Start date:</b>             <%= @release.release_start_date || "no start date" %></p>
-  <p><b>End date:</b>               <%= @release.release_end_date   || "no end date"   %></p>
-  <p><b>Initial story points:</b>   <%= @release.initial_story_points || "N/A" %></p>
-  <p><b>Remaining story points:</b> <%= @remaining_story_points %> (<%= @release.stories.count %> stories)</p>
-  <p><b>Saved snapshots:</b>        <%= @release.burndown_days.count %></p>
+  <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
+  <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
+  <p><b><%= l(:field_initial_story_points) %>:</b> <%= @release.initial_story_points %></p>
+  <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
+  <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= @release.burndown_days.count  %></p>
 <% end %>
 
 <% html_title(@release.name) -%>
