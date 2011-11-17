@@ -99,6 +99,10 @@ en:
   label_release_end_date: [[field_release_start_date]]
   field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
+  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  today_not_in_release_warning: "Warning: current date is not within release date range."
+  release_update_snapshot_today: Update story point snapshot for today
+  release_create_snapshot_today: Save story point snapshot for today
 
   # Version fields
   field_name: "Name"
