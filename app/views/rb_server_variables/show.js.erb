@@ -100,7 +100,7 @@ if (RB == null) {
       project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
     }
   %>
-  RB.project_versions = <%= project_versions.to_json %>;
+  RB.constants.project_versions = <%= project_versions.to_json %>;
   RB.constants.story_states = <%= transitions.to_json %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
 <% end %>
