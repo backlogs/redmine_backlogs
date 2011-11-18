@@ -112,14 +112,8 @@ Feature: Scrum Master
   Scenario: Download printable cards for the task board
     Given I have selected card label stock Avery 7169
       And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
-<<<<<<< HEAD
-      And I am viewing the issues list
-      And I follow "Sprint 001"
-      And I follow "Sprint cards"
-=======
       And I am viewing the issues sidebar for Sprint 001
      When I follow "Sprint cards"
->>>>>>> master
      Then the request should complete successfully
 
   Scenario: view the sprint notes
