@@ -16,10 +16,10 @@
     <h3><%= l(:label_release_plural) %></h3>
     <% if @releases.empty? %>
         no releases
-    <% elsif @releases.count == 1 %>
+    <% elsif @releases.size == 1 %>
         one release
     <% else %>
-        <%= @releases.count %> releases
+        <%= @releases.size %> releases
     <% end %>
 <% end %>
 

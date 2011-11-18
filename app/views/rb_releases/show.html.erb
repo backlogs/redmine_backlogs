@@ -39,7 +39,7 @@
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
   <p><b><%= l(:field_initial_story_points) %>:</b> <%= @release.initial_story_points %></p>
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
-  <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= @release.burndown_days.count  %></p>
+  <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= @release.burndown_days.size   %></p>
 <% end %>
 
 <% html_title(@release.name) -%>
