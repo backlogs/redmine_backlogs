@@ -5,7 +5,7 @@ class AddReleaseDatesToProject < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :projects, :release_start_date
-    drop_column :projects, :release_end_date
+    remove_column :projects, :release_start_date
+    remove_column :projects, :release_end_date
   end
 end
