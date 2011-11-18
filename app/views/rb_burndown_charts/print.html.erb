@@ -1,6 +1,6 @@
 <html><head>
   <title><%= h(@sprint.name) %></title>
-  <%= render :partial => 'shared/head' %>
+  <%= call_hook :view_layouts_base_html_head %>
 </head><body>
 <% if @sprint.has_burndown? %>
   <%= render :partial => 'burndown', :locals => {:sprint => @sprint, :mode => :full, :style => "width: #{@width}px; height: #{@height}px" } %>
