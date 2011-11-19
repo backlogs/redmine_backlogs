@@ -74,7 +74,7 @@ es:
   label_chart_options: "Opciones de gr\xC3\xA1fico"
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
-  label_download: Download
+  label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
   label_hours_ideal: ideal
   label_hours_remaining: horas faltantes
