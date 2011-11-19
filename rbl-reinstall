@@ -202,8 +202,8 @@ if [[ $RMDB =~ [Yy] ]]; then
     rake db:migrate_plugins
     rake redmine:backlogs:install labels=no
 
-    if [ ! -z "$ADMINPW" ]; then
-      ./script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
+    if [ ! -z "$USERPW" ]; then
+      ./script/runner "User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '$USERPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $USERPW'}"
     fi
 fi
 fi

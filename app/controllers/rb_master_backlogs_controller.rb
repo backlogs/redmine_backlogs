@@ -53,7 +53,7 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_wiki),
               :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint, :only_path => true)
              } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
-    links << {:label =>  l(:label_download),
+    links << {:label =>  l(:label_download_sprint),
               :url => url_for(:controller => 'rb_sprints', :action => 'download', :sprint_id => @sprint, :only_path => true)
              } if @sprint && @sprint.has_burndown?
     links << {:label => l(:label_reset),
