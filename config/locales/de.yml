@@ -74,7 +74,7 @@ de:
   label_chart_options: Chart-Optionen
   label_close_completed_sprints: "Schließe abgeschlossene Sprints"
   label_column_width: Spaltenbreite
-  label_download: Download
+  label_download_sprint: Download
   label_hide_completed_sprints: Verstecke abgeschlossene Sprints
   label_hours: Stunden
   label_hours_ideal: ideal
