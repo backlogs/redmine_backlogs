@@ -99,7 +99,7 @@ en:
   label_release_end_date: Release end date
   label_new_story: New Story
   label_new_sprint: New Sprint
-  label_download: Download
+  label_download_sprint: Download
   label_reset: Reset
   label_close_completed_sprints: Close completed Sprints
   label_no_start: no start
