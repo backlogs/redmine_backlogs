@@ -152,7 +152,7 @@ ja:
   label_webcal: Webcal Feed
   label_new_story: 新しいストーリー
   label_new_sprint: 新しいスプリント
-  label_download: ダウンロード
+  label_download_sprint: ダウンロード
   label_reset: リセット
   label_close_completed_sprints: 完了したスプリントをクローズ
   label_no_start: 開始日未設定
