@@ -76,7 +76,7 @@ pt-BR:
   label_chart_options: "Op\xC3\xA7\xC3\xB5es do gr\xC3\xA1fico"
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
-  label_download: Download
+  label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
   label_hours: Horas
   label_hours_ideal: ideal
