@@ -74,7 +74,7 @@ nl:
   label_chart_options: Grafiek Opties
   label_close_completed_sprints: Sluit gecompleteerde sprints
   label_column_width: Kolom breedte
-  label_download: Download
+  label_download_sprint: Download
   label_hide_completed_sprints: Verberg gecompleteerde sprints
   label_hours_ideal: ideaal
   label_hours_remaining: resterende uren
