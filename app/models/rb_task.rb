@@ -23,6 +23,7 @@ class RbTask < Issue
     blocks = params.delete('blocks')
 
     task = new(attribs)
+    task.estimated_hours = task.remaining_hours
     if params['parent_issue_id']
       parent = Issue.find(params['parent_issue_id'])
       task.start_date = parent.start_date
