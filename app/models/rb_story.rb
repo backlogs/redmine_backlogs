@@ -18,10 +18,13 @@ class RbStory < Issue
           and fixed_version_id is NULL
           and is_closed = ? and #{visible}", project_id, RbStory.trackers, false]
       else
+        unless sprint_id.kind_of? Array
+            sprint_id = [ sprint_id ]
+        end
         c = ["
           project_id = ?
           and tracker_id in (?)
-          and fixed_version_id = ? and #{visible}",
+          and fixed_version_id IN (?) and #{visible}",
           project_id, RbStory.trackers, sprint_id]
       end
 
@@ -57,6 +60,16 @@ class RbStory < Issue
 
     def self.sprint_backlog(sprint, options={})
       return RbStory.backlog(sprint.project.id, sprint.id, options)
+    end
+
+    def self.backlogs_by_sprint(project, sprints, options={})
+        ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, options)
+        sprint_of = {}
+        ret.each do |backlog|
+            sprint_of[backlog.fixed_version_id] ||= []
+            sprint_of[backlog.fixed_version_id].push(backlog)
+        end
+        return sprint_of
     end
 
     def self.stories_open(project)

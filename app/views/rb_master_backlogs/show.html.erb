@@ -42,26 +42,28 @@
       <div id="sprint_backlogs_container">
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
-      <!--script for collapsing closed backlog div-->
-      <script language="javascript">
-		  function toggleDiv(divid){
-		    if(document.getElementById(divid).style.display == 'none'){
-		      document.getElementById(divid).style.display = 'block';
-		      document.getElementById('toggle').innerHTML = <%= l(:label_hide_completed_sprints).to_json %>
-		    }else{
-		      document.getElementById(divid).style.display = 'none';
-		      document.getElementById('toggle').innerHTML = <%= l(:label_show_completed_sprints).to_json %>
-		    }
-		  }
-	  </script>
-	  <br><a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');" id="toggle"><%= l(:label_show_completed_sprints) %></a><br><br>
-      <div id="closed_sprint_backlogs_container" style="display:none">
-      	<%if @c_sprint_backlogs.empty? %>
-      	  <div><%= l(:label_no_data_to_show) %></div>
-      	<%else%>
-          <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
-        <% end %>
-      </div>
+	  <% if ! @settings[:disable_closed_sprints_to_master_backlogs] %>
+		  <!--script for collapsing closed backlog div-->
+		  <script language="javascript">
+			  function toggleDiv(divid){
+				if(document.getElementById(divid).style.display == 'none'){
+				  document.getElementById(divid).style.display = 'block';
+				  document.getElementById('toggle').innerHTML = <%= l(:label_hide_completed_sprints).to_json %>
+				}else{
+				  document.getElementById(divid).style.display = 'none';
+				  document.getElementById('toggle').innerHTML = <%= l(:label_show_completed_sprints).to_json %>
+				}
+			  }
+		  </script>
+		  <br><a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');" id="toggle"><%= l(:label_show_completed_sprints) %></a><br><br>
+		  <div id="closed_sprint_backlogs_container" style="display:none">
+			<%if @c_sprint_backlogs.empty? %>
+			  <div><%= l(:label_no_data_to_show) %></div>
+			<%else%>
+			  <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
+			<% end %>
+		  </div>
+	  <% end %>
       <div id="dummy_backlog_container"></div>
     </div>
   </div>

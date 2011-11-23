@@ -23,8 +23,8 @@ class RbApplicationController < ApplicationController
   end
 
   def check_if_plugin_is_configured
-    settings = Setting.plugin_redmine_backlogs
-    if settings[:story_trackers].blank? || settings[:task_tracker].blank?
+    @settings = Setting.plugin_redmine_backlogs
+    if @settings[:story_trackers].blank? || @settings[:task_tracker].blank?
       respond_to do |format|
         format.html { render :file => "shared/not_configured" }
       end
