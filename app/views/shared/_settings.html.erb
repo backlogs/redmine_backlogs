@@ -134,3 +134,8 @@
                     ['60', '60000'],
                 ], Setting.plugin_redmine_backlogs[:autorefresh_wait])) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:label_hide_completed_sprints)) %>
+  <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Setting.plugin_redmine_backlogs[:disable_closed_sprints_to_master_backlogs]) %>
+</p>
