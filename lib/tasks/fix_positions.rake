@@ -14,7 +14,7 @@ namespace :redmine do
                                from issues
                                where not position is null and tracker_id in (#{RbStory.trackers(:string)})
                                group by position
-                               having duplicates > 1").each {|duplicate|
+                               having count(*) > 1").each {|duplicate|
             repeat = true
 
             puts "Found position #{duplicate.position} #{duplicate.duplicates} times"
