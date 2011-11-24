@@ -1,3 +1,9 @@
 #toolbar .links{
   display:none !important;
 }
+.add_new {
+    display: none;
+}
+.breadcrumbs select {
+    display: none;
+}
