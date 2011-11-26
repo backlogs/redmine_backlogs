@@ -24,13 +24,7 @@ namespace :redmine do
         end
       }
 
-      puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.1 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.1/
-
-      begin
-        RbStory.trackers
-      rescue NoMethodError
-        raise "Looks like there's a conflicting plugin that redefines the Story class"
-      end
+      puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.x is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.[0-9]/
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       settings = Setting.plugin_redmine_backlogs

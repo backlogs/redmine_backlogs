@@ -147,9 +147,9 @@ class RbTask < Issue
   def burndown(sprint = nil)
     return nil unless self.is_task?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
-    return nil if sprint.nil?
+    return nil if sprint.nil? || !sprint.has_burndown?
 
-    return Rails.cache.fetch("RbIssue(#{self.id}).burndown(#{sprint.id})") {
+    return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
       bd = nil
       if sprint.has_burndown?
         days = sprint.days(:active)

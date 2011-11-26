@@ -13,7 +13,6 @@ module Backlogs
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
-        before_destroy :backlogs_before_destroy
       end
     end
 
@@ -101,24 +100,6 @@ module Backlogs
         return Integer(self.story_points * (hpp / 8))
       end
 
-      def backlogs_before_destroy
-        clear_burndown_cache if project.module_enabled?('backlogs')
-      end
-
-      def clear_burndown_cache
-        return if self.new_record?
-
-        sprints = JournalDetail.find(:all,
-                               :joins => :journal,
-                               :conditions => ["journalized_id = ? and journalized_type = 'Issue'
-                                                and property = 'attr' and prop_key = 'fixed_version_id'", self.id]).collect{|jd| [jd.value, jd.old_value]}
-        sprints.flatten!
-        sprints << self.fixed_version_id.to_s
-        sprints.reject{|v| v.blank?}.uniq.each{|sprint|
-          Rails.cache.delete("RbIssue(#{self.id}).burndown(#{sprint})")
-        }
-      end
-
       def backlogs_before_save
         if project.module_enabled?('backlogs') && (self.is_task? || self.story)
           self.remaining_hours = 0 if self.status.backlog_is?(:success)
@@ -126,8 +107,6 @@ module Backlogs
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
-
-          clear_burndown_cache
         end
 
         @issue_before_change.position = self.position if @issue_before_change # don't log position updates
@@ -172,8 +151,6 @@ module Backlogs
         if self.story || self.is_task?
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
-
-        clear_burndown_cache
       end
 
       def value_at(property, time)
