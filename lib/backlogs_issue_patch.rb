@@ -63,7 +63,11 @@ module Backlogs
       def story
         if @rb_story.nil?
           if self.new_record?
-            parent = self.parent_id.blank? ? nil : Issue.find(self.parent_id)
+            parent_id = self.parent_id
+            parent_id = self.parent_issue_id if parent_id.blank?
+            parent_id = nil if parent_id.blank?
+            parent = parent_id ? Issue.find(parent_id) : nil
+
             if parent.nil?
               @rb_story = nil
             elsif parent.is_story?
@@ -102,8 +106,11 @@ module Backlogs
 
       def backlogs_before_save
         if project.module_enabled?('backlogs') && (self.is_task? || self.story)
+          self.remaining_hours ||= self.estimated_hours
+          self.estimated_hours ||= self.remaining_hours
+
           self.remaining_hours = 0 if self.status.backlog_is?(:success)
-          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
+
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
