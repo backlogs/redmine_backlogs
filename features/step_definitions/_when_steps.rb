@@ -110,8 +110,10 @@ Given /^I visit the scrum statistics page$/ do
   visit url_for(:controller => 'rb_all_projects', :action => 'statistics')
 end
 
-When /^I download the calendar feed$/ do
+When /^I try to download the calendar feed, it should (succeed|fail)$/ do |status|
   visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project })
+
+  raise "Calender feed download did not #{status} as expected" unless (status == 'succeed') == page.body.include?('BEGIN:VCALENDAR')
 end
 
 When /^I view the master backlog$/ do

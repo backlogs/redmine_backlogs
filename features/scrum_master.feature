@@ -101,11 +101,11 @@ Feature: Scrum Master
     Given I have set my API access key
       And I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
       And I am logged out
-     When I download the calendar feed
-     Then the request should complete successfully
+     When I try to download the calendar feed, it should succeed
+      And the request should complete successfully
     Given I have guessed an API access key
-     When I download the calendar feed
-     Then the request should fail
+     When I try to download the calendar feed, it should fail
+      And the request should complete successfully
      
   Scenario: Download printable cards for the product backlog
     Given I have selected card label stock Avery 7169
