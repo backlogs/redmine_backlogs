@@ -3,11 +3,11 @@ require 'icalendar'
 class RbCalendarsController < RbApplicationController
   unloadable
   
-  accept_key_auth :show
+  accept_api_auth :ical
   
-  def show
+  def ical
     respond_to do |format|
-      format.xml { send_data(generate_ical, :disposition => 'attachment') }
+      format.api { send_data(generate_ical, :disposition => 'attachment') }
     end
   end
 

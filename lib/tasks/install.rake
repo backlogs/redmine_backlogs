@@ -24,7 +24,10 @@ namespace :redmine do
         end
       }
 
-      puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.x is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.[0-9]/
+      major, minor, patch = *Redmine::VERSION.to_s.gsub(/[^\.0-9].*/, '').split('.').collect{|v| Integer(v)}
+      unless major == 1 && minor == 2 && patch >= 1
+        puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.1 or higher is supported at this time"
+      end
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       settings = Setting.plugin_redmine_backlogs

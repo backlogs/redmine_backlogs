@@ -114,6 +114,8 @@ module Backlogs
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
+        elsif self.is_story?
+          self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
         end
 
         @issue_before_change.position = self.position if @issue_before_change # don't log position updates

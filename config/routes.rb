@@ -38,7 +38,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'story/create',                                   :controller => :rb_stories,          :action => 'create'
     rb.connect    'story/update/:id',                               :controller => :rb_stories,          :action => 'update'
 
-    rb.connect    'calendar/:key/:project_id.ics',                  :controller => :rb_calendars,        :action => 'show', :format => 'xml'
+    rb.connect    'calendar/:key/:project_id.ics',                  :controller => :rb_calendars,        :action => 'ical', :format => 'api'
 
     rb.connect    'burndown/:sprint_id',                            :controller => :rb_burndown_charts,  :action => 'show'
     rb.connect    'burndown/:sprint_id/embed',                      :controller => :rb_burndown_charts,  :action => 'embedded'
