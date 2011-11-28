@@ -28,7 +28,7 @@
         global[k] += 1
       }
     %>
-    <h3><a href="#"><span class="score score_<%= score %>"><%= score %></span> <%= project.name %></a> </h3>
+    <h3><a href="#"><span class="score score_<%= score %>"><%= score %></span> <%= h project.name %></a> </h3>
     <div>
       <% if stats[:velocity] %>
         <%= l(:label_sprint_velocity, stats) %><br/>

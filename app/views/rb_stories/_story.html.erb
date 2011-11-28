@@ -4,7 +4,7 @@
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
   <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>">
-    <div class="t"><%= tracker_name_or_empty(story) %></div>
+    <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
   <div class="subject editable story_field" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %></div>
