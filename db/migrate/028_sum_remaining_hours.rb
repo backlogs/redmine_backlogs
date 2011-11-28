@@ -12,13 +12,15 @@ class SumRemainingHours < ActiveRecord::Migration
       execute "insert into backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
                select id, root_id, lft, rgt, 0
                from issues
-               where tracker_id in (#{RbStory.trackers(:string)})"
+               where tracker_id in (#{RbStory.trackers(:string)}) and lft <> (rgt - 1)"
+
       execute "update backlogs_tmp_story_remaining_hours
                set tmp_remaining_hours = (
                   select sum(coalesce(remaining_hours, 0))
                   from issues
                   where root_id = tmp_root_id and lft > tmp_lft and rgt < tmp_rgt
                )"
+
       execute "update issues
                set remaining_hours = (select tmp_remaining_hours from backlogs_tmp_story_remaining_hours where tmp_id = id)
                where id in (select tmp_id from backlogs_tmp_story_remaining_hours)"
