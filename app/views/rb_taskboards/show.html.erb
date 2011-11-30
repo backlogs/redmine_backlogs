@@ -21,7 +21,7 @@
 <% content_for :breadcrumbs do %>
   <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
   <%= breadcrumb_separator %>
-  <%= h @sprint.name %>
+  <%= strip_tags @sprint.name %>
 <% end %>
 
 <%- content_for :view_specific_links do %>
@@ -39,7 +39,7 @@
     <tr>
       <td><%= l(:backlogs_story) %></td>
       <%- @statuses.each do |status| %>
-      <td class="swimlane"><%= h status.name %></td>
+      <td class="swimlane"><%= strip_tags status.name %></td>
       <%- end %>
     </tr>
   </table>
@@ -64,10 +64,10 @@
             <div style="float:left; padding-left:3px; font-weight:bold;"><span class="add_new"><img src="../../images/add.png" alt="+" /></span><%= assignee_name_or_empty(story) %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
           </div>
-          <div class="subject"><%= h story.subject %></div>
+          <div class="subject"><%= strip_tags story.subject %></div>
           <%- if @project != story.project %>
             <div class="id project">
-              <span class="t"><%= h story.project %></span>
+              <span class="t"><%= strip_tags story.project %></span>
               <span class="v"><%= story.project.id %></span>
             </div>
           <%- end %>
@@ -94,14 +94,14 @@
 
   <select class="priority_id template" id="priority_id_options">
     <%- IssuePriority.all.each do |p| %>
-    <option value="<%= p.id %>"><%= h p.name %></option>
+    <option value="<%= p.id %>"><%= strip_tags p.name %></option>
     <%- end %>
   </select>
 
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
     <%- @project.members.each do |member| %>
-    <option value="<%= member.user_id %>" color="<%= member.user.backlogs_preference(:task_color) %>" color_light="<%= Color.new(member.user.backlogs_preference(:task_color)).lighten(0.5) %>"><%= h member.name %></option>
+    <option value="<%= member.user_id %>" color="<%= member.user.backlogs_preference(:task_color) %>" color_light="<%= Color.new(member.user.backlogs_preference(:task_color)).lighten(0.5) %>"><%= strip_tags member.name %></option>
     <%- end %>
   </select>
   <div id="task_template">

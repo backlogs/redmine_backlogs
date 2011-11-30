@@ -1,8 +1,8 @@
-<b><%= I18n.t :field_subject %></b>: <%= h tooltip.subject %><br />
+<b><%= I18n.t :field_subject %></b>: <%= strip_tags tooltip.subject %><br />
 <b><%= I18n.t :field_tracker_id %> </b>: <%= tooltip.tracker %><br />
 <b><%= I18n.t :story_status %></b>: <%= status_label_or_default(tooltip) %><br />
 <b><%= I18n.t :story_points %></b>: <%= story_points_or_empty(tooltip) %><br />
 <b><%= I18n.t :story_estimation_hours %></b>: <%= tooltip.estimated_hours %><br />
 <b><%= I18n.t :story_spent_time %></b>: <%= tooltip.spent_hours.round(2) %><br />
 <b><%= I18n.t :story_remaining_hours %></b>: <%= tooltip.remaining_hours %>
-<p><b><%= I18n.t :story_description %></b><br /><%= textile_to_html(tooltip.description).gsub("\"", "&quot;") %></p>
+<p><b><%= I18n.t :story_description %></b><br /><%= textile_to_html(strip_tags tooltip.description) %></p>

@@ -3,14 +3,14 @@
     <div class="t"><%= issue_link_or_empty(task) %></div>
     <div class="v"><%= id_or_empty(task) %></div>
   </div>
-  <div class="subject editable" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= h task.subject %></div>
+  <div class="subject editable" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= strip_tags task.subject %></div>
   <div class="assigned_to_id editable" fieldtype="select" fieldname="assigned_to_id" fieldlabel="<%=l(:field_assigned_to)%>">
     <div class="t"><%= assignee_name_or_empty(task) %></div>
     <div class="v"><%= assignee_id_or_empty(task) %></div>
   </div>
   <% if task.priority_id != IssuePriority.default.id %>
     <div class="priority_id editable"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>">
-      <div class="t"><%= h task.priority.name %></div>
+      <div class="t"><%= strip_tags task.priority.name %></div>
       <div class="v"><%= task.priority_id %></div>
     </div>
   <% end %>

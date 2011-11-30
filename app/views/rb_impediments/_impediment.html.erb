@@ -3,7 +3,7 @@
     <div class="t"><%= issue_link_or_empty(impediment) %></div>
     <div class="v"><%= id_or_empty(impediment) %></div>
   </div>
-  <div class="subject editable" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= h impediment.subject %></div>
+  <div class="subject editable" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= strip_tags impediment.subject %></div>
   <div class="blocks editable" fieldname="blocks" fieldlabel="<%=l(:field_blocks)%>"><%= blocked_ids(impediment.blocks) %></div>
   <div class="assigned_to_id editable" fieldtype="select" fieldname="assigned_to_id" fieldlabel="<%=l(:field_assigned_to)%>">
     <div class="t"><%= assignee_name_or_empty(impediment) %></div>

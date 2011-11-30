@@ -18,7 +18,7 @@
   %>
     <thead>
      <tr>
-      <th colspan="3"><%= l(:label_project) %>:<%= h project %></th>
+      <th colspan="3"><%= l(:label_project) %>:<%= strip_tags project %></th>
      </tr>
     </thead>
     <tbody>
@@ -50,13 +50,13 @@
           total = done+todo+progress
      %>
       <tr class="<%= cnt%2==0?'even':'odd' %>">
-       <td><a href='../rb/taskboards/<%= sprint.id %>'><%= h sprint %></a></td>
+       <td><a href='../rb/taskboards/<%= sprint.id %>'><%= strip_tags sprint %></a></td>
        <td><!-- /
 
        <%
        statuses.each do |status|
        -%>
-        <nobr><%= h status.name %>:<%= stat.has_key?(status.id)?stat[status.id]:0 %></nobr>/
+        <nobr><%= strip_tags status.name %>:<%= stat.has_key?(status.id)?stat[status.id]:0 %></nobr>/
       <% end -%>
  -->
       <table class="progress" style="width: 100%;">
@@ -73,7 +73,7 @@
        </tbody>
       </table>
       </td>
-       <td style="width:15em;text-align:right;"><%= h sprint.sprint_start_date %> - <%= h sprint.effective_date %></td>
+       <td style="width:15em;text-align:right;"><%= strip_tags sprint.sprint_start_date %> - <%= strip_tags sprint.effective_date %></td>
       </tr>
      <% cnt+=1
         end
