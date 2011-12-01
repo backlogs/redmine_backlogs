@@ -26,6 +26,8 @@ Dispatcher.to_prepare do
   require_dependency 'backlogs_merged_array'
 
   require_dependency 'backlogs_version'
+
+  Redmine::AccessControl.permission(:manage_versions).actions << "rb_sprints/close_completed"
 end
 
 

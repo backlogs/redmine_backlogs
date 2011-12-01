@@ -8,9 +8,9 @@
     <%- if backlog[:sprint] %>
       <%= render :partial => "rb_sprints/sprint", :object => backlog[:sprint] %>
       <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
-    <%- else %>
+    <%- elsif User.current.allowed_to?(:manage_versions, @project) %>
       <div class="label"><%=l(:label_product_backlog).titleize %></div>
-      <%= link_to l(:label_close_completed_sprints), close_completed_project_versions_path(@project), :class => "close_sprint", :method => :put, :target => "_blank" %>
+      <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
       <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
     <%- end %>
   </div>

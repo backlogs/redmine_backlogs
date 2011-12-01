@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'sprint/:sprint_id/update',                       :controller => :rb_sprints,          :action => 'update'
     rb.connect    'sprint/:sprint_id/reset',                        :controller => :rb_sprints,          :action => 'reset'
     rb.connect    'sprint/download/:sprint_id.xml',                 :controller => :rb_sprints,          :action => 'download', :format => 'xml'
+    rb.connect    'sprints/:project_id/close_completed',            :controller => :rb_sprints,          :action => 'close_completed'
 
     rb.connect    'stories/:project_id/:sprint_id.pdf',             :controller => :rb_stories,          :action => 'index', :format => 'pdf'
     rb.connect    'stories/:project_id.pdf',                        :controller => :rb_stories,          :action => 'index', :format => 'pdf'
