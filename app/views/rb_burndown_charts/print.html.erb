@@ -1,5 +1,5 @@
 <html><head>
-  <title><%= strip_tags @sprint.name %></title>
+  <title><%= h @sprint.name %></title>
   <%= call_hook :view_layouts_base_html_head %>
 </head><body>
 <% if @sprint.has_burndown? %>

@@ -11,7 +11,7 @@
 <% end %>
 
 <% if project %>
-  <h3><%= strip_tags project.name %></h3>
+  <h3><%= h project.name %></h3>
   <%= link_to(l(:backlogs_product_backlog), {
       :controller => 'rb_queries',
       :action => 'show',

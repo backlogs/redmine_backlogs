@@ -4,10 +4,10 @@
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
   <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>">
-    <div class="t"><%= strip_tags tracker_name_or_empty(story) %></div>
+    <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
-  <div class="subject editable story_field" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=strip_tags story.subject %></div>
+  <div class="subject editable story_field" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %></div>
   <div class="status_id editable story_field" fieldtype="select" fieldname="status_id" fieldlabel="<%=l(:field_status_id)%>">
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
@@ -17,7 +17,7 @@
   <% else %>
   <div class="story_points editable story_points_select" fieldtype="select" fieldname="story_points" fieldlabel="<%=l(:story_points)%>">
     <% %w(t v).each do |c| %>
-      <div class="<%=strip_tags c %>"><%= story_points_or_empty(story) %></div>
+      <div class="<%=h c %>"><%= story_points_or_empty(story) %></div>
     <% end %>
   </div>
   <% end %>

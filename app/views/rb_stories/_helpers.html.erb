@@ -1,21 +1,21 @@
 <!-- story helper tags -->
 <select class="status_id helper" id="status_id_options">
   <%- IssueStatus.find(:all, :order => "position ASC").each do |status| %>
-  <option value="<%= status.id %>" class="<%= (status.is_closed? ?  l(:label_closed_issues) + ' ' : "") %>"><%= strip_tags status.name %></option>
+  <option value="<%= status.id %>" class="<%= (status.is_closed? ?  l(:label_closed_issues) + ' ' : "") %>"><%= h status.name %></option>
   <%- end %>
 </select>
 
 <%- unless Setting.plugin_redmine_backlogs[:story_points].blank? -%>
 <select class="story_points helper" id="story_points_options">
 	<%- (['']+Setting.plugin_redmine_backlogs[:story_points].split(/,/)).each do |point| %>
-	<option value="<%=strip_tags point %>"><%=strip_tags point %></option>
+	<option value="<%=h point %>"><%=h point %></option>
 	<%- end %>
 </select>
 <%- end -%>
 
 <select class="tracker_id helper" id="tracker_id_options">
   <%-  Tracker.find_all_by_id(Setting.plugin_redmine_backlogs[:story_trackers]).each do |tracker| %>
-  <option value="<%= tracker.id %>"><%= strip_tags tracker.name %></option>
+  <option value="<%= tracker.id %>"><%= h tracker.name %></option>
   <%- end %>
 </select>
 

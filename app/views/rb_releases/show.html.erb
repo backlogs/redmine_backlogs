@@ -3,7 +3,7 @@
 <%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %>
 </div>
 
-<h2><%= strip_tags @release.name %></h2>
+<h2><%= h @release.name %></h2>
 <h3>Release Burndown</h3>
 <!--Release Burndown Visualization-->
 <% unless @release.has_burndown? %>
