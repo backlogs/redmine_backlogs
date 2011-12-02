@@ -26,7 +26,7 @@
   <div class="user_status"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
   <div class="higher_item_id"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
   <div class="meta">
-    <%= render :partial => "shared/model_errors", :object => story.errors %>
+    <%= render :partial => "backlogs/model_errors", :object => story.errors %>
   </div>
   <div class="clearfix"></div>
 </li>

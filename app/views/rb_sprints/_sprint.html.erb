@@ -8,6 +8,6 @@
   <div class="effective_date editable date" fieldname="effective_date" fieldlabel="<%=l(:field_effective_date)%>"><%= sprint.effective_date || l(:label_no_end) %></div>
   <div class="description editable" fieldname="description" fieldlabel="<%=l(:field_description)%>" fieldtype="textarea"><%= h sprint.description %></div>
   <div class="meta">
-    <%= render :partial => "shared/model_errors", :object => sprint.errors %>
+    <%= render :partial => "backlogs/model_errors", :object => sprint.errors %>
   </div>
 </div>

@@ -45,7 +45,7 @@ Redmine::Plugin.register :redmine_backlogs do
                          :story_points              => "1,2,3,5,8",
                          :show_burndown_in_sidebar  => 'enabled'
                        }, 
-           :partial => 'shared/settings'
+           :partial => 'backlogs/settings'
 
   project_module :backlogs do
     # SYNTAX: permission :name_of_permission, { :controller_name => [:action1, :action2] }
