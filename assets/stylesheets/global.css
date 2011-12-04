@@ -86,3 +86,6 @@ body.loading #refresh{
 ul.ui-sortable {
     min-height: 20px!important;
 }
+.tooltip_text{
+  display:none;
+}
