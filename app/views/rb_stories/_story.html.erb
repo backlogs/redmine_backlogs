@@ -1,5 +1,6 @@
 <li class="model story <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>">
-  <div class="id story_tooltip story_field" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
+  <div class="id story_tooltip story_field">
+    <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>

@@ -1,7 +1,7 @@
 jQuery.qtipMakeOptions = function(container) {
     return {
         content: {
-            text: container.attr('title')
+            text: container.children('div.tooltip_text')
         },
         position: {
             my: 'top left',
