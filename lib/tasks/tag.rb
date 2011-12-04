@@ -50,4 +50,5 @@ end
 `git add init.rb lib/backlogs_version.rb`
 `git commit -m #{newversion}`
 `git tag #{newversion}`
+`git push`
 `git push --tags`
