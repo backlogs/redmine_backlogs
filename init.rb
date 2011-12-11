@@ -113,6 +113,8 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :create_tasks,           { :rb_tasks => [:new, :create]  }
     permission :update_tasks,           { :rb_tasks => [:edit, :update] }
     
+    permission :update_remaining_hours, { :rb_tasks => [:edit, :update] }
+
     # Impediment permissions
     # :show_impediments and :list_impediments are implicit in :view_sprints
     permission :create_impediments,     { :rb_impediments => [:new, :create]  }
