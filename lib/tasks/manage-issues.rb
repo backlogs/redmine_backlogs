@@ -145,15 +145,15 @@ class GitHub
   end
 
   def issues(state = :open)
-    return YAML::load(get("issues/list/:user/:repo/#{state}"))['issues'].collect { |i| Issue.new(self, i) }
+    return get("issues/list/:user/:repo/#{state}")['issues'].collect { |i| Issue.new(self, i) }
   end
 
   def issue(id)
-    return Issue.new(self, YAML::load(get("issues/show/:user/:repo/#{id}"))['issue'])
+    return Issue.new(self, get("issues/show/:user/:repo/#{id}")['issue'])
   end
 
   def labels(which = :all)
-    return YAML::load(get('issues/labels/:user/:repo'))['labels'] if which == :all
+    return get('issues/labels/:user/:repo')['labels'] if which == :all
     return issues.collect{|i| i.labels}.flatten.compact.uniq if which == :active
     return (issues.collect{|i| i.labels(:calculate)}.flatten + GitHub.states(:keep)).compact.uniq if which == :calculate
     raise "Unexpected selector #{which.inspect}"
