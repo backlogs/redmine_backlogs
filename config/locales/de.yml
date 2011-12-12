@@ -3,16 +3,16 @@ de:
   backlogs_active: aktiv
   backlogs_any: beliebig
   backlogs_card_specification: "Etikettenart für den Kartendruck"
-  backlogs_impediment: Impediment
+  backlogs_impediment: Hindernis
   backlogs_points_burn_direction: Burnup/-down Punkte
   backlogs_product_backlog: Produkt Backlog
   backlogs_sprints: Sprints
   backlogs_statistics_active: "Projektaktivität anzeigen"
   backlogs_statistics_active_failed: "Projekt zeigt keine Aktivität"
-  backlogs_statistics_committed_velocity_stable: "Die definierte Velocity ist über die Sprints stabil"
-  backlogs_statistics_committed_velocity_stable_failed: "Die definierte Velocity ist über die Sprints nicht stabil"
+  backlogs_statistics_committed_velocity_stable: "Die definierte Entwicklungsgeschwindigkeit ist über die Sprints stabil"
+  backlogs_statistics_committed_velocity_stable_failed: "Die definierte Entwicklungsgeschwindigkeit ist über die Sprints nicht stabil"
   backlogs_statistics_product_backlog_filled: Produkt Backlog hat Stories
-  backlogs_statistics_product_backlog_filled_failed: Produkt Backlog is leer
+  backlogs_statistics_product_backlog_filled_failed: Produkt Backlog ist leer
   backlogs_statistics_product_backlog_sized: "Die Stories am Anfang des Produkt Backlog besitzen eine Größe"
   backlogs_statistics_product_backlog_sized_failed: "Am Anfang des Produkt Backlog hat es Stories ohne definierte Größen"
   backlogs_statistics_sizing_consistent: "Die Story Größen sind gegenüber den Schätzungen stabil"
@@ -25,8 +25,8 @@ de:
   backlogs_statistics_sprints_estimated_failed: "Aktive oder geschlossene Sprints haben ungeschätzte Stories"
   backlogs_statistics_sprints_sized: "Aktive und kürzlich geschlossene Sprints besitzen jeweils eine Größe"
   backlogs_statistics_sprints_sized_failed: "Das Projekt besitzt Stories in aktiven oder kürzlich geschlossene Sprints ohne definierte Größen"
-  backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity Standard Abweichungn: %{value} Punkte"
+  backlogs_statistics_velocity: "Entwicklungsgeschwindigkeit: %{value}"
+  backlogs_statistics_velocity_stddev: "Standardabweichung der Entwicklungsgeschwindigkeit: %{value} Punkte"
   backlogs_statistics_yield: Das Projekt liefert eine gute durchschnittliche Ausbeute
   backlogs_statistics_yield_failed: Das Projekt liefert eine schlechte durchschnittliche Ausbeute
   backlogs_story: Story
@@ -47,7 +47,7 @@ de:
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
   error_taken: ist bereits in Bearbeitung
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Zugeordnet zu
   field_backlogs_issue_type: Backlog Typ
   field_blocks: blockiert
@@ -69,7 +69,7 @@ de:
   field_velocity_based_estimate: "Geschwindigkeitsbasierende Abschätzung"
   label_back_to_project: "Zurück zur Projektseite"
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: "Sie haben noch keine Backlogs konfiguriert. Bitte gehen Sie auf {{administration}} > {{plugins}}, klicken Sie dann auf den {{configure}} Link für dieses Plugin. Kommen Sie hierher zurück, sobald sie die Felder konfiguriert haben."
+  label_backlogs_unconfigured: "Sie haben noch keine Backlogs konfiguriert. Bitte gehen Sie auf %{administration} > %{plugins}, klicken Sie dann auf den %{configure} Link für dieses Plugin. Kommen Sie hierher zurück, sobald sie die Felder konfiguriert haben."
   label_burndown: Burndown
   label_chart_options: Chart-Optionen
   label_close_completed_sprints: "Schließe abgeschlossene Sprints"
@@ -80,7 +80,7 @@ de:
   label_hours_ideal: ideal
   label_hours_remaining: restliche Stunden
   label_hours_required_burn_rate: Notwendiger Durchsatz (Stunden)
-  label_impediments: Impediments
+  label_impediments: Hindernisse
   label_master_backlog: Master Backlog
   label_new_sprint: Neuer Sprint
   label_new_story: Neue Story
@@ -100,11 +100,11 @@ de:
   label_product_backlog: Produkt Backlog
   label_product_cards: Produkt Backlog Karten
   label_release: Release
-  label_release_end_date: field_release_start_date
+  label_release_end_date: Release Enddatum
   label_release_new: Neues Release
   label_release_planning: Release-Planung
   label_release_plural: Releases
-  label_release_start_date: field_release_start_date
+  label_release_start_date: Release Anfangsdatum
   label_reset: Reset
   label_scrum_statistics: Scrum Statistiken
   label_select_all: "Alle auswählen"
@@ -112,7 +112,7 @@ de:
   label_sprint_backlog: Sprint Backlog
   label_sprint_cards: Sprint Karten
   label_sprint_impediments: Sprint Blockaden
-  label_sprint_name: Sprint "{{name}}"
+  label_sprint_name: Sprint "%{name}"
   label_stories: Stories
   label_stories_tasks: Stories/Aufgaben
   label_task_board: Aufgabenliste
@@ -142,7 +142,7 @@ de:
   story_status: Status
   today_not_in_release_msg: Heutiges Datum liegt nicht im Release-Zeitraum. Snapshot wirklich speichern?
   today_not_in_release_warning: "Achtung: heutiges Datum liegt nicht im Release-Zeitraum."
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: {summary}"
   use_free_text_if_empty: Textfeld falls Dropdown Box is leer
   warning_reset_sprint: "|- SIE SIND DABEI DEN SPRINT ZURÜCKZUSETZEN!\n\
     Sind sie sicher? Das Zurücksetzen des Sprint hat folgende Auswirkungen auf die Stories und Tasks:\n\
