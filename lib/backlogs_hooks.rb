@@ -56,13 +56,15 @@ module BacklogsPlugin
 
         snippet = ''
 
+        project = context[:project]
+
         if issue.is_story?
           snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td></tr>"
           vbe = issue.velocity_based_estimate
           snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
         end
 
-        if issue.is_task?
+        if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
           snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
         end
 
