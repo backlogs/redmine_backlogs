@@ -28,6 +28,7 @@ ja:
   backlogs_statistics_velocity: "ベロシティ: %{value}"
   backlogs_statistics_velocity_stddev: "ベロシティの標準偏差: %{value} ポイント"
   backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
+  backlogs_story_close_status: "ストーリーを自動クローズするときのステータス"
   backlogs_product_backlog: "プロダクトバックログ"
   backlogs_sprints: "スプリント"
   backlogs_story: "ストーリー"

@@ -5,6 +5,7 @@
   backlogs_card_specification: Etikettype for utskrift
   backlogs_impediment: Impedimenter
   backlogs_points_burn_direction: Poeng burn opp/ned
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Produkt backlog
   backlogs_sprints: Sprinter
   backlogs_statistics_active: Project show activity

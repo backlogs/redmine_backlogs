@@ -13,6 +13,8 @@ zh:
   backlogs_points_burn_direction: !binary |
     54K55pWw5raI6ICXIOeHg+i1ty/nh4PlsL0=
 
+  backlogs_story_close_status: "Status to close story automatically"
+
   backlogs_product_backlog: !binary |
     5Lqn5ZOBYmFja2xvZw==
 

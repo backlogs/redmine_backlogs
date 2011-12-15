@@ -19,6 +19,8 @@ ru:
     0Lgg0YHQutC+0LvRjNC60L4g0LXRidGRINC+0YHRgtCw0ZHRgtGB0Y8g0YHQ
     tNC10LvQsNGC0Yw=
 
+  backlogs_story_close_status: "Status to close story automatically"
+
   backlogs_product_backlog: !binary |
     0JHRjdC60LvQvtCzINC/0YDQvtC00YPQutGC0LAgKNGB0L/QuNGB0L7QuiDR
     gtGA0LXQsdC+0LLQsNC90LjQuSDQuiDRhNGD0L3QutGG0LjQvtC90LDQu9GM
