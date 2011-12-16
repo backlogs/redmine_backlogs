@@ -24,15 +24,13 @@ namespace :redmine do
         end
       }
 
-      major, minor, patch = *Redmine::VERSION.to_s.gsub(/[^\.0-9].*/, '').split('.').collect{|v| Integer(v)}
-      if major == 1 && minor == 2 && patch == 2
+      supported = [1, 3, 0]
+      if Redmine::VERSION.to_a[0,3] == supported
         # pass
-      elsif major == 1 && minor == 2 && patch > 0
-        puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.2 is supported at this time. 1.2.1 and higher are known to work."
-      elsif major == 1 && minor == 2 && patch == 0
-        puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.2 is supported at this time. 1.2.0 will mostly work, but calendaring is broken by a Redmine API change."
+      elsif Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY > 0
+        puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version #{supported.join('.')} is supported at this time. 1.2.1 and higher are known to work."
       else
-        raise "ERROR: You have Redmine version #{Redmine::VERSION}, only version 1.2.2 is supported at this time."
+        raise "ERROR: You have Redmine version #{Redmine::VERSION}, which is known not to work with backlogs. #{supported.join('.')} is the currently supported version"
       end
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
