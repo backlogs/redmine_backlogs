@@ -58,6 +58,7 @@ module Backlogs
     def add(arrays)
       return unless arrays
       arrays.each_pair do |name, data|
+        next if data.nil?
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
         raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
