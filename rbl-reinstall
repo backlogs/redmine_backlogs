@@ -109,7 +109,7 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install thin
 
       # cucumber-rails pulls in an unnecesary gherkin
-      eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').select{|x| x.version.version == '2.3.7'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+      eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').reject{|x| x.version.version == '2.6.8'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
     fi
 
     if [[ "$GEMSET" = "chiliproject" ]]; then
