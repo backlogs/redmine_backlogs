@@ -67,6 +67,14 @@ class RbTask < Issue
       attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
     end
 
+    # Auto assign task to current user when
+    # 1. the task is not assigned to anyone yet
+    # 2. task status changed (i.e. Updating task name or remaining hours won't assign task to user)
+    # Can be enabled/disabled in setting page
+    if Setting.plugin_redmine_backlogs[:auto_assign_task] && self.assigned_to_id.blank? && (self.status_id != params[:status_id].to_i)
+      attribs[:assigned_to_id] = User.current.id
+    end
+
     valid_relationships = if is_impediment && params[:blocks] #if blocks param was not sent, that means the impediment was just dragged
                             validate_blocks_list(params[:blocks])
                           else
