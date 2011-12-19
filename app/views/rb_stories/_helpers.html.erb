@@ -7,7 +7,7 @@
 
 <%- unless Setting.plugin_redmine_backlogs[:story_points].blank? -%>
 <select class="story_points helper" id="story_points_options">
-	<%- (['']+Setting.plugin_redmine_backlogs[:story_points].split(/,/)).each do |point| %>
+	<%- (['']+Setting.plugin_redmine_backlogs[:story_points].split(/,/).collect(&:to_f)).each do |point| %>
 	<option value="<%=h point %>"><%=h point %></option>
 	<%- end %>
 </select>
