@@ -139,3 +139,8 @@
   <%= content_tag(:label, l(:label_hide_completed_sprints)) %>
   <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Setting.plugin_redmine_backlogs[:disable_closed_sprints_to_master_backlogs]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, "Auto assign task to current user") %>
+  <%= check_box_tag("settings[auto_assign_task]", 'enabled', Setting.plugin_redmine_backlogs[:auto_assign_task]) %>
+</p>
