@@ -406,3 +406,8 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
   @sprint.created_on = date
   @sprint.save!
 end
+
+Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do
+  Rails.cache.clear
+  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:include_sat_and_sun => true})
+end

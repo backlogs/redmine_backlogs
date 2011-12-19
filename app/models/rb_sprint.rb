@@ -192,9 +192,12 @@ class RbSprint < Version
       raise "Unexpected day range '#{cutoff.inspect}'"
     end
 
-    # assumes mon-fri are working days, sat-sun are not. this
-    # assumption is not globally right, we need to make this configurable.
-    return d.select {|d| (d.wday > 0 and d.wday < 6) }
+    if Setting.plugin_redmine_backlogs[:include_sat_and_sun]
+      return d.to_a
+    else
+      # mon-fri are working days, sat-sun are not
+      return d.select {|d| (d.wday > 0 and d.wday < 6) }
+    end
   end
 
   def eta
@@ -203,8 +206,13 @@ class RbSprint < Version
     dpp = self.project.scrum_statistics.info[:average_days_per_point]
     return nil if !dpp
 
-    # assume 5 out of 7 are working days
-    return self.start_date + Integer(self.points * dpp * 7.0/5)
+    derived_days = if Setting.plugin_redmine_backlogs[:include_sat_and_sun]
+                     Integer(self.points * dpp)
+                   else
+                     # 5 out of 7 are working days
+                     Integer(self.points * dpp * 7.0/5)
+                   end
+    return self.start_date + derived_days
   end
 
   def has_burndown?
