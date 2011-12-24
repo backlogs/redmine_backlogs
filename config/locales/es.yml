@@ -2,22 +2,22 @@
 es: 
   backlogs_active: activo
   backlogs_any: cualquiera
-  backlogs_card_specification: Tipos de etiqueta para impresion de tarjetas
+  backlogs_card_specification: Tipos de etiqueta para impresión de tarjetas
   backlogs_impediment: Impedimento
   backlogs_points_burn_direction: Burn up/down de puntos
   backlogs_product_backlog: Backlog del producto
   backlogs_sprints: Sprints
-  backlogs_statistics_active: Project show activity
-  backlogs_statistics_active_failed: Project shows no activity
+  backlogs_statistics_active: Proyecto presenta actividad
+  backlogs_statistics_active_failed: Proyecto no presenta actividad
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
-  backlogs_statistics_product_backlog_filled: Product backlog has stories
-  backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
+  backlogs_statistics_product_backlog_filled: Backlog del producto tiene historias
+  backlogs_statistics_product_backlog_filled_failed: Backlog del producto está vacío
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
   backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
   backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
   backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_sizing_stddev: "Desviación estándar en horas vs. puntos: %{value} horas"
   backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
   backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
   backlogs_statistics_sprints: Measured over %{value} sprints
@@ -48,19 +48,19 @@ es:
   error_release_end_after_start: "Fecha del release final tiene que ser despu\xC3\xA9s de la fecha de inicio"
   error_taken: ya se encuentra en uso
   event_sprint_summary: "%{projecto}: %{resumen}"
-  field_assigned_to: Assigned To
+  field_assigned_to: Asignado a
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Bloques
   field_initial_story_points: Puntos iniciales de la historia
   field_name: Nombre
   field_number_of_snapshots: Puntos ahorrados en la instantanea
   field_position: "Posici\xC3\xB3n"
-  field_priority: Priority
+  field_priority: Prioridad
   field_release_end_date: Fecha final del release
   field_release_start_date: Fecha inicial del release
   field_story_points: Puntos de historia
   field_subject: Tema
-  field_remaining_hours: Remaining (hours)
+  field_remaining_hours: Restante (horas)
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on
@@ -72,19 +72,19 @@ es:
   label_backlogs_unconfigured: "Usted no ha configurado Backlogs a\xC3\xBAn, Por favor dirijase a %{administration} > %{plugins}, luego pulse en el enlace %{configure} para este plugin. Una vez que haya configurado los valores, regrese a esta p\xC3\xA1gina para empezar a usar esta herramienta."
   label_burndown: Burndown
   label_chart_options: "Opciones de gr\xC3\xA1fico"
-  label_close_completed_sprints: Close completed Sprints
-  label_column_width: Column width
-  label_download_sprint: Download
-  label_hide_completed_sprints: Hide Completed Sprints
+  label_close_completed_sprints: Cerrar Sprints completados
+  label_column_width: Ancho de columna
+  label_download_sprint: Descargar
+  label_hide_completed_sprints: Ocultar Sprints completados
   label_hours_ideal: ideal
   label_hours_remaining: horas faltantes
   label_hours_required_burn_rate: es necesario el burn rate (horas)
   label_hours: horas
   label_impediments: Impedimentos
   label_master_backlog: Principal Backlog
-  label_new_sprint: New Sprint
-  label_new_story: New Story
-  label_no_data_to_show: No data to show
+  label_new_sprint: Nuevo Sprint
+  label_new_story: Nueva Historia
+  label_no_data_to_show: No hay datos para mostrar
   label_no_end: no end
   label_no_start: no start
   label_not_prioritized: no priorizado
@@ -105,7 +105,7 @@ es:
   label_release_planning: "Planificaci\xC3\xB3n del release"
   label_release_plural: Releases
   label_release_start_date: Fecha inicial del Release
-  label_reset: Reset
+  label_reset: Reiniciar
   label_scrum_statistics: "Estad\xC3\xADsticas de Scrum"
   label_select_all: Seleccionar todas
   label_show_completed_sprints: Show Completed Sprints
