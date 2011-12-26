@@ -144,3 +144,8 @@
   <%= content_tag(:label, "Auto assign task to current user") %>
   <%= check_box_tag("settings[auto_assign_task]", 'enabled', Setting.plugin_redmine_backlogs[:auto_assign_task]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, "Include Saturday and Sunday in Burndown") %>
+  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled', Setting.plugin_redmine_backlogs[:include_sat_and_sun]) %>
+</p>
