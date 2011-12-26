@@ -157,3 +157,42 @@ Feature: Scrum master
       And I have made the following task mutations:
         | day     | task | remaining | status      |
         | 3       | S.1  | 0         |             |
+
+  Scenario: Saturday and Sunday are included in burndown chart
+    Given I have configured backlogs plugin to include Saturday and Sunday in burndown
+      And I am viewing the taskboard for Sprint 001
+      And I have made the following task mutations:
+        | day     | task | remaining | status      |
+        | 1       | A.1  | 5         | In progress |
+        | 1       | B.1  | 10        | In progress |
+        | 2       | A.1  | 0         |             |
+        | 2       | A.1  |           | Closed      |
+        | 2       | C.1  | 30        | In progress |
+        | 3       | B.1  | 0         |             |
+        | 3       | B.1  |           | Closed      |
+        | 3       | C.1  | 25        |             |
+        | 4       | C.1  | 10        |             |
+        | 5       | C.1  | 5         |             |
+        | 6       | C.1  | 1         |             |
+        | 7       | C.1  | 0         |             |
+        | 7       | C.1  |           | Closed      |
+     Then the sprint burndown should be:
+        | day     | points_committed | points_to_resolve | hours_remaining |
+        | start   | 7                | 7                 | 70              |
+        | 1       | 7                | 7                 | 55              |
+        | 2       | 7                | 6                 | 40              |
+        | 3       | 7                | 4                 | 25              |
+        | 4       | 7                | 4                 | 10              |
+        | 5       | 7                | 4                 | 5               |
+        | 6       | 7                | 4                 | 1               |
+        | 7       | 7                | 0                 | 0               |
+      And the sprint burnup should be:
+        | day     | points_committed | points_resolved | hours_remaining |
+        | start   | 7                | 0               | 70              |
+        | 1       | 7                | 0               | 55              |
+        | 2       | 7                | 1               | 40              |
+        | 3       | 7                | 3               | 25              |
+        | 4       | 7                | 3               | 10              |
+        | 5       | 7                | 3               | 5               |
+        | 6       | 7                | 3               | 1               |
+        | 7       | 7                | 7               | 0               |
