@@ -9,7 +9,7 @@ class Burndown
     stories = sprint.stories | Journal.find(:all, :joins => :details,
                         :conditions => ["journalized_type = 'Issue'
                               and property = 'attr' and prop_key = 'fixed_version_id'
-                              and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).collect{|j| j.journalized.becomes(RbStory) }
+                              and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
 
     baseline = [0] * (sprint.days(:active).size + 1)
     baseline += [nil] * (1 + (@days.size - baseline.size))
