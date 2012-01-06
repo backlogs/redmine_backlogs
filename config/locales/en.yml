@@ -73,7 +73,7 @@ en:
   label_burndown: Burndown
   label_chart_options: Chart Options
   label_hours: hours
-  label_hours_ideal: ideal
+  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_impediments: Impediments

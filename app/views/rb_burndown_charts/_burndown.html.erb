@@ -14,11 +14,19 @@
         :series => series.collect{|s| burndown[s].enum_for(:each_with_index).collect{|d,i| [i*2, d]}},
         :position => Hash[*(0.upto(series.size - 1).collect{|i| [series[i], i]}.flatten)],
         :options => {
-          :series => series.collect{|s| {:label => l("label_#{s}"), :yaxis => (s.to_s =~ /^points/ ? 'y2axis' : 'yaxis')}},
+          :series => series.collect{|s|
+            axis = s.to_s.split('_')[0]
+            {
+              :label => l("label_#{s}"),
+              :yaxis => {'hours' => 'yaxis', 'points' => 'y2axis', 'ideal' => 'y3axis'}[axis],
+              :showHighlight => (axis != 'ideal'),
+              :markerOptions => {:style => {'hours' => 'filledSquare', 'points' => 'filledCircle', 'ideal' => 'filledDiamond'}[axis]}
+            }
+          },
           :legend => {:show => (mode == :full), :location => 'sw'},
           :grid => {:shadow => false},
           :seriesDefaults => {:showMarker => (mode == :full), :shadow => false},
-          :axesDefaults =>  {:showTick => (mode == :full)},
+          :axesDefaults =>  {:pad => 1.05, :showTick => (mode == :full)},
           :axes => {
               :xaxis => {
                 :min => 0,
@@ -26,15 +34,18 @@
                 :ticks => ticks,
                 :tickOptions => {:angle => -90, :fontSize => '8pt'}
               },
-              :yaxis => {:min => 0, :max => burndown[:max_hours], :tickOptions => {:formatString => '%d'}},
-              :y2axis => {:min => 0, :max => burndown[:max_points], :tickOptions => {:formatString => '%d'}}
+              :yaxis => {:label => l("label_hours"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
+              :y2axis => {:label => l("label_points"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
+              :y3axis => {:min => 0, :autoscale => true, :showTicks => false, :showTickMarks => false, :tickOptions => {:showGridline => false, :show => false}}
           },
-          :highlighter => { :tooltipAxes => 'y', :formatString => '%s', :show => true }
+          :highlighter => { :bringSeriesToFront => true, :tooltipAxes => 'y', :formatString => '%s', :show => true }
         }
       }
   %>
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json %>;
-  RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
-  RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.rendererOptions = {tickRenderer: RB.$.jqplot.CanvasAxisTickRenderer};
+  // RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
+  // RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.tickRenderer: RB.$.jqplot.CanvasAxisTickRenderer;
+  RB.burndown.charts[<%= sprint.id %>].options.axes.yaxis.labelRenderer = RB.$.jqplot.CanvasAxisLabelRenderer;
+  RB.burndown.charts[<%= sprint.id %>].options.axes.y2axis.labelRenderer = RB.$.jqplot.CanvasAxisLabelRenderer;
   RB.burndown.initialize();
 </script>

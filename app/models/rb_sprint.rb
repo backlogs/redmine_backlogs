@@ -36,11 +36,7 @@ class Burndown
     @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
     @data[:points_to_accept] = series.collect{|s| s.to_accept }
 
-    if series[0].hours
-      @data[:hours_ideal] = (0 .. @days.size).collect{|i| (series[0].hours / @days.size) * i }.reverse
-    else
-      @data[:hours_ideal] = [nil] * @days.size
-    end
+    @data[:ideal] = (0..@days.size).to_a.reverse
 
     @data[:points_required_burn_rate] = series.collect{|r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
     @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
@@ -55,16 +51,6 @@ class Burndown
       else
         raise "Unexpected burn direction #{direction.inspect}"
     end
-
-    max = {'hours' => nil, 'points' => nil}
-    @data.keys.each{|series|
-      units = series.to_s.gsub(/_.*/, '')
-      next unless ['points', 'hours'].include?(units)
-      max[units] = ([max[units]] + @data[series]).compact.max
-    }
-
-    @data[:max_points] = max['points']
-    @data[:max_hours] = max['hours']
   end
 
   def [](i)
@@ -77,7 +63,7 @@ class Burndown
     @series ||= {}
     return @series[remove_empty] if @series[remove_empty]
 
-    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.select{|k| k =~ /^(points|hours)_/}.sort
+    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.sort
     return @series[remove_empty] unless remove_empty
 
     # delete :points_committed if flatline
