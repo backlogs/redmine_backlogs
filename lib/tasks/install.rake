@@ -6,7 +6,7 @@ namespace :redmine do
 
     desc "Install and configure Redmine Backlogs"
     task :install => :environment do |t|
-      ENV["RAILS_ENV"] ||= "development"
+      raise "You must specify the RAILS_ENV ('rake redmine:backlogs:install RAILS_ENV=production' or 'rake redmine:backlogs:install RAILS_ENV=development')" unless ENV["RAILS_ENV"]
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
