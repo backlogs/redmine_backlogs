@@ -463,7 +463,7 @@ module BacklogsCards
         data['category'] = issue.category ? issue.category.name : ''
         data['size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
         data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
-        data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
+        data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['position']})"
         data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
         data['owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.name}"
         data['owner.email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
