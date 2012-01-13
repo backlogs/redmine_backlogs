@@ -8,6 +8,7 @@ require 'uri/common'
 require 'open-uri/cached'
 require 'zlib'
 require 'nokogiri'
+require 'system_timer'
 
 class String
   def units_to_points
@@ -206,7 +207,9 @@ module BacklogsCards
 
     def image
       begin
-        return open(@url)
+        SystemTimer.timeout_after(10) do
+          return open(@url)
+        end
       rescue
         return nil
       end
@@ -216,8 +219,9 @@ module BacklogsCards
   end
 
   class Template
-
     def initialize(width, height, template)
+      @gravatar_online = true
+
       f = nil
       ['-default', ''].each {|postfix|
         t = File.dirname(__FILE__) + "/#{template}#{postfix}.glabels"
@@ -334,11 +338,16 @@ module BacklogsCards
               end
 
             when 'Object-image'
-              if data['owner.email']
+              if data['owner.email'] && @gravatar_online
                 dim = box(obj)
 
                 img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
-                pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w] if img
+                if img
+                  pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
+                else
+                  # if image loading fails once, stop loading images for this rendering
+                  @gravatar_online = false
+                end
               end
 
             else
