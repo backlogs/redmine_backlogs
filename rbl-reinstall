@@ -132,10 +132,11 @@ if [[ $RM =~ [Yy] ]]; then
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/redmine
     cd ~/redmine
-    git clone git://github.com/edavis10/redmine.git
+    #git clone git://github.com/edavis10/redmine.git
+    svn co http://redmine.rubyforge.org/svn/tags/$VERSION redmine
     cd ~/redmine/redmine
-    git fetch --tags
-    git checkout $VERSION
+    #git fetch --tags
+    #git checkout $VERSION
     cp ~/redmine/setup/database-redmine.yml ~/redmine/redmine/config/database.yml
     ln -s ~/redmine/redmine_backlogs ~/redmine/redmine/vendor/plugins
     ln -s ~/redmine/redmine_backlogs/features ~/redmine/redmine
