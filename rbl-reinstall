@@ -86,6 +86,7 @@ if [[ $RVM =~ [Yy] ]]; then
       echo 'Installing gems for redmine-backlogs'
       gem install mysql
       gem install icalendar
+      gem install system_timer
       gem install prawn
       gem install holidays --version 1.0.3
       gem install holidays
