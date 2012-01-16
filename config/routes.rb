@@ -18,8 +18,8 @@ ActionController::Routing::Routes.draw do |map|
 
     rb.connect    'statistics',                                     :controller => :rb_all_projects,      :action => 'statistics'
 
-    rb.connect    'server_variables/:project_id/:caller.js',        :controller => :rb_server_variables,  :action => 'show', :format => 'js'
-    rb.connect    'server_variables/:sprint_id/:caller.js',         :controller => :rb_server_variables,  :action => 'show', :format => 'js'
+    rb.connect    'server_variables/project/:project_id/:caller.js',:controller => :rb_server_variables,  :action => 'show', :format => 'js'
+    rb.connect    'server_variables/sprint/:sprint_id/:caller.js',  :controller => :rb_server_variables,  :action => 'show', :format => 'js'
     rb.connect    'server_variables.js',                            :controller => :rb_all_projects,      :action => 'server_variables', :format => 'js'
 
     rb.connect    'master_backlog/:project_id',                     :controller => :rb_master_backlogs,   :action => 'show'

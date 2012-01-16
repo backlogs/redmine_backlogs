@@ -1,4 +1,6 @@
 require 'color'
+require 'nokogiri'
+
 module RbCommonHelper
   unloadable
   
@@ -208,6 +210,10 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       collection << [a.name, a.id] if roles and roles.detect {|role| role.member? && role.allowed_to?(:log_time)}
     end
     collection
+  end
+
+  def tidy(html)
+    return Nokogiri::HTML::fragment(html).to_xhtml
   end
 
 end
