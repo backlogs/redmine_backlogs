@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module RbMasterBacklogsHelper
   unloadable
   include Redmine::I18n
@@ -58,5 +60,8 @@ module RbMasterBacklogsHelper
   def stories(backlog)
     backlog[:stories] || backlog.stories
   end
-  
+
+  def tidy(html)
+    return Nokogiri::HTML::fragment(html).to_xhtml
+  end
 end

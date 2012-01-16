@@ -62,7 +62,7 @@ module Backlogs
       }
     }
   end
-  module_function :trackers
+  module_function :task_workflow
 
   def configured?
     return false if Backlogs.gems.values.reject{|installed| installed}.size > 0
