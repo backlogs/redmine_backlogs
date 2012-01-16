@@ -98,27 +98,3 @@ if (RB == null) {
   RB.constants.story_states = <%= transitions.to_json %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
 <% end %>
-
-<%
-  if @caller == 'rb_taskboards#show'
-    transitions = User.current.admin?
-
-    if !transitions && RbTask.tracker
-      roles = User.current.roles_for_project(@project)
-      tracker = Tracker.find(RbTask.tracker)
-
-      catch (:done) do
-        [false, true].each{|creator|
-          [false, true].each{|assignee|
-            tracker.issue_statuses.each {|status|
-              status.new_statuses_allowed_to(roles, tracker, creator, assignee).each{|s|
-                transitions = true
-                throw :done
-              }
-            }
-          }
-        }
-      end
-    end %>
-  RB.constants.workflow = <%= transitions.to_json %>;
-<% end %>

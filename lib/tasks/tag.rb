@@ -40,14 +40,7 @@ File.open('init.rb', 'w') do |f|
   f.write(code)
 end
 code = nil
-File.open('lib/backlogs_version.rb') do |f|
-  code = f.read
-end
-code.gsub!(/tagged_version\s*=\s*[^\n]+/m, "tagged_version = '#{newversion}'")
-File.open('lib/backlogs_version.rb', 'w') do |f|
-  f.write(code)
-end
-`git add init.rb lib/backlogs_version.rb`
+`git add init.rb`
 `git commit -m #{newversion}`
 `git tag #{newversion}`
 `git push`

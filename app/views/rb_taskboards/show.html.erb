@@ -9,13 +9,6 @@
     type="text/javascript"
     src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :caller => 'rb_taskboards#show', :sprint_id => @sprint.id) %>">
   </script>
-
-  <script type="text/javascript">
-    if(!RB.constants.workflow) {
-      alert('<%= escape_javascript(l(:error_no_workflow_for_task_tracker)) %>');
-      window.location.replace('/trackers'); // '<% url_for(:controller => 'trackers', :action => 'index') %>';
-    }
-  </script>
 <% end %>
 
 <% content_for :breadcrumbs do %>

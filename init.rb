@@ -25,7 +25,7 @@ Dispatcher.to_prepare do
 
   require_dependency 'backlogs_merged_array'
 
-  require_dependency 'backlogs_version'
+  require_dependency 'backlogs_setup'
 
   Redmine::AccessControl.permission(:manage_versions).actions << "rb_sprints/close_completed"
 end
@@ -124,7 +124,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :view_scrum_statistics,   { :rb_all_projects => :statistics }
   end
 
-  menu :project_menu, :rb_master_backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id
-  menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_master_backlogs, :param => :project_id
-  menu :application_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics, :if => Proc.new {|| User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) }
+  menu :project_menu, :rb_master_backlogs, { :controller => :rb_master_backlogs, :action => :show }, :caption => :label_backlogs, :after => :issues, :param => :project_id, :if => Proc.new { Backlogs.configured? }
+  menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_master_backlogs, :param => :project_id, :if => Proc.new { Backlogs.configured? }
+  menu :application_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics, :if => Proc.new {|| User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) }, :if => Proc.new { Backlogs.configured? }
 end

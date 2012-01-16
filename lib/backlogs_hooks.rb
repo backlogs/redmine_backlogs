@@ -257,11 +257,10 @@ module BacklogsPlugin
       end
 
       def view_layouts_base_html_head(context={})
-        if context[:request].session[:backlogs].nil?
-          context[:request].session[:backlogs] = true
+        if User.current.admin?
+          context[:request].session[:backlogs] = Backlogs.configured? if context[:request].session[:backlogs].nil?
+          context[:controller].send(:flash)[:error] = "Backlogs plugin not configured" if !context[:request].session[:backlogs]
         end
-          
-        context[:controller].send(:flash)[:error] = "Backlogs plugin not configured" if !context[:request].session[:backlogs]
 
         return %{
           <link rel="stylesheet" href="#{Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery/jquery.jqplot/jquery.jqplot.min.css')}" type="text/css" />

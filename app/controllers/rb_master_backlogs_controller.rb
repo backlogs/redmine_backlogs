@@ -38,7 +38,7 @@ class RbMasterBacklogsController < RbApplicationController
              } unless @sprint
     links << {:label => l(:label_task_board),
               :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint, :only_path => true)
-             } if @sprint && @sprint.stories.size > 0
+             } if @sprint && @sprint.stories.size > 0 && Backlogs.task_workflow(@project)
     links << {:label =>  l(:label_burndown),
               :url => '#',
               :classname => 'show_burndown_chart'

@@ -16,12 +16,8 @@ namespace :redmine do
         puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
       end
 
-      ['system_timer', 'nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
-        begin
-          require gem
-        rescue LoadError
-          raise "You are missing the '#{gem}' gem"
-        end
+      Backlogs.gems.each_pair {|gem, installed|
+        raise "You are missing the '#{gem}' gem" unless installed
       }
 
       supported = [1, 3, 0]
