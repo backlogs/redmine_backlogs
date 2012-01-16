@@ -2,7 +2,7 @@
 <%- content_for :head_tags do %>
   <script
     type="text/javascript"
-    src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :caller => 'rb_master_backlogs#show', :project_id => @project.identifier) %>">
+    src="<%= url_for(:controller => 'rb_server_variables', :action => 'project', :project_id => @project.identifier, :context => 'backlogs') %>">
   </script>
 
   <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', 'jquery/jquery.liveFilter.js', 'jquery/jquery.liveFilter.setup.js', :plugin => 'redmine_backlogs' %>

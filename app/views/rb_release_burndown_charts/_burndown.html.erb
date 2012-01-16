@@ -19,8 +19,6 @@
     var options = {};
     // chart objects
     burndown_charts = new Object();
-    // TODO: I have no idea why plain 'jQuery' doesn't work
-    burndown_charts.jquery = jQuery.noConflict();
 
     <%- charts.each do |chart| %>
       burndown_charts[<%= chart.release_id%>] = {
@@ -34,10 +32,10 @@
         max_y: <%= chart.max == 0 ? 1 : 1.01 * chart.max %>,
 
         initialize: function() {
-          decoration = !(burndown_charts.jquery('#<%= "#{div}#{chart.release_id}" %>').hasClass('minimal'));
+          decoration = !(RB.$('#<%= "#{div}#{chart.release_id}" %>').hasClass('minimal'));
 
           /*
-          this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', this.datasets, {
+          this.chart = RB.$.jqplot('<%= "#{div}#{chart.release_id}" %>', this.datasets, {
             legend: {show: decoration, location: 'sw'},
             grid: {shadow:false},
             seriesDefaults: {showMarker: decoration, shadow:false},
@@ -54,11 +52,11 @@
           }); */
           snapshots=<%= @release.js_snapshots %>
           ideal=<%= @release.js_ideal %>
-          this.chart = burndown_charts.jquery.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
+          this.chart = RB.$.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
               //gridPadding:{right:35},
               axes:{
                   xaxis:{
-                      renderer:burndown_charts.jquery.jqplot.DateAxisRenderer,
+                      renderer: RB.$.jqplot.DateAxisRenderer,
                       tickOptions:{formatString:'%b %#d, %y'},
                       //min:'May 30, 2008',
                       //tickInterval:'1 month'
@@ -83,7 +81,7 @@
 
     function burndown_configure(cb)
     {
-      disabled = '|' + burndown_charts.jquery.cookies.get('release_burndown_series') + '|';
+      disabled = '|' + RB.$.cookies.get('release_burndown_series') + '|';
 
       if (!(cb == undefined)) {
         _disabled = [];
@@ -96,16 +94,16 @@
           _disabled.push(cb.value);
         }
         disabled = _disabled.join('|');
-        burndown_charts.jquery.cookies.set('release_burndown_series', disabled, { expiresAt: new Date((new Date()).getFullYear + 100, 1, 1)});
+        RB.$.cookies.set('release_burndown_series', disabled, { expiresAt: new Date((new Date()).getFullYear + 100, 1, 1)});
         disabled = '|' + disabled + '|';
       }
 
-      checkboxes = burndown_charts.jquery('.series_enabled');
+      checkboxes = RB.$('.series_enabled');
       if (checkboxes) {
         /* enable all, then reset */
         checkboxes.attr('checked', true);
         <%- dataseries.each do |series| %>
-          checkbox = burndown_charts.jquery('#<%= "#{series}" %>_enabled');
+          checkbox = RB.$('#<%= "#{series}" %>_enabled');
           if (checkbox && -1 != disabled.indexOf('|<%= "#{series}" %>|')) { checkbox.attr('checked', false); }
         <%- end %>
       }
@@ -115,7 +113,7 @@
       <%- end %>
     }
 
-    burndown_charts.jquery(document).ready(function(){
+    RB.$(document).ready(function(){
       <%- charts.each do |chart| %>
         burndown_charts[<%= chart.release_id%>].initialize();
       <%- end %>

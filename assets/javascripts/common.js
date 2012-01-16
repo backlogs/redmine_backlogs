@@ -2,7 +2,7 @@ if(RB==null){
   var RB = {};
 }
 
-if (typeof(jQuery) != 'undefined') { RB.$ = jQuery.noConflict(); }
+if (RB.$ == null) { RB.$ = jQuery.noConflict(); }
 
 RB.Object = {
   // Douglas Crockford's technique for object extension

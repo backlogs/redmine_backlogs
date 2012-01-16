@@ -1,48 +1,46 @@
-if (RB == null) {
-  var RB = {
-    buildImageTag: function(name) {
-      return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
-    },
+if (RB.constants == null) {
+  RB.buildImageTag = function(name) {
+    return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
+  };
 
-    constants: {
-      protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
-      request_forgery_protection_token: '<%= request_forgery_protection_token %>',
-      form_authenticity_token: '<%= form_authenticity_token %>',
-      <%
-        autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
-        autorefresh_wait = '1000' if autorefresh_wait.blank?
-        autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
-        autorefresh_wait = Integer(autorefresh_wait)
-        autorefresh_wait = 1000 if autorefresh_wait < 1000
-      %>
-      autorefresh_wait: <%= autorefresh_wait.to_json %>
-    },
+  RB.constants = {
+    protect_against_forgery: <%= protect_against_forgery? ? "true" : "false" %>,
+    request_forgery_protection_token: '<%= request_forgery_protection_token %>',
+    form_authenticity_token: '<%= form_authenticity_token %>',
+    <%
+      autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
+      autorefresh_wait = '1000' if autorefresh_wait.blank?
+      autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
+      autorefresh_wait = Integer(autorefresh_wait)
+      autorefresh_wait = 1000 if autorefresh_wait < 1000
+    %>
+    autorefresh_wait: <%= autorefresh_wait.to_json %>
+  };
 
-    routes: {
-      create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
-      update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',
+  RB.routes = {
+    create_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'create') %>',
+    update_sprint: '<%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ":id") %>',
 
-      create_story: '<%= url_for(:controller => 'rb_stories', :action => 'create') %>',
-      update_story: '<%= url_for(:controller => 'rb_stories', :action => 'update', :id => ":id") %>',
-  
-      create_task: '<%= url_for(:controller => 'rb_tasks', :action => 'create') %>',
-      update_task: '<%= url_for(:controller => 'rb_tasks', :action => 'update', :id => ":id") %>',
+    create_story: '<%= url_for(:controller => 'rb_stories', :action => 'create') %>',
+    update_story: '<%= url_for(:controller => 'rb_stories', :action => 'update', :id => ":id") %>',
 
-      create_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'create') %>',
-      update_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'update', :id => ":id") %>',
+    create_task: '<%= url_for(:controller => 'rb_tasks', :action => 'create') %>',
+    update_task: '<%= url_for(:controller => 'rb_tasks', :action => 'update', :id => ":id") %>',
 
-      show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
-      show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
-      show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>'
-    },
+    create_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'create') %>',
+    update_impediment: '<%= url_for(:controller => 'rb_impediments', :action => 'update', :id => ":id") %>',
 
-    urlFor: function(route_name, options) {
-      route = RB.routes[route_name];
-      if(options != null && options['id'] != null){
-        route = route.replace(":id", options['id']);
-      }
-      return route;
+    show_updated_items: '<%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ":id") %>',
+    show_burndown_chart: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ":id") %>',
+    show_burndown_embedded: '<%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ":id") %>'
+  };
+
+  RB.urlFor = function(route_name, options) {
+    route = RB.routes[route_name];
+    if(options != null && options['id'] != null){
+      route = route.replace(":id", options['id']);
     }
+    return route;
   };
 }
 
@@ -52,10 +50,11 @@ if (RB == null) {
 
 <% if @sprint %>
   RB.constants.sprint_id = <%= @sprint.id %>;
+  RB.constants.project_id = <%= @sprint.project_id %>;
 <% end %>
 
 <%
-  if @caller == 'rb_master_backlogs#show'
+  if @context == 'backlogs'
     default_status = IssueStatus.default
     default_status = default_status.id.to_s if default_status
 
