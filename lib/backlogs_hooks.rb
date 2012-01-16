@@ -5,6 +5,11 @@ module BacklogsPlugin
       # the entire queries toolbar is disabled if you don't have
       # custom queries
 
+      def exception(context, ex)
+        context[:controller].send(:flash)[:error] = "Backlogs error: #{ex.message} (#{ex.class})"
+        RAILS_DEFAULT_LOGGER.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
+      end
+
       def view_issues_sidebar_planning_bottom(context={ })
         begin
           project = context[:project]
@@ -49,7 +54,7 @@ module BacklogsPlugin
             </script>
           }
         rescue => e
-          context[:controller].send(:flash)[:error] = e.to_s
+          exception(context, e)
           return ''
         end
       end
@@ -76,7 +81,7 @@ module BacklogsPlugin
   
           return snippet
         rescue => e
-          context[:controller].send(:flash)[:error] = e.to_s
+          exception(context, e)
           return ''
         end
       end
@@ -137,7 +142,7 @@ module BacklogsPlugin
   
           return snippet
         rescue => e
-          context[:controller].send(:flash)[:error] = e.to_s
+          exception(context, e)
           return ''
         end
       end
@@ -170,7 +175,7 @@ module BacklogsPlugin
             generatedscript
           end
         rescue => e
-          context[:controller].send(:flash)[:error] = e.to_s
+          exception(context, e)
           return ''
         end
       end
@@ -187,7 +192,7 @@ module BacklogsPlugin
             </div>
           }
         rescue => e
-          context[:controller].send(:flash)[:error] = e.to_s
+          exception(context, e)
           return ''
         end
       end
