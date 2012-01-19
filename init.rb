@@ -72,7 +72,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_sprints          => [:index, :show, :download],
                                         :rb_wikis            => :show,
                                         :rb_stories          => [:index, :show],
-                                        :rb_server_variables => :show,
+                                        :rb_server_variables => [:project, :sprint],
                                         :rb_all_projects     => :server_variables,
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
@@ -85,7 +85,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_tasks            => [:index, :show],
                                         :rb_impediments      => [:index, :show],
                                         :rb_wikis            => :show,
-                                        :rb_server_variables => :show,
+                                        :rb_server_variables => [:project, :sprint],
                                         :rb_all_projects     => :server_variables,
                                         :rb_hooks_render     => [:view_issues_sidebar],
                                         :rb_burndown_charts  => [:embedded, :show, :print],
