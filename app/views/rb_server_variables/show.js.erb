@@ -16,7 +16,7 @@ if (RB.constants == null) {
       autorefresh_wait = Integer(autorefresh_wait)
       autorefresh_wait = 1000 if autorefresh_wait < 1000
     %>
-    autorefresh_wait: <%= autorefresh_wait.as_json %>
+    autorefresh_wait: <%= autorefresh_wait.to_json %>
   };
 
   RB.routes = {
@@ -96,6 +96,6 @@ if (RB.constants == null) {
       }
     }
   %>
-  RB.constants.story_states = <%= transitions.as_json %>;
+  RB.constants.story_states = <%= transitions.to_json %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true) %>';
 <% end %>
