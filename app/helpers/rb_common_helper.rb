@@ -17,7 +17,7 @@ module RbCommonHelper
   end
 
   def build_inline_style(task)
-    if (task.blank? || task.assigned_to.blank?)
+    if (task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User))
       ''
     else
       color_to = task.assigned_to.backlogs_preference(:task_color)
@@ -27,12 +27,12 @@ background-color:#{task.assigned_to.backlogs_preference(:task_color)};
 background: -webkit-gradient(linear, left top, left bottom, from(#{color_from}), to(#{color_to}));
 background: -moz-linear-gradient(top, #{color_from}, #{color_to});
 filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#{color_from},EndColorStr=#{color_to});
-'"    
+'"
     end
   end
 
   def build_inline_style_color(task)
-    task.blank? || task.assigned_to.blank? ? '' : "#{task.assigned_to.backlogs_preference(:task_color)}"
+    task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User) ? '' : "#{task.assigned_to.backlogs_preference(:task_color)}"
   end 
   
   def breadcrumb_separator
