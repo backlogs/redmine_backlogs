@@ -257,9 +257,9 @@ module BacklogsPlugin
       end
 
       def view_layouts_base_html_head(context={})
-        if User.current.admin?
-          context[:request].session[:backlogs] = Backlogs.configured? if context[:request].session[:backlogs].nil?
-          context[:controller].send(:flash)[:error] = "Backlogs plugin not configured" if !context[:request].session[:backlogs]
+        if User.current.admin? && !context[:request].session[:backlogs_configured]
+          context[:request].session[:backlogs] = Backlogs.configured?
+          context[:controller].send(:flash)[:error] = "Backlogs plugin not configured (visit plugin settings page for details)" if !context[:request].session[:backlogs]
         end
 
         return %{
