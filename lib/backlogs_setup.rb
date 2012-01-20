@@ -49,7 +49,7 @@ module Backlogs
   module_function :gems
 
   def trackers
-    return {:task => !RbTask.tracker.nil?, :story => RbStory.trackers.size != 0, :default_state => !IssuePriority.default.nil?}
+    return {:task => !RbTask.tracker.nil?, :story => RbStory.trackers.size != 0, :default_priority => !IssuePriority.default.nil?}
   end
   module_function :trackers
 

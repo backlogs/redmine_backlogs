@@ -49,7 +49,7 @@
     <table>
       <tr><th colspan="2">Trackers</th></tr>
       <% Backlogs.trackers.each_pair do |tracker, ok| %>
-        <tr><td><%= {:story => 'Story trackers', :task => 'Task tracker', :default_state => 'Default issue state'}[tracker] %></td><td class="<%= ok ? 'ok' : 'error' %>"><%= ok ? 'ok' : 'not configured' %></td></tr>
+        <tr><td><%= {:story => 'Story trackers', :task => 'Task tracker', :default_priority => 'Default issue priority'}[tracker] %></td><td class="<%= ok ? 'ok' : 'error' %>"><%= ok ? 'ok' : 'not configured' %></td></tr>
       <% end %>
     </table>
   </fieldset>

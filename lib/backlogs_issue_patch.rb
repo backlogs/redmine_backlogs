@@ -114,6 +114,7 @@ module Backlogs
           self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
+          self.start_date = Date.today if self.start_date.nil? && self.status_id != IssueStatus.default.id
         elsif self.is_story?
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
         end
