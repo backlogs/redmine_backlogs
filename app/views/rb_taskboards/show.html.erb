@@ -94,7 +94,7 @@
 
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
-    <%- @project.members.select{|u| u.is_a?(User)}.each do |member| %>
+    <%- @project.members.each do |member| %>
     <option value="<%= member.user_id %>" color="<%= member.user.backlogs_preference(:task_color) %>" color_light="<%= Color.new(member.user.backlogs_preference(:task_color)).lighten(0.5) %>"><%= h member.name %></option>
     <%- end %>
   </select>
