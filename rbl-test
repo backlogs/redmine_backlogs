@@ -1,0 +1,40 @@
+#!/bin/bash
+
+GEMSET=`rvm-prompt g | sed -e 's/@//'`
+export RAILS_ENV=cucumber
+
+CONFIG="$( cd "$( dirname "$0" )" && pwd )"
+CONFIG="$CONFIG/rbl-reinstall.rc"
+
+if [ ! -f $CONFIG ]; then
+    echo "$CONFIG does not exist"
+    exit
+fi
+
+source $CONFIG
+
+cd ~/redmine/$GEMSET
+
+mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
+mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
+mysqladmin -u root -p$DBROOTPW create $GEMSET
+
+zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
+
+echo migrations
+rake db:migrate
+rake db:migrate_plugins
+#rake redmine:backlogs:install batch=true corruptiontest=false labels=false RAILS_ENV=cucumber
+rm -rf ~/$GEMSET/cache/*
+
+rm -f log/cucumber.log
+echo tests
+script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
+
+mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
+mysqladmin -u root -p$DBROOTPW create $GEMSET
+cat ../setup/blcuke-salvage.sql | mysql -u root -p$DBROOTPW $GEMSET 
+
+#rm -f ~/redmine/www.redminebacklogs.net/coverage/*
+#cp -r ~/redmine/redmine/coverage/* ~/redmine/www.redminebacklogs.net/coverage
+#chmod a+rwX ~/redmine/www.redminebacklogs.net/coverage/*

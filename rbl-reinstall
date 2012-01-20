@@ -1,14 +1,14 @@
 #!/bin/bash
 
-CONFIG="$( cd "$( dirname "$0" )" && pwd )"
-CONFIG="$CONFIG/rbl-reinstall.rc"
-export RAILS_ENV=development
-
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
 if [ -z "$GEMSET" ]; then
   echo "No gemset"
   exit
 fi
+
+CONFIG="$( cd "$( dirname "$0" )" && pwd )"
+CONFIG="$CONFIG/rbl-reinstall.rc"
+export RAILS_ENV=development
 
 if [ ! -f $CONFIG ]; then
     echo "$CONFIG does not exist"
