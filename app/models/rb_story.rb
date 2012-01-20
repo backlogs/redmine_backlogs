@@ -119,7 +119,7 @@ class RbStory < Issue
 
     def move_after(prev_id)
       # remove so the potential 'prev' has a correct position
-      remove_from_list
+      RbStory.connection.execute("update issues set position = position - 1 where position > #{position}") unless position.nil?
 
       if prev_id.to_s == ''
         prev = nil
@@ -127,20 +127,24 @@ class RbStory < Issue
         prev = RbStory.find(prev_id)
       end
 
-      # if it's the first story, move it to the 1st position
+      # if prev is the first story, move current to the 1st position
       if prev.blank?
-        insert_at
-        move_to_top
+        RbStory.connection.execute("update issues set position = position + 1")
+        RbStory.connection.execute("update issues set position = 0 where id = #{id}")
 
-      # if its predecessor has no position (shouldn't happen), make it
+      # if its predecessor has no position (shouldn't happen), make current the last positioned story
       # the last story
-      elsif !prev.in_list?
-        insert_at
-        move_to_bottom
+      elsif prev.position.nil?
+        RbStory.connection.execute("update issues
+                                    inner join (select coalesce(max(position), 0) as max_position from issues) as other_issues
+                                    set issues.position = other_issues.max_position
+                                    where id = #{id}")
 
       # there's a valid predecessor
       else
-        insert_at(prev.position + 1)
+        RbStory.connection.execute("update issues set position = position + 1 where position > #{prev.position}")
+        RbStory.connection.execute("update issues set position = #{prev.position} + 1 where id = #{id}")
+
       end
     end
 

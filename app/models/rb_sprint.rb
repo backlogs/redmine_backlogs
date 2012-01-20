@@ -6,10 +6,21 @@ class Burndown
     @sprint_id = sprint.id
     @days = sprint.days(:all)
 
-    stories = sprint.stories | Journal.find(:all, :joins => :details,
+    stories = sprint.stories
+    
+    case Backlogs.platform
+      when :redmine
+        stories |= Journal.find(:all, :joins => :details,
                         :conditions => ["journalized_type = 'Issue'
                               and property = 'attr' and prop_key = 'fixed_version_id'
                               and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
+      when :chiliproject
+        # chiliproject journals are not meant to be scanned, unfortunately. This will be slow.
+        stories |= Journal.find(:all,
+                                :conditions => ["type = 'Issue'"]).select{|j|
+                                j.changes['fixed_version_id'].first == sprint.id || j.changes['fixed_version_id'].last == sprint.id}.collect{|j|
+                                RbStory.find(j.journaled_id) }
+    end
 
     baseline = [0] * (sprint.days(:active).size + 1)
     baseline += [nil] * (1 + (@days.size - baseline.size))

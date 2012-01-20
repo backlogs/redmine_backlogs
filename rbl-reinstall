@@ -2,6 +2,7 @@
 
 CONFIG="$( cd "$( dirname "$0" )" && pwd )"
 CONFIG="$CONFIG/rbl-reinstall.rc"
+export RAILS_ENV=development
 
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
 if [ -z "$GEMSET" ]; then
@@ -16,10 +17,6 @@ fi
 
 source $CONFIG
 
-if [ -z "$VERSION" ]; then
-    echo "VERSION not set"
-    exit
-fi
 
 if [ -z "$DBROOTPW" ]; then
     echo "DBROOTPW not set"
@@ -60,16 +57,15 @@ if [ ! -d ~/redmine/redmine_backlogs ]; then
 fi
 
 # ruby env
+if [ -z "`gem list | grep rails`" ]; then
+  RVM=y
+fi
 if [ -z "$RVM" ]; then
   read -p "Reinstall RVM? " RVM
 fi
 if [[ $RVM =~ [Yy] ]]; then
     echo "re-creating $GEMSET"
-    rvm use 1.8.7
-    rvm gemset create $GEMSET
     rvm --force gemset empty $GEMSET
-    rvm use 1.8.7@$GEMSET
-
 
     if [[ "$GEMSET" = "redmine" ]]; then
 
@@ -115,25 +111,31 @@ if [[ $RVM =~ [Yy] ]]; then
 
     if [[ "$GEMSET" = "chiliproject" ]]; then
       gem install bundler
+      bundle exec gem install system_timer
       # rest is installed through bundler install
     fi
 fi
 
 # redmine
 if [ "$GEMSET" = "redmine" ]; then
-if [ ! -f ~/redmine/redmine/config/database.yml ]; then
-  echo Forced RM install
-  RM=Y
-elif [ -z "$RM" ]; then
-  read -p "Reinstall Redmine? " RM
-fi
-if [[ $RM =~ [Yy] ]]; then
+  if [ ! -f ~/redmine/redmine/config/database.yml ]; then
+    echo Forced RM install
+    RMINSTALL=Y
+  elif [ -z "$RMINSTALL" ]; then
+    read -p "Reinstall Redmine? " RMINSTALL
+  fi
+  if [[ $RMINSTALL =~ [Yy] ]]; then
+    if [ -z "$RMVERSION" ]; then
+      echo "VERSION not set"
+      exit
+    fi
+
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/redmine
     cd ~/redmine
     #git clone git://github.com/edavis10/redmine.git
-    svn co http://redmine.rubyforge.org/svn/tags/$VERSION redmine
+    svn co http://redmine.rubyforge.org/svn/tags/$RMVERSION redmine
     cd ~/redmine/redmine
     #git fetch --tags
     #git checkout $VERSION
@@ -141,20 +143,25 @@ if [[ $RM =~ [Yy] ]]; then
     ln -s ~/redmine/redmine_backlogs ~/redmine/redmine/vendor/plugins
     ln -s ~/redmine/redmine_backlogs/features ~/redmine/redmine
     echo 'rvm use 1.8.7@redmine' > ~/redmine/redmine/.rvmrc
-
+  
     [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --spork
-fi
+  fi
 fi
 
 # chiliproject
 if [ "$GEMSET" = "chiliproject" ]; then
-if [ ! -f ~/redmine/chiliproject/config/database.yml ]; then
-  echo Forced CP install
-  CP=Y
-elif [ -z "$CP" ]; then
-  read -p "Reinstall ChiliProject? " CP
-fi
-if [[ $CP =~ [Yy] ]]; then
+  if [ ! -f ~/redmine/chiliproject/config/database.yml ]; then
+    echo Forced CP install
+    CPINSTALL=Y
+  elif [ -z "$CPINSTALL" ]; then
+    read -p "Reinstall ChiliProject? " CP
+  fi
+  if [[ $CPINSTALL =~ [Yy] ]]; then
+    if [ -z "$CPVERSION" ]; then
+      echo "VERSION not set"
+      exit
+    fi
+
     echo "create database chiliproject character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/chiliproject
@@ -162,35 +169,38 @@ if [[ $CP =~ [Yy] ]]; then
     git clone https://github.com/chiliproject/chiliproject.git
     cd ~/redmine/chiliproject
     git fetch --tags
-    git checkout v2.2.0
+    git checkout v$CPVERSION
     cp ~/redmine/setup/database-chiliproject.yml ~/redmine/chiliproject/config/database.yml
     ln -s ~/redmine/redmine_backlogs ~/redmine/chiliproject/vendor/plugins
     ln -s ~/redmine/redmine_backlogs/features ~/redmine/chiliproject
     echo 'rvm use 1.8.7@chiliproject' > ~/redmine/chiliproject/.rvmrc
+  fi
+
+  if [[ $RVM =~ [Yy] ]]; then
     cd ~/redmine/chiliproject
     bundle install
-fi
+  fi
 fi
 
 # RM database
 if [ "$GEMSET" = "redmine" ]; then
-if [ -z "$RMDB" ]; then
-  read -p "Reinstall RM database? " RMDB
-fi
-if [[ $RMDB =~ [Yy] ]]; then
+  if [ -z "$RMDB" ]; then
+    read -p "Reinstall RM database? " RMDB
+  fi
+  if [[ $RMDB =~ [Yy] ]]; then
     mysqladmin -f -u root -p$DBROOTPW drop redmine
     echo "create database redmine character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on redmine.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
-
+  
     cd ~/redmine/redmine
-
+  
     if [ -f ~/redmine/setup/redmine.sql.gz ]; then
       echo 'Restoring database backup'
       zcat ~/redmine/setup/redmine.sql.gz | mysql -u root -p$DBROOTPW redmine
       echo "update users set auth_source_id = NULL;" | mysql -u root -p$DBROOTPW redmine
     fi
-
+  
     echo "Let's go!"
     rake db:migrate
     rake generate_session_store
@@ -198,32 +208,31 @@ if [[ $RMDB =~ [Yy] ]]; then
     rake db:migrate:upgrade_plugin_migrations
     rake db:migrate_plugins
     rake redmine:backlogs:install labels=no
-
+  
     if [ ! -z "$USERPW" ]; then
       ./script/runner "User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '$USERPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $USERPW'}"
     fi
-fi
+  fi
 fi
 
 if [ "$GEMSET" = "chiliproject" ]; then
-# CP database
-if [ -z "$CPDB" ]; then
-  read -p "Reinstall CP database? " CPDB
-fi
-if [[ $CPDB =~ [Yy] ]]; then
+  if [ -z "$CPDB" ]; then
+    read -p "Reinstall CP database? " CPDB
+  fi
+  if [[ $CPDB =~ [Yy] ]]; then
     mysqladmin -u root -p$DBROOTPW drop chiliproject
     echo "create database chiliproject character set utf8;" | mysql -u root -p$DBROOTPW mysql
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     echo "grant all privileges on chiliproject.* to 'redmine'@'localhost';" | mysql -u root -p$DBROOTPW mysql
-
+  
     cd ~/redmine/chiliproject
-
+  
     if [ -f ~/redmine/setup/chiliproject.sql.gz ]; then
       echo 'Restoring database backup'
       zcat ~/redmine/setup/chiliproject.sql.gz | mysql -u root -p$DBROOTPW chiliproject
       echo "update users set auth_source_id = NULL;" | mysql -u root -p$DBROOTPW chiliproject
     fi
-
+  
     echo "Let's go!"
     bundle exec rake db:migrate
     bundle exec rake generate_session_store
@@ -231,9 +240,9 @@ if [[ $CPDB =~ [Yy] ]]; then
     bundle exec rake db:migrate:upgrade_plugin_migrations
     bundle exec rake db:migrate_plugins
     bundle exec rake redmine:backlogs:install
-
+  
     if [ ! -z "$ADMINPW" ]; then
       bundle exec script/runner "user = User.find(:first, :conditions => {:admin => true}) ; user.password, user.password_confirmation = '$ADMINPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $ADMINPW'"
     fi
-fi
+  fi
 fi

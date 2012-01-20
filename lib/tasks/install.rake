@@ -20,14 +20,7 @@ namespace :redmine do
         raise "You are missing the '#{gem}' gem" unless installed
       }
 
-      supported = [1, 3, 0]
-      if Redmine::VERSION.to_a[0,3] == supported
-        # pass
-      elsif Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY > 0
-        puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version #{supported.join('.')} is supported at this time. 1.2.1 and higher are known to work."
-      else
-        raise "ERROR: You have Redmine version #{Redmine::VERSION}, which is known not to work with backlogs. #{supported.join('.')} is the currently supported version"
-      end
+      puts Backlogs.platform_support(true)
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       settings = Setting.plugin_redmine_backlogs

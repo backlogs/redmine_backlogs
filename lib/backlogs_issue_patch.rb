@@ -136,13 +136,22 @@ module Backlogs
           # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
           # update_parent :<
-          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and fixed_version_id<>?
-                                            and exists(select 1 from journals j join journal_details jd on j.id = jd.journal_id
-                                                           where j.journalized_id = issues.id and j.journalized_type = 'Issue'
-                                                           and jd.property='attr' and jd.prop_key='fixed_version_id')", root_id, lft, rgt, fixed_version_id]).each{ |task|
+          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
+                                          (
+                                            (? is NULL and not fixed_version_id is NULL)
+                                            or
+                                            (not ? is NULL and fixed_version_id is NULL)
+                                            or
+                                            (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
+                                          )", root_id, lft, rgt, fixed_version_id, fixed_version_id, fixed_version_id, fixed_version_id]).each{|task|
             j = Journal.new
             j.journalized = task
-            j.created_on = Time.now
+            case Backlogs.platform 
+              when :redmine
+                j.created_on = Time.now
+              when :chiliproject
+                j.created_at = Time.now
+            end
             j.user = User.current
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
             j.save!
@@ -182,24 +191,47 @@ module Backlogs
         values = [nil] * active_days.size
 
         journals = false
-        JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                 :conditions => ["property = 'attr' and prop_key = '#{property}'
-                                                  and journalized_type = 'Issue' and journalized_id = ?",
-                                                  id]).each {|detail|
-          # if this is the first journal, fill up with initial old_value
-          values.fill(detail.old_value) unless values[0]
+        case Backlogs.platform 
+          when :redmine
+            JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
+                                    :conditions => ["property = 'attr' and prop_key = '#{property}'
+                                                      and journalized_type = 'Issue' and journalized_id = ?",
+                                                      id]).each {|detail|
+              # if this is the first journal, fill up with initial old_value
+              values.fill(detail.old_value) unless values[0]
 
-          # get the date from which this value is current up to now, and fill the remainder (might be overwritten later)
-          jdate = detail.journal.created_on.to_date
-          if jdate < active_days[0]
-            i = 0
-          else
-            i = active_days.index{|d| d > jdate}
-          end
+              # get the date from which this value is current up to now, and fill the remainder (might be overwritten later)
+              jdate = detail.journal.created_on.to_date
+              if jdate < active_days[0]
+                i = 0
+              else
+                i = active_days.index{|d| d > jdate}
+              end
 
-          journals = true
-          values.fill(detail.value, i) if i
-        }
+              journals = true
+              values.fill(detail.value, i) if i
+            }
+
+          when :chiliproject
+            Journal.find(:all, :order => "journals.created_at asc").each{|journal|
+              changes = journal.changes[property.to_s]
+              next unless changes
+
+              # if this is the first journal, fill up with initial old_value
+              values.fill(changes.first) unless values[0]
+
+              # get the date from which this value is current up to now, and fill the remainder (might be overwritten later)
+              jdate = journal.created_at.to_date
+              if jdate < active_days[0]
+                i = 0
+              else
+                i = active_days.index{|d| d > jdate}
+              end
+
+              journals = true
+              values.fill(changes.last, i) if i
+            }
+        end
 
         # if no journals was found, the current value is what all the days have
         if journals

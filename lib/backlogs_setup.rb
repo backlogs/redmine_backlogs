@@ -20,12 +20,20 @@ module Backlogs
   end
   module_function :version
 
-  def redmine
-    return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,2] == [1,3]
-    return "#{Redmine::VERSION} (not supported, but it will work)" if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY > 0
-    return "#{Redmine::VERSION} (NOT SUPPORTED)"
+  def platform_support(raise_error = false)
+    case platform
+      when :redmine
+        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,2] == [1,3]
+        return "#{Redmine::VERSION} (not supported, but it will work)" if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY > 0
+        return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
+        raise "#{Redmine::VERSION} (NOT SUPPORTED)"
+      when :chiliproject
+        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,3] == [2,6,0]
+        return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
+        raise "#{Redmine::VERSION} (NOT SUPPORTED)"
+    end
   end
-  module_function :redmine
+  module_function :platform_support
 
   def gems
     installed = Hash[*(['system_timer', 'nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].collect{|gem| [gem, false]}.flatten)]
@@ -70,4 +78,17 @@ module Backlogs
     return true
   end
   module_function :configured?
+
+  def platform
+    unless @platform
+      begin
+        ChiliProject::VERSION
+        @platform = :chiliproject
+      rescue NameError
+        @platform = :redmine
+      end
+    end
+    return @platform
+  end
+  module_function :platform
 end
