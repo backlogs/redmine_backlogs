@@ -3,7 +3,12 @@ require 'icalendar'
 class RbCalendarsController < RbApplicationController
   unloadable
   
-  accept_api_auth :ical
+  case Backlogs.platform
+    when :redmine
+      accept_api_auth :ical
+    when :chiliproject
+      accept_key_auth :ical
+  end
   
   def ical
     respond_to do |format|

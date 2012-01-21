@@ -157,24 +157,19 @@ class RbTask < Issue
     return nil if sprint.nil? || !sprint.has_burndown?
 
     return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
-      bd = nil
-      if sprint.has_burndown?
-        days = sprint.days(:active)
-        series = Backlogs::MergedArray.new
-        series.merge(:hours => history(:remaining_hours, days))
-        series.merge(:sprint => history(:fixed_version_id, days))
-        series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
-        series.each{|d|
-          if d.sprint != sprint.id
-            d.hours = nil
-          elsif d.sprint_start
-            d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
-          end
-        }
-        bd = series.series(:hours)
-      end
-
-      bd
+      days = sprint.days(:active)
+      series = Backlogs::MergedArray.new
+      series.merge(:hours => history(:remaining_hours, days))
+      series.merge(:sprint => history(:fixed_version_id, days))
+      series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
+      series.each{|d|
+        if d.sprint != sprint.id
+          d.hours = nil
+        elsif d.sprint_start
+          d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
+        end
+      }
+      series.series(:hours)
     }
   end
 

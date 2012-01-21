@@ -21,7 +21,7 @@ module RbCommonHelper
       ''
     else
       color_to = task.assigned_to.backlogs_preference(:task_color)
-      color_from = Color.new(color_to).lighten(0.5)
+      color_from = Backlogs::Color.new(color_to).lighten(0.5)
       "style='
 background-color:#{task.assigned_to.backlogs_preference(:task_color)}; 
 background: -webkit-gradient(linear, left top, left bottom, from(#{color_from}), to(#{color_to}));
