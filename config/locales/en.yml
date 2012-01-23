@@ -23,6 +23,7 @@ en:
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_sprints: Measured over %{value} sprints
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"

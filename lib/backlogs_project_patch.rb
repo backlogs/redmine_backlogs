@@ -44,7 +44,7 @@ module Backlogs
       }
       Statistics.stats.sort.each{|m|
         v = send(m.intern)
-        @statistics[:values][m.gsub(/^stat_/, '')] = v if v
+        @statistics[:values][m.gsub(/^stat_/, '')] = v unless v.nil? || (v.respond_to?(:"nan?") && v.nan?) || (v.respond_to?(:"infinite?") && v.infinite?)
       }
 
       if @statistics[:succeeded].size == 0 && @statistics[:failed].size == 0
@@ -146,6 +146,10 @@ module Backlogs
 
     def stat_sizing_stddev
       return @hours_per_point_stddev
+    end
+
+    def stat_hours_per_point
+      return @hours_per_point
     end
   end
 
