@@ -192,7 +192,7 @@ module Backlogs
 
         values = [nil] * active_days.size
 
-        property = property.to_s
+        property_s = property.to_s
         case Backlogs.platform 
           when :redmine
             changes = JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
@@ -203,9 +203,18 @@ module Backlogs
             }
           when :chiliproject
             # the chiliproject changelog is screwed up beyond all reckoning...
-            changes = []
-            changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property].nil?}.collect{|j|
-              [j.created_at.to_date] + j.changes[property]
+            # a truly horrid journals design -- worse than RMs, and that takes some doing
+            # I know this should be using activerecord introspection, but someone else will have to go
+            # rummaging through the docs for self.class.reflect_on_association et al.
+            table = case property
+              when :status_id then 'issue_statuses'
+              else nil
+            end
+
+            valid_ids = table ? RbStory.connection.select_values("select id from #{table}").collect{|x| x.to_i} : nil
+            changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property_s].nil?}.collect{|j|
+              delta = valid_ids ? j.changes[property_s].collect{|v| valid_ids.include?(v) ? v : nil} : j.changes[property_s]
+              [j.created_at.to_date] + delta
             }
         end
 

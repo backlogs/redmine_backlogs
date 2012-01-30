@@ -166,7 +166,7 @@ if [ "$GEMSET" = "chiliproject" ]; then
     echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
     rm -rf ~/redmine/chiliproject
     cd ~/redmine
-    git clone https://github.com/chiliproject/chiliproject.git
+    git clone http://github.com/chiliproject/chiliproject.git
     cd ~/redmine/chiliproject
     git fetch --tags
     git checkout v$CPVERSION
