@@ -29,7 +29,7 @@ class RbTask < Issue
     end
     task.save!
 
-    raise "Not a valid block list" if is_impediment && !task.validate_blocks_list(blocks)
+    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks)
 
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
     task.update_blocked_list blocks.split(/\D+/) if is_impediment
