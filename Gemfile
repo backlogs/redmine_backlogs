@@ -5,7 +5,8 @@ gem "prawn", "~> 0.8.4"
 gem "holidays"
 gem "open-uri-cached"
 gem "nokogiri"
-gem "system_timer"
+
+gem "system_timer" if Backlogs.gems.include?('system_timer')
 
 gem "gherkin", "=2.6.8"
 gem "cucumber", "=1.1.2"

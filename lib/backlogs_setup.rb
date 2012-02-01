@@ -35,8 +35,17 @@ module Backlogs
   end
   module_function :platform_support
 
+  def os
+    return :windows if RUBY_PLATFORM =~ /cygwin|windows|mswin|mingw|bccwin|wince|emx/
+    return :unix if RUBY_PLATFORM =~ /darwin|linux/
+    return :java if RUBY_PLATFORM =~ /java/
+    return nil
+  end
+  module_function :os
+
   def gems
     installed = Hash[*(['system_timer', 'nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].collect{|gem| [gem, false]}.flatten)]
+    installed.delete('system_timer') unless os == :unix && RUBY_VERSION =~ /^1\.8\./
     installed.keys.each{|gem|
       begin
         require gem

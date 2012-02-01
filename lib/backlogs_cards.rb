@@ -8,7 +8,14 @@ require 'uri/common'
 require 'open-uri/cached'
 require 'zlib'
 require 'nokogiri'
-require 'system_timer'
+
+if Backlogs.gems.include?('system_timer')
+  require 'system_timer'
+  ReliableTimout = SystemTimer
+else
+  require 'timeout'
+  ReliableTimout = Timeout
+end
 
 class String
   def units_to_points
@@ -207,7 +214,7 @@ module BacklogsCards
 
     def image
       begin
-        SystemTimer.timeout_after(10) do
+        ReliableTimout.timeout(10) do
           return open(@url)
         end
       rescue
