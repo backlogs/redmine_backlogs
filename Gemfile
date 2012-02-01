@@ -6,10 +6,7 @@ gem "holidays"
 gem "open-uri-cached"
 gem "nokogiri"
 
-if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
-  gem "system_timer"
-end
-
+gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 gem "gherkin", "=2.6.8"
 gem "cucumber", "=1.1.2"
 gem "zentest-without-autotest"
