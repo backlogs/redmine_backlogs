@@ -1,3 +1,182 @@
+== 2012-02-01 v0.8.2
+
+* Only require system_timer for unix-1.8.x
+* fix many jslint problems
+
+== 2012-01-30 v0.8.1
+
+* ChiliProject fixes
+* Report Hours per point in statistics page. Be careful how you use this.
+
+== 2012-01-21 v0.8.0
+
+* Fixes for redmine group-assign
+* ChiliProject support
+
+== 2012-01-20 v0.7.9
+
+* Auto-set start date for tasks
+* Prelimenary ChiliProject support
+
+== 2012-01-19 v0.7.8
+* ie8/9 fixes
+* Fixed error for non-logged in users
+* Remove 'Not configured' message as soon as problem is corrected
+
+== 2012-01-16 v0.7.7
+
+* Opera fixes
+
+== 2012-01-16 v0.7.6
+
+* Fixed crash
+
+== 2012-01-16 v0.7.5
+
+* Fixed crash
+
+== 2012-01-16 v0.7.4
+
+* More graceful checking against bad installs
+
+== 2012-01-16 v0.7.3
+
+* Better error reporting for incomplete installs
+* Gem requirements updates
+* Support for offline installations
+* Card printing fixes
+
+== 2012-01-06 v0.7.2
+
+* Always show ideal in burndown
+* Fixes crash for stories with points
+* Merge pull request "Allowed burndown chart to include saturday and sunday" from pinglamb/burndown_include_sat_and_sun
+* Few changes to spanish translation from mauriciorivera
+* Auto assign task to current user when he/she changes the task status and the task is not assigned yet, configurable in setting page
+* Fixes for fractional story points
+
+== 2011-12-16 v0.7.1
+
+* Tests run again
+* Starting support for Redmine 1.3.0
+* Conflict with redmine hipchat plugin fixed
+* Trackers sorted by id when adding new story
+* Updated german language file from cgraumann
+* Add permission setting to disable remaining hours
+
+== 2011-12-04 v0.7.0
+
+* Fixing tooltips XSS from bohansen
+
+== 2011-12-02 v0.6.23
+
+* More stringent version checks
+* Fixes syntax error
+* Replaced 028 migration with proper sum ("Stories does not sum remaining hours")
+* Fixed crash on migration to latest version
+* migration to accompany "Stories does not sum remaining hours"
+
+== 2011-11-28 v0.6.22
+
+* Calendar tests finally run again
+
+== 2011-11-28 v0.6.21
+
+* Remaining hours sum again, calendar feed works again
+* Tests run again
+* Fixed "Burndown suddenly drops to zero points, hours"
+* Backlog sorting fixed
+* Hide button and select box on taskboard print-out from siegerv
+* Fixed estimated hours not set when creating task from bohansen
+* Hide the add new task button and project selection box on the print-out of the taskboard.
+* Fixed estimated hours not set when creating task
+* Fixed master backlogs performance when there are too many sprints. from walf443
+* Change story point color in taskboard. from alminium
+* Fixes "Update to v0.6.16 not working"
+* Language updates
+* Fixes "Error while printing burndown"
+* Fix for burndown resizing bug from darklin
+* Important performance fix from sauliusgrigaitis
+* Added missing index on Issues table postition field
+* Fixed sprint points calculation when adding story directly to sprint in backlogs view from bohansen
+* Fixes "Crash on migration to latest version"
+* Fixes "Scrum statistics tab missing despite permission enabled"
+
+== 2011-11-11 v0.6.20
+
+* Fixes "Scrum Statistics page doesn't load"
+* Fixes "Master Backlog positions always take position 1"
+* Javascript errors
+* Added defaults for burndown print size
+* Burndown print size customization from darklin
+* Validation of story description moved back to server from bohansen
+* Tests pass again
+
+== 2011-11-09 v0.6.19
+
+* Fixes "Crash on migration to latest version"
+* Fix for float story points total sum on masterbacklog from bohansen
+* Remove all hook rendering for "Error viewing issues after installing backlogs"
+* Fix for float story points total sum on masterbacklog.
+
+== 2011-11-06 v0.6.18
+
+* Story points with fractions
+* Creating a task caused error, fix from ekohl
+* Better cache management
+* Added storypoints field to product backlog from bohansen
+* Added tracker statistics tooltip on backlog view + fixed recalculation from bohansen
+
+== 2011-11-03 v0.6.17
+
+* Added tracker statistics tooltip on backlog view + fixed recalculation of story points when updating story.
+* Fix 500 error caused by the 'My page' block from dakota
+* Fix issue with internal error caused by my page block typo
+* Caching fixes
+* Fixes "Internal Error when try to open an issue where Story Point is setted"
+* Taskboard layout improvements from alminium,bohansen
+
+== 2011-10-31 v0.6.16
+
+* Fixes "Migrating to estimated hours => remaining hours"
+* Fixed decimal comma problem for remaining hours on taskboard from bohansen
+* Brush up master backlogs.
+
+== 2011-10-31 v0.6.15
+
+* All tests pass
+* fixed story subject is overflow from alminium
+* Improve ie support from alminium
+* update jquery 1.6.2 and jquery-ui 1.8.16 to fix IE dnd problem.
+* In taskboard, don't open task editor when move task.
+* adjust the status in master backlog for IE.
+* fixed dnd event handling.
+* German translation updated from sureal
+* Rebase to remaining_hours branch.
+* Fixed overflow story title on masterbacklogs.
+* fixed task dialog in taskboardd is transparent.
+* Fixed rb_variable_server/how.js.erb that cause http status 500 from floreal
+* special characters disappeared when stories are created via backlog page
+* fixed burndown chart.
+* fixed start end date order.
+* update Japanese translation.
+* Option to Not Show Burndown Chart on Sidebar
+* Points not resolved" regression
+
+== 2011-10-05 v0.6.14
+
+* update Japanese translation.
+* All tests pass again
+* Burndown fixes
+* Auto-tagger
+
+== 2011-09-29 v0.6.13
+* Fixes "auto-refresh rate is too fast" (but my heart goes out to you if your production server can't handle 1 request per second)
+* Fixes "Private issues is always shown in backlog lists"
+* Fixes "Template Error on Master Backlog"
+* Migration for "Display Error for Tasks and Their Sub-Tasks"
+* Force tasks to the task tracker (related to "Display Error for Tasks and Their Sub-Tasks")
+* update Japanese translations.
 == 2011-09-18 v0.6.11
 
 * various bugfixes
