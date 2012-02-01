@@ -13,8 +13,9 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     var update = RB.Factory.initialize(RB.Story, html);
     var target;
     var oldParent;
+    var stories;
     
-    if(RB.$('#story_' + update.getID()).length==0){
+    if(RB.$('#story_' + update.getID()).length===0){
       target = update;                                      // Create a new item
     } else {
       target = RB.$('#story_' + update.getID()).data('this');  // Re-use existing item
@@ -27,12 +28,12 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     if(previous.length > 0){
       target.$.insertAfter( RB.$('#story_' + previous) );
     } else {
-      if(target.$.find(".fixed_version_id").text().length==0){
+      if(target.$.find(".fixed_version_id").text().length===0){
         // Story belongs to the product backlog
-        var stories = RB.$('#product_backlog_container .backlog .stories');
+        stories = RB.$('#product_backlog_container .backlog .stories');
       } else {
         // Story belongs to a sprint backlog
-        var stories = RB.$('#sprint_' + target.$.find(".fixed_version_id").text()).siblings(".stories").first();
+        stories = RB.$('#sprint_' + target.$.find(".fixed_version_id").text()).siblings(".stories").first();
       }
       stories.prepend(target.$);
     }
@@ -40,13 +41,19 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     var _ = target.$.find('div.story_tooltip');
     _.qtip(jQuery.qtipMakeOptions(_));
 
-    if(oldParent!=null) oldParent.recalcVelocity();
+    if(oldParent!==null) {
+        oldParent.recalcVelocity();
+    }
     target.$.parents(".backlog").first().data('this').recalcVelocity();
 
     // Retain edit mode and focus if user was editing the
     // story before an update was received from the server    
-    if(target.$.hasClass('editing')) target.edit();
-    if(target.$.data('focus')!=null && target.$.data('focus').length>0) target.$.find("*[name=" + target.$.data('focus') + "]").focus();
+    if(target.$.hasClass('editing')) {
+        target.edit();
+    }
+    if(target.$.data('focus')!==null && target.$.data('focus').length>0) {
+        target.$.find("*[name=" + target.$.data('focus') + "]").focus();
+    }
         
     target.$.effect("highlight", { easing: 'easeInExpo' }, 4000);
   },
