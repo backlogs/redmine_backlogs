@@ -34,6 +34,10 @@ pt-BR:
   backlogs_task: Tarefas
   backlogs_task_tracker: "Seq\xC3\xBC\xC3\xAAncia da tarefa"
   backlogs_wiki_template: "Modelo para a p\xC3\xA1gina wiki sprint"
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: "Editar a p\xC3\xA1gina no wiki"
   comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"

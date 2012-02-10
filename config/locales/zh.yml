@@ -56,6 +56,10 @@ zh:
   backlogs_wiki_template: !binary |
     5Yay5Yi655qEd2lraemhtemdoueahOaooeadvw==
 
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: !binary |
     57yW6L6Rd2lraemhtemdog==
 

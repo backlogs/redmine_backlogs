@@ -34,6 +34,10 @@ es:
   backlogs_task: Tarea
   backlogs_task_tracker: Seguimiento de Tarea
   backlogs_wiki_template: "Plantilla para p\xC3\xA1gina de Spring"
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: Editar wiki
   comma_delimited_numbers: "N\xC3\xBAmeros delimitados por comas"
   current_open_story_points: "Puntos de la actual historia abierta:"
