@@ -66,6 +66,10 @@ ru:
     0KjQsNCx0LvQvtC9INC00LvRjyDRgdC/0YDQuNC90YLQsCDRgdGC0YDQsNC9
     0LjRhtGLIHdpa2k=
 
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: !binary |
     0KDQtdC00LDQutGC0LjRgNC+0LLQsNGC0Ywg0YHRgtGA0LDQvdC40YbRgyB3
     aWtp

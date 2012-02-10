@@ -36,6 +36,10 @@ fr:
 
   backlogs_task_tracker: "Tracker de t\xC3\xA2ches"
   backlogs_wiki_template: "Maquette pour page wiki de sc\xC3\xA9anario"
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: Modifier la page wiki
   comma_delimited_numbers: Nombres d\xC3\xA9limit\xC3\xA9s par des virgules
   current_open_story_points: "Points des sc\xC3\xA9narii ouverts :"

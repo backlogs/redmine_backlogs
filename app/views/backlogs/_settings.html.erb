@@ -121,12 +121,12 @@
 </p>
 
 <p>
-  <%= content_tag(:label, "Burndown print width") %>
+  <%= content_tag(:label, l(:backlogs_burndown_print_width)) %>
   <%= text_field_tag("settings[burndown_print_width]", Setting.plugin_redmine_backlogs[:burndown_print_width]) %>
 </p>
 
 <p>
-  <%= content_tag(:label, "Burndown print height") %>
+  <%= content_tag(:label, l(:backlogs_burndown_print_height)) %>
   <%= text_field_tag("settings[burndown_print_height]", Setting.plugin_redmine_backlogs[:burndown_print_height]) %>
 </p>
 
@@ -164,11 +164,11 @@
 </p>
 
 <p>
-  <%= content_tag(:label, "Auto assign task to current user") %>
+  <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
   <%= check_box_tag("settings[auto_assign_task]", 'enabled', Setting.plugin_redmine_backlogs[:auto_assign_task]) %>
 </p>
 
 <p>
-  <%= content_tag(:label, "Include Saturday and Sunday in Burndown") %>
+  <%= content_tag(:label, l(:backlogs_include_sat_and_sun)) %>
   <%= check_box_tag("settings[include_sat_and_sun]", 'enabled', Setting.plugin_redmine_backlogs[:include_sat_and_sun]) %>
 </p>

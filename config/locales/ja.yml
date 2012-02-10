@@ -35,6 +35,10 @@ ja:
   backlogs_task: "タスク"
   backlogs_task_tracker: "タスクとして利用のトラッカー"
   backlogs_wiki_template: "スプリントのテンプレートのWikiページ"
+  backlogs_burndown_print_width: バーンダウンの印刷の幅
+  backlogs_burndown_print_height: バーンダウンの印刷の高さ
+  backlogs_auto_assign_task: 現在のユーザにタスクを自動でアサイン
+  backlogs_include_sat_and_sun: 土曜と日曜をバーンダウンに含める
   button_edit_wiki: "Wikiページの編集"
   comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
   current_open_story_points: "現在オープンしているストーリーポイント:"
@@ -70,7 +74,7 @@ ja:
   field_time_entry_comments: コメント
   label_back_to_project: プロジェクトページへ戻る
   label_backlogs: バックログ
-  label_backlogs_unconfigured: "バックログが設定されていません。設定画面 %{administration} > %{plugins}, からリンク %{configure} をクリックして設定してください。フィールドを設定⑤、このページへ戻りツールを利用してください。"
+  label_backlogs_unconfigured: "バックログが設定されていません。設定画面 %{administration} > %{plugins}, からリンク %{configure} をクリックして設定してください。フィールドを設定後、このページへ戻りツールを利用してください。"
   label_burndown: バーンダウン
   label_chart_options: チャートオプション
   label_hours: 時間
@@ -79,7 +83,7 @@ ja:
   label_hours_required_burn_rate: 必要なバーンレート(時間)
   label_impediments: 残チケット
   label_master_backlog: マスターバックログ
-  label_not_prioritized: not prioritized
+  label_not_prioritized: 優先度が未設定
   label_points: ポイント
   label_points_accepted: アクセプトされたポイント
   label_points_burn_down: ダウン
@@ -109,7 +113,7 @@ ja:
   error_blank: "ブランクにできません"
   error_greater_than_start_date: "開始日より前にできません"
 
-  rb_label_link_to_original: "Include link to original story"
+  rb_label_link_to_original: "オリジナルのストーリーのリンクを含める"
   rb_label_copy_tasks: "タスクをコピー"
   rb_label_copy_tasks_none: "None"
   rb_label_copy_tasks_all: "全て"
@@ -183,15 +187,13 @@ ja:
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"
   warning_reset_sprint: |
-    YOU ARE ABOUT TO RESET THIS SPRINT!
+    このスプリントをリセットする際の注意！！
     
-    Are you sure you want to do this? Resetting the sprint
-    will have the following effects on stories and tasks:
+    本当にスプリントをリセットしますか? スプリントのリセットは
+    ストーリーとタスクに次の影響があります:
     
-    * Creation date will be set to the sprint start date
-    * ALL modifications to the stories and tasks except notes
-       will be DELETED
-    * The current value will become the initial value for all
-       story/task properties
-    * State will be set to the default issue state
+    * 作成日はスプリントの開始日に設定されます
+    * コメントを除いた全てのストーリーとタスクの変更は削除されます
+    * 現在の値は、全てのストーリーとタスクの初期値になります
+    * ステータスはチケットのデフォルトのステータスになります
 
