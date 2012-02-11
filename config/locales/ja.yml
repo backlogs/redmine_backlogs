@@ -135,6 +135,7 @@ ja:
   permission_update_impediments: "障害の更新"
   permission_subscribe_to_calendars: "カレンダーへの取り込み"
   permission_view_scrum_statistics: "スクラム統計の閲覧"
+  permission_update_remaining_hours: "残り時間の更新"
 
   # Tooltips
   story_description: "説明"
