@@ -81,8 +81,8 @@ module BacklogsCards
     attr_reader :paper_width, :paper_height, :paper_size
 
     def self.selected_label
-      return nil unless Setting.plugin_redmine_backlogs[:card_spec]
-      return LAYOUTS[Setting.plugin_redmine_backlogs[:card_spec]]
+      return nil unless Backlogs.setting[:card_spec]
+      return LAYOUTS[Backlogs.setting[:card_spec]]
     end
 
     def self.malformed(label)
@@ -191,13 +191,11 @@ module BacklogsCards
         YAML.dump(malformed_labels, dump)
       end
 
-      if Setting.plugin_redmine_backlogs[:card_spec] && ! LabelStock.selected_label && LAYOUTS.size != 0
+      if Backlogs.setting[:card_spec] && ! LabelStock.selected_label && LAYOUTS.size != 0
         # current label non-existant
         label = LAYOUTS.keys[0]
-        puts "Non-existant label stock '#{Setting.plugin_redmine_backlogs[:card_spec]}' selected, replacing with random '#{label}'"
-        s = Setting.plugin_redmine_backlogs
-        s[:card_spec] = label
-        Setting.plugin_redmine_backlogs = s
+        puts "Non-existant label stock '#{Backlogs.setting[:card_spec]}' selected, replacing with random '#{label}'"
+        Backlogs.setting[:card_spec] = label
       end
     end
   end
@@ -400,7 +398,7 @@ module BacklogsCards
       @cards = 0
 
       
-      case Setting.plugin_redmine_backlogs[:taskboard_card_order]
+      case Backlogs.setting[:taskboard_card_order]
         when 'tasks_follow_story'
           stories.each { |story| 
             add(story)

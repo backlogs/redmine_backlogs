@@ -10,7 +10,7 @@ if (RB.constants == null) {
     request_forgery_protection_token: '<%= request_forgery_protection_token %>',
     form_authenticity_token: '<%= form_authenticity_token %>',
     <%
-      autorefresh_wait = Setting.plugin_redmine_backlogs[:autorefresh_wait].to_s
+      autorefresh_wait = Backlogs.setting[:autorefresh_wait].to_s
       autorefresh_wait = '1000' if autorefresh_wait.blank?
       autorefresh_wait = '1000' unless autorefresh_wait =~ /^[0-9]+$/
       autorefresh_wait = Integer(autorefresh_wait)

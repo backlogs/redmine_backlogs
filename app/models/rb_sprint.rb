@@ -140,7 +140,7 @@ class RbSprint < Version
   def find_wiki_template
     projects = [self.project] + self.project.ancestors
 
-    template = Setting.plugin_redmine_backlogs[:wiki_template]
+    template = Backlogs.setting[:wiki_template]
     if template =~ /:/
       p, template = *template.split(':', 2)
       projects << Project.find(p)
@@ -189,7 +189,7 @@ class RbSprint < Version
       raise "Unexpected day range '#{cutoff.inspect}'"
     end
 
-    if Setting.plugin_redmine_backlogs[:include_sat_and_sun]
+    if Backlogs.setting[:include_sat_and_sun]
       return d.to_a
     else
       # mon-fri are working days, sat-sun are not
@@ -203,7 +203,7 @@ class RbSprint < Version
     dpp = self.project.scrum_statistics.info[:average_days_per_point]
     return nil if !dpp
 
-    derived_days = if Setting.plugin_redmine_backlogs[:include_sat_and_sun]
+    derived_days = if Backlogs.setting[:include_sat_and_sun]
                      Integer(self.points * dpp)
                    else
                      # 5 out of 7 are working days
@@ -229,7 +229,7 @@ class RbSprint < Version
   def burndown(direction=nil)
     return nil if not self.has_burndown? || !self.is_story?
 
-    direction ||= Setting.plugin_redmine_backlogs[:points_burn_direction]
+    direction ||= Backlogs.setting[:points_burn_direction]
     direction = 'down' if direction != 'up'
 
     @burndown ||= {'up' => nil, 'down' => nil}

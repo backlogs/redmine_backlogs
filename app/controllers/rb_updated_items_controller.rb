@@ -7,7 +7,7 @@ class RbUpdatedItemsController < RbApplicationController
   # params[:only] limits the types of models that the method
   # should return
   def show
-    @settings = Setting.plugin_redmine_backlogs
+    @settings = Backlogs.settings
     only  = (params[:only] ? params[:only].split(/, ?/).map{|v| v.to_sym} : [:sprints, :stories, :tasks, :impediments])
     @items = HashWithIndifferentAccess.new
     @include_meta = true

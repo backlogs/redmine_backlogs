@@ -23,9 +23,8 @@ namespace :redmine do
       puts Backlogs.platform_support(true)
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
-      settings = Setting.plugin_redmine_backlogs
-      settings[:points_burn_direction] ||= 'down'
-      settings[:wiki_template]         ||= ''
+      Backlogs.setting[:points_burn_direction] ||= 'down'
+      Backlogs.setting[:wiki_template] ||= ''
 
       puts "\n"
       puts "====================================================="
@@ -48,12 +47,12 @@ namespace :redmine do
           FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
         end
       end
-      settings[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
+      Backlogs.setting[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
 
       trackers = Tracker.find(:all)
 
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
-        settings[:story_trackers] = ENV['story_trackers'].split(',').collect{|n| Tracker.find_by_name(n).id }
+        Backlogs.setting[:story_trackers] = ENV['story_trackers'].split(',').collect{|n| Tracker.find_by_name(n).id }
       else
         if RbStory.trackers.length == 0
           puts "Configuring story and task trackers..."
@@ -89,22 +88,22 @@ namespace :redmine do
             end
           end
 
-          settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
+          Backlogs.setting[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
         end
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
-        settings[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
+        Backlogs.setting[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
       else
         if !RbTask.tracker
           # Check if there is at least one tracker available
           puts "-----------------------------------------------------"
-          if settings[:story_trackers].length < trackers.length
+          if Backlogs.setting[:story_trackers].length < trackers.length
             invalid = true
             while invalid
               # If there's at least one, ask the user to pick one
               puts "Which tracker do you want to use for your tasks?"
-              available_trackers = trackers.select{|t| !settings[:story_trackers].include? t.id}
+              available_trackers = trackers.select{|t| !Backlogs.setting[:story_trackers].include? t.id}
               j = 0
               available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
               # puts "  #{ j + 1 }. <<new>>"
@@ -117,7 +116,7 @@ namespace :redmine do
                 print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
                 STDOUT.flush
                 if (STDIN.gets.chomp!).match("y")
-                  settings[:task_tracker] = available_trackers[selection.first.to_i-1].id
+                  Backlogs.setting[:task_tracker] = available_trackers[selection.first.to_i-1].id
                   invalid = false
                 end
               # elsif selection.length == 0 or selection.first.to_i == j + 1
@@ -140,9 +139,6 @@ namespace :redmine do
         end
       end
 
-      # Necessary because adding key-value pairs one by one doesn't seem to work
-      Setting.plugin_redmine_backlogs = settings
-      
       puts "Story and task trackers are now set."
       
       print "Migrating the database..."

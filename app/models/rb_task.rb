@@ -4,7 +4,7 @@ class RbTask < Issue
   unloadable
 
   def self.tracker
-    task_tracker = Setting.plugin_redmine_backlogs[:task_tracker]
+    task_tracker = Backlogs.setting[:task_tracker]
     return nil if task_tracker.blank?
     return Integer(task_tracker)
   end
@@ -71,7 +71,7 @@ class RbTask < Issue
     # 1. the task is not assigned to anyone yet
     # 2. task status changed (i.e. Updating task name or remaining hours won't assign task to user)
     # Can be enabled/disabled in setting page
-    if Setting.plugin_redmine_backlogs[:auto_assign_task] && self.assigned_to_id.blank? && (self.status_id != params[:status_id].to_i)
+    if Backlogs.setting[:auto_assign_task] && self.assigned_to_id.blank? && (self.status_id != params[:status_id].to_i)
       attribs[:assigned_to_id] = User.current.id
     end
 

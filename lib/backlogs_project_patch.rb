@@ -70,7 +70,7 @@ module Backlogs
 
     def self.active_tests
       # test this!
-      return Statistics.instance_methods.select{|m| m =~ /^test_/}.reject{|m| Setting.plugin_redmine_backlogs["disable_stats_#{m}".intern] }
+      return Statistics.instance_methods.select{|m| m =~ /^test_/}.reject{|m| Backlogs.setting["disable_stats_#{m}".intern] }
     end
 
     def self.active

@@ -76,7 +76,7 @@
       :project_id => project.id,
       :sprint_id => sprint.id
       }) %><br/>
-  <% if Setting.plugin_redmine_backlogs[:show_burndown_in_sidebar] == 'enabled' %>
+  <% if Backlogs.setting[:show_burndown_in_sidebar] == 'enabled' %>
     <%= render :partial => "rb_burndown_charts/burndown", :locals => {:sprint => sprint, :mode => :minimal, :style => 'margin-left:0px; margin-top:20px; width:250px; height:192px;' } %>
   <% end %>
 <% end %>

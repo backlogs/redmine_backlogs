@@ -1,4 +1,6 @@
 require 'rubygems'
+require 'yaml'
+require 'singleton'
 
 module Backlogs
   def version
@@ -100,4 +102,41 @@ module Backlogs
     return @platform
   end
   module_function :platform
+
+  class SettingsProxy
+    include Singleton
+
+    def [](key)
+      return safe_load[key]
+    end
+
+    def []=(key, value)
+      settings = safe_load
+      settings[key] = value
+      Setting.plugin_redmine_backlogs = settings
+    end
+
+    def to_h
+      h = safe_load
+      h.freeze
+      h
+    end
+
+    private
+
+    def safe_load
+      settings = Setting.plugin_redmine_backlogs.dup
+      settings = YAML::load(settings) if settings.is_a?(String)
+      settings
+    end
+  end
+  
+  def setting
+    SettingsProxy.instance
+  end
+  module_function :setting
+  def settings
+    SettingsProxy.instance.to_h
+  end
+  module_function :settings
 end

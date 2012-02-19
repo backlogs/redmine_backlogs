@@ -104,7 +104,7 @@ class RbStory < Issue
       # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
       trackers = []
       if ActiveRecord::Base.connection.tables.include?('settings')
-        trackers = Setting.plugin_redmine_backlogs[:story_trackers]
+        trackers = Backlogs.setting[:story_trackers]
         trackers = [] if trackers.blank?
       end
 

@@ -7,7 +7,7 @@ class RbTaskboardsController < RbApplicationController
     stories = @sprint.stories
     @story_ids    = stories.map{|s| s.id}
 
-    @settings = Setting.plugin_redmine_backlogs
+    @settings = Backlogs.settings
 
     ## determine status columns to show
     tracker = Tracker.find_by_id(RbTask.tracker)

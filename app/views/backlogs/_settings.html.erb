@@ -93,13 +93,13 @@
             options_for_select([
                     [l(:label_points_burn_up), 'up'],
                     [l(:label_points_burn_down), 'down']
-                ], Setting.plugin_redmine_backlogs[:points_burn_direction])) %>
+                ], Backlogs.setting[:points_burn_direction])) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_card_specification)) %>
   <% if Backlogs.gems.values.reject{|installed| installed}.size == 0 %>
-    <%= select_tag("settings[card_spec]", options_for_select(BacklogsCards::LabelStock::LAYOUTS.keys.sort.collect{|label| [label, label]}, Setting.plugin_redmine_backlogs[:card_spec])) %>
+    <%= select_tag("settings[card_spec]", options_for_select(BacklogsCards::LabelStock::LAYOUTS.keys.sort.collect{|label| [label, label]}, Backlogs.setting[:card_spec])) %>
   <% else %>
     <b>Please install all required gems</b>
   <% end %>
@@ -112,39 +112,39 @@
                     [l(:rb_task_cards_story_follows_tasks), 'story_follows_tasks'],
                     [l(:rb_task_cards_tasks_follow_story), 'tasks_follow_story'],
                     [l(:rb_task_cards_stories_then_tasks), 'stories_then_tasks']
-                ], Setting.plugin_redmine_backlogs[:taskboard_card_order])) %>
+                ], Backlogs.setting[:taskboard_card_order])) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_wiki_template)) %>
-  <%= text_field_tag("settings[wiki_template]", Setting.plugin_redmine_backlogs[:wiki_template]) %>
+  <%= text_field_tag("settings[wiki_template]", Backlogs.setting[:wiki_template]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_burndown_print_width)) %>
-  <%= text_field_tag("settings[burndown_print_width]", Setting.plugin_redmine_backlogs[:burndown_print_width]) %>
+  <%= text_field_tag("settings[burndown_print_width]", Backlogs.setting[:burndown_print_width]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_burndown_print_height)) %>
-  <%= text_field_tag("settings[burndown_print_height]", Setting.plugin_redmine_backlogs[:burndown_print_height]) %>
+  <%= text_field_tag("settings[burndown_print_height]", Backlogs.setting[:burndown_print_height]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
-	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Setting.plugin_redmine_backlogs[:timelog_from_taskboard]) %>
+	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:rb_show_burndown_in_sidebar)) %>
-	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',Setting.plugin_redmine_backlogs[:show_burndown_in_sidebar]) %>
+	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',Backlog.setting[:show_burndown_in_sidebar]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:field_story_points)) %>
   <%= l(:comma_delimited_numbers) %><br>
   <%= l(:use_free_text_if_empty) %><br>
-  <%= text_field_tag("settings[story_points]", Setting.plugin_redmine_backlogs[:story_points]) %>
+  <%= text_field_tag("settings[story_points]", Backlog.setting[:story_points]) %>
 </p>
 
 <p>
@@ -155,20 +155,20 @@
                     ['10', '10000'],
                     ['30', '30000'],
                     ['60', '60000'],
-                ], Setting.plugin_redmine_backlogs[:autorefresh_wait])) %>
+                ], Backlog.setting[:autorefresh_wait])) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:label_hide_completed_sprints)) %>
-  <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Setting.plugin_redmine_backlogs[:disable_closed_sprints_to_master_backlogs]) %>
+  <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Backlogs.setting[:disable_closed_sprints_to_master_backlogs]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
-  <%= check_box_tag("settings[auto_assign_task]", 'enabled', Setting.plugin_redmine_backlogs[:auto_assign_task]) %>
+  <%= check_box_tag("settings[auto_assign_task]", 'enabled', Backlog.setting[:auto_assign_task]) %>
 </p>
 
 <p>
   <%= content_tag(:label, l(:backlogs_include_sat_and_sun)) %>
-  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled', Setting.plugin_redmine_backlogs[:include_sat_and_sun]) %>
+  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled', Backlog.setting[:include_sat_and_sun]) %>
 </p>
