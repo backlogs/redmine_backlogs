@@ -130,6 +130,7 @@ module Backlogs
         Setting.connection.execute("select value from settings where name = 'plugin_redmine_backlogs'").each{|v| settings = v}
         settings = YAML::load(settings)
       end
+      raise "Unable to load settings" if settings.is_a?(String)
       settings
     end
   end
