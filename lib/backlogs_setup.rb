@@ -126,7 +126,11 @@ module Backlogs
 
     def safe_load
       settings = Setting.plugin_redmine_backlogs.dup
-      settings = YAML::load(settings) if settings.is_a?(String)
+      if settings.is_a?(String)
+        Setting.clear_cache
+        settings = Setting.plugin_redmine_backlogs.dup
+      end
+      raise "Unable to load settings" if settings.is_a?(String)
       settings
     end
   end
