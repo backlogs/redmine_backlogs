@@ -1,5 +1,5 @@
 begin
-  if RUBY_VERSION =~ /^1\.9\./
+  if RUBY_VERSION >= '1.9'
     raise LoadError
   end
 
