@@ -90,12 +90,13 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install nokogiri
 
       # dev & testing
-      gem install gherkin -v=2.6.8
-      gem install -v=1.1.2 cucumber
+      gem install gherkin -v=2.8.0
+      gem install -v=1.1.8 cucumber
       #gem install zentest-without-autotest
       gem install ZenTest -v=4.6.0
       gem install -v=1.3.1 rspec
       gem install -v=0.3.2 cucumber-rails
+      gem install -v=0.2.15 culerity
       gem install capybara -v=0.3.9
       gem install spork
       gem install database_cleaner
@@ -107,7 +108,7 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install thin
 
       # cucumber-rails pulls in an unnecesary gherkin
-      eval `ruby -e "require 'rubygems'; puts Gem.cache.find_name('gherkin').reject{|x| x.version.version == '2.6.8'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+      eval `ruby -e "require 'rubygems'; puts Gem.cache.find_name('gherkin').reject{|x| x.version.version == '2.8.0'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
     fi
 
     if [[ "$GEMSET" = "chiliproject" ]]; then
