@@ -19,7 +19,8 @@ group :development do
   gem "database_cleaner"
   gem "gherkin", "=2.6.8"
   gem "spork"
-  gem "rcov"
+  gem "rcov" if RUBY_VERSION =~ /^1\.8\./
+  gem "simplecov" if RUBY_VERSION =~ /^1\.9\./
   gem "redgreen"
   gem "rspec", "=1.3.1"
   gem "rspec-rails", "=1.3.3"
