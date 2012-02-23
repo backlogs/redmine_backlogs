@@ -7,20 +7,21 @@ gem "open-uri-cached"
 gem "prawn"
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
+# development gems, sorted alphabetically
 group :development do
+  gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
+  gem 'autotest-rails'
   gem "capybara", "=0.3.9"
   gem "cucumber", "=1.1.2"
   gem "database_cleaner"
   gem "gherkin", "=2.6.8"
-  gem "spork"
-  gem "rcov" if RUBY_VERSION =~ /^1\.8\./
-  gem "simplecov" if RUBY_VERSION =~ /^1\.9\./
   gem "redgreen"
   gem "rspec", "=1.3.1"
   gem "rspec-rails", "=1.3.3"
+  gem (RUBY_VERSION >= "1.9" ? "simplecov" : "rcov")
+  gem "spork"
   gem "timecop"
   gem "thin"
-  gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'cucumber-rails', '=0.3.2'
-  gem 'autotest-rails'
 end
+
