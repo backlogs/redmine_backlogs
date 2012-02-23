@@ -7,14 +7,6 @@ gem "open-uri-cached"
 gem "prawn"
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
-group :mysql do
-  gem "mysql"
-end
-
-group :postgresql do
-  gem "pg"
-end
-
 group :development do
   gem "capybara", "=0.3.9"
   gem "cucumber", "=1.1.2"
@@ -28,6 +20,7 @@ group :development do
   gem "rspec-rails", "=1.3.3"
   gem "timecop"
   gem "thin"
-  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
-  gem 'guard-cucumber'
+  gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
+  gem 'cucumber-rails', '=0.3.2'
+  gem 'autotest-rails'
 end
