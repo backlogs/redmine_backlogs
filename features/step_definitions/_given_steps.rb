@@ -360,6 +360,7 @@ end
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
   visit url_for(:controller => 'rb_hooks_render',
                 :action=>'view_issues_sidebar',
+                :project_id => @project,
                 :sprint_id => RbSprint.find_by_name(name).id,
                 :only_path => true)
   assert_page_loaded(page)
