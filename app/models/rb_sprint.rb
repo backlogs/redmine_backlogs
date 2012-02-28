@@ -92,9 +92,20 @@ class RbSprint < Version
     errors.add_to_base("Sprint cannot end before it starts") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
 
-  def self.open_sprints(project_id)
-    return Project.find(project_id).shared_versions.open.scoped(:order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+  def self.rb_scope(symbol, func)
+    if Rails::VERSION::MAJOR < 3
+      named_scope symbol, func
+    else
+      scope symbol, func
+    end
   end
+
+  rb_scope :open_sprints, lambda { |project|
+    {
+      :order => 'sprint_start_date ASC, effective_date ASC',
+      :conditions => [ "status = 'open' and project_id = ?", project.id ]
+    }
+  }
 
   #TIB ajout du scope :closed_sprints
   rb_scope :closed_sprints, lambda { |project|
