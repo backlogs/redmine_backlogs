@@ -1,4 +1,8 @@
 begin
+  if RUBY_VERSION >= '1.9'
+    raise LoadError
+  end
+
   require 'cucumber/rake/task' #I have to add this
   
   namespace :redmine do

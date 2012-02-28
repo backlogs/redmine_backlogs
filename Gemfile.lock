@@ -1,0 +1,98 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    Ascii85 (1.0.1)
+    ZenTest (4.5.0)
+    autotest-rails (4.1.2)
+      ZenTest (~> 4.5)
+    builder (3.0.0)
+    capybara (0.3.9)
+      culerity (>= 0.2.4)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      selenium-webdriver (>= 0.0.3)
+    childprocess (0.3.1)
+      ffi (~> 1.0.6)
+    cucumber (1.1.2)
+      builder (>= 2.1.2)
+      diff-lcs (>= 1.1.2)
+      gherkin (~> 2.6.2)
+      json (>= 1.4.6)
+      term-ansicolor (>= 1.0.6)
+    cucumber-rails (0.3.2)
+      cucumber (>= 0.8.0)
+    culerity (0.2.15)
+    daemons (1.1.8)
+    database_cleaner (0.7.1)
+    diff-lcs (1.1.3)
+    eventmachine (0.12.10)
+    ffi (1.0.11)
+    gherkin (2.6.8)
+      json (>= 1.4.6)
+    holidays (1.0.3)
+    icalendar (1.1.6)
+    json (1.6.5)
+    json_pure (1.6.5)
+    mime-types (1.17.2)
+    multi_json (1.1.0)
+    nokogiri (1.5.0)
+    open-uri-cached (0.0.5)
+    pdf-reader (1.0.0)
+      Ascii85 (~> 1.0.0)
+      ruby-rc4
+    prawn (0.12.0)
+      pdf-reader (>= 0.9.0)
+      ttfunk (~> 1.0.2)
+    rack (1.4.1)
+    rack-test (0.6.1)
+      rack (>= 1.0)
+    redgreen (1.2.2)
+    rspec (1.3.1)
+    rspec-rails (1.3.3)
+      rack (>= 1.0.0)
+      rspec (= 1.3.1)
+    ruby-rc4 (0.1.5)
+    rubyzip (0.9.6.1)
+    selenium-webdriver (2.13.0)
+      childprocess (>= 0.2.1)
+      ffi (~> 1.0.9)
+      json_pure
+      rubyzip
+    simplecov (0.6.0)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.5.3)
+    simplecov-html (0.5.3)
+    spork (0.9.0)
+    term-ansicolor (1.0.7)
+    thin (1.3.1)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
+    timecop (0.3.5)
+    ttfunk (1.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ZenTest (= 4.5.0)
+  autotest-rails
+  capybara (= 0.3.9)
+  cucumber (= 1.1.2)
+  cucumber-rails (= 0.3.2)
+  database_cleaner
+  gherkin (= 2.6.8)
+  holidays (= 1.0.3)
+  icalendar
+  nokogiri
+  open-uri-cached
+  prawn
+  redgreen
+  rspec (= 1.3.1)
+  rspec-rails (= 1.3.3)
+  simplecov
+  spork
+  thin
+  timecop
