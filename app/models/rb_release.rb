@@ -82,7 +82,7 @@ class ReleaseBurndown
 end
 
 class RbRelease < ActiveRecord::Base
-  set_table_name 'releases'
+  self.table_name = 'releases'
 
   unloadable
 
