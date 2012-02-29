@@ -203,13 +203,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
   def users_allowed_to_log_on_task
-    users = User.find(:all)
-    collection = []
-    users.each do |a|
-      roles = a.roles_for_project(@project)
-      collection << [a.name, a.id] if roles and roles.detect {|role| role.member? && role.allowed_to?(:log_time)}
-    end
-    collection
+    @project.memberships.collect{|m|
+      user = m.user
+      roles = user.roles_for_project(@project)
+      roles && roles.detect {|role| role.member? && role.allowed_to?(:log_time)} ? [user.name, user.id] : nil
+    }.compact
   end
 
   def tidy(html)
