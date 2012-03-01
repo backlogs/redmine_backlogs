@@ -20,7 +20,7 @@ module Backlogs
         if request.post? && flash[:notice] == l(:notice_account_updated)
           color = (params[:backlogs] ? params[:backlogs][:task_color] : '').to_s
           if color == '' || color.match(/^#[A-Fa-f0-9]{6}$/)
-            User.current.backlogs_preference(:task_color, color)
+            User.current.backlogs_preference[:task_color] = color
           else
             flash[:notice] = "Invalid task color code #{color}"
           end

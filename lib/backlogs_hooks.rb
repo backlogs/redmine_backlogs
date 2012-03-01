@@ -187,7 +187,7 @@ module BacklogsPlugin
             <div class="box tabular">
             <p>
               #{label :backlogs, :task_color}
-              #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference(:task_color)}
+              #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference[:task_color]}
             </p>
             </div>
           }
