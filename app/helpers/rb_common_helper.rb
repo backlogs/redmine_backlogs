@@ -205,7 +205,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def users_allowed_to_log_on_task
     @project.memberships.collect{|m|
       user = m.user
-      roles = user.roles_for_project(@project)
+      roles = user ? user.roles_for_project(@project) : nil
       roles && roles.detect {|role| role.member? && role.allowed_to?(:log_time)} ? [user.name, user.id] : nil
     }.compact
   end
