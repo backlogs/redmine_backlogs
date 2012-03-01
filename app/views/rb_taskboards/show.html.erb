@@ -31,25 +31,36 @@
   <table id="board_header" cellspacing="0">
     <tr>
       <td><%= l(:backlogs_story) %></td>
-      <%- @statuses.each do |status| %>
+<%-
+    @statuses.each do |status|
+%>
       <td class="swimlane"><%= h status.name %></td>
-      <%- end %>
+<%-
+    end
+%>
     </tr>
   </table>
 
   <table id="impediments" class="board" cellspacing="0">
     <tr>
       <td><div class="label_sprint_impediments"><span class="add_new"><img src="../../images/add.png" alt="+" /></span><%= l(:label_sprint_impediments) %></div></td>
-      <%- @statuses.each do |status| %>
+<%-
+    impediments = @sprint.impediments
+    @statuses.each do |status|
+%>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
-        <%= render :partial => "rb_impediments/impediment", :collection => @sprint.impediments.select{|impediment| impediment.status_id==status.id} %>
+        <%= render :partial => "rb_impediments/impediment", :collection => impediments.select{|impediment| impediment.status_id==status.id} %>
       </td>
-      <%- end %>
+<%-
+    end
+%>
     </tr>
   </table>
 
   <table id="tasks" class="board" cellspacing="0">
-    <%- @sprint.stories.each do |story| %>  
+<%-
+    @sprint.stories.each do |story|
+%>
     <tr>
       <td>
         <div class="story <%= mark_if_closed(story) %>" style="<%= build_inline_style_color(story) %>">
@@ -62,28 +73,41 @@
           <%- if @project != story.project %>
             <div class="id project">
               <span class="t"><%= h story.project %></span>
-              <span class="v"><%= story.project.id %></span>
+              <span class="v"><%= story.project_id %></span>
             </div>
           <%- end %>
           <div class="story_points editable" fieldname="story_points" fieldlabel="<%=l(:field_story_points)%>"><%= story.story_points %></div>
         </div>
       </td>
-      <%- @statuses.each do |status| %>
+<%-
+      descendants = story.descendants
+      @statuses.each do |status|
+%>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>">
-        <%= render :partial => "rb_tasks/task", :collection => story.descendants.select{|task| task.status.id==status.id} %>
+        <%= render :partial => "rb_tasks/task", :collection => descendants.select{|task| task.status.id==status.id} %>
       </td>
-      <%- end %>
+<%-
+      end
+%>
     </tr>
-    <%- end %>
+<%-
+    end
+%>
   </table>
 </div>
-<%- end %>
+<%-
+  end
+%>
 
 <%- content_for :helpers do %>
   <select class="time_entry_user_id template" id="time_entry_user_id_options">
-    <%- users_allowed_to_log_on_task.each do |u| %>
+<%-
+    users_allowed_to_log_on_task.each do |u|
+%>
       <option value="<%= u[1] %>"><%= u[0] %></option>
-    <%- end %>
+<%-
+    end
+%>
   </select>
 
   <select class="priority_id template" id="priority_id_options">
@@ -94,9 +118,24 @@
 
   <select class="assigned_to_id template" id="assigned_to_id_options">
     <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
-    <%- @project.members.each do |member| %>
-    <option value="<%= member.user_id %>" color="<%= member.user.backlogs_preference(:task_color) %>" color_light="<%= Backlogs::Color.new(member.user.backlogs_preference(:task_color)).lighten(0.5) %>"><%= h member.name %></option>
-    <%- end %>
+<%-
+    member_colors = {}
+    member_colors_lights = {}
+    @project.members.each do |member|
+      member_color = member_colors[member.user_id]
+      if member_color.nil?
+        member_color =                         member.user.backlogs_preference(:task_color)
+        member_color_light =                   Backlogs::Color.new(member_color).lighten(0.5)
+        member_colors[member.user_id] =        member_color
+        member_colors_lights[member.user_id] = member_color_light
+      else
+        member_color_light = member_colors_lights[member.user_id]
+      end 
+%>
+    <option value="<%= member.user_id %>" color="<%= member_color %>" color_light="<%= member_color_light %>"><%= h member.name %></option>
+<%-
+    end
+%>
   </select>
   <div id="task_template">
     <%= render :partial => "rb_tasks/task", :object => RbTask.new %>
