@@ -179,8 +179,8 @@ class RbTask < Issue
     if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
       @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
       # Make sure user has permission to edit time entries to allow 
-      # logging time for other users
-      if User.current.allowed_to?(:edit_time_entries, self.project)
+      # logging time for other users. Use current user in case none is selected
+      if User.current.allowed_to?(:edit_time_entries, self.project) && params[:time_entry_user_id].to_i != 0
         @time_entry.user_id = params[:time_entry_user_id]
       else
         # Otherwise log time for current user
