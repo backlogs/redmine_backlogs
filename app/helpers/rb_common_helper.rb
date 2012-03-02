@@ -207,7 +207,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       user = m.user
       roles = user ? user.roles_for_project(@project) : nil
       roles && roles.detect {|role| role.member? && role.allowed_to?(:log_time)} ? [user.name, user.id] : nil
-    }.compact
+    }.compact.insert(0,["",0]) # Add blank entry
   end
 
   def tidy(html)
