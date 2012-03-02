@@ -7,20 +7,21 @@ class RbStoriesController < RbApplicationController
   include BacklogsCards
   
   def index
-    cards = nil
+    if ! LabelStock.selected_label
+      render :text => "No label stock selected. How did you get here?", :status => 500
+      return
+    end
+
     begin
       cards = Cards.new(params[:sprint_id] ? @sprint.stories : RbStory.product_backlog(@project), params[:sprint_id], current_language)
     rescue Prawn::Errors::CannotFit
-      cards = nil
+      render :text => "There was a problem rendering the cards. A possible error could be that the selected font exceeds a render box", :status => 500
+      return
     end
 
     respond_to do |format|
       format.pdf {
-        if cards
-          send_data(cards.pdf.render, :disposition => 'attachment', :type => 'application/pdf')
-        else
-          render :text => "There was a problem rendering the cards. A possible error could be that the selected font exceeds a render box", :status => 500
-        end
+        send_data(cards.pdf.render, :disposition => 'attachment', :type => 'application/pdf')
       }
     end
   end
@@ -43,8 +44,6 @@ class RbStoriesController < RbApplicationController
 
   def update
     story = RbStory.find(params[:id])
-    YAML::dump(story)
-    YAML::dump(params)
     begin
       result = story.update_and_position!(params)
     rescue => e

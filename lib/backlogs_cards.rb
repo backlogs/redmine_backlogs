@@ -22,7 +22,7 @@ class String
     return Float(self) if self =~/[0-9]$/
 
     m = self.match(/^([^a-z\s]+)\s*([a-z]+)$/)
-    raise "No units found for #{self}" unless m
+    raise "No units found for #{self.inspect}" unless m
 
     value = Float(m[1])
     case m[2]
