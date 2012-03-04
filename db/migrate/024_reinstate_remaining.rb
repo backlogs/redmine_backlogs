@@ -25,7 +25,7 @@ class ReinstateRemaining < ActiveRecord::Migration
 
       execute "update issues set created_on = updated_on where created_on is NULL"
 
-      projects = Project.all.select{|p| p.module_enabled?('backlogs')}.collect{|p| p.id }
+      projects = Project.all.select{|p| Backlogs.configured?(p)}.collect{|p| p.id }
       trackers = (RbStory.trackers + [RbTask.tracker]).compact
 
       throw :done if trackers.size == 0 || projects.size == 0

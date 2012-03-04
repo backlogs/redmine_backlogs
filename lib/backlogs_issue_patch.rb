@@ -23,7 +23,7 @@ module Backlogs
     module InstanceMethods
       def move_to_project_without_transaction_with_autolink(new_project, new_tracker = nil, options = {})
         newissue = move_to_project_without_transaction_without_autolink(new_project, new_tracker, options)
-        return newissue if newissue.blank? || !self.project.module_enabled?('backlogs')
+        return newissue if newissue.blank? || !Backlogs.configured?(self.project)
 
         if project_id == newissue.project_id and is_story? and newissue.is_story? and id != newissue.id
           relation = IssueRelation.new :relation_type => IssueRelation::TYPE_DUPLICATES
@@ -103,7 +103,7 @@ module Backlogs
       end
 
       def backlogs_before_save
-        if project.module_enabled?('backlogs') && (self.is_task? || self.story)
+        if Backlogs.configured?(project) && (self.is_task? || self.story)
           self.remaining_hours ||= self.estimated_hours
           self.estimated_hours ||= self.remaining_hours
 
@@ -127,7 +127,7 @@ module Backlogs
         ## care of this, but appearantly neither root_id nor
         ## parent_id are set at that point
 
-        return unless self.project.module_enabled? 'backlogs'
+        return unless Backlogs.configured?(self.project)
 
         if self.is_story?
           # raw sql and manual journal here because not

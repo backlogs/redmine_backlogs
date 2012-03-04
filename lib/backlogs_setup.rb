@@ -83,9 +83,10 @@ module Backlogs
   end
   module_function :task_workflow
 
-  def configured?
+  def configured?(project=nil)
     return false if Backlogs.gems.values.reject{|installed| installed}.size > 0
     return false if Backlogs.trackers.values.reject{|configured| configured}.size > 0
+    return false unless project.nil? || project.enabled_module_names.include?("backlogs")
     return true
   end
   module_function :configured?

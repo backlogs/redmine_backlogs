@@ -15,7 +15,7 @@ module BacklogsPlugin
           project = context[:project]
   
           return '' unless project && !project.blank?
-          return '' unless project.module_enabled?('backlogs')
+          return '' unless Backlogs.configured?(project)
   
           sprint_id = nil
   
@@ -63,7 +63,7 @@ module BacklogsPlugin
         begin
           issue = context[:issue]
   
-          return '' unless issue.project.module_enabled? 'backlogs'
+          return '' unless Backlogs.configured?(issue.project)
   
           snippet = ''
   
@@ -91,7 +91,7 @@ module BacklogsPlugin
           snippet = ''
           issue = context[:issue]
   
-          return '' unless issue.project.module_enabled?('backlogs')
+          return '' unless backlogs.configured?(issue.project)
   
           #project = context[:project]
   
@@ -152,7 +152,7 @@ module BacklogsPlugin
           version = context[:version]
           project = version.project
   
-          return '' unless project.module_enabled? 'backlogs'
+          return '' unless Backlogs.configured?(project)
   
           snippet = ''
   
@@ -201,7 +201,7 @@ module BacklogsPlugin
         params = context[:params]
         issue = context[:issue]
 
-        return unless issue.project.module_enabled? 'backlogs'
+        return unless backlogs.configured?(issue.project)
 
         if issue.is_story?
           if params[:link_to_original]

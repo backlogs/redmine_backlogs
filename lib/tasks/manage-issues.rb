@@ -125,6 +125,7 @@ class GitHub
     url = url.gsub(/:user/, @user).gsub(/:repo/, @repo)
     url = "#{GitHub::ROOT}#{url}"
     data = Net::HTTP.get(URI.parse(url))
+    exit if data == ''
     begin
       return YAML::load(data)
     rescue

@@ -14,7 +14,7 @@
      projs.each do |project| 
      sprints = RbSprint.open_sprints(project)
      next if sprints.length ==0
-     next if !project.enabled_module_names.include?("backlogs")
+     next unless Backlogs.configured?(project)
   %>
     <thead>
      <tr>
