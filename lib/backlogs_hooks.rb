@@ -91,7 +91,7 @@ module BacklogsPlugin
           snippet = ''
           issue = context[:issue]
   
-          return '' unless backlogs.configured?(issue.project)
+          return '' unless Backlogs.configured?(issue.project)
   
           #project = context[:project]
   
@@ -201,7 +201,7 @@ module BacklogsPlugin
         params = context[:params]
         issue = context[:issue]
 
-        return unless backlogs.configured?(issue.project)
+        return unless Backlogs.configured?(issue.project)
 
         if issue.is_story?
           if params[:link_to_original]
