@@ -471,10 +471,10 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
   if copy_option == "none"
     choose('copy_tasks_none')
   elsif copy_option == "open"
-    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_open")]').node['id']
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_open")]')['id']
     choose(field_id)
   else
-    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]').node['id']
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]')['id']
     choose(field_id)
   end
 end
