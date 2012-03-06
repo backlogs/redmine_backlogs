@@ -14,7 +14,7 @@ de:
   backlogs_statistics_product_backlog_filled: Produkt Backlog hat Stories
   backlogs_statistics_product_backlog_filled_failed: Produkt Backlog ist leer
   backlogs_statistics_product_backlog_sized: "Die Stories am Anfang des Produkt Backlog besitzen eine Größe"
-  backlogs_statistics_product_backlog_sized_failed: "Am Anfang des Produkt Backlog hat es Stories ohne definierte Größen"
+  backlogs_statistics_product_backlog_sized_failed: "Am Anfang des Produkt Backlog gibt es Stories ohne definierte Größen"
   backlogs_statistics_sizing_consistent: "Die Story Größen sind gegenüber den Schätzungen stabil"
   backlogs_statistics_sizing_consistent_failed: "Die Story Größen weichen von den Schätzungen ab"
   backlogs_statistics_sizing_stddev: "Standard Abweichung in Stunden gegenüber den Story Points: %{value} Std."
@@ -34,10 +34,10 @@ de:
   backlogs_task: Aufgabe
   backlogs_task_tracker: Aufgaben Tracker
   backlogs_wiki_template: "Vorlage für das Sprint-Wiki"
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
+  backlogs_burndown_print_width: Burndown Druck Breite
+  backlogs_burndown_print_height: Burndown Druck Höhe
+  backlogs_auto_assign_task: Task automatisch dem aktuellen Benutzer zuweisen
+  backlogs_include_sat_and_sun: Samstag und Sonntag im Burndown anzeigen
   button_edit_wiki: Wiki Seite bearbeiten
   comma_delimited_numbers: Mittels Komma getrennte Zahlenwerte
   current_open_story_points: "Aktuell offene Story Points:"
@@ -46,7 +46,7 @@ de:
   error_inclusion: ist in der Liste nicht enthalten
   error_intro_plural: "Die folgenden Fehler sind aufgetreten:"
   error_intro_singular: "Der folgende Fehler ist aufgetreten:"
-  error_must_have_comma_delimited_list: muss eine Kommaseparierte Liste mit Story- oder Aufgaben-IDs enthalten
+  error_must_have_comma_delimited_list: muss eine durch Komma getrennte Liste mit Story- oder Aufgaben-IDs enthalten
   error_no_workflow_for_task_tracker: "Sie haben keine Berechtigung für diesen Tracker. Falls sie dies als Fehler empfinden, so kontaktieren Sie den Administrator"
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
@@ -55,7 +55,7 @@ de:
   field_assigned_to: Zugeordnet zu
   field_backlogs_issue_type: Backlog Typ
   field_blocks: blockiert
-  field_remaining_hours: Remaining (hours)
+  field_remaining_hours: Restaufwand (Stunden)
   field_initial_story_points: Storypunkte zu Beginn
   field_name: Name
   field_number_of_snapshots: Gespeicherte Punkte-Snapshots
@@ -129,7 +129,7 @@ de:
   rb_label_link_to_original: "Link zur original Story einfügen"
   rb_label_timelog_disable: Deaktivieren
   rb_label_timelog_enable: Aktivieren
-  rb_show_burndown_in_sidebar: Zeige burndown Diagramm in Tickets-Seitenleiste
+  rb_show_burndown_in_sidebar: Zeige Burndown Diagramm in Tickets-Seitenleiste
   rb_task_cards_stories_then_tasks: Zuerst alle Stories, dann alle Tasks
   rb_task_cards_story_follows_tasks: Tasks gefolgt von deren Stories
   rb_task_cards_tasks_follow_story: Story gefolgt von deren Tasks
