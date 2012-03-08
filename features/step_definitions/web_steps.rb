@@ -220,8 +220,7 @@ end
 
 Then /^dump the page to "(.+)"$/ do |file|
   raise "#{file} can only be /(log\/)?[A-Z0-9]+\.html/i, #{file.inspect} passed" unless file =~ /^(log\/)[A-Z0-9]+\.html$/i
-  raise "#{file} exists" if File.exist?(file)
-  
+
   File.open(file, 'w') do |f|
     f.write(page.body)
   end

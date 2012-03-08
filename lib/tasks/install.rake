@@ -36,7 +36,7 @@ namespace :redmine do
         print "Fetching card labels from http://git.gnome.org..."
         STDOUT.flush
         begin
-          BacklogsCards::LabelStock.fetch_labels
+          BacklogsPrintableCards::CardPageLayout.update
           print "done!\n"
         rescue Exception => fetch_error
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
@@ -47,7 +47,6 @@ namespace :redmine do
           FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
         end
       end
-      Backlogs.setting[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
 
       trackers = Tracker.find(:all)
 

@@ -21,11 +21,21 @@ class String
   def units_to_points
     return Float(self) if self =~/[0-9]$/
 
-    m = self.match(/^([^a-z\s]+)\s*([a-z]+)$/)
+    m = self.match(/(.*)(mm|pt|in)$/)
+    if m
+      value = m[1].strip
+      units = m[2]
+    else
+      value = self
+      units = nil
+    end
     raise "No units found for #{self.inspect}" unless m
 
-    value = Float(m[1])
-    case m[2]
+    value = Float(value.gsub(/\.$/, ''))
+    case units
+      when nil
+        return value
+
       when 'mm'
         return value * 2.8346457
         
@@ -41,65 +51,79 @@ class String
   end
 end
 
-module BacklogsCards
-  class LabelStock
-    begin
-      LAYOUTS = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
-      LAYOUTS.keys.each{|k| LAYOUTS[k]['name'] = k }
-    rescue
-      LAYOUTS = {}
-    end
+module BacklogsPrintableCards
+ class CardPageLayout
+    def initialize(layout)
+      @layout = layout
 
-    def initialize
-      raise "No label stock selected" unless LabelStock.selected_label
-      layout = LabelStock.selected_label
-
-      @top_margin = layout['top_margin'].units_to_points
-      @vertical_pitch = layout['vertical_pitch'].units_to_points
-      @height = layout['height'].units_to_points
+      begin
+        @top_margin = layout['top_margin'].units_to_points
+        @height = layout['height'].units_to_points
+        @vertical_pitch = layout['vertical_pitch'].units_to_points
+        @vertical_pitch = @height if @vertical_pitch == 0
   
-      @left_margin = layout['left_margin'].units_to_points
-      @horizontal_pitch = layout['horizontal_pitch'].units_to_points
-      @width = layout['width'].units_to_points
+        @left_margin = layout['left_margin'].units_to_points
+        @width = layout['width'].units_to_points
+        @horizontal_pitch = layout['horizontal_pitch'].units_to_points
+        @horizontal_pitch = @width if @horizontal_pitch == 0
 
-      @across = Integer(layout['across'])
-      @down = Integer(layout['down'])
+        @across = Integer(layout['across'])
+        @down = Integer(layout['down'])
   
-      layout['papersize'].upcase!
+        @papersize = layout['papersize'].upcase
+        @name = layout['name']
+        @source = layout['source']
 
-      geom = Prawn::Document::PageGeometry::SIZES[layout['papersize']]
-      raise "Paper size '#{label['papersize']}' not supported" if geom.nil?
+        geom = Prawn::Document::PageGeometry::SIZES[@papersize]
+        if geom.nil?
+          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
+          @valid = false
+          return
+        end
   
-      @paper_width = geom[0]
-      @paper_height = geom[1]
-      @paper_size = layout['papersize']
+        @paper_width = geom[0]
+        @paper_height = geom[1]
+        @paper_size = layout['papersize']
+
+        @valid = false
+        if @down < 1
+          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no rows"
+        elsif @across < 1
+          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no columns"
+        elsif @height > @vertical_pitch
+          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card height exceeds vertical pitch"
+        elsif @width > @horizontal_pitch
+          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card width exceeds horizontal pitch"
+        else
+          @valid = true
+        end
+      rescue => e
+        RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
+        @valid = false
+      end
     end
 
     attr_reader :left_margin, :horizontal_pitch, :width
     attr_reader :top_margin, :vertical_pitch, :height
     attr_reader :across, :down
     attr_reader :paper_width, :paper_height, :paper_size
+    attr_reader :source
+    attr_reader :valid
 
-    def self.selected_label
-      return nil unless Backlogs.setting[:card_spec]
+    def self.selected
       return LAYOUTS[Backlogs.setting[:card_spec]]
     end
 
-    def self.malformed(label)
-      return true if (label['down'] > 1) && (label['height'].units_to_points > label['vertical_pitch'].units_to_points)
-      return true if (label['across'] > 1) && (label['width'].units_to_points > label['horizontal_pitch'].units_to_points)
-      return false
+    def self.available
+      return LAYOUTS.keys.sort
     end
-  
-    def self.fetch_labels
-      # clean up existing labels
-      LAYOUTS.keys.each {|label|
-        if LabelStock.malformed(LAYOUTS[label])
-          LAYOUTS.delete(label)
-          puts "Removing malformed label '#{label}'"
-        end
-      }
 
+    def to_yaml
+      return @layout.reject{|k, v| k == 'name'}
+    end
+
+    def self.update
+      # clean up existing labels
       malformed_labels = {}
 
       ['avery-iso-templates.xml', 'avery-other-templates.xml', 'avery-us-templates.xml', 'brother-other-templates.xml', 'dymo-other-templates.xml',
@@ -169,16 +193,18 @@ module BacklogsCards
           next if label.nil?
   
           key = "#{specs['brand']} #{specs['part']}"
+          label['name'] = key
 
-          if LabelStock.malformed(label)
+          stock = CardPageLayout.new(label)
+          if !stock.valid
             puts "Skipping malformed label '#{key}' from #{filename}"
-            malformed_labels[key] = label
+            malformed_labels[key] = stock.to_yaml
           else
-            LAYOUTS[key] = label if not LAYOUTS[key] or LAYOUTS[key]['source'] == 'glabel'
+            LAYOUTS[key] = stock if not LAYOUTS[key] or LAYOUTS[key].source == 'glabel'
   
             specs.xpath('Alias').each { |also|
-              key = "#{also['brand']} #{also['part']}"
-              LAYOUTS[key] = label.dup if not LAYOUTS[key] or LAYOUTS[key]['source'] == 'glabel'
+              aliaskey = "#{also['brand']} #{also['part']}"
+              LAYOUTS[aliaskey] = stock if not LAYOUTS[aliaskey] or LAYOUTS[aliaskey].source == 'glabel'
             }
           end
         }
@@ -190,14 +216,18 @@ module BacklogsCards
       File.open(File.dirname(__FILE__) + '/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
       end
-
-      if Backlogs.setting[:card_spec] && ! LabelStock.selected_label && LAYOUTS.size != 0
-        # current label non-existant
-        label = LAYOUTS.keys[0]
-        puts "Non-existant label stock '#{Backlogs.setting[:card_spec]}' selected, replacing with random '#{label}'"
-        Backlogs.setting[:card_spec] = label
-      end
     end
+  end
+
+  LAYOUTS = {}
+  begin
+    layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
+    layouts.each_pair{|key, spec|
+      layout = CardPageLayout.new(spec.merge({'name' => key}))
+      LAYOUTS[key] = layout if layout.valid
+    }
+  rescue => e
+    RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
   end
 
   # put the mixins in a separate class, seems to interfere with prawn otherwise
@@ -223,7 +253,7 @@ module BacklogsCards
     attr_reader :url
   end
 
-  class Template
+  class CardTemplate
     def initialize(width, height, template)
       @gravatar_online = true
 
@@ -366,76 +396,79 @@ module BacklogsCards
     end
   end
 
-  class Cards
+  class PrintableCards
     include Redmine::I18n
 
     def initialize(stories, with_tasks, lang)
       set_language_if_valid lang
 
-      @label = LabelStock.new
-      @story = Template.new(@label.width, @label.height, 'story')
-      @task = Template.new(@label.width, @label.height, 'task')
-  
+      @label = CardPageLayout.selected
       @pdf = Prawn::Document.new(
         :page_layout => :portrait,
         :left_margin => 0,
         :right_margin => 0,
         :top_margin => 0,
         :bottom_margin => 0,
-        :page_size => @label.paper_size)
+        :page_size => @label ? @label.paper_size : 'A4')
 
-      fontdir = File.dirname(__FILE__) + '/ttf'
-      @pdf.font_families.update(
-        "DejaVuSans" => {
-          :bold         => "#{fontdir}/DejaVuSans-Bold.ttf",
-          :italic       => "#{fontdir}/DejaVuSans-Oblique.ttf",
-          :bold_italic  => "#{fontdir}/DejaVuSans-BoldOblique.ttf",
-          :normal       => "#{fontdir}/DejaVuSans.ttf"
-        }
-      )
-      @pdf.font "DejaVuSans"
-
-      @cards = 0
-
-      
-      case Backlogs.setting[:taskboard_card_order]
-        when 'tasks_follow_story'
-          stories.each { |story| 
-            add(story)
-
-            if with_tasks
-              story.descendants.each {|task|
-                add(task)
-              }
-            end
-          }
-
-        when 'stories_then_tasks'
-          stories.each { |story| 
-            add(story)
-          }
-
-          if with_tasks
-            @cards  = 0
-            @pdf.start_new_page
-
-            stories.each { |story| 
-              story.descendants.each {|task|
-                add(task)
-              }
-            }
-          end
-
-        else # 'story_follows_tasks'
-          stories.each { |story| 
-            if with_tasks
-              story.descendants.each {|task|
-                add(task)
-              }
-            end
+      if !@label
+        @pdf.text("No (valid) label layout was selected. Your rails log will probably have more details on the exact problem.")
+      else
+        @story = CardTemplate.new(@label.width, @label.height, 'story')
+        @task = CardTemplate.new(@label.width, @label.height, 'task')
   
-            add(story)
+        fontdir = File.dirname(__FILE__) + '/ttf'
+        @pdf.font_families.update(
+          "DejaVuSans" => {
+            :bold         => "#{fontdir}/DejaVuSans-Bold.ttf",
+            :italic       => "#{fontdir}/DejaVuSans-Oblique.ttf",
+            :bold_italic  => "#{fontdir}/DejaVuSans-BoldOblique.ttf",
+            :normal       => "#{fontdir}/DejaVuSans.ttf"
           }
+        )
+        @pdf.font "DejaVuSans"
+
+        @cards = 0
+      
+        case Backlogs.setting[:taskboard_card_order]
+          when 'tasks_follow_story'
+            stories.each { |story| 
+              add(story)
+
+              if with_tasks
+                story.descendants.each {|task|
+                  add(task)
+                }
+              end
+            }
+
+          when 'stories_then_tasks'
+            stories.each { |story| 
+              add(story)
+            }
+
+            if with_tasks
+              @cards  = 0
+              @pdf.start_new_page
+
+              stories.each { |story| 
+                story.descendants.each {|task|
+                  add(task)
+                }
+              }
+            end
+
+          else # 'story_follows_tasks'
+            stories.each { |story| 
+              if with_tasks
+                story.descendants.each {|task|
+                  add(task)
+                }
+              end
+  
+              add(story)
+            }
+        end
       end
     end
   

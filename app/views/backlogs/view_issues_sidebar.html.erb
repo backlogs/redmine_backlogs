@@ -17,7 +17,7 @@
       :action => 'show',
       :project_id => project.id
       }) %><br/>
-  <% if BacklogsCards::LabelStock.selected_label %>
+  <% if BacklogsPrintableCards::CardPageLayout.selected %>
   <%= link_to(l(:label_product_cards), {
       :controller => 'rb_stories',
       :action => 'index',
@@ -52,7 +52,7 @@
       })
   %><br/>
 
-  <% if BacklogsCards::LabelStock.selected_label %>
+  <% if BacklogsPrintableCards::CardPageLayout.selected %>
     <%= link_to(l(:label_sprint_cards), {
         :controller => 'rb_stories',
         :action => 'index',

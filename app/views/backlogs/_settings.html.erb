@@ -99,7 +99,7 @@
 <p>
   <%= content_tag(:label, l(:backlogs_card_specification)) %>
   <% if Backlogs.gems.values.reject{|installed| installed}.size == 0 %>
-    <%= select_tag("settings[card_spec]", options_for_select(BacklogsCards::LabelStock::LAYOUTS.keys.sort.collect{|label| [label, label]}, Backlogs.setting[:card_spec])) %>
+    <%= select_tag("settings[card_spec]", options_for_select(BacklogsPrintableCards::CardPageLayout.available.collect{|label| [label, label]}, Backlogs.setting[:card_spec])) %>
   <% else %>
     <b>Please install all required gems</b>
   <% end %>

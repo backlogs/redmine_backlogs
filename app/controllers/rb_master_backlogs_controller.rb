@@ -51,7 +51,7 @@ class RbMasterBacklogsController < RbApplicationController
              } unless @sprint
     links << {:label => l(:label_sprint_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :sprint_id => @sprint, :only_path => true)
-             } if @sprint && BacklogsCards::LabelStock.selected_label && @sprint.stories.size > 0
+             } if @sprint && BacklogsPrintableCards::CardPageLayout.selected && @sprint.stories.size > 0
     links << {:label => l(:label_product_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :only_path => true)
              } unless @sprint
