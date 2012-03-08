@@ -351,7 +351,7 @@ Given /^I am viewing the issues sidebar for (.+)$/ do |name|
 end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:card_spec => stock } )
+  Backlogs.setting[:card_spec] = stock
   BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil
 end
 
