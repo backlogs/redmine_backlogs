@@ -1,3 +1,11 @@
+** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT **
+
+Backlogs has been granted an GitHub organization. This will make management lots easier. 
+
+ALL DEVELOPMENT HAS MOVED TO https://github.com/backlogs/redmine_backlogs AS OF RIGHT NOW
+
+** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT ** IMPORTANT **
+
 REDMINE BACKLOGS
 ----------------
 A Redmine plugin for agile teams. For more information,
