@@ -285,6 +285,54 @@ module BacklogsPlugin
           #{javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs'}
         }
       end
+
+      def view_timelog_edit_form_bottom(context={ })
+        time_entry = context[:time_entry]
+        return '' if time_entry[:issue_id].blank?
+
+        issue = Issue.find(context[:time_entry].issue_id)
+        return '' unless Backlogs.configured?(issue.project) &&
+                         Backlogs.setting[:timelog_from_taskboard]=='enabled'
+        snippet=''
+
+        begin
+          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+            remaining_hours = issue.remaining_hours
+            snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
+            snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6)
+            snippet += '</p>'
+          end
+          return snippet
+        rescue => e
+          exception(context, e)
+          return ''
+        end
+
+      end       
+
+      def controller_timelog_edit_before_save(context={ })
+        time_entry = context[:time_entry]
+        return '' if time_entry[:issue_id].blank?
+
+        params = context[:params]
+        return unless params.include?("commit")
+
+        issue = Issue.find(time_entry.issue_id)
+        return unless Backlogs.configured?(issue.project) &&
+                      Backlogs.setting[:timelog_from_taskboard]=='enabled'
+
+        if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+          remaining_hours = params[:remaining_hours].gsub(',','.').to_f
+          if remaining_hours != issue.remaining_hours
+            if time_entry.save
+              issue.journalized_update_attribute(:remaining_hours,remaining_hours)
+              issue.remaining_hours = remaining_hours
+              issue.save
+            end
+          end
+        end
+      end
+
     end
   end
 end
