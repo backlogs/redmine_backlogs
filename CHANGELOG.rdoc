@@ -1,3 +1,21 @@
+== 2012-03-04 v0.8.6
+
+* Improve debugging (dump pages)
+
+== 2012-03-04 v0.8.5
+
+* Fix for timelog from taskboard
+
+== 2012-02-28 v0.8.4
+
+* Update gem dependencies
+* Improve i18n and add Japanese localization
+
+== 2012-02-01 v0.8.3
+
+* Only include system_timer gem on unix-1.8.7
+* Fix many jslint problems
+
 == 2012-02-01 v0.8.2
 
 * Only require system_timer for unix-1.8.x
@@ -19,6 +37,7 @@
 * Prelimenary ChiliProject support
 
 == 2012-01-19 v0.7.8
+
 * ie8/9 fixes
 * Fixed error for non-logged in users
 * Remove 'Not configured' message as soon as problem is corrected
@@ -186,7 +205,7 @@
 * Allow resetting a sprint
   This can be useful for when planning is done offline, and you enter stories/tasks after
   the sprint start date. Use with care.
-    
+
 == 2011-08-30 v0.6.9
 
 * Burndown in sidebar conforms to currently selected sprint/story

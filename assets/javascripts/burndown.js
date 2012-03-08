@@ -71,10 +71,10 @@ RB.burndown.configure = function() {
   var disabled = RB.burndown.options.disabled_series();
   var cb;
 
-  for (i in disabled) {
-    cb = RB.$('#burndown_series_' + disabled[i]);
+  RB.$.each(disabled, function(index, value) {
+    cb = RB.$('#burndown_series_' + value);
     if (cb) { cb.attr('checked', false); }
-  }
+  });
 
   var legend = RB.burndown.options.show_legend();
   RB.$('#burndown_legend_' + legend).attr('checked', true);
