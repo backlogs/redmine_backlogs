@@ -84,7 +84,7 @@ module Backlogs
   module_function :task_workflow
 
   def migrated?
-    available = Dir[File.join(File.dirname(__FILE__), '../db/migrate/*.rb'].collect{|m| Integer(m.split('_')[0])}.sort
+    available = Dir[File.join(File.dirname(__FILE__), '../db/migrate/*.rb')].collect{|m| Integer(m.split('_')[0])}.sort
     return true if migrations.size == 0
     ran = Setting.connection.execute("select version from schema_migrations where version like '%-redmine_backlogs'").collect{|m| Integer(m.split('-')[0])}.sort
     return ran >= available

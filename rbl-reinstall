@@ -17,6 +17,15 @@ fi
 
 source $CONFIG
 
+function fixgemspecs {
+  gemspecs=`ls -A /home/hnse/.rvm/gems/ruby-1.8.7-p358@redmine/specifications | tail -1 | wc -l`
+  if [ "$gemspecs" = "1" ]; then
+    for gemspec in `gem environment gemdir`/specifications/*.gemspec; do
+      ruby -pi -e "gsub(/s.date\s*=\s*%q\{([0-9]{4}-[0-9]{2}-[0-9]{2}) 00:00:00.0+Z?\}/, 's.date = %q{\1}')" $gemspec
+    done
+  fi
+}
+
 
 if [ -z "$DBROOTPW" ]; then
     echo "DBROOTPW not set"
@@ -69,15 +78,16 @@ if [[ $RVM =~ [Yy] ]]; then
 
     if [[ "$GEMSET" = "redmine" ]]; then
 
-      if [[ $VERSION =~ '1.2.[12]' ]]; then
-        echo 'Downgrading rubygems'
-        rvm rubygems 1.3.7 
-      fi
+      fixgemspecs
+      echo 'Downgrading rubygems'
+      rm -f `gem environment gemdir`/specifications/*.gemspec
+      rvm rubygems 1.7.2
 
       echo 'Installing base gems'
       gem install rack -v=1.1.1
       gem install rails -v=2.3.14
       gem install i18n -v=0.4.2
+      fixgemspecs
 
       echo 'Installing gems for redmine-backlogs'
       gem install mysql
@@ -85,20 +95,24 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install system_timer
       gem install prawn
       gem install holidays --version 1.0.3
-      gem install holidays
+      #fixgemspecs
+      #gem install holidays
+      #fixgemspecs
       gem install open-uri-cached
       gem install nokogiri
 
       # dev & testing
       gem install gherkin -v=2.8.0
+      gem install term-ansicolor -v=1.0.6
       gem install -v=1.1.8 cucumber
       #gem install zentest-without-autotest
       gem install ZenTest -v=4.6.0
       gem install -v=1.3.1 rspec
       gem install -v=0.3.2 cucumber-rails
       gem install -v=0.2.15 culerity
+      gem install rubyzip -v=0.9.5
       gem install capybara -v=0.3.9
-      gem install spork
+      gem install spork -v=0.8.5
       gem install database_cleaner
       #gem install autotest-rails
       gem install redgreen
@@ -108,7 +122,7 @@ if [[ $RVM =~ [Yy] ]]; then
       gem install thin
 
       # cucumber-rails pulls in an unnecesary gherkin
-      eval `ruby -e "require 'rubygems'; puts Gem.cache.find_name('gherkin').reject{|x| x.version.version == '2.8.0'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+      eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').reject{|x| x.version.version == '2.8.0'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
     fi
 
     if [[ "$GEMSET" = "chiliproject" ]]; then
