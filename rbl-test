@@ -7,21 +7,29 @@ Usage:
 `basename $0`               Run all tests and generate coverage report
 `basename $0` -f <feature>  Run tests for a single feature
 `basename $0` -h            Show this page
+`basename $0` -p            Publish test results to website
 
 EOF
 exit $1
 }
 
-while getopts "hf:" OPT; do
+while getopts "phf:" OPT; do
   case $OPT in
     h) print_usage 0;;
     f) TEST_FEATURE="$OPTARG";;
+    p) PUBLISH="yes";;
     [?]) print_usage 1;;
   esac
 done
 
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
 export RAILS_ENV=cucumber
+
+case "$GEMSET" in
+  redmine) ;;
+  chiliproject) ;;
+  *) echo 'No gemset active'; exit 1;;
+esac
 
 CONFIG="$( cd "$( dirname "$0" )" && pwd )"
 CONFIG="$CONFIG/rbl-reinstall.rc"
@@ -60,6 +68,25 @@ mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
 mysqladmin -u root -p$DBROOTPW create $GEMSET
 cat ../setup/blcuke-salvage.sql | mysql -u root -p$DBROOTPW $GEMSET 
 
-#rm -f ~/redmine/www.redminebacklogs.net/coverage/*
-#cp -r ~/redmine/redmine/coverage/* ~/redmine/www.redminebacklogs.net/coverage
-#chmod a+rwX ~/redmine/www.redminebacklogs.net/coverage/*
+if [ -n "$PUBLISH" ]; then
+  cd ~/redmine/redmine_backlogs
+  BRANCH=`git branch --no-color | awk '/^\*/ { print $2}'`
+  COMMIT=`git log -1 --format=%h`
+  COVERAGE="$GEMSET-$BRANCH-$COMMIT"
+  rm -rf "$HOME/redmine/www/coverage/$COVERAGE"
+  mkdir "$HOME/redmine/www/coverage/$COVERAGE"
+  cp -r ~/redmine/$GEMSET/coverage/* "$HOME/redmine/www/coverage/$COVERAGE"
+  chmod a+rwX ~/redmine/www/coverage/*
+  cd ~/redmine/www/coverage
+  echo '---' > index.markdown
+  echo 'title: Code coverage' >> index.markdown
+  echo 'layout: default' >> index.markdown
+  echo '---' >> index.markdown
+  echo '# Code coverage' >> index.markdown
+  echo '' >> index.markdown
+  ls | awk
+  ls -l | grep ^d | awk '{print "[" $8, $6, $7 "](" $8 ")  "}' >> index.markdown
+  git add .
+  git commit -m "coverage update: $COVERAGE"
+  git push
+fi
