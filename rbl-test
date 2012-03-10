@@ -1,5 +1,25 @@
 #!/bin/bash
 
+function print_usage {
+cat <<EOF
+
+Usage:
+`basename $0`               Run all tests and generate coverage report
+`basename $0` -f <feature>  Run tests for a single feature
+`basename $0` -h            Show this page
+
+EOF
+exit $1
+}
+
+while getopts "hf:" OPT; do
+  case $OPT in
+    h) print_usage 0;;
+    f) TEST_FEATURE="$OPTARG";;
+    [?]) print_usage 1;;
+  esac
+done
+
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
 export RAILS_ENV=cucumber
 
@@ -28,8 +48,13 @@ rake db:migrate_plugins
 rm -rf ~/$GEMSET/cache/*
 
 rm -f log/cucumber.log
-echo tests
-script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
+if [ -z "$TEST_FEATURE" ]; then
+  echo "Running all tests"
+  script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
+else
+  echo "Testing feature: $TEST_FEATURE"
+  script -c "cucumber $TEST_FEATURE" -f ~/redmine/cuke-$GEMSET.log
+fi
 
 mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
 mysqladmin -u root -p$DBROOTPW create $GEMSET

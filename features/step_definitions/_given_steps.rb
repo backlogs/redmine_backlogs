@@ -411,3 +411,41 @@ Given /^I have configured backlogs plugin to include Saturday and Sunday in burn
   Rails.cache.clear
   Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:include_sat_and_sun => true})
 end
+
+Given /^timelog from taskboard has been enabled$/ do
+  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:timelog_from_taskboard => 'enabled' })
+end
+
+Given /^I am a team member of the project and allowed to update remaining hours$/ do
+  role = Role.find(:first, :conditions => "name='Manager'")
+  role.permissions << :view_master_backlog
+  role.permissions << :view_releases
+  role.permissions << :view_taskboards
+  role.permissions << :create_tasks
+  role.permissions << :update_tasks
+  role.permissions << :update_remaining_hours
+  role.save!
+  login_as_team_member
+end
+
+Given /^I am logging time for task (.+)$/ do |subject|
+  issue = Issue.find_by_subject(subject)
+  visit "/issues/#{issue.id}/time_entries"
+  click_link('Log time')
+  page.driver.response.status.should == 200
+end
+
+Given /^I am viewing log time for the ecookbook project$/ do
+  visit "/projects/#{@project}/time_entries"
+  click_link('Log time')
+  page.driver.response.status.should == 200
+end
+
+Given /^I set the hours spent to (\d+)$/ do |arg1|
+  fill_in 'time_entry[hours]', :with => arg1
+end
+
+Given /^I set the remaining_hours to (\d+)$/ do |arg1|
+  fill_in 'remaining_hours', :with => arg1
+end
+
