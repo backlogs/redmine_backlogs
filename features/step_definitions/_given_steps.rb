@@ -149,7 +149,8 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
   task_tracker = "#{Tracker.create!(:name => 'Task').id}"
   plugin = Redmine::Plugin.find('redmine_backlogs')
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge( {:story_trackers => story_trackers, :task_tracker => task_tracker } )
+  Backlogs.setting[:story_trackers] = story_trackers
+  Backlogs.setting[:task_tracker] = task_tracker
 
   # Make sure these trackers are enabled in the project
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
@@ -381,7 +382,7 @@ Given /^I have set the content for wiki page (.+) to (.+)$/ do |title, content|
 end
 
 Given /^I have made (.+) the template page for sprint notes/ do |title|
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:wiki_template => Wiki.titleize(title)})
+  Backlogs.setting[:wiki_template] = Wiki.titleize(title)
 end
 
 Given /^there are no stories in the project$/ do
@@ -409,11 +410,11 @@ end
 
 Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do
   Rails.cache.clear
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:include_sat_and_sun => true})
+  Backlogs.setting[:include_sat_and_sun] = true
 end
 
 Given /^timelog from taskboard has been enabled$/ do
-  Setting.plugin_redmine_backlogs = Setting.plugin_redmine_backlogs.merge({:timelog_from_taskboard => 'enabled' })
+  Backlogs.setting[:timelog_from_taskboard] = 'enabled'
 end
 
 Given /^I am a team member of the project and allowed to update remaining hours$/ do

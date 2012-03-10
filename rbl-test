@@ -73,7 +73,7 @@ if [ -n "$PUBLISH" ]; then
   BRANCH=`git branch --no-color | awk '/^\*/ { print $2}'`
   COMMIT=`git log -1 --format=%h`
   COVERAGE="$GEMSET-$BRANCH-$COMMIT"
-  rm -rf "$HOME/redmine/www/coverage/$COVERAGE"
+  rm -rf ~/redmine/www/coverage/$GEMSET-$BRANCH-*
 
   ran=0
   if [ -e ~/redmine/cuke-$GEMSET.log ]; then
