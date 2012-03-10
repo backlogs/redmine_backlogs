@@ -143,3 +143,7 @@ When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type
   date = date.strftime("%B %d, %Y %H:%M:%S") + '.' + (date.to_f % 1 + 0.001).to_s.split('.')[1]
   visit url_for(:controller => 'rb_updated_items', :action => :show, :project_id => @project.id, :only => object_type, :since => date)
 end
+
+When /^I click save$/ do
+  page.find(:xpath, '//input[@name="commit"]').click
+end

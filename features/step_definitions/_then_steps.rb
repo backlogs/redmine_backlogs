@@ -262,3 +262,9 @@ Then /^show me the story burndown for (.+)$/ do |story|
     show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
   end
 end
+
+Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,value|
+  issue = Issue.find_by_subject(subject)
+  issue.spent_hours.should == value.to_f
+end
+
