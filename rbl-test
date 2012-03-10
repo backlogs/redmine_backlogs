@@ -51,7 +51,7 @@ zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET
 
 echo migrations
 rake db:migrate
-rake db:migrate_plugins
+rake db:migrate:plugins
 #rake redmine:backlogs:install batch=true corruptiontest=false labels=false RAILS_ENV=cucumber
 rm -rf ~/$GEMSET/cache/*
 
