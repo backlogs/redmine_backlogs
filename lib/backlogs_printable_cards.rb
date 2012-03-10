@@ -118,8 +118,8 @@ module BacklogsPrintableCards
       return LAYOUTS.keys.sort
     end
 
-    def to_yaml
-      return @layout.reject{|k, v| k == 'name'}
+    def to_yaml(opts={})
+      return @layout.reject{|k, v| k == 'name'}.to_yaml(opts)
     end
 
     def self.update
