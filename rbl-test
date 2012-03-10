@@ -36,7 +36,7 @@ CONFIG="$CONFIG/rbl-reinstall.rc"
 
 if [ ! -f $CONFIG ]; then
     echo "$CONFIG does not exist"
-    exit
+    exit 1
 fi
 
 source $CONFIG
@@ -74,9 +74,31 @@ if [ -n "$PUBLISH" ]; then
   COMMIT=`git log -1 --format=%h`
   COVERAGE="$GEMSET-$BRANCH-$COMMIT"
   rm -rf "$HOME/redmine/www/coverage/$COVERAGE"
-  mkdir "$HOME/redmine/www/coverage/$COVERAGE"
-  cp -r ~/redmine/$GEMSET/coverage/* "$HOME/redmine/www/coverage/$COVERAGE"
-  chmod a+rwX ~/redmine/www/coverage/*
+
+  ran=0
+  if [ -e ~/redmine/cuke-$GEMSET.log ]; then
+    ran=`grep scenarios ~/redmine/cuke-$GEMSET.log | wc -l`
+  fi
+  if [ "$ran" = "1" ]; then
+    mkdir "$HOME/redmine/www/coverage/$COVERAGE"
+
+    failed=`grep -E 'scenarios.*(skipped|failed)' ~/redmine/cuke-$GEMSET.log | wc -l`
+
+    if [ "$failed" = "1" ]; then
+      cd ~/redmine/www/coverage/$COVERAGE
+      echo '---' > index.markdown
+      echo 'title: Build failed' >> index.markdown
+      echo 'layout: default' >> index.markdown
+      echo '---' >> index.markdown
+      echo '# Build failed' >> index.markdown
+      echo '' >> index.markdown
+      ruby -e 'while gets; break if $_ =~ /^WARNING/; end; while gets; break if $_ =~ /^[+]-{10}/; puts "    #{$_.strip}  "; end' ~/redmine/cuke-$GEMSET.log >> index.markdown
+
+    else
+      cp -r ~/redmine/$GEMSET/coverage/* "$HOME/redmine/www/coverage/$COVERAGE"
+    fi
+  fi
+
   cd ~/redmine/www/coverage
   echo '---' > index.markdown
   echo 'title: Code coverage' >> index.markdown
@@ -84,8 +106,10 @@ if [ -n "$PUBLISH" ]; then
   echo '---' >> index.markdown
   echo '# Code coverage' >> index.markdown
   echo '' >> index.markdown
-  ls | awk
-  ls -l | grep ^d | awk '{print "[" $8, $6, $7 "](" $8 ")  "}' >> index.markdown
+  ls -lt | grep ^d | awk '{print "[" $8, $6, $7 "](" $8 ")  "}' >> index.markdown
+
+  chmod a+rwX ~/redmine/www/coverage/*
+
   git add .
   git commit -m "coverage update: $COVERAGE"
   git push
