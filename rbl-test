@@ -111,6 +111,6 @@ if [ -n "$PUBLISH" ]; then
   chmod a+rwX ~/redmine/www/coverage/*
 
   git add .
-  git commit -m "coverage update: $COVERAGE"
+  git commit -am "coverage update: $COVERAGE"
   git push
 fi
