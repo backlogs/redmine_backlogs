@@ -30,7 +30,7 @@ module Backlogs
         return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
         raise "#{Redmine::VERSION} (NOT SUPPORTED)"
       when :chiliproject
-        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,3] == [2,6,0]
+        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,3] == [3,0,0]
         return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
         raise "#{Redmine::VERSION} (NOT SUPPORTED)"
     end
@@ -83,9 +83,18 @@ module Backlogs
   end
   module_function :task_workflow
 
+  def migrated?
+    available = Dir[File.join(File.dirname(__FILE__), '../db/migrate/*.rb'].collect{|m| Integer(m.split('_')[0])}.sort
+    return true if migrations.size == 0
+    ran = Setting.connection.execute("select version from schema_migrations where version like '%-redmine_backlogs'").collect{|m| Integer(m.split('-')[0])}.sort
+    return ran >= available
+  end
+  module_function :migrated?
+
   def configured?(project=nil)
     return false if Backlogs.gems.values.reject{|installed| installed}.size > 0
     return false if Backlogs.trackers.values.reject{|configured| configured}.size > 0
+    return false unless Backlogs.migrated?
     return false unless project.nil? || project.enabled_module_names.include?("backlogs")
     return true
   end

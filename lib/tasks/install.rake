@@ -142,7 +142,7 @@ namespace :redmine do
       
       print "Migrating the database..."
       STDOUT.flush
-      system('rake db:migrate_plugins --trace > redmine_backlogs_install.log')
+      system('rake db:migrate:plugins --trace > redmine_backlogs_install.log')
       if $?==0
         puts "done!"
         puts "Installation complete. Please restart Redmine."
