@@ -40,6 +40,9 @@
 <% if !Backlogs.configured? %>
   <fieldset>
     <legend>Backlogs was not properly set up</legend>
+    <%- if !Backlogs.migrated? %>
+      <p>Plugin migrations have not been executed</p>
+    <%- end %>
     <table>
       <tr><th>Gem</th><th>Installed</th></tr>
       <% Backlogs.gems.each_pair do |gem, installed| %>
