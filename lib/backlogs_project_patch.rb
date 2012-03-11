@@ -39,12 +39,16 @@ module Backlogs
       Statistics.active_tests.sort.each{|m|
         r = send(m.intern)
         next if r.nil? # this test deems itself irrelevant
-        m.gsub!(/^test_/, '')
-        @statistics[r ? :succeeded : :failed] << (m.gsub(/^test_/, '') + (r ? '' : '_failed'))
+        @statistics[r ? :succeeded : :failed] <<
+          (m.to_s.gsub(/^test_/, '') + (r ? '' : '_failed'))
       }
       Statistics.stats.sort.each{|m|
         v = send(m.intern)
-        @statistics[:values][m.gsub(/^stat_/, '')] = v unless v.nil? || (v.respond_to?(:"nan?") && v.nan?) || (v.respond_to?(:"infinite?") && v.infinite?)
+        @statistics[:values][m.to_s.gsub(/^stat_/, '')] =
+          v unless
+                   v.nil? ||
+                   (v.respond_to?(:"nan?") && v.nan?) ||
+                   (v.respond_to?(:"infinite?") && v.infinite?)
       }
 
       if @statistics[:succeeded].size == 0 && @statistics[:failed].size == 0
