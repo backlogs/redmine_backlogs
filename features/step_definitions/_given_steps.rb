@@ -436,8 +436,8 @@ Given /^I am logging time for task (.+)$/ do |subject|
   page.driver.response.status.should == 200
 end
 
-Given /^I am viewing log time for the ecookbook project$/ do
-  visit "/projects/#{@project}/time_entries"
+Given /^I am viewing log time for the (.*) project$/ do |project_id|
+  visit "/projects/#{project_id}/time_entries"
   click_link('Log time')
   page.driver.response.status.should == 200
 end
