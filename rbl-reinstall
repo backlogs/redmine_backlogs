@@ -225,10 +225,10 @@ if [ "$GEMSET" = "redmine" ]; then
     echo "Let's go!"
     rake db:migrate
     rake generate_session_store
-    rake redmine:load_default_data
+    rake redmine:load_default_data REDMINE_LANG=en
     rake db:migrate:upgrade_plugin_migrations
-    rake --trace db:migrate:plugins
-    rake redmine:backlogs:install labels=no
+    rake db:migrate:plugins
+    rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task
   
     if [ ! -z "$USERPW" ]; then
       ./script/runner "User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '$USERPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $USERPW'}"

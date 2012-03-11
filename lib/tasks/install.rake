@@ -51,7 +51,15 @@ namespace :redmine do
       trackers = Tracker.find(:all)
 
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
-        Backlogs.setting[:story_trackers] = ENV['story_trackers'].split(',').collect{|n| Tracker.find_by_name(n).id }
+        trackers =  ENV['story_trackers'].split(',')
+        trackers.each{|name|
+          if ! Tracker.find(:first, :conditions => ["name=?", name])
+            puts "Creating story tracker '#{name}'"
+            tracker = Tracker.new(:name => name)
+            tracker.save!
+          end
+        }
+        Backlogs.setting[:story_trackers] = trackers.collect{|n| Tracker.find_by_name(n).id }
       else
         if RbStory.trackers.length == 0
           puts "Configuring story and task trackers..."
@@ -92,6 +100,11 @@ namespace :redmine do
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
+        if ! Tracker.find(:first, :conditions => ["name=?", ENV['task_tracker']])
+          puts "Creating task tracker '#{ENV['task_tracker']}'"
+          tracker = Tracker.new(:name => ENV['task_tracker'])
+          tracker.save!
+        end
         Backlogs.setting[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
       else
         if !RbTask.tracker
