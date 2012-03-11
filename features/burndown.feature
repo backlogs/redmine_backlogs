@@ -1,4 +1,4 @@
-Feature: Scrum master
+Feature: Burndown
   As a scrum master
   I want to manage sprints and their stories
   So that they get done according the product owner's requirements
