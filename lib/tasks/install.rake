@@ -14,6 +14,8 @@ namespace :redmine do
         Rails.cache.clear
       rescue NoMethodError
         puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
+      rescue SystemCallError
+        puts "Cache directory is not found"
       end
 
       Backlogs.gems.each_pair {|gem, installed|
