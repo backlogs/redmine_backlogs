@@ -28,7 +28,7 @@
 <%- end %>
 
 <%- content_for :main do %>
-<div id="userid" style="hidden;"><%= User.current.id %></div>
+<span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
 <div id="taskboard">
   <table id="board_header" cellspacing="0">
     <tr>
