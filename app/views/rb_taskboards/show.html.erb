@@ -24,56 +24,12 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
+  <a id="private_mode">Private</a>
 <%- end %>
 
 <%- content_for :main do %>
+<span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
 <div id="taskboard">
-
-<script type="text/javascript">
-  function checkbox_update(value) {
-    RB.$('.checkbox').each(function(){
-      RB.$(this).attr('checked', value);
-    });
-    RB.$(".checkbox").trigger("change");
-  }
-
-  RB.$(function(){
-    RB.$(".checkbox").change(function(){
-      RB.$(".task").each(function() {
-        var asg = this.children[3].children[1].childNodes[0];
-        if (asg == undefined) return;
-        var asg_v = asg.nodeValue;
-        if (RB.$('.asg_' + asg_v).is(':checked')) {
-          RB.$(this).show();
-        } else {
-          RB.$(this).hide();
-        }
-      });
-    });
-  });
-  RB.$(function(){
-    RB.$("#allon").click(function(){
-      checkbox_update(true)
-    });
-  });
-  RB.$(function(){
-    RB.$("#alloff").click(function(){
-      checkbox_update(false)
-    });
-  });
-</script>
-
-<ul style="list-style:none">
-<% @project.members.each do |member| %>
-    <li style="float:left"><label>
-        <%= check_box_tag "assign_to_id[]", member.id, true, :class => "checkbox asg_#{member.user.id}" %><%= member.name %></label></li>
-<% end %>
-    <li style="float:left"><label><a href="#" id="allon">all on</a></label></li>
-    <li style="float:left"><label><a href="#" id="alloff">all off</a></label></li>
-</ul>
-
-<br style="clear:both" />
-
   <table id="board_header" cellspacing="0">
     <tr>
       <td><%= l(:backlogs_story) %></td>
