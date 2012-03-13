@@ -24,9 +24,11 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
+  <a id="private_mode">Private</a>
 <%- end %>
 
 <%- content_for :main do %>
+<div id="userid" style="hidden;"><%= User.current.id %></div>
 <div id="taskboard">
 
 <script type="text/javascript">
