@@ -90,7 +90,7 @@ module Backlogs
 
     ran = []
     Setting.connection.execute("select version from schema_migrations where version like '%-redmine_backlogs'").each{|m|
-      ran << Integer(((m.is_a?(Hash) m.values : m)[0].split('-')[0])
+      ran << Integer((m.is_a?(Hash) ? m.values : m)[0].split('-')[0])
     }
     return false if ran.size == 0
     ran = ran.sort[-1]
