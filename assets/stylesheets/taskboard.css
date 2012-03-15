@@ -223,6 +223,7 @@ See RB.Taskboard.initialize()
   padding:2px;
   width:81px;
 }
+
 .issue.closed .subject.editable{
   text-decoration:line-through;
 }
@@ -351,6 +352,11 @@ See RB.Taskboard.initialize()
 }
 #task_editor .subject{
   height:65px;
+  width:272px;
+}
+
+#task_editor .description{
+  height:80px;
   width:272px;
 }
 #task_editor .remaining_hours,
