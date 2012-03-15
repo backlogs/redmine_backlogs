@@ -69,7 +69,7 @@ class RbTask < Issue
   def update_with_relationships(params, is_impediment = false)
     time_entry_add(params)
 
-    attribs = rb_safe_attributes(params)
+    attribs = RbTask.rb_safe_attributes(params)
 
     # Auto assign task to current user when
     # 1. the task is not assigned to anyone yet
