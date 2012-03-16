@@ -268,3 +268,15 @@ Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,val
   issue.spent_hours.should == value.to_f
 end
 
+Then /^sprint (.+) should contain (.+)$/ do |sprint_name, story_subject|
+  story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story.should_not be_nil
+end
+
+Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, task_subject|
+  stories = RbStory.find(:all, :conditions => { :subject => story_subject })
+  stories.length.should == 1
+
+  tasks = RbTask.find(:all, :conditions => { :subject => task_subject, :parent_id => stories.first.id })
+  tasks.length.should == 1
+end

@@ -144,6 +144,7 @@ When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type
   visit url_for(:controller => 'rb_updated_items', :action => :show, :project_id => @project.id, :only => object_type, :since => date)
 end
 
-When /^I click save$/ do
+When /^I click (create|copy|save)$/ do |command|
   page.find(:xpath, '//input[@name="commit"]').click
 end
+

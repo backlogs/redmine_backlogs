@@ -9,12 +9,20 @@ class RbTask < Issue
     return Integer(task_tracker)
   end
 
-  def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
+  def self.rb_safe_attributes(params)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
-      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) && !RbTask.column_names.include?(k) }
+      safe_attributes_names = RbTask::SAFE_ATTRIBUTES
     else
-      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) && !RbTask.column_names.include?(k)}
+      safe_attributes_names = Issue.new.safe_attribute_names
     end
+    attribs = params.select {|k,v| safe_attributes_names.include?(k) }
+    attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
+    return attribs
+  end
+
+  def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
+
+    attribs = rb_safe_attributes(params)
 
     attribs['author_id'] = user_id
     attribs['tracker_id'] = RbTask.tracker
@@ -61,11 +69,8 @@ class RbTask < Issue
 
   def update_with_relationships(params, is_impediment = false)
     time_entry_add(params)
-    if Issue.const_defined? "SAFE_ATTRIBUTES"
-      attribs = params.clone.delete_if {|k,v| !RbTask::SAFE_ATTRIBUTES.include?(k) }
-    else
-      attribs = params.clone.delete_if {|k,v| !Issue.new.safe_attribute_names.include?(k.to_s) }
-    end
+
+    attribs = RbTask.rb_safe_attributes(params)
 
     # Auto assign task to current user when
     # 1. the task is not assigned to anyone yet
