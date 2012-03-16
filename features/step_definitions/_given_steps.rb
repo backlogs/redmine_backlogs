@@ -450,3 +450,23 @@ Given /^I set the remaining_hours to (\d+)$/ do |arg1|
   fill_in 'remaining_hours', :with => arg1
 end
 
+Given /^I am duplicating (.+) to (.+) for (.+)$/ do |story_old, story_new, sprint_name|
+  issue = Issue.find_by_subject(story_old)
+  visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
+  page.driver.response.status.should == 200
+  fill_in 'issue_subject', :with => story_new
+  page.select(sprint_name, :from => "issue_fixed_version_id")
+end
+
+Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
+  if copy_option == "none"
+    choose('copy_tasks_none')
+  elsif copy_option == "open"
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_open")]').node['id']
+    choose(field_id)
+  else
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]').node['id']
+    choose(field_id)
+  end
+end
+
