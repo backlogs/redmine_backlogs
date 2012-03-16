@@ -226,7 +226,7 @@ if [ "$GEMSET" = "redmine" ]; then
     rake db:migrate
     rake generate_session_store
     rake redmine:load_default_data REDMINE_LANG=en
-    rake db:migrate:upgrade_plugin_migrations
+    rake db:migrate:upgrade:plugin_migrations
     rake db:migrate:plugins
     rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task
   
@@ -259,7 +259,7 @@ if [ "$GEMSET" = "chiliproject" ]; then
     bundle exec rake generate_session_store
     bundle exec rake redmine:load_default_data
     bundle exec rake db:migrate:upgrade_plugin_migrations
-    bundle exec rake db:migrate_plugins
+    bundle exec rake db:migrate:plugins
     bundle exec rake redmine:backlogs:install
   
     if [ ! -z "$ADMINPW" ]; then
