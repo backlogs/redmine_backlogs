@@ -195,7 +195,7 @@ if [ "$GEMSET" = "chiliproject" ]; then
   if [[ $RVM =~ [Yy] ]]; then
     cd ~/redmine/chiliproject
     sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
-    bundle install
+    bundle install redmine_dev=true
   fi
 
   if [[ $CPINSTALL =~ [Yy] ]]; then

@@ -8,3 +8,4 @@ lib/labels-malformed.yaml
 graph.dot
 nbproject
 *.rc
+Gemfile.lock

@@ -145,10 +145,9 @@ module Backlogs
     def safe_load
       settings = Setting.plugin_redmine_backlogs.dup
       if settings.is_a?(String)
-        Setting.connection.execute("select value from settings where name = 'plugin_redmine_backlogs'").each{|v| settings = v}
-        settings = YAML::load(settings)
+        RAILS_DEFAULT_LOGGER.error "Unable to load settings"
+        return {}
       end
-      raise "Unable to load settings" if settings.is_a?(String)
       settings
     end
   end

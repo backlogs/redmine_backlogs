@@ -8,7 +8,7 @@ gem "prawn"
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
 # development gems, sorted alphabetically
-group :development do
+if ENV['backlogs_dev'] == 'true'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   gem "capybara", "=0.3.9"
