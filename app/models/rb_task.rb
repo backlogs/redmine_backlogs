@@ -16,7 +16,7 @@ class RbTask < Issue
       safe_attributes_names = Issue.new.safe_attribute_names
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
-    return attribs
+    return Hash[*attribs.flatten]
   end
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
