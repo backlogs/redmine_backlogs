@@ -4,7 +4,7 @@ ja:
   backlogs_active: active
   backlogs_any: any
   backlogs_card_specification: カード印刷のラベルタイプ
-  backlogs_impediment: 残チケット
+  backlogs_impediment: 妨害事項
   backlogs_statistics_active_failed: "プロジェクトにはアクティビティがありません"
   backlogs_statistics_active: "プロジェクトには幾つかのアクティビティがあります"
   backlogs_statistics_product_backlog_filled_failed: "プロダクトバックログが見つかりません"
@@ -81,7 +81,7 @@ ja:
   label_hours_ideal: 理想時間
   label_hours_remaining: 残り時間
   label_hours_required_burn_rate: 必要なバーンレート(時間)
-  label_impediments: 残チケット
+  label_impediments: 妨害事項
   label_master_backlog: マスターバックログ
   label_not_prioritized: 優先度が未設定
   label_points: ポイント
@@ -131,8 +131,8 @@ ja:
   permission_update_stories: "ストーリーの更新"
   permission_create_tasks: "タスクの作成"
   permission_update_tasks: "タスクの更新"
-  permission_create_impediments: "障害の作成"
-  permission_update_impediments: "障害の更新"
+  permission_create_impediments: "妨害事項の作成"
+  permission_update_impediments: "妨害事項の更新"
   permission_subscribe_to_calendars: "カレンダーへの取り込み"
   permission_view_scrum_statistics: "スクラム統計の閲覧"
   permission_update_remaining_hours: "残り時間の更新"
@@ -149,7 +149,7 @@ ja:
   label_select_all: 全て選択
   label_sprint_backlog: スプリントバックログ
   label_sprint_cards: スプリントカード
-  label_sprint_impediments: スプリントの残チケット
+  label_sprint_impediments: スプリント妨害事項
   label_sprint_name: "スプリント: %{name}"
   label_stories: ストーリー
   label_stories_tasks: ストーリー/タスク
