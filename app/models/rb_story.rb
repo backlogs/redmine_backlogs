@@ -135,10 +135,12 @@ class RbStory < Issue
       # if its predecessor has no position (shouldn't happen), make current the last positioned story
       # the last story
       elsif prev.position.nil?
-        RbStory.connection.execute("update issues
-                                    inner join (select coalesce(max(position), 0) as max_position from issues) as other_issues
-                                    set issues.position = other_issues.max_position
-                                    where id = #{id}")
+        new_pos = 0
+        RbStory.connection.execute("select coalesce(max(position)+1, 0) from issues").each{|row|
+          row = row.values if row.is_a?(Hash)
+          new_pos = row[0]
+        }
+        RbStory.connection.execute("update issues set position = #{new_pos} where id = #{id}")
 
       # there's a valid predecessor
       else
