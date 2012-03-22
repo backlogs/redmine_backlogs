@@ -17,7 +17,7 @@ Feature: Burndown
         | Closed      |         1 |          0 |                    |
         | Accepted    |         1 |          0 |                    |
         | Rejected    |         1 |          0 |                  1 |
-      And the project has the following sprint:
+      And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  |
         | Sprint 001     | today             | 1.week.from_now |
         | Sprint siegerv | 2011-08-19        | 2011-09-02      |
@@ -28,7 +28,7 @@ Feature: Burndown
         | 2        | Story 2 |
         | 3        | Story 3 |
         | 4        | Story 4 |
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | position | subject         | sprint         | points | day |
         | 1        | Story A         | Sprint 001     | 1      |     |
         | 2        | Story B         | Sprint 001     | 2      |     |
@@ -36,7 +36,7 @@ Feature: Burndown
 
         | 4        | Siegerv story 1 | Sprint siegerv | 1      |     |
 
-      And the project has the following tasks:
+      And I have defined the following tasks:
         | subject      | story            | estimate | status | offset |
         | A.1          | Story A          | 10       | New    | 1h     |
         | B.1          | Story B          | 20       | New    | 1h     |
@@ -111,11 +111,11 @@ Feature: Burndown
         | 2       | A.1  |           | Closed      |
         | 2       | C.1  | 30        | In Progress |
 
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | subject | sprint     | points | day |
         | Story D | Sprint 001 | 4      | 3   |
 
-      And the project has the following tasks:
+      And I have defined the following tasks:
         | subject      | story     | estimate | status | offset |
         | D.1          | Story D   | 40       | New    | 1h     |
 
@@ -143,7 +143,7 @@ Feature: Burndown
   Scenario: Change sprint start date
     Given I am viewing the taskboard for Sprint 001
       And I have changed the sprint start date to tomorrow
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | position | subject | sprint     | points |
         | 4        | Story D | Sprint 001 | 1      |
       And I have changed the sprint start date to today

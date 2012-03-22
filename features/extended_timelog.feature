@@ -8,13 +8,13 @@ Feature: Extended timelog
       And timelog from taskboard has been enabled
       And I am a team member of the project and allowed to update remaining hours
       And I have deleted all existing issues
-      And the project has the following sprints:
+      And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | position | subject | sprint     |
         | 1        | Story 1 | Sprint 001 |
-      And the project has the following tasks:
+      And I have defined the following tasks:
         | subject | story  |
         | Task 1  | Story 1 |
         

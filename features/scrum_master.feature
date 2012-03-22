@@ -7,7 +7,7 @@ Feature: Scrum Master
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
       And I have deleted all existing issues
-      And the project has the following sprints:
+      And I have defined the following sprints:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
         | Sprint 002 | 2010-02-01        | 2010-02-28      |
@@ -19,11 +19,11 @@ Feature: Scrum Master
         | 2        | Story 2 |
         | 3        | Story 3 |
         | 4        | Story 4 |
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | position | subject | sprint     |
         | 5        | Story A | Sprint 001 |
         | 6        | Story B | Sprint 001 |
-      And the project has the following impediments:
+      And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story A | 
 

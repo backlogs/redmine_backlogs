@@ -7,16 +7,16 @@ Feature: Duplicate story
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
       And I have deleted all existing issues
-      And the project has the following sprints:
+      And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
         | Sprint 004 | 2010-04-01        | 2010-04-30     |
-      And the project has the following stories in the following sprints:
+      And I have defined the following stories in the following sprints:
         | position | subject | sprint     |
         | 1        | Story 1 | Sprint 001 |
-      And the project has the following tasks:
+      And I have defined the following tasks:
         | subject | story   |
         | Task 1  | Story 1 |
         | Task 2  | Story 1 |

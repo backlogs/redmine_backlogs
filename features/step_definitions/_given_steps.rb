@@ -156,7 +156,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
 end
 
-Given /^the project has the following sprints?:$/ do |table|
+Given /^I have defined the following sprints:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
     version['project_id'] = @project.id
@@ -248,7 +248,7 @@ Given /^the project has the following stories in the product backlog:$/ do |tabl
   end
 end
 
-Given /^the project has the following stories in the following sprints:$/ do |table|
+Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
     params = initialize_story_params
     params['subject'] = story.delete('subject')
@@ -286,7 +286,7 @@ Given /^the project has the following stories in the following sprints:$/ do |ta
   end
 end
 
-Given /^the project has the following tasks:$/ do |table|
+Given /^I have defined the following tasks:$/ do |table|
   table.hashes.each do |task|
     story = RbStory.find(:first, :conditions => { :subject => task.delete('story') })
     story.should_not be_nil
@@ -318,7 +318,7 @@ Given /^the project has the following tasks:$/ do |table|
   end
 end
 
-Given /^the project has the following impediments:$/ do |table|
+Given /^I have defined the following impediments:$/ do |table|
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
     params = initialize_impediment_params(sprint.id)
