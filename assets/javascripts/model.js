@@ -293,7 +293,7 @@ RB.Model = RB.Object.create({
     self.unmarkError();
     self.markSaving();
     
-    jQuery.ajax({
+    RB.ajax({
        type: "POST",
        url: saveDir.url,
        data: saveDir.data,
