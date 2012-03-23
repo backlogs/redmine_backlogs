@@ -43,9 +43,8 @@ a:hover{
   position:relative;
 }
 #toolbar .userselect{
-  bottom: 10px;
+  bottom:50px;
   font-size: 0.7em;
-  position: relative;
 }
 #toolbar .links{
   bottom:5px;
