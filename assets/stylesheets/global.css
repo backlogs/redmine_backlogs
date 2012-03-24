@@ -26,11 +26,10 @@ a:hover{
   z-index:1000;
 }
 #toolbar .breadcrumbs{
-  bottom:5px;
-  display:block;
-  font-size:0.8em;
-  left:10px;
-  position:absolute;
+  float: left;
+  font-size: 0.8em;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 #toolbar .breadcrumbs .home{
   font-size:1.2em;
@@ -40,6 +39,11 @@ a:hover{
   color: #999999;
   font-size:0.7em;
   font-weight:bold;
+/*  position:relative;*/
+}
+#toolbar .userselect{
+  float: left;
+  font-size: 0.7em;
   position:relative;
 }
 #toolbar .links{
