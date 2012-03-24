@@ -233,7 +233,7 @@ Given /^I have deleted all existing issues$/ do
   @project.issues.delete_all
 end
 
-Given /^the project has the following stories in the product backlog:$/ do |table|
+Given /^I have defined the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
     params = initialize_story_params
     params['subject'] = story.delete('subject')

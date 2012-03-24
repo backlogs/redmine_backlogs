@@ -22,7 +22,7 @@ Feature: Burndown
         | Sprint 001     | today             | 1.week.from_now |
         | Sprint siegerv | 2011-08-19        | 2011-09-02      |
 
-      And the project has the following stories in the product backlog:
+      And I have defined the following stories in the product backlog:
         | position | subject |
         | 1        | Story 1 |
         | 2        | Story 2 |
