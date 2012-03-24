@@ -1,7 +1,8 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
-  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment',  'jquery/jquery.multiselect.js', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
@@ -12,11 +13,51 @@
 <% end %>
 
 <% content_for :breadcrumbs do %>
+
+
   <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
   <%= breadcrumb_separator %>
   <%= h @sprint.name %>
+
 <% end %>
 
+<%- content_for :view_specific_users do %>
+<span id="userselect">
+<script type="text/javascript">
+  RB.$(function(){
+    RB.$("userlist").multiselect({
+      close: function() {
+        RB.$(".task").each(function() {
+          var asg = this.getElementsByClassName('assigned_to_id')[0].getElementsByClassName('v')[0]
+          if (asg == undefined || asg == null) return;
+          var asg_v = asg.innerHTML;
+          if (asg_v == "") return;
+	  if (RB.$("userlist").multiselect("widget").find(":checkbox[value='"+asg_v+"']").is(':checked')) {
+		RB.$(this).show();
+	  }else {
+		RB.$(this).hide();
+	 }
+      });
+     }  
+   });
+  });
+
+</script>
+
+<ul style="list-style:none; margin:0px">
+    <li><label>
+       <userlist size="5" name="example-basic" multiple="multiple" title="Basic example">
+		<% @project.members.each do |member| %>
+            		<option value="<%= member.user_id %>"> <%= member.name %></option>
+		<% end %>
+        </userlist>
+
+        </label></li>
+</ul>
+
+<br style="clear:both" />
+</span>
+<%- end %>
 <%- content_for :view_specific_links do %>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
@@ -30,6 +71,8 @@
 <%- content_for :main do %>
 <span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
 <div id="taskboard">
+
+
   <table id="board_header" cellspacing="0">
     <tr>
       <td><%= l(:backlogs_story) %></td>
