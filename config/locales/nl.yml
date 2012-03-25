@@ -80,7 +80,7 @@ nl:
   label_column_width: Kolom breedte
   label_download_sprint: Download
   label_hide_completed_sprints: Verberg gecompleteerde sprints
-  label_hours_ideal: ideaal
+  label_ideal: ideaal
   label_hours_remaining: resterende uren
   label_hours_required_burn_rate: benodigde burn rate (uren)
   label_hours: uren

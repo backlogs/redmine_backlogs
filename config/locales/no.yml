@@ -80,7 +80,7 @@
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_hours_ideal: ideal
+  label_ideal: ideal
   label_hours_remaining: "gjenv\xC3\xA6rende timer"
   label_hours_required_burn_rate: "p\xC3\xA5krevet burn rate (timer)"
   label_hours: timer
