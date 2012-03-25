@@ -80,7 +80,7 @@ es:
   label_column_width: Ancho de columna
   label_download_sprint: Descargar
   label_hide_completed_sprints: Ocultar Sprints completados
-  label_hours_ideal: ideal
+  label_ideal: ideal
   label_hours_remaining: horas faltantes
   label_hours_required_burn_rate: es necesario el burn rate (horas)
   label_hours: horas
