@@ -81,7 +81,7 @@ de:
   label_download_sprint: Download
   label_hide_completed_sprints: Verstecke abgeschlossene Sprints
   label_hours: Stunden
-  label_hours_ideal: ideal
+  label_ideal: ideal
   label_hours_remaining: restliche Stunden
   label_hours_required_burn_rate: Notwendiger Durchsatz (Stunden)
   label_impediments: Hindernisse

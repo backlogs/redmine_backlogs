@@ -83,7 +83,7 @@ pt-BR:
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
   label_hours: Horas
-  label_hours_ideal: ideal
+  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_impediments: Impediments
