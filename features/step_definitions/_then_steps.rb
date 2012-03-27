@@ -70,6 +70,10 @@ Then /^the request should fail$/ do
   page.driver.response.status.should == 401
 end
 
+Then /^calendar feed download should (succeed|fail)$/ do |status|
+  (status == 'succeed').should == page.body.include?('BEGIN:VCALENDAR')
+end
+
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
   story = RbStory.at_rank(@project.id, sprint, position.to_i)
