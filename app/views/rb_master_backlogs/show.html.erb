@@ -6,6 +6,10 @@
   </script>
 
   <%= javascript_include_tag(
+    'jquery/jquery.qtip.pack.js',
+    'jquery/jquery.qtip.setup.js',
+    'jquery/jquery.liveFilter.js',
+    'jquery/jquery.liveFilter.setup.js',
     'master_backlog',
     'backlog',
     'model',
@@ -16,10 +20,6 @@
     'board_updater',
     'master_backlog_updater',
     'burndown',
-    'jquery/jquery.qtip.pack.js',
-    'jquery/jquery.qtip.setup.js',
-    'jquery/jquery.liveFilter.js',
-    'jquery/jquery.liveFilter.setup.js',
     :plugin => 'redmine_backlogs') %>
   <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'master_backlog.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
