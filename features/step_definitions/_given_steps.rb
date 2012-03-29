@@ -140,6 +140,11 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
 
+Given /^backlogs is configured$/ do
+  Backlogs.configured?.should be_true
+end
+
+
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Rails.cache.clear
   @project = get_project(project_id)
