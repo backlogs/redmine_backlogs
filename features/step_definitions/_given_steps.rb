@@ -228,7 +228,7 @@ Given /^I have made the following task mutations:$/ do |table|
     Timecop.travel(mutated) do
       task.remaining_hours = remaining.to_f unless remaining.blank?
       task.status_id = status if status
-      task.save!
+      task.save!.should be_true
     end
 
     mutation.should == {}

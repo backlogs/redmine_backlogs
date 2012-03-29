@@ -90,6 +90,8 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story.should_not be_nil
+  story.children.length.should be >= position.to_i
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
