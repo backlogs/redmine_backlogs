@@ -37,16 +37,49 @@
 	  }else {
 		RB.$(this).hide();
 	 }
+
       });
-     }  
-   });
+     //Check if all stories should be visable even if not used
+      if (RB.$("userlist").multiselect("widget").find(":checkbox[value='s']").is(':checked')) {
+	  var showUnusedStories = 1;
+      } else {
+          var showUnusedStories = 0;
+      }	 
+
+     //Parse through all the stories and hide the ones not used
+      RB.$('.story').each(function() {
+	var sprintInfo = this.getElementsByClassName("id")[0].getElementsByTagName('a')[0];
+	var storyID = sprintInfo.innerHTML;
+	
+	RB.$(this).closest('tr').show();
+	var hasVisTasks = 0;
+   
+        //Parse each task in the story and see if any tasks are not hidden
+	RB.$("#tasks [id^="+storyID+"_]").each(function(){
+
+		RB.$(this).children().each(function(){
+			if(RB.$(this).is(':visible'))
+				hasVisTasks = 1;
+		});
+       });
+
+       //Hide or show story row based on if any tasks are visable
+       if (hasVisTasks || showUnusedStories)
+		RB.$(this).closest('tr').show();
+	else
+		RB.$(this).closest('tr').hide(); 
+   }); 
+     }
+
   });
+});
 
 </script>
 
 <ul style="list-style:none; margin:0px">
     <li><label>
        <userlist size="5" name="example-basic" multiple="multiple" title="Basic example">
+            		<option value='s'>Show empty Stories</option>
 		<% @project.members.each do |member| %>
             		<option value="<%= member.user_id %>"> <%= member.name %></option>
 		<% end %>
