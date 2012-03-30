@@ -10,7 +10,7 @@ module Backlogs
       @past_sprints = RbSprint.find(:all,
         :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
         :order => "effective_date desc",
-        :limit => 5)
+        :limit => 5).select(&:has_burndown?)
 
       @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.compact.sum / @past_sprints.collect{|s| s.days(:all).size}.compact.sum if @past_sprints.size > 0
 
