@@ -6,7 +6,11 @@
       series = burndown.series.sort{|a, b| l("label_#{a}") <=> l("label_#{b}") }
       dates = sprint.days(:all)
 
-      ticks = dates.collect{|d| Time.local(d.year, d.mon, d.mday) }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
+      ticks = dates.collect{|d|
+        t = Time.utc(d.year, d.mon, d.mday)
+        zone = User.current.time_zone
+        zone ? t.in_time_zone(zone) : t
+      }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
       ticks = (0..dates.size * 2).collect{|i| [i, (i % 2 == 0 ? ' ' : ticks[(i-1)/2] + ' ')] }
 
       chart = {
