@@ -66,7 +66,7 @@ class RbSprintsController < RbApplicationController
       }
     }
 
-    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-exce', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
+    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-excel', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
 
   def reset
