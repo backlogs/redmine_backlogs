@@ -9,12 +9,14 @@ require 'open-uri/cached'
 require 'zlib'
 require 'nokogiri'
 
-if Backlogs.gems.include?('system_timer')
-  require 'system_timer'
-  ReliableTimout = SystemTimer
-else
-  require 'timeout'
-  ReliableTimout = Timeout
+unless defined?('ReliableTimout') || defined?(:ReliableTimout)
+  if Backlogs.gems.include?('system_timer')
+    require 'system_timer'
+    ReliableTimout = SystemTimer
+  else
+    require 'timeout'
+    ReliableTimout = Timeout
+  end
 end
 
 class String
@@ -53,6 +55,8 @@ end
 
 module BacklogsPrintableCards
  class CardPageLayout
+    @@layouts ||= {} 
+
     def initialize(layout)
       @layout = layout
 
@@ -111,11 +115,11 @@ module BacklogsPrintableCards
     attr_reader :valid
 
     def self.selected
-      return LAYOUTS[Backlogs.setting[:card_spec]]
+      return @@layouts[Backlogs.setting[:card_spec]]
     end
 
     def self.available
-      return LAYOUTS.keys.sort
+      return @@layouts.keys.sort
     end
 
     def to_yaml(opts={})
@@ -200,18 +204,18 @@ module BacklogsPrintableCards
             puts "Skipping malformed label '#{key}' from #{filename}"
             malformed_labels[key] = stock.to_yaml
           else
-            LAYOUTS[key] = stock if not LAYOUTS[key] or LAYOUTS[key].source == 'glabel'
+            @@layouts[key] = stock if not @@layouts[key] or @@layouts[key].source == 'glabel'
   
             specs.xpath('Alias').each { |also|
               aliaskey = "#{also['brand']} #{also['part']}"
-              LAYOUTS[aliaskey] = stock if not LAYOUTS[aliaskey] or LAYOUTS[aliaskey].source == 'glabel'
+              @@layouts[aliaskey] = stock if not @@layouts[aliaskey] or @@layouts[aliaskey].source == 'glabel'
             }
           end
         }
       }
   
       File.open(File.dirname(__FILE__) + '/labels.yaml', 'w') do |dump|
-        YAML.dump(LAYOUTS, dump)
+        YAML.dump(@@layouts, dump)
       end
       File.open(File.dirname(__FILE__) + '/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
@@ -219,12 +223,11 @@ module BacklogsPrintableCards
     end
   end
 
-  LAYOUTS = {}
   begin
     layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
     layouts.each_pair{|key, spec|
       layout = CardPageLayout.new(spec.merge({'name' => key}))
-      LAYOUTS[key] = layout if layout.valid
+      @@layouts[key] = layout if layout.valid
     }
   rescue => e
     RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
