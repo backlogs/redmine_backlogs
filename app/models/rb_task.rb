@@ -13,7 +13,9 @@ class RbTask < Issue
     if Issue.const_defined? "SAFE_ATTRIBUTES"
       safe_attributes_names = RbTask::SAFE_ATTRIBUTES
     else
-      safe_attributes_names = Issue.new.safe_attribute_names
+      safe_attributes_names = Issue.new(
+        :project_id=>params[:project_id] # required to verify "safeness"
+      ).safe_attribute_names
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
