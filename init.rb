@@ -17,6 +17,7 @@ Dispatcher.to_prepare do
   require_dependency 'backlogs_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
+  require_dependency 'backlogs_issue_relation_patch'
   require_dependency 'backlogs_tracker_patch'
   require_dependency 'backlogs_version_patch'
   require_dependency 'backlogs_project_patch'
