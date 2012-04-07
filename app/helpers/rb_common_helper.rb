@@ -214,4 +214,20 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     return Nokogiri::HTML::fragment(html).to_xhtml
   end
 
+  def users_assignable_options_for_select(collection)
+    s = ''
+    groups = ''
+    collection.sort.each do |element|
+      if element.is_a?(Group)
+        groups << "<option value=\"#{element.id}\">#{h element.name}</option>"
+      else
+        s << "<option value=\"#{element.id}\" color=\"#{element.backlogs_preference[:task_color]}\" color_light=\"#{element.backlogs_preference[:task_color_light]}\">#{h element.name}</option>"
+      end
+    end
+    unless groups.empty?
+      s << %(<optgroup label="#{h(l(:label_group_plural))}">#{groups}</optgroup>)
+    end
+    s
+  end
+
 end
