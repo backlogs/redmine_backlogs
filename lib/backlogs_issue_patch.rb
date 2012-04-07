@@ -37,17 +37,17 @@ module Backlogs
 
       def journalized_update_attributes!(attribs)
         init_journal(User.current)
-        return update_attributes!(attribs)
+        return self.becomes(Issue).update_attributes!(attribs)
       end
 
       def journalized_update_attributes(attribs)
         init_journal(User.current)
-        return update_attributes(attribs)
+        return self.becomes(Issue).update_attributes(attribs)
       end
 
       def journalized_update_attribute(attrib, v)
         init_journal(User.current)
-        update_attribute(attrib, v)
+        self.becomes(Issue).update_attribute(attrib, v)
       end
 
       def is_story?

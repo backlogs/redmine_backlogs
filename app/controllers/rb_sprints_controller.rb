@@ -31,7 +31,7 @@ class RbSprintsController < RbApplicationController
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     begin
-      result  = @sprint.update_attributes attribs
+      result  = @sprint.becomes(Version).update_attributes attribs
     rescue => e
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
