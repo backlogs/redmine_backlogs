@@ -14,7 +14,7 @@
 <%- end -%>
 
 <select class="tracker_id helper" id="tracker_id_options">
-  <%-  Tracker.find_all_by_id(Backlogs.setting[:story_trackers]).sort_by { |t| [t.position] }.each do |tracker| %>
+  <%- RbStory.trackers(:project => @project, :type => :trackers).each do |tracker| %>
   <option value="<%= tracker.id %>"><%= h tracker.name %></option>
   <%- end %>
 </select>

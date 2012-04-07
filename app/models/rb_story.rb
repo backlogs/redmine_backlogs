@@ -100,7 +100,10 @@ class RbStory < Issue
            :order => "updated_on ASC")
     end
 
-    def self.trackers(type = :array)
+    def self.trackers(options = {})
+      # legacy
+      options = {:type => options} if options.is_a?(Symbol)
+
       # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
       trackers = []
       if ActiveRecord::Base.connection.tables.include?('settings')
@@ -108,9 +111,20 @@ class RbStory < Issue
         trackers = [] if trackers.blank?
       end
 
-      return trackers.join(',') if type == :string
+      trackers = Tracker.find_all_by_id(trackers)
+      trackers = trackers & options[:project].trackers if options[:project]
+      trackers = trackers.sort_by { |t| [t.position] }
 
-      return trackers.map { |tracker| Integer(tracker) }
+      case options[:type]
+        when :trackers
+          return trackers
+        when :array, nil
+          return trackers.collect{|t| t.id}
+        when :string
+          return trackers.collect{|t| t.id.to_s}.join(',')
+        else
+          raise "Unexpected return type #{options[:type].inspect}"
+      end
     end
 
     def tasks

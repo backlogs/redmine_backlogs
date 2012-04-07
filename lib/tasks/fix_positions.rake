@@ -4,7 +4,7 @@ namespace :redmine do
     task :fix_positions => :environment do
       if RbStory.trackers.size > 0
         # non-story issues get no position
-        RbStory.connection.execute("update issues set position = null where not tracker_id in (#{RbStory.trackers(:string)})")
+        RbStory.connection.execute("update issues set position = null where not tracker_id in (#{RbStory.trackers(:type=>:string)})")
 
         # make positions unique
         repeat = true
@@ -12,7 +12,7 @@ namespace :redmine do
           repeat = false
           RbStory.find_by_sql("select position, count(*) as duplicates
                                from issues
-                               where not position is null and tracker_id in (#{RbStory.trackers(:string)})
+                               where not position is null and tracker_id in (#{RbStory.trackers(:type=>:string)})
                                group by position
                                having count(*) > 1").each {|duplicate|
             repeat = true
@@ -31,7 +31,7 @@ namespace :redmine do
         # assign null-positioned stories a position at the end
         story = RbStory.find_by_sql('select max(position) as highest from issues')
         max = story ? (story[0].highest.to_i + 1) : 1
-        RbStory.find_by_sql("select id from issues where tracker_id in (#{RbStory.trackers(:string)}) and position is null").each_with_index{|story, i|
+        RbStory.find_by_sql("select id from issues where tracker_id in (#{RbStory.trackers(:type=>:string)}) and position is null").each_with_index{|story, i|
           puts "Assigning position #{max + i} to #{story.id}"
           RbStory.connection.execute("update issues set position = #{max + i} where id = #{story.id}")
         }
@@ -44,9 +44,9 @@ namespace :redmine do
         while repeat
           repeat = false
           RbStory.find_by_sql("select id, position,
-                                  (select min(position) from issues where tracker_id in (#{RbStory.trackers(:string)}) and position > pregap.position) as postgap
+                                  (select min(position) from issues where tracker_id in (#{RbStory.trackers(:type=>:string)}) and position > pregap.position) as postgap
                                from issues pregap
-                               where tracker_id in (#{RbStory.trackers(:string)})
+                               where tracker_id in (#{RbStory.trackers(:type=>:string)})
                                   and not exists(select * from issues where position = pregap.position + 1)").each{|pregap|
             if pregap.postgap
               puts "Closing gap between #{pregap.position} and #{pregap.postgap}"

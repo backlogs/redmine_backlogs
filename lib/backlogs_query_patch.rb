@@ -32,7 +32,7 @@ module Backlogs
                             select max(story_lft.lft)
                             from issues story_lft
                             where story_lft.root_id = issues.root_id
-                            and story_lft.tracker_id in (<%= RbStory.trackers(:string) %>)
+                            and story_lft.tracker_id in (<%= RbStory.trackers(:type=>:string) %>)
                             and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
                           )"
 
@@ -92,7 +92,7 @@ module Backlogs
         selected_values = values_for(field)
         selected_values = ['story', 'task'] if selected_values.include?('any')
 
-        story_trackers = RbStory.trackers.collect{|val| "#{val}"}.join(",")
+        story_trackers = RbStory.trackers(:type=>:string)
         all_trackers = (RbStory.trackers + [RbTask.tracker]).collect{|val| "#{val}"}.join(",")
 
         selected_values.each { |val|
