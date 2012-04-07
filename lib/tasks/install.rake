@@ -131,22 +131,21 @@ namespace :redmine do
                   Backlogs.setting[:task_tracker] = available_trackers[selection.first.to_i-1].id
                   invalid = false
                 end
-              # elsif selection.length == 0 or selection.first.to_i == j + 1
-              #   # If the user chose to create a new one, then ask for the name
-              #   settings[:task_tracker] = create_new_tracker
-              #   invalid = false
+              elsif selection.length == 0 or selection.first.to_i == j + 1
+                # If the user chose to create a new one, then ask for the name
+                settings[:task_tracker] = create_new_tracker
+                invalid = false
               else
                 puts "Oooops! That's not a valid selection. Please try again."
               end
             end
           else
-            # If there's none, ask to create one
-            # settings[:task_tracker] = create_new_tracker
-            puts "You don't have any trackers available for use with tasks."
-            puts "Please create a new tracker via the Redmine admin interface,"
-            puts "then re-run this installer. Press any key to continue."
-            STDOUT.flush
-            STDIN.gets
+            settings[:task_tracker] = create_new_tracker
+            #puts "You don't have any trackers available for use with tasks."
+            #puts "Please create a new tracker via the Redmine admin interface,"
+            #puts "then re-run this installer. Press any key to continue."
+            #STDOUT.flush
+            #STDIN.gets
           end
         end
       end
