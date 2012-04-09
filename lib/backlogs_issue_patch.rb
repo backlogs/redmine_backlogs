@@ -84,7 +84,13 @@ module Backlogs
       def blocks
         # return issues that I block that aren't closed
         return [] if closed?
-        relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil}.compact
+        relations_from.collect {|ir|
+          begin
+            ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil
+          rescue
+            nil
+          end
+        }.compact
       end
 
       def blockers
