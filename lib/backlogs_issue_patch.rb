@@ -84,13 +84,13 @@ module Backlogs
       def blocks
         # return issues that I block that aren't closed
         return [] if closed?
-        relations_from.collect {|ir|
-          begin
-            ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil
-          rescue
-            nil
-          end
-        }.compact
+        begin
+          return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
+        rescue
+          # stupid rails and their ignorance of proper relational databases
+          RAILS_DEFAULT_LOGGER.error "Cannot return the blocks list for #{self.id}: #{e}"
+          return []
+        end
       end
 
       def blockers
