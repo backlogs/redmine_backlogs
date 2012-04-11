@@ -51,17 +51,19 @@
 
           RB.$(this).closest('tr').show();
           var hasVisTasks = 0;
+          var hasTasks = 0;  // Keep track if a story has tasks (visible or not)
 
           //Parse each task in the story and see if any tasks are not hidden
           RB.$("#tasks [id^="+storyID+"_]").each(function(){
             RB.$(this).children().each(function(){
+              hasTasks = 1
               if(RB.$(this).is(':visible'))
                 hasVisTasks = 1;
             });
           });
 
-          //Hide or show story row based on if any tasks are visable
-          if (hasVisTasks || showUnusedStories)
+          //Hide or show story row based on if any tasks are visible
+          if (hasVisTasks || (showUnusedStories && !hasTasks))
             RB.$(this).closest('tr').show();
           else
             RB.$(this).closest('tr').hide();
