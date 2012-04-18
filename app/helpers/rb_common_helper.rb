@@ -219,7 +219,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     groups = ''
     collection.sort.each do |element|
       if element.is_a?(Group)
-        groups << "<option value=\"#{element.id}\">#{h element.name}</option>"
+        groups << "<option value=\"#{element.id}\" color=\"#AAAAAA\" color_light=\"#E0E0E0\">#{h element.name}</option>"
       else
         s << "<option value=\"#{element.id}\" color=\"#{element.backlogs_preference[:task_color]}\" color_light=\"#{element.backlogs_preference[:task_color_light]}\">#{h element.name}</option>"
       end
