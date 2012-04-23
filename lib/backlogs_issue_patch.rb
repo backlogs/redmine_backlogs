@@ -9,8 +9,6 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        alias_method_chain :move_to_project_without_transaction, :autolink
-
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
         after_destroy :backlogs_after_destroy
@@ -21,20 +19,6 @@ module Backlogs
     end
 
     module InstanceMethods
-      def move_to_project_without_transaction_with_autolink(new_project, new_tracker = nil, options = {})
-        newissue = move_to_project_without_transaction_without_autolink(new_project, new_tracker, options)
-        return newissue if newissue.blank? || !Backlogs.configured?(self.project)
-
-        if project_id == newissue.project_id and is_story? and newissue.is_story? and id != newissue.id
-          relation = IssueRelation.new :relation_type => IssueRelation::TYPE_DUPLICATES
-          relation.issue_from = self
-          relation.issue_to = newissue
-          relation.save
-        end
-
-        return newissue
-      end
-
       def journalized_update_attributes!(attribs)
         init_journal(User.current)
         return self.becomes(Issue).update_attributes!(attribs)

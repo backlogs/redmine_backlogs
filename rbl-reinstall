@@ -1,6 +1,7 @@
 #!/bin/bash
 
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
+RUBY=`rvm-prompt v | sed -e 's/\.[0-9]*$//'`
 if [ -z "$GEMSET" ]; then
   echo "No gemset"
   exit
@@ -78,57 +79,68 @@ if [[ $RVM =~ [Yy] ]]; then
 
     if [[ "$GEMSET" = "redmine" ]]; then
 
-      fixgemspecs
       echo 'Downgrading rubygems'
-      rm -f `gem environment gemdir`/specifications/*.gemspec
-      rvm rubygems 1.7.2
+      rvm rubygems latest-1.8
 
       echo 'Installing base gems'
       gem install rack -v=1.1.1
       gem install rails -v=2.3.14
       gem install i18n -v=0.4.2
-      fixgemspecs
 
       echo 'Installing gems for redmine-backlogs'
-      gem install mysql
       gem install icalendar
-      gem install system_timer
+
       gem install prawn
-      gem install holidays --version 1.0.3
-      #fixgemspecs
-      #gem install holidays
-      #fixgemspecs
+      gem install holidays
       gem install open-uri-cached
       gem install nokogiri
 
       # dev & testing
-      gem install gherkin -v=2.8.0
+      #gem install gherkin -v=2.8.0
       gem install term-ansicolor -v=1.0.6
-      gem install -v=1.1.8 cucumber
       #gem install zentest-without-autotest
+      gem install rubyzip -v=0.9.5
+
       gem install ZenTest -v=4.6.0
       gem install -v=1.3.1 rspec
       gem install -v=0.3.2 cucumber-rails
+      gem install -v=1.1.8 cucumber
       gem install -v=0.2.15 culerity
-      gem install rubyzip -v=0.9.5
-      gem install capybara -v=0.3.9
-      gem install spork -v=0.8.5
+
+      gem install capybara -v=1.1.1
+      gem install spork # -v=0.8.5
       gem install database_cleaner
       #gem install autotest-rails
       gem install redgreen
-      gem install rcov
       gem install -v=1.3.3 rspec-rails
       gem install timecop
       gem install thin
 
       # cucumber-rails pulls in an unnecesary gherkin
-      eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').reject{|x| x.version.version == '2.8.0'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+      #eval `ruby -e "require 'rubygems'; puts Gem.source_index.find_name('gherkin').reject{|x| x.version.version == '2.8.0'}.collect{|x| \"gem uninstall gherkin -v=#{x.version.version}\"}.join(\"\n\")"`
+
+      gem uninstall cucumber -v=1.1.8
+      gem uninstall gherkin -v=2.8.0
+      gem uninstall holidays -v=1.0.3
+      #gem uninstall rack -v=1.1.1
+
+      DUPLICATES=`gem list | grep , | wc -l`
+      if [[ "$DUPLICATES" != "0" ]]; then
+        echo 'Duplicate gems'
+        gem list | grep ,
+        exit
+      fi
     fi
 
-    if [[ "$GEMSET" = "chiliproject" ]]; then
-      gem install bundler
+    gem install bundler
+    bundle config build.mysql --with-mysql-config=`which mysql_config`
+    gem install mysql
+
+    if [[ "$RUBY" = "1.8" ]]; then
       gem install system_timer
-      # rest is installed through bundler install
+      gem install rcov
+    else
+      gem install simplecov
     fi
 fi
 
@@ -158,8 +170,14 @@ if [ "$GEMSET" = "redmine" ]; then
     cp ~/redmine/setup/database-redmine.yml ~/redmine/redmine/config/database.yml
     ln -s ~/redmine/redmine_backlogs ~/redmine/redmine/vendor/plugins
     ln -s ~/redmine/redmine_backlogs/features ~/redmine/redmine
-    echo 'rvm use 1.8.7@redmine' > ~/redmine/redmine/.rvmrc
+    echo 'rvm use 1.9.3@redmine' > ~/redmine/redmine/.rvmrc
   
+    if [[ $RVM =~ [Yy] ]]; then
+      cd ~/redmine/redmine
+      sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
+      redmine_dev=true bundle install
+    fi
+
     [ -f ~/redmine/redmine/config/environments/cucumber.rb ] || script/generate cucumber --spork
   fi
 fi
@@ -195,7 +213,7 @@ if [ "$GEMSET" = "chiliproject" ]; then
   if [[ $RVM =~ [Yy] ]]; then
     cd ~/redmine/chiliproject
     sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
-    bundle install redmine_dev=true
+    redmine_dev=true bundle install
   fi
 
   if [[ $CPINSTALL =~ [Yy] ]]; then

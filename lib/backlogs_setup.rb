@@ -25,8 +25,8 @@ module Backlogs
   def platform_support(raise_error = false)
     case platform
       when :redmine
-        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,2] == [1,3]
-        return "#{Redmine::VERSION} (not supported, but it will work)" if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY > 0
+        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,2] == [1,4]
+        return "#{Redmine::VERSION} (not supported, but it will work)" if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 3 && Redmine::VERSION::TINY > 0
         return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
         raise "#{Redmine::VERSION} (NOT SUPPORTED)"
       when :chiliproject
