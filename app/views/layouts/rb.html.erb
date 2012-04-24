@@ -8,7 +8,7 @@
 
 <%= call_hook :view_layouts_base_html_head %>
 
-<%= stylesheet_link_tag 'global.css', 'jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+<%= stylesheet_link_tag 'global.css', 'jquery/jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
 <%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
 <%= yield :head_tags -%>

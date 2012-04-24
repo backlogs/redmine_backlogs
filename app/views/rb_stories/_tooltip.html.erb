@@ -1,6 +1,7 @@
 <b><%= I18n.t :field_subject %></b>: <%=h tooltip.subject %><br />
 <b><%= I18n.t :field_tracker_id %> </b>: <%=h tooltip.tracker %><br />
 <b><%= I18n.t :story_status %></b>: <%=h status_label_or_default(tooltip) %><br />
+<b><%= I18n.t :field_category %> </b>: <%=h tooltip.category %><br />
 <b><%= I18n.t :story_points %></b>: <%=h story_points_or_empty(tooltip) %><br />
 <b><%= I18n.t :story_estimation_hours %></b>: <%=h tooltip.estimated_hours %><br />
 <b><%= I18n.t :story_spent_time %></b>: <%= tooltip.spent_hours.round(2) %><br />

@@ -1,8 +1,8 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
   <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment',  'jquery/jquery.multiselect.js', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
@@ -13,7 +13,6 @@
 <% end %>
 
 <% content_for :breadcrumbs do %>
-
 
   <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
   <%= breadcrumb_separator %>
@@ -32,60 +31,57 @@
           if (asg == undefined || asg == null) return;
           var asg_v = asg.innerHTML;
           if (asg_v == "") return;
-	  if (RB.$("userlist").multiselect("widget").find(":checkbox[value='"+asg_v+"']").is(':checked')) {
-		RB.$(this).show();
-	  }else {
-		RB.$(this).hide();
-	 }
-
-      });
-     //Check if all stories should be visable even if not used
-      if (RB.$("userlist").multiselect("widget").find(":checkbox[value='s']").is(':checked')) {
-	  var showUnusedStories = 1;
-      } else {
+          if (RB.$("userlist").multiselect("widget").find(":checkbox[value='"+asg_v+"']").is(':checked')) {
+            RB.$(this).show();
+          }else {
+            RB.$(this).hide();
+          }
+        });
+        //Check if all stories should be visible even if not used
+        if (RB.$("userlist").multiselect("widget").find(":checkbox[value='s']").is(':checked')) {
+          var showUnusedStories = 1;
+        } else {
           var showUnusedStories = 0;
-      }	 
+        }
 
-     //Parse through all the stories and hide the ones not used
-      RB.$('.story').each(function() {
-	var sprintInfo = this.getElementsByClassName("id")[0].getElementsByTagName('a')[0];
-	var storyID = sprintInfo.innerHTML;
-	
-	RB.$(this).closest('tr').show();
-	var hasVisTasks = 0;
-   
-        //Parse each task in the story and see if any tasks are not hidden
-	RB.$("#tasks [id^="+storyID+"_]").each(function(){
+        //Parse through all the stories and hide the ones not used
+        RB.$('.story').each(function() {
+          var sprintInfo = this.getElementsByClassName("id")[0].getElementsByTagName('a')[0];
+          var storyID = sprintInfo.innerHTML;
 
-		RB.$(this).children().each(function(){
-			if(RB.$(this).is(':visible'))
-				hasVisTasks = 1;
-		});
-       });
+          RB.$(this).closest('tr').show();
+          var hasVisTasks = 0;
+          var hasTasks = 0;  // Keep track if a story has tasks (visible or not)
 
-       //Hide or show story row based on if any tasks are visable
-       if (hasVisTasks || showUnusedStories)
-		RB.$(this).closest('tr').show();
-	else
-		RB.$(this).closest('tr').hide(); 
-   }); 
-     }
+          //Parse each task in the story and see if any tasks are not hidden
+          RB.$("#tasks [id^="+storyID+"_]").each(function(){
+            RB.$(this).children().each(function(){
+              hasTasks = 1
+              if(RB.$(this).is(':visible'))
+                hasVisTasks = 1;
+            });
+          });
 
+          //Hide or show story row based on if any tasks are visible
+          if (hasVisTasks || (showUnusedStories && !hasTasks))
+            RB.$(this).closest('tr').show();
+          else
+            RB.$(this).closest('tr').hide();
+        });
+      }
+    });
   });
-});
-
 </script>
 
 <ul style="list-style:none; margin:0px">
-    <li><label>
-       <userlist size="5" name="example-basic" multiple="multiple" title="Basic example">
-            		<option value='s'>Show empty Stories</option>
-		<% @project.members.each do |member| %>
-            		<option value="<%= member.user_id %>"> <%= member.name %></option>
-		<% end %>
-        </userlist>
-
-        </label></li>
+  <li><label>
+    <userlist size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+      <option value='s'>Show empty Stories</option>
+      <% @project.assignable_users.sort.each do |member| %>
+        <option value="<%= member.id %>"> <%= member.name %></option>
+      <% end %>
+      </userlist>
+  </label></li>
 </ul>
 
 <br style="clear:both" />
@@ -127,7 +123,7 @@
   </table>
 
   <table id="tasks" class="board" cellspacing="0">
-    <%- @sprint.stories.each do |story| %>  
+    <%- @sprint.stories.each do |story| %>
     <tr>
       <td>
         <div class="story <%= mark_if_closed(story) %>" style="<%= build_inline_style_color(story) %>">
