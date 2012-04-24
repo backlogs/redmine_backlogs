@@ -3,7 +3,7 @@ require 'nokogiri'
 
 module RbCommonHelper
   unloadable
-  
+
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
   end
@@ -23,7 +23,7 @@ module RbCommonHelper
       color_to = task.assigned_to.backlogs_preference[:task_color]
       color_from = Backlogs::Color.new(color_to).lighten(0.5)
       "style='
-background-color:#{task.assigned_to.backlogs_preference[:task_color]}; 
+background-color:#{task.assigned_to.backlogs_preference[:task_color]};
 background: -webkit-gradient(linear, left top, left bottom, from(#{color_from}), to(#{color_to}));
 background: -moz-linear-gradient(top, #{color_from}, #{color_to});
 filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#{color_from},EndColorStr=#{color_to});
@@ -33,8 +33,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def build_inline_style_color(task)
     task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User) ? '' : "#{task.assigned_to.backlogs_preference[:task_color]}"
-  end 
-  
+  end
+
   def breadcrumb_separator
     "<span class='separator'>&gt;</span>"
   end
@@ -56,7 +56,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def sprint_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => "sprint", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, {:controller => "versions", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
   end
 
   def release_link_or_empty(release)
@@ -74,7 +74,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def record_id_or_empty(story)
     story.new_record? ? "" : story.id
   end
-  
+
   def sprint_status_id_or_default(sprint)
     sprint.new_record? ? Version::VERSION_STATUSES.first : sprint.status
   end
@@ -82,7 +82,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def sprint_status_label_or_default(sprint)
     sprint.new_record? ? l("version_status_#{Version::VERSION_STATUSES.first}") : l("version_status_#{sprint.status}")
   end
-  
+
   def status_id_or_default(story)
     story.new_record? ? IssueStatus.find(:first, :order => "position ASC").id : story.status.id
   end
@@ -106,7 +106,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def textile_description_or_empty(story)
     story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
-  
+
   def textile_to_html(textile)
     textile.nil? ? "" : Redmine::WikiFormatting::Textile::Formatter.new(textile).to_html
   end
@@ -118,7 +118,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def tracker_name_or_empty(story)
     story.new_record? ? "" : story.tracker.name
   end
-  
+
   def updated_on_with_milliseconds(story)
     date_string_with_milliseconds(story.updated_on, 0.001) unless story.blank?
   end

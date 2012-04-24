@@ -21,7 +21,8 @@
   <%= link_to(l(:label_product_cards), {
       :controller => 'rb_stories',
       :action => 'index',
-      :project_id => project.id
+      :project_id => project.id,
+      :format => 'pdf'
       }) %><br/>
   <% end %>
 <% end %>
@@ -57,7 +58,8 @@
         :controller => 'rb_stories',
         :action => 'index',
         :project_id => project.id,
-        :sprint_id => sprint.id
+        :sprint_id => sprint.id,
+        :format => 'pdf'
         })
     %><br/>
   <% end %>
