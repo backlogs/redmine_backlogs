@@ -32,7 +32,7 @@ case "$GEMSET" in
 esac
 
 CONFIG="$( cd "$( dirname "$0" )" && pwd )"
-CONFIG="$CONFIG/rbl-reinstall.rc"
+CONFIG="$CONFIG/rbl-test.rc"
 
 if [ ! -f $CONFIG ]; then
     echo "$CONFIG does not exist"
@@ -50,6 +50,7 @@ mysqladmin -u root -p$DBROOTPW create $GEMSET
 zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
 
 echo migrations
+bundle exec rake generate_session_store
 script -c "rake db:migrate" -f ~/redmine/cuke-$GEMSET-migrate.log
 script -c "rake db:migrate:plugins" -f ~/redmine/cuke-$GEMSET-migrate-plugins.log
 #rake redmine:backlogs:install batch=true corruptiontest=false labels=false RAILS_ENV=cucumber

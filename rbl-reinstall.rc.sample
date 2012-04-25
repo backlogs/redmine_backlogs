@@ -1,8 +1,0 @@
-VERSION=1.2.0
-DBROOTPW=your_mysql_root_pw
-DBPW=redmine_db_user_pw
-RVM=y # reinstall base gems in rvm environment
-DEV=y # reinstall dev gems in rvm environment
-DB=n # drop and re-create database
-# if DB=n, you can set DBROOTPW and DBPW to anything you want, they
-# won't be used, but they must be set to something

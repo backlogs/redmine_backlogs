@@ -111,7 +111,7 @@ Given /^I visit the scrum statistics page$/ do
 end
 
 When /^I try to download the calendar feed$/ do
-  visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project })
+  visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project, :format => 'api' })
 end
 
 When /^I view the master backlog$/ do

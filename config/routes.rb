@@ -4,8 +4,6 @@ ActionController::Routing::Routes.draw do |map|
   # From Redmine so namespacing avoids any further problems down the line
   map.resource :rb, :only => :none do |rb|
     rb.resource   :updated_items,    :only => :show,                :controller => :rb_updated_items,   :as => "updated_items/:project_id"
-    rb.resource   :query,            :only => :show,                :controller => :rb_queries,         :as => "queries/:project_id"
-    rb.resource   :query,            :only => :impediments,         :controller => :rb_queries,         :as => "queries/:project_id/:sprint_id"
     rb.resource   :wiki,             :only => [:show, :edit],       :controller => :rb_wikis,           :as => "wikis/:sprint_id"
     rb.resource   :task,             :except => :index,             :controller => :rb_tasks,           :as => "task/:id"
     rb.resources  :tasks,            :only => :index,               :controller => :rb_tasks,           :as => "tasks/:story_id"
@@ -15,6 +13,10 @@ ActionController::Routing::Routes.draw do |map|
     rb.resources  :release,          :only => :destroy,             :controller => :rb_releases,        :as => "release/:release_id"
     rb.resources  :releases,         :only => :index,               :controller => :rb_releases,        :as => "releases/:project_id"
     rb.resources  :releases,         :only => :snapshot,            :controller => :rb_releases,        :as => "releases/:project_id"
+
+    rb.connect    'issues/backlog/product/:project_id',             :controller => :rb_queries,           :action => 'show'
+    rb.connect    'issues/backlog/sprint/:sprint_id',               :controller => :rb_queries,           :action => 'show'
+    rb.connect    'issues/impediments/sprint/:sprint_id',           :controller => :rb_queries,           :action => 'impediments'
 
     rb.connect    'statistics',                                     :controller => :rb_all_projects,      :action => 'statistics'
 
@@ -34,8 +36,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'sprint/download/:sprint_id.xml',                 :controller => :rb_sprints,          :action => 'download', :format => 'xml'
     rb.connect    'sprints/:project_id/close_completed',            :controller => :rb_sprints,          :action => 'close_completed'
 
-    rb.connect    'stories/:project_id/:sprint_id.pdf',             :controller => :rb_stories,          :action => 'index', :format => 'pdf'
-    rb.connect    'stories/:project_id.pdf',                        :controller => :rb_stories,          :action => 'index', :format => 'pdf'
+    rb.connect    'stories/sprint/:sprint_id.pdf',                  :controller => :rb_stories,          :action => 'index', :format => 'pdf'
+    rb.connect    'stories/project/:project_id.pdf',                :controller => :rb_stories,          :action => 'index', :format => 'pdf'
     rb.connect    'story/create',                                   :controller => :rb_stories,          :action => 'create'
     rb.connect    'story/update/:id',                               :controller => :rb_stories,          :action => 'update'
 
@@ -45,8 +47,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'burndown/:sprint_id/embed',                      :controller => :rb_burndown_charts,  :action => 'embedded'
     rb.connect    'burndown/:sprint_id/print',                      :controller => :rb_burndown_charts,  :action => 'print'
 
-    rb.connect    'hooks/sidebar/:project_id/:sprint_id',           :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
-    rb.connect    'hooks/sidebar/:project_id',                      :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
+    rb.connect    'hooks/sidebar/sprint/:sprint_id',                :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
+    rb.connect    'hooks/sidebar/project/:project_id',              :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
   end
 
 end
