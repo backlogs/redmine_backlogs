@@ -55,17 +55,6 @@ end
 
 module BacklogsPrintableCards
   class CardPageLayout
-    @@layouts ||= {} 
-    begin
-      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
-      layouts.each_pair{|key, spec|
-        layout = CardPageLayout.new(spec.merge({'name' => key}))
-        @@layouts[key] = layout if layout.valid
-      }
-    rescue => e
-      RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
-    end
-
     def initialize(layout)
       @layout = layout
 
@@ -229,6 +218,17 @@ module BacklogsPrintableCards
       File.open(File.dirname(__FILE__) + '/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
       end
+    end
+
+    @@layouts ||= {} 
+    begin
+      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
+      layouts.each_pair{|key, spec|
+        layout = CardPageLayout.new(spec.merge({'name' => key}))
+        @@layouts[key] = layout if layout.valid
+      }
+    rescue => e
+      RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
     end
   end
 
