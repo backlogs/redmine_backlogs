@@ -143,7 +143,7 @@ class Options
   OPTPARSE.parse!
 
   @@options[:platform] = `rvm-prompt g | sed -e 's/@//'`.gsub(/[\r\n]/, '').strip
-  @@options[:version] = case @@options[:platform] when 'redmine' then '1.4.1' when 'chiliproject' then '2.6.0' else nil end
+  @@options[:version] = case @@options[:platform] when 'redmine' then '1.4.1' when 'chiliproject' then '3.1.0' else nil end
 
   error("No platform selected") if @@options[:platform].to_s == ''
   error("Unsupported platform #{@@options[:platform].inspect}") unless ['redmine', 'chiliproject'].include?(@@options[:platform])

@@ -30,7 +30,7 @@ module Backlogs
         return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
         raise "#{Redmine::VERSION} (NOT SUPPORTED)"
       when :chiliproject
-        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,3] == [3,0,0]
+        return "#{Redmine::VERSION} (supported)" if Redmine::VERSION.to_a[0,3] == [3,1,0]
         return "#{Redmine::VERSION} (NOT SUPPORTED)" unless raise_error
         raise "#{Redmine::VERSION} (NOT SUPPORTED)"
     end
