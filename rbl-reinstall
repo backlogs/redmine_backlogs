@@ -287,7 +287,7 @@ end
 
 script.database "rake db:migrate"
 script.database "bundle exec rake generate_session_store"
-script.database "REDMINE_LANG=en rake redmine:load_default_data"
+script.database "REDMINE_LANG=en rake redmine:load_default_data" unless exists("~/redmine/setup/#{Options.platform}.sql.gz")
 script.database "rake db:migrate:plugins"
 script.database "labels=no story_trackers=Story task_tracker=Task rake redmine:backlogs:install"
 
