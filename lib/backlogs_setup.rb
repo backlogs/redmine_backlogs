@@ -26,13 +26,16 @@ module Backlogs
     case platform
       when :redmine
         supported = [1,4]
+        unsupported = [1,3]
       when :chiliproject
         supported = [3,1,0]
+        unsupported = nil
       else
         raise "Unsupported platform #{platform}"
     end
 
     return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
+    return "#{Redmine::VERSION} (unsupported but might work, please upgrade to #{supported.collect{|d| d.to_s}.join('.')}" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
     msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.collect{|d| d.to_s}.join('.')})"
     raise msg if raise_error
     return msg
