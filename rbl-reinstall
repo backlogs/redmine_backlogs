@@ -5,7 +5,7 @@ require 'optparse'
 require 'yaml'
 
 def error(msg)
-  puts "echo #{msg}\n"
+  puts "echo '#{msg}'\n"
   exit
 end
 
@@ -49,10 +49,10 @@ class Script
   end
 
   def chiliproject(line)
-    self << line if Options.platform == 'chiliproject'
+    install line if Options.platform == 'chiliproject'
   end
   def redmine(line)
-    self << line if Options.platform == 'redmine'
+    install line if Options.platform == 'redmine'
   end
 
   def to_s
@@ -94,7 +94,6 @@ class Options
       @@options[:rootpw] = pw
     end
 
-    @@options[:user] ||= 'redmine'
     opts.on( '-U', '--user USER', 'DB user' ) do |user|
       @@options[:user] = user
     end
@@ -102,8 +101,8 @@ class Options
       @@options[:pw] = pw
     end
 
-    opts.on( '-a', '--admin PASSWORD', 'Admin password' ) do |pw|
-      @@options[:admin] = pw
+    opts.on( '-a', '--adminpw PASSWORD', 'Admin password' ) do |pw|
+      @@options[:adminpw] = pw
     end
 
     opts.on( '-d', '--database', 'Re-install database' ) do
@@ -119,6 +118,16 @@ class Options
       puts opts
       exit
     end
+  end
+
+  def self.status
+    status = []
+    @@options.keys.sort{|a,b| a.to_s <=> b.to_s}.each{|o|
+      v = @@options[o]
+      v = '*****' if o.to_s =~ /pw$/ && v != ''
+      status << "echo '#{o}: #{v}'"
+    }
+    return status
   end
 
   OPTPARSE.top.each_option do |opt|
@@ -150,6 +159,7 @@ class Options
   error("Version not set") if Options.version.to_s == '' && Options.install?
 
   @@options[@@options[:platform].intern].each_pair{|k, v| @@options[k] = v if @@options[k].to_s == ''} if @@options[@@options[:platform].intern].is_a?(Hash)
+  @@options[:user] ||= 'redmine' if @@options[:pw].to_s != ''
 
   [:rvm, :install, :database].each{|option|
     @@options[option] = nil if @@options[option].to_s.strip == ''
@@ -157,11 +167,17 @@ class Options
   }
 
   @@options[:install] ||= !exists("~/redmine/#{@@options[:platform]}/config/database.yml")
-  @@options[:rvm] ||= (`rvm list | grep rails` == '')
+  @@options[:rvm] ||= (`gem list | grep rails`.strip == '')
 
   error("DB root password not set") if Options.rootpw.to_s == '' && Options.database?
-  error("DB password not set") if Options.pw.to_s == '' && Options.database?
   error("DB user not set") if Options.pw.to_s == '' && Options.database?
+  error("DB password not set") if Options.pw.to_s == '' && Options.database?
+  error("Admin password too short (must be longer than 4 chars)") if Options.adminpw.to_s.length > 0 && Options.adminpw.to_s.length <= 4 && Options.database?
+
+  [:rootpw, :pw, :adminpw].each{|pw|
+    next unless @@options[pw].to_s =~ /['"]/
+    error("#{pw} cannot contain a quote character")
+  }
 
   verify('~/redmine')
   verify("~/redmine/setup/database-#{Options.platform}.yml")
@@ -169,13 +185,13 @@ class Options
 end
 
 
+Options.status.each{|status| script << status }
 script << 'echo "*** PIPE OUTPUT OF THIS SCRIPT THROUGH BASH ***"'
 script << 'set -e'
 script << 'export RAILS_ENV=development'
 script << 'cd ~/redmine'
 
 script.install "rm -rf ~/redmine/#{Options.platform}"
-script.install "cd ~/redmine"
 
 script.redmine "svn co http://redmine.rubyforge.org/svn/tags/#{Options.version} redmine"
 script.chiliproject "git clone http://github.com/chiliproject/chiliproject.git"
@@ -236,6 +252,7 @@ else
   script.gem :simplecov
 end
 
+script.gem "cd ~/redmine/#{Options.platform}"
 script.gem "bundle install --system"
 
 script.gem :cucumber, '-1.1.9'
@@ -251,9 +268,17 @@ script.gem "
 "
 script.rvm "./script/generate cucumber --skip --spork"
 
+script.database "cd ~/redmine/#{Options.platform}"
 script.database "mysqladmin -f -u root -p#{Options.rootpw} drop #{Options.platform}"
 script.database "echo \"create database #{Options.platform} character set utf8;\" | mysql -u root -p#{Options.rootpw} mysql"
-script.database "echo \"create user '#{Options.user}'@'localhost' identified by '#{Options.pw}';\" | mysql -u root -p#{Options.rootpw} mysql"
+
+script.database "
+  DBUSER=`echo \"select concat(User, '@', Host) from mysql.user;\" | mysql -u root -proot | grep '^#{Options.user}@localhost$' | wc -l`
+  if [[ \"$DBUSER\" = \"0\" ]]; then
+    echo \"create user '#{Options.user}'@'localhost' identified by '#{Options.pw}';\" | mysql -u root -p#{Options.rootpw} mysql
+  fi
+"
+
 script.database "echo \"grant all privileges on redmine.* to 'redmine'@'localhost';\" | mysql -u root -p#{Options.rootpw} mysql"
 if exists("~/redmine/setup/#{Options.platform}.sql.gz")
   script.database "zcat ~/redmine/setup/#{Options.platform}.sql.gz | mysql -u root -p#{Options.rootpw} #{Options.platform}"
@@ -266,9 +291,9 @@ script.database "REDMINE_LANG=en rake redmine:load_default_data"
 script.database "rake db:migrate:plugins"
 script.database "labels=no story_trackers=Story task_tracker=Task rake redmine:backlogs:install"
 
-if Options.admin.to_s == ''
+if Options.adminpw.to_s != ''
   script.database "cd ~/redmine/#{Options.platform}"
-  script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '$USERPW'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to $USERPW'}\""
+  script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
 end
 
 puts script
