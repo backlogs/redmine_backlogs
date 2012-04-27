@@ -2,7 +2,7 @@ class RbWikisController < RbApplicationController
   unloadable
 
   # NOTE: This method is public (see init.rb). We will let Redmine core's
-  # WikiController#index tak care of autorization
+  # WikiController#index take care of autorization
   # NOTE: this redirection causes a page to be created from a template
   # as a side-effect of calling @sprint.wiki_page
   def show
@@ -10,7 +10,7 @@ class RbWikisController < RbApplicationController
   end
 
   # NOTE: This method is public (see init.rb). We will let Redmine core's
-  # WikiController#index tak care of autorization
+  # WikiController#index take care of autorization
   # NOTE: this redirection causes a page to be created from a template
   # as a side-effect of calling @sprint.wiki_page
   def edit
