@@ -186,7 +186,12 @@ module Backlogs
         return history(property, [time.to_date])[0]
       end
 
-      def history(property, days)
+      # Extract history of a property of a story for a range of days.
+      # \param property to extract
+      # \param days of interest as an Array
+      # \param sprint_burndown bool for selecting extra processing for sprint burndown
+      # \return array of property values 
+      def history(property, days, sprint_burndown=true)
         property = property.to_s unless property.is_a?(String)
         raise "Unsupported property #{property.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(property)
 
@@ -219,8 +224,10 @@ module Backlogs
           values.fill(change.value, day)
         }
 
-        # ignore the start-of-day value for issues created mid-sprint
-        values[0] = nil if created_day > days[0]
+        if sprint_burndown == true
+          # ignore the start-of-day value for issues created mid-sprint
+          values[0] = nil if created_day > days[0]
+        end
 
         return prefix + values
       end
