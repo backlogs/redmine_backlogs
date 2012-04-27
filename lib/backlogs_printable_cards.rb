@@ -113,15 +113,15 @@ module BacklogsPrintableCards
     attr_reader :valid
 
     def self.selected
-      return @@layouts[Backlogs.setting[:card_spec]]
+      @@layouts[Backlogs.setting[:card_spec]]
     end
 
     def self.available
-      return @@layouts.keys.sort
+      @@layouts.keys.sort
     end
 
     def to_yaml(opts={})
-      return @layout.reject{|k, v| k == 'name'}.to_yaml(opts)
+      @layout.reject{|k, v| k == 'name'}.to_yaml(opts)
     end
 
     def self.update
@@ -277,7 +277,7 @@ module BacklogsPrintableCards
     end
 
     def box(b, scaled=true)
-      return {
+      {
         :x => (b['x'].units_to_points / @template[:x]) * @width,
         :y => (1 - (b['y'].units_to_points / @template[:y])) * @height,
         :w => (b['w'].units_to_points / @template[:x]) * @width,
@@ -289,21 +289,21 @@ module BacklogsPrintableCards
       s = b.xpath('Span')[0]
       style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
       style = 'normal' if style == ''
-      return {
+      {
         :size => Integer(s['font_size']),
         :style => style.intern
       }
     end
 
     def line_width(obj)
-      return obj['line_width'].units_to_points
+      obj['line_width'].units_to_points
     end
 
     def color(obj, prop)
       c = obj[prop]
       return nil if c =~ /00$/
       raise "Alpha channel not supported" unless c =~ /ff$/i
-      return c[2, 6]
+      c[2, 6]
     end
 
     def line(l)

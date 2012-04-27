@@ -13,7 +13,7 @@ module Backlogs
       def [](key)
         raise "Key '#{key}' does not exist" unless self.include?(key)
         raise "Key '#{key}' is not a symbol" unless key.is_a?(Symbol)
-        return super(key)
+        super(key)
       end
 
       def []=(key, value)
@@ -71,7 +71,7 @@ module Backlogs
     end
 
     def [](i)
-      return @data[i]
+      @data[i]
     end
 
     def each(&block)
@@ -87,7 +87,7 @@ module Backlogs
     end
 
     def to_s
-      return @data.collect{|s| s.to_s}.join("\n")
+      @data.collect{|s| s.to_s}.join("\n")
     end
   end
 end

@@ -111,7 +111,7 @@ $LOREM = $LOREM.gsub(/\s+/, ' ')
 $LOREM = $LOREM.split(/[.]\s*/)
 
 def lorem(n)
-  return $LOREM[rand($LOREM.size - 20)..-1].join('. ')[0, n]
+  $LOREM[rand($LOREM.size - 20)..-1].join('. ')[0, n]
 end
 
 $ALPHANUMERICS = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
@@ -134,7 +134,7 @@ def unique(model_attr)
   v = "#{model_attr.split('#')[0]}#{v}"
   v << "@example.com" if model_attr.match(/#mail/)
 
-  return v
+  v
 end
 
 def random_string(model_attr, v)
@@ -160,7 +160,7 @@ def random_string(model_attr, v)
     end
   end
 
-  return nv
+  nv
 end
 
 

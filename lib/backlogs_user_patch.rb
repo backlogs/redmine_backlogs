@@ -56,7 +56,7 @@ module Backlogs
         @prefs[prefixed] = value
       end
 
-      return @prefs[prefixed]
+      @prefs[prefixed]
     end
   end
 

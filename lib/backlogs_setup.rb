@@ -18,7 +18,7 @@ module Backlogs
 
     v = [v, g].compact.join(' ')
     v = '?' if v == ''
-    return v
+    v
   end
   module_function :version
 
@@ -46,7 +46,7 @@ module Backlogs
     return :windows if RUBY_PLATFORM =~ /cygwin|windows|mswin|mingw|bccwin|wince|emx/
     return :unix if RUBY_PLATFORM =~ /darwin|linux/
     return :java if RUBY_PLATFORM =~ /java/
-    return nil
+    nil
   end
   module_function :os
 
@@ -60,12 +60,12 @@ module Backlogs
       rescue LoadError
       end
     }
-    return installed
+    installed
   end
   module_function :gems
 
   def trackers
-    return {:task => !RbTask.tracker.nil?, :story => RbStory.trackers.size != 0, :default_priority => !IssuePriority.default.nil?}
+    {:task => !RbTask.tracker.nil?, :story => RbStory.trackers.size != 0, :default_priority => !IssuePriority.default.nil?}
   end
   module_function :trackers
 
@@ -100,7 +100,7 @@ module Backlogs
     return false if ran.size == 0
     ran = ran.sort[-1]
 
-    return ran >= available
+    ran >= available
   end
   module_function :migrated?
 
@@ -109,7 +109,7 @@ module Backlogs
     return false if Backlogs.trackers.values.reject{|configured| configured}.size > 0
     return false unless Backlogs.migrated?
     return false unless project.nil? || project.enabled_module_names.include?("backlogs")
-    return true
+    true
   end
   module_function :configured?
 

@@ -23,7 +23,7 @@ class MigrateLegacy < ActiveRecord::Migration
     r.each_with_index{|v, i|
       normalized << MigrateLegacy.normalize_value(v, t[i])
     }
-    return normalized
+    normalized
   end
 
   def self.up

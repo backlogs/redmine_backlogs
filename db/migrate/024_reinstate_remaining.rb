@@ -14,7 +14,7 @@ class ReinstateRemaining < ActiveRecord::Migration
 
     e = issue.leaves.collect{|t| ReinstateRemaining.initial_estimate(t)}.compact
     return nil if e.size == 0
-    return e.sum
+    e.sum
   end
 
   def self.up

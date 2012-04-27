@@ -42,7 +42,7 @@ def dir(path=nil)
     r += "/#{d}"
     return "#{r}#{path}" if File.directory?("#{r}/redmine_backlogs")
   }
-  return nil
+  nil
 end
 
 $key_order = []
@@ -53,7 +53,7 @@ def keycomp(a, b)
   return pa <=> pb if pa && pb
   return 1 if pa
   return -1 if pb
-  return a.to_s <=> b.to_s
+  a.to_s <=> b.to_s
 end
 
 class Hash
@@ -134,11 +134,11 @@ def translated(l, s)
       puts "#{l}: #{word}"
     end
   end
-  return status
+  status
 end
 
 def name(t)
-  return YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
+  YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
 end
 
 translation.keys.sort.each {|t|

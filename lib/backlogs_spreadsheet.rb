@@ -17,7 +17,7 @@ module BacklogsSpreadsheet
         return s if s.id == ns.id || ns.auto
       }
       @styles << ns
-      return ns
+      ns
     end
 
     def to_xml(xml)
@@ -54,7 +54,7 @@ module BacklogsSpreadsheet
     attr_reader :id, :auto, :font, :numberformat
 
     def ==(other)
-      return font == other.font && numberformat == other.numberformat
+      font == other.font && numberformat == other.numberformat
     end
 
     def to_xml(xml)
@@ -77,7 +77,7 @@ module BacklogsSpreadsheet
     end
 
     def default_style
-      return {}
+      {}
     end
 
     attr_accessor :style
@@ -98,7 +98,7 @@ module BacklogsSpreadsheet
     end
 
     def celltype
-      return self.class.name.gsub(/^.*::/, '').gsub(/Cell$/, '')
+      self.class.name.gsub(/^.*::/, '').gsub(/Cell$/, '')
     end
   end
 
@@ -106,7 +106,7 @@ module BacklogsSpreadsheet
     include Cell
 
     def is_a?(x)
-      return (x == NumberCell) || Float.ancestors.include?(x)
+      (x == NumberCell) || Float.ancestors.include?(x)
     end
   end
 
@@ -119,16 +119,16 @@ module BacklogsSpreadsheet
     include Cell
 
     def is_a?(x)
-      return (x == DateTimeCell) || DateTime.ancestors.include?(x)
+      (x == DateTimeCell) || DateTime.ancestors.include?(x)
     end
 
     def to_s
-      return self.strftime('%FT%T.%L')
+      self.strftime('%FT%T.%L')
     end
 
     def default_style
       return {:numberformat => {'ss:Format' => 'Short Date'}} if self.hour == 0 && self.min == 0 && self.sec == 0
-      return {:numberformat => {'ss:Format' => 'General Date'}}
+      {:numberformat => {'ss:Format' => 'General Date'}}
     end
   end
 
@@ -163,7 +163,7 @@ module BacklogsSpreadsheet
 
     def [](row, col)
       return nil unless @cells[row]
-      return @cells[row][col]
+      @cells[row][col]
     end
 
     def []=(row, col, c)
@@ -210,7 +210,7 @@ module BacklogsSpreadsheet
     end
 
     def dimensions
-      return [@cells.keys.max + 1, @cells.values.collect{|r| r.keys }.flatten.max + 1]
+      [@cells.keys.max + 1, @cells.values.collect{|r| r.keys }.flatten.max + 1]
     end
 
     def rows
@@ -221,7 +221,7 @@ module BacklogsSpreadsheet
           data[r][c] = v
         }
       }
-      return data
+      data
     end
 
     attr_accessor :name
@@ -263,11 +263,11 @@ module BacklogsSpreadsheet
 
       w = BacklogsSpreadsheet::WorkSheet.new(self, i)
       @worksheets << w
-      return w
+      w
     end
 
     def sheetnames
-      return @worksheets.collect{|w| w.name }
+      @worksheets.collect{|w| w.name }
     end
 
     def load(data)
@@ -331,7 +331,7 @@ module BacklogsSpreadsheet
       end
 
       builder.doc.root.add_previous_sibling Nokogiri::XML::ProcessingInstruction.new(builder.doc, "mso-application", 'progid="Excel.Sheet"')
-      return builder.to_xml
+      builder.to_xml
     end
   end
 end

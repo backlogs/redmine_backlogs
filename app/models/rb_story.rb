@@ -33,7 +33,7 @@ class RbStory < Issue
       c += extras
     end
 
-    return c
+    c
   end
 
   # this forces NULLS-LAST ordering
@@ -51,15 +51,15 @@ class RbStory < Issue
       stories << story
     }
 
-    return stories
+    stories
   end
 
   def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(project.id, nil, :limit => limit)
+    RbStory.backlog(project.id, nil, :limit => limit)
   end
 
   def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(sprint.project.id, sprint.id, options)
+    RbStory.backlog(sprint.project.id, sprint.id, options)
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
@@ -69,7 +69,7 @@ class RbStory < Issue
       sprint_of[backlog.fixed_version_id] ||= []
       sprint_of[backlog.fixed_version_id].push(backlog)
     end
-    return sprint_of
+    sprint_of
   end
 
   def self.stories_open(project)
@@ -82,7 +82,7 @@ class RbStory < Issue
       story.rank = i + 1
       stories << story
     }
-    return stories
+    stories
   end
 
   def self.create_and_position(params)
@@ -93,7 +93,7 @@ class RbStory < Issue
     # indicate that this a new story. saving will set position to 1 and the move_after code needs position = nil to make an insert operation.
     s.position = nil
     s.move_after(params['prev_id'])
-    return s
+    s
   end
 
   def self.find_all_updated_since(since, project_id)
@@ -130,7 +130,7 @@ class RbStory < Issue
   end
 
   def tasks
-    return RbTask.tasks_for(self.id)
+    RbTask.tasks_for(self.id)
   end
 
   def move_after(prev_id)
@@ -193,7 +193,7 @@ class RbStory < Issue
     # method. Comparing to nil should be safe.
     return notsized if story_points == nil || story_points.blank?
     return 'S' if story_points == 0
-    return story_points.to_s
+    story_points.to_s
   end
 
   def task_status
@@ -206,7 +206,7 @@ class RbStory < Issue
         open += 1
       end
     }
-    return {:open => open, :closed => closed}
+    {:open => open, :closed => closed}
   end
 
   def update_and_position!(params)
@@ -232,16 +232,16 @@ class RbStory < Issue
 
     @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => [:status, :project])
 
-    return @rank
+    @rank
   end
 
   def self.at_rank(project_id, sprint_id, rank)
-    return RbStory.find(:first,
-                      :order => RbStory::ORDER,
-                      :conditions => RbStory.condition(project_id, sprint_id),
-                      :joins => [:status, :project],
-                      :limit => 1,
-                      :offset => rank - 1)
+    RbStory.find(:first,
+                 :order => RbStory::ORDER,
+                 :conditions => RbStory.condition(project_id, sprint_id),
+                 :joins => [:status, :project],
+                 :limit => 1,
+                 :offset => rank - 1)
   end
 
   def burndown(sprint=nil)

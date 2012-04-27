@@ -6,7 +6,7 @@ class RbTask < Issue
   def self.tracker
     task_tracker = Backlogs.setting[:task_tracker]
     return nil if task_tracker.blank?
-    return Integer(task_tracker)
+    Integer(task_tracker)
   end
 
   def self.rb_safe_attributes(params)
@@ -19,7 +19,7 @@ class RbTask < Issue
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
-    return attribs
+    attribs
   end
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
@@ -45,7 +45,7 @@ class RbTask < Issue
     task.update_blocked_list blocks.split(/\D+/) if is_impediment
     task.time_entry_add(params)
 
-    return task
+    task
   end
 
   # TODO: there's an assumption here that impediments always have the
@@ -66,7 +66,7 @@ class RbTask < Issue
         tasks << task
       }
     end
-    return tasks
+    tasks
   end
 
   def update_with_relationships(params, is_impediment = false)
@@ -155,7 +155,7 @@ class RbTask < Issue
     return nil if !s
 
     @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
-    return @rank
+    @rank
   end
 
   def burndown(sprint = nil)

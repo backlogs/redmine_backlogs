@@ -67,7 +67,7 @@ class Burndown
   def [](i)
     i = i.intern if i.is_a?(String)
     raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
-    return @data[i]
+    @data[i]
   end
 
   def series(remove_empty = true)
@@ -84,7 +84,7 @@ class Burndown
     @series[remove_empty].each {|k|
       @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect{|d| d.to_f }.uniq == [0.0]
     }
-    return @series[remove_empty]
+    @series[remove_empty]
   end
 
   attr_reader :days
@@ -118,11 +118,11 @@ class RbSprint < Version
   }
 
   def stories
-    return RbStory.sprint_backlog(self)
+    RbStory.sprint_backlog(self)
   end
 
   def points
-    return stories.inject(0){|sum, story| sum + story.story_points.to_i}
+    stories.inject(0){|sum, story| sum + story.story_points.to_i}
   end
 
   def has_wiki_page
@@ -134,7 +134,7 @@ class RbSprint < Version
     template = find_wiki_template
     return false if template && page.text == template.text
 
-    return true
+    true
   end
 
   def find_wiki_template
@@ -153,7 +153,7 @@ class RbSprint < Version
       t = p.wiki.find_page(template)
       return t if t
     }
-    return nil
+    nil
   end
 
   def wiki_page
@@ -174,7 +174,7 @@ class RbSprint < Version
       end
     end
 
-    return wiki_page_title
+    wiki_page_title
   end
 
   def days(cutoff)
@@ -209,11 +209,11 @@ class RbSprint < Version
                      # 5 out of 7 are working days
                      Integer(self.points * dpp * 7.0/5)
                    end
-    return self.start_date + derived_days
+    self.start_date + derived_days
   end
 
   def has_burndown?
-    return (days(:active) || []).size != 0
+    (days(:active) || []).size != 0
   end
 
   def activity
@@ -223,7 +223,7 @@ class RbSprint < Version
     # assume a sprint is active if it's only 2 days old
     return true if bd[:hours_remaining].compact.size <= 2
 
-    return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
+    Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
   end
 
   def burndown(direction=nil)
@@ -234,7 +234,7 @@ class RbSprint < Version
 
     @burndown ||= {'up' => nil, 'down' => nil}
     @burndown[direction] ||= Burndown.new(self, direction)
-    return @burndown[direction]
+    @burndown[direction]
   end
 
   def impediments

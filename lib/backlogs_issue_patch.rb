@@ -21,12 +21,12 @@ module Backlogs
     module InstanceMethods
       def journalized_update_attributes!(attribs)
         init_journal(User.current)
-        return self.becomes(Issue).update_attributes!(attribs)
+        self.becomes(Issue).update_attributes!(attribs)
       end
 
       def journalized_update_attributes(attribs)
         init_journal(User.current)
-        return self.becomes(Issue).update_attributes(attribs)
+        self.becomes(Issue).update_attributes(attribs)
       end
 
       def journalized_update_attribute(attrib, v)
@@ -35,11 +35,11 @@ module Backlogs
       end
 
       def is_story?
-        return RbStory.trackers.include?(tracker_id)
+        RbStory.trackers.include?(tracker_id)
       end
 
       def is_task?
-        return (tracker_id == RbTask.tracker)
+        tracker_id == RbTask.tracker
       end
 
       def story
@@ -62,7 +62,7 @@ module Backlogs
             @rb_story = @rb_story.becomes(RbStory) if @rb_story
           end
         end
-        return @rb_story
+        @rb_story
       end
 
       def blocks
@@ -89,7 +89,7 @@ module Backlogs
         hpp = self.project.scrum_statistics.hours_per_point
         return nil if ! hpp
 
-        return Integer(self.story_points * (hpp / 8))
+        Integer(self.story_points * (hpp / 8))
       end
 
       def backlogs_before_save
@@ -107,7 +107,7 @@ module Backlogs
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
         end
 
-        return true
+        true
       end
 
       def backlogs_after_save
@@ -164,7 +164,7 @@ module Backlogs
       end
 
       def value_at(property, time)
-        return history(property, [time.to_date])[0]
+        history(property, [time.to_date])[0]
       end
 
       def history(property, days)

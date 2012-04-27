@@ -8,7 +8,7 @@ module Backlogs
     end
 
     def to_s
-      return @sql.result
+      @sql.result
     end
   end
 
@@ -79,7 +79,7 @@ module Backlogs
                              }
         end
 
-        return @available_filters.merge(backlogs_filters)
+        @available_filters.merge(backlogs_filters)
       end
 
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)
@@ -123,7 +123,7 @@ module Backlogs
             sql = "not (" + sql.join(" or ") + ")"
         end
 
-        return sql
+        sql
       end
     end
 

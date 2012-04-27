@@ -63,7 +63,7 @@ class ReleaseBurndown
   attr_reader :ideal
 
   def series(select = :active)
-    return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
+    @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
   end
 
   private
@@ -76,7 +76,7 @@ class ReleaseBurndown
   end
 
   def to_h(keys, values)
-    return Hash[*keys.zip(values).flatten]
+    Hash[*keys.zip(values).flatten]
   end
 
 end
@@ -100,7 +100,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories
-    return RbStory.stories_open(@project)
+    RbStory.stories_open(@project)
   end
 
   def burndown_days
@@ -115,13 +115,13 @@ class RbRelease < ActiveRecord::Base
   end
 
   def has_burndown?
-    return !!(self.release_start_date and self.release_end_date and self.initial_story_points)
+    !!(self.release_start_date and self.release_end_date and self.initial_story_points)
   end
 
   def burndown
     return nil if not self.has_burndown?
     @cached_burndown ||= ReleaseBurndown.new(self)
-    return @cached_burndown
+    @cached_burndown
   end
 
   def today

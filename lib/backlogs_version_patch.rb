@@ -17,7 +17,7 @@ module Backlogs
 
     module InstanceMethods
       def burndown
-        return RbSprint.find_by_id(self.id).burndown
+        RbSprint.find_by_id(self.id).burndown
       end
 
     end

@@ -35,7 +35,7 @@ class GitHub
     end
 
     def to_s
-      return @data.inspect
+      @data.inspect
     end
   end
 
@@ -48,7 +48,7 @@ class GitHub
     end
 
     def state
-      return @data[:state].intern
+      @data[:state].intern
     end
 
     def state=(new)
@@ -94,7 +94,7 @@ class GitHub
         prio = m[1] if m
       }
       l << "prio-#{prio}" if prio
-      return l.compact.uniq.collect{|lb| lb.downcase}
+      l.compact.uniq.collect{|lb| lb.downcase}
     end
 
     def labels=(new)
@@ -146,11 +146,11 @@ class GitHub
   end
 
   def issues(state = :open)
-    return get("issues/list/:user/:repo/#{state}")['issues'].collect { |i| Issue.new(self, i) }
+    get("issues/list/:user/:repo/#{state}")['issues'].collect { |i| Issue.new(self, i) }
   end
 
   def issue(id)
-    return Issue.new(self, get("issues/show/:user/:repo/#{id}")['issue'])
+    Issue.new(self, get("issues/show/:user/:repo/#{id}")['issue'])
   end
 
   def labels(which = :all)
@@ -175,11 +175,11 @@ class GitHub
   end
 
   def committers
-    return ['friflaj']
+    ['friflaj']
   end
 
   def self.states(cond)
-    return GitHub::STATES.keys.select{|k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond))}
+    GitHub::STATES.keys.select{|k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond))}
   end
 end
 
