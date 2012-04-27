@@ -70,11 +70,9 @@ module Backlogs
     end
 
     module InstanceMethods
-
       def backlogs_preference
         @backlogs_preference ||= Backlogs::Preference.new(self)
       end
-
     end
   end
 end

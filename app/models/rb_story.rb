@@ -294,5 +294,4 @@ class RbStory < Issue
       bd
     }
   end
-
 end

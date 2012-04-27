@@ -33,5 +33,4 @@ class RbTasksController < RbApplicationController
       format.html { render :partial => "task", :object => @task, :status => status }
     end
   end
-
 end

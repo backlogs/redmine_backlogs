@@ -50,5 +50,4 @@ class RbTaskboardsController < RbApplicationController
       format.html { render :layout => "rb" }
     end
   end
-
 end

@@ -252,5 +252,4 @@ class RbSprint < Version
             self.id]
       ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
   end
-
 end

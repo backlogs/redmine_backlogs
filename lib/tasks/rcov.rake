@@ -7,8 +7,6 @@ begin
 
   namespace :redmine do
     namespace :backlogs do
-
-
       desc "Generate RCov report for Redmine Backlogs"
       task :rcov => ["rcov:all"]
 

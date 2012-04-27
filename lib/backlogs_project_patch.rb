@@ -167,14 +167,12 @@ module Backlogs
     end
 
     module InstanceMethods
-
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
         @scrum_statistics = Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) } unless @scrum_statistics
 
         @scrum_statistics
       end
-
     end
   end
 end

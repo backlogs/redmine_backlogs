@@ -8,7 +8,6 @@ module Backlogs
 
       base.class_eval do
         unloadable
-
       end
     end
 
@@ -19,7 +18,6 @@ module Backlogs
       def burndown
         RbSprint.find_by_id(self.id).burndown
       end
-
     end
   end
 end

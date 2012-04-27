@@ -59,5 +59,4 @@ class RbStoriesController < RbApplicationController
       format.html { render :partial => "story", :object => story, :status => status }
     end
   end
-
 end

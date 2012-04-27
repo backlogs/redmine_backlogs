@@ -37,5 +37,4 @@ class RbImpedimentsController < RbApplicationController
       format.html { render :partial => "impediment", :object => @impediment, :status => status }
     end
   end
-
 end

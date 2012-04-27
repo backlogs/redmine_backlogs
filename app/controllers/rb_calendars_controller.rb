@@ -100,5 +100,4 @@ class RbCalendarsController < RbApplicationController
 
     cal.to_ical
   end
-
 end

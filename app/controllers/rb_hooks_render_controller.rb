@@ -16,5 +16,4 @@ class RbHooksRenderController < RbApplicationController
       format.html { render :template => 'backlogs/view_issues_sidebar.html.erb', :layout => false, :locals => locals }
     end
   end
-
 end
