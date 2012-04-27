@@ -32,7 +32,7 @@
           sprint.stories.each do |story|
             story.tasks.each do |task|
               next if statuses[task.status_id] == nil # Avoid bug?
-	      if statuses[task.status_id].is_closed?
+              if statuses[task.status_id].is_closed?
                 done+=1
               elsif task.status_id == IssueStatus.default.id
                 todo+=1

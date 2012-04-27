@@ -38,12 +38,12 @@
 <div id="sprints">
 <!--Show only sprints included in release duration & sort them by due date (sooner first)-->
 <% if @project.shared_versions.select{|version|  version.due_date && (version.due_date>=@release.release_start_date && version.due_date<=@release.release_end_date)}.sort{|vx,vy| vx.due_date <=>vy.due_date}.each do |version| %>
-	<h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
-	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
-	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
-    <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
+  <h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
+  <%= render :partial => 'versions/overview', :locals => {:version => version} %>
+  <%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
+  <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
 <% end.empty? %>
-	<p class="nodata"><%= l(:label_no_data) %></p>
+  <p class="nodata"><%= l(:label_no_data) %></p>
 <% end %>
 
 </div>
