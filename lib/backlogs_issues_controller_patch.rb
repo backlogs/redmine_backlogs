@@ -13,10 +13,10 @@ module Backlogs
           after_filter :add_backlogs_fields, :only => [:index]
         end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def add_backlogs_fields
         story_trackers = RbStory.trackers

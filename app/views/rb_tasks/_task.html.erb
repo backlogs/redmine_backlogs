@@ -34,6 +34,6 @@
     <div class="story_id"><%= task.story ? task.story.id : '' %></div>
     <div class="status_id"><%= task.status_id %></div>
     <div class="previous"><%= task.right_sibling.blank? ? '' : task.right_sibling.id %></div>
-    <%= render :partial => "backlogs/model_errors", :object => task.errors %>  
+    <%= render :partial => "backlogs/model_errors", :object => task.errors %>
   </div>
 </div>

@@ -156,7 +156,7 @@ module Backlogs
       settings
     end
   end
-  
+
   def setting
     SettingsProxy.instance
   end

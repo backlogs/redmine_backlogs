@@ -21,7 +21,7 @@ class ReinstateRemaining < ActiveRecord::Migration
     catch (:done) do
       throw :done if Issue.column_names.include?('remaining_hours')
 
-      add_column :issues, :remaining_hours, :float            
+      add_column :issues, :remaining_hours, :float
 
       execute "update issues set created_on = updated_on where created_on is NULL"
 

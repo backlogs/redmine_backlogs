@@ -11,7 +11,7 @@ class RbStory < Issue
       end
       visible = '1=1' # unless visible
 
-      if sprint_id.nil?  
+      if sprint_id.nil?
         c = ["
           project_id = ?
           and tracker_id in (?)

@@ -54,7 +54,7 @@ class MigrateLegacy < ActiveRecord::Migration
       end
 
       trackers = {}
-      
+
       # find story/task trackers per project
       execute("
           select projects.id as project_id, pt.tracker_id as tracker_id

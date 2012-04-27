@@ -77,7 +77,7 @@ def login_as_admin
   fill_in 'password', :with => 'admin'
   page.find(:xpath, '//input[@name="login"]').click
   @user = User.find(:first, :conditions => "login='admin'")
-end  
+end
 
 def task_position(task)
   p1 = task.story.tasks.select{|t| t.id == task.id}[0].rank

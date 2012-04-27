@@ -6,10 +6,10 @@ module Backlogs
         base.extend(ClassMethods)
         base.send(:include, InstanceMethods)
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def backlog?
         return (issue_statuses.collect{|s| s.backlog}.compact.uniq.size == 4)

@@ -90,7 +90,7 @@ Feature: Scrum Master
      Then Story 4 should be in the 1st position of the sprint named Sprint 001
       And Story 1 should be in the 2nd position of the sprint named Sprint 001
       And Story 2 should be in the 1st position of the sprint named Sprint 002
-  
+
   Scenario: Move a story down in a sprint
     Given I am viewing the master backlog
      When I move the story named Story A below Story B

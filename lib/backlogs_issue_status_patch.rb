@@ -6,10 +6,10 @@ module Backlogs
         base.extend(ClassMethods)
         base.send(:include, InstanceMethods)
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def backlog
         return :success if is_closed? && (default_done_ratio.nil? || default_done_ratio == 100)

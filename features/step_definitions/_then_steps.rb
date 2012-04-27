@@ -55,10 +55,10 @@ end
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
   higher = RbStory.find(:all, :conditions => { :subject => higher_subject })
   higher.length.should == 1
-  
+
   lower = RbStory.find(:all, :conditions => { :subject => lower_subject })
   lower.length.should == 1
-  
+
   lower.first.higher_item.id.should == higher.first.id
 end
 
@@ -119,7 +119,7 @@ end
 
 Then /^the sprint should be updated accordingly$/ do
   sprint = RbSprint.find(@sprint_params['id'])
-  
+
   sprint.attributes.each_key do |key|
     unless ['updated_on', 'created_on'].include?(key)
       case
@@ -145,7 +145,7 @@ Then /^the story named (.+) should have (\d+) task named (.+)$/ do |story_subjec
 
   tasks = stories.first.descendants
   tasks.length.should == 1
-  
+
   tasks.first.subject.should == task_subject
 end
 

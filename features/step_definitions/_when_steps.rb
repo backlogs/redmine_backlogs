@@ -1,17 +1,17 @@
 When /^I create the impediment$/ do
-  page.driver.process :post, 
+  page.driver.process :post,
                       url_for(:controller => :rb_impediments, :action => :create),
                       @impediment_params
 end
 
 When /^I create the story$/ do
-  page.driver.process :post, 
+  page.driver.process :post,
                       url_for(:controller => :rb_stories, :action => :create),
                       @story_params
 end
 
 When /^I create the task$/ do
-  page.driver.process :post, 
+  page.driver.process :post,
                       url_for(:controller => :rb_tasks, :action => :create),
                       @task_params
 end
@@ -25,7 +25,7 @@ end
 When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   prev  = RbStory.find(:first, :conditions => ["subject=?", prev_subject])
-  
+
   attributes = story.attributes
   attributes[:prev]             = prev.id
   attributes[:fixed_version_id] = prev.fixed_version_id
@@ -40,7 +40,7 @@ When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) positio
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   story.fixed_version = sprint
-  
+
   attributes = story.attributes
   attributes[:prev] = if position == 1
                         ''

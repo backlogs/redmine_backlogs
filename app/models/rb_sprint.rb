@@ -7,7 +7,7 @@ class Burndown
     @days = sprint.days(:all)
 
     stories = sprint.stories
-    
+
     case Backlogs.platform
       when :redmine
         stories |= Journal.find(:all, :joins => :details,
@@ -124,7 +124,7 @@ class RbSprint < Version
   def points
     return stories.inject(0){|sum, story| sum + story.story_points.to_i}
   end
-   
+
   def has_wiki_page
     return false if wiki_page_title.blank?
 
@@ -238,7 +238,7 @@ class RbSprint < Version
   end
 
   def impediments
-    @impediments ||= Issue.find(:all, 
+    @impediments ||= Issue.find(:all,
       :conditions => ["id in (
               select issue_from_id
               from issue_relations ir

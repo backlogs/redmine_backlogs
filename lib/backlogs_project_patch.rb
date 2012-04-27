@@ -108,7 +108,7 @@ module Backlogs
     def test_sprint_notes_available
       return !@past_sprints.detect{|s| !s.has_wiki_page}
     end
-  
+
     def test_active
       return (@project.status != Project::STATUS_ACTIVE || (@active_sprint && @active_sprint.activity))
     end
@@ -162,19 +162,19 @@ module Backlogs
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
     end
-    
+
     module ClassMethods
     end
-    
+
     module InstanceMethods
-    
+
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
         @scrum_statistics = Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) } unless @scrum_statistics
-    
+
         return @scrum_statistics
       end
-    
+
     end
   end
 end

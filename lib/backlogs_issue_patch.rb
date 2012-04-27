@@ -133,7 +133,7 @@ module Backlogs
                                           )", root_id, lft, rgt, fixed_version_id, fixed_version_id, fixed_version_id, fixed_version_id]).each{|task|
             j = Journal.new
             j.journalized = task
-            case Backlogs.platform 
+            case Backlogs.platform
               when :redmine
                 j.created_on = Time.now
               when :chiliproject

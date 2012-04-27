@@ -76,7 +76,7 @@ class Options
     # Set a banner, displayed at the top
     # of the help screen.
     opts.banner = "Usage: rbl-reinstall [options] file1 file2 ..."
- 
+
     opts.on('-p', '--platform PLATFORM', 'Install platform' ) do |platform|
     end
 

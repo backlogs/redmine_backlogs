@@ -11,10 +11,10 @@ module Backlogs
           after_filter :save_backlogs_preferences, :only => [:account]
         end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def save_backlogs_preferences
         if request.post? && flash[:notice] == l(:notice_account_updated)

@@ -11,7 +11,7 @@
 <div class="mypage-box">
  <table class="list issues">
   <%
-     projs.each do |project| 
+     projs.each do |project|
      sprints = RbSprint.open_sprints(project)
      next if sprints.length ==0
      next unless Backlogs.configured?(project)
@@ -36,14 +36,14 @@
                 done+=1
               elsif task.status_id == IssueStatus.default.id
                 todo+=1
-              else 
+              else
                 progress+=1
               end
               status = task.status_id
               if stat.has_key?(status)
                 stat[status] += 1
               else
-                stat[status] = 1 
+                stat[status] = 1
               end
             end
           end
