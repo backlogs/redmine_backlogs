@@ -74,14 +74,16 @@
 </script>
 
 <ul style="list-style:none; margin:0px">
-  <li><label>
-    <userlist size="5" name="filter-user-selection" multiple="multiple" title="User selection">
-      <option value='s'>Show empty Stories</option>
-      <% @project.assignable_users.sort.each do |member| %>
-        <option value="<%= member.id %>"> <%= member.name %></option>
-      <% end %>
+  <li>
+    <label>
+      <userlist size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+        <option value='s'>Show empty Stories</option>
+        <% @project.assignable_users.sort.each do |member| %>
+          <option value="<%= member.id %>"> <%= member.name %></option>
+        <% end %>
       </userlist>
-  </label></li>
+    </label>
+  </li>
 </ul>
 
 <br style="clear:both" />
