@@ -8,11 +8,9 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :task,             :except => :index,             :controller => :rb_tasks,           :as => "task/:id"
     rb.resources  :tasks,            :only => :index,               :controller => :rb_tasks,           :as => "tasks/:story_id"
     rb.resource   :taskboard,        :only => :show,                :controller => :rb_taskboards,      :as => "taskboards/:sprint_id"
-    rb.resource   :release,          :only => :show,                :controller => :rb_releases,        :as => "release/:release_id"
-    rb.resources  :release,          :only => :edit,                :controller => :rb_releases,        :as => "release/:release_id"
-    rb.resources  :release,          :only => :destroy,             :controller => :rb_releases,        :as => "release/:release_id"
+    rb.resource   :release, :only => [:show, :edit, :destroy, :snapshot], :controller => :rb_releases,  :as => "release/:release_id",   :member => {:snapshot => :get, :edit => :post}
+    rb.resources  :release,          :only => :new,                 :controller => :rb_releases,        :as => "release/:project_id",   :new => { :new => :post }
     rb.resources  :releases,         :only => :index,               :controller => :rb_releases,        :as => "releases/:project_id"
-    rb.resources  :releases,         :only => :snapshot,            :controller => :rb_releases,        :as => "releases/:project_id"
 
     rb.connect    'issues/backlog/product/:project_id',             :controller => :rb_queries,           :action => 'show'
     rb.connect    'issues/backlog/sprint/:sprint_id',               :controller => :rb_queries,           :action => 'show'
