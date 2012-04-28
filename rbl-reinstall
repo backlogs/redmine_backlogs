@@ -136,12 +136,12 @@ class Options
   OPTPARSE.top.each_option do |opt|
     next unless opt.long && opt.long.is_a?(Array)
     case opt.class.to_s
-      when 'OptionParser::Switch::RequiredArgument'
-        postfix=''
-      when 'OptionParser::Switch::NoArgument'
-        postfix='?'
-      else
-        raise "Unhandled class #{opt.class}"
+    when 'OptionParser::Switch::RequiredArgument'
+      postfix=''
+    when 'OptionParser::Switch::NoArgument'
+      postfix='?'
+    else
+      raise "Unhandled class #{opt.class}"
     end
 
     switch = opt.long[0].gsub(/^-*/, '')

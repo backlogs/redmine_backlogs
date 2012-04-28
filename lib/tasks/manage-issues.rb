@@ -75,11 +75,11 @@ class GitHub
           date = req.updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
           case diff
-            when 0 then nil
-            when 1 then l << '1day'
-            else
-              l << "#{diff}days"
-              l << 'no-feedback' if diff > 4
+          when 0 then nil
+          when 1 then l << '1day'
+          else
+            l << "#{diff}days"
+            l << 'no-feedback' if diff > 4
           end
         end
       end

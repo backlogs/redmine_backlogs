@@ -296,14 +296,14 @@ module BacklogsSpreadsheet
             raise "No cell data" unless v
 
             case v['Type']
-              when 'Number'
-                v = (v.text =~ /^[0-9]+(\.0+)?$/ ? Integer(v.text.gsub(/\.0+/, '')) : Float(v.text))
-              when 'String', nil
-                v = v.text
-              when 'DateTime'
-                v = Time.parse(v.text)
-              else
-                raise "Unsupported cell format '#{data['Type']}'"
+            when 'Number'
+              v = (v.text =~ /^[0-9]+(\.0+)?$/ ? Integer(v.text.gsub(/\.0+/, '')) : Float(v.text))
+            when 'String', nil
+              v = v.text
+            when 'DateTime'
+              v = Time.parse(v.text)
+            else
+              raise "Unsupported cell format '#{data['Type']}'"
             end
 
             c = cell.at('Comment//Data')

@@ -4,10 +4,10 @@ class RbCalendarsController < RbApplicationController
   unloadable
 
   case Backlogs.platform
-    when :redmine
-      accept_api_auth :ical
-    when :chiliproject
-      accept_key_auth :ical
+  when :redmine
+    accept_api_auth :ical
+  when :chiliproject
+    accept_key_auth :ical
   end
 
   def ical

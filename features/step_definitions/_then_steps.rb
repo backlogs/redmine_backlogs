@@ -123,12 +123,12 @@ Then /^the sprint should be updated accordingly$/ do
   sprint.attributes.each_key do |key|
     unless ['updated_on', 'created_on'].include?(key)
       case
-        when sprint[key].nil?
-          @sprint_params[key].should be_nil
-        when key =~ /_date/
-          sprint[key].strftime("%Y-%m-%d").should == @sprint_params[key]
-        else
-          sprint[key].should == @sprint_params[key]
+      when sprint[key].nil?
+        @sprint_params[key].should be_nil
+      when key =~ /_date/
+        sprint[key].strftime("%Y-%m-%d").should == @sprint_params[key]
+      else
+        sprint[key].should == @sprint_params[key]
       end
     end
   end
@@ -243,14 +243,14 @@ Then /^show me the (.+) journal for (.+)$/ do |property, issue|
   puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
   issue.journals.each {|j|
     case Backlogs.platform
-      when :redmine
-        j.details.select {|detail| detail.prop_key == property}.each {|detail|
-          puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
-        }
-      when :chiliproject
-        if j.changes[property] && j.created_at > issue.created_on
-          puts "  #{j.created_at}: #{j.changes[property].first} -> #{j.changes[property].last}"
-        end
+    when :redmine
+      j.details.select {|detail| detail.prop_key == property}.each {|detail|
+        puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
+      }
+    when :chiliproject
+      if j.changes[property] && j.created_at > issue.created_on
+        puts "  #{j.created_at}: #{j.changes[property].first} -> #{j.changes[property].last}"
+      end
     end
   }
   puts "  #{issue.updated_on}: #{issue.send(property.intern)}"

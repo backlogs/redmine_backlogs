@@ -35,20 +35,16 @@ class String
 
     value = Float(value.gsub(/\.$/, ''))
     case units
-      when nil
-        return value
-
-      when 'mm'
-        return value * 2.8346457
-
-      when 'pt'
-        return value
-
-      when 'in'
-        return value * 72
-
-      else
-        raise "Unexpected unit specification for #{self}"
+    when nil
+      return value
+    when 'mm'
+      return value * 2.8346457
+    when 'pt'
+      return value
+    when 'in'
+      return value * 72
+    else
+      raise "Unexpected unit specification for #{self}"
     end
   end
 end
@@ -324,70 +320,69 @@ module BacklogsPrintableCards
           next if obj.text?
 
           case obj.name
-            when 'Object-box'
-              dim = box(obj)
-              pdf.fill_color = color(obj, 'fill_color') || default_fill_color
-              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
-              pdf.line_width = line_width(obj)
+          when 'Object-box'
+            dim = box(obj)
+            pdf.fill_color = color(obj, 'fill_color') || default_fill_color
+            pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
+            pdf.line_width = line_width(obj)
 
-              pdf.stroke {
-                if color(obj, 'fill_color')
-                  pdf.fill_rectangle [312,260], 180, 16 
-                else
-                  pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
-                end
-              }
-
-
-            when 'Object-line'
-              dim = line(obj)
-              pdf.line_width = line_width(obj)
-              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
-
-              pdf.stroke {
-                pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
-              }
-
-            when 'Object-text'
-              dim = box(obj)
-
-              pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
-
-              content = ''
-              obj.xpath('Span')[0].children.each {|t|
-                if t.text?
-                  content << t.text
-                elsif t.name == 'Field'
-                  f = data[t['name']]
-                  raise "Unsupported card variable '#{t['name']}" unless f
-                  content << f
-                else
-                  raise "Unsupported text object '#{t.name}'"
-                end
-              }
-
-              content.strip!
-
-              s = style(obj)
-              pdf.font_size(s[:size]) do
-                Prawn::Text::Box.new(content, {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style]}).render
+            pdf.stroke {
+              if color(obj, 'fill_color')
+                pdf.fill_rectangle [312,260], 180, 16
+              else
+                pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
               end
+            }
 
-            when 'Object-image'
-              if data['owner.email'] && @gravatar_online
-                dim = box(obj)
+          when 'Object-line'
+            dim = line(obj)
+            pdf.line_width = line_width(obj)
+            pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
 
-                img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
-                if img
-                  pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
-                else
-                  # if image loading fails once, stop loading images for this rendering
-                  @gravatar_online = false
-                end
+            pdf.stroke {
+              pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
+            }
+
+          when 'Object-text'
+            dim = box(obj)
+
+            pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
+
+            content = ''
+            obj.xpath('Span')[0].children.each {|t|
+              if t.text?
+                content << t.text
+              elsif t.name == 'Field'
+                f = data[t['name']]
+                raise "Unsupported card variable '#{t['name']}" unless f
+                content << f
+              else
+                raise "Unsupported text object '#{t.name}'"
               end
+            }
 
-            else
-              raise "Unsupported object '#{obj.name}'"
+            content.strip!
+
+            s = style(obj)
+            pdf.font_size(s[:size]) do
+              Prawn::Text::Box.new(content, {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style]}).render
+            end
+
+          when 'Object-image'
+            if data['owner.email'] && @gravatar_online
+              dim = box(obj)
+
+              img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
+              if img
+                pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
+              else
+                # if image loading fails once, stop loading images for this rendering
+                @gravatar_online = false
+              end
+            end
+
+          else
+            raise "Unsupported object '#{obj.name}'"
           end
         }
       end
@@ -432,43 +427,43 @@ module BacklogsPrintableCards
         @cards = 0
 
         case Backlogs.setting[:taskboard_card_order]
-          when 'tasks_follow_story'
-            stories.each { |story|
-              add(story)
-
-              if with_tasks
-                story.descendants.each {|task|
-                  add(task)
-                }
-              end
-            }
-
-          when 'stories_then_tasks'
-            stories.each { |story|
-              add(story)
-            }
+        when 'tasks_follow_story'
+          stories.each { |story|
+            add(story)
 
             if with_tasks
-              @cards  = 0
-              @pdf.start_new_page
+              story.descendants.each {|task|
+                add(task)
+              }
+            end
+          }
 
-              stories.each { |story|
-                story.descendants.each {|task|
-                  add(task)
-                }
+        when 'stories_then_tasks'
+          stories.each { |story|
+            add(story)
+          }
+
+          if with_tasks
+            @cards  = 0
+            @pdf.start_new_page
+
+            stories.each { |story|
+              story.descendants.each {|task|
+                add(task)
+              }
+            }
+          end
+
+        else # 'story_follows_tasks'
+          stories.each { |story|
+            if with_tasks
+              story.descendants.each {|task|
+                add(task)
               }
             end
 
-          else # 'story_follows_tasks'
-            stories.each { |story|
-              if with_tasks
-                story.descendants.each {|task|
-                  add(task)
-                }
-              end
-
-              add(story)
-            }
+            add(story)
+          }
         end
       end
     end

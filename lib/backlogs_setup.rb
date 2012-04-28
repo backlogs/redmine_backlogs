@@ -24,14 +24,14 @@ module Backlogs
 
   def platform_support(raise_error = false)
     case platform
-      when :redmine
-        supported = [1,4]
-        unsupported = [1,3]
-      when :chiliproject
-        supported = [3,1,0]
-        unsupported = nil
-      else
-        raise "Unsupported platform #{platform}"
+    when :redmine
+      supported = [1,4]
+      unsupported = [1,3]
+    when :chiliproject
+      supported = [3,1,0]
+      unsupported = nil
+    else
+      raise "Unsupported platform #{platform}"
     end
 
     return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported

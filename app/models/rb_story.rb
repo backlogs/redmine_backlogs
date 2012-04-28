@@ -118,14 +118,14 @@ class RbStory < Issue
     trackers = trackers.sort_by { |t| [t.position] }
 
     case options[:type]
-      when :trackers
-        return trackers
-      when :array, nil
-        return trackers.collect{|t| t.id}
-      when :string
-        return trackers.collect{|t| t.id.to_s}.join(',')
-      else
-        raise "Unexpected return type #{options[:type].inspect}"
+    when :trackers
+      return trackers
+    when :array, nil
+      return trackers.collect{|t| t.id}
+    when :string
+      return trackers.collect{|t| t.id.to_s}.join(',')
+    else
+      raise "Unexpected return type #{options[:type].inspect}"
     end
   end
 

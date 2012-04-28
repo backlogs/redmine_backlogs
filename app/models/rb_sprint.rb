@@ -9,17 +9,17 @@ class Burndown
     stories = sprint.stories
 
     case Backlogs.platform
-      when :redmine
-        stories |= Journal.find(:all, :joins => :details,
-                        :conditions => ["journalized_type = 'Issue'
-                              and property = 'attr' and prop_key = 'fixed_version_id'
-                              and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
-      when :chiliproject
-        # chiliproject journals are not meant to be scanned, unfortunately. This will be slow.
-        stories |= Journal.find(:all,
-                                :conditions => ["type = 'Issue'"]).select{|j|
-                                j.changes['fixed_version_id'].first == sprint.id || j.changes['fixed_version_id'].last == sprint.id}.collect{|j|
-                                RbStory.find(j.journaled_id) }
+    when :redmine
+      stories |= Journal.find(:all, :joins => :details,
+                              :conditions => ["journalized_type = 'Issue'
+                            and property = 'attr' and prop_key = 'fixed_version_id'
+                            and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
+    when :chiliproject
+      # chiliproject journals are not meant to be scanned, unfortunately. This will be slow.
+      stories |= Journal.find(:all,
+                              :conditions => ["type = 'Issue'"]).select{|j|
+                              j.changes['fixed_version_id'].first == sprint.id || j.changes['fixed_version_id'].last == sprint.id}.collect{|j|
+                              RbStory.find(j.journaled_id) }
     end
 
     baseline = [0] * (sprint.days(:active).size + 1)
@@ -53,14 +53,14 @@ class Burndown
     @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
 
     case direction
-      when 'up'
-        @data.delete(:points_to_resolve)
-        @data.delete(:points_to_accept)
-      when 'down'
-        @data.delete(:points_resolved)
-        @data.delete(:points_accepted)
-      else
-        raise "Unexpected burn direction #{direction.inspect}"
+    when 'up'
+      @data.delete(:points_to_resolve)
+      @data.delete(:points_to_accept)
+    when 'down'
+      @data.delete(:points_resolved)
+      @data.delete(:points_accepted)
+    else
+      raise "Unexpected burn direction #{direction.inspect}"
     end
   end
 

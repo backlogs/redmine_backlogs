@@ -97,30 +97,27 @@ module Backlogs
 
         selected_values.each { |val|
           case val
-            when "story"
-              sql << "(#{db_table}.tracker_id in (#{story_trackers}))"
-
-            when "task"
-              sql << "(#{db_table}.tracker_id = #{RbTask.tracker})"
-
-            when "impediment"
-              sql << "(#{db_table}.id in (
-                                select issue_from_id
-                                from issue_relations ir
-                                join issues blocked on
-                                  blocked.id = ir.issue_to_id
-                                  and blocked.tracker_id in (#{all_trackers})
-                                where ir.relation_type = 'blocks'
-                              ))"
+          when "story"
+            sql << "(#{db_table}.tracker_id in (#{story_trackers}))"
+          when "task"
+            sql << "(#{db_table}.tracker_id = #{RbTask.tracker})"
+          when "impediment"
+            sql << "(#{db_table}.id in (
+                              select issue_from_id
+                              from issue_relations ir
+                              join issues blocked on
+                                blocked.id = ir.issue_to_id
+                                and blocked.tracker_id in (#{all_trackers})
+                              where ir.relation_type = 'blocks'
+                            ))"
           end
         }
 
         case operator
-          when "="
-            sql = sql.join(" or ")
-
-          when "!"
-            sql = "not (" + sql.join(" or ") + ")"
+        when "="
+          sql = sql.join(" or ")
+        when "!"
+          sql = "not (" + sql.join(" or ") + ")"
         end
 
         sql

@@ -134,10 +134,10 @@ module Backlogs
             j = Journal.new
             j.journalized = task
             case Backlogs.platform
-              when :redmine
-                j.created_on = Time.now
-              when :chiliproject
-                j.created_at = Time.now
+            when :redmine
+              j.created_on = Time.now
+            when :chiliproject
+              j.created_at = Time.now
             end
             j.user = User.current
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
@@ -184,28 +184,28 @@ module Backlogs
 
         property_s = property.to_s
         case Backlogs.platform 
-          when :redmine
-            changes = JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                    :conditions => ["property = 'attr' and prop_key = '#{property}'
-                                                      and journalized_type = 'Issue' and journalized_id = ?",
-                                                      id]).collect {|detail|
-              [detail.journal.created_on.to_date, detail.old_value, detail.value]
-            }
-          when :chiliproject
-            # the chiliproject changelog is screwed up beyond all reckoning...
-            # a truly horrid journals design -- worse than RMs, and that takes some doing
-            # I know this should be using activerecord introspection, but someone else will have to go
-            # rummaging through the docs for self.class.reflect_on_association et al.
-            table = case property
-              when :status_id then 'issue_statuses'
-              else nil
-            end
+        when :redmine
+          changes = JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
+                                  :conditions => ["property = 'attr' and prop_key = '#{property}'
+                                                    and journalized_type = 'Issue' and journalized_id = ?",
+                                                    id]).collect {|detail|
+            [detail.journal.created_on.to_date, detail.old_value, detail.value]
+          }
+        when :chiliproject
+          # the chiliproject changelog is screwed up beyond all reckoning...
+          # a truly horrid journals design -- worse than RMs, and that takes some doing
+          # I know this should be using activerecord introspection, but someone else will have to go
+          # rummaging through the docs for self.class.reflect_on_association et al.
+          table = case property
+                  when :status_id then 'issue_statuses'
+                  else nil
+                  end
 
-            valid_ids = table ? RbStory.connection.select_values("select id from #{table}").collect{|x| x.to_i} : nil
-            changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property_s].nil?}.collect{|j|
-              delta = valid_ids ? j.changes[property_s].collect{|v| valid_ids.include?(v) ? v : nil} : j.changes[property_s]
-              [j.created_at.to_date] + delta
-            }
+          valid_ids = table ? RbStory.connection.select_values("select id from #{table}").collect{|x| x.to_i} : nil
+          changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property_s].nil?}.collect{|j|
+            delta = valid_ids ? j.changes[property_s].collect{|v| valid_ids.include?(v) ? v : nil} : j.changes[property_s]
+            [j.created_at.to_date] + delta
+          }
         end
 
         journals = false
@@ -253,14 +253,14 @@ module Backlogs
             v
           else
             case @@backlogs_column_type[property]
-              when :integer
-                v.blank? ? nil : Integer(v)
-              when :float
-                v.blank? ? nil : Float(v)
-              when :string
-                v.to_s
-              else
-                raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
+            when :integer
+              v.blank? ? nil : Integer(v)
+            when :float
+              v.blank? ? nil : Float(v)
+            when :string
+              v.to_s
+            else
+              raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
             end
           end
         }

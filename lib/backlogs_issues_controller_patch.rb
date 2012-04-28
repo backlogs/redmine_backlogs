@@ -22,20 +22,20 @@ module Backlogs
         story_trackers = RbStory.trackers
 
         case params[:format]
-          when 'xml'
-            body = Nokogiri::XML(response.body)
-            body.xpath('//issue').each{|issue|
-              next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
-              issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
-            }
-            response.body = body.to_xml
-          when 'json'
-            body = JSON.parse(response.body)
-            body['issues'].each{|issue|
-              next unless story_trackers.include?(issue['tracker']['id'])
-              issue['story_points'] = RbStory.find(issue['id']).story_points
-            }
-            response.body = body.to_json
+        when 'xml'
+          body = Nokogiri::XML(response.body)
+          body.xpath('//issue').each{|issue|
+            next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
+            issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
+          }
+          response.body = body.to_xml
+        when 'json'
+          body = JSON.parse(response.body)
+          body['issues'].each{|issue|
+            next unless story_trackers.include?(issue['tracker']['id'])
+            issue['story_points'] = RbStory.find(issue['id']).story_points
+          }
+          response.body = body.to_json
         end
       end
     end

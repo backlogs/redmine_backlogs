@@ -3,18 +3,16 @@ class MigrateLegacy < ActiveRecord::Migration
     return nil if v.class == NilClass
 
     case t
-      when :int
-        return Integer(v)
-
-      when :bool
-        if [TrueClass, FalseClass].include?(v.class)
-          return v
-        else
-          return ! (['', '0'].include?("#{v}"))
-        end
-
-      else
+    when :int
+      return Integer(v)
+    when :bool
+      if [TrueClass, FalseClass].include?(v.class)
         return v
+      else
+        return ! (['', '0'].include?("#{v}"))
+      end
+    else
+      return v
     end
   end
 

@@ -21,17 +21,16 @@ module BacklogsPlugin
 
           params = context[:controller].params
           case "#{params['controller']}##{params['action']}"
-            when 'issues#show'
-              if params['id'] && (issue = Issue.find(params['id'])) && (issue.is_task? || issue.is_story?) && issue.fixed_version
-                sprint_id = issue.fixed_version_id
-              end
-
-            when 'issues#index'
-              q = context[:request].session[:query]
-              sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
-              if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
-                sprint_id = sprint[:values][0]
-              end
+          when 'issues#show'
+            if params['id'] && (issue = Issue.find(params['id'])) && (issue.is_task? || issue.is_story?) && issue.fixed_version
+              sprint_id = issue.fixed_version_id
+            end
+          when 'issues#index'
+            q = context[:request].session[:query]
+            sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
+            if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
+              sprint_id = sprint[:values][0]
+            end
           end
 
           url_options = {
@@ -220,14 +219,14 @@ module BacklogsPlugin
 
             if action != 'none'
               case action
-                when 'open'
-                  tasks = story.tasks.select{|t| !t.reload.closed?}
-                when 'none'
-                  tasks = []
-                when 'all'
-                  tasks = story.tasks
-                else
-                  raise "Unexpected value #{params[:copy_tasks]}"
+              when 'open'
+                tasks = story.tasks.select{|t| !t.reload.closed?}
+              when 'none'
+                tasks = []
+              when 'all'
+                tasks = story.tasks
+              else
+                raise "Unexpected value #{params[:copy_tasks]}"
               end
 
               tasks.each {|t|
