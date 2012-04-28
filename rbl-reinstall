@@ -60,8 +60,6 @@ class Script
   end
 end
 
-script = Script.new
-
 def exists(path)
   return File.exist?(File.expand_path(path))
 end
@@ -84,6 +82,10 @@ class Options
 
     opts.on( '-i', '--install', 'DB root password' ) do
       @@options[:install] = true
+    end
+
+    opts.on( '-v', '--verbose', 'Verbose output' ) do
+      @@options[:verbose] = true
     end
 
     opts.on( '-r', '--rvm', 'Re-create rvm gemset' ) do
@@ -109,7 +111,7 @@ class Options
       @@options[:database] = true
     end
 
-    opts.on( '-v', '--version VERSION', 'Re-install database' ) do |version|
+    opts.on( '-V', '--version VERSION', 'Platform version' ) do |version|
     end
 
     # This displays the help screen, all programs are
@@ -124,6 +126,7 @@ class Options
     status = []
     @@options.keys.sort{|a,b| a.to_s <=> b.to_s}.each{|o|
       v = @@options[o]
+      next if v.is_a?(Hash)
       v = '*****' if o.to_s =~ /pw$/ && v != ''
       status << "echo '#{o}: #{v}'"
     }
@@ -184,6 +187,7 @@ class Options
   verify("~/redmine/redmine_backlogs")
 end
 
+script = Script.new
 
 Options.status.each{|status| script << status }
 script << 'echo "*** PIPE OUTPUT OF THIS SCRIPT THROUGH BASH ***"'
@@ -285,11 +289,11 @@ if exists("~/redmine/setup/#{Options.platform}.sql.gz")
   script.database "echo \"update users set auth_source_id = NULL;\" | mysql -u root -p#{Options.rootpw} #{Options.platform}"
 end
 
-script.database "rake db:migrate"
-script.database "bundle exec rake generate_session_store"
-script.database "REDMINE_LANG=en rake redmine:load_default_data" unless exists("~/redmine/setup/#{Options.platform}.sql.gz")
-script.database "rake db:migrate:plugins"
-script.database "labels=no story_trackers=Story task_tracker=Task rake redmine:backlogs:install"
+script.database "rake #{Options.verbose? ? '--trace' : ''} db:migrate"
+script.database "bundle exec rake #{Options.verbose? ? '--trace' : ''} generate_session_store"
+script.database "REDMINE_LANG=en rake #{Options.verbose? ? '--trace' : ''} redmine:load_default_data" unless exists("~/redmine/setup/#{Options.platform}.sql.gz")
+script.database "rake #{Options.verbose? ? '--trace' : ''} db:migrate:plugins"
+script.database "labels=no story_trackers=Story task_tracker=Task rake #{Options.verbose? ? '--trace' : ''} redmine:backlogs:install"
 
 if Options.adminpw.to_s != ''
   script.database "cd ~/redmine/#{Options.platform}"
