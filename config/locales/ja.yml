@@ -24,7 +24,7 @@ ja:
   backlogs_statistics_committed_velocity_stable_failed: "承認されたベロシティはスプリントをまたがって安定していません"
   backlogs_statistics_committed_velocity_stable: "承認されたベロシティはスプリントをまたがって安定しています"
   backlogs_statistics_sizing_stddev: "ポイントに対する時間の標準偏差 %{value} 時間"
-  backlogs_statistics_sprints: %{value} スプリントに渡って測定されています
+  backlogs_statistics_sprints: "%{value} スプリントに渡って測定されています"
   backlogs_statistics_velocity: "ベロシティ: %{value}"
   backlogs_statistics_velocity_stddev: "ベロシティの標準偏差: %{value} ポイント"
   backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
