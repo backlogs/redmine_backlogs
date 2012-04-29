@@ -8,18 +8,18 @@ class FlattenStoryPositions < ActiveRecord::Migration
       t.column :position, :integer, :null => false
     end
 
-    execute "insert into backlogs_tmp_issue_position
-             select story.id, count(*) + 1
-             from issues story
-             join issues pred on
+    execute "INSERT INTO backlogs_tmp_issue_position
+             SELECT story.id, COUNT(*) + 1
+             FROM issues story
+             JOIN issues pred ON
                (pred.project_id < story.project_id)
-               or
-               (pred.project_id = story.project_id and pred.fixed_version_id < story.fixed_version_id)
-               or
-               (pred.project_id = story.project_id and pred.fixed_version_id = story.fixed_version_id and pred.position < story.position)
-             group by story.id"
+               OR
+               (pred.project_id = story.project_id AND pred.fixed_version_id < story.fixed_version_id)
+               OR
+               (pred.project_id = story.project_id AND pred.fixed_version_id = story.fixed_version_id AND pred.position < story.position)
+             GROUP BY story.id"
 
-    execute "update issues set position = (select position from backlogs_tmp_issue_position where backlogs_tmp_issue_position.id = issues.id)"
+    execute "UPDATE issues SET position = (SELECT position FROM backlogs_tmp_issue_position WHERE backlogs_tmp_issue_position.id = issues.id)"
 
     drop_table :backlogs_tmp_issue_position
   end

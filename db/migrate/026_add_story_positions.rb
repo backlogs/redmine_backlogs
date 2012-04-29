@@ -5,11 +5,11 @@ class AddStoryPositions < ActiveRecord::Migration
 
     unless RbStory.trackers.size == 0
       max = 0
-      execute("select max(position) from issues").each{|row| max = row[0]}
+      execute("SELECT MAX(position) FROM issues").each{|row| max = row[0]}
 
-      execute "update issues
-               set position = #{max} + id
-               where position is null and tracker_id in (#{RbStory.trackers(:type=>:string)})"
+      execute "UPDATE issues
+               SET position = #{max} + id
+               WHERE position IS NULL AND tracker_id IN (#{RbStory.trackers(:type => :string)})"
     end
   end
 

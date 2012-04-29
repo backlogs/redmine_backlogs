@@ -58,7 +58,7 @@ module Backlogs
               @rb_story = parent.story
             end
           else
-            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and rgt > ? and tracker_id in (?)", root_id, lft, rgt, RbStory.trackers ])
+            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? AND lft < ? AND rgt > ? AND tracker_id IN (?)", root_id, lft, rgt, RbStory.trackers ])
             @rb_story = @rb_story.becomes(RbStory) if @rb_story
           end
         end
@@ -123,13 +123,13 @@ module Backlogs
           # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
           # update_parent :<
-          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
+          Issue.find(:all, :conditions => ["root_id = ? AND lft > ? AND rgt < ? AND
                                           (
-                                            (? is NULL and not fixed_version_id is NULL)
-                                            or
-                                            (not ? is NULL and fixed_version_id is NULL)
-                                            or
-                                            (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
+                                            (? IS NULL AND NOT fixed_version_id IS NULL)
+                                            OR
+                                            (NOT ? IS NULL AND fixed_version_id IS NULL)
+                                            OR
+                                            (NOT ? IS NULL AND NOT fixed_version_id IS NULL AND ? <> fixed_version_id)
                                           )", root_id, lft, rgt, fixed_version_id, fixed_version_id, fixed_version_id, fixed_version_id]).each{|task|
             j = Journal.new
             j.journalized = task
@@ -143,24 +143,24 @@ module Backlogs
             j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
             j.save!
           }
-          connection.execute("update issues set tracker_id = #{RbTask.tracker}, fixed_version_id = #{connection.quote(fixed_version_id)} where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
+          connection.execute("UPDATE issues SET tracker_id = #{RbTask.tracker}, fixed_version_id = #{connection.quote(fixed_version_id)} WHERE root_id = #{self.root_id} AND lft > #{self.lft} AND rgt < #{self.rgt}")
 
           # safe to do by sql since we don't want any of this logged
           unless self.position
             max = 0
-            connection.execute('select coalesce(max(position), -1) + 1 from issues where not position is null').each {|i| max = i[0] }
-            connection.execute("update issues set position = #{connection.quote(max)} where id = #{id}")
+            connection.execute('SELECT COALESCE(MAX(position), -1) + 1 FROM issues WHERE NOT position IS NULL').each {|i| max = i[0] }
+            connection.execute("UPDATE issues SET position = #{connection.quote(max)} WHERE id = #{id}")
           end
         end
 
         if self.story || self.is_task?
-          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
+          connection.execute("UPDATE issues SET tracker_id = #{RbTask.tracker} WHERE root_id = #{self.root_id} AND lft >= #{self.lft} AND rgt <= #{self.rgt}")
         end
       end
 
       def backlogs_after_destroy
         return if self.position.nil?
-        Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}")
+        Issue.connection.execute("UPDATE issues SET position = position - 1 WHERE position > #{self.position}")
       end
 
       def value_at(property, time)
@@ -183,11 +183,11 @@ module Backlogs
         values = [nil] * active_days.size
 
         property_s = property.to_s
-        case Backlogs.platform 
+        case Backlogs.platform
         when :redmine
-          changes = JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                  :conditions => ["property = 'attr' and prop_key = '#{property}'
-                                                    and journalized_type = 'Issue' and journalized_id = ?",
+          changes = JournalDetail.find(:all, :order => "journals.created_on ASC" , :joins => :journal,
+                                  :conditions => ["property = 'attr' AND prop_key = '#{property}'
+                                                    AND journalized_type = 'Issue' AND journalized_id = ?",
                                                     id]).collect {|detail|
             [detail.journal.created_on.to_date, detail.old_value, detail.value]
           }
@@ -201,7 +201,7 @@ module Backlogs
                   else nil
                   end
 
-          valid_ids = table ? RbStory.connection.select_values("select id from #{table}").collect{|x| x.to_i} : nil
+          valid_ids = table ? RbStory.connection.select_values("SELECT id FROM #{table}").collect{|x| x.to_i} : nil
           changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property_s].nil?}.collect{|j|
             delta = valid_ids ? j.changes[property_s].collect{|v| valid_ids.include?(v) ? v : nil} : j.changes[property_s]
             [j.created_at.to_date] + delta

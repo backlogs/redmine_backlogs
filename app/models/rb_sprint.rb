@@ -12,8 +12,8 @@ class Burndown
     when :redmine
       stories |= Journal.find(:all, :joins => :details,
                               :conditions => ["journalized_type = 'Issue'
-                            and property = 'attr' and prop_key = 'fixed_version_id'
-                            and (value = ? or old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
+                            AND property = 'attr' AND prop_key = 'fixed_version_id'
+                            AND (value = ? OR old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
     when :chiliproject
       # chiliproject journals are not meant to be scanned, unfortunately. This will be slow.
       stories |= Journal.find(:all,
@@ -105,7 +105,7 @@ class RbSprint < Version
   named_scope :open_sprints, lambda { |project|
     {
       :order => 'sprint_start_date ASC, effective_date ASC',
-      :conditions => [ "status = 'open' and project_id = ?", project.id ]
+      :conditions => [ "status = 'open' AND project_id = ?", project.id ]
     }
   }
 
@@ -113,7 +113,7 @@ class RbSprint < Version
   named_scope :closed_sprints, lambda { |project|
     {
        :order => 'sprint_start_date ASC, effective_date ASC',
-       :conditions => [ "status = 'closed' and project_id = ?", project.id ]
+       :conditions => [ "status = 'closed' AND project_id = ?", project.id ]
     }
   }
 
@@ -223,7 +223,7 @@ class RbSprint < Version
     # assume a sprint is active if it's only 2 days old
     return true if bd[:hours_remaining].compact.size <= 2
 
-    Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
+    Issue.exists?(['fixed_version_id = ? AND ((updated_on BETWEEN ? AND ?) OR (created_on BETWEEN ? AND ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
   end
 
   def burndown(direction=nil)
@@ -240,13 +240,13 @@ class RbSprint < Version
   def impediments
     @impediments ||= Issue.find(:all,
       :conditions => ["id in (
-              select issue_from_id
-              from issue_relations ir
-              join issues blocked
-                on blocked.id = ir.issue_to_id
-                and blocked.tracker_id in (?)
-                and blocked.fixed_version_id = (?)
-              where ir.relation_type = 'blocks'
+              SELECT issue_from_id
+              FROM issue_relations ir
+              JOIN issues blocked
+                ON blocked.id = ir.issue_to_id
+                AND blocked.tracker_id IN (?)
+                AND blocked.fixed_version_id = (?)
+              WHERE ir.relation_type = 'blocks'
               )",
             RbStory.trackers + [RbTask.tracker],
             self.id]

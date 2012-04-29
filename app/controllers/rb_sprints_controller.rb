@@ -83,15 +83,15 @@ class RbSprintsController < RbApplicationController
     }
     if ids.size != 0
       ids = ids.join(',')
-      Issue.connection.execute("update issues set updated_on = created_on where id in (#{ids})")
+      Issue.connection.execute("UPDATE issues SET updated_on = created_on WHERE id IN (#{ids})")
 
-      Journal.connection.execute("delete from journal_details where journal_id in (select id from journals where journalized_type = 'Issue' and journalized_id in (#{ids}))")
-      Journal.connection.execute("delete from journals where (notes is null or notes = '') and journalized_type = 'Issue' and journalized_id in (#{ids})")
-      Journal.connection.execute("update journals
-                                   set created_on = (select created_on
-                                                     from issues
-                                                     where journalized_id = issues.id)
-                                   where journalized_type = 'Issue' and journalized_id in (#{ids})")
+      Journal.connection.execute("DELETE FROM journal_details WHERE journal_id IN (SELECT id FROM journals WHERE journalized_type = 'Issue' AND journalized_id IN (#{ids}))")
+      Journal.connection.execute("DELETE FROM journals WHERE (notes IS NULL OR notes = '') AND journalized_type = 'Issue' AND journalized_id IN (#{ids})")
+      Journal.connection.execute("UPDATE journals
+                                  SET created_on = (SELECT created_on
+                                                    FROM issues
+                                                    WHERE journalized_id = issues.id)
+                                  WHERE journalized_type = 'Issue' AND journalized_id IN (#{ids})")
     end
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier

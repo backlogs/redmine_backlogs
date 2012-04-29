@@ -4,8 +4,8 @@ class FixMissingJournal < ActiveRecord::Migration
   def self.up
     if Backlogs.platform == :redmine
       Issue.find(:all, :conditions => ['tracker_id = ?', RbTask.tracker]).each {|task|
-        jd = JournalDetail.find(:first, :order => "journals.created_on desc" , :joins => :journal,
-                               :conditions => ["property = 'attr' and prop_key = 'estimated_hours' and journalized_type = 'Issue' and journalized_id = ?", task.id])
+        jd = JournalDetail.find(:first, :order => "journals.created_on DESC" , :joins => :journal,
+                               :conditions => ["property = 'attr' AND prop_key = 'estimated_hours' AND journalized_type = 'Issue' AND journalized_id = ?", task.id])
         if jd && jd.value.to_f != task.estimated_hours
           nj = Journal.new
           nj.journalized = task

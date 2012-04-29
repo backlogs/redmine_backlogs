@@ -23,7 +23,7 @@ class ReinstateRemaining < ActiveRecord::Migration
 
       add_column :issues, :remaining_hours, :float
 
-      execute "update issues set created_on = updated_on where created_on is NULL"
+      execute "UPDATE issues SET created_on = updated_on WHERE created_on IS NULL"
 
       projects = Project.all.select{|p| Backlogs.configured?(p)}.collect{|p| p.id }
       trackers = (RbStory.trackers + [RbTask.tracker]).compact
@@ -47,11 +47,11 @@ class ReinstateRemaining < ActiveRecord::Migration
           ids = chunk.collect{|i| i.id.to_s}.join(',')
 
           # change journal for remaining_hours into estimated_hours
-          sql << "update journal_details set prop_key='remaining_hours'
-                   where prop_key='estimated_hours'
-                   and journal_id in (select id from journals
-                                  where journalized_type='Issue'
-                                  and journalized_id in (#{ids}))"
+          sql << "UPDATE journal_details SET prop_key = 'remaining_hours'
+                  WHERE prop_key = 'estimated_hours'
+                  AND journal_id IN (SELECT id FROM journals
+                                     WHERE journalized_type = 'Issue'
+                                     AND journalized_id IN (#{ids}))"
 
         }
         converted += chunk.size
@@ -62,7 +62,7 @@ class ReinstateRemaining < ActiveRecord::Migration
       sql.each{|stmt| execute(stmt) }
 
       # clean up any journal entries without details
-      execute "delete from journals where not id in (select journal_id from journal_details) and (notes is NULL or notes = '')"
+      execute "DELETE FROM journals WHERE NOT id IN (SELECT journal_id FROM journal_details) AND (notes IS NULL OR notes = '')"
 
       # stupid mysql doesn't support self-referential subselect updates
       create_table :backlogs_tmp_estimated_hours do |t|
@@ -72,18 +72,18 @@ class ReinstateRemaining < ActiveRecord::Migration
       end
 
       # sum up all leaf issues
-      execute "insert into backlogs_tmp_estimated_hours (id, estimated_hours, remaining_hours)
-               select story.id, coalesce(sum(tasks.estimated_hours), 0), coalesce(sum(tasks.remaining_hours), 0)
-               from issues story
-               join issues tasks on tasks.root_id = story.root_id and tasks.lft > story.lft and tasks.rgt < story.rgt and tasks.lft = tasks.rgt - 1
-               group by story.id"
+      execute "INSERT INTO backlogs_tmp_estimated_hours (id, estimated_hours, remaining_hours)
+               SELECT story.id, COALESCE(SUM(tasks.estimated_hours), 0), COALESCE(SUM(tasks.remaining_hours), 0)
+               FROM issues story
+               JOIN issues tasks ON tasks.root_id = story.root_id AND tasks.lft > story.lft AND tasks.rgt < story.rgt AND tasks.lft = tasks.rgt - 1
+               GROUP BY story.id"
 
       # only update non-leaf issues
-      execute "update issues
-               set
-                 estimated_hours = (select estimated_hours from backlogs_tmp_estimated_hours where backlogs_tmp_estimated_hours.id = issues.id),
-                 remaining_hours = (select remaining_hours from backlogs_tmp_estimated_hours where backlogs_tmp_estimated_hours.id = issues.id)
-               where id in (select id from backlogs_tmp_estimated_hours)"
+      execute "UPDATE issues
+               SET
+                 estimated_hours = (SELECT estimated_hours FROM backlogs_tmp_estimated_hours WHERE backlogs_tmp_estimated_hours.id = issues.id),
+                 remaining_hours = (SELECT remaining_hours FROM backlogs_tmp_estimated_hours WHERE backlogs_tmp_estimated_hours.id = issues.id)
+               WHERE id IN (SELECT id FROM backlogs_tmp_estimated_hours)"
 
       drop_table :backlogs_tmp_estimated_hours
     end

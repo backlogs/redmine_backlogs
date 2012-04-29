@@ -16,7 +16,7 @@ class RbMasterBacklogsController < RbApplicationController
 
     last_story = RbStory.find(
                           :first,
-                          :conditions => ["project_id=? AND tracker_id in (?)", @project.id, RbStory.trackers],
+                          :conditions => ["project_id = ? AND tracker_id IN (?)", @project.id, RbStory.trackers],
                           :order => "updated_on DESC"
                           )
     @last_update = (last_story ? last_story.updated_on : nil)

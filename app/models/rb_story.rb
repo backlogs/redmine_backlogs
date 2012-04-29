@@ -14,17 +14,17 @@ class RbStory < Issue
     if sprint_id.nil?
       c = ["
         project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id is NULL
-        and is_closed = ? and #{visible}", project_id, RbStory.trackers, false]
+        AND tracker_id IN (?)
+        AND fixed_version_id IS NULL
+        AND is_closed = ? AND #{visible}", project_id, RbStory.trackers, false]
     else
       unless sprint_id.kind_of? Array
         sprint_id = [ sprint_id ]
       end
       c = ["
         project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id IN (?) and #{visible}",
+        AND tracker_id IN (?)
+        AND fixed_version_id IN (?) AND #{visible}",
         project_id, RbStory.trackers, sprint_id]
     end
 
@@ -77,7 +77,7 @@ class RbStory < Issue
 
     RbStory.find(:all,
           :order => RbStory::ORDER,
-          :conditions => ["project_id = ? AND tracker_id in (?) and is_closed = ?",project.id,RbStory.trackers,false],
+          :conditions => ["project_id = ? AND tracker_id IN (?) AND is_closed = ?",project.id,RbStory.trackers,false],
           :joins => :status).each_with_index {|story, i|
       story.rank = i + 1
       stories << story
@@ -98,7 +98,7 @@ class RbStory < Issue
 
   def self.find_all_updated_since(since, project_id)
     find(:all,
-         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?)", project_id, Time.parse(since), trackers],
+         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id IN (?)", project_id, Time.parse(since), trackers],
          :order => "updated_on ASC")
   end
 
@@ -135,7 +135,7 @@ class RbStory < Issue
 
   def move_after(prev_id)
     # remove so the potential 'prev' has a correct position
-    RbStory.connection.execute("update issues set position = position - 1 where position > #{position}") unless position.nil?
+    RbStory.connection.execute("UPDATE issues SET position = position - 1 WHERE position > #{position}") unless position.nil?
 
     if prev_id.to_s == ''
       prev = nil
@@ -145,25 +145,25 @@ class RbStory < Issue
 
     # if prev is the first story, move current to the 1st position
     if prev.blank?
-      RbStory.connection.execute("update issues set position = position + 1")
+      RbStory.connection.execute("UPDATE issues SET position = position + 1")
       # do stories start at position 1? rake task fix_positions indicates that.
-      RbStory.connection.execute("update issues set position = 1 where id = #{id}")
+      RbStory.connection.execute("UPDATE issues SET position = 1 WHERE id = #{id}")
 
     # if its predecessor has no position (shouldn't happen
     # - but happens if we add many stories using "new issues" and begin sorting),
     # make current the last positioned story the last story
     elsif prev.position.nil?
       new_pos = 0
-      RbStory.connection.execute("select coalesce(max(position)+1, 0) from issues").each{|row|
+      RbStory.connection.execute("SELECT COALESCE(MAX(position) + 1, 0) FROM issues").each{|row|
         row = row.values if row.is_a?(Hash)
         new_pos = row[0]
       }
-      RbStory.connection.execute("update issues set position = #{new_pos} where id = #{id}")
+      RbStory.connection.execute("UPDATE issues SET position = #{new_pos} WHERE id = #{id}")
 
     # there's a valid predecessor
     else
-      RbStory.connection.execute("update issues set position = position + 1 where position > #{prev.position}")
-      RbStory.connection.execute("update issues set position = #{prev.position} + 1 where id = #{id}")
+      RbStory.connection.execute("UPDATE issues SET position = position + 1 WHERE position > #{prev.position}")
+      RbStory.connection.execute("UPDATE issues SET position = #{prev.position} + 1 WHERE id = #{id}")
     end
   end
 
@@ -225,9 +225,9 @@ class RbStory < Issue
 
   def rank
     if self.position.blank?
-      extras = ['and ((issues.position is NULL and issues.id <= ?) or not issues.position is NULL)', self.id]
+      extras = ['AND ((issues.position IS NULL AND issues.id <= ?) OR NOT issues.position IS NULL)', self.id]
     else
-      extras = ['and not issues.position is NULL and issues.position <= ?', self.position]
+      extras = ['AND NOT issues.position IS NULL AND issues.position <= ?', self.position]
     end
 
     @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => [:status, :project])

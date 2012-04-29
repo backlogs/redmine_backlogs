@@ -6,10 +6,10 @@ module Backlogs
       @project = project
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
-      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", @project.id, Date.today])
+      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? AND status = 'open' AND ? BETWEEN sprint_start_date AND effective_date", @project.id, Date.today])
       @past_sprints = RbSprint.find(:all,
-        :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
-        :order => "effective_date desc",
+        :conditions => ["project_id = ? AND NOT(effective_date IS NULL OR sprint_start_date IS NULL) AND effective_date < ?", @project.id, Date.today],
+        :order => "effective_date DESC",
         :limit => 5).select(&:has_burndown?)
 
       @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.compact.sum / @past_sprints.collect{|s| s.days(:all).size}.compact.sum if @past_sprints.size > 0
@@ -98,11 +98,11 @@ module Backlogs
     end
 
     def test_sprints_sized
-      !Issue.exists?(["story_points is null and fixed_version_id in (?) and tracker_id in (?)", @all_sprints.collect{|s| s.id}, RbStory.trackers])
+      !Issue.exists?(["story_points IS NULL AND fixed_version_id IN (?) AND tracker_id IN (?)", @all_sprints.collect{|s| s.id}, RbStory.trackers])
     end
 
     def test_sprints_estimated
-      !Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
+      !Issue.exists?(["estimated_hours IS NULL AND fixed_version_id IN (?) AND tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
     end
 
     def test_sprint_notes_available

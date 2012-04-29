@@ -52,7 +52,7 @@ class RbTask < Issue
   # task-tracker as their tracker, and are top-level issues.
   def self.find_all_updated_since(since, project_id, find_impediments = false)
     find(:all,
-         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
+         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id IN (?) AND parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
          :order => "updated_on ASC")
   end
 
@@ -111,11 +111,11 @@ class RbTask < Issue
 
   def update_blocked_list(for_blocking)
     # Existing relationships not in for_blocking should be removed from the 'blocks' list
-    relations_from.find(:all, :conditions => "relation_type='blocks'").each{ |ir|
+    relations_from.find(:all, :conditions => "relation_type = 'blocks'").each{ |ir|
       ir.destroy unless for_blocking.include?( ir[:issue_to_id] )
     }
 
-    already_blocking = relations_from.find(:all, :conditions => "relation_type='blocks'").map{|ir| ir.issue_to_id}
+    already_blocking = relations_from.find(:all, :conditions => "relation_type = 'blocks'").map{|ir| ir.issue_to_id}
 
     # Non-existing relationships that are in for_blocking should be added to the 'blocks' list
     for_blocking.select{ |id| !already_blocking.include?(id) }.each{ |id|
@@ -154,7 +154,7 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank ||= Issue.count( :conditions => ['tracker_id = ? AND root_id = ? AND lft > ? AND lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
     @rank
   end
 

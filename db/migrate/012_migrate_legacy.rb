@@ -26,7 +26,7 @@ class MigrateLegacy < ActiveRecord::Migration
 
   def self.up
     begin
-      execute "select count(*) from backlogs"
+      execute "SELECT COUNT(*) FROM backlogs"
       legacy = true
     rescue
       legacy = false
@@ -55,9 +55,9 @@ class MigrateLegacy < ActiveRecord::Migration
 
       # find story/task trackers per project
       execute("
-          select projects.id as project_id, pt.tracker_id as tracker_id
-          from projects
-          left join projects_trackers pt on pt.project_id = projects.id").each { |row|
+          SELECT projects.id AS project_id, pt.tracker_id AS tracker_id
+          FROM projects
+          LEFT JOIN projects_trackers pt ON pt.project_id = projects.id").each { |row|
 
         project_id, tracker_id = MigrateLegacy.row(row, [:int, :int])
 
@@ -71,7 +71,7 @@ class MigrateLegacy < ActiveRecord::Migration
 
       say_with_time "Migrating Backlogs data..." do
         bottom = 0
-        execute("select coalesce(max(position), 0) from items").each { |row| 
+        execute("SELECT COALESCE(MAX(position), 0) FROM items").each { |row|
           bottom = row[0].to_i
         }
         bottom += 1
@@ -79,14 +79,14 @@ class MigrateLegacy < ActiveRecord::Migration
         connection = ActiveRecord::Base.connection
 
         stories = execute "
-          select story.issue_id, story.points, versions.id, issues.project_id
-          from items story
-          join issues on issues.id = story.issue_id
-          left join items parent on parent.id = story.parent_id and story.parent_id <> 0
-          left join backlogs sprint on story.backlog_id = sprint.id and sprint.id <> 0
-          left join versions on versions.id = sprint.version_id and sprint.version_id <> 0
-          where parent.id is null
-          order by coalesce(story.position, #{bottom}) desc, story.created_at desc"
+          SELECT story.issue_id, story.points, versions.id, issues.project_id
+          FROM items story
+          JOIN issues ON issues.id = story.issue_id
+          LEFT JOIN items parent ON parent.id = story.parent_id AND story.parent_id <> 0
+          LEFT JOIN backlogs sprint ON story.backlog_id = sprint.id AND sprint.id <> 0
+          LEFT JOIN versions ON versions.id = sprint.version_id AND sprint.version_id <> 0
+          WHERE parent.id IS NULL
+          ORDER BY COALESCE(story.position, #{bottom}) DESC, story.created_at DESC"
 
         stories.each { |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
@@ -111,14 +111,14 @@ class MigrateLegacy < ActiveRecord::Migration
         }
 
         tasks = execute "
-          select task.issue_id, versions.id, parent.issue_id, task_issue.project_id
-          from items task
-          join issues task_issue on task_issue.id = task.issue_id
-          join items parent on parent.id = task.parent_id and task.parent_id <> 0
-          join issues parent_issue on parent_issue.id = parent.issue_id
-          left join backlogs sprint on task.backlog_id = sprint.id and sprint.id <> 0
-          left join versions on versions.id = sprint.version_id and sprint.version_id <> 0
-          order by coalesce(task.position, #{bottom}), task.created_at"
+          SELECT task.issue_id, versions.id, parent.issue_id, task_issue.project_id
+          FROM items task
+          JOIN issues task_issue ON task_issue.id = task.issue_id
+          JOIN items parent ON parent.id = task.parent_id AND task.parent_id <> 0
+          JOIN issues parent_issue ON parent_issue.id = parent.issue_id
+          LEFT JOIN backlogs sprint ON task.backlog_id = sprint.id AND sprint.id <> 0
+          LEFT JOIN versions ON versions.id = sprint.version_id AND sprint.version_id <> 0
+          ORDER BY COALESCE(task.position, #{bottom}), task.created_at"
 
         tasks.each { |row|
           id, sprint, parent_id, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
@@ -140,7 +140,7 @@ class MigrateLegacy < ActiveRecord::Migration
           task.save!
         }
 
-        res = execute "select version_id, start_date, is_closed from backlogs"
+        res = execute "SELECT version_id, start_date, is_closed FROM backlogs"
         res.each { |row|
           version, start_date, is_closed = MigrateLegacy.row(row, [:int, :string, :bool])
 
@@ -148,7 +148,7 @@ class MigrateLegacy < ActiveRecord::Migration
           version = connection.quote(version == 0 ? nil : version)
           start_date = connection.quote(start_date)
 
-          execute "update versions set status = #{status}, sprint_start_date = #{start_date} where id = #{version}"
+          execute "UPDATE versions SET status = #{status}, sprint_start_date = #{start_date} WHERE id = #{version}"
         }
       end
 

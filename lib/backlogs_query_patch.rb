@@ -25,24 +25,24 @@ module Backlogs
 
         # couldn't get HAVING to work, so a subselect will have to
         # do
-        story_sql = "from issues story
-                         where
+        story_sql = "FROM issues story
+                         WHERE
                           story.root_id = issues.root_id
-                          and story.lft in (
-                            select max(story_lft.lft)
-                            from issues story_lft
-                            where story_lft.root_id = issues.root_id
-                            and story_lft.tracker_id in (<%= RbStory.trackers(:type=>:string) %>)
-                            and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
+                          AND story.lft IN (
+                            SELECT MAX(story_lft.lft)
+                            FROM issues story_lft
+                            WHERE story_lft.root_id = issues.root_id
+                            AND story_lft.tracker_id IN (<%= RbStory.trackers(:type=>:string) %>)
+                            AND issues.lft >= story_lft.lft AND issues.rgt <= story_lft.rgt
                           )"
 
         base.add_available_column(QueryColumn.new(:position,
                                       :sortable => [
                                         # sprint startdate
-                                        "coalesce((select sprint_start_date from versions where versions.id = issues.fixed_version_id), '1900-01-01')",
+                                        "COALESCE((SELECT sprint_start_date FROM versions WHERE versions.id = issues.fixed_version_id), '1900-01-01')",
 
                                         # sprint id, in case start dates are the same
-                                        "(select id from versions where versions.id = issues.fixed_version_id)",
+                                        "(SELECT id FROM versions WHERE versions.id = issues.fixed_version_id)",
 
                                         # make sure stories with NULL position sort-last
                                         RbERB.new("(select case when story.position is null then 1 else 0 end #{story_sql})"),
@@ -75,7 +75,7 @@ module Backlogs
           backlogs_filters = {
             "backlogs_issue_type" => {  :type => :list,
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 20 } 
+                                        :order => 20 }
                              }
         end
 
@@ -98,26 +98,26 @@ module Backlogs
         selected_values.each { |val|
           case val
           when "story"
-            sql << "(#{db_table}.tracker_id in (#{story_trackers}))"
+            sql << "(#{db_table}.tracker_id IN (#{story_trackers}))"
           when "task"
             sql << "(#{db_table}.tracker_id = #{RbTask.tracker})"
           when "impediment"
-            sql << "(#{db_table}.id in (
-                              select issue_from_id
-                              from issue_relations ir
-                              join issues blocked on
+            sql << "(#{db_table}.id IN (
+                              SELECT issue_from_id
+                              FROM issue_relations ir
+                              JOIN issues blocked ON
                                 blocked.id = ir.issue_to_id
-                                and blocked.tracker_id in (#{all_trackers})
-                              where ir.relation_type = 'blocks'
+                                AND blocked.tracker_id IN (#{all_trackers})
+                              WHERE ir.relation_type = 'blocks'
                             ))"
           end
         }
 
         case operator
         when "="
-          sql = sql.join(" or ")
+          sql = sql.join(" OR ")
         when "!"
-          sql = "not (" + sql.join(" or ") + ")"
+          sql = "NOT (" + sql.join(" OR ") + ")"
         end
 
         sql
