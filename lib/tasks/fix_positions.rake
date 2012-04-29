@@ -10,18 +10,20 @@ namespace :redmine do
         repeat = true
         while repeat
           repeat = false
-          RbStory.find_by_sql("select position, count(*) as duplicates
+          RbStory.find_by_sql("select position, count(*) as dups
                                from issues
                                where not position is null and tracker_id in (#{RbStory.trackers(:type=>:string)})
                                group by position
                                having count(*) > 1").each {|duplicate|
             repeat = true
 
-            puts "Found position #{duplicate.position} #{duplicate.duplicates} times"
+            puts "Found position #{duplicate.position} #{duplicate.dups} times"
 
-            RbStory.connection.execute("update issues set position = position + #{duplicate.duplicates} where position > #{duplicate.position}")
+            RbStory.connection.execute("update issues set position = position + #{duplicate.dups} where position > #{duplicate.position}")
 
-            RbStory.find_by_position(duplicate.position).each_with_index{|story, i|
+            RbStory.find_by_sql("select id from issues
+                                where position = #{duplicate.position}").each_with_index{|story, i|
+              puts "update issues set position = position + #{i} where id = #{story.id}"
               RbStory.connection.execute("update issues set position = position + #{i} where id = #{story.id}")
             }
             break

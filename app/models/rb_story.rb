@@ -90,6 +90,8 @@ class RbStory < Issue
       attribs = Hash[*attribs.flatten]
       s = RbStory.new(attribs)
       s.save!
+      # indicate that this a new story. saving will set position to 1 and the move_after code needs position = nil to make an insert operation.
+      s.position = nil
       s.move_after(params['prev_id'])
       return s
     end
@@ -144,10 +146,12 @@ class RbStory < Issue
       # if prev is the first story, move current to the 1st position
       if prev.blank?
         RbStory.connection.execute("update issues set position = position + 1")
-        RbStory.connection.execute("update issues set position = 0 where id = #{id}")
+        # do stories start at position 1? rake task fix_positions indicates that.
+        RbStory.connection.execute("update issues set position = 1 where id = #{id}")
 
-      # if its predecessor has no position (shouldn't happen), make current the last positioned story
-      # the last story
+      # if its predecessor has no position (shouldn't happen
+      # - but happens if we add many stories using "new issues" and begin sorting),
+      # make current the last positioned story the last story
       elsif prev.position.nil?
         new_pos = 0
         RbStory.connection.execute("select coalesce(max(position)+1, 0) from issues").each{|row|
