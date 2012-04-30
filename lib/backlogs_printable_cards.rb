@@ -484,7 +484,7 @@ module BacklogsPrintableCards
 
         data['id'] = issue.id
         data['subject'] = issue.subject.to_s.strip
-        data['description'] = issue.description.to_s.strip;
+        data['description'] = issue.description.to_s.strip
         data['description'] = data['subject'] if data['description'] == ''
         data['category'] = issue.category ? issue.category.name : ''
         data['hours.estimated'] = (issue.estimated_hours || '?').to_s + ' ' + l(:label_hours)
@@ -499,7 +499,7 @@ module BacklogsPrintableCards
       elsif issue.is_story?
         data['id'] = issue.id
         data['subject'] = issue.subject
-        data['description'] = issue.description.to_s.strip;
+        data['description'] = issue.description.to_s.strip
         data['description'] = data['subject'] if data['description'] == ''
         data['category'] = issue.category ? issue.category.name : ''
         data['size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
