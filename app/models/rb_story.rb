@@ -146,8 +146,8 @@ class RbStory < Issue
       # if prev is the first story, move current to the 1st position
       if prev.blank?
         RbStory.connection.execute("update issues set position = position + 1")
-        # do stories start at position 1? rake task fix_positions indicates that.
-        RbStory.connection.execute("update issues set position = 1 where id = #{id}")
+        # stories do start at position 0
+        RbStory.connection.execute("update issues set position = 0 where id = #{id}")
 
       # if its predecessor has no position (shouldn't happen
       # - but happens if we add many stories using "new issues" and begin sorting),
