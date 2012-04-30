@@ -148,8 +148,8 @@ module Backlogs
           # safe to do by sql since we don't want any of this logged
           unless self.position
             max = 0
-            connection.execute('select max(position) from issues where not position is null').each {|i| max = i[0] }
-            connection.execute("update issues set position = #{connection.quote(max)} + 1 where id = #{id}")
+            connection.execute('select coalesce(max(position), -1) + 1 from issues where not position is null').each {|i| max = i[0] }
+            connection.execute("update issues set position = #{connection.quote(max)} where id = #{id}")
           end
         end
 
