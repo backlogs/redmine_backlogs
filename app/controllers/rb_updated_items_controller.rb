@@ -8,7 +8,7 @@ class RbUpdatedItemsController < RbApplicationController
   # should return
   def show
     @settings = Backlogs.settings
-    only  = (params[:only] ? params[:only].split(/, ?/).map{ |v| v.to_sym } : [:sprints, :stories, :tasks, :impediments])
+    only  = (params[:only] ? params[:only].split(/, ?/).map { |v| v.to_sym } : [:sprints, :stories, :tasks, :impediments])
     @items = HashWithIndifferentAccess.new
     @include_meta = true
     @last_update = nil

@@ -146,7 +146,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
-  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
+  story_trackers = Tracker.find(:all).map { |s| "#{s.id}" }
   task_tracker = "#{Tracker.create!(:name => 'Task').id}"
   plugin = Redmine::Plugin.find('redmine_backlogs')
   Backlogs.setting[:story_trackers] = story_trackers
