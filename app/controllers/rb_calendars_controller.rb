@@ -22,7 +22,7 @@ class RbCalendarsController < RbApplicationController
     cal = Icalendar::Calendar.new
 
     # current + future sprints
-    RbSprint.find(:all, :conditions => ["NOT sprint_start_date IS NULL AND NOT effective_date IS NULL AND project_id = ? AND effective_date >= ?", @project.id, Date.today]).each {|sprint|
+    RbSprint.find(:all, :conditions => ["NOT sprint_start_date IS NULL AND NOT effective_date IS NULL AND project_id = ? AND effective_date >= ?", @project.id, Date.today]).each do |sprint|
       summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
       description_text = "#{sprint.name}: #{url_for(:controller => 'rb_queries', :only_path => false, :action => 'show', :project_id => @project.id, :sprint_id => sprint.id)}\n#{sprint.description}"
 
@@ -34,7 +34,7 @@ class RbCalendarsController < RbApplicationController
         klass       'PRIVATE'
         transp      'TRANSPARENT'
       end
-    }
+    end
 
     open_issues = %Q[
         #{IssueStatus.table_name}.is_closed = ?
@@ -83,8 +83,8 @@ class RbCalendarsController < RbApplicationController
     conditions << @project.id
     conditions << Date.today
 
-    issues = Issue.find(:all, :include => :status, :conditions => conditions).each {|issue|
-      summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
+    issues = Issue.find(:all, :include => :status, :conditions => conditions).each do |issue|
+      summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject })
       description_text = "#{issue.subject}: #{url_for(:controller => 'issues', :only_path => false, :action => 'show', :id => issue.id)}\n#{issue.description}"
       # I know this should be "cal.todo do", but outlook in it's
       # infinite stupidity doesn't support VTODO
@@ -96,7 +96,7 @@ class RbCalendarsController < RbApplicationController
         klass       'PRIVATE'
         transp      'TRANSPARENT'
       end
-    }
+    end
 
     cal.to_ical
   end

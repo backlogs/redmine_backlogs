@@ -3,7 +3,7 @@ require 'timecop'
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
-  story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story = RbStory.find(:first, :conditions => ["subject = ? AND name = ?", story_subject, sprint_name], :joins => :fixed_version)
   story_position(story).should == position.to_i
 end
 
@@ -34,22 +34,22 @@ end
 
 Then /^show me the list of sprints$/ do
   header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
+  data = RbSprint.open_sprints(@project.id).collect { |s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
 end
 
 Then /^show me the list of stories$/ do
   header = [['id', 5], ['position', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
+  data = RbStory.find(:all, :conditions => "project_id = #{@project.id}", :order => "position ASC").collect do |story|
     [story.id, story.position, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
-  }
+  end
 
   show_table("Stories", header, data)
 end
 
 Then /^show me the sprint impediments$/ do
-  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
+  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect { |i| i.subject }.inspect}"
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -82,11 +82,11 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, bac
 end
 
 Then /^all positions should be unique$/ do
-  RbStory.find_by_sql("select project_id, position, count(*) as dups from issues where not position is NULL group by project_id, position having count(*) > 1").length.should == 0
+  RbStory.find_by_sql("SELECT project_id, position, COUNT(*) AS dups FROM issues WHERE NOT position IS NULL GROUP BY project_id, position HAVING COUNT(*) > 1").length.should == 0
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find(:first, :conditions => ["subject = ?", story_subject])
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
@@ -107,14 +107,14 @@ Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |spr
   impediments.size.should == count.to_i
 
   subjects = {}
-  impediment_subject.split(/(?:\s+and\s+)|(?:\s*,\s*)/).each {|s|
+  impediment_subject.split(/(?:\s+and\s+)|(?:\s*,\s*)/).each do |s|
     subjects[s] = 0
-  }
-  sprint.impediments.each{|i|
+  end
+  sprint.impediments.each do |i|
     subjects[i.subject].should_not be_nil
     subjects[i.subject] += 1 if subjects[i.subject]
-  }
-  subjects.values.select{|v| v == 0}.size.should == 0
+  end
+  subjects.values.select { |v| v == 0}.size.should == 0
 end
 
 Then /^the sprint should be updated accordingly$/ do
@@ -163,9 +163,9 @@ end
 
 Then /^the story should have a (.+) of (.+)$/ do |attribute, value|
   @story.reload
-  if attribute=="tracker"
-    attribute="tracker_id"
-    value = Tracker.find(:first, :conditions => ["name=?", value]).id
+  if attribute == "tracker"
+    attribute = "tracker_id"
+    value = Tracker.find(:first, :conditions => ["name = ?", value]).id
   end
   @story[attribute].should == value
 end
@@ -175,7 +175,7 @@ Then /^the wiki page (.+) should contain (.+)$/ do |title, content|
   page = @project.wiki.find_page(title)
   page.should_not be_nil
 
-  raise "\"#{content}\" not found on page \"#{title}\"" unless page.content.text.match(/#{content}/) 
+  raise "\"#{content}\" not found on page \"#{title}\"" unless page.content.text.match(/#{content}/)
 end
 
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
@@ -197,7 +197,7 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
     day = (day == 'start' ? 0 : day.to_i)
     date = days[day]
 
-    metrics.keys.sort{|a, b| a.to_s <=> b.to_s}.each do |k|
+    metrics.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |k|
       expected = metrics[k]
       got = bd[k.intern][day]
 
@@ -218,12 +218,12 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   dates = @sprint.days(:all)
   dates = [:start] + dates
 
-  header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
+  header = ['day'] + bd.series(false).sort { |a, b| a.to_s <=> b.to_s }
 
   data = []
-  days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
+  days = bd.series(false).collect { |k| bd[k] }.collect { |s| s.size }.max
   0.upto(days - 1) do |day|
-    data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
+    data << ["#{dates[day]} (#{day})"] + header.reject { |h| h == 'day' }.collect { |k| bd[k][day] }
   end
 
   show_table("Burndown for #{@sprint.name} (#{@sprint.sprint_start_date} - #{@sprint.effective_date})", header, data)
@@ -241,18 +241,18 @@ Then /^show me the (.+) journal for (.+)$/ do |property, issue|
   issue = Issue.find(:first, :conditions => ['subject = ?', issue])
   puts "\n"
   puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
-  issue.journals.each {|j|
+  issue.journals.each do |j|
     case Backlogs.platform
     when :redmine
-      j.details.select {|detail| detail.prop_key == property}.each {|detail|
+      j.details.select { |detail| detail.prop_key == property }.each do |detail|
         puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
-      }
+      end
     when :chiliproject
       if j.changes[property] && j.created_at > issue.created_on
         puts "  #{j.created_at}: #{j.changes[property].first} -> #{j.changes[property].last}"
       end
     end
-  }
+  end
   puts "  #{issue.updated_on}: #{issue.send(property.intern)}"
 end
 
@@ -260,10 +260,10 @@ Then /^show me the story burndown for (.+)$/ do |story|
   Timecop.travel((@sprint.effective_date + 1).to_time) do
     story = RbStory.find(:first, :conditions => ['subject = ?', story])
     bd = story.burndown
-    header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
+    header = ['day'] + bd.keys.sort { |a, b| a.to_s <=> b.to_s }
     bd['day'] = ['start'] + @sprint.days(:active)
-    data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
-    show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
+    data = bd.transpose.collect { |row| header.collect { |k| row[k] } }
+    show_table("Burndown for story #{story.subject}", header.collect { |h| h.to_s }, data)
   end
 end
 
@@ -273,7 +273,7 @@ Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,val
 end
 
 Then /^sprint (.+) should contain (.+)$/ do |sprint_name, story_subject|
-  story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story = RbStory.find(:first, :conditions => ["subject = ? AND name = ?", story_subject, sprint_name], :joins => :fixed_version)
   story.should_not be_nil
 end
 

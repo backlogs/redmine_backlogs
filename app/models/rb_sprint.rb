@@ -10,15 +10,16 @@ class Burndown
 
     case Backlogs.platform
     when :redmine
-      stories |= Journal.find(:all, :joins => :details,
+      stories |= Journal.find(:all,
+                              :joins => :details,
                               :conditions => ["journalized_type = 'Issue'
                             AND property = 'attr' AND prop_key = 'fixed_version_id'
-                            AND (value = ? OR old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject{|j| j.journalized.nil? }.collect{|j| j.journalized.becomes(RbStory) }
+                            AND (value = ? OR old_value = ?)", sprint.id.to_s, sprint.id.to_s]).reject { |j| j.journalized.nil? }.collect { |j| j.journalized.becomes(RbStory) }
     when :chiliproject
       # chiliproject journals are not meant to be scanned, unfortunately. This will be slow.
       stories |= Journal.find(:all,
-                              :conditions => ["type = 'Issue'"]).select{|j|
-                              j.changes['fixed_version_id'].first == sprint.id || j.changes['fixed_version_id'].last == sprint.id}.collect{|j|
+                              :conditions => ["type = 'Issue'"]).select { |j|
+                              j.changes['fixed_version_id'].first == sprint.id || j.changes['fixed_version_id'].last == sprint.id }.collect { |j|
                               RbStory.find(j.journaled_id) }
     end
 
@@ -33,24 +34,24 @@ class Burndown
 
     stories.each { |story| series.add(story.burndown(sprint)) }
 
-    series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
-    series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
+    series.merge(:to_resolve => series.collect { |r| r.points && r.points_resolved ? r.points - r.points_resolved : nil })
+    series.merge(:to_accept => series.collect { |a| a.points && a.points_accepted ? a.points - a.points_accepted : nil })
 
-    series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
+    series.merge(:days_left => (0..@days.size).collect { |d| @days.size - d })
 
     @data = {}
 
-    @data[:points_committed] = series.collect{|s| s.points }
-    @data[:hours_remaining] = series.collect{|s| s.hours }
-    @data[:points_accepted] = series.collect{|s| s.points_accepted }
-    @data[:points_resolved] = series.collect{|s| s.points_resolved }
-    @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
-    @data[:points_to_accept] = series.collect{|s| s.to_accept }
+    @data[:points_committed] = series.collect { |s| s.points }
+    @data[:hours_remaining] = series.collect { |s| s.hours }
+    @data[:points_accepted] = series.collect { |s| s.points_accepted }
+    @data[:points_resolved] = series.collect { |s| s.points_resolved }
+    @data[:points_to_resolve] = series.collect { |s| s.to_resolve }
+    @data[:points_to_accept] = series.collect { |s| s.to_accept }
 
     @data[:ideal] = (0..@days.size).to_a.reverse
 
-    @data[:points_required_burn_rate] = series.collect{|r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
-    @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
+    @data[:points_required_burn_rate] = series.collect { |r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
+    @data[:hours_required_burn_rate] = series.collect { |r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
 
     case direction
     when 'up'
@@ -74,16 +75,16 @@ class Burndown
     @series ||= {}
     return @series[remove_empty] if @series[remove_empty]
 
-    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.sort
+    @series[remove_empty] = @data.keys.collect { |k| k.to_s }.sort
     return @series[remove_empty] unless remove_empty
 
     # delete :points_committed if flatline
     @series[remove_empty].delete('points_committed') if @data[:points_committed].uniq.compact.size < 1
 
     # delete any series that is flat-line 0/nil
-    @series[remove_empty].each {|k|
-      @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect{|d| d.to_f }.uniq == [0.0]
-    }
+    @series[remove_empty].each do |k|
+      @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect { |d| d.to_f }.uniq == [0.0]
+    end
     @series[remove_empty]
   end
 
@@ -105,7 +106,7 @@ class RbSprint < Version
   named_scope :open_sprints, lambda { |project|
     {
       :order => 'sprint_start_date ASC, effective_date ASC',
-      :conditions => [ "status = 'open' AND project_id = ?", project.id ]
+      :conditions => ["status = 'open' AND project_id = ?", project.id]
     }
   }
 
@@ -113,7 +114,7 @@ class RbSprint < Version
   named_scope :closed_sprints, lambda { |project|
     {
        :order => 'sprint_start_date ASC, effective_date ASC',
-       :conditions => [ "status = 'closed' AND project_id = ?", project.id ]
+       :conditions => ["status = 'closed' AND project_id = ?", project.id]
     }
   }
 
@@ -122,7 +123,7 @@ class RbSprint < Version
   end
 
   def points
-    stories.inject(0){|sum, story| sum + story.story_points.to_i}
+    stories.inject(0) { |sum, story| sum + story.story_points.to_i }
   end
 
   def has_wiki_page
@@ -148,11 +149,11 @@ class RbSprint < Version
 
     projects.compact!
 
-    projects.each{|p|
+    projects.each do |p|
       next unless p.wiki
       t = p.wiki.find_page(template)
       return t if t
-    }
+    end
     nil
   end
 
@@ -167,10 +168,10 @@ class RbSprint < Version
     if !page
       template = find_wiki_template
       if template
-      page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
-      page.content = WikiContent.new
-      page.content.text = "h1. #{self.name}\n\n#{template.text}"
-      page.save!
+        page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
+        page.content = WikiContent.new
+        page.content.text = "h1. #{self.name}\n\n#{template.text}"
+        page.save!
       end
     end
 
@@ -193,7 +194,7 @@ class RbSprint < Version
       return d.to_a
     else
       # mon-fri are working days, sat-sun are not
-      return d.select {|d| (d.wday > 0 and d.wday < 6) }
+      return d.select { |d| (d.wday > 0 and d.wday < 6) }
     end
   end
 
@@ -232,14 +233,14 @@ class RbSprint < Version
     direction ||= Backlogs.setting[:points_burn_direction]
     direction = 'down' if direction != 'up'
 
-    @burndown ||= {'up' => nil, 'down' => nil}
+    @burndown ||= { 'up' => nil, 'down' => nil }
     @burndown[direction] ||= Burndown.new(self, direction)
     @burndown[direction]
   end
 
   def impediments
     @impediments ||= Issue.find(:all,
-      :conditions => ["id in (
+      :conditions => ["id IN (
               SELECT issue_from_id
               FROM issue_relations ir
               JOIN issues blocked
@@ -250,6 +251,6 @@ class RbSprint < Version
               )",
             RbStory.trackers + [RbTask.tracker],
             self.id]
-      ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
+      ) #.sort { |a, b| a.closed? == b.closed? ? a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
   end
 end

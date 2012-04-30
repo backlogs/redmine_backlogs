@@ -70,19 +70,19 @@ module Backlogs
         @available_filters = available_filters_without_backlogs_issue_type
 
         if RbStory.trackers.length == 0 or RbTask.tracker.blank?
-          backlogs_filters = { }
+          backlogs_filters = {}
         else
           backlogs_filters = {
-            "backlogs_issue_type" => {  :type => :list,
-                                        :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 20 }
+            "backlogs_issue_type" => { :type => :list,
+                                       :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
+                                       :order => 20 }
                              }
         end
 
         @available_filters.merge(backlogs_filters)
       end
 
-      def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)
+      def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter = false)
         return sql_for_field_without_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter) unless field == "backlogs_issue_type"
 
         db_table = Issue.table_name
@@ -92,10 +92,10 @@ module Backlogs
         selected_values = values_for(field)
         selected_values = ['story', 'task'] if selected_values.include?('any')
 
-        story_trackers = RbStory.trackers(:type=>:string)
-        all_trackers = (RbStory.trackers + [RbTask.tracker]).collect{|val| "#{val}"}.join(",")
+        story_trackers = RbStory.trackers(:type => :string)
+        all_trackers = (RbStory.trackers + [RbTask.tracker]).collect { |val| "#{val}" }.join(",")
 
-        selected_values.each { |val|
+        selected_values.each do |val|
           case val
           when "story"
             sql << "(#{db_table}.tracker_id IN (#{story_trackers}))"
@@ -111,7 +111,7 @@ module Backlogs
                               WHERE ir.relation_type = 'blocks'
                             ))"
           end
-        }
+        end
 
         case operator
         when "="

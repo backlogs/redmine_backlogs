@@ -35,13 +35,13 @@ $jargon = %w{
   Standartwert
   }
 
-def dir(path=nil)
+def dir(path = nil)
   path = "/#{path}" if path
   r = ''
-  File.expand_path('.', __FILE__).gsub(/\\/, '/').split('/').reject{|d| d == ''}.each {|d|
+  File.expand_path('.', __FILE__).gsub(/\\/, '/').split('/').reject { |d| d == '' }.each do |d|
     r += "/#{d}"
     return "#{r}#{path}" if File.directory?("#{r}/redmine_backlogs")
-  }
+  end
   nil
 end
 
@@ -61,7 +61,7 @@ class Hash
   def to_yaml(opts = {})
     YAML::quick_emit(object_id, opts) do |out|
       out.map(taguri, to_yaml_style) do |map|
-        sort{|a, b| keycomp(a, b) }.each do |k, v|
+        sort { |a, b| keycomp(a, b) }.each do |k, v|
           map.add(k, v)
         end
       end
@@ -74,24 +74,24 @@ webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
 translations = dir('redmine_backlogs/config/locales')
 
 $key_order = []
-File.open("#{translations}/en.yml").each {|line|
+File.open("#{translations}/en.yml").each do |line|
   m = line.match(/^\s+[-_a-z0-9]+\s*:/)
   next unless m
   key = m[0].strip.gsub(/:$/, '').strip
   $key_order << key
-}
+end
 
 translation = {}
 authors = {}
-Dir.glob("#{translations}/*.yml").each {|trans|
+Dir.glob("#{translations}/*.yml").each do |trans|
   strings = YAML::load_file(trans)
   translation[strings.keys[0]] = strings[strings.keys[0]]
   author = `git log #{trans} | grep -i ^author:`
-  author = author.split("\n").collect{|a| a.gsub(/^author:/i, '').gsub(/<.*/, '').strip}
-  author = author.uniq.sort{|a, b| a.downcase <=> b.downcase}.join(', ')
+  author = author.split("\n").collect { |a| a.gsub(/^author:/i, '').gsub(/<.*/, '').strip }
+  author = author.uniq.sort { |a, b| a.downcase <=> b.downcase }.join(', ')
   author = " (#{author})" if author != ''
   authors[strings.keys[0]] = author
-}
+end
 
 webpage.write(<<HEADER)
 ---
@@ -126,7 +126,7 @@ def translated(l, s)
   return true if ['zh', 'ja'].include?(l) # aspell doesn't have a language file for these
   speller = Aspell.new(l.gsub('-', '_'))
   speller.set_option('ignore-case', 'true')
-  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
+  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word|
     next if $jargon.include?(word.downcase)
     next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
     unless speller.check(word)
@@ -141,20 +141,20 @@ def name(t)
   YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
 end
 
-translation.keys.sort.each {|t|
+translation.keys.sort.each do |t|
   next if t == 'en'
 
   untranslated = []
   varstyle = []
 
   nt = {}
-  translation['en'].keys.each {|k|
+  translation['en'].keys.each do |k|
     nt[k] = translation[t][k].to_s.strip
     nt[k] = translation['en'][k].to_s.strip if nt[k].strip == ''
 
     varstyle << k if nt[k].include?('{{')
     untranslated << k unless translation['en'][k] != nt[k] || translated(t, nt[k])
-  }
+  end
   errors = (varstyle + untranslated).uniq
 
   if errors.size > 0
@@ -174,7 +174,7 @@ translation.keys.sort.each {|t|
   webpage.write("bq(#{status}). #{name(t)}#{pct}#{authors[t]}\n\n")
 
   columns = 2
-  [[untranslated, 'Untranslated'], [varstyle, 'Old-style variable substitution']].each {|error|
+  [[untranslated, 'Untranslated'], [varstyle, 'Old-style variable substitution']].each do |error|
     keys, title = *error
     next if keys.size == 0
 
@@ -188,7 +188,7 @@ translation.keys.sort.each {|t|
     webpage.write("\n")
 
     File.open("#{translations}/#{t}.yml", 'w') do |out|
-      out.write({t => nt}.to_yaml)
+      out.write({ t => nt }.to_yaml)
     end
-  }
-}
+  end
+end

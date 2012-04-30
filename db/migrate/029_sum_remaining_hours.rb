@@ -9,7 +9,6 @@ class SumRemainingHours < ActiveRecord::Migration
         t.column :tmp_remaining_hours, :float, :null => false
       end
 
-
       # non-leaf stories
       execute "INSERT INTO backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
                SELECT id, root_id, lft, rgt, 0

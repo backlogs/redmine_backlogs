@@ -1,7 +1,6 @@
 require 'benchmark'
 
 class ReinstateRemaining < ActiveRecord::Migration
-
   def self.initial_estimate(issue)
     if issue.leaf?
       if issue.fixed_version_id && issue.fixed_version.sprint_start_date
@@ -12,7 +11,7 @@ class ReinstateRemaining < ActiveRecord::Migration
       return issue.value_at(:estimated_hours, time)
     end
 
-    e = issue.leaves.collect{|t| ReinstateRemaining.initial_estimate(t)}.compact
+    e = issue.leaves.collect { |t| ReinstateRemaining.initial_estimate(t) }.compact
     return nil if e.size == 0
     e.sum
   end
@@ -25,26 +24,26 @@ class ReinstateRemaining < ActiveRecord::Migration
 
       execute "UPDATE issues SET created_on = updated_on WHERE created_on IS NULL"
 
-      projects = Project.all.select{|p| Backlogs.configured?(p)}.collect{|p| p.id }
+      projects = Project.all.select { |p| Backlogs.configured?(p) }.collect{ |p| p.id }
       trackers = (RbStory.trackers + [RbTask.tracker]).compact
 
       throw :done if trackers.size == 0 || projects.size == 0
 
-      issues = RbTask.find(:all, :conditions => ['project_id in (?) and tracker_id in (?)', projects, trackers]).to_a
+      issues = RbTask.find(:all, :conditions => ['project_id IN (?) AND tracker_id IN (?)', projects, trackers]).to_a
       converted = 0
 
       puts "Reverting estimated hours for #{issues.size} issues. This will take a while. Sorry."
       sql = []
       issues.in_groups_of(200, false) do |chunk|
         b = Benchmark.measure {
-          chunk.each {|task|
+          chunk.each do |task|
             task.reload
             task.remaining_hours = task.estimated_hours
             task.estimated_hours = initial_estimate(task)
             task.save!
-          }
+          end
 
-          ids = chunk.collect{|i| i.id.to_s}.join(',')
+          ids = chunk.collect { |i| i.id.to_s }.join(',')
 
           # change journal for remaining_hours into estimated_hours
           sql << "UPDATE journal_details SET prop_key = 'remaining_hours'
@@ -59,7 +58,7 @@ class ReinstateRemaining < ActiveRecord::Migration
         puts "#{converted} values set, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(((issues.size - converted) + 1) / speed)}s"
       end
 
-      sql.each{|stmt| execute(stmt) }
+      sql.each { |stmt| execute(stmt) }
 
       # clean up any journal entries without details
       execute "DELETE FROM journals WHERE NOT id IN (SELECT journal_id FROM journal_details) AND (notes IS NULL OR notes = '')"

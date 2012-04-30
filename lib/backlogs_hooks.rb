@@ -10,7 +10,7 @@ module BacklogsPlugin
         RAILS_DEFAULT_LOGGER.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
       end
 
-      def view_issues_sidebar_planning_bottom(context={ })
+      def view_issues_sidebar_planning_bottom(context = {})
         begin
           project = context[:project]
 
@@ -38,8 +38,8 @@ module BacklogsPlugin
             :controller => :rb_hooks_render,
             :action     => :view_issues_sidebar,
             :project_id => project.identifier,
-            :host => context[:request].host_with_port,
-            :protocol => context[:request].ssl? ? 'https' : 'http'
+            :host       => context[:request].host_with_port,
+            :protocol   => context[:request].ssl? ? 'https' : 'http'
           }
           url_options[:sprint_id] = sprint_id if sprint_id
 
@@ -58,7 +58,7 @@ module BacklogsPlugin
         end
       end
 
-      def view_issues_show_details_bottom(context={ })
+      def view_issues_show_details_bottom(context = {})
         begin
           issue = context[:issue]
 
@@ -85,7 +85,7 @@ module BacklogsPlugin
         end
       end
 
-      def view_issues_form_details_bottom(context={ })
+      def view_issues_form_details_bottom(context = {})
         begin
           snippet = ''
           issue = context[:issue]
@@ -94,7 +94,7 @@ module BacklogsPlugin
 
           #project = context[:project]
 
-          #developers = project.members.select {|m| m.user.allowed_to?(:log_time, project)}.collect{|m| m.user}
+          #developers = project.members.select { |m| m.user.allowed_to?(:log_time, project) }.collect { |m| m.user}
           #developers = select_tag("time_entry[user_id]", options_from_collection_for_select(developers, :id, :name, User.current.id))
           #developers = developers.gsub(/\n/, '')
 
@@ -146,7 +146,7 @@ module BacklogsPlugin
         end
       end
 
-      def view_versions_show_bottom(context={ })
+      def view_versions_show_bottom(context = {})
         begin
           version = context[:version]
           project = version.project
@@ -157,7 +157,7 @@ module BacklogsPlugin
 
           if User.current.allowed_to?(:edit_wiki_pages, project)
             snippet += '<span id="edit_wiki_page_action">'
-            snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
+            snippet += link_to l(:button_edit_wiki), { :controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
             snippet += '</span>'
 
             # this wouldn't be necesary if the schedules plugin
@@ -220,7 +220,7 @@ module BacklogsPlugin
             if action != 'none'
               case action
               when 'open'
-                tasks = story.tasks.select{|t| !t.reload.closed?}
+                tasks = story.tasks.select { |t| !t.reload.closed? }
               when 'none'
                 tasks = []
               when 'all'
@@ -229,18 +229,18 @@ module BacklogsPlugin
                 raise "Unexpected value #{params[:copy_tasks]}"
               end
 
-              tasks.each {|t|
+              tasks.each do |t|
                 nt = RbTask.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
                 nt.save!
-              }
+              end
             end
           end
         end
       end
 
-      def controller_issues_edit_after_save(context={ })
+      def controller_issues_edit_after_save(context = {})
         params = context[:params]
         issue = context[:issue]
 
@@ -254,7 +254,7 @@ module BacklogsPlugin
         end
       end
 
-      def view_layouts_base_html_head(context={})
+      def view_layouts_base_html_head(context = {})
         return '' if Setting.login_required? && !User.current.logged?
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]
@@ -285,14 +285,14 @@ module BacklogsPlugin
         }
       end
 
-      def view_timelog_edit_form_bottom(context={ })
+      def view_timelog_edit_form_bottom(context = {})
         time_entry = context[:time_entry]
         return '' if time_entry[:issue_id].blank?
 
         issue = Issue.find(context[:time_entry].issue_id)
         return '' unless Backlogs.configured?(issue.project) &&
-                         Backlogs.setting[:timelog_from_taskboard]=='enabled'
-        snippet=''
+                         Backlogs.setting[:timelog_from_taskboard] == 'enabled'
+        snippet = ''
 
         begin
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
@@ -309,7 +309,7 @@ module BacklogsPlugin
 
       end
 
-      def controller_timelog_edit_before_save(context={ })
+      def controller_timelog_edit_before_save(context = {})
         time_entry = context[:time_entry]
         return '' if time_entry[:issue_id].blank?
 
@@ -318,7 +318,7 @@ module BacklogsPlugin
 
         issue = Issue.find(time_entry.issue_id)
         return unless Backlogs.configured?(issue.project) &&
-                      Backlogs.setting[:timelog_from_taskboard]=='enabled'
+                      Backlogs.setting[:timelog_from_taskboard] == 'enabled'
 
         if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
           remaining_hours = params[:remaining_hours].gsub(',','.').to_f

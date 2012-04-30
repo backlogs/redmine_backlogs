@@ -2,7 +2,7 @@ require 'rubygems'
 require 'timecop'
 
 Given /^I am a product owner of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find(:first, :conditions => "name = 'Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :create_stories
   role.permissions << :update_stories
@@ -16,7 +16,7 @@ Given /^I am a product owner of the project$/ do
 end
 
 Given /^I am a scrum master of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find(:first, :conditions => "name = 'Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -33,7 +33,7 @@ Given /^I am a scrum master of the project$/ do
 end
 
 Given /^I am a team member of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find(:first, :conditions => "name = 'Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -54,24 +54,24 @@ Given /^I am viewing the master backlog$/ do
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find(:first, :conditions => ["name = ?", sprint_name])
   visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  @sprint = RbSprint.find(:first, :conditions => ["name = ?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
 
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
-  if attribute=="tracker"
-    attribute="tracker_id"
-    value = Tracker.find(:first, :conditions => ["name=?", value]).id
-  elsif attribute=="status"
-    attribute="status_id"
-    value = IssueStatus.find(:first, :conditions => ["name=?", value]).id
+  if attribute == "tracker"
+    attribute = "tracker_id"
+    value = Tracker.find(:first, :conditions => ["name = ?", value]).id
+  elsif attribute == "status"
+    attribute = "status_id"
+    value = IssueStatus.find(:first, :conditions => ["name = ?", value]).id
   end
   @story_params[attribute] = value
 end
@@ -86,7 +86,7 @@ Given /^I want to create a story$/ do
 end
 
 Given /^I want to create a task for (.+)$/ do |story_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find(:first, :conditions => ["subject = ?", story_subject])
   @task_params = initialize_task_params(story.id)
 end
 
@@ -112,13 +112,13 @@ Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = RbSprint.find(:first, :conditions => ["name=?", name])
+  sprint = RbSprint.find(:first, :conditions => ["name = ?", name])
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
 
 Given /^I want to indicate that the impediment blocks (.+)$/ do |blocks_csv|
-  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
+  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map { |s| s.id }.join(',')
   @impediment_params[:blocks] = blocks_csv
 end
 
@@ -133,7 +133,7 @@ Given /^I want to set the (.+) of the impediment to (.+)$/ do |attribute, value|
 end
 
 Given /^I want to edit the story with subject (.+)$/ do |subject|
-  @story = RbStory.find(:first, :conditions => ["subject=?", subject])
+  @story = RbStory.find(:first, :conditions => ["subject = ?", subject])
   @story.should_not be_nil
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
@@ -195,7 +195,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days(:all).collect{|d| d.to_time}
+  days = @sprint.days(:all).collect { |d| d.to_time }
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
@@ -252,7 +252,7 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
   table.hashes.each do |story|
     params = initialize_story_params
     params['subject'] = story.delete('subject')
-    sprint = RbSprint.find(:first, :conditions => [ "name=?", story.delete('sprint') ])
+    sprint = RbSprint.find(:first, :conditions => ["name = ?", story.delete('sprint')])
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
     params['prev_id'] = story_before(story.delete('position'))
@@ -324,7 +324,7 @@ Given /^I have defined the following impediments:$/ do |table|
     params = initialize_impediment_params(sprint.id)
 
     params['subject'] = impediment.delete('subject')
-    params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
+    params['blocks']  = RbStory.find(:all, :conditions => ['subject IN (?)', impediment.delete('blocks').split(', ')]).map { |s| s.id }.join(',')
 
     impediment.should == {}
 
@@ -337,17 +337,17 @@ Given /^I have defined the following impediments:$/ do |table|
 end
 
 Given /^I am viewing the issues list$/ do
-  visit url_for(:controller => 'issues', :action=>'index', :project_id => @project)
+  visit url_for(:controller => 'issues', :action => 'index', :project_id => @project)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the issues sidebar$/ do
-  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project)
+  visit url_for(:controller => 'rb_hooks_render', :action => 'view_issues_sidebar', :project_id => @project)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
-  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :sprint_id => RbSprint.find_by_name(name).id)
+  visit url_for(:controller => 'rb_hooks_render', :action => 'view_issues_sidebar', :sprint_id => RbSprint.find_by_name(name).id)
   page.driver.response.status.should == 200
 end
 
@@ -391,7 +391,7 @@ end
 
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
-  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
+  data = Issue.find(:all, :conditions => ['tracker_id = ? AND fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect { |t| [t.subject, t.remaining_hours.inspect] }
   show_table("Task hours", header, data)
 end
 
@@ -418,7 +418,7 @@ Given /^timelog from taskboard has been enabled$/ do
 end
 
 Given /^I am a team member of the project and allowed to update remaining hours$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find(:first, :conditions => "name = 'Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards

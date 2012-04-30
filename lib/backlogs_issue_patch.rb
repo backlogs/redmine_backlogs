@@ -9,8 +9,8 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        before_save :backlogs_before_save
-        after_save  :backlogs_after_save
+        before_save   :backlogs_before_save
+        after_save    :backlogs_after_save
         after_destroy :backlogs_after_destroy
       end
     end
@@ -58,7 +58,7 @@ module Backlogs
               @rb_story = parent.story
             end
           else
-            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? AND lft < ? AND rgt > ? AND tracker_id IN (?)", root_id, lft, rgt, RbStory.trackers ])
+            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => ["root_id = ? AND lft < ? AND rgt > ? AND tracker_id IN (?)", root_id, lft, rgt, RbStory.trackers])
             @rb_story = @rb_story.becomes(RbStory) if @rb_story
           end
         end
@@ -69,7 +69,7 @@ module Backlogs
         # return issues that I block that aren't closed
         return [] if closed?
         begin
-          return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
+          return relations_from.collect { |ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
         rescue
           # stupid rails and their ignorance of proper relational databases
           RAILS_DEFAULT_LOGGER.error "Cannot return the blocks list for #{self.id}: #{e}"
@@ -80,7 +80,7 @@ module Backlogs
       def blockers
         # return issues that block me
         return [] if closed?
-        relations_to.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_from.closed? ? ir.issue_from : nil}.compact
+        relations_to.collect { |ir| ir.relation_type == 'blocks' && !ir.issue_from.closed? ? ir.issue_from : nil }.compact
       end
 
       def velocity_based_estimate
@@ -148,7 +148,7 @@ module Backlogs
           # safe to do by sql since we don't want any of this logged
           unless self.position
             max = 0
-            connection.execute('SELECT COALESCE(MAX(position), -1) + 1 FROM issues WHERE NOT position IS NULL').each {|i| max = i[0] }
+            connection.execute('SELECT COALESCE(MAX(position), -1) + 1 FROM issues WHERE NOT position IS NULL').each { |i| max = i[0] }
             connection.execute("UPDATE issues SET position = #{connection.quote(max)} WHERE id = #{id}")
           end
         end
@@ -169,7 +169,7 @@ module Backlogs
 
       def history(property, days)
         created_day = created_on.to_date
-        active_days = days.select{|d| d >= created_day}
+        active_days = days.select { |d| d >= created_day }
 
         # if not active, don't do anything
         return [nil] * (days.size + 1) if active_days.size == 0
@@ -185,12 +185,13 @@ module Backlogs
         property_s = property.to_s
         case Backlogs.platform
         when :redmine
-          changes = JournalDetail.find(:all, :order => "journals.created_on ASC" , :joins => :journal,
-                                  :conditions => ["property = 'attr' AND prop_key = '#{property}'
-                                                    AND journalized_type = 'Issue' AND journalized_id = ?",
-                                                    id]).collect {|detail|
+          changes = JournalDetail.find(:all,
+                                       :conditions => ["property = 'attr' AND prop_key = '#{property}'
+                                                        AND journalized_type = 'Issue' AND journalized_id = ?", id],
+                                       :order => "journals.created_on ASC",
+                                       :joins => :journal).collect do |detail|
             [detail.journal.created_on.to_date, detail.old_value, detail.value]
-          }
+          end
         when :chiliproject
           # the chiliproject changelog is screwed up beyond all reckoning...
           # a truly horrid journals design -- worse than RMs, and that takes some doing
@@ -201,15 +202,15 @@ module Backlogs
                   else nil
                   end
 
-          valid_ids = table ? RbStory.connection.select_values("SELECT id FROM #{table}").collect{|x| x.to_i} : nil
-          changes = self.journals.reject{|j| j.created_at < self.created_on || j.changes[property_s].nil?}.collect{|j|
-            delta = valid_ids ? j.changes[property_s].collect{|v| valid_ids.include?(v) ? v : nil} : j.changes[property_s]
+          valid_ids = table ? RbStory.connection.select_values("SELECT id FROM #{table}").collect { |x| x.to_i } : nil
+          changes = self.journals.reject { |j| j.created_at < self.created_on || j.changes[property_s].nil? }.collect { |j|
+            delta = valid_ids ? j.changes[property_s].collect { |v| valid_ids.include?(v) ? v : nil } : j.changes[property_s]
             [j.created_at.to_date] + delta
           }
         end
 
         journals = false
-        changes.each{|change|
+        changes.each do |change|
           date, before, after = *change
 
           # if this is the first journal, fill up with initial old_value
@@ -219,12 +220,12 @@ module Backlogs
           if date < active_days[0]
             i = 0
           else
-            i = active_days.index{|d| d > date}
+            i = active_days.index { |d| d > date }
           end
 
           journals = true
           values.fill(after, i) if i
-        }
+        end
 
         # if no journals was found, the current value is what all the days have
         if journals
@@ -246,9 +247,9 @@ module Backlogs
         # and convert to the proper type (the journal holds only strings)
 
         @@backlogs_column_type ||= {}
-        @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select{|c| c.name == "#{property}"}.collect{|c| c.type}[0]
+        @@backlogs_column_type[property] ||= Issue.connection.columns(Issue.table_name).select { |c| c.name == "#{property}" }.collect { |c| c.type }[0]
 
-        return values.collect{|v|
+        return values.collect do |v|
           if v.nil?
             v
           else
@@ -263,7 +264,7 @@ module Backlogs
               raise "Unexpected field type '#{@@backlogs_column_type[property].inspect}' for Issue##{property}"
             end
           end
-        }
+        end
       end
     end
   end

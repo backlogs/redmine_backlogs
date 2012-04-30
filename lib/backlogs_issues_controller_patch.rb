@@ -24,17 +24,17 @@ module Backlogs
         case params[:format]
         when 'xml'
           body = Nokogiri::XML(response.body)
-          body.xpath('//issue').each{|issue|
+          body.xpath('//issue').each do |issue|
             next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
             issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
-          }
+          end
           response.body = body.to_xml
         when 'json'
           body = JSON.parse(response.body)
-          body['issues'].each{|issue|
+          body['issues'].each do |issue|
             next unless story_trackers.include?(issue['tracker']['id'])
             issue['story_points'] = RbStory.find(issue['id']).story_points
-          }
+          end
           response.body = body.to_json
         end
       end

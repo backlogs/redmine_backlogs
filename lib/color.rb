@@ -31,7 +31,7 @@ module Backlogs
     # Default value for #darken, #lighten etc.
     BRIGHTNESS_DEFAULT = 0.2
 
-    # Constructor.  Inits to white (#FFFFFF) by default, or accepts any params 
+    # Constructor.  Inits to white (#FFFFFF) by default, or accepts any params
     # supported by #parse.
     def initialize(*args)
       @r = 255
@@ -77,10 +77,8 @@ module Backlogs
     # Attempt to read in a string and parse it into values
     def self.parse(*args)
       case args.size
-
       when 0 then
         return nil
-
       when 1 then
         val = args[0]
 
@@ -101,12 +99,9 @@ module Backlogs
         else
           return nil
         end
-
         return Color.new(r,g,b,a || 255)
-
       when 3,4 then
         return Color.new(*args)
-
       end
       nil
     end

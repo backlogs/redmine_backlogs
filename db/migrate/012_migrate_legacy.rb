@@ -18,9 +18,9 @@ class MigrateLegacy < ActiveRecord::Migration
 
   def self.row(r, t)
     normalized = []
-    r.each_with_index{|v, i|
+    r.each_with_index do |v, i|
       normalized << MigrateLegacy.normalize_value(v, t[i])
-    }
+    end
     normalized
   end
 
@@ -57,23 +57,23 @@ class MigrateLegacy < ActiveRecord::Migration
       execute("
           SELECT projects.id AS project_id, pt.tracker_id AS tracker_id
           FROM projects
-          LEFT JOIN projects_trackers pt ON pt.project_id = projects.id").each { |row|
+          LEFT JOIN projects_trackers pt ON pt.project_id = projects.id").each do |row|
 
         project_id, tracker_id = MigrateLegacy.row(row, [:int, :int])
 
         trackers[project_id] ||= {}
         trackers[project_id][:story] = tracker_id if RbStory.trackers.include?(tracker_id)
         trackers[project_id][:task] = tracker_id if RbTask.tracker == tracker_id
-      }
+      end
 
       # close existing transactions and turn on autocommit
       ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
       say_with_time "Migrating Backlogs data..." do
         bottom = 0
-        execute("SELECT COALESCE(MAX(position), 0) FROM items").each { |row|
+        execute("SELECT COALESCE(MAX(position), 0) FROM items").each do |row|
           bottom = row[0].to_i
-        }
+        end
         bottom += 1
 
         connection = ActiveRecord::Base.connection
@@ -88,7 +88,7 @@ class MigrateLegacy < ActiveRecord::Migration
           WHERE parent.id IS NULL
           ORDER BY COALESCE(story.position, #{bottom}) DESC, story.created_at DESC"
 
-        stories.each { |row|
+        stories.each do |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
           say "Updating story #{id}"
@@ -108,7 +108,7 @@ class MigrateLegacy < ActiveRecord::Migration
           # position gets shifted down 1 spot each time, yielding a
           # neatly compacted position list
           story.insert_at 1
-        }
+        end
 
         tasks = execute "
           SELECT task.issue_id, versions.id, parent.issue_id, task_issue.project_id
@@ -120,7 +120,7 @@ class MigrateLegacy < ActiveRecord::Migration
           LEFT JOIN versions ON versions.id = sprint.version_id AND sprint.version_id <> 0
           ORDER BY COALESCE(task.position, #{bottom}), task.created_at"
 
-        tasks.each { |row|
+        tasks.each do |row|
           id, sprint, parent_id, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
           say "Updating task #{id}"
@@ -138,10 +138,10 @@ class MigrateLegacy < ActiveRecord::Migration
           task.fixed_version_id = sprint
           task.parent_issue_id = parent_id
           task.save!
-        }
+        end
 
         res = execute "SELECT version_id, start_date, is_closed FROM backlogs"
-        res.each { |row|
+        res.each do |row|
           version, start_date, is_closed = MigrateLegacy.row(row, [:int, :string, :bool])
 
           status = connection.quote(is_closed ? 'closed' : 'open')
@@ -149,21 +149,20 @@ class MigrateLegacy < ActiveRecord::Migration
           start_date = connection.quote(start_date)
 
           execute "UPDATE versions SET status = #{status}, sprint_start_date = #{start_date} WHERE id = #{version}"
-        }
+        end
       end
 
       execute %{
-        insert into burndown_days (version_id, points_committed, points_accepted, created_at)
-        select version_id, scope, done, backlog_chart_data.created_at
-        from backlogs
-        join backlog_chart_data on backlogs.id = backlog_id
+        INSERT INTO burndown_days (version_id, points_committed, points_accepted, created_at)
+        SELECT version_id, scope, done, backlog_chart_data.created_at
+        FROM backlogs
+        JOIN backlog_chart_data ON backlogs.id = backlog_id
         }
       ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
       drop_table :backlogs
       drop_table :items
     end
-
   end
 
   def self.down

@@ -22,9 +22,9 @@ module RbMasterBacklogsHelper
     }
     items.each do |item|
       item[:condition] = true unless item.has_key?(:condition)
-      if item[:condition] && ( (is_sprint && item[:for] == :sprint) ||
-                               (!is_sprint && item[:for] == :product) ||
-                               (item[:for] == :both) )
+      if item[:condition] && ((is_sprint && item[:for] == :sprint) ||
+                              (!is_sprint && item[:for] == :product) ||
+                              (item[:for] == :both))
         html += %{ <li class="item">#{item[:item]}</li> }
       end
     end
@@ -43,7 +43,7 @@ module RbMasterBacklogsHelper
   end
 
   def is_sprint?(backlog)
-    backlog.class.to_s.downcase=='sprint'
+    backlog.class.to_s.downcase == 'sprint'
   end
 
   def menu_link(label, options = {})

@@ -61,7 +61,7 @@ class RbReleasesController < RbApplicationController
 
   def remaining_story_points
     res = 0
-    @release.stories.each {|s| res += s.story_points if s.story_points}
+    @release.stories.each { |s| res += s.story_points if s.story_points }
     res
   end
 end

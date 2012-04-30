@@ -2,7 +2,6 @@ class FlattenStoryPositions < ActiveRecord::Migration
   def self.up
     # Rails doesn't support temp tables, mysql doesn't support update
     # from same-table subselect
-
     create_table :backlogs_tmp_issue_position do |t|
       t.column :id, :integer, :null => false
       t.column :position, :integer, :null => false

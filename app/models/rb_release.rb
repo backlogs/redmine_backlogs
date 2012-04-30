@@ -26,19 +26,19 @@ class ReleaseBurndown
 
     # load cache
     day_index = to_h(days, (0..(days.size - 1)).to_a)
-    ReleaseBurndownDay.find(:all, :order=>'day', :conditions => ["release_id = ?", release.id]).each {|data|
+    ReleaseBurndownDay.find(:all, :order => 'day', :conditions => ["release_id = ?", release.id]).each do |data|
       day = day_index[data.day.to_date]
       next if !day
 
       _series[day] = [data.remaining_story_points.to_f]
-    }
+    end
 
     # use initial story points for first day if not loaded from cache (db)
     _series[0] = [release.initial_story_points.to_f] unless _series[0]
 
     # fill out series
     last = nil
-    _series = _series.enum_for(:each_with_index).collect{|v, i| v.nil? ? last : (last = v; v) }
+    _series = _series.enum_for(:each_with_index).collect { |v, i| v.nil? ? last : (last = v; v) }
 
     # make registered series
     remaining_story_points = _series.transpose
@@ -49,7 +49,7 @@ class ReleaseBurndown
       make_series :ideal, [remaining_story_points[0]]
     else
       day_diff = remaining_story_points[0][0] / (daycount - 1.0)
-      make_series :ideal, remaining_story_points[0].enum_for(:each_with_index).collect{|c, i| remaining_story_points[0][0] - i * day_diff }
+      make_series :ideal, remaining_story_points[0].enum_for(:each_with_index).collect { |c, i| remaining_story_points[0][0] - i * day_diff }
     end
 
     @max = @available_series.values.flatten.compact.max
@@ -63,7 +63,7 @@ class ReleaseBurndown
   attr_reader :ideal
 
   def series(select = :active)
-    @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
+    @available_series.values.select { |s| (select == :all) }.sort { |x, y| "#{x.name}" <=> "#{y.name}" }
   end
 
   private
@@ -104,7 +104,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def burndown_days
-    self.release_burndown_days.sort { |a,b| a.day <=> b.day }
+    self.release_burndown_days.sort { |a, b| a.day <=> b.day }
   end
 
   def days(cutoff = nil)

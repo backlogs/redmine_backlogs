@@ -12,23 +12,23 @@ module BacklogsSpreadsheet
 
     def add(s)
       ns = Style.new(s)
-      @styles.each {|s|
+      @styles.each do |s|
         next unless s == ns
         return s if s.id == ns.id || ns.auto
-      }
+      end
       @styles << ns
       ns
     end
 
     def to_xml(xml)
-      xml.Styles { @styles.each{|s| s.to_xml(xml) }}
+      xml.Styles { @styles.each { |s| s.to_xml(xml) } }
     end
   end
 
   class Style
     def initialize(options)
       # make a deep clone to avoid other people messing with our data
-      options = Marshal.load( Marshal.dump( options ) )
+      options = Marshal.load(Marshal.dump(options))
 
       @id = options.delete(:id)
       @auto = false
@@ -39,10 +39,10 @@ module BacklogsSpreadsheet
 
       if options[:font] && options[:font].size > 0
         @font = {
-          'ss:FontName' => options[:font][:name] || 'Calibri',
-          'x:Family' => options[:font][:name] || 'Swiss',
-          'ss:Size' => options[:font][:size] || 11,
-          'ss:Color' => options[:font][:color] || '#000000',
+          'ss:FontName' => options[:font][:name]  || 'Calibri',
+          'x:Family'    => options[:font][:name]  || 'Swiss',
+          'ss:Size'     => options[:font][:size]  || 11,
+          'ss:Color'    => options[:font][:color] || '#000000',
         }
         @font['ss:Bold'] = '1' if options[:font][:bold]
         @font['ss:Italic'] = '1' if options[:font][:italic]
@@ -58,10 +58,10 @@ module BacklogsSpreadsheet
     end
 
     def to_xml(xml)
-      xml.Style('ss:ID' => @id) {
+      xml.Style('ss:ID' => @id) do
         xml.Font(@font) if @font
         xml.NumberFormat(@numberformat) if @numberformat
-      }
+      end
     end
   end
 
@@ -84,17 +84,16 @@ module BacklogsSpreadsheet
     attr_accessor :comment
 
     def to_xml(xml, col)
-      cellopts = {'ss:Index' => (col+1).to_s}
+      cellopts = { 'ss:Index' => (col+1).to_s }
       cellopts['ss:StyleID'] = @style.id if @style
-      xml.Cell(cellopts) {
+      xml.Cell(cellopts) do
         xml.Data(self.to_s, 'ss:Type' => celltype)
         if @comment
-          xml.Comment {
-            xml.send(:"ss:Data", @comment, 'xmlns' => "http://www.w3.org/TR/REC-html40") {
-            }
-          }
+          xml.Comment do
+            xml.send(:"ss:Data", @comment, 'xmlns' => "http://www.w3.org/TR/REC-html40") {}
+          end
         end
-      }
+      end
     end
 
     def celltype
@@ -127,8 +126,8 @@ module BacklogsSpreadsheet
     end
 
     def default_style
-      return {:numberformat => {'ss:Format' => 'Short Date'}} if self.hour == 0 && self.min == 0 && self.sec == 0
-      {:numberformat => {'ss:Format' => 'General Date'}}
+      return { :numberformat => { 'ss:Format' => 'Short Date' } } if self.hour == 0 && self.min == 0 && self.sec == 0
+      { :numberformat => { 'ss:Format' => 'General Date' } }
     end
   end
 
@@ -148,7 +147,7 @@ module BacklogsSpreadsheet
       if data.is_a?(Array)
         @row += 1 if @col != 0
         @col = 0
-        data.each {|c| self[@row, @col] = c }
+        data.each { |c| self[@row, @col] = c }
         @row += 1
         @col = 0
       else
@@ -201,26 +200,24 @@ module BacklogsSpreadsheet
 
         @cells[row] ||= {}
         @cells[row][col] = c
-
       else
         @cells[row].delete(col) if @cells[row]
         @cells.delete(row) if @cells[row] && @cells[row].size == 0
-
       end
     end
 
     def dimensions
-      [@cells.keys.max + 1, @cells.values.collect{|r| r.keys }.flatten.max + 1]
+      [@cells.keys.max + 1, @cells.values.collect { |r| r.keys }.flatten.max + 1]
     end
 
     def rows
       r, c = *dimensions
       data = [ [nil] * c ] * r
-      @cells.each_pair {|r, v|
-        v.each_pair {|c, v|
+      @cells.each_pair do |r, v|
+        v.each_pair do |c, v|
           data[r][c] = v
-        }
-      }
+        end
+      end
       data
     end
 
@@ -228,17 +225,20 @@ module BacklogsSpreadsheet
 
     def to_xml(xml)
       rows, cols = *dimensions
-      xml.Worksheet('ss:Name' => @name) {
-        xml.Table('ss:ExpandedColumnCount' => cols.to_s, 'ss:ExpandedRowCount' => rows.to_s, 'x:FullColumns' => "1", 'x:FullRows' => "1") {
-          @cells.keys.sort.each {|row|
-            xml.Row('ss:Index' => (row+1).to_s) {
-              @cells[row].keys.sort.each {|col|
+      xml.Worksheet('ss:Name' => @name) do
+        xml.Table('ss:ExpandedColumnCount' => cols.to_s,
+                  'ss:ExpandedRowCount' => rows.to_s,
+                  'x:FullColumns' => "1",
+                  'x:FullRows' => "1") do
+          @cells.keys.sort.each do |row|
+            xml.Row('ss:Index' => (row + 1).to_s) do
+              @cells[row].keys.sort.each end |col|
                 @cells[row][col].to_xml(xml, col)
-              }
-            }
-          }
-        }
-      }
+              end
+            end
+          end
+        end
+      end
     end
   end
 
@@ -258,7 +258,7 @@ module BacklogsSpreadsheet
 
       i.strip!
 
-      w = @worksheets.select{|w| w.name.downcase == i.downcase}
+      w = @worksheets.select { |w| w.name.downcase == i.downcase }
       return w[0] if w.size > 1
 
       w = BacklogsSpreadsheet::WorkSheet.new(self, i)
@@ -267,7 +267,7 @@ module BacklogsSpreadsheet
     end
 
     def sheetnames
-      @worksheets.collect{|w| w.name }
+      @worksheets.collect { |w| w.name }
     end
 
     def load(data)
@@ -284,13 +284,13 @@ module BacklogsSpreadsheet
       doc = Nokogiri::XML(data)
       doc.remove_namespaces!
 
-      doc.xpath('//Worksheet').each {|ws|
+      doc.xpath('//Worksheet').each do |ws|
         _ws = self[ws['Name']]
 
-        ws.xpath('Table/Row').each_with_index {|row, i|
-          rownum = Integer(row['Index'] || (i+1)) - 1
-          row.xpath('Cell').each_with_index {|cell, i|
-            colnum = Integer(cell['Index'] || (i+1)) - 1
+        ws.xpath('Table/Row').each_with_index do |row, i|
+          rownum = Integer(row['Index'] || ( i + 1)) - 1
+          row.xpath('Cell').each_with_index do |cell, i|
+            colnum = Integer(cell['Index'] || (i + 1)) - 1
             v = cell.at('Data')
 
             raise "No cell data" unless v
@@ -307,12 +307,12 @@ module BacklogsSpreadsheet
             end
 
             c = cell.at('Comment//Data')
-            v = {:value => v, :comment => c.text} if c
+            v = { :value => v, :comment => c.text } if c
 
             _ws[rownum, colnum] = v
-          }
-        }
-      }
+          end
+        end
+      end
 
       data.close if close
     end
@@ -326,7 +326,7 @@ module BacklogsSpreadsheet
                      'xmlns:html' => "http://www.w3.org/TR/REC-html40") {
           xml.ExcelWorkbook('xmlns' => "urn:schemas-microsoft-com:office:excel")
           @stylemanager.to_xml(xml)
-          @worksheets.each{ |w| w.to_xml(xml) }
+          @worksheets.each { |w| w.to_xml(xml) }
         }
       end
 

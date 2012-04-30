@@ -4,10 +4,10 @@ module Backlogs
       def initialize(data = {})
         super
 
-        data.each_pair {|k, v|
+        data.each_pair do |k, v|
           raise "#{k} is not a symbol" unless k.is_a?(Symbol)
           self[k] = v
-        }
+        end
       end
 
       def [](key)
@@ -32,7 +32,7 @@ module Backlogs
       end
 
       def nilify
-        keys.each{|k| self[k] = nil}
+        keys.each { |k| self[k] = nil }
       end
     end
 
@@ -48,9 +48,9 @@ module Backlogs
 
         if @data
           raise "#{name} must have length of #{@data.size}, actual size #{data.size}" unless @data == [] || data.size == @data.size
-          @data.zip(data).each {|cell, v| cell[name] = v }
+          @data.zip(data).each { |cell, v| cell[name] = v }
         else
-          @data = data.collect{|v| FlexObject.new(name => v) }
+          @data = data.collect{ |v| FlexObject.new(name => v) }
         end
       end
     end
@@ -64,9 +64,7 @@ module Backlogs
         raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
         raise "data series '#{name}' is too long (got #{data.size}, maximum accepted #{@data.size})" if data.size > @data.size
 
-        data.each_with_index{|d, i|
-          @data[i][name] += d if d
-        }
+        data.each_with_index { |d, i| @data[i][name] += d if d }
       end
     end
 
@@ -75,19 +73,19 @@ module Backlogs
     end
 
     def each(&block)
-      @data.each {|cell| block.call(cell) }
+      @data.each { |cell| block.call(cell) }
     end
 
     def collect(&block)
-      @data.collect {|cell| block.call(cell) }
+      @data.collect { |cell| block.call(cell) }
     end
 
     def series(name)
-      @data.collect{|cell| cell[name]}
+      @data.collect { |cell| cell[name] }
     end
 
     def to_s
-      @data.collect{|s| s.to_s}.join("\n")
+      @data.collect { |s| s.to_s }.join("\n")
     end
   end
 end

@@ -8,7 +8,7 @@ class RbSprintsController < RbApplicationController
   unloadable
 
   def create
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
+    attribs = params.select { |k, v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     @sprint = RbSprint.new(attribs)
 
@@ -28,7 +28,7 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
+    attribs = params.select { |k, v| k != 'id' and RbSprint.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     begin
       result  = @sprint.becomes(Version).update_attributes attribs
@@ -43,28 +43,28 @@ class RbSprintsController < RbApplicationController
   end
 
   def download
-    bold = {:font => {:bold => true}}
+    bold = { :font => { :bold => true } }
     dump = BacklogsSpreadsheet::WorkBook.new
     ws = dump[@sprint.name]
-    ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
+    ws << [nil, @sprint.id, nil, nil, { :value => @sprint.name, :style => bold }, { :value => 'Start', :style => bold }] + @sprint.days(:all).collect { |d| { :value => d, :style => bold } }
     bd = @sprint.burndown
-    bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
+    bd.series(false).sort { |a, b| l("label_#{a}") <=> l("label_#{b}") }.each do |k|
       ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
-    }
+    end
 
-    @sprint.stories.each{|s|
-      ws << [s.tracker.name, s.id, nil, nil, {:value => s.subject, :style => bold}]
+    @sprint.stories.each do |s|
+      ws << [s.tracker.name, s.id, nil, nil, { :value => s.subject, :style => bold }]
       bd = s.burndown
-      bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
+      bd.keys.sort { |a, b| l("label_#{a}") <=> l("label_#{b}") }.each do |k|
         next if k == :status
         label = l("label_#{k}")
-        label = {:value => label, :comment => k.to_s} if [:points, :points_accepted].include?(k)
-        ws << [nil, nil, nil, nil, label ] + bd[k]
-      }
-      s.tasks.each {|t|
-        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown
-      }
-    }
+        label = { :value => label, :comment => k.to_s } if [:points, :points_accepted].include?(k)
+        ws << [nil, nil, nil, nil, label] + bd[k]
+      end
+      s.tasks.each do |t|
+        ws << [nil, nil, t.tracker.name, t.id, { :value => t.subject, :style => bold }] + t.burndown
+      end
+    end
 
     send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-excel', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
@@ -77,10 +77,10 @@ class RbSprintsController < RbApplicationController
 
     ids = []
     status = IssueStatus.default.id
-    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
+    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each do |issue|
       ids << issue.id.to_s
       issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
-    }
+    end
     if ids.size != 0
       ids = ids.join(',')
       Issue.connection.execute("UPDATE issues SET updated_on = created_on WHERE id IN (#{ids})")

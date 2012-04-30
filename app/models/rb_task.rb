@@ -14,16 +14,15 @@ class RbTask < Issue
       safe_attributes_names = RbTask::SAFE_ATTRIBUTES
     else
       safe_attributes_names = Issue.new(
-        :project_id=>params[:project_id] # required to verify "safeness"
+        :project_id => params[:project_id] # required to verify "safeness"
       ).safe_attribute_names
     end
-    attribs = params.select {|k,v| safe_attributes_names.include?(k) }
+    attribs = params.select { |k, v| safe_attributes_names.include?(k) }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
     attribs
   end
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
-
     attribs = rb_safe_attributes(params)
 
     attribs['author_id'] = user_id
@@ -60,11 +59,11 @@ class RbTask < Issue
     tasks = []
     story = RbStory.find_by_id(story_id)
     if RbStory.trackers.include?(story.tracker_id)
-      story.descendants.each_with_index {|task, i|
+      story.descendants.each_with_index do |task, i|
         task = task.becomes(RbTask)
         task.rank = i + 1
         tasks << task
-      }
+      end
     end
     tasks
   end
@@ -111,23 +110,23 @@ class RbTask < Issue
 
   def update_blocked_list(for_blocking)
     # Existing relationships not in for_blocking should be removed from the 'blocks' list
-    relations_from.find(:all, :conditions => "relation_type = 'blocks'").each{ |ir|
-      ir.destroy unless for_blocking.include?( ir[:issue_to_id] )
-    }
+    relations_from.find(:all, :conditions => "relation_type = 'blocks'").each do |ir|
+      ir.destroy unless for_blocking.include?(ir[:issue_to_id])
+    end
 
-    already_blocking = relations_from.find(:all, :conditions => "relation_type = 'blocks'").map{|ir| ir.issue_to_id}
+    already_blocking = relations_from.find(:all, :conditions => "relation_type = 'blocks'").map { |ir| ir.issue_to_id }
 
     # Non-existing relationships that are in for_blocking should be added to the 'blocks' list
-    for_blocking.select{ |id| !already_blocking.include?(id) }.each{ |id|
-      ir = relations_from.new(:relation_type=>'blocks')
+    for_blocking.select { |id| !already_blocking.include?(id) }.each do |id|
+      ir = relations_from.new(:relation_type => 'blocks')
       ir[:issue_to_id] = id
       ir.save!
-    }
+    end
     reload
   end
 
   def validate_blocks_list(list)
-    if list.split(/\D+/).length==0
+    if list.split(/\D+/).length == 0
       errors.add :blocks, :must_have_comma_delimited_list
       false
     else
@@ -154,7 +153,7 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count( :conditions => ['tracker_id = ? AND root_id = ? AND lft > ? AND lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank ||= Issue.count(:conditions => ['tracker_id = ? AND root_id = ? AND lft > ? AND lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
     @rank
   end
 
@@ -168,14 +167,14 @@ class RbTask < Issue
       series = Backlogs::MergedArray.new
       series.merge(:hours => history(:remaining_hours, days))
       series.merge(:sprint => history(:fixed_version_id, days))
-      series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
-      series.each{|d|
+      series.merge(:sprint_start => days.collect { |d| (d == sprint.sprint_start_date) } + [false])
+      series.each do |d|
         if d.sprint != sprint.id
           d.hours = nil
         elsif d.sprint_start
           d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
         end
-      }
+      end
       series.series(:hours)
     }
   end
