@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION < '1.9'
 require 'timecop'
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|

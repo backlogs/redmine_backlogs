@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION < '1.9'
 require 'yaml'
 require 'singleton'
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION < '1.9'
 require 'open-uri'
 require 'json'
 

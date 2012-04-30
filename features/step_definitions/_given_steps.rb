@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION < '1.9'
 require 'timecop'
 
 Given /^I am a product owner of the project$/ do
