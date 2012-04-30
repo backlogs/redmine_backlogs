@@ -256,7 +256,13 @@ class RbStory < Issue
       if sprint.has_burndown?
         days = sprint.days(:active)
 
-        status = history(:status_id, days).collect{|s| s ? IssueStatus.find(s) : nil}
+        status = history(:status_id, days).collect{|s|
+          begin
+            s ? IssueStatus.find(s) : nil
+          rescue ActiveRecord::RecordNotFound
+            nil
+          end
+        }
 
         series = Backlogs::MergedArray.new
         series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
