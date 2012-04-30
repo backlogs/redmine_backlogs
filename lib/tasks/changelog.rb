@@ -25,7 +25,7 @@ gitlog.split("\n").each do |line|
   else
     issues = line.scan(/#[0-9]+/)
     issues.each do |issueno|
-      issue = open("https://api.github.com/repos/relaxdiego/redmine_backlogs/issues/#{issueno.gsub(/^#/, '')}").read
+      issue = open("https://api.github.com/repos/backlogs/redmine_backlogs/issues/#{issueno.gsub(/^#/, '')}").read
       issue = JSON.parse(issue)
       line.gsub!(/#{issueno}/, "\"#{issue['title']}\"")
     end
