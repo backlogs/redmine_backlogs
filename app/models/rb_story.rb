@@ -256,7 +256,7 @@ class RbStory < Issue
     days_end = days.dup
     days_end.shift
     days_end << sprints.last.effective_date.to_date
-    status = history(:status_id,days,false).collect{|s| s ? IssueStatus.find(s) : nil}[0...-1]
+
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
@@ -265,13 +265,13 @@ class RbStory < Issue
     series.merge(:closed_points => baseline.dup)
 
     # Collect data
-    series.merge(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
+    series.merge(:accepted => history(:status_success, days,false)[0...-1])
     series.merge(:points => history(:story_points,days,false)[0...-1])
-    series.merge(:open => status.collect{|s| s ? !s.is_closed? : false})
+    series.merge(:open => history(:status_open, days,false)[0...-1])
     first = true;
-    series.merge(:accepted_first => status.collect{|s|
-                   if s
-                     if s.backlog_is?(:success) && first == true
+    series.merge(:accepted_first => series.series(:accepted).collect{ |a|
+                   if a
+                     if a == true && first == true
                        first = false
                        true
                      else
