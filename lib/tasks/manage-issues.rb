@@ -21,7 +21,7 @@ class GitHub
     def initialize(gh, data)
       @gh = gh
       @data = {}
-      data.each_pair{|k, v| @data[k.to_sym] = v }
+      data.each_pair { |k, v| @data[k.to_sym] = v }
     end
 
     def method_missing(method_sym, *arguments, &block)
@@ -35,7 +35,7 @@ class GitHub
     end
 
     def to_s
-      return @data.inspect
+      @data.inspect
     end
   end
 
@@ -48,7 +48,7 @@ class GitHub
     end
 
     def state
-      return @data[:state].intern
+      @data[:state].intern
     end
 
     def state=(new)
@@ -58,7 +58,7 @@ class GitHub
     def labels(which = :current)
       return @data[:labels] if which == :current
 
-      l = @data[:labels].reject{|l| l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i }
+      l = @data[:labels].reject { |l| l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i }
 
       if comments.size > 0
         # last comment by a repo committer and not labeled with a
@@ -67,34 +67,34 @@ class GitHub
           l << "feedback-required"
 
           req = nil
-          comments.reverse.each{|c|
+          comments.reverse.each do |c|
             break unless @gh.committers.include?(c.user)
             req = c
-          }
+          end
 
           date = req.updated_at
           diff = Integer((Time.now - date)) / (60 * 60 * 24)
           case diff
-            when 0 then nil
-            when 1 then l << '1day'
-            else
-              l << "#{diff}days"
-              l << 'no-feedback' if diff > 4
+          when 0 then nil
+          when 1 then l << '1day'
+          else
+            l << "#{diff}days"
+            l << 'no-feedback' if diff > 4
           end
         end
       end
       prio = nil
-      comments.each {|c|
+      comments.each do |c|
         next unless @gh.committers.include?(c.user)
-        prio = 
+        prio =
         m = c.body.match(/\s:([0-9]+):\s/)
         m = c.body.match(/^:([0-9]+):\s/) unless m
         m = c.body.match(/\s:([0-9]+):$/) unless m
         m = c.body.match(/^:([0-9]+):$/) unless m
         prio = m[1] if m
-      }
+      end
       l << "prio-#{prio}" if prio
-      return l.compact.uniq.collect{|lb| lb.downcase}
+      l.compact.uniq.collect { |lb| lb.downcase }
     end
 
     def labels=(new)
@@ -103,12 +103,12 @@ class GitHub
       add = new - old
 
       # post user and api key here
-      remove.each {|l|
+      remove.each do |l|
         @gh.post("issues/label/remove/:user/:repo/#{CGI::escape(l)}/#{number}")
-      }
-      add.each {|l|
+      end
+      add.each do |l|
         @gh.post("issues/label/add/:user/:repo/#{CGI::escape(l)}/#{number}")
-      }
+      end
     end
   end
 
@@ -137,7 +137,7 @@ class GitHub
   end
 
   def post(url)
-    auth = {'login' => GitHub::CONFIG['username'], 'token' => GitHub::CONFIG['token']}
+    auth = { 'login' => GitHub::CONFIG['username'], 'token' => GitHub::CONFIG['token'] }
     url = url.gsub(/:user/, @user).gsub(/:repo/, @repo)
     url = "#{GitHub::ROOT}#{url}"
     r = Net::HTTP.post_form(URI.parse(url), auth)
@@ -146,17 +146,17 @@ class GitHub
   end
 
   def issues(state = :open)
-    return get("issues/list/:user/:repo/#{state}")['issues'].collect { |i| Issue.new(self, i) }
+    get("issues/list/:user/:repo/#{state}")['issues'].collect { |i| Issue.new(self, i) }
   end
 
   def issue(id)
-    return Issue.new(self, get("issues/show/:user/:repo/#{id}")['issue'])
+    Issue.new(self, get("issues/show/:user/:repo/#{id}")['issue'])
   end
 
   def labels(which = :all)
     return get('issues/labels/:user/:repo')['labels'] if which == :all
-    return issues.collect{|i| i.labels}.flatten.compact.uniq if which == :active
-    return (issues.collect{|i| i.labels(:calculate)}.flatten + GitHub.states(:keep)).compact.uniq if which == :calculate
+    return issues.collect { |i| i.labels }.flatten.compact.uniq if which == :active
+    return (issues.collect { |i| i.labels(:calculate) }.flatten + GitHub.states(:keep)).compact.uniq if which == :calculate
     raise "Unexpected selector #{which.inspect}"
   end
 
@@ -166,20 +166,20 @@ class GitHub
     add = new - old
 
     # post user and api key here
-    remove.each {|l|
+    remove.each do |l|
       post("issues/label/remove/:user/:repo/#{l}")
-    }
-    add.each {|l|
+    end
+    add.each do |l|
       post("issues/label/add/:user/:repo/#{l}")
-    }
+    end
   end
 
   def committers
-    return ['friflaj']
+    ['friflaj']
   end
 
   def self.states(cond)
-    return GitHub::STATES.keys.select{|k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond))}
+    GitHub::STATES.keys.select { |k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond)) }
   end
 end
 
@@ -187,9 +187,9 @@ end
   gh = GitHub.new 'backlogs', 'redmine_backlogs'
 
   gh.labels = gh.labels(:calculate)
-  gh.issues.each{|i|
+  gh.issues.each do |i|
     i.labels = i.labels(:calculate)
-  }
+  end
 #rescue
   #
 #end

@@ -4,7 +4,7 @@
 
   <fieldset>
       <legend><%= l(:label_chart_options) %></legend>
-      
+
       Legend:
       <%- ['Off', 'NW', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W'].each do |legend| %>
         <input type="radio" name="legend" id="burndown_legend_<%= legend.downcase %>" value="<%= legend.downcase %>" onclick="RB.burndown.change_legend(this)">&nbsp;<%= legend %>&nbsp;&nbsp;

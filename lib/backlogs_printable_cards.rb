@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rubygems' if RUBY_VERSION < '1.9'
 require 'prawn'
 require 'prawn/measurement_extensions'
 require 'net/http'
@@ -35,20 +35,16 @@ class String
 
     value = Float(value.gsub(/\.$/, ''))
     case units
-      when nil
-        return value
-
-      when 'mm'
-        return value * 2.8346457
-        
-      when 'pt'
-        return value
-
-      when 'in'
-        return value * 72
-
-      else
-        raise "Unexpected unit specification for #{self}"
+    when nil
+      return value
+    when 'mm'
+      return value * 2.8346457
+    when 'pt'
+      return value
+    when 'in'
+      return value * 72
+    else
+      raise "Unexpected unit specification for #{self}"
     end
   end
 end
@@ -63,7 +59,7 @@ module BacklogsPrintableCards
         @height = layout['height'].units_to_points
         @vertical_pitch = layout['vertical_pitch'].units_to_points
         @vertical_pitch = @height if @vertical_pitch == 0
-  
+
         @left_margin = layout['left_margin'].units_to_points
         @width = layout['width'].units_to_points
         @horizontal_pitch = layout['horizontal_pitch'].units_to_points
@@ -71,7 +67,7 @@ module BacklogsPrintableCards
 
         @across = Integer(layout['across'])
         @down = Integer(layout['down'])
-  
+
         @papersize = layout['papersize'].upcase
         @name = layout['name']
         @source = layout['source']
@@ -82,7 +78,7 @@ module BacklogsPrintableCards
           @valid = false
           return
         end
-  
+
         @paper_width = geom[0]
         @paper_height = geom[1]
         @paper_size = layout['papersize']
@@ -113,24 +109,28 @@ module BacklogsPrintableCards
     attr_reader :valid
 
     def self.selected
-      return @@layouts[Backlogs.setting[:card_spec]]
+      @@layouts[Backlogs.setting[:card_spec]]
     end
 
     def self.available
-      return @@layouts.keys.sort
+      @@layouts.keys.sort
     end
 
-    def to_yaml(opts={})
-      return @layout.reject{|k, v| k == 'name'}.to_yaml(opts)
+    def to_yaml(opts = {})
+      @layout.reject { |k, v| k == 'name' }.to_yaml(opts)
     end
 
     def self.update
       # clean up existing labels
       malformed_labels = {}
 
-      ['avery-iso-templates.xml', 'avery-other-templates.xml', 'avery-us-templates.xml', 'brother-other-templates.xml', 'dymo-other-templates.xml',
-       'maco-us-templates.xml', 'misc-iso-templates.xml', 'misc-other-templates.xml', 'misc-us-templates.xml', 'pearl-iso-templates.xml',  
-       'uline-us-templates.xml', 'worldlabel-us-templates.xml', 'zweckform-iso-templates.xml'].each {|filename|
+      ['avery-iso-templates.xml', 'avery-other-templates.xml',
+       'avery-us-templates.xml', 'brother-other-templates.xml',
+       'dymo-other-templates.xml', 'maco-us-templates.xml',
+       'misc-iso-templates.xml', 'misc-other-templates.xml',
+       'misc-us-templates.xml', 'pearl-iso-templates.xml',
+       'uline-us-templates.xml', 'worldlabel-us-templates.xml',
+       'zweckform-iso-templates.xml'].each { |filename|
 
         uri = URI.parse("http://git.gnome.org/browse/glabels/plain/templates/#{filename}")
         labels = nil
@@ -143,7 +143,7 @@ module BacklogsPrintableCards
             else
               user = pass = nil
             end
-            labels = Net::HTTP::Proxy(proxy.host, proxy.port, user, pass).start(uri.host) {|http| http.get(uri.path)}.body
+            labels = Net::HTTP::Proxy(proxy.host, proxy.port, user, pass).start(uri.host) { |http| http.get(uri.path) }.body
           rescue URI::Error => e
             puts "Setup proxy failed: #{e}"
             labels = nil
@@ -163,19 +163,19 @@ module BacklogsPrintableCards
 
         doc = Nokogiri::XML(labels)
         doc.remove_namespaces!
-  
+
         doc.xpath('Glabels-templates/Template').each { |specs|
           label = nil
-  
+
           papersize = specs['size']
           papersize = 'Letter' if papersize == 'US-Letter'
-  
-          specs.xpath('Label-rectangle').each { |geom|
+
+          specs.xpath('Label-rectangle').each do |geom|
             margin = nil
             geom.xpath('Markup-margin').each { |m| margin = m['size'] }
             margin = "1mm" if margin.blank?
-  
-            geom.xpath('Layout').each { |layout|
+
+            geom.xpath('Layout').each do |layout|
               label = {
                 'inner_margin' => margin,
                 'across' => Integer(layout['nx']),
@@ -189,11 +189,11 @@ module BacklogsPrintableCards
                 'papersize' => papersize,
                 'source' => 'glabel'
               }
-            }
-          }
-  
+            end
+          end
+
           next if label.nil?
-  
+
           key = "#{specs['brand']} #{specs['part']}"
           label['name'] = key
 
@@ -203,15 +203,15 @@ module BacklogsPrintableCards
             malformed_labels[key] = stock.to_yaml
           else
             @@layouts[key] = stock if not @@layouts[key] or @@layouts[key].source == 'glabel'
-  
-            specs.xpath('Alias').each { |also|
+
+            specs.xpath('Alias').each do |also|
               aliaskey = "#{also['brand']} #{also['part']}"
               @@layouts[aliaskey] = stock if not @@layouts[aliaskey] or @@layouts[aliaskey].source == 'glabel'
-            }
+            end
           end
         }
       }
-  
+
       File.open(File.dirname(__FILE__) + '/labels.yaml', 'w') do |dump|
         YAML.dump(@@layouts, dump)
       end
@@ -220,13 +220,13 @@ module BacklogsPrintableCards
       end
     end
 
-    @@layouts ||= {} 
+    @@layouts ||= {}
     begin
       layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
-      layouts.each_pair{|key, spec|
-        layout = CardPageLayout.new(spec.merge({'name' => key}))
+      layouts.each_pair do |key, spec|
+        layout = CardPageLayout.new(spec.merge({ 'name' => key }))
         @@layouts[key] = layout if layout.valid
-      }
+      end
     rescue => e
       RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
     end
@@ -260,24 +260,24 @@ module BacklogsPrintableCards
       @gravatar_online = true
 
       f = nil
-      ['-default', ''].each {|postfix|
+      ['-default', ''].each do |postfix|
         t = File.dirname(__FILE__) + "/#{template}#{postfix}.glabels"
         f = t if File.exists?(t)
-      }
+      end
       raise "No template for #{template}" unless f
       label = Nokogiri::XML(Zlib::GzipReader.open(f))
       label.remove_namespaces!
 
       bounds = label.xpath('//Template/Label-rectangle')[0]
-      @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points}
+      @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points }
 
       @card = label.xpath('//Objects')[0]
       @width = width
       @height = height
     end
 
-    def box(b, scaled=true)
-      return {
+    def box(b, scaled = true)
+      {
         :x => (b['x'].units_to_points / @template[:x]) * @width,
         :y => (1 - (b['y'].units_to_points / @template[:y])) * @height,
         :w => (b['w'].units_to_points / @template[:x]) * @width,
@@ -289,31 +289,30 @@ module BacklogsPrintableCards
       s = b.xpath('Span')[0]
       style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
       style = 'normal' if style == ''
-      return {
+      {
         :size => Integer(s['font_size']),
         :style => style.intern
       }
     end
 
     def line_width(obj)
-      return obj['line_width'].units_to_points
+      obj['line_width'].units_to_points
     end
 
     def color(obj, prop)
       c = obj[prop]
       return nil if c =~ /00$/
       raise "Alpha channel not supported" unless c =~ /ff$/i
-      return c[2, 6]
+      c[2, 6]
     end
 
     def line(l)
-      return {
+      {
         :x1 => (l['x'].units_to_points / @template[:x]) * @width,
         :y1 => (1 - (l['y'].units_to_points / @template[:y])) * @height,
         :x2 => ((l['x'].units_to_points + l['dx'].units_to_points) / @template[:x]) * @width,
         :y2 => (1 - ((l['y'].units_to_points + l['dy'].units_to_points) / @template[:y])) * @height
       }
-      return data
     end
 
     def render(x, y, pdf, data)
@@ -325,70 +324,69 @@ module BacklogsPrintableCards
           next if obj.text?
 
           case obj.name
-            when 'Object-box'
-              dim = box(obj)
-              pdf.fill_color = color(obj, 'fill_color') || default_fill_color
-              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
-              pdf.line_width = line_width(obj)
+          when 'Object-box'
+            dim = box(obj)
+            pdf.fill_color = color(obj, 'fill_color') || default_fill_color
+            pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
+            pdf.line_width = line_width(obj)
 
-              pdf.stroke {
-                if color(obj, 'fill_color')
-                  pdf.fill_rectangle [312,260], 180, 16 
-                else
-                  pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
-                end
-              }
-
-
-            when 'Object-line'
-              dim = line(obj)
-              pdf.line_width = line_width(obj)
-              pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
-
-              pdf.stroke {
-                pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
-              }
-
-            when 'Object-text'
-              dim = box(obj)
-
-              pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
-
-              content = ''
-              obj.xpath('Span')[0].children.each {|t|
-                if t.text?
-                  content << t.text
-                elsif t.name == 'Field'
-                  f = data[t['name']]
-                  raise "Unsupported card variable '#{t['name']}" unless f
-                  content << f
-                else
-                  raise "Unsupported text object '#{t.name}'"
-                end
-              }
-
-              content.strip!
-
-              s = style(obj)
-              pdf.font_size(s[:size]) do
-                Prawn::Text::Box.new(content, {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style]}).render
+            pdf.stroke do
+              if color(obj, 'fill_color')
+                pdf.fill_rectangle [312,260], 180, 16
+              else
+                pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
               end
+            end
 
-            when 'Object-image'
-              if data['owner.email'] && @gravatar_online
-                dim = box(obj)
+          when 'Object-line'
+            dim = line(obj)
+            pdf.line_width = line_width(obj)
+            pdf.stroke_color = color(obj, 'line_color') || default_stroke_color
 
-                img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
-                if img
-                  pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
-                else
-                  # if image loading fails once, stop loading images for this rendering
-                  @gravatar_online = false
-                end
+            pdf.stroke do
+              pdf.line([dim[:x1], dim[:y1]], [dim[:x2], dim[:y2]])
+            end
+
+          when 'Object-text'
+            dim = box(obj)
+
+            pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
+
+            content = ''
+            obj.xpath('Span')[0].children.each do |t|
+              if t.text?
+                content << t.text
+              elsif t.name == 'Field'
+                f = data[t['name']]
+                raise "Unsupported card variable '#{t['name']}" unless f
+                content << f
+              else
+                raise "Unsupported text object '#{t.name}'"
               end
+            end
 
-            else
-              raise "Unsupported object '#{obj.name}'"
+            content.strip!
+
+            s = style(obj)
+            pdf.font_size(s[:size]) do
+              Prawn::Text::Box.new(content, { :overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style] }).render
+            end
+
+          when 'Object-image'
+            if data['owner.email'] && @gravatar_online
+              dim = box(obj)
+
+              img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
+              if img
+                pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
+              else
+                # if image loading fails once, stop loading images for this rendering
+                @gravatar_online = false
+              end
+            end
+
+          else
+            raise "Unsupported object '#{obj.name}'"
           end
         }
       end
@@ -418,7 +416,7 @@ module BacklogsPrintableCards
       else
         @story = CardTemplate.new(@label.width, @label.height, 'story')
         @task = CardTemplate.new(@label.width, @label.height, 'task')
-  
+
         fontdir = File.dirname(__FILE__) + '/ttf'
         @pdf.font_families.update(
           "DejaVuSans" => {
@@ -431,58 +429,50 @@ module BacklogsPrintableCards
         @pdf.font "DejaVuSans"
 
         @cards = 0
-      
+
         case Backlogs.setting[:taskboard_card_order]
-          when 'tasks_follow_story'
-            stories.each { |story| 
-              add(story)
-
-              if with_tasks
-                story.descendants.each {|task|
-                  add(task)
-                }
-              end
-            }
-
-          when 'stories_then_tasks'
-            stories.each { |story| 
-              add(story)
-            }
+        when 'tasks_follow_story'
+          stories.each do |story|
+            add(story)
 
             if with_tasks
-              @cards  = 0
-              @pdf.start_new_page
+              story.descendants.each { |task| add(task) }
+            end
+          end
 
-              stories.each { |story| 
-                story.descendants.each {|task|
-                  add(task)
-                }
-              }
+        when 'stories_then_tasks'
+          stories.each { |story| add(story) }
+
+          if with_tasks
+            @cards  = 0
+            @pdf.start_new_page
+
+            stories.each do |story|
+              story.descendants.each { |task| add(task) }
+            end
+          end
+
+        else # 'story_follows_tasks'
+          stories.each do |story|
+            if with_tasks
+              story.descendants.each { |task| add(task) }
             end
 
-          else # 'story_follows_tasks'
-            stories.each { |story| 
-              if with_tasks
-                story.descendants.each {|task|
-                  add(task)
-                }
-              end
-  
-              add(story)
-            }
+            add(story)
+          end
         end
       end
     end
-  
+
     attr_reader :pdf
-  
+
     def add(issue)
       row = @cards % @label.down
       col = Integer(@cards / @label.down) % @label.across
       @cards += 1
-  
+
       @pdf.start_new_page if row == 0 and col == 0 and @cards != 1
-  
+
       x = @label.left_margin + (@label.horizontal_pitch * col)
       y = @label.paper_height - (@label.top_margin + (@label.vertical_pitch * row))
 
@@ -494,11 +484,12 @@ module BacklogsPrintableCards
 
         data['id'] = issue.id
         data['subject'] = issue.subject.to_s.strip
-        data['description'] = issue.description.to_s.strip; data['description'] = data['subject'] if data['description'] == ''
+        data['description'] = issue.description.to_s.strip
+        data['description'] = data['subject'] if data['description'] == ''
         data['category'] = issue.category ? issue.category.name : ''
         data['hours.estimated'] = (issue.estimated_hours || '?').to_s + ' ' + l(:label_hours)
         data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
-        data['path'] = (issue.self_and_ancestors.reverse.collect{|i| "#{i.tracker.name} ##{i.id}"}.join(" : ")) + " (#{data['story.position']})"
+        data['path'] = (issue.self_and_ancestors.reverse.collect { |i| "#{i.tracker.name} ##{i.id}" }.join(" : ")) + " (#{data['story.position']})"
         data['sprint.name'] = issue.fixed_version ? issue.fixed_version.name : I18n.t(:backlogs_product_backlog)
         data['owner'] = issue.assigned_to.blank? ? "" : "#{issue.assigned_to.name}"
         data['owner.email'] = issue.assigned_to.blank? ? nil : issue.assigned_to.mail.to_s.downcase
@@ -508,7 +499,8 @@ module BacklogsPrintableCards
       elsif issue.is_story?
         data['id'] = issue.id
         data['subject'] = issue.subject
-        data['description'] = issue.description.to_s.strip; data['description'] = data['subject'] if data['description'] == ''
+        data['description'] = issue.description.to_s.strip
+        data['description'] = data['subject'] if data['description'] == ''
         data['category'] = issue.category ? issue.category.name : ''
         data['size'] = (issue.story_points ? "#{issue.story_points}" : '?') + ' ' + l(:label_points)
         data['position'] = issue.position ? issue.position : l(:label_not_prioritized)
@@ -524,10 +516,10 @@ module BacklogsPrintableCards
 
       end
 
-      data.keys.each {|d| data[d] = data[d].to_s }
+      data.keys.each { |d| data[d] = data[d].to_s }
 
       card.render(x, y, @pdf, data)
     end
-  
+
   end
 end

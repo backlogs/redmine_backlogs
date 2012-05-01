@@ -6,7 +6,7 @@ include RbCommonHelper
 class RbStoriesController < RbApplicationController
   unloadable
   include BacklogsPrintableCards
-  
+
   def index
     if ! BacklogsPrintableCards::CardPageLayout.selected
       render :text => "No label stock selected. How did you get here?", :status => 500
@@ -26,7 +26,7 @@ class RbStoriesController < RbApplicationController
       }
     end
   end
-  
+
   def create
     params['author_id'] = User.current.id
     begin
@@ -37,7 +37,7 @@ class RbStoriesController < RbApplicationController
     end
 
     status = (story.id ? 200 : 400)
-    
+
     respond_to do |format|
       format.html { render :partial => "story", :object => story, :status => status }
     end
@@ -54,10 +54,9 @@ class RbStoriesController < RbApplicationController
 
     story.reload
     status = (result ? 200 : 400)
-    
+
     respond_to do |format|
       format.html { render :partial => "story", :object => story, :status => status }
     end
   end
-
 end

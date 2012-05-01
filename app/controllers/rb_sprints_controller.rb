@@ -8,7 +8,7 @@ class RbSprintsController < RbApplicationController
   unloadable
 
   def create
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
+    attribs = params.select { |k, v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     @sprint = RbSprint.new(attribs)
 
@@ -28,7 +28,7 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
+    attribs = params.select { |k, v| k != 'id' and RbSprint.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     begin
       result  = @sprint.becomes(Version).update_attributes attribs
@@ -43,28 +43,28 @@ class RbSprintsController < RbApplicationController
   end
 
   def download
-    bold = {:font => {:bold => true}}
+    bold = { :font => { :bold => true } }
     dump = BacklogsSpreadsheet::WorkBook.new
     ws = dump[@sprint.name]
-    ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
+    ws << [nil, @sprint.id, nil, nil, { :value => @sprint.name, :style => bold }, { :value => 'Start', :style => bold }] + @sprint.days(:all).collect { |d| { :value => d, :style => bold } }
     bd = @sprint.burndown
-    bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
+    bd.series(false).sort { |a, b| l("label_#{a}") <=> l("label_#{b}") }.each do |k|
       ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
-    }
+    end
 
-    @sprint.stories.each{|s|
-      ws << [s.tracker.name, s.id, nil, nil, {:value => s.subject, :style => bold}]
+    @sprint.stories.each do |s|
+      ws << [s.tracker.name, s.id, nil, nil, { :value => s.subject, :style => bold }]
       bd = s.burndown
-      bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
+      bd.keys.sort { |a, b| l("label_#{a}") <=> l("label_#{b}") }.each do |k|
         next if k == :status
         label = l("label_#{k}")
-        label = {:value => label, :comment => k.to_s} if [:points, :points_accepted].include?(k)
-        ws << [nil, nil, nil, nil, label ] + bd[k]
-      }
-      s.tasks.each {|t|
-        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown
-      }
-    }
+        label = { :value => label, :comment => k.to_s } if [:points, :points_accepted].include?(k)
+        ws << [nil, nil, nil, nil, label] + bd[k]
+      end
+      s.tasks.each do |t|
+        ws << [nil, nil, t.tracker.name, t.id, { :value => t.subject, :style => bold }] + t.burndown
+      end
+    end
 
     send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-excel', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
@@ -77,21 +77,21 @@ class RbSprintsController < RbApplicationController
 
     ids = []
     status = IssueStatus.default.id
-    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
+    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each do |issue|
       ids << issue.id.to_s
       issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
-    }
+    end
     if ids.size != 0
       ids = ids.join(',')
-      Issue.connection.execute("update issues set updated_on = created_on where id in (#{ids})")
+      Issue.connection.execute("UPDATE issues SET updated_on = created_on WHERE id IN (#{ids})")
 
-      Journal.connection.execute("delete from journal_details where journal_id in (select id from journals where journalized_type = 'Issue' and journalized_id in (#{ids}))")
-      Journal.connection.execute("delete from journals where (notes is null or notes = '') and journalized_type = 'Issue' and journalized_id in (#{ids})")
-      Journal.connection.execute("update journals
-                                   set created_on = (select created_on
-                                                     from issues
-                                                     where journalized_id = issues.id)
-                                   where journalized_type = 'Issue' and journalized_id in (#{ids})")
+      Journal.connection.execute("DELETE FROM journal_details WHERE journal_id IN (SELECT id FROM journals WHERE journalized_type = 'Issue' AND journalized_id IN (#{ids}))")
+      Journal.connection.execute("DELETE FROM journals WHERE (notes IS NULL OR notes = '') AND journalized_type = 'Issue' AND journalized_id IN (#{ids})")
+      Journal.connection.execute("UPDATE journals
+                                  SET created_on = (SELECT created_on
+                                                    FROM issues
+                                                    WHERE journalized_id = issues.id)
+                                  WHERE journalized_type = 'Issue' AND journalized_id IN (#{ids})")
     end
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier

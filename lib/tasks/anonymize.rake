@@ -111,10 +111,10 @@ $LOREM = $LOREM.gsub(/\s+/, ' ')
 $LOREM = $LOREM.split(/[.]\s*/)
 
 def lorem(n)
-  return $LOREM[rand($LOREM.size - 20)..-1].join('. ')[0, n]
+  $LOREM[rand($LOREM.size - 20)..-1].join('. ')[0, n]
 end
 
-$ALPHANUMERICS = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
+$ALPHANUMERICS = [('0'..'9'),('A'..'Z'),('a'..'z')].map { |range| range.to_a }.flatten
 $RANDOM_CACHE = ((0... 100).map { $ALPHANUMERICS[rand($ALPHANUMERICS.size)] }.join)
 $PASSWORD = ((0... 8).map { $ALPHANUMERICS[rand($ALPHANUMERICS.size)] }.join)
 
@@ -134,14 +134,14 @@ def unique(model_attr)
   v = "#{model_attr.split('#')[0]}#{v}"
   v << "@example.com" if model_attr.match(/#mail/)
 
-  return v
+  v
 end
 
 def random_string(model_attr, v)
   return nil if !v
 
   return $PASSWORD if model_attr.match(/#password$/)
-  
+
   # these are required to be unique
   return unique(model_attr) if $UNIQUE.include?(model_attr) || model_attr.match(/#mail$/)
 
@@ -160,7 +160,7 @@ def random_string(model_attr, v)
     end
   end
 
-  return nv
+  nv
 end
 
 
@@ -196,7 +196,7 @@ namespace :redmine do
       admins = []
       ActiveRecord::Base.send(:subclasses).each do |model|
         attrs = {}
-        model.columns_hash.each_pair { |attrib, column|
+        model.columns_hash.each_pair do |attrib, column|
           #next unless model.content_columns.include?(column)
           next if column.name == 'type'
           next if attrib.match(/_type$/)
@@ -206,16 +206,16 @@ namespace :redmine do
           attrib = 'password' if attrib == 'hashed_password'
 
           attrs[attrib] = nil
-        }
+        end
 
         if attrs.size != 0
           puts "Anonymizing #{model.name} ..."
-          model.all.each { |obj|
+          model.all.each do |obj|
             save_error = nil
             10.times do |attempt|
-              attrs.each_pair {|k, v|
+              attrs.each_pair do |k, v|
                 attrs[k] = random_string("#{model.name}##{k}", obj.send(k))
-              }
+              end
 
               attempt_string = (attempt == 0 ? '' : " (attempt #{attempt + 1}")
 
@@ -235,14 +235,14 @@ namespace :redmine do
             if model.name == 'User' && obj.admin?
               admins << obj.login
             end
-          }
+          end
         end
       end
 
-      User.find(:all).each { |user|
+      User.find(:all).each do |user|
         user.password = $PASSWORD
         user.save!
-      }
+      end
 
       puts "Your anonymized admins are #{admins.inspect} with password '#{$PASSWORD}'"
     end

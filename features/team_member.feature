@@ -25,8 +25,8 @@ Feature: Team Member
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story 1 |
-        | Impediment 2 | Sprint 001 | Story 2 | 
-        
+        | Impediment 2 | Sprint 001 | Story 2 |
+
   Scenario: Create a task for a story
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
@@ -84,7 +84,7 @@ Feature: Team Member
      When the browser fetches impediments updated since 1 week from now
      Then the request should complete successfully
       And the server should return 0 updated impediments
-      
+
   Scenario: Copy estimate to remaining
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1

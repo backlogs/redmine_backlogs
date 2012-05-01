@@ -3,7 +3,7 @@ require 'nokogiri'
 
 module RbCommonHelper
   unloadable
-  
+
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
   end
@@ -13,7 +13,7 @@ module RbCommonHelper
   end
 
   def blocked_ids(blocked)
-    blocked.map{|b| b.id }.join(',')
+    blocked.map { |b| b.id }.join(',')
   end
 
   def build_inline_style(task)
@@ -33,8 +33,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def build_inline_style_color(task)
     task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User) ? '' : "#{task.assigned_to.backlogs_preference[:task_color]}"
-  end 
-  
+  end
+
   def breadcrumb_separator
     "<span class='separator'>&gt;</span>"
   end
@@ -50,17 +50,17 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def issue_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => "issues", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, { :controller => "issues", :action => "show", :id => item }, { :target => "_blank", :class => "prevent_edit" })
   end
 
   def sprint_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => 'versions', :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, { :controller => 'versions', :action => "show", :id => item }, { :target => "_blank", :class => "prevent_edit" })
   end
 
   def release_link_or_empty(release)
-    release.new_record? ? "" : link_to(release.name, {:controller => "rb_releases", :action => "show", :release_id => release})
+    release.new_record? ? "" : link_to(release.name, { :controller => "rb_releases", :action => "show", :release_id => release })
   end
 
   def mark_if_closed(story)
@@ -74,7 +74,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def record_id_or_empty(story)
     story.new_record? ? "" : story.id
   end
-  
+
   def sprint_status_id_or_default(sprint)
     sprint.new_record? ? Version::VERSION_STATUSES.first : sprint.status
   end
@@ -82,7 +82,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def sprint_status_label_or_default(sprint)
     sprint.new_record? ? l("version_status_#{Version::VERSION_STATUSES.first}") : l("version_status_#{sprint.status}")
   end
-  
+
   def status_id_or_default(story)
     story.new_record? ? IssueStatus.find(:first, :order => "position ASC").id : story.status.id
   end
@@ -106,7 +106,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def textile_description_or_empty(story)
     story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
-  
+
   def textile_to_html(textile)
     textile.nil? ? "" : Redmine::WikiFormatting::Textile::Formatter.new(textile).to_html
   end
@@ -118,22 +118,22 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def tracker_name_or_empty(story)
     story.new_record? ? "" : story.tracker.name
   end
-  
+
   def updated_on_with_milliseconds(story)
     date_string_with_milliseconds(story.updated_on, 0.001) unless story.blank?
   end
 
-  def date_string_with_milliseconds(d, add=0)
+  def date_string_with_milliseconds(d, add = 0)
     return '' if d.blank?
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
   end
 
   def remaining_hours(item)
-    item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
+    item.remaining_hours.blank? || item.remaining_hours == 0 ? "" : item.remaining_hours
   end
 
   def workdays(start_day, end_day)
-    return (start_day .. end_day).select {|d| (d.wday > 0 and d.wday < 6) }
+    return (start_day .. end_day).select { |d| (d.wday > 0 and d.wday < 6) }
   end
 
   def release_burndown_interpolate(release, day)
@@ -156,25 +156,25 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
                   l(:remaining_story_points),
                   l(:ideal)
                 ]
-      csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      csv << headers.collect { |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
 
       # csv lines
       if (release.release_start_date != release.burndown_days[0])
         fields = [release.release_start_date,
                   release.initial_story_points.to_f.to_s.gsub('.', ','),
                   release.initial_story_points.to_f.to_s.gsub('.', ',')]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+        csv << fields.collect { |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
       release.burndown_days.each do |rbd|
         fields = [rbd.day,
                   rbd.remaining_story_points.to_s.gsub('.', ','),
                   release_burndown_interpolate(release, rbd.day).to_s.gsub('.', ',')
                  ]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+        csv << fields.collect { |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
       if (release.release_end_date != release.burndown_days[-1])
         fields = [release.release_end_date, "", "0,0"]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+        csv << fields.collect { |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
     end
     export
@@ -183,18 +183,23 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   # Renders the project quick-jump box
   def render_backlog_project_jump_box
     projects = EnabledModule.find(:all,
-                             :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
-                             :include => :project,
-                             :joins => :project).collect { |mod| mod.project}
+                                  :conditions => ["enabled_modules.name = 'backlogs' AND status = ?", Project::STATUS_ACTIVE],
+                                  :include => :project,
+                                  :joins => :project).collect { |mod| mod.project}
 
-    projects = Member.find(:all, :conditions => ["user_id = ? and project_id IN (?)", User.current.id, projects.collect(&:id)]).collect{ |m| m.project}
+    projects = Member.find(:all, :conditions => ["user_id = ? AND project_id IN (?)", User.current.id, projects.collect(&:id)]).collect { |m| m.project }
 
     if projects.any?
       s = '<select onchange="if (this.value != \'\') { window.location = this.value; }">' +
             "<option value=''>#{ l(:label_jump_to_a_project) }</option>" +
             '<option value="" disabled="disabled">---</option>'
       s << project_tree_options_for_select(projects, :selected => @project) do |p|
-        { :value => url_for(:controller => 'rb_master_backlogs', :action => 'show', :project_id => p, :jump => current_menu_item) }
+        {
+          :value => url_for(:controller => 'rb_master_backlogs',
+                            :action => 'show',
+                            :project_id => p,
+                            :jump => current_menu_item)
+        }
       end
       s << '</select>'
       s
@@ -203,15 +208,15 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
   def users_allowed_to_log_on_task
-    @project.memberships.collect{|m|
+    @project.memberships.collect { |m|
       user = m.user
       roles = user ? user.roles_for_project(@project) : nil
-      roles && roles.detect {|role| role.member? && role.allowed_to?(:log_time)} ? [user.name, user.id] : nil
-    }.compact.insert(0,["",0]) # Add blank entry
+      roles && roles.detect { |role| role.member? && role.allowed_to?(:log_time) } ? [user.name, user.id] : nil
+    }.compact.insert(0, ["", 0]) # Add blank entry
   end
 
   def tidy(html)
-    return Nokogiri::HTML::fragment(html).to_xhtml
+    Nokogiri::HTML::fragment(html).to_xhtml
   end
 
   def users_assignable_options_for_select(collection)
@@ -229,5 +234,4 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     end
     s
   end
-
 end

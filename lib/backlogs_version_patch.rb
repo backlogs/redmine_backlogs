@@ -8,18 +8,16 @@ module Backlogs
 
       base.class_eval do
         unloadable
-
       end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def burndown
-        return RbSprint.find_by_id(self.id).burndown
+        RbSprint.find_by_id(self.id).burndown
       end
-
     end
   end
 end

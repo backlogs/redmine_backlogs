@@ -16,7 +16,7 @@ class RbTasksController < RbApplicationController
     result = @task.errors.length
     status = (result == 0 ? 200 : 400)
     @include_meta = true
-    
+
     respond_to do |format|
       format.html { render :partial => "task", :object => @task, :status => status }
     end
@@ -28,10 +28,9 @@ class RbTasksController < RbApplicationController
     result = @task.update_with_relationships(params)
     status = (result ? 200 : 400)
     @include_meta = true
-    
+
     respond_to do |format|
       format.html { render :partial => "task", :object => @task, :status => status }
     end
   end
-
 end

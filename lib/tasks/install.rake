@@ -2,7 +2,7 @@ require 'fileutils'
 require 'benchmark'
 
 namespace :redmine do
-  namespace :backlogs do 
+  namespace :backlogs do
 
     desc "Install and configure Redmine Backlogs"
     task :install => :environment do |t|
@@ -16,9 +16,9 @@ namespace :redmine do
         puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
       end
 
-      Backlogs.gems.each_pair {|gem, installed|
+      Backlogs.gems.each_pair do |gem, installed|
         raise "You are missing the '#{gem}' gem" unless installed
-      }
+      end
 
       puts Backlogs.platform_support(true)
 
@@ -52,14 +52,14 @@ namespace :redmine do
 
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
         trackers =  ENV['story_trackers'].split(',')
-        trackers.each{|name|
-          if ! Tracker.find(:first, :conditions => ["name=?", name])
+        trackers.each do |name|
+          if ! Tracker.find(:first, :conditions => ["name = ?", name])
             puts "Creating story tracker '#{name}'"
             tracker = Tracker.new(:name => name)
             tracker.save!
           end
-        }
-        Backlogs.setting[:story_trackers] = trackers.collect{|n| Tracker.find_by_name(n).id }
+        end
+        Backlogs.setting[:story_trackers] = trackers.collect { |n| Tracker.find_by_name(n).id }
       else
         if RbStory.trackers.length == 0
           puts "Configuring story and task trackers..."
@@ -71,7 +71,7 @@ namespace :redmine do
             print "Separate values with a space (e.g. 1 3): "
             STDOUT.flush
             selection = (STDIN.gets.chomp!).split(/\D+/)
-            
+
             # Check that all values correspond to an items in the list
             invalid = false
             invalid_value = nil
@@ -85,7 +85,7 @@ namespace :redmine do
                 tracker_names << trackers[s.to_i-1].name
               end
             end
-          
+
             if invalid
               puts "Oooops! You entered an invalid value (#{invalid_value}). Please try again."
             else
@@ -95,12 +95,12 @@ namespace :redmine do
             end
           end
 
-          Backlogs.setting[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
+          Backlogs.setting[:story_trackers] = selection.map { |s| trackers[s.to_i-1].id }
         end
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
-        if ! Tracker.find(:first, :conditions => ["name=?", ENV['task_tracker']])
+        if ! Tracker.find(:first, :conditions => ["name = ?", ENV['task_tracker']])
           puts "Creating task tracker '#{ENV['task_tracker']}'"
           tracker = Tracker.new(:name => ENV['task_tracker'])
           tracker.save!
@@ -115,20 +115,20 @@ namespace :redmine do
             while invalid
               # If there's at least one, ask the user to pick one
               puts "Which tracker do you want to use for your tasks?"
-              available_trackers = trackers.select{|t| !Backlogs.setting[:story_trackers].include? t.id}
+              available_trackers = trackers.select { |t| !Backlogs.setting[:story_trackers].include? t.id }
               j = 0
               available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
               # puts "  #{ j + 1 }. <<new>>"
               print "Choose one from above (or choose none to create a new tracker): "
               STDOUT.flush
               selection = (STDIN.gets.chomp!).split(/\D+/)
-                    
+
               if selection.length > 0 and selection.first.to_i <= available_trackers.length
                 # If the user picked one, use that
-                print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
+                print "You selected #{available_trackers[selection.first.to_i - 1].name}. Is this correct? (y/n) "
                 STDOUT.flush
                 if (STDIN.gets.chomp!).match("y")
-                  Backlogs.setting[:task_tracker] = available_trackers[selection.first.to_i-1].id
+                  Backlogs.setting[:task_tracker] = available_trackers[selection.first.to_i - 1].id
                   invalid = false
                 end
               elsif selection.length == 0 or selection.first.to_i == j + 1
@@ -151,7 +151,7 @@ namespace :redmine do
       end
 
       puts "Story and task trackers are now set."
-      
+
       print "Migrating the database..."
       STDOUT.flush
       system('rake db:migrate:plugins --trace > redmine_backlogs_install.log')
@@ -167,7 +167,7 @@ namespace :redmine do
         puts "*******************************************************"
       end
     end
-    
+
     def create_new_tracker
       repeat = true
       puts "Creating a new task tracker."
@@ -175,13 +175,13 @@ namespace :redmine do
         print "Please type the tracker's name: "
         STDOUT.flush
         name = STDIN.gets.chomp!
-        if Tracker.find(:first, :conditions => "name='#{name}'")
+        if Tracker.find(:first, :conditions => "name = '#{name}'")
           puts "Ooops! That name is already taken."
           next
         end
         print "You typed '#{name}'. Is this correct? (y/n) "
         STDOUT.flush
-        
+
         if (STDIN.gets.chomp!).match("y")
           tracker = Tracker.new(:name => name)
           tracker.save!

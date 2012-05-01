@@ -3,7 +3,7 @@ require 'benchmark'
 class NullTaskPosition < ActiveRecord::Migration
   def self.up
     if RbTask.tracker
-      execute "update issues set position = null where tracker_id = #{RbTask.tracker}"
+      execute "UPDATE issues SET position = NULL WHERE tracker_id = #{RbTask.tracker}"
     end
 
     if RbTask.tracker && RbStory.trackers.size > 0
@@ -13,11 +13,11 @@ class NullTaskPosition < ActiveRecord::Migration
         t.column :story_rgt, :integer, :null => false
       end
 
-      execute "insert into backlogs_tmp_set_task_tracker (story_root_id, story_lft, story_rgt)
-                select root_id, lft, rgt from issues where tracker_id in (#{RbStory.trackers(:type=>:string)})"
+      execute "INSERT INTO backlogs_tmp_set_task_tracker (story_root_id, story_lft, story_rgt)
+               SELECT root_id, lft, rgt FROM issues WHERE tracker_id IN (#{RbStory.trackers(:type => :string)})"
 
-      execute "update issues set tracker_id = #{RbTask.tracker}
-              where exists (select 1 from backlogs_tmp_set_task_tracker where root_id = story_root_id and lft > story_lft and rgt < story_rgt)"
+      execute "UPDATE issues SET tracker_id = #{RbTask.tracker}
+               WHERE exists (SELECT 1 FROM backlogs_tmp_set_task_tracker WHERE root_id = story_root_id AND lft > story_lft AND rgt < story_rgt)"
 
       drop_table :backlogs_tmp_set_task_tracker
     end

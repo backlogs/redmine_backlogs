@@ -17,7 +17,7 @@ Feature: Extended timelog
       And I have defined the following tasks:
         | subject | story  |
         | Task 1  | Story 1 |
-        
+
   Scenario: Log time and set remaining hours from "Log time"-view
     Given I am logging time for task Task 1
       And I set the hours spent to 2

@@ -6,7 +6,7 @@ class RbTask < Issue
   def self.tracker
     task_tracker = Backlogs.setting[:task_tracker]
     return nil if task_tracker.blank?
-    return Integer(task_tracker)
+    Integer(task_tracker)
   end
 
   def self.rb_safe_attributes(params)
@@ -14,16 +14,15 @@ class RbTask < Issue
       safe_attributes_names = RbTask::SAFE_ATTRIBUTES
     else
       safe_attributes_names = Issue.new(
-        :project_id=>params[:project_id] # required to verify "safeness"
+        :project_id => params[:project_id] # required to verify "safeness"
       ).safe_attribute_names
     end
-    attribs = params.select {|k,v| safe_attributes_names.include?(k) }
+    attribs = params.select { |k, v| safe_attributes_names.include?(k) }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
-    return attribs
+    attribs
   end
 
   def self.create_with_relationships(params, user_id, project_id, is_impediment = false)
-
     attribs = rb_safe_attributes(params)
 
     attribs['author_id'] = user_id
@@ -45,14 +44,14 @@ class RbTask < Issue
     task.update_blocked_list blocks.split(/\D+/) if is_impediment
     task.time_entry_add(params)
 
-    return task
+    task
   end
 
   # TODO: there's an assumption here that impediments always have the
   # task-tracker as their tracker, and are top-level issues.
   def self.find_all_updated_since(since, project_id, find_impediments = false)
     find(:all,
-         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
+         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id IN (?) AND parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
          :order => "updated_on ASC")
   end
 
@@ -60,13 +59,13 @@ class RbTask < Issue
     tasks = []
     story = RbStory.find_by_id(story_id)
     if RbStory.trackers.include?(story.tracker_id)
-      story.descendants.each_with_index {|task, i|
+      story.descendants.each_with_index do |task, i|
         task = task.becomes(RbTask)
         task.rank = i + 1
-        tasks << task 
-      }
+        tasks << task
+      end
     end
-    return tasks
+    tasks
   end
 
   def update_with_relationships(params, is_impediment = false)
@@ -102,7 +101,7 @@ class RbTask < Issue
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
         save
       end
-                                    
+
       result
     else
       false
@@ -111,23 +110,23 @@ class RbTask < Issue
 
   def update_blocked_list(for_blocking)
     # Existing relationships not in for_blocking should be removed from the 'blocks' list
-    relations_from.find(:all, :conditions => "relation_type='blocks'").each{ |ir|
-      ir.destroy unless for_blocking.include?( ir[:issue_to_id] )
-    }
+    relations_from.find(:all, :conditions => "relation_type = 'blocks'").each do |ir|
+      ir.destroy unless for_blocking.include?(ir[:issue_to_id])
+    end
 
-    already_blocking = relations_from.find(:all, :conditions => "relation_type='blocks'").map{|ir| ir.issue_to_id}
+    already_blocking = relations_from.find(:all, :conditions => "relation_type = 'blocks'").map { |ir| ir.issue_to_id }
 
     # Non-existing relationships that are in for_blocking should be added to the 'blocks' list
-    for_blocking.select{ |id| !already_blocking.include?(id) }.each{ |id|
-      ir = relations_from.new(:relation_type=>'blocks')
+    for_blocking.select { |id| !already_blocking.include?(id) }.each do |id|
+      ir = relations_from.new(:relation_type => 'blocks')
       ir[:issue_to_id] = id
       ir.save!
-    }
+    end
     reload
   end
 
   def validate_blocks_list(list)
-    if list.split(/\D+/).length==0
+    if list.split(/\D+/).length == 0
       errors.add :blocks, :must_have_comma_delimited_list
       false
     else
@@ -154,8 +153,8 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
-    return @rank
+    @rank ||= Issue.count(:conditions => ['tracker_id = ? AND root_id = ? AND lft > ? AND lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank
   end
 
   def burndown(sprint = nil)
@@ -168,24 +167,24 @@ class RbTask < Issue
       series = Backlogs::MergedArray.new
       series.merge(:hours => history(:remaining_hours, days))
       series.merge(:sprint => history(:fixed_version_id, days))
-      series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
-      series.each{|d|
+      series.merge(:sprint_start => days.collect { |d| (d == sprint.sprint_start_date) } + [false])
+      series.each do |d|
         if d.sprint != sprint.id
           d.hours = nil
         elsif d.sprint_start
           d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
         end
-      }
+      end
       series.series(:hours)
     }
   end
 
   def time_entry_add(params)
-    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user 
+    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user
     # to loose a precious comment if hours is accidently left blank.
     if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
-      @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
-      # Make sure user has permission to edit time entries to allow 
+      @time_entry = TimeEntry.new(:issue => self, :project => self.project)
+      # Make sure user has permission to edit time entries to allow
       # logging time for other users. Use current user in case none is selected
       if User.current.allowed_to?(:edit_time_entries, self.project) && params[:time_entry_user_id].to_i != 0
         @time_entry.user_id = params[:time_entry_user_id]

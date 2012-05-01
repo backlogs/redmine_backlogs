@@ -9,27 +9,29 @@ class SumRemainingHours < ActiveRecord::Migration
         t.column :tmp_remaining_hours, :float, :null => false
       end
 
-
       # non-leaf stories
-      execute "insert into backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
-               select id, root_id, lft, rgt, 0
-               from issues
-               where tracker_id in (#{RbStory.trackers(:type=>:string)}) and lft <> (rgt - 1)"
+      execute "INSERT INTO backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
+               SELECT id, root_id, lft, rgt, 0
+               FROM issues
+               WHERE tracker_id IN (#{RbStory.trackers(:type => :string)}) AND lft <> (rgt - 1)"
 
       # tasks below these stories
-      execute "insert into backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
-               select issues.id, root_id, lft, rgt, coalesce(remaining_hours, 0)
-               from backlogs_tmp_story_remaining_hours
-               join issues on tmp_root_id = root_id and lft > tmp_lft and rgt < tmp_rgt"
+      execute "INSERT INTO backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
+               SELECT issues.id, root_id, lft, rgt, COALESCE(remaining_hours, 0)
+               FROM backlogs_tmp_story_remaining_hours
+               JOIN issues ON tmp_root_id = root_id AND lft > tmp_lft AND rgt < tmp_rgt"
 
       # update non-leaf-tasks below non-leaf stories and set their remaining_hours to the sum of their leaf-tasks
-      execute "update issues
-               set remaining_hours = (
-                        select sum(tmp_remaining_hours)
-                        from backlogs_tmp_story_remaining_hours
-                        where root_id = tmp_root_id and lft < tmp_lft and rgt > tmp_rgt and tmp_lft = (tmp_rgt - 1)
+      execute "UPDATE issues
+               SET remaining_hours = (
+                        SELECT SUM(tmp_remaining_hours)
+                        FROM backlogs_tmp_story_remaining_hours
+                        WHERE root_id = tmp_root_id
+                        AND lft < tmp_lft
+                        AND rgt > tmp_rgt
+                        AND tmp_lft = (tmp_rgt - 1)
                )
-               where lft <> (rgt - 1) and id in (select tmp_id from backlogs_tmp_story_remaining_hours)"
+               WHERE lft <> (rgt - 1) AND id IN (SELECT tmp_id FROM backlogs_tmp_story_remaining_hours)"
 
       drop_table :backlogs_tmp_story_remaining_hours
     end

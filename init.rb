@@ -41,24 +41,24 @@ Redmine::Plugin.register :redmine_backlogs do
   description 'A plugin for agile teams'
   version 'v0.9.3'
 
-  settings :default => { 
-                         :story_trackers            => nil, 
-                         :task_tracker              => nil, 
+  settings :default => {
+                         :story_trackers            => nil,
+                         :task_tracker              => nil,
                          :card_spec                 => nil,
                          :taskboard_card_order      => 'story_follows_tasks',
                          :story_points              => "1,2,3,5,8",
                          :show_burndown_in_sidebar  => 'enabled'
-                       }, 
+                       },
            :partial => 'backlogs/settings'
 
   project_module :backlogs do
     # SYNTAX: permission :name_of_permission, { :controller_name => [:action1, :action2] }
-        
+
     # Master backlog permissions
     permission :reset_sprint,         {
                                         :rb_sprints           => :reset
                                       }
-    permission :view_master_backlog,  { 
+    permission :view_master_backlog,  {
                                         :rb_master_backlogs  => [:show, :menu],
                                         :rb_sprints          => [:index, :show, :download],
                                         :rb_hooks_render     => [:view_issues_sidebar],
@@ -81,8 +81,8 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
                                       }
-    
-    permission :view_taskboards,      { 
+
+    permission :view_taskboards,      {
                                         :rb_taskboards       => :show,
                                         :rb_sprints          => :show,
                                         :rb_stories          => [:index, :show],
@@ -97,26 +97,26 @@ Redmine::Plugin.register :redmine_backlogs do
                                       }
 
     # Release permissions
-    permission :modify_releases,      { :rb_releases => [:new, :create, :edit, :snapshot, :destroy]  }
+    permission :modify_releases,      { :rb_releases => [:new, :create, :edit, :snapshot, :destroy] }
 
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission
-    permission :create_sprints,      { :rb_sprints => [:new, :create]  }
+    permission :create_sprints,      { :rb_sprints => [:new, :create] }
     permission :update_sprints,      {
                                         :rb_sprints => [:edit, :update],
                                         :rb_wikis   => [:edit, :update]
                                       }
-    
+
     # Story permissions
     # :show_stories and :list_stories are implicit in :view_master_backlog permission
     permission :create_stories,         { :rb_stories => :create }
     permission :update_stories,         { :rb_stories => :update }
-    
+
     # Task permissions
     # :show_tasks and :list_tasks are implicit in :view_sprints
     permission :create_tasks,           { :rb_tasks => [:new, :create]  }
     permission :update_tasks,           { :rb_tasks => [:edit, :update] }
-    
+
     permission :update_remaining_hours, { :rb_tasks => [:edit, :update] }
 
     # Impediment permissions
