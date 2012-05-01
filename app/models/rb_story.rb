@@ -256,19 +256,11 @@ class RbStory < Issue
       if sprint.has_burndown?
         days = sprint.days(:active)
 
-        status = history(:status_id, days).collect{|s|
-          begin
-            s ? IssueStatus.find(s) : nil
-          rescue ActiveRecord::RecordNotFound
-            nil
-          end
-        }
-
         series = Backlogs::MergedArray.new
         series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
         series.merge(:points => history(:story_points, days))
-        series.merge(:open => status.collect{|s| s ? !s.is_closed? : false})
-        series.merge(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
+        series.merge(:open => history(:status_open, days))
+        series.merge(:accepted => history(:status_success, days))
         series.merge(:hours => ([0] * (days.size + 1)))
 
         tasks.each{|task| series.add(:hours => task.burndown(sprint)) }

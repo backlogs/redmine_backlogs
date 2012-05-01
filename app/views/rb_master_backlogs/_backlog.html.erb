@@ -14,7 +14,7 @@
       <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
     <%- end %>
   </div>
-  <ul class="stories">
+  <ul id="stories-for-<%= backlog[:sprint] ? backlog[:sprint].id : 'product-backlog' %>" class="stories">
     <%= render :partial => "rb_stories/story", :collection => backlog[:stories] %>
   </ul>
 </div>

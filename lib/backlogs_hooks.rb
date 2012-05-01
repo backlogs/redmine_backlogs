@@ -231,7 +231,7 @@ module BacklogsPlugin
               end
 
               tasks.each {|t|
-                nt = RbTask.new
+                nt = Issue.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
                 nt.save!
