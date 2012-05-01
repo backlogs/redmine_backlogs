@@ -1,58 +1,91 @@
 require 'date'
 
-# FIXME this is simplified copypasta of the Burndown class from sprint.rb
 class ReleaseBurndown
-  class Series < Array
-    def initialize(*args)
-      @name = args.pop
-
-      raise "Name '#{@name}' must be a symbol" unless @name.is_a?  Symbol
-      super(*args)
-    end
-
-    attr_reader :name
-  end
-
   def initialize(release)
-    @days = release.days
+#    @days = release.days
     @release_id = release.id
+    @project = release.project
 
-    # end date for graph
-    days = @days
-    daycount = days.size
-    #days = release.days(Date.today) if release.release_end_date > Date.today
+    # Select closed sprints within release period
+    sprints = release.closed_sprints
+    return if sprints.nil?
 
-    _series = ([nil] * days.size)
+    baseline = [0] * sprints.size
 
-    # load cache
-    day_index = to_h(days, (0..(days.size - 1)).to_a)
-    ReleaseBurndownDay.find(:all, :order=>'day', :conditions => ["release_id = ?", release.id]).each {|data|
-      day = day_index[data.day.to_date]
-      next if !day
+    series = Backlogs::MergedArray.new
+    series.merge(:backlog_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
+    series.merge(:closed_points => baseline.dup)
 
-      _series[day] = [data.remaining_story_points.to_f]
+#TODO Caching
+#TODO Maybe utilize/extend sprint burndown data?
+#TODO Stories continued over several sprints (by duplicating) should not show up as added
+#TODO Likewise stories split from inital epics should not show up as added
+
+    # Go through each story of each sprint
+    sprints.each{ |sprint|
+      sprint.stories.each{ |story|
+#BUG Stories closed after sprint end date will show up as closed in the next sprint...
+        series.add(story.release(sprints))
+      }
+    }
+    # Go through each open story in the backlog
+    release.stories.each{ |story|
+      series.add(story.release(sprints))
     }
 
-    # use initial story points for first day if not loaded from cache (db)
-    _series[0] = [release.initial_story_points.to_f] unless _series[0]
+    # Series collected, now format data for jqplot
+    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
+    # sorted out:
+    # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
+#TODO Maybe move jqplot format stuff to releaseburndown view?
+    @data = {}
+    @data[:added_points] = series.collect{ |s| -1 * s.added_points }
+    @data[:added_points_pos] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
+    @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
+    @data[:closed_points] = series.series(:closed_points)
 
-    # fill out series
-    last = nil
-    _series = _series.enum_for(:each_with_index).collect{|v, i| v.nil? ? last : (last = v; v) }
 
-    # make registered series
-    remaining_story_points = _series.transpose
-    make_series :remaining_story_points, remaining_story_points[0]
+    # Forecast (probably just as good as the weather forecast...)
+#TODO Move forecast to RbRelease?
+    @data[:trend_closed] = Array.new
+    @data[:trend_added] = Array.new
+    avg_count = 3
+    if sprints.size >= avg_count
+      avg_added = (@data[:added_points][-1] - @data[:added_points][-avg_count]) / avg_count
+      avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
+      current_backlog = @data[:added_points][-1] + @data[:added_points_pos][-1] + @data[:backlog_points][-1]
+      current_added = @data[:added_points][-1]
+      current_sprints = @data[:closed_points].size
 
-    # calculate burn-down ideal
-    if daycount == 1 # should never happen
-      make_series :ideal, [remaining_story_points[0]]
-    else
-      day_diff = remaining_story_points[0][0] / (daycount - 1.0)
-      make_series :ideal, remaining_story_points[0].enum_for(:each_with_index).collect{|c, i| remaining_story_points[0][0] - i * day_diff }
+      # Add beginning and end dataset [sprint,points] for trendlines
+      @data[:trend_closed] << [current_sprints, current_backlog]
+      @data[:trend_closed] << [current_sprints + 10, current_backlog - avg_closed * 10]
+      @data[:trend_added] << [current_sprints, current_added]
+      @data[:trend_added] << [current_sprints + 10, current_added + avg_added * 10]
+
     end
 
-    @max = @available_series.values.flatten.compact.max
+#TODO Estimate sprints left
+    sprints_left = [0] * 10
+
+    # Extend other series with empty datapoints up to the estimated number of sprints
+    # to format plot correctly
+    @data[:added_points].concat sprints_left.dup
+    @data[:added_points_pos].concat sprints_left.dup
+    @data[:backlog_points].concat sprints_left.dup
+    @data[:closed_points].concat sprints_left.dup
+  end
+
+  def [](i)
+    i = i.intern if i.is_a?(String)
+    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
+    return @data[i]
+  end
+
+  def series(select = :active)
+    return @data.keys.collect{ |k| k.to_s }
+#    return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
   end
 
   attr_reader :days
@@ -61,24 +94,6 @@ class ReleaseBurndown
 
   attr_reader :remaining_story_points
   attr_reader :ideal
-
-  def series(select = :active)
-    return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
-  end
-
-  private
-
-  def make_series(name, data)
-    @available_series ||= {}
-    s = ReleaseBurndown::Series.new(data, name)
-    @available_series[name] = s
-    instance_variable_set("@#{name}", s)
-  end
-
-  def to_h(keys, values)
-    return Hash[*keys.zip(values).flatten]
-  end
-
 end
 
 class RbRelease < ActiveRecord::Base
@@ -99,6 +114,16 @@ class RbRelease < ActiveRecord::Base
         end
     end
 
+    # Return sprints closed within this release
+    def closed_sprints
+      sprints = RbSprint.closed_sprints(self.project).reject!{ |s|
+        s.effective_date == nil ||
+        s.sprint_start_date < self.release_start_date ||
+        s.effective_date > self.release_end_date
+      }
+      return sprints
+    end
+
     def stories
       return RbStory.stories_open(@project)
     end
@@ -115,7 +140,7 @@ class RbRelease < ActiveRecord::Base
     end
 
     def has_burndown?
-        return !!(self.release_start_date and self.release_end_date and self.initial_story_points)
+        return !!(self.release_start_date and self.release_end_date and self.initial_story_points && !self.closed_sprints.nil?)
     end
 
     def burndown
@@ -126,18 +151,5 @@ class RbRelease < ActiveRecord::Base
 
     def today
       ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
-    end
-
-    def js_ideal
-      "[['#{release_start_date}', #{initial_story_points}], ['#{release_end_date}', 0]]"
-    end
-
-    def js_snapshots
-      foo = "["
-      if burndown_days and burndown_days[0] and burndown_days[0].day != release_start_date
-        foo += "['#{release_start_date}', #{initial_story_points}],"
-      end
-      burndown_days.each { |bdd| foo += "['#{bdd.day}', #{bdd.remaining_story_points}]," }
-      foo += "]"
     end
 end

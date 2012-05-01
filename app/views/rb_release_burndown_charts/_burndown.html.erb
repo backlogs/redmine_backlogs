@@ -1,122 +1,67 @@
-<%- charts = (burndown.is_a?(Array) ? burndown : [burndown]) %>
-<%- dataseries = charts[0].series(:all).collect{|series| series.name } %>
+<div style="<%= style %>" class="burndown_chart" id="burndown_<%= release.id %>"><div class="loading">Generating chart...</div></div>
 
+<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
+<style type="text/css" media="screen">
+  .jqplot-axis {
+  font-size: 0.85em;
+  }
+  .jqplot-title {
+  font-size: 1.1em;
+  }
+  .jqplot-y6axis-tick {
+  padding-right: 0px;
+  }
+</style>
+<script type="text/javascript" language="javascript">
+  <%-
+    burndown = release.burndown
 
-  <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js', :plugin => 'redmine_backlogs' %>
-  <style type="text/css" media="screen">
-    .jqplot-axis {
-      font-size: 0.85em;
-    }
-    .jqplot-title {
-      font-size: 1.1em;
-    }
-    .jqplot-y6axis-tick {
-      padding-right: 0px;
-    }
-  </style>
-  <script type="text/javascript" language="javascript">
-    // Define options otherwise jqplot throws an error
-    var options = {};
-    // chart objects
-    burndown_charts = new Object();
+    # Put together series in the correct order for bar/line rendering
+    jqplot_series = Array.new
+    jqplot_series << burndown[:added_points]
+    jqplot_series << burndown[:added_points_pos]
+    jqplot_series << burndown[:backlog_points]
+    jqplot_series << burndown[:closed_points]
+    jqplot_series << burndown[:trend_added]
+    jqplot_series << burndown[:trend_closed]
 
-    <%- charts.each do |chart| %>
-      burndown_charts[<%= chart.release_id%>] = {
-        chart: null,
-        dataset_position: {<%= chart.series(:all).enum_for(:each_with_index).collect{|s, i| "#{s.name}: #{i}"}.join(', ') %>},
-        datasets: [<%= chart.series(:all).collect{|s| "[#{s.join(',')}]"}.join(', ') %>],
-        series: [<%= chart.series(:all).collect{|s| "{ label: '#{escape_javascript(l(s.name))}', yaxis: 'yaxis' }"}.join(',') %>],
-        xticks: [<%= chart.days.enum_for(:each_with_index).collect{|d,i| "[#{i+1}, '#{escape_javascript(::I18n.t('date.abbr_day_names')[d.wday % 7])}']"}.join(',') %>],
-
-        // add a little clearance to the chart
-        max_y: <%= chart.max == 0 ? 1 : 1.01 * chart.max %>,
-
-        initialize: function() {
-          decoration = !(RB.$('#<%= "#{div}#{chart.release_id}" %>').hasClass('minimal'));
-
-          /*
-          this.chart = RB.$.jqplot('<%= "#{div}#{chart.release_id}" %>', this.datasets, {
-            legend: {show: decoration, location: 'sw'},
-            grid: {shadow:false},
-            seriesDefaults: {showMarker: decoration, shadow:false},
-            axesDefaults: {showTick: decoration},
-            series: this.series,
-            axes:{
-              xaxis:{min:1, max:<%= chart.days.length %>, tickInterval:1, ticks: this.xticks}, 
-              yaxis:{min:0, max: this.max_y, tickOptions:{formatString:'%d'}},
-              },
-            highlighter:{
-              tooltipAxes: 'y',
-              formatString: '%s'
-            }
-          }); */
-          snapshots=<%= @release.js_snapshots %>
-          ideal=<%= @release.js_ideal %>
-          this.chart = RB.$.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
-              //gridPadding:{right:35},
-              axes:{
-                  xaxis:{
-                      renderer: RB.$.jqplot.DateAxisRenderer,
-                      tickOptions:{formatString:'%b %#d, %y'},
-                      //min:'May 30, 2008',
-                      //tickInterval:'1 month'
-                  },
-                  yaxis:{min:0, max: this.max_y},
-              },
-              //series:[{lineWidth:4, markerOptions:{style:'square'}}]
-          });
+    chart = {
+      :series => jqplot_series,
+      :options => {
+        :stackSeries => true,
+        :seriesDefaults => {
+          # renderer: RB.$.jqplot.BarRenderer,
+          :rendererOptions => {
+            :barMargin => 30,
+            :fillToZero => true,
+          }
         },
-
-        reconfigure: function(disabled) {
-          if (this.chart) {
-            <%- dataseries.each do |series| %>
-              p = this.dataset_position['<%= "#{series}" %>'];
-              if (!(p == undefined)) { this.chart.series[p].show = (disabled.indexOf('|<%= "#{series}" %>|') == -1); };
-            <%- end %>
-            this.chart.replot();
-          }
-        }
-      };
-    <%- end %>
-
-    function burndown_configure(cb)
-    {
-      disabled = '|' + RB.$.cookies.get('release_burndown_series') + '|';
-
-      if (!(cb == undefined)) {
-        _disabled = [];
-        <%- dataseries.each do |series| %>
-          if (disabled.indexOf('|<%= "#{series}" %>|') != -1 && cb.value != '<%= "#{series}" %>') {
-            _disabled.push('<%= "#{series}" %>');
-          }
-        <%- end %>
-        if (!cb.checked) {
-          _disabled.push(cb.value);
-        }
-        disabled = _disabled.join('|');
-        RB.$.cookies.set('release_burndown_series', disabled, { expiresAt: new Date((new Date()).getFullYear + 100, 1, 1)});
-        disabled = '|' + disabled + '|';
+        :axes => {
+          :xaxis => {
+            # renderer: RB.$.jqplot.CategoryAxisRenderer
+          },
+          :yaxis => {
+            :padMin => 0,
+          },
+        },
+        :legend => { :show => true, :location => 'ne'},
+        :series => [
+          {:rendererOptions => {:barWidth => 0}},
+          {}, {}, {},
+          {:disableStack => true},
+          {:disableStack => true}
+        ]
       }
-
-      checkboxes = RB.$('.series_enabled');
-      if (checkboxes) {
-        /* enable all, then reset */
-        checkboxes.attr('checked', true);
-        <%- dataseries.each do |series| %>
-          checkbox = RB.$('#<%= "#{series}" %>_enabled');
-          if (checkbox && -1 != disabled.indexOf('|<%= "#{series}" %>|')) { checkbox.attr('checked', false); }
-        <%- end %>
-      }
-
-      <%- charts.each do |chart| %>
-        burndown_charts[<%= chart.release_id %>].reconfigure(disabled);
-      <%- end %>
     }
-
-    RB.$(document).ready(function(){
-      <%- charts.each do |chart| %>
-        burndown_charts[<%= chart.release_id%>].initialize();
-      <%- end %>
-      burndown_configure();
-    });
-  </script>
+#TODO labels for each series
+# e.g. series => {:label => 'sprint #'}
+  %>
+RB.burndown.charts[<%= release.id %>] = <%= chart.to_json %>
+RB.burndown.charts[<%= release.id %>].options.seriesDefaults.renderer = RB.$.jqplot.BarRenderer;
+RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.CategoryAxisRenderer;
+RB.burndown.charts[<%= release.id %>].options.series[4].renderer = RB.$.jqplot.LineRenderer;
+RB.burndown.charts[<%= release.id %>].options.series[5].renderer = RB.$.jqplot.LineRenderer;
+RB.burndown.initialize();
+</script>

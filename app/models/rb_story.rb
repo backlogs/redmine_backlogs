@@ -245,6 +245,70 @@ class RbStory < Issue
                       :offset => rank - 1)
   end
 
+  # Produces relevant information for release graphs
+  # @param sprints is array of sprints of interest
+  # @return hash collection of 
+  def release(sprints)
+    days = Array.new
+    # Find interesting days of each sprint for the release graph
+    sprints.each { |sprint| days << sprint.sprint_start_date.to_date }
+#TODO Maybe only effective_date??
+    days_end = days.dup
+    days_end.shift
+    days_end << sprints.last.effective_date.to_date
+    status = history(:status_id,days,false).collect{|s| s ? IssueStatus.find(s) : nil}[0...-1]
+    baseline = [0] * days.size
+
+    series = Backlogs::MergedArray.new
+    series.merge(:backlog_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
+    series.merge(:closed_points => baseline.dup)
+
+    # Collect data
+    series.merge(:accepted => status.collect{|s| s ? (s.backlog_is?(:success)) : false})
+    series.merge(:points => history(:story_points,days,false)[0...-1])
+    series.merge(:open => status.collect{|s| s ? !s.is_closed? : false})
+    first = true;
+    series.merge(:accepted_first => status.collect{|s|
+                   if s
+                     if s.backlog_is?(:success) && first == true
+                       first = false
+                       true
+                     else
+                       false
+                     end
+                   else
+                     false
+                   end
+                 })
+    series.merge(:day => days)
+    series.merge(:day_end => days_end)
+
+    # Extract added_points, backlog_points and closed points from the data collected
+    series.each { |p|
+      if (created_on.to_date < sprints.first.sprint_start_date.to_date) && p.open
+        p.backlog_points = p.points
+      end
+      if p.accepted_first
+        p.closed_points = p.points
+      end
+      # Is the story created within this sprint?
+      if (created_on.to_date >= sprints.first.sprint_start_date.to_date) &&
+          (created_on.to_date < p.day_end)
+        p.added_points = p.points
+        if p.accepted
+          p.backlog_points = -p.points
+        end
+      end
+    }
+
+    rl = {}
+    rl[:backlog_points] = series.series(:backlog_points)
+    rl[:added_points] = series.series(:added_points)
+    rl[:closed_points] = series.series(:closed_points)
+    return rl
+  end
+
   def burndown(sprint=nil)
     return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
