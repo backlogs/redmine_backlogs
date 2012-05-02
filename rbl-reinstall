@@ -68,7 +68,7 @@ def verify(path)
 end
 
 class Options
-  OPTIONSFILE = File.join(File.dirname(__FILE__), File.basename(__FILE__, File.extname(__FILE__)) + '.yml')
+  OPTIONSFILE = File.join(File.dirname(__FILE__), 'backlogs.yml')
   @@options = {}
   @@options = YAML::load_file(OPTIONSFILE) if File.exist?(OPTIONSFILE)
 
@@ -273,7 +273,13 @@ script.gem "
 script.rvm "./script/generate cucumber --skip --spork"
 
 script.database "cd ~/redmine/#{Options.platform}"
-script.database "mysqladmin -f -u root -p#{Options.rootpw} drop #{Options.platform}"
+
+script.database "
+  DBINSTALLED=`echo show databases | mysql -u root -p#{Options.rootpw} | grep #{Options.platform} | wc -l`
+  if [[ \"$DBINSTALLED\" != \"0\" ]]; then
+    mysqladmin -f -u root -p#{Options.rootpw} drop #{Options.platform}
+  fi
+"
 script.database "echo \"create database #{Options.platform} character set utf8;\" | mysql -u root -p#{Options.rootpw} mysql"
 
 script.database "
@@ -283,7 +289,8 @@ script.database "
   fi
 "
 
-script.database "echo \"grant all privileges on redmine.* to 'redmine'@'localhost';\" | mysql -u root -p#{Options.rootpw} mysql"
+script.database "echo \"grant all privileges on redmine.* to 'redmine'@'%';\" | mysql -u root -p#{Options.rootpw} mysql"
+script.database "echo \"grant all privileges on redmine.* to 'root'@'%';\" | mysql -u root -p#{Options.rootpw} mysql"
 if exists("~/redmine/setup/#{Options.platform}.sql.gz")
   script.database "zcat ~/redmine/setup/#{Options.platform}.sql.gz | mysql -u root -p#{Options.rootpw} #{Options.platform}"
   script.database "echo \"update users set auth_source_id = NULL;\" | mysql -u root -p#{Options.rootpw} #{Options.platform}"

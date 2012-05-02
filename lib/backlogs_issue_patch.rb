@@ -157,7 +157,6 @@ module Backlogs
             connection.execute("update issues set
                                 updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{quoted_fixed_version}
                                 where id in #{tasklist}")
-            tasks_updated.each{|task| RbJournal.rebuild(task)}
           end
 
           connection.execute("update issues

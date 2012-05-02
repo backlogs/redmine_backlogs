@@ -29,8 +29,8 @@ class Burndown
 
     @data = {}
 
-    @data[:points_committed] = series.collect{|s| s.points }
     @data[:hours_remaining] = series.collect{|s| s.hours }
+    @data[:points_committed] = series.collect{|s| s.points }
     @data[:points_accepted] = series.collect{|s| s.points_accepted }
     @data[:points_resolved] = series.collect{|s| s.points_resolved }
     @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
