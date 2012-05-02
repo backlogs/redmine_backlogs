@@ -98,8 +98,12 @@ class RbJournal < ActiveRecord::Base
       end
     }
 
-    changes['status_open'] = changes['status_id'].collect{|change| change.merge(:new => !(issue_status[change[:new]].is_closed?))}
-    changes['status_success'] = changes['status_id'].collect{|change| change.merge(:new => issue_status[change[:new]].backlog_is?(:success))}
+    changes['status_open'] = changes['status_success'] = []
+    changes['status_id'].each{|change|
+      status = issue_status[change[:new]]
+      changes['status_open'] << change.merge(:new => status && !status.is_closed?)
+      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success))
+    }
     changes.delete('status_id')
 
     changes.each_pair{|prop, updates|
