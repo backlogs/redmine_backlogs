@@ -4,6 +4,7 @@ class ChangeIssuePositionColumn < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :issues, :position, :integer, :null => false
+    puts "Can't disable null positions"
+    # change_column :issues, :position, :integer, :null => false
   end
 end
