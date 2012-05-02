@@ -98,7 +98,7 @@ class RbJournal < ActiveRecord::Base
       end
     }
 
-    changes['status_open'] = changes['status_success'] = []
+    ['status_open', 'status_success'].each{|p| changes[p] = [] }
     changes['status_id'].each{|change|
       status = issue_status[change[:new]]
       changes['status_open'] << change.merge(:new => status && !status.is_closed?)

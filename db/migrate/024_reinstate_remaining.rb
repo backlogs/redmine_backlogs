@@ -90,6 +90,6 @@ class ReinstateRemaining < ActiveRecord::Migration
   end
 
   def self.down
-    raise ActiveRecord::IrreversibleMigration
+    puts "Reverting irreversible migration"
   end
 end

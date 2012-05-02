@@ -47,7 +47,7 @@ mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
 mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
 mysqladmin -u root -p$DBROOTPW create $GEMSET
 
-zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
+#zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
 
 echo migrations
 bundle exec rake generate_session_store
@@ -65,9 +65,11 @@ else
   script -c "cucumber $TEST_FEATURE" -f ~/redmine/cuke-$GEMSET.log
 fi
 
-mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
-mysqladmin -u root -p$DBROOTPW create $GEMSET
-cat ../setup/blcuke-salvage.sql | mysql -u root -p$DBROOTPW $GEMSET 
+sed '/^$/d' -i ~/redmine/cuke-$GEMSET.log
+
+#mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
+#mysqladmin -u root -p$DBROOTPW create $GEMSET
+#cat ../setup/blcuke-salvage.sql | mysql -u root -p$DBROOTPW $GEMSET 
 
 if [ -n "$PUBLISH" ]; then
   cd ~/redmine/redmine_backlogs

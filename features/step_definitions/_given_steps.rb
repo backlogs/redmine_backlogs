@@ -247,7 +247,7 @@ end
 Given /^I have defined the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
     params = initialize_story_params
-    params['subject'] = story.delete('subject')
+    params['subject'] = story.delete('subject').strip
     params['prev_id'] = story_before(story.delete('position'))
 
     story.should == {}

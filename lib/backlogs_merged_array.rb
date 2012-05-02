@@ -87,7 +87,10 @@ module Backlogs
     end
 
     def to_s
-      return @data.collect{|s| s.to_s}.join("\n")
+      return @data.to_s
+    end
+    def inspect
+      return @data.collect{|d| d.inspect}.join("\n")
     end
   end
 end
