@@ -95,7 +95,13 @@ if (RB.constants == null) {
         }
       }
     }
+
+    project_versions = {}
+    RbStory.find(:all, RbStory.find_params( :include_backlog => true, :project_id => @project.id, :sprint_id => @project.shared_versions.collect{|v| v.id})).each {|story|
+      project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
+    }
   %>
+  RB.constants.project_versions = <%= project_versions.to_json %>;
   RB.constants.story_states = <%= transitions.to_json %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => 'json', :only_path => true) %>';
 <% end %>

@@ -21,13 +21,17 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
 
-    // Initialize task lists
-    j.find("#tasks .list").sortable({ 
-      connectWith: '#tasks .list', 
-      placeholder: 'placeholder',
-      start: self.dragStart,
-      stop: self.dragStop,
-      update: self.dragComplete
+    // Initialize task lists, restricting drop to the story
+    j.find('.story-swimlane').each(function(index){
+      var id = '#' + RB.$(this).attr('id') + ' .list';
+
+      j.find(id).sortable({
+        connectWith: id, 
+        placeholder: 'placeholder',
+        start: self.dragStart,
+        stop: self.dragStop,
+        update: self.dragComplete
+      });
     });
 
     // Initialize each task in the board

@@ -40,9 +40,9 @@ Then /^show me the list of sprints$/ do
 end
 
 Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
-    [story.id, story.position, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+  header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20]]
+  data = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true).collect {|story|
+    [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
   }
 
   show_table("Stories", header, data)
@@ -50,6 +50,10 @@ end
 
 Then /^show me the sprint impediments$/ do
   puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
+end
+
+Then /^show me the projects$/ do
+  show_projects
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -76,7 +80,7 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
-  story = RbStory.at_rank(@project.id, sprint, position.to_i)
+  story = RbStory.at_rank(position.to_i, :project_id => sprint.nil? ? @project.id : nil, :sprint_id => sprint)
   story.should_not be_nil
   story.subject.should == subject
 end
@@ -86,7 +90,7 @@ Then /^all positions should be unique$/ do
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find_by_subject(story_subject)
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
@@ -180,7 +184,7 @@ end
 
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
   issue = Issue.find_by_subject(subject)
-  issue[attribute].should == value.to_i
+  issue.send(attribute.intern).should == value.to_i
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|

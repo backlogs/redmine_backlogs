@@ -1,5 +1,5 @@
 def get_project(identifier)
-  Project.find(:first, :conditions => "identifier='#{identifier}'")
+  Project.find(identifier)
 end
 
 def time_offset(o)
@@ -13,9 +13,9 @@ def time_offset(o)
   return ((((d.to_i * 24) + h.to_i) * 60) + m.to_i) * 60 * (sign == '-' ? -1 : 1)
 end
 
-def initialize_story_params
+def initialize_story_params(project_id = nil)
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
-  @story['project_id'] = @project.id
+  @story['project_id'] = project_id ? Project.find(project_id).id : @project.id
   @story['tracker_id'] = RbStory.trackers.first
   @story['author_id']  = @user.id
   @story
@@ -23,7 +23,7 @@ end
 
 def initialize_task_params(story_id)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes)
-  params['project_id'] = @project.id
+  params['project_id'] = RbStory.find_by_id(story_id).project_id
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
@@ -31,13 +31,18 @@ def initialize_task_params(story_id)
   params
 end
 
-def initialize_impediment_params(sprint_id)
-  params = HashWithIndifferentAccess.new(RbTask.new.attributes)
-  params['project_id'] = @project.id
+def sprint_id_from_name(name)
+  sprint = RbSprint.find_by_name(name)
+  raise "No sprint by name #{name}" unless sprint
+  return sprint.id
+end
+
+def initialize_impediment_params(attributes)
+  params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['fixed_version_id'] = sprint_id
-  params['status_id'] = IssueStatus.find(:first).id
+  params['status_id'] = IssueStatus.default.id
+  params['project_id'] = Version.find(params['fixed_version_id']).project.id if params['fixed_version_id']
   params
 end
 
@@ -87,11 +92,11 @@ def task_position(task)
 end
 
 def story_position(story)
-  p1 = RbStory.backlog(story.project, story.fixed_version_id).select{|s| s.id == story.id}[0].rank
+  p1 = RbStory.backlog(:project_id => story.fixed_version_id ? nil : story.project.id, :sprint_id => story.fixed_version_id).select{|s| s.id == story.id}[0].rank
   p2 = story.rank
   p1.should == p2
 
-  RbStory.at_rank(story.project_id, story.fixed_version_id, p1).id.should == story.id
+  RbStory.at_rank(p1, :project_id => story.project_id, :sprint_id => story.fixed_version_id).id.should == story.id
   return p1
 end
 

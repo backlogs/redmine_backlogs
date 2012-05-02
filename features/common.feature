@@ -5,6 +5,7 @@ Feature: Common
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And no versions or issues exist
       And I am a team member of the project
 
   Scenario: View the product backlog

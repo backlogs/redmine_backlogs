@@ -1,28 +1,35 @@
-When /^I create the impediment$/ do
-  page.driver.process :post, 
-                      url_for(:controller => :rb_impediments, :action => :create),
-                      @impediment_params
+When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, project|
+  params = @impediment_params.dup
+  params['project_id'] = Project.find(project) if project != ''
+
+  page.driver.process :post, url_for(:controller => :rb_impediments, :action => :create), params
+
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I create the story$/ do
+When /^I (try to )?create the story$/ do |attempt|
   page.driver.process :post, 
                       url_for(:controller => :rb_stories, :action => :create),
                       @story_params
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I create the task$/ do
+When /^I (try to )?create the task$/ do |attempt|
+  initial_estimate = @task_params.delete('initial_estimate')
   page.driver.process :post, 
                       url_for(:controller => :rb_tasks, :action => :create),
                       @task_params
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I create the sprint$/ do
+When /^I (try to )?create the sprint$/ do |attempt|
   page.driver.process :post,
                       url_for(:controller => :rb_sprints, :action => :create),
                       @sprint_params
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
+When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_subject, prev_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   prev  = RbStory.find(:first, :conditions => ["subject=?", prev_subject])
   
@@ -33,9 +40,10 @@ When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
   page.driver.process :post,
                       url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
                       attributes.merge({ "_method" => "put" })
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, direction, position, sprint_name|
+When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
@@ -53,9 +61,10 @@ When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) positio
   page.driver.process :post,
                       url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
                       attributes.merge({ "_method" => "put" })
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |old_pos, new_pos|
+When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |attempt, old_pos, new_pos|
   @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v")
 
   story = @story_ids[old_pos.to_i-1]
@@ -75,35 +84,42 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
                       url_for(:controller => :rb_stories, :action => :update, :id => story.text),
                       {:prev => (prev.nil? ? '' : prev.text), :project_id => @project.id, "_method" => "put"}
 
+  page.driver.response.status.should == 200 if attempt == ''
+
   @story = RbStory.find(story.text.to_i)
 end
 
-When /^I request the server_variables resource$/ do
+When /^I (try to )?request the server_variables resource$/ do |attempt|
   visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id)
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I update the impediment$/ do
+When /^I (try to )?update the impediment$/ do |attempt|
   page.driver.process :post, 
                       url_for(:controller => :rb_impediments, :action => :update, :id => @impediment_params['id']),
                       @impediment_params
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I update the sprint$/ do
+When /^I (try to )?update the sprint$/ do |attempt|
   page.driver.process :post,
                       url_for(:controller => 'rb_sprints', :action => "update", :sprint_id => @sprint_params['id']),
                       @sprint_params.merge({ "_method" => "put" })
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I update the story$/ do
+When /^I (try to )?update the story$/ do |attempt|
   page.driver.process :post,
                       url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
                       @story_params.merge({ "_method" => "put" })
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
-When /^I update the task$/ do
+When /^I (try to )?update the task$/ do |attempt|
   page.driver.process :post,
                       url_for(:controller => :rb_tasks, :action => :update, :id => @task_params[:id]),
                       @task_params.merge({ "_method" => "put" })
+  page.driver.response.status.should == 200 if attempt == ''
 end
 
 Given /^I visit the scrum statistics page$/ do

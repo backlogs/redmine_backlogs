@@ -189,6 +189,54 @@
   text-decoration:none;
   font-weight:bold;
 }
+.backlog .header .menu .item ul{
+  -moz-box-shadow: 2px 2px 3px #999999;
+  -webkit-box-shadow: 2px 2px 3px #999999;
+  box-shadow: 2px 2px 3px #999999;
+  background-color:#EFEFEF;
+  display:none;
+  list-style:none;
+  margin:0;
+  padding:0;
+  position:absolute;
+  left:160px;
+  top:0;
+}
+.backlog .header .menu .item .icon {
+  left:140px;
+  top:5px;
+}
+.backlog .header .menu .item ul li{
+  display: block;
+  height:24px;
+  overflow:hidden;
+  text-align: left;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width:160px;
+}
+.backlog .header .menu .item:hover ul{
+  display:block;
+}
+.backlog .header .menu .item ul li:hover{
+  background-color:#DDDDDD;
+}
+.backlog .header .menu .item:hover ul li a {
+  font-weight:normal; /* Work-around for when .item is hovered */
+}
+.backlog .header .menu .item ul li a{
+  color:#000000;
+  display:block;
+  font-size:12px;
+  height:100%;
+  padding:6px;
+  width:100%;
+}
+.backlog .header .menu .item ul li:hover a{
+  text-decoration:none;
+  font-weight:bold;
+}
 
 #product_backlog_container .closedbacklog .header .label,
 #product_backlog_container .backlog .header .label{
@@ -378,6 +426,25 @@
 #backlogs_container .stories .story .id .v {
   display:none;
 }
+#backlogs_container .stories .story .project {
+  display:block;
+  position:relative;
+  float:left;
+  width:55px;
+  margin:1px 0 0 1px;
+  padding-left:2px;
+  padding-top:2px;
+}
+#backlogs_container .stories .story .project .t {
+  overflow:hidden;
+}
+#backlogs_container .stories .story .project .v {
+  display:none;
+}
+#backlogs_container .stories .story.editing .project,
+#backlogs_container .stories .story.editing select.project_id.editor {
+  display:none;
+}
 #backlogs_container .stories .story .subject {
   display:block;
 /*  height:15px;
@@ -388,7 +455,7 @@
 /*  position:absolute;
   top:1px;*/
   float:left;
-  width:32em;
+  width:30em;
   margin-right:2em;
   white-space:nowrap;
 }
@@ -430,18 +497,19 @@
 /*  height:15px;
   right:10px;
   overflow:hidden;*/
-  padding:5px 15px 4px 9px;
+  padding:5px 5px 4px 5px;
 /*  position:absolute;*/
   text-align:right;
 /*  top:1px;*/
   float: right;
-  width:2em;
+  width:3em;
 }
 #backlogs_container .stories .story .story_points .v {
   display:none;
 }
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
+#backlogs_container .stories .story .story_project,
 #backlogs_container .stories .story .user_status {
   display:none;
 }

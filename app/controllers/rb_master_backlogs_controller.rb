@@ -5,7 +5,7 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
-    sprints = RbSprint.open_sprints(@project)
+    sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
 
     #TIB (ajout des sprints fermés)
     if @settings[:disable_closed_sprints_to_master_backlogs]
@@ -34,6 +34,15 @@ class RbMasterBacklogsController < RbApplicationController
     links = []
 
     links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
+
+    if !@project.descendants.active.empty? then
+      links.first[:classname] = nil
+      links.first[:sub] = []
+      @project.self_and_descendants.active.each {|project|
+        links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+      }
+    end
+
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
              } unless @sprint
     links << {:label => l(:label_task_board),
