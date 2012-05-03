@@ -213,7 +213,7 @@ class RbStory < Issue
     def update_and_position!(params)
       attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
       attribs = Hash[*attribs.flatten]
-      result = self.becomes(Issue).journalized_update_attributes attribs
+      result = self.journalized_update_attributes attribs
       if result and params[:prev]
         move_after(params[:prev])
       end
