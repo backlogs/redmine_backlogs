@@ -156,7 +156,12 @@ namespace :redmine do
 
       print "Migrating the database..."
       STDOUT.flush
-      system('rake db:migrate:plugins --trace > redmine_backlogs_install.log')
+      if Backlogs.platform == :redmine && Redmine::VERSION::MAJOR > 1
+        db_migrate_task = "redmine:plugins:migrate"
+      else
+        db_migrate_task = "db:migrate:plugins"
+      end
+      system("rake #{db_migrate_task} --trace > redmine_backlogs_install.log")
       system('rake redmine:backlogs:fix_positions --trace >> redmine_backlogs_install.log')
       if $?==0
         puts "done!"
