@@ -25,7 +25,7 @@ module Backlogs
   def development?
     return File.exist?(File.join(case Rails::VERSION.to_a[0,1] when 2 then RAILS_ROOT.to_s when 3 then Rails.root.to_s else nil end, 'backlogs.dev'))
   end
-  module_function development?
+  module_function :"development?"
 
   def platform_support(raise_error = false)
     case platform
@@ -45,7 +45,7 @@ module Backlogs
       return msg
     end
 
-    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported && 
+    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
     return "#{Redmine::VERSION} (unsupported but might work, please upgrade to #{supported.collect{|d| d.to_s}.join('.')}" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
 
     return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
