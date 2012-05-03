@@ -22,6 +22,11 @@ module Backlogs
   end
   module_function :version
 
+  def development?
+    return File.exist?(File.join(case Rails::VERSION.to_a[0,1] when 2 then RAILS_ROOT.to_s when 3 then Rails.root.to_s else nil end, 'backlogs.dev'))
+  end
+  module_function development?
+
   def platform_support(raise_error = false)
     case platform
       when :redmine
@@ -34,8 +39,17 @@ module Backlogs
         raise "Unsupported platform #{platform}"
     end
 
-    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
+    unless RUBY_VERSION =~ /^1\.8\./ || development?
+      msg = "#{Redmine::VERSION} (UNSUPPORTED ruby version #{RUBY_VERSION})"
+      raise msg if raise_error
+      return msg
+    end
+
+    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported && 
     return "#{Redmine::VERSION} (unsupported but might work, please upgrade to #{supported.collect{|d| d.to_s}.join('.')}" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
+
+    return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
+
     msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.collect{|d| d.to_s}.join('.')})"
     raise msg if raise_error
     return msg
@@ -108,6 +122,12 @@ module Backlogs
     return false if Backlogs.trackers.values.reject{|configured| configured}.size > 0
     return false unless Backlogs.migrated?
     return false unless project.nil? || project.enabled_module_names.include?("backlogs")
+    begin
+      platform_support(true)
+    rescue
+      return false
+    end
+      
     return true
   end
   module_function :configured?
