@@ -63,7 +63,10 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^the request should complete successfully$/ do
-  page.driver.response.status.should == 200
+  page.driver.response.status.should equal(200),\
+    "Request failed with error: "\
+    "#{page.driver.response.status}\n"\
+    "#{page.driver.response.body}"
 end
 
 Then /^the request should fail$/ do
