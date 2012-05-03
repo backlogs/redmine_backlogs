@@ -70,7 +70,6 @@ module Backlogs
   module_function :trackers
 
   def task_workflow(project)
-    return true if User.current.admin?
     return false unless RbTask.tracker
 
     roles = User.current.roles_for_project(@project)
