@@ -1,4 +1,5 @@
 require_dependency 'issues_controller'
+require 'rubygems'
 require 'nokogiri'
 require 'json'
 
