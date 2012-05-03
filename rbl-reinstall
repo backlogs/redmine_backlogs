@@ -102,6 +102,10 @@ class Options
     opts.on( '-P', '--pw PASSWORD', 'DB password' ) do |pw|
       @@options[:pw] = pw
     end
+    @@options[:host] ||= 'localhost'
+    opts.on( '-H', '--host HOSTNAME', 'MySQL host' ) do |host|
+      @@options[:host] = host
+    end
 
     opts.on( '-a', '--adminpw PASSWORD', 'Admin password' ) do |pw|
       @@options[:adminpw] = pw
@@ -183,7 +187,6 @@ class Options
   }
 
   verify('~/redmine')
-  verify("~/redmine/setup/database-#{Options.platform}.yml")
   verify("~/redmine/redmine_backlogs")
 end
 
@@ -206,7 +209,33 @@ script.chiliproject "git checkout v#{Options.version}"
 script.install "cd ~/redmine/#{Options.platform}"
 script.install "ln -s ~/redmine/redmine_backlogs ~/redmine/#{Options.platform}/vendor/plugins"
 script.install "ln -s ~/redmine/redmine_backlogs/features ~/redmine/#{Options.platform}"
+
+if Options.install?
+  setup = File.expand_path("~/redmine/setup")
+  File.mkdir(setup) unless File.exist?(setup)
+
+  dbfile = File.join(setup, "database-#{Options.platform}.yml")
+  unless File.exist?(dbfile)
+    db = {}
+    ['production', 'development', 'cucumber', 'test'].each{|env|
+      db[env] = {
+        'adapter' => 'mysql',
+        #'database' => "#{Options.platform}-#{env}".gsub(/-production$/, ''),
+        'database' => Options.platform,
+        'host' => Options.host,
+        'username' => Options.user,
+        'password' => Options.pw,
+        'encoding' => 'utf8'
+      }
+    }
+    File.open(dbfile), 'w') do |f|
+      f.write(db.to_yaml)
+    end
+  end
+end
+
 script.install "cp ~/redmine/setup/database-#{Options.platform}.yml ~/redmine/#{Options.platform}/config/database.yml"
+
 script.install "echo rvm use `rvm-prompt v g` > ~/redmine/#{Options.platform}/.rvmrc"
 script.install "sed -i -e\"s/gem 'capybara'/gem 'capybara', '=0.3.9'/\" Gemfile"
 
