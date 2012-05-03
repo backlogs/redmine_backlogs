@@ -51,7 +51,7 @@ module Backlogs
   module_function :os
 
   def gems
-    installed = Hash[*(['system_timer', 'nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].collect{|gem| [gem, false]}.flatten)]
+    installed = Hash[*(['json', 'system_timer', 'nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].collect{|gem| [gem, false]}.flatten)]
     installed.delete('system_timer') unless os == :unix && RUBY_VERSION =~ /^1\.8\./
     installed.keys.each{|gem|
       begin
