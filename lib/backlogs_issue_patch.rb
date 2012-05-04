@@ -145,6 +145,9 @@ module Backlogs
               when :chiliproject
                 j.created_at = self.updated_on
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
+                j.type = 'IssueJournal'
+                j.activity_type = 'issues'
+                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
             end
             j.user = User.current
             j.save!
@@ -155,7 +158,7 @@ module Backlogs
           if tasks_updated.size > 0
             tasklist = '(' + tasks_updated.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{quoted_fixed_version}
+                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}
                                 where id in #{tasklist}")
           end
 

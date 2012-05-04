@@ -298,7 +298,8 @@ script.gem "
       exit
     fi
 "
-script.rvm "./script/generate cucumber --skip --spork"
+script.install "cd ~/redmine/#{Options.platform}"
+script.install "./script/generate cucumber --skip --spork"
 
 script.database "cd ~/redmine/#{Options.platform}"
 
