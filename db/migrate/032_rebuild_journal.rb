@@ -17,6 +17,12 @@ class RebuildJournal < ActiveRecord::Migration
       puts "#{migrated} issues migrated, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(((issues.size - migrated) + 1) / speed)}s"
     end
 
+    add_index :rb_journals, :issue_id 
+    add_index :rb_journals, :property 
+    add_index :rb_journals, :timestamp 
+    add_index :rb_journals, :value 
+    add_index :rb_journals, [:issue_id, :property, :value]
+
     puts "Priming stats cache"
     EnabledModule.find(:all, :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE], :include => :project, :joins => :project).each{|mod|
       puts mod.project.name

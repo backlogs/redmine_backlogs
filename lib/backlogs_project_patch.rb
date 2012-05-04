@@ -3,6 +3,8 @@ require_dependency 'project'
 module Backlogs
   class Statistics
     def initialize(project)
+      puts "Rebuilding statistics for #{project.identifier}" if Backlogs.development?
+
       @project = project
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
@@ -168,9 +170,15 @@ module Backlogs
     
     module InstanceMethods
     
-      def scrum_statistics
+      def scrum_statistics(force = false)
+        if force
+          # done this way to the potentially very expensive cache rebuild is done while the old cache may still be served to others
+          stats = Backlogs::Statistics.new(self)
+          Rails.cache.delete("Project(#{self.id}).scrum_statistics")
+          return Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { stats }
+        end
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
-        @scrum_statistics = Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) } unless @scrum_statistics
+        @scrum_statistics ||= Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) }
     
         return @scrum_statistics
       end
