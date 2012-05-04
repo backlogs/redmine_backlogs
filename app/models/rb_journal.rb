@@ -20,7 +20,6 @@ class RbJournal < ActiveRecord::Base
   JOURNALED_PROPERTIES = ['fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
 
   belongs_to :issue
-  before_save :backlogs_before_save
 
   def self.journal(j)
     case Backlogs.platform
@@ -128,34 +127,30 @@ class RbJournal < ActiveRecord::Base
     return s
   end
 
-  def backlogs_before_save
-    case self.value
-      when nil
-        #
-      when true
-        self.value = "true"
-      when false
-        self.value = "false"
-      else
-        self.value = self.value.to_s
-    end
-    self.property = self.property.to_s unless self.property.is_a?(String)
+  def property
+    return self[:property].to_sym
+  end
+  def property=(name)
+    self[:property] = name.to_s
   end
 
-  def after_find
-    self.property = self.property.intern unless self.property.is_a?(Symbol)
+  def value
+    v = self[:value]
 
-    return if self.value.nil?
+    return nil if v.nil?
 
-    self.value = case self.property
+    case property
       when :status_open, :status_success
-        (self.value == 'true')
+        return (v == 'true')
       when :fixed_version_id
-        Integer(self.value)
+        return Integer(v)
       when :story_points, :remaining_hours
-        Float(self.value)
+        return Float(v)
       else
-        raise "Unknown cache property #{property.inspect}"
+        raise "Unknown journal property #{property.inspect}"
     end
+  end
+  def value=(v)
+    self[:value] = v.nil? ? nil : v.to_s
   end
 end
