@@ -3,6 +3,8 @@
 require 'rubygems'
 require 'optparse'
 require 'yaml'
+#require 'io/nonblock'
+require 'open3'
 
 def error(msg)
   puts "echo '#{msg}'\n"
@@ -57,6 +59,15 @@ class Script
 
   def to_s
     return @script
+  end
+
+  def execute
+    stdin, stdout, stderr = Open3.popen3('bash')
+    stdout.sync = true
+    stdin.write("#{self}\nexit\n")
+    while line = stdout.gets
+      print line
+    end
   end
 end
 
@@ -193,7 +204,6 @@ end
 script = Script.new
 
 Options.status.each{|status| script << status }
-script << 'echo "*** PIPE OUTPUT OF THIS SCRIPT THROUGH BASH ***"'
 script << 'set -e'
 script << 'export RAILS_ENV=development'
 script << 'cd ~/redmine'
@@ -336,4 +346,4 @@ if Options.adminpw.to_s != ''
   script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
 end
 
-puts script
+script.execute
