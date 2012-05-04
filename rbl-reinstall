@@ -228,7 +228,7 @@ if Options.install?
         'encoding' => 'utf8'
       }
     }
-    File.open(dbfile), 'w') do |f|
+    File.open(dbfile, 'w') do |f|
       f.write(db.to_yaml)
     end
   end

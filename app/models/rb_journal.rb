@@ -129,6 +129,7 @@ class RbJournal < ActiveRecord::Base
   end
 
   def backlogs_before_save
+    self.property = self.property.to_s unless self.property.is_a?(String)
     case self.value
       when nil
         #
@@ -137,9 +138,8 @@ class RbJournal < ActiveRecord::Base
       when false
         self.value = "false"
       else
-        self.value = self.value.to_s
+        self.value = self.value.to_s unless self.value.nil?
     end
-    self.property = self.property.to_s unless self.property.is_a?(String)
   end
 
   def after_find
@@ -151,9 +151,9 @@ class RbJournal < ActiveRecord::Base
       when :status_open, :status_success
         (self.value == 'true')
       when :fixed_version_id
-        Integer(self.value)
+        self.value == '' ? nil : Integer(self.value)
       when :story_points, :remaining_hours
-        Float(self.value)
+        self.value == '' ? nil : Float(self.value)
       else
         raise "Unknown cache property #{property.inspect}"
     end
