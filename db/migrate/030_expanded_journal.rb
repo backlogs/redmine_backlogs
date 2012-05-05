@@ -11,6 +11,6 @@ class ExpandedJournal < ActiveRecord::Migration
   end
 
   def self.down
-    #pass
+    drop_table :rb_journals
   end
 end
