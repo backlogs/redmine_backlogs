@@ -322,7 +322,7 @@ script.database "
 script.database "echo \"create database #{Options.platform} character set utf8;\" | mysql -u root -p#{Options.rootpw} mysql"
 
 script.database "
-  DBUSER=`echo \"select concat(User, '@', Host) from mysql.user;\" | mysql -u root -proot | grep '^#{Options.user}@localhost$' | wc -l`
+  DBUSER=`echo \"select concat(User, '@', Host) from mysql.user;\" | mysql -u root -p#{Options.rootpw} | grep '^#{Options.user}@localhost$' | wc -l`
   if [[ \"$DBUSER\" = \"0\" ]]; then
     echo \"create user '#{Options.user}'@'localhost' identified by '#{Options.pw}';\" | mysql -u root -p#{Options.rootpw} mysql
   fi
