@@ -30,7 +30,17 @@ class RbJournal < ActiveRecord::Base
         j.details.each{|detail|
           next unless detail.property == 'attr'
           next unless RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
-          RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
+          if detail.prop_key == 'status_id'
+            begin
+              status = IssueStatus.find(detail.value)
+            rescue ActiveRecord::RecordNotFound
+              status = nil
+            end
+            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed? : nil).save
+            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success) : nil).save
+          else
+            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
+          end
         }
 
       when :chiliproject
@@ -39,7 +49,19 @@ class RbJournal < ActiveRecord::Base
           timestamp = j.created_on
 
           RbJournal::REDMINE_PROPERTIES.each{|prop|
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save unless j.details[prop].nil?
+            next if j.details[prop].nil?
+
+            if prop == 'status_id'
+              begin
+                status = IssueStatus.find(j.details[prop][1])
+              rescue ActiveRecord::RecordNotFound
+                status = nil
+              end
+              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed? : nil).save
+              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success) : nil).save
+            else
+              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save
+            end
           }
         end
     end
