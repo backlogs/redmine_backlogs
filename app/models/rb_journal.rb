@@ -131,7 +131,7 @@ class RbJournal < ActiveRecord::Base
     return self[:property].to_sym
   end
   def property=(name)
-    raise "Unknown journal property #{property.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(name.to_s)
+    raise "Unknown journal property #{name.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(name.to_s)
     self[:property] = name.to_s
   end
 
