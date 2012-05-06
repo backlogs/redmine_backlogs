@@ -22,50 +22,40 @@ class RbJournal < ActiveRecord::Base
   belongs_to :issue
 
   def self.journal(j)
-    timestamp = j.created_on
     case Backlogs.platform
       when :redmine
-        issue_id = j.journalized_id
-
         j.details.each{|detail|
-          next unless detail.property == 'attr'
-          next unless RbJournal::REDMINE_PROPERTIES.include?(journal_property_key(prop))
-          create_journal(j, prop, issue_id, timestamp)
+          next unless detail.property == 'attr' && RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
+          create_journal(j, detail, j.journalized_id, j.created_on)
         }
 
       when :chiliproject
         if j.type == 'IssueJournal'
-          issue_id = j.journaled_id
-
           RbJournal::REDMINE_PROPERTIES.each{|prop|
             next if j.details[prop].nil?
-            create_journal(j, prop, issue_id, timestamp)
+            create_journal(j, prop, j.journaled_id, j.created_on)
           }
         end
     end
   end
 
   def self.create_journal(j, prop, issue_id, timestamp)
-    properties = Array.new
     if journal_property_key(prop) == 'status_id'
       begin
         status = IssueStatus.find(journal_property_value(prop, j))
       rescue ActiveRecord::RecordNotFound
         status = nil
       end
-      properties << { 'prop_key' => 'status_open',
-                      'prop_value' => status && !status.is_closed }
-      properties << { 'prop_key' => 'status_success',
-                      'prop_value' => status && !status.backlog_is?(:success) }
+      properties = [ { :prop_key => 'status_open',              :prop_value => status && !status.is_closed },
+                     { :prop_key => 'status_success',           :prop_value => status && !status.backlog_is?(:success) } ]
     else
-      properties << { 'prop_key' => journal_property_key(prop),
-                      'prop_value' => journal_property_value(prop, j) }
+      properties = [ { :prop_key => journal_property_key(prop), :prop_value => journal_property_value(prop, j) } ]
     end
     properties.each{|property|
       RbJournal.new(:issue_id => issue_id,
                     :timestamp => timestamp,
-                    :property => property['prop_key'],
-                    :value => property['prop_value']).save
+                    :property => property[:prop_key],
+                    :value => property[:prop_value]).save
     }
   end
 
