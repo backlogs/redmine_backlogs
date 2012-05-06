@@ -36,8 +36,8 @@ class RbJournal < ActiveRecord::Base
             rescue ActiveRecord::RecordNotFound
               status = nil
             end
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed? : nil).save
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success) : nil).save
+            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed?).save
+            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success)).save
           else
             RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
           end
@@ -57,8 +57,8 @@ class RbJournal < ActiveRecord::Base
               rescue ActiveRecord::RecordNotFound
                 status = nil
               end
-              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed? : nil).save
-              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success) : nil).save
+              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed?).save
+              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success)).save
             else
               RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save
             end
