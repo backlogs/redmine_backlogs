@@ -3,8 +3,8 @@ require_dependency 'user'
 module Backlogs
   module TrackerPatch
     def self.included(base) # :nodoc:
-        base.extend(ClassMethods)
-        base.send(:include, InstanceMethods)
+      base.extend(ClassMethods)
+      base.send(:include, InstanceMethods)
     end
   
     module ClassMethods

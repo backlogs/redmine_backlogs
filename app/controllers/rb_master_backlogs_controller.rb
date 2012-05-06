@@ -9,9 +9,9 @@ class RbMasterBacklogsController < RbApplicationController
 
     #TIB (ajout des sprints fermés)
     if @settings[:disable_closed_sprints_to_master_backlogs]
-        c_sprints = []
+      c_sprints = []
     else
-        c_sprints = RbSprint.closed_sprints(@project)
+      c_sprints = RbSprint.closed_sprints(@project)
     end
 
     last_story = RbStory.find(

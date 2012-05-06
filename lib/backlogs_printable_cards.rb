@@ -313,7 +313,6 @@ module BacklogsPrintableCards
         :x2 => ((l['x'].units_to_points + l['dx'].units_to_points) / @template[:x]) * @width,
         :y2 => (1 - ((l['y'].units_to_points + l['dy'].units_to_points) / @template[:y])) * @height
       }
-      return data
     end
 
     def render(x, y, pdf, data)
