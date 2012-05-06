@@ -91,7 +91,7 @@ class RbJournal < ActiveRecord::Base
                                                 RbJournal::REDMINE_PROPERTIES, issue.id]).each {|detail|
           changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
         }
-          
+
       when :chiliproject
         # has to be here because the ChiliProject journal design easily allows for one to delete issue statuses that remain
         # in the journal, because even the already-feeble rails integrity constraints can't be enforced. This also mean it's

@@ -2,7 +2,7 @@ include RbCommonHelper
 
 class RbTaskboardsController < RbApplicationController
   unloadable
-  
+
   def show
     stories = @sprint.stories
     @story_ids    = stories.map{|s| s.id}
@@ -50,5 +50,5 @@ class RbTaskboardsController < RbApplicationController
       format.html { render :layout => "rb" }
     end
   end
-  
+
 end

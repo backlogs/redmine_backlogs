@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'optparse'
 require 'yaml'
-#require 'io/nonblock'
+require 'io/nonblock'
 require 'open3'
 
 def error(msg)
@@ -93,6 +93,10 @@ class Options
 
     opts.on( '-i', '--install', 'DB root password' ) do
       @@options[:install] = true
+    end
+
+    opts.on( '-D', '--dryrun', 'Dry run' ) do
+      @@options[:dryrun] = true
     end
 
     opts.on( '-v', '--verbose', 'Verbose output' ) do
@@ -235,16 +239,22 @@ if Options.install?
         'host' => Options.host,
         'username' => Options.user,
         'password' => Options.pw,
-        'encoding' => 'utf8'
+        #'encoding' => 'utf8'
       }
     }
     File.open(dbfile, 'w') do |f|
       f.write(db.to_yaml)
     end
+
+    fixtures = File.expand_path("~/redmine/setup/issues-#{Options.platform}.yml")
+    issues = YAML::load(File.open(fixtures))
+    issues.values.each{|issue| issue['position'] = issue['id'] }
+    File.open(fixtures, 'w' ) { |out| YAML.dump( issues, out ) }
   end
 end
 
 script.install "cp ~/redmine/setup/database-#{Options.platform}.yml ~/redmine/#{Options.platform}/config/database.yml"
+script.install "cp ~/redmine/setup/issues-#{Options.platform}.yml ~/redmine/#{Options.platform}/test/fixtures/issues.yml"
 
 script.install "echo rvm use `rvm-prompt v g` > ~/redmine/#{Options.platform}/.rvmrc"
 script.install "sed -i -e\"s/gem 'capybara'/gem 'capybara', '=0.3.9'/\" Gemfile"
@@ -295,10 +305,17 @@ else
   script.gem :simplecov
 end
 
+script.gem :rubyzip, '-0.9.7'
 script.gem "cd ~/redmine/#{Options.platform}"
 script.gem "bundle install --system"
 
-script.gem :rubyzip, '-0.9.7'
+#script.gem :multi_json, '-1.3.4'
+#script.gem :addressable, '-2.2.8'
+#script.gem :spork, '-0.9.1'
+
+#Installing addressable (2.2.8) 
+#Installing multi_json (1.3.4) 
+#Installing spork (0.9.1) 
 
 script.gem "
     DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
@@ -346,4 +363,8 @@ if Options.adminpw.to_s != ''
   script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
 end
 
-script.execute
+if Options.dryrun?
+  puts script
+else
+  script.execute
+end

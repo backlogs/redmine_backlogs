@@ -8,7 +8,7 @@ namespace :redmine do
       skip_tables = ['schema_migrations']
 
       ActiveRecord::Base.establish_connection
-      
+
       (ActiveRecord::Base.connection.tables - skip_tables).each do |table_name|
         i = "000"
         File.open("#{RAILS_ROOT}/vendor/plugins/redmine_backlogs/features/fixtures/#{table_name}.yml", 'w') do |file|

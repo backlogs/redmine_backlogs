@@ -132,7 +132,7 @@ module Backlogs
     rescue
       return false
     end
-      
+
     return true
   end
   module_function :configured?
@@ -180,7 +180,7 @@ module Backlogs
       settings
     end
   end
-  
+
   def setting
     SettingsProxy.instance
   end

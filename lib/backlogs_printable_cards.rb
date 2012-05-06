@@ -40,7 +40,7 @@ class String
 
       when 'mm'
         return value * 2.8346457
-        
+
       when 'pt'
         return value
 
@@ -63,7 +63,7 @@ module BacklogsPrintableCards
         @height = layout['height'].units_to_points
         @vertical_pitch = layout['vertical_pitch'].units_to_points
         @vertical_pitch = @height if @vertical_pitch == 0
-  
+
         @left_margin = layout['left_margin'].units_to_points
         @width = layout['width'].units_to_points
         @horizontal_pitch = layout['horizontal_pitch'].units_to_points
@@ -71,7 +71,7 @@ module BacklogsPrintableCards
 
         @across = Integer(layout['across'])
         @down = Integer(layout['down'])
-  
+
         @papersize = layout['papersize'].upcase
         @name = layout['name']
         @source = layout['source']
@@ -82,7 +82,7 @@ module BacklogsPrintableCards
           @valid = false
           return
         end
-  
+
         @paper_width = geom[0]
         @paper_height = geom[1]
         @paper_size = layout['papersize']
@@ -129,7 +129,7 @@ module BacklogsPrintableCards
       malformed_labels = {}
 
       ['avery-iso-templates.xml', 'avery-other-templates.xml', 'avery-us-templates.xml', 'brother-other-templates.xml', 'dymo-other-templates.xml',
-       'maco-us-templates.xml', 'misc-iso-templates.xml', 'misc-other-templates.xml', 'misc-us-templates.xml', 'pearl-iso-templates.xml',  
+       'maco-us-templates.xml', 'misc-iso-templates.xml', 'misc-other-templates.xml', 'misc-us-templates.xml', 'pearl-iso-templates.xml',
        'uline-us-templates.xml', 'worldlabel-us-templates.xml', 'zweckform-iso-templates.xml'].each {|filename|
 
         uri = URI.parse("http://git.gnome.org/browse/glabels/plain/templates/#{filename}")
@@ -163,18 +163,18 @@ module BacklogsPrintableCards
 
         doc = Nokogiri::XML(labels)
         doc.remove_namespaces!
-  
+
         doc.xpath('Glabels-templates/Template').each { |specs|
           label = nil
-  
+
           papersize = specs['size']
           papersize = 'Letter' if papersize == 'US-Letter'
-  
+
           specs.xpath('Label-rectangle').each { |geom|
             margin = nil
             geom.xpath('Markup-margin').each { |m| margin = m['size'] }
             margin = "1mm" if margin.blank?
-  
+
             geom.xpath('Layout').each { |layout|
               label = {
                 'inner_margin' => margin,
@@ -191,9 +191,9 @@ module BacklogsPrintableCards
               }
             }
           }
-  
+
           next if label.nil?
-  
+
           key = "#{specs['brand']} #{specs['part']}"
           label['name'] = key
 
@@ -203,7 +203,7 @@ module BacklogsPrintableCards
             malformed_labels[key] = stock.to_yaml
           else
             @@layouts[key] = stock if not @@layouts[key] or @@layouts[key].source == 'glabel'
-  
+
             specs.xpath('Alias').each { |also|
               aliaskey = "#{also['brand']} #{also['part']}"
               @@layouts[aliaskey] = stock if not @@layouts[aliaskey] or @@layouts[aliaskey].source == 'glabel'
@@ -211,7 +211,7 @@ module BacklogsPrintableCards
           end
         }
       }
-  
+
       File.open(File.dirname(__FILE__) + '/labels.yaml', 'w') do |dump|
         YAML.dump(@@layouts, dump)
       end
@@ -220,7 +220,7 @@ module BacklogsPrintableCards
       end
     end
 
-    @@layouts ||= {} 
+    @@layouts ||= {}
     begin
       layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
       layouts.each_pair{|key, spec|
@@ -332,7 +332,7 @@ module BacklogsPrintableCards
 
               pdf.stroke {
                 if color(obj, 'fill_color')
-                  pdf.fill_rectangle [312,260], 180, 16 
+                  pdf.fill_rectangle [312,260], 180, 16
                 else
                   pdf.rectangle [dim[:x], dim[:y]], dim[:w], dim[:h]
                 end
@@ -417,7 +417,7 @@ module BacklogsPrintableCards
       else
         @story = CardTemplate.new(@label.width, @label.height, 'story')
         @task = CardTemplate.new(@label.width, @label.height, 'task')
-  
+
         fontdir = File.dirname(__FILE__) + '/ttf'
         @pdf.font_families.update(
           "DejaVuSans" => {
@@ -430,10 +430,10 @@ module BacklogsPrintableCards
         @pdf.font "DejaVuSans"
 
         @cards = 0
-      
+
         case Backlogs.setting[:taskboard_card_order]
           when 'tasks_follow_story'
-            stories.each { |story| 
+            stories.each { |story|
               add(story)
 
               if with_tasks
@@ -444,7 +444,7 @@ module BacklogsPrintableCards
             }
 
           when 'stories_then_tasks'
-            stories.each { |story| 
+            stories.each { |story|
               add(story)
             }
 
@@ -452,7 +452,7 @@ module BacklogsPrintableCards
               @cards  = 0
               @pdf.start_new_page
 
-              stories.each { |story| 
+              stories.each { |story|
                 story.descendants.each {|task|
                   add(task)
                 }
@@ -460,28 +460,28 @@ module BacklogsPrintableCards
             end
 
           else # 'story_follows_tasks'
-            stories.each { |story| 
+            stories.each { |story|
               if with_tasks
                 story.descendants.each {|task|
                   add(task)
                 }
               end
-  
+
               add(story)
             }
         end
       end
     end
-  
+
     attr_reader :pdf
-  
+
     def add(issue)
       row = @cards % @label.down
       col = Integer(@cards / @label.down) % @label.across
       @cards += 1
-  
+
       @pdf.start_new_page if row == 0 and col == 0 and @cards != 1
-  
+
       x = @label.left_margin + (@label.horizontal_pitch * col)
       y = @label.paper_height - (@label.top_margin + (@label.vertical_pitch * row))
 
@@ -527,6 +527,6 @@ module BacklogsPrintableCards
 
       card.render(x, y, @pdf, data)
     end
-  
+
   end
 end

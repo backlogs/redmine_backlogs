@@ -126,7 +126,7 @@ def translated(l, s)
   return true if ['zh', 'ja'].include?(l) # aspell doesn't have a language file for these
   speller = Aspell.new(l.gsub('-', '_'))
   speller.set_option('ignore-case', 'true')
-  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
+  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word|
     next if $jargon.include?(word.downcase)
     next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
     unless speller.check(word)

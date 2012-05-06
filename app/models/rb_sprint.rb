@@ -10,7 +10,7 @@ class Burndown
     stories |= RbStory.find(:all,
       :conditions => ["tracker_id in (?) and exists(select 1 from rb_journals where rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = ?)",
                       RbStory.trackers, sprint.id.to_s]) if RbStory.trackers.size > 0
-    
+
     baseline = [0] * (sprint.days(:active).size + 1)
     baseline += [nil] * (1 + (@days.size - baseline.size))
 
@@ -113,7 +113,7 @@ class RbSprint < Version
   def points
     return stories.inject(0){|sum, story| sum + story.story_points.to_i}
   end
-   
+
   def has_wiki_page
     return false if wiki_page_title.blank?
 
@@ -227,7 +227,7 @@ class RbSprint < Version
   end
 
   def impediments
-    @impediments ||= Issue.find(:all, 
+    @impediments ||= Issue.find(:all,
       :conditions => ["id in (
               select issue_from_id
               from issue_relations ir

@@ -63,7 +63,7 @@ class RbTask < Issue
       story.descendants.each_with_index {|task, i|
         task = task.becomes(RbTask)
         task.rank = i + 1
-        tasks << task 
+        tasks << task
       }
     end
     return tasks
@@ -102,7 +102,7 @@ class RbTask < Issue
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
         save
       end
-                                    
+
       result
     else
       false
@@ -181,11 +181,11 @@ class RbTask < Issue
   end
 
   def time_entry_add(params)
-    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user 
+    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user
     # to loose a precious comment if hours is accidently left blank.
     if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
-      @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
-      # Make sure user has permission to edit time entries to allow 
+      @time_entry = TimeEntry.new(:issue => self, :project => self.project)
+      # Make sure user has permission to edit time entries to allow
       # logging time for other users. Use current user in case none is selected
       if User.current.allowed_to?(:edit_time_entries, self.project) && params[:time_entry_user_id].to_i != 0
         @time_entry.user_id = params[:time_entry_user_id]
