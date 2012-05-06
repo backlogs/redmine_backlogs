@@ -161,11 +161,12 @@ class RbJournal < ActiveRecord::Base
     v = self[:value]
 
     return nil if v.nil?
+    return nil if v == "nil"
 
     case property
       when :status_open, :status_success
         return (v == 'true')
-      when :fixed_version_id
+      when :fixed_version_id, :status_id
         return Integer(v)
       when :story_points, :remaining_hours
         return Float(v)
