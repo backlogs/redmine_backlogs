@@ -22,48 +22,68 @@ class RbJournal < ActiveRecord::Base
   belongs_to :issue
 
   def self.journal(j)
+    timestamp = j.created_on
     case Backlogs.platform
       when :redmine
         issue_id = j.journalized_id
-        timestamp = j.created_on
 
         j.details.each{|detail|
           next unless detail.property == 'attr'
-          next unless RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
-          if detail.prop_key == 'status_id'
-            begin
-              status = IssueStatus.find(detail.value)
-            rescue ActiveRecord::RecordNotFound
-              status = nil
-            end
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed?).save
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success)).save
-          else
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
-          end
+          next unless RbJournal::REDMINE_PROPERTIES.include?(journal_property_key(prop))
+          create_journal(j, prop, issue_id, timestamp)
         }
 
       when :chiliproject
         if j.type == 'IssueJournal'
           issue_id = j.journaled_id
-          timestamp = j.created_on
 
           RbJournal::REDMINE_PROPERTIES.each{|prop|
             next if j.details[prop].nil?
-
-            if prop == 'status_id'
-              begin
-                status = IssueStatus.find(j.details[prop][1])
-              rescue ActiveRecord::RecordNotFound
-                status = nil
-              end
-              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_open', :value => status && !status.is_closed?).save
-              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => 'status_success', :value => status && !status.backlog_is?(:success)).save
-            else
-              RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save
-            end
+            create_journal(j, prop, issue_id, timestamp)
           }
         end
+    end
+  end
+
+  def self.create_journal(j, prop, issue_id, timestamp)
+    properties = Array.new
+    if journal_property_key(prop) == 'status_id'
+      begin
+        status = IssueStatus.find(journal_property_value(prop, j))
+      rescue ActiveRecord::RecordNotFound
+        status = nil
+      end
+      properties << { 'prop_key' => 'status_open',
+                      'prop_value' => status && !status.is_closed }
+      properties << { 'prop_key' => 'status_success',
+                      'prop_value' => status && !status.backlog_is?(:success) }
+    else
+      properties << { 'prop_key' => journal_property_key(prop),
+                      'prop_value' => journal_property_value(prop, j) }
+    end
+    properties.each{|property|
+      RbJournal.new(:issue_id => issue_id,
+                    :timestamp => timestamp,
+                    :property => property['prop_key'],
+                    :value => property['prop_value']).save
+    }
+  end
+
+  def self.journal_property_key(property)
+    case Backlogs.platform
+      when :redmine
+        return property.prop_key
+      when :chiliproject
+        return property
+    end
+  end
+
+  def self.journal_property_value(property, j)
+    case Backlogs.platform
+      when :redmine
+        return property.value
+      when :chiliproject
+        return j.details[property][1]
     end
   end
 
