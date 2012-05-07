@@ -56,7 +56,6 @@ bundle exec rake generate_session_store
 script -c "rake db:migrate" -f ~/redmine/cuke-$GEMSET.log
 #script -c "REDMINE_LANG=en rake redmine:load_default_data" -f ~/redmine/defaults.log
 script -c "rake db:migrate:plugins" -f ~/redmine/cuke-$GEMSET.log
-exit
 #rake redmine:backlogs:install batch=true corruptiontest=false labels=false RAILS_ENV=cucumber
 
 rm -f log/cucumber.log
