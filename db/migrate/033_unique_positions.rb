@@ -35,7 +35,7 @@ class UniquePositions < ActiveRecord::Migration
     execute "update issues set unique_position = position"
     remove_column :issues, :position
 
-    add_column :issues, :position, :integer, :null => false, :default => nil
+    add_column :issues, :position, :integer, :null => false
     execute "update issues set position = unique_position"
     remove_column :issues, :unique_position
 
