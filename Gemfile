@@ -46,8 +46,8 @@ group :test do
   gem "poltergeist", "~>0.6.0"
   gem "redgreen" if RUBY_VERSION < "1.9"
   if RAILS_VERSION_IS_3
-    gem "rspec", "=2.5.0"
-    gem "rspec-rails", "=2.5.0"
+    gem "rspec", '~>2.11.0'
+    gem "rspec-rails", '~> 2.11.0'
   else
     gem "rspec", "=1.3.1"
     gem "rspec-rails", "=1.3.3"
