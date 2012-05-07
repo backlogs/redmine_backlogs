@@ -143,17 +143,23 @@ class RbStory < Issue
       pos = (RbStory.maximum(:position) || -1) + 1
       conn.execute("update issues set position = #{pos} where id=#{self.id}")
     else
-      RbStory.transaction do
-        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-        #puts "\nmoving #{self.id}@#{self.position} after #{prev.id}@#{prev.position}"
-        conn.execute('update issues set position_sentinel = position') # damn you MySQL
+      msg = "moving #{self.id}@#{self.position} after #{prev.id}@#{prev.position}\n"
+      begin
+        RbStory.transaction do
+          # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+          conn.execute('update issues set position_sentinel = position') # damn you MySQL
 
-        conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
-        conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
-        conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
+          conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
+            msg << "Gap after #{prev.id}@#{prev.position}\n"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
+          conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
+            msg << "moved"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
+          conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
+            msg << "old gap closed"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
 
-        #conn.execute("select id, position from issues").each{|row| puts row.inspect}
-        conn.execute('update issues set position_sentinel = 0') # damn you MySQL
+          conn.execute('update issues set position_sentinel = 0') # damn you MySQL
+        end
+      rescue
+        raise msg + "oops\n"
       end
     end
   end
