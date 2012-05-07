@@ -29,17 +29,9 @@ class UniquePositions < ActiveRecord::Migration
     execute("update issues set position = (select new_position from _backlogs_tmp_position where id = issue_id)")
     execute("drop table _backlogs_tmp_position")
 
-    remove_index :issues, :position 
-
-    add_column :issues, :unique_position, :integer
-    execute "update issues set unique_position = position"
-    remove_column :issues, :position
-
-    add_column :issues, :position, :integer
-    execute "update issues set position = unique_position"
-    remove_column :issues, :unique_position
     change_column :issues, :position, :integer, :null => false
 
+    remove_index :issues, :position 
     add_index :issues, :position, :unique => true
   end
 
