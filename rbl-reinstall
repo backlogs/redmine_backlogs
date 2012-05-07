@@ -246,17 +246,18 @@ if Options.install?
     File.open(dbfile, 'w') do |f|
       f.write(db.to_yaml)
     end
-
-    case Options.platform
-      when :redmine
-        issues = YAML::load("http://redmine.rubyforge.org/svn/tags/#{Options.version}/test/fixtures/issues.yml")
-      when :chiliproject
-        issues = YAML::load("https://raw.github.com/chiliproject/chiliproject/master/test/fixtures/issues.yml")
-    end
-    issues.values.each{|issue| issue['position'] = issue['id'] }
-    fixtures = File.expand_path("~/redmine/setup/issues-#{Options.platform}.yml")
-    File.open(fixtures, 'w' ) { |out| YAML.dump( issues, out ) }
   end
+
+  issues = case Options.platform
+    when 'redmine'
+      YAML::load(open("http://redmine.rubyforge.org/svn/tags/#{Options.version}/test/fixtures/issues.yml"))
+    when 'chiliproject'
+      YAML::load(open("https://raw.github.com/chiliproject/chiliproject/master/test/fixtures/issues.yml"))
+    else 
+  end
+  issues.values.each{|issue| issue['position'] = issue['id'] }
+  fixtures = File.expand_path("~/redmine/setup/issues-#{Options.platform}.yml")
+  File.open(fixtures, 'w' ) { |out| YAML.dump( issues, out ) }
 end
 
 script.install "cp ~/redmine/setup/database-#{Options.platform}.yml ~/redmine/#{Options.platform}/config/database.yml"
