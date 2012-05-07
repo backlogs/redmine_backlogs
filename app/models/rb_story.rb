@@ -139,7 +139,8 @@ class RbStory < Issue
     end
 
     conn = RbStory.connection
-    if prev.nil?
+    if prev.nil? || prev.position.nil?
+      RAILS_DEFAULT_LOGGER.error "Position ought not to be null!" if prev.position.nil?
       pos = conn.select_value("select coalesce(max(position), -1) + 1 from issues")
       conn.execute("update issues set position = #{pos} where id=#{self.id}")
     else
