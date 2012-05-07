@@ -145,8 +145,6 @@ class RbStory < Issue
     else
       RbStory.transaction do
         pos = self.position
-        puts "placing '#{self.subject}' @ #{self.position} behind '#{prev.subject}' @ #{prev.position}"
-        conn.execute('select position, subject from issues order by position').each{|row| puts row.inspect }
         conn.execute("update issues set position = position + 1 where position > #{prev.position}")
         conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}")
         conn.execute("update issues set position = position - 1 where position >= #{pos}")
