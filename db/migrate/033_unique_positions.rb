@@ -3,7 +3,7 @@ require 'benchmark'
 class UniquePositions < ActiveRecord::Migration
   def self.up
     begin
-      execute("drop table _backlogs_tmp_position")
+      execute("drop table if exists _backlogs_tmp_position")
     rescue
     end
 
