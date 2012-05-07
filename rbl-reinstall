@@ -5,6 +5,7 @@ require 'optparse'
 require 'yaml'
 require 'io/nonblock'
 require 'open3'
+require 'open-uri'
 
 def error(msg)
   puts "echo '#{msg}'\n"
@@ -246,9 +247,14 @@ if Options.install?
       f.write(db.to_yaml)
     end
 
-    fixtures = File.expand_path("~/redmine/setup/issues-#{Options.platform}.yml")
-    issues = YAML::load(File.open(fixtures))
+    case Options.platform
+      when :redmine
+        issues = YAML::load("http://redmine.rubyforge.org/svn/tags/#{Options.version}/test/fixtures/issues.yml")
+      when :chiliproject
+        issues = YAML::load("https://raw.github.com/chiliproject/chiliproject/master/test/fixtures/issues.yml")
+    end
     issues.values.each{|issue| issue['position'] = issue['id'] }
+    fixtures = File.expand_path("~/redmine/setup/issues-#{Options.platform}.yml")
     File.open(fixtures, 'w' ) { |out| YAML.dump( issues, out ) }
   end
 end
