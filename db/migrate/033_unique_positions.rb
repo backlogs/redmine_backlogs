@@ -31,8 +31,10 @@ class UniquePositions < ActiveRecord::Migration
 
     change_column :issues, :position, :integer, :null => false
 
-    remove_index :issues, :position 
-    add_index :issues, :position, :unique => true
+    # Needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+    add_column :issues, :position_sentinel, :integer, :null=>false, :default => 0
+
+    add_index :issues, [:position, :position_sentinel], :unique => true
   end
 
   def self.down

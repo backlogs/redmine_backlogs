@@ -139,16 +139,21 @@ class RbStory < Issue
     end
 
     conn = RbStory.connection
-    if prev.nil? || prev.position.blank?
-      RAILS_DEFAULT_LOGGER.error "Position ought not to be null!" if prev && prev.position.blank?
-      pos = conn.select_value("select coalesce(max(position), -1) + 1 from issues")
+    if prev.nil?
+      pos = (RbStory.maximum(:position) || -1) + 1
       conn.execute("update issues set position = #{pos} where id=#{self.id}")
     else
       RbStory.transaction do
-        pos = self.position
-        conn.execute("update issues set position = position + 1 where position > #{prev.position}")
-        conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}")
-        conn.execute("update issues set position = position - 1 where position >= #{pos}")
+        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+        #puts "\nmoving #{self.id}@#{self.position} after #{prev.id}@#{prev.position}"
+        conn.execute('update issues set position_sentinel = position') # damn you MySQL
+
+        conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
+        conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
+        conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
+
+        #conn.execute("select id, position from issues").each{|row| puts row.inspect}
+        conn.execute('update issues set position_sentinel = 0') # damn you MySQL
       end
     end
   end

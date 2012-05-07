@@ -180,7 +180,10 @@ module Backlogs
       end
 
       def backlogs_after_destroy
+        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+        Issue.connection.execute('update issues set position_sentinel = position') # damn you MySQL
         Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
+        Issue.connection.execute('update issues set position_sentinel = 0') # damn you MySQL
         RbJournal.destroy_all(:issue_id => self.id)
       end
 
