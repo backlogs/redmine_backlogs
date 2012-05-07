@@ -96,6 +96,8 @@ pt-BR:
   label_not_prioritized: "N\xC3\xA3o priorizadas"
   label_points: Pontos
   label_points_accepted: points accepted
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Descer
   label_points_burn_up: Subir
   label_points_committed: points committed

@@ -93,6 +93,8 @@ es:
   label_no_start: no start
   label_not_prioritized: no priorizado
   label_points_accepted: puntos aceptados
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Abajo
   label_points_burn_up: Arriba
   label_points_committed: puntos realizados
