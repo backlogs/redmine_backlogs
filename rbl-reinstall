@@ -3,6 +3,8 @@
 require 'rubygems'
 require 'optparse'
 require 'yaml'
+#require 'io/nonblock'
+require 'open3'
 
 def error(msg)
   puts "echo '#{msg}'\n"
@@ -58,6 +60,15 @@ class Script
   def to_s
     return @script
   end
+
+  def execute
+    stdin, stdout, stderr = Open3.popen3('bash')
+    stdout.sync = true
+    stdin.write("#{self}\nexit\n")
+    while line = stdout.gets
+      print line
+    end
+  end
 end
 
 def exists(path)
@@ -101,6 +112,10 @@ class Options
     end
     opts.on( '-P', '--pw PASSWORD', 'DB password' ) do |pw|
       @@options[:pw] = pw
+    end
+    @@options[:host] ||= 'localhost'
+    opts.on( '-H', '--host HOSTNAME', 'MySQL host' ) do |host|
+      @@options[:host] = host
     end
 
     opts.on( '-a', '--adminpw PASSWORD', 'Admin password' ) do |pw|
@@ -183,14 +198,12 @@ class Options
   }
 
   verify('~/redmine')
-  verify("~/redmine/setup/database-#{Options.platform}.yml")
   verify("~/redmine/redmine_backlogs")
 end
 
 script = Script.new
 
 Options.status.each{|status| script << status }
-script << 'echo "*** PIPE OUTPUT OF THIS SCRIPT THROUGH BASH ***"'
 script << 'set -e'
 script << 'export RAILS_ENV=development'
 script << 'cd ~/redmine'
@@ -206,16 +219,42 @@ script.chiliproject "git checkout v#{Options.version}"
 script.install "cd ~/redmine/#{Options.platform}"
 script.install "ln -s ~/redmine/redmine_backlogs ~/redmine/#{Options.platform}/vendor/plugins"
 script.install "ln -s ~/redmine/redmine_backlogs/features ~/redmine/#{Options.platform}"
+
+if Options.install?
+  setup = File.expand_path("~/redmine/setup")
+  File.mkdir(setup) unless File.exist?(setup)
+
+  dbfile = File.join(setup, "database-#{Options.platform}.yml")
+  unless File.exist?(dbfile)
+    db = {}
+    ['production', 'development', 'cucumber', 'test'].each{|env|
+      db[env] = {
+        'adapter' => 'mysql',
+        #'database' => "#{Options.platform}-#{env}".gsub(/-production$/, ''),
+        'database' => Options.platform,
+        'host' => Options.host,
+        'username' => Options.user,
+        'password' => Options.pw,
+        'encoding' => 'utf8'
+      }
+    }
+    File.open(dbfile, 'w') do |f|
+      f.write(db.to_yaml)
+    end
+  end
+end
+
 script.install "cp ~/redmine/setup/database-#{Options.platform}.yml ~/redmine/#{Options.platform}/config/database.yml"
+
 script.install "echo rvm use `rvm-prompt v g` > ~/redmine/#{Options.platform}/.rvmrc"
 script.install "sed -i -e\"s/gem 'capybara'/gem 'capybara', '=0.3.9'/\" Gemfile"
 
 script.rvm "rvm --force gemset empty #{Options.platform}"
 
-script.rvm 'rvm rubygems latest-1.8'
+script.rvm 'rvm rubygems 1.6.2' # removes annoying "Gem.source_index is deprecated, use Specification." warnings
 
-script.rvm "touch ~/redmine/redmine_backlogs/Gemfile.dev"
-script.rvm "touch ~/redmine/#{Options.platform}/Gemfile.dev"
+script.rvm "touch ~/redmine/redmine_backlogs/backlogs.dev"
+script.rvm "touch ~/redmine/#{Options.platform}/backlogs.dev"
 
 script.gem :rack, '1.1.1'
 script.gem :rails, '2.3.14'
@@ -259,8 +298,7 @@ end
 script.gem "cd ~/redmine/#{Options.platform}"
 script.gem "bundle install --system"
 
-script.gem :cucumber, '-1.1.9'
-script.gem :gherkin, '-2.9.3'
+script.gem :rubyzip, '-0.9.7'
 
 script.gem "
     DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
@@ -270,7 +308,8 @@ script.gem "
       exit
     fi
 "
-script.rvm "./script/generate cucumber --skip --spork"
+script.install "cd ~/redmine/#{Options.platform}"
+script.install "./script/generate cucumber --skip --spork"
 
 script.database "cd ~/redmine/#{Options.platform}"
 
@@ -283,7 +322,7 @@ script.database "
 script.database "echo \"create database #{Options.platform} character set utf8;\" | mysql -u root -p#{Options.rootpw} mysql"
 
 script.database "
-  DBUSER=`echo \"select concat(User, '@', Host) from mysql.user;\" | mysql -u root -proot | grep '^#{Options.user}@localhost$' | wc -l`
+  DBUSER=`echo \"select concat(User, '@', Host) from mysql.user;\" | mysql -u root -p#{Options.rootpw} | grep '^#{Options.user}@localhost$' | wc -l`
   if [[ \"$DBUSER\" = \"0\" ]]; then
     echo \"create user '#{Options.user}'@'localhost' identified by '#{Options.pw}';\" | mysql -u root -p#{Options.rootpw} mysql
   fi
@@ -307,4 +346,4 @@ if Options.adminpw.to_s != ''
   script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
 end
 
-puts script
+script.execute
