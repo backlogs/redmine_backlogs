@@ -8,9 +8,10 @@ class Burndown
 
     stories = sprint.stories
     stories |= RbStory.find(:all,
-      :conditions => ["tracker_id in (?) and exists(select 1 from rb_journals where rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = ?)",
-                      RbStory.trackers, sprint.id.to_s]) if RbStory.trackers.size > 0
-    
+      :joins => ["JOIN rb_journals ON rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = " + sprint.id.to_s],
+      :conditions => ["tracker_id in (?)",
+                      RbStory.trackers]) if RbStory.trackers.size > 0
+
     baseline = [0] * (sprint.days(:active).size + 1)
     baseline += [nil] * (1 + (@days.size - baseline.size))
 
