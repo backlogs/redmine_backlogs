@@ -21,7 +21,7 @@ module Backlogs
     module InstanceMethods
       def journalized_update_attributes!(attribs)
         # workaround for #493
-        if self.is_a?(Issue)
+        if self.class == Issue
           init_journal(User.current)
           return self.update_attributes!(attribs)
         else
@@ -32,7 +32,7 @@ module Backlogs
 
       def journalized_update_attributes(attribs)
         # workaround for #493
-        if self.is_a?(Issue)
+        if self.class == Issue
           init_journal(User.current)
           return self.update_attributes(attribs)
         else
@@ -43,7 +43,7 @@ module Backlogs
 
       def journalized_update_attribute(attrib, v)
         # workaround for #493
-        if self.is_a?(Issue)
+        if self.class == Issue
           init_journal(User.current)
           self.becomes(Issue).update_attribute(attrib, v)
         else
