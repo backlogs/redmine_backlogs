@@ -21,18 +21,36 @@ module Backlogs
 
     module InstanceMethods
       def journalized_update_attributes!(attribs)
-        init_journal(User.current)
-        return self.becomes(Issue).update_attributes!(attribs)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          return self.update_attributes!(attribs)
+        else
+          Issue.find(self.id).journalized_update_attributes!(attribs)
+          self.reload
+        end
       end
 
       def journalized_update_attributes(attribs)
-        init_journal(User.current)
-        return self.becomes(Issue).update_attributes(attribs)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          return self.update_attributes(attribs)
+        else
+          Issue.find(self.id).journalized_update_attributes(attribs)
+          self.reload
+        end
       end
 
       def journalized_update_attribute(attrib, v)
-        init_journal(User.current)
-        self.becomes(Issue).update_attribute(attrib, v)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          self.becomes(Issue).update_attribute(attrib, v)
+        else
+          Issue.find(self.id).journalized_update_attribute(attrib, v)
+          self.reload
+        end
       end
 
       def is_story?
