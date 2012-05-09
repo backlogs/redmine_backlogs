@@ -167,7 +167,6 @@ class RbTask < Issue
       days = sprint.days(:active)
 
       earliest_estimate = history(:estimated_hours, days).compact[0]
-      sprint_start_day = days.index{|d| d >= sprint.sprint_start_date}
 
       series = Backlogs::MergedArray.new
       series.merge(:hours => history(:remaining_hours, days))
@@ -175,7 +174,7 @@ class RbTask < Issue
       series.each_with_index{|d, i|
         if d.sprint != sprint.id
           d.hours = nil
-        elsif i == sprint_start_day && d.hours.to_f == 0 && earliest_estimate.to_f != 0.0
+        elsif i == 0 && d.hours.to_f == 0 && earliest_estimate.to_f != 0.0
           # set hours to earliest estimate *within sprint* if first day is not filled out
           d.hours = earliest_estimate
         end

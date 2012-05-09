@@ -3,8 +3,6 @@ require_dependency 'project'
 module Backlogs
   class Statistics
     def initialize(project)
-      puts "Rebuilding statistics for #{project.identifier}" if Backlogs.development?
-
       @project = project
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
