@@ -3,7 +3,7 @@ namespace :redmine do
     desc "Remove duplicate positions in the issues table"
     task :fix_positions => :environment do
       begin
-        RbStory.connection.execute("drop table _backlogs_tmp_position")
+        RbStory.connection.execute("drop table if exists _backlogs_tmp_position")
       rescue
       end
         
