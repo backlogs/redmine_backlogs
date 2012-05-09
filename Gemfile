@@ -15,6 +15,7 @@ if File.exist?(File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev
   gem 'autotest-rails'
   gem "capybara", "=0.3.9"
   gem "cucumber", "=1.1.2"
+  gem "culerity", "=0.2.15"
   gem "database_cleaner"
   gem "gherkin", "=2.6.2"
   gem "redgreen" if RUBY_VERSION < "1.9"

@@ -134,6 +134,10 @@ class Options
     opts.on( '-V', '--version VERSION', 'Platform version' ) do |version|
     end
 
+    @@options[:ruby] = RUBY_VERSION.gsub(/^(^[0-9]+\.[0-9]+).*/, '\1')
+    opts.on( '--ruby VERSION', 'Ruby version' ) do |version|
+    end
+
     # This displays the help screen, all programs are
     # assumed to have this option.
     opts.on( '-h', '--help', 'Display this screen' ) do
@@ -229,18 +233,18 @@ if Options.install?
   setup = File.expand_path("~/redmine/setup")
   File.mkdir(setup) unless File.exist?(setup)
 
-  dbfile = File.join(setup, "database-#{Options.platform}.yml")
+  dbfile = File.join(setup, "database-#{Options.platform}-#{Options.ruby}.yml")
   unless File.exist?(dbfile)
     db = {}
     ['production', 'development', 'cucumber', 'test'].each{|env|
       db[env] = {
-        'adapter' => 'mysql',
+        'adapter' => 'mysql' + (Options.ruby == '1.8' ? '' : '2'),
         #'database' => "#{Options.platform}-#{env}".gsub(/-production$/, ''),
         'database' => Options.platform,
         'host' => Options.host,
         'username' => Options.user,
         'password' => Options.pw,
-        #'encoding' => 'utf8'
+        'encoding' => 'utf8'
       }
     }
     File.open(dbfile, 'w') do |f|
@@ -260,7 +264,7 @@ if Options.install?
   File.open(fixtures, 'w' ) { |out| YAML.dump( issues, out ) }
 end
 
-script.install "cp ~/redmine/setup/database-#{Options.platform}.yml ~/redmine/#{Options.platform}/config/database.yml"
+script.install "cp ~/redmine/setup/database-#{Options.platform}-#{Options.ruby}.yml ~/redmine/#{Options.platform}/config/database.yml"
 script.install "cp ~/redmine/setup/issues-#{Options.platform}.yml ~/redmine/#{Options.platform}/test/fixtures/issues.yml"
 
 script.install "echo rvm use `rvm-prompt v g` > ~/redmine/#{Options.platform}/.rvmrc"
@@ -268,61 +272,21 @@ script.install "sed -i -e\"s/gem 'capybara'/gem 'capybara', '=0.3.9'/\" Gemfile"
 
 script.rvm "rvm --force gemset empty #{Options.platform}"
 
-script.rvm 'rvm rubygems 1.6.2' # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+if Options.ruby == '1.8'
+  script.rvm 'rvm rubygems 1.6.2' # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+else
+  script.rvm 'rvm rubygems latest-1.8' # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+end
 
 script.rvm "touch ~/redmine/redmine_backlogs/backlogs.dev"
 script.rvm "touch ~/redmine/#{Options.platform}/backlogs.dev"
 
-script.gem :rack, '1.1.1'
-script.gem :rails, '2.3.14'
-script.gem :i18n, '0.4.2'
-
-script.gem :icalendar
-script.gem :prawn
-script.gem :holidays , '1.0.3'
-script.gem :'open-uri-cached'
-script.gem :nokogiri
-
-# dev & testing
-#script.gem :gherkin, '2.6.2'
-script.gem :'term-ansicolor', '1.0.7'
-script.gem :rubyzip, '0.9.7'
-
-script.gem :ZenTest ,'4.5.0'
-script.gem :rspec, '1.3.1'
-#script.gem :'cucumber-rails', '0.3.2'
-#script.gem :cucumber, '1.1.8'
-script.gem :culerity, '0.2.15'
-
-script.gem :capybara, '0.3.9'
-script.gem :spork #, '0.8.5'
-script.gem :database_cleaner
-script.gem :redgreen
-script.gem :'rspec-rails', '1.3.3'
-script.gem :timecop
-script.gem :thin
-script.gem :mysql
-
 script.gem :bundler
 
-if RUBY_VERSION =~ /^1\.8\./
-  script.gem :system_timer
-  script.gem :rcov
-else
-  script.gem :simplecov
-end
-
-script.gem :rubyzip, '-0.9.7'
 script.gem "cd ~/redmine/#{Options.platform}"
 script.gem "bundle install --system"
-
-#script.gem :multi_json, '-1.3.4'
-#script.gem :addressable, '-2.2.8'
-#script.gem :spork, '-0.9.1'
-
-#Installing addressable (2.2.8) 
-#Installing multi_json (1.3.4) 
-#Installing spork (0.9.1) 
+#script.gem "bundle install --path=vendor/bundle"
+script.gem "echo Bundler done!"
 
 script.gem "
     DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
@@ -332,6 +296,7 @@ script.gem "
       exit
     fi
 "
+
 script.install "cd ~/redmine/#{Options.platform}"
 script.install "./script/generate cucumber --skip --spork"
 
@@ -360,7 +325,8 @@ if exists("~/redmine/setup/#{Options.platform}.sql.gz")
 end
 
 script.database "rake #{Options.verbose? ? '--trace' : ''} db:migrate"
-script.database "bundle exec rake #{Options.verbose? ? '--trace' : ''} generate_session_store"
+
+script.database "rake #{Options.verbose? ? '--trace' : ''} generate_session_store"
 script.database "REDMINE_LANG=en rake #{Options.verbose? ? '--trace' : ''} redmine:load_default_data" unless exists("~/redmine/setup/#{Options.platform}.sql.gz")
 script.database "rake #{Options.verbose? ? '--trace' : ''} db:migrate:plugins"
 script.database "labels=no story_trackers=Story task_tracker=Task rake #{Options.verbose? ? '--trace' : ''} redmine:backlogs:install"
