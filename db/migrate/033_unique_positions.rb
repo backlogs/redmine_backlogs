@@ -2,10 +2,7 @@ require 'benchmark'
 
 class UniquePositions < ActiveRecord::Migration
   def self.up
-    begin
-      execute("drop table _backlogs_tmp_position")
-    rescue Exception
-    end
+    execute("drop table if exists _backlogs_tmp_position")
 
     execute("create table _backlogs_tmp_position (issue_id int not null unique, new_position int not null unique)")
 

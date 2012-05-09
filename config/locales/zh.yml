@@ -6,10 +6,14 @@ zh:
   backlogs_any: !binary |
     5omA5pyJ
 
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: !binary |
     5omT5Y2w5Y2h54mH55qE5qCH562+57G75Z6L
 
   backlogs_impediment: Impediment
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: !binary |
     54K55pWw5raI6ICXIOeHg+i1ty/nh4PlsL0=
 
@@ -23,6 +27,7 @@ zh:
   backlogs_statistics_active_failed: Project shows no activity
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
@@ -56,10 +61,6 @@ zh:
   backlogs_wiki_template: !binary |
     5Yay5Yi655qEd2lraemhtemdoueahOaooeadvw==
 
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: !binary |
     57yW6L6Rd2lraemhtemdog==
 
@@ -85,13 +86,12 @@ zh:
 
   error_release_end_after_start: Release end date has to be after start date
   error_taken: is already in use
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: !binary |
     QmFja2xvZ+exu+Weiw==
 
   field_blocks: "[[Blocks]]"
-  field_remaining_hours: Remaining (hours)
   field_initial_story_points: Initial story points
   field_name: "[[Name]]"
   field_number_of_snapshots: Saved point snapshots
@@ -101,6 +101,7 @@ zh:
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_remaining_hours: Remaining (hours)
   field_story_points: !binary |
     5pWF5LqL54K55pWw
 
@@ -134,12 +135,12 @@ zh:
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_hours: !binary |
     5bCP5pe2
 
+  label_ideal: ideal
   label_impediments: Impediments
   label_master_backlog: !binary |
     QmFja2xvZ+aOp+WItuadvw==
@@ -230,7 +231,7 @@ zh:
   story_status: Status
   today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
   warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!

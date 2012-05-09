@@ -2,8 +2,12 @@
 en-GB: 
   backlogs_active: active
   backlogs_any: any
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: Label types for card printing
   backlogs_impediment: Impediment
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Points burn up/down
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
@@ -11,6 +15,7 @@ en-GB:
   backlogs_statistics_active_failed: Project shows no activity
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
@@ -34,10 +39,6 @@ en-GB:
   backlogs_task: Task
   backlogs_task_tracker: Task tracker
   backlogs_wiki_template: Template for sprint wiki page
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: Edit wiki page
   comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
@@ -62,9 +63,9 @@ en-GB:
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_remaining_hours: Remaining (hours)
   field_story_points: Story points
   field_subject: Subject
-  field_remaining_hours: Remaining (hours)
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on
@@ -80,10 +81,10 @@ en-GB:
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_hours: hours
+  label_ideal: ideal
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_new_sprint: New Sprint

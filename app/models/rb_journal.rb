@@ -16,8 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class RbJournal < ActiveRecord::Base
-  REDMINE_PROPERTIES = ['fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
-  JOURNALED_PROPERTIES = ['fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
+  REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
+  JOURNALED_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
 
   belongs_to :issue
 
@@ -177,7 +177,7 @@ class RbJournal < ActiveRecord::Base
         return (v == 'true')
       when :fixed_version_id
         return Integer(v)
-      when :story_points, :remaining_hours
+      when :story_points, :remaining_hours, :estimated_hours
         return Float(v)
       else
         raise "Unknown journal property #{property.inspect}"
