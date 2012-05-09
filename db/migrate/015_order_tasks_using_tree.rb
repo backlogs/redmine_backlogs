@@ -6,7 +6,7 @@ class OrderTasksUsingTree < ActiveRecord::Migration
         RbTask.find(:all, :conditions => ["tracker_id = ?", RbTask.tracker], :order => "project_id ASC, parent_id ASC, position ASC").each do |t|
           begin
             t.move_after last_task[t.parent_id] if last_task[t.parent_id]
-          rescue Exception
+          rescue
             # nested tasks break this migrations. Task order not that
             # big a deal, proceed
           end
