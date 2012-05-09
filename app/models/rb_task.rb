@@ -165,6 +165,9 @@ class RbTask < Issue
 
     return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
       days = sprint.days(:active)
+
+      earliest_estimate = history(:estimated_hours, days).compact[0]
+
       series = Backlogs::MergedArray.new
       series.merge(:hours => history(:remaining_hours, days))
       series.merge(:sprint => history(:fixed_version_id, days))
@@ -172,8 +175,9 @@ class RbTask < Issue
       series.each{|d|
         if d.sprint != sprint.id
           d.hours = nil
-        elsif d.sprint_start
-          d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
+        elsif d.sprint_start && (d.hours.to_f == 0) && (earliest_estimate.to_f != 0.0)
+          # set hours to earliest estimate *within sprint* if first day is not filled out
+          d.hours = earliest_estimate
         end
       }
       series.series(:hours)
