@@ -52,7 +52,7 @@ fr:
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau."
   error_release_end_after_start: "La date de fin de la release doit être après la date de début."
   error_taken: déjà utilisé
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigné à
   field_backlogs_issue_type: Type de backlog
   field_blocks: Blocks
@@ -74,7 +74,7 @@ fr:
   field_velocity_based_estimate: "Estimation basée sur la vélocité"
   label_back_to_project: "Retour à la page backlog de produit"
   label_backlogs: Backlog
-  label_backlogs_unconfigured: "Vous n'avez pas encore configuré les backlog. Aller à {{administration}} > {{plugins}}, et cliquez sur le lien {{configure}} pour ce plugin. Une fois que vous aurez défini les champs, revenez à cette page pour utiliser l'outil"
+  label_backlogs_unconfigured: "Vous n'avez pas encore configuré les backlog. Aller à %{administration} > %{plugins}, et cliquez sur le lien %{configure} pour ce plugin. Une fois que vous aurez défini les champs, revenez à cette page pour utiliser l'outil"
   label_burndown: Burndown
   label_chart_options: Options du graphique
   label_hours: heures
@@ -146,7 +146,7 @@ fr:
   label_sprint_backlog: Backlog dz sprint
   label_sprint_cards: Cartes de sprint
   label_sprint_impediments: Bloquants du Sprint
-  label_sprint_name: Sprint "{{name}}"
+  label_sprint_name: Sprint "%{name}"
   label_stories: "Stories"
   label_stories_tasks: "Stories/Tâches"
   label_task_board: "Tableau des tâches"
@@ -166,7 +166,7 @@ fr:
   rb_auto_refresh: Auto-Rafraichir backlogs/tableau des tâches (seconds)
   today_not_in_release_msg: La date actuelle n'est pas dans l'intervalle des dates de la release. Voulez-vous vraiment sauvegarder un snapshot ?
   today_not_in_release_warning: "Avertissement : la date actuelle n'est dans l'intervalle des dates de la release."
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "Utiliser un champ texte au lieu d'une liste déroulante si c'est vide"
   warning_reset_sprint: |
     VOUS ÊTES SUR LE POINT DE RÉINITIALISER CE SPRINT !

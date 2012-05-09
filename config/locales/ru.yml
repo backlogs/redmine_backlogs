@@ -109,7 +109,7 @@ ru:
     0LDQu9Cw
 
   error_taken: is already in use
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: !binary |
     0KLQuNC/INCx0Y3QutC70L7Qs9Cw
@@ -340,7 +340,7 @@ ru:
     stC40YLQtdC70YzQvdC+INC20LXQu9Cw0LXRgtC1INGB0L7RhdGA0LDQvdC4
     0YLRjCDRgdC90LjQvNC+0Lo/
 
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
   warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!
