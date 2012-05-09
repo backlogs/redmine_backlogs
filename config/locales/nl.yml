@@ -2,8 +2,12 @@
 nl: 
   backlogs_active: lopend
   backlogs_any: alle
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: Label type voor kaartjes
   backlogs_impediment: Impediment
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Points burn omhoog/omlaag
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
@@ -11,6 +15,7 @@ nl:
   backlogs_statistics_active_failed: Project is niet actief
   backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over de sprints heen
   backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet stabiel over de sprints heen
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog heeft stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is leeg
   backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog hebben sizes
@@ -34,10 +39,6 @@ nl:
   backlogs_task: Taak
   backlogs_task_tracker: Taak tracker
   backlogs_wiki_template: Template voor sprint wiki pagina
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: Wijzig wiki page
   comma_delimited_numbers: Komma-gescheiden getallen
   current_open_story_points: Story points open op dit moment
@@ -62,9 +63,9 @@ nl:
   field_priority: Prioriteit
   field_release_end_date: Eind datum van de release
   field_release_start_date: Start datum release
+  field_remaining_hours: Remaining (hours)
   field_story_points: Story points
   field_subject: Onderwerp
-  field_remaining_hours: Remaining (hours)
   field_time_entry_comments: Tijd registratie commentaar
   field_time_entry_hours: Tijd registratie uren
   field_time_entry_spend_on: Tijd registratie spendeer aan
@@ -80,10 +81,10 @@ nl:
   label_column_width: Kolom breedte
   label_download_sprint: Download
   label_hide_completed_sprints: Verberg gecompleteerde sprints
-  label_ideal: ideaal
   label_hours_remaining: resterende uren
   label_hours_required_burn_rate: benodigde burn rate (uren)
   label_hours: uren
+  label_ideal: ideaal
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_new_sprint: New Sprint

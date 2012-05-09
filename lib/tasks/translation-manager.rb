@@ -69,7 +69,7 @@ class Hash
   end
 end
 
-webdir = dir('www.redminebacklogs.net')
+webdir = dir('www')
 webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
 translations = dir('redmine_backlogs/config/locales')
 

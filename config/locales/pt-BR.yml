@@ -2,8 +2,12 @@
 pt-BR: 
   backlogs_active: Ativo
   backlogs_any: Nenhum
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: "Tipo de r\xC3\xB3tulo para impress\xC3\xA3o no cart\xC3\xA3o"
   backlogs_impediment: Impediment
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Pontos usados subir/descer
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
@@ -11,6 +15,7 @@ pt-BR:
   backlogs_statistics_active_failed: Project shows no activity
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
@@ -34,10 +39,6 @@ pt-BR:
   backlogs_task: Tarefas
   backlogs_task_tracker: "Seq\xC3\xBC\xC3\xAAncia da tarefa"
   backlogs_wiki_template: "Modelo para a p\xC3\xA1gina wiki sprint"
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: "Editar a p\xC3\xA1gina no wiki"
   comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
@@ -55,7 +56,6 @@ pt-BR:
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Tipo de backlog
   field_blocks: Blocos
-  field_remaining_hours: Remaining (hours)
   field_initial_story_points: Initial story points
   field_name: Nome
   field_number_of_snapshots: Saved point snapshots
@@ -65,6 +65,7 @@ pt-BR:
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_remaining_hours: Remaining (hours)
   field_story_points: "Pontos de est\xC3\xB3ria"
   field_subject: Assunto
   field_time_entry_comments: Time Entry Comments
@@ -83,9 +84,9 @@ pt-BR:
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
   label_hours: Horas
-  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
+  label_ideal: ideal
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_new_sprint: New Sprint

@@ -2,8 +2,12 @@
 es: 
   backlogs_active: activo
   backlogs_any: cualquiera
-  backlogs_card_specification: Tipos de etiqueta para impresión de tarjetas
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
+  backlogs_card_specification: "Tipos de etiqueta para impresi\xC3\xB3n de tarjetas"
   backlogs_impediment: Impedimento
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Burn up/down de puntos
   backlogs_product_backlog: Backlog del producto
   backlogs_sprints: Sprints
@@ -11,13 +15,14 @@ es:
   backlogs_statistics_active_failed: Proyecto no presenta actividad
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Backlog del producto tiene historias
-  backlogs_statistics_product_backlog_filled_failed: Backlog del producto está vacío
+  backlogs_statistics_product_backlog_filled_failed: "Backlog del producto est\xC3\xA1 vac\xC3\xADo"
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
   backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
   backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
   backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_stddev: "Desviación estándar en horas vs. puntos: %{value} horas"
+  backlogs_statistics_sizing_stddev: "Desviaci\xC3\xB3n est\xC3\xA1ndar en horas vs. puntos: %{value} horas"
   backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
   backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
   backlogs_statistics_sprints: Measured over %{value} sprints
@@ -34,10 +39,6 @@ es:
   backlogs_task: Tarea
   backlogs_task_tracker: Seguimiento de Tarea
   backlogs_wiki_template: "Plantilla para p\xC3\xA1gina de Spring"
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: Editar wiki
   comma_delimited_numbers: "N\xC3\xBAmeros delimitados por comas"
   current_open_story_points: "Puntos de la actual historia abierta:"
@@ -62,9 +63,9 @@ es:
   field_priority: Prioridad
   field_release_end_date: Fecha final del release
   field_release_start_date: Fecha inicial del release
+  field_remaining_hours: Restante (horas)
   field_story_points: Puntos de historia
   field_subject: Tema
-  field_remaining_hours: Restante (horas)
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on
@@ -80,10 +81,10 @@ es:
   label_column_width: Ancho de columna
   label_download_sprint: Descargar
   label_hide_completed_sprints: Ocultar Sprints completados
-  label_ideal: ideal
   label_hours_remaining: horas faltantes
   label_hours_required_burn_rate: es necesario el burn rate (horas)
   label_hours: horas
+  label_ideal: ideal
   label_impediments: Impedimentos
   label_master_backlog: Principal Backlog
   label_new_sprint: Nuevo Sprint
