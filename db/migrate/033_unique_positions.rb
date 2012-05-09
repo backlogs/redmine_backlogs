@@ -4,7 +4,7 @@ class UniquePositions < ActiveRecord::Migration
   def self.up
     begin
       execute("drop table _backlogs_tmp_position")
-    rescue
+    rescue Exception
     end
 
     execute("create table _backlogs_tmp_position (issue_id int not null unique, new_position int not null unique)")
@@ -32,9 +32,9 @@ class UniquePositions < ActiveRecord::Migration
     change_column :issues, :position, :integer, :null => false
 
     # Needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-    add_column :issues, :position_sentinel, :integer, :null=>false, :default => 0
+    add_column :issues, :position_lock, :integer, :null=>false, :default => 0
 
-    add_index :issues, [:position, :position_sentinel], :unique => true
+    add_index :issues, [:position, :position_lock], :unique => true
   end
 
   def self.down

@@ -140,26 +140,19 @@ class RbStory < Issue
 
     conn = RbStory.connection
     if prev.nil?
-      pos = (RbStory.maximum(:position) || -1) + 1
+      pos = (RbStory.minimum(:position) || 1) - 1
       conn.execute("update issues set position = #{pos} where id=#{self.id}")
     else
       msg = "moving #{self.id}@#{self.position} after #{prev.id}@#{prev.position}\n"
-      begin
-        RbStory.transaction do
-          # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-          conn.execute('update issues set position_sentinel = position') # damn you MySQL
+      RbStory.transaction do
+        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+        conn.execute('update issues set position_lock = position') # damn you MySQL
 
-          conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
-            msg << "Gap after #{prev.id}@#{prev.position}\n"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
-          conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
-            msg << "moved"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
-          conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
-            msg << "old gap closed"; conn.execute("select id, position from issues").each{|row| msg << row.inspect + "\n"}
+        conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
+        conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
+        conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
 
-          conn.execute('update issues set position_sentinel = 0') # damn you MySQL
-        end
-      rescue
-        raise msg + "oops\n"
+        conn.execute('update issues set position_lock = 0') # damn you MySQL
       end
     end
   end
@@ -196,13 +189,7 @@ class RbStory < Issue
   end
 
   def rank
-    if self.position.blank?
-      extras = ['and ((issues.position is NULL and issues.id <= ?) or not issues.position is NULL)', self.id]
-    else
-      extras = ['and not issues.position is NULL and issues.position <= ?', self.position]
-    end
-
-    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, extras), :joins => [:status, :project])
+    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, ['and issues.position <= ?', self.position]), :joins => [:status, :project])
 
     return @rank
   end

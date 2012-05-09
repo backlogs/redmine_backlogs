@@ -22,43 +22,8 @@ module Backlogs
         unloadable # Send unloadable so it will not be unloaded in development
         base.add_available_column(QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points"))
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
-
-        # couldn't get HAVING to work, so a subselect will have to
-        # do
-        story_sql = "from issues story
-                         where
-                          story.root_id = issues.root_id
-                          and story.lft in (
-                            select max(story_lft.lft)
-                            from issues story_lft
-                            where story_lft.root_id = issues.root_id
-                            and story_lft.tracker_id in (<%= RbStory.trackers(:type=>:string) %>)
-                            and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
-                          )"
-
-        base.add_available_column(QueryColumn.new(:position,
-                                      :sortable => [
-                                        # sprint startdate
-                                        "coalesce((select sprint_start_date from versions where versions.id = issues.fixed_version_id), '1900-01-01')",
-
-                                        # sprint id, in case start dates are the same
-                                        "(select id from versions where versions.id = issues.fixed_version_id)",
-
-                                        # make sure stories with NULL position sort-last
-                                        RbERB.new("(select case when story.position is null then 1 else 0 end #{story_sql})"),
-
-                                        # story position
-                                        RbERB.new("(select story.position #{story_sql})"),
-
-                                        # story ID, in case story positions are the same (SHOULD NOT HAPPEN!).
-                                        RbERB.new("(select story.id #{story_sql})"),
-
-                                        # order in task tree
-                                        "issues.lft"
-                                      ],
-                                      :default_order => 'asc'))
-
-        base.add_available_column(QueryColumn.new(:remaining_hours))
+        base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
+        base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
 
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type

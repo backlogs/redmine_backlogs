@@ -30,7 +30,7 @@ class MigrateLegacy < ActiveRecord::Migration
     begin
       execute "select count(*) from backlogs"
       legacy = true
-    rescue
+    rescue Exception
       legacy = false
     end
 

@@ -39,7 +39,6 @@ Feature: Product Owner
       And I want to create a story
       And I set the subject of the story to A Whole New Story
      When I create the story
-     Then show me the list of stories
      Then the 1st story in the product backlog should be A Whole New Story
       And all positions should be unique
 

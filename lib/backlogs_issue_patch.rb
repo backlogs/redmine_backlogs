@@ -125,8 +125,8 @@ module Backlogs
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
         end
 
-        unless self.position
-          self.position = (Issue.maximum(:position) || -1) + 1
+        if self.position.blank?
+          self.position = (Issue.minimum(:position) || 1) - 1
           # scrub position from the journal by copying the new value to the old
           @attributes_before_change['position'] = self.position if @attributes_before_position
         end
@@ -199,9 +199,11 @@ module Backlogs
 
       def backlogs_after_destroy
         # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-        Issue.connection.execute('update issues set position_sentinel = position') # damn you MySQL
-        Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
-        Issue.connection.execute('update issues set position_sentinel = 0') # damn you MySQL
+        Issue.transaction do
+          Issue.connection.execute('update issues set position_lock = position') # damn you MySQL
+          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
+          Issue.connection.execute('update issues set position_lock = 0') # damn you MySQL
+        end
         RbJournal.destroy_all(:issue_id => self.id)
       end
 
