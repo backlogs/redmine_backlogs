@@ -3,18 +3,18 @@ require_dependency 'my_controller'
 module Backlogs
   module MyControllerPatch
     def self.included(base) # :nodoc:
-        base.extend(ClassMethods)
-        base.send(:include, InstanceMethods)
+      base.extend(ClassMethods)
+      base.send(:include, InstanceMethods)
 
-        base.class_eval do
-          unloadable # Send unloadable so it will not be unloaded in development
-          after_filter :save_backlogs_preferences, :only => [:account]
-        end
+      base.class_eval do
+        unloadable # Send unloadable so it will not be unloaded in development
+        after_filter :save_backlogs_preferences, :only => [:account]
+      end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def save_backlogs_preferences
         if request.post? && flash[:notice] == l(:notice_account_updated)

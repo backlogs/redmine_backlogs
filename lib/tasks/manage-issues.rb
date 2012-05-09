@@ -86,7 +86,7 @@ class GitHub
       prio = nil
       comments.each {|c|
         next unless @gh.committers.include?(c.user)
-        prio = 
+        prio = nil
         m = c.body.match(/\s:([0-9]+):\s/)
         m = c.body.match(/^:([0-9]+):\s/) unless m
         m = c.body.match(/\s:([0-9]+):$/) unless m

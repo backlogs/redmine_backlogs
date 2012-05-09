@@ -2,7 +2,7 @@ require 'fileutils'
 require 'benchmark'
 
 namespace :redmine do
-  namespace :backlogs do 
+  namespace :backlogs do
 
     desc "Install and configure Redmine Backlogs"
     task :install => :environment do |t|
@@ -71,7 +71,7 @@ namespace :redmine do
             print "Separate values with a space (e.g. 1 3): "
             STDOUT.flush
             selection = (STDIN.gets.chomp!).split(/\D+/)
-            
+
             # Check that all values correspond to an items in the list
             invalid = false
             invalid_value = nil
@@ -85,7 +85,7 @@ namespace :redmine do
                 tracker_names << trackers[s.to_i-1].name
               end
             end
-          
+
             if invalid
               puts "Oooops! You entered an invalid value (#{invalid_value}). Please try again."
             else
@@ -122,7 +122,7 @@ namespace :redmine do
               print "Choose one from above (or choose none to create a new tracker): "
               STDOUT.flush
               selection = (STDIN.gets.chomp!).split(/\D+/)
-                    
+
               if selection.length > 0 and selection.first.to_i <= available_trackers.length
                 # If the user picked one, use that
                 print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
@@ -151,10 +151,11 @@ namespace :redmine do
       end
 
       puts "Story and task trackers are now set."
-      
+
       print "Migrating the database..."
       STDOUT.flush
       system('rake db:migrate:plugins --trace > redmine_backlogs_install.log')
+      system('rake redmine:backlogs:fix_positions --trace >> redmine_backlogs_install.log')
       if $?==0
         puts "done!"
         puts "Installation complete. Please restart Redmine."
@@ -167,7 +168,7 @@ namespace :redmine do
         puts "*******************************************************"
       end
     end
-    
+
     def create_new_tracker
       repeat = true
       puts "Creating a new task tracker."
@@ -181,7 +182,7 @@ namespace :redmine do
         end
         print "You typed '#{name}'. Is this correct? (y/n) "
         STDOUT.flush
-        
+
         if (STDIN.gets.chomp!).match("y")
           tracker = Tracker.new(:name => name)
           tracker.save!

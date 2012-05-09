@@ -24,24 +24,56 @@ class RbJournal < ActiveRecord::Base
   def self.journal(j)
     case Backlogs.platform
       when :redmine
-        issue_id = j.journalized_id
-        timestamp = j.created_on
-
         j.details.each{|detail|
-          next unless detail.property == 'attr'
-          next unless RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
-          RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
+          next unless detail.property == 'attr' && RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
+          create_journal(j, detail, j.journalized_id, j.created_on)
         }
 
       when :chiliproject
         if j.type == 'IssueJournal'
-          issue_id = j.journaled_id
-          timestamp = j.created_on
-
           RbJournal::REDMINE_PROPERTIES.each{|prop|
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save unless j.details[prop].nil?
+            next if j.details[prop].nil?
+            create_journal(j, prop, j.journaled_id, j.created_on)
           }
         end
+    end
+  end
+
+  def self.create_journal(j, prop, issue_id, timestamp)
+    if journal_property_key(prop) == 'status_id'
+      begin
+        status = IssueStatus.find(journal_property_value(prop, j))
+      rescue ActiveRecord::RecordNotFound
+        status = nil
+      end
+      properties = [ { :prop_key => 'status_open',              :prop_value => status && !status.is_closed },
+                     { :prop_key => 'status_success',           :prop_value => status && !status.backlog_is?(:success) } ]
+    else
+      properties = [ { :prop_key => journal_property_key(prop), :prop_value => journal_property_value(prop, j) } ]
+    end
+    properties.each{|property|
+      RbJournal.new(:issue_id => issue_id,
+                    :timestamp => timestamp,
+                    :property => property[:prop_key],
+                    :value => property[:prop_value]).save
+    }
+  end
+
+  def self.journal_property_key(property)
+    case Backlogs.platform
+      when :redmine
+        return property.prop_key
+      when :chiliproject
+        return property
+    end
+  end
+
+  def self.journal_property_value(property, j)
+    case Backlogs.platform
+      when :redmine
+        return property.value
+      when :chiliproject
+        return j.details[property][1]
     end
   end
 
@@ -59,7 +91,7 @@ class RbJournal < ActiveRecord::Base
                                                 RbJournal::REDMINE_PROPERTIES, issue.id]).each {|detail|
           changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
         }
-          
+
       when :chiliproject
         # has to be here because the ChiliProject journal design easily allows for one to delete issue statuses that remain
         # in the journal, because even the already-feeble rails integrity constraints can't be enforced. This also mean it's

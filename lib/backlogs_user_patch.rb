@@ -62,15 +62,15 @@ module Backlogs
 
   module UserPatch
     def self.included(base) # :nodoc:
-        base.extend(ClassMethods)
-        base.send(:include, InstanceMethods)
+      base.extend(ClassMethods)
+      base.send(:include, InstanceMethods)
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
-  
+
       def backlogs_preference
         @backlogs_preference ||= Backlogs::Preference.new(self)
       end

@@ -6,11 +6,6 @@ class Burndown
     @sprint_id = sprint.id
     @days = sprint.days(:all)
 
-    stories = sprint.stories
-    stories |= RbStory.find(:all,
-      :conditions => ["tracker_id in (?) and exists(select 1 from rb_journals where rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = ?)",
-                      RbStory.trackers, sprint.id.to_s]) if RbStory.trackers.size > 0
-    
     baseline = [0] * (sprint.days(:active).size + 1)
     baseline += [nil] * (1 + (@days.size - baseline.size))
 
@@ -20,12 +15,18 @@ class Burndown
     series.merge(:points_resolved => baseline.dup)
     series.merge(:points_accepted => baseline.dup)
 
-    stories.each { |story| series.add(story.burndown(sprint)) }
+    if RbStory.trackers.size > 0
+      stories = sprint.stories + RbStory.find(:all, 
+        :joins => ["JOIN rb_journals ON rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = '#{sprint.id}'"],
+        :conditions => ["tracker_id in (?) and fixed_version_id <> #{sprint.id}", RbStory.trackers])
 
-    series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
-    series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
+      stories.each { |story| series.add(story.burndown(sprint)) }
 
-    series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
+      series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
+      series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
+
+      series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
+    end
 
     @data = {}
 
@@ -110,7 +111,7 @@ class RbSprint < Version
   def points
     return stories.inject(0){|sum, story| sum + story.story_points.to_i}
   end
-   
+
   def has_wiki_page
     return false if wiki_page_title.blank?
 
@@ -224,7 +225,7 @@ class RbSprint < Version
   end
 
   def impediments
-    @impediments ||= Issue.find(:all, 
+    @impediments ||= Issue.find(:all,
       :conditions => ["id in (
               select issue_from_id
               from issue_relations ir
