@@ -35,6 +35,8 @@ class UniquePositions < ActiveRecord::Migration
   end
 
   def self.down
-    #pass
+    remove_index :issues, [:position, :position_lock]
+    remove_column :issues, :position_lock
+    change_column :issues, :position, :integer, :null => true
   end
 end
