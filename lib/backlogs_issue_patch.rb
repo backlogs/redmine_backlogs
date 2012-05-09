@@ -125,7 +125,7 @@ module Backlogs
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
         end
 
-        if self.position.blank?
+        if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
           self.position = (Issue.minimum(:position) || 1) - 1
           # scrub position from the journal by copying the new value to the old
           @attributes_before_change['position'] = self.position if @attributes_before_position

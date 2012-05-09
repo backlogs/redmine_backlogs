@@ -143,7 +143,6 @@ class RbStory < Issue
       pos = (RbStory.minimum(:position) || 1) - 1
       conn.execute("update issues set position = #{pos} where id=#{self.id}")
     else
-      msg = "moving #{self.id}@#{self.position} after #{prev.id}@#{prev.position}\n"
       RbStory.transaction do
         # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
         conn.execute('update issues set position_lock = position') # damn you MySQL
