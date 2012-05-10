@@ -24,7 +24,11 @@ while getopts "phf:" OPT; do
   esac
 done
 
+command -v ruby >/dev/null 2>&1 || errmsg "no ruby available"
+RUBYVER=`ruby --version | awk '{print $2}' | awk -F. '{print $1 "." $2}'`
+
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
+
 export RAILS_ENV=cucumber
 
 case "$GEMSET" in
@@ -43,13 +47,13 @@ fi
 
 source $CONFIG
 
-cd ~/redmine/$GEMSET
+cd ~/redmine/$GEMSET-$RUBYVER
 
 mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
 mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
 mysqladmin -u root -p$DBROOTPW create $GEMSET
 
-zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
+#zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
 
 echo migrations
 bundle exec rake generate_session_store
@@ -61,7 +65,11 @@ script -c "rake db:migrate:plugins" -f ~/redmine/cuke-$GEMSET.log
 rm -f log/cucumber.log
 if [ -z "$TEST_FEATURE" ]; then
   echo "Running all tests"
-  script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
+  if [ "$RUBYVER" = "1.9" ]; then
+    script -c "cucumber features" -f ~/redmine/cuke-$GEMSET.log
+  else
+    script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
+  fi
 else
   echo "Testing feature: $TEST_FEATURE"
   script -c "cucumber $TEST_FEATURE" -f ~/redmine/cuke-$GEMSET.log
