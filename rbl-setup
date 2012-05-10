@@ -7,10 +7,14 @@ function errmsg {
   exit 1
 }
 
-RUBY=`which ruby`
-if [ -z "$RUBY" ]; then
-  errmsg "no ruby available"
-fi
+function removegem {
+  REMGEM=`gem list | grep "$1.*$2" | wc -l`
+  if [[ \"$REMGEM\" != \"0\" ]]; then
+    gem uninstall $1 -v=$2
+  fi
+}
+
+command -v ruby >/dev/null 2>&1 || errmsg "no ruby available"
 RUBYVER=`ruby --version | awk '{print $2}' | awk -F. '{print $1 "." $2}'`
 
 while getopts "hp:igdc:" OPT; do
@@ -37,12 +41,8 @@ fi
 source $BACKLOGS_CONFIG
 
 if [ -z "$PLATFORM" ]; then
-  RVM=`which rvm-prompt`
-  if [ -z "$RVM" ]; then
-    errmsg "no platform selected"
-  else
-    PLATFORM=`rvm-prompt g | sed -e 's/@//'`
-  fi
+  command -v rvm-prompt >/dev/null 2>&1 || errmsg "no platform selected"
+  PLATFORM=`rvm-prompt g | sed -e 's/@//'`
 fi
 
 case $PLATFORM in
@@ -70,6 +70,12 @@ fi
 if [ ! -e $WORKSPACE ]; then
   errmsg "$WORKSPACE does not exist"
 fi
+
+echo Workspace: $WORKSPACE
+echo Config: $BACKLOGS_CONFIG
+echo Install: $INSTALL
+echo Gems: $GEMS
+echo Database: $DATABASE
 
 if [ "$INSTALL" = "yes" ]; then
   if [ ! -e "$WORKSPACE/$PLATFORM-$RUBYVER" ]; then
@@ -108,20 +114,18 @@ if [ "$INSTALL" = "yes" ] ; then
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
   ln -s "$WORKSPACE/redmine_backlogs" "$WORKSPACE/$PLATFORM-$RUBYVER/vendor/plugins"
   ln -s "$WORKSPACE/redmine_backlogs/features" "$WORKSPACE/$PLATFORM-$RUBYVER"
-  cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/database.yml"
-  cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/issues.yml"
+  cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/config/database.yml"
+  cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/test/fixtures/issues.yml"
   echo rvm use `ruby --version | awk '{print $2}' | sed -e 's/p.*//'`@$PLATFORM > "$WORKSPACE/$PLATFORM-$RUBYVER/.rvmrc"
   sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
 fi
 
-if [ ! -z "$RVM" ] ; then
-  if [ "$GEMS" = "yes" ] ; then
-    rvm --force gemset empty $PLATFORM
-    case $RUBYVER in
-      1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
-      1.9) rvm rubygems latest-1.8;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
-    esac
-  fi
+if [ ! -z "$RVM" -a "$GEMS" = "yes" ] ; then
+  rvm --force gemset empty $PLATFORM
+  case $RUBYVER in
+    1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+    1.9) rvm rubygems latest-1.8;;
+  esac
 fi
 
 if [ "$GEMS" = "yes" ]; then
@@ -132,6 +136,9 @@ if [ "$GEMS" = "yes" ]; then
   bundle install --system
   #bundle install --path=vendor/bundle
 
+  removegem simplecov 0.6.2
+  removegem simplecov 0.6.3
+
   DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
   if [[ \"$DUPLICATES\" != \"0\" ]]; then
     echo 'Duplicate gems! Aborting installation'
@@ -141,10 +148,7 @@ if [ "$GEMS" = "yes" ]; then
 fi
 
 if [ "$INSTALL" = "yes" ] ; then
-  BUNDLER=`which bundle`
-  if [ -z "$BUNDLER" ] ; then
-    errmsg "Please set up gem environment first"
-  fi
+  command -v bundle >/dev/null 2>&1 || errmsg "Please set up gem environment first"
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
   ./script/generate cucumber --skip --spork
 fi

@@ -10,7 +10,8 @@ gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linu
 
 # development gems
 #puts "RBL dev mode: " + File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')
-if File.exist?(File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')) # this is actually the main Gemfile
+#if File.exist?(File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')) # this is actually the main Gemfile
+group :development do
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   gem "capybara", "=0.3.9"
