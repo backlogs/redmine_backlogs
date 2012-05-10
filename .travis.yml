@@ -2,6 +2,9 @@ language: ruby
 rvm:
   - 1.8.7
   - 1.9.3
+env:
+  - REDMINE_VER=1
+  - REDMINE_VER=2
 
 install: "echo skip bundle install"
 
