@@ -26,8 +26,9 @@ module Backlogs
           init_journal(User.current)
           return self.update_attributes!(attribs)
         else
-          Issue.find(self.id).journalized_update_attributes!(attribs)
+          v = Issue.find(self.id).journalized_update_attributes!(attribs)
           self.reload
+          return v
         end
       end
 
@@ -37,8 +38,9 @@ module Backlogs
           init_journal(User.current)
           return self.update_attributes(attribs)
         else
-          Issue.find(self.id).journalized_update_attributes(attribs)
+          v = Issue.find(self.id).journalized_update_attributes(attribs)
           self.reload
+          return v
         end
       end
 
@@ -48,8 +50,9 @@ module Backlogs
           init_journal(User.current)
           self.becomes(Issue).update_attribute(attrib, v)
         else
-          Issue.find(self.id).journalized_update_attribute(attrib, v)
+          v = Issue.find(self.id).journalized_update_attribute(attrib, v)
           self.reload
+          return v
         end
       end
 
