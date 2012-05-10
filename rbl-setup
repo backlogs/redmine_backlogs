@@ -75,7 +75,7 @@ if [ "$INSTALL" = "yes" ]; then
   if [ ! -e "$WORKSPACE/$PLATFORM-$RUBYVER" ]; then
     mkdir "$WORKSPACE/$PLATFORM-$RUBYVER"
   fi
-  if [ ! -f "$WORKSPACE/$PLATFORM-$RUBYVER/database.yml" && ! -f "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml"] ; then
+  if [ ! -f "$WORKSPACE/$PLATFORM-$RUBYVER/database.yml" -a ! -f "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" ] ; then
     errmsg "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml not found"
   fi
   if [ ! -f "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" ]; then
@@ -83,7 +83,7 @@ if [ "$INSTALL" = "yes" ]; then
       redmine) ISSUES_FIXTURE_URL="http://redmine.rubyforge.org/svn/tags/$VERSION/test/fixtures/issues.yml";;
       chiliproject) ISSUES_FIXTURE_URL="https://raw.github.com/chiliproject/chiliproject/master/test/fixtures/issues.yml";;
     esac
-    wget "$ISSUES_FIXTURE_URL" -O - | awk '/^issue/ {print $0; print "  position: " NR} !/^issue/ {print $0}' > "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml"
+    wget -qO- "$ISSUES_FIXTURE_URL" | awk '/^issue/ {print $0; print "  position: " NR} !/^issue/ {print $0}' > "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml"
   fi
 fi
 
@@ -95,7 +95,7 @@ if [ "$INSTALL" = "yes" ] ; then
 
   case $PLATFORM in
     redmine)
-      svn co "http://redmine.rubyforge.org/svn/tags/#$VERSION" "redmine-$RUBYVER"
+      svn co "http://redmine.rubyforge.org/svn/tags/$VERSION" "redmine-$RUBYVER"
       ;;
     chiliproject)
       git clone http://github.com/chiliproject/chiliproject.git "chiliproject-$RUBYVER"
@@ -110,7 +110,7 @@ if [ "$INSTALL" = "yes" ] ; then
   ln -s "$WORKSPACE/redmine_backlogs/features" "$WORKSPACE/$PLATFORM-$RUBYVER"
   cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/database.yml"
   cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/issues.yml"
-  echo rvm use `ruby --version`@$PLATFORM > "$WORKSPACE/$PLATFORM-$RUBYVER/.rvmrc"
+  echo rvm use `ruby --version | awk '{print $2}' | sed -e 's/p.*//'`@$PLATFORM > "$WORKSPACE/$PLATFORM-$RUBYVER/.rvmrc"
   sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
 fi
 
@@ -129,8 +129,8 @@ if [ "$GEMS" = "yes" ]; then
   touch "$WORKSPACE/$PLATFORM-$RUBYVER/backlogs.dev"
   gem install bundler
 
-  #bundle install --system
-  bundle install --path=vendor/bundle
+  bundle install --system
+  #bundle install --path=vendor/bundle
 
   DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
   if [[ \"$DUPLICATES\" != \"0\" ]]; then
@@ -141,6 +141,10 @@ if [ "$GEMS" = "yes" ]; then
 fi
 
 if [ "$INSTALL" = "yes" ] ; then
+  BUNDLER=`which bundle`
+  if [ -z "$BUNDLER" ] ; then
+    errmsg "Please set up gem environment first"
+  fi
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
   ./script/generate cucumber --skip --spork
 fi
