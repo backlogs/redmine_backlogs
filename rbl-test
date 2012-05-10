@@ -24,8 +24,11 @@ while getopts "phf:" OPT; do
   esac
 done
 
+command -v ruby >/dev/null 2>&1 || errmsg "no ruby available"
+RUBYVER=`ruby --version | awk '{print $2}' | awk -F. '{print $1 "." $2}'`
+
 GEMSET=`rvm-prompt g | sed -e 's/@//'`
-RUBY=`rvm-prompt v`
+
 export RAILS_ENV=cucumber
 
 case "$GEMSET" in
@@ -62,7 +65,7 @@ script -c "rake db:migrate:plugins" -f ~/redmine/cuke-$GEMSET.log
 rm -f log/cucumber.log
 if [ -z "$TEST_FEATURE" ]; then
   echo "Running all tests"
-  if [ "$RUBY" = "1.9.3" ]; then
+  if [ "$RUBYVER" = "1.9" ]; then
     script -c "cucumber features" -f ~/redmine/cuke-$GEMSET.log
   else
     script -c "rake redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log

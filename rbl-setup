@@ -17,6 +17,9 @@ function removegem {
 command -v ruby >/dev/null 2>&1 || errmsg "no ruby available"
 RUBYVER=`ruby --version | awk '{print $2}' | awk -F. '{print $1 "." $2}'`
 
+export RVM="yes"
+command -v rvm  >/dev/null 2>&1 || export RVM="no"
+
 while getopts "hp:igdc:" OPT; do
   case $OPT in
     h) print_usage 0;;
@@ -40,9 +43,11 @@ fi
 
 source $BACKLOGS_CONFIG
 
-if [ -z "$PLATFORM" ]; then
-  command -v rvm-prompt >/dev/null 2>&1 || errmsg "no platform selected"
+if [ -z "$PLATFORM" -a "$RVM" = "yes" ]; then
   PLATFORM=`rvm-prompt g | sed -e 's/@//'`
+fi
+if [ -z "$PLATFORM" ]; then
+  errmsg "no platform selected"
 fi
 
 case $PLATFORM in
@@ -120,7 +125,7 @@ if [ "$INSTALL" = "yes" ] ; then
   sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
 fi
 
-if [ ! -z "$RVM" -a "$GEMS" = "yes" ] ; then
+if [ "$RVM" = "yes" -a "$GEMS" = "yes" ] ; then
   rvm --force gemset empty $PLATFORM
   case $RUBYVER in
     1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
@@ -135,9 +140,6 @@ if [ "$GEMS" = "yes" ]; then
 
   bundle install --system
   #bundle install --path=vendor/bundle
-
-  removegem simplecov 0.6.2
-  removegem simplecov 0.6.3
 
   DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
   if [[ \"$DUPLICATES\" != \"0\" ]]; then
@@ -162,9 +164,10 @@ if [ "$DATABASE" = "yes" ] ; then
 
   echo "create database $PLATFORM character set utf8;" | mysql -u root -p$DBROOTPW mysql
 
-  DBUSER=`echo "select concat(User, '@', Host) from mysql.user;" | mysql -u root -p$DBROOTPW | grep '^$DBUSER@localhost$' | wc -l`
-  if [[ "$DBUSER" = "0" ]]; then
-    echo "create user '$DBUSER'@'localhost' identified by '$DBPW';" | mysql -u root -p$DBROOTPW mysql
+  DBUSEREXISTS=`echo "select concat(User, '@', Host) from mysql.user;" | mysql -u root -p$DBROOTPW | grep "$DBUSER@localhost" | wc -l`
+  if [[ "$DBUSEREXISTS" = "0" ]]; then
+    echo "create user '$DBUSER'@'localhost' identified by '$DBUSERPW';" mysql -u root -p$DBROOTPW mysql
+    echo "create user '$DBUSER'@'localhost' identified by '$DBUSERPW';" | mysql -u root -p$DBROOTPW mysql
   fi
 
   echo "grant all privileges on $PLATFORM.* to '$DBUSER'@'%';" | mysql -u root -p$DBROOTPW mysql

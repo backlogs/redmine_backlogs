@@ -22,7 +22,11 @@ group :development do
   gem "redgreen" if RUBY_VERSION < "1.9"
   gem "rspec", "=1.3.1"
   gem "rspec-rails", "=1.3.3"
-  gem (RUBY_VERSION >= "1.9" ? "simplecov" : "rcov")
+  if RUBY_VERSION >= "1.9"
+    gem "simplecov", "=0.6.2"
+  else
+    gem "rcov"
+  end
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
   gem "timecop"
