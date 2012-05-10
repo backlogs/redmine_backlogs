@@ -47,7 +47,7 @@ fi
 
 source $CONFIG
 
-cd ~/redmine/$GEMSET
+cd ~/redmine/$GEMSET-$RUBYVER
 
 mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
 mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
