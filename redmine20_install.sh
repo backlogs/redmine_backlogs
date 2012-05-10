@@ -51,7 +51,11 @@ mkdir -p coverage
 ln -sf `pwd`/coverage $WORKSPACE
 
 # run cucumber
-bundle exec cucumber -f junit --out $WORKSPACE
+if [ ! -n "${CUCUMBER_FORMAT}" ];
+then
+  export CUCUMBER_FORMAT=progress
+fi
+bundle exec cucumber -f $CUCUMBER_FORMAT --out $WORKSPACE
 
 # clean up database
 bundle exec rake redmine:plugins:migrate NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
