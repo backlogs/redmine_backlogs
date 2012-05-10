@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 1.8.7
+  - 1.9.3
+
+install: "echo skip bundle install"
+
+script:
+  - export WORKSPACE=`pwd`/workspace
+  - export PATH_TO_BACKLOGS=`pwd`
+  - export PATH_TO_REDMINE=$WORKSPACE/redmine
+  - mkdir $WORKSPACE
+  - cp config/database.yml.travis $WORKSPACE/database.yml
+  - git clone  -b master --depth=100 --quiet git://github.com/Vanuan/redmine.git $PATH_TO_REDMINE
+  - ./redmine20_install.sh
+
