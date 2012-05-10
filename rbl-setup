@@ -114,12 +114,14 @@ if [ "$INSTALL" = "yes" ] ; then
   sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
 fi
 
-if [ ! -z "$RVM" && "$GEMS" = "yes" ]; then
-  rvm --force gemset empty $PLATFORM
-  case $RUBYVER in
-    1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
-    1.9) rvm rubygems latest-1.8;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
-  esac
+if [ ! -z "$RVM" ] ; then
+  if [ "$GEMS" = "yes" ] ; then
+    rvm --force gemset empty $PLATFORM
+    case $RUBYVER in
+      1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+      1.9) rvm rubygems latest-1.8;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
+    esac
+  fi
 fi
 
 if [ "$GEMS" = "yes" ]; then
@@ -171,7 +173,7 @@ if [ "$DATABASE" = "yes" ] ; then
   fi
   bundle exec rake $TRACE db:migrate:plugins
   labels=no story_trackers=Story task_tracker=Task bundle exec rake $TRACE redmine:backlogs:install
-
+fi
 # if Options.adminpw.to_s != ''
 #   script.database "cd ~/redmine/#{Options.platform}"
 #   script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
