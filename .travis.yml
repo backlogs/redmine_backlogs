@@ -12,5 +12,5 @@ script:
   - mkdir $WORKSPACE
   - cp config/database.yml.travis $WORKSPACE/database.yml
   - git clone  -b master --depth=100 --quiet git://github.com/Vanuan/redmine.git $PATH_TO_REDMINE
-  - ./redmine20_install.sh
+  - bash -x ./redmine20_install.sh
 
