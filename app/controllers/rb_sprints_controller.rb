@@ -33,6 +33,8 @@ class RbSprintsController < RbApplicationController
     begin
       # using this instead of becomes to work around #493
       result  = Version.find(@sprint.id).update_attributes attribs
+      # version.update_attributes does not change @sprint. Reloading it manually.
+      @sprint.reload
     rescue => e
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
