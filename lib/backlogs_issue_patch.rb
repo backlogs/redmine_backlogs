@@ -48,7 +48,7 @@ module Backlogs
         # workaround for #493
         if self.class == Issue
           init_journal(User.current)
-          self.becomes(Issue).update_attribute(attrib, v)
+          self.update_attribute(attrib, v)
         else
           v = Issue.find(self.id).journalized_update_attribute(attrib, v)
           self.reload
