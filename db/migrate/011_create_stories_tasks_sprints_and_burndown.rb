@@ -30,7 +30,7 @@ class CreateStoriesTasksSprintsAndBurndown < ActiveRecord::Migration
 
     remove_column :versions, :sprint_start_date
 
-    drop_index :burndown_days, :version_id
+    remove_index :burndown_days, :version_id
     drop_table :burndown_days
   end
 end

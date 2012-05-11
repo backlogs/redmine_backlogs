@@ -1,22 +1,23 @@
 require_dependency 'issues_controller'
+require 'rubygems'
 require 'nokogiri'
 require 'json'
 
 module Backlogs
   module IssuesControllerPatch
     def self.included(base) # :nodoc:
-        base.extend(ClassMethods)
-        base.send(:include, InstanceMethods)
+      base.extend(ClassMethods)
+      base.send(:include, InstanceMethods)
 
-        base.class_eval do
-          unloadable # Send unloadable so it will not be unloaded in development
-          after_filter :add_backlogs_fields, :only => [:index]
-        end
+      base.class_eval do
+        unloadable # Send unloadable so it will not be unloaded in development
+        after_filter :add_backlogs_fields, :only => [:index]
+      end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def add_backlogs_fields
         story_trackers = RbStory.trackers

@@ -11,10 +11,10 @@ module Backlogs
 
       end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
       def burndown
         return RbSprint.find_by_id(self.id).burndown

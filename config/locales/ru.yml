@@ -6,6 +6,9 @@ ru:
   backlogs_any: !binary |
     0LvRjtCx0L7QuQ==
 
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: !binary |
     0KLQuNC/0Ysg0LzQtdGC0L7QuiDQtNC70Y8g0L/QtdGH0LDRgtC4INC60LDR
     gNGC
@@ -13,6 +16,7 @@ ru:
   backlogs_impediment: !binary |
     0JfQsNC00LXRgNC20LrQsA==
 
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: !binary |
     0KLQvtGH0LrQuCDRgSDRg9C60LDQt9Cw0L3QuNC10LwsINGB0LrQvtC70YzQ
     utC+INGD0LbQtSDQstGL0L/QvtC70L3QtdC90L4g0LfQsNC00LDQvdC40Y8g
@@ -32,6 +36,7 @@ ru:
   backlogs_statistics_active_failed: Project shows no activity
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
@@ -66,10 +71,6 @@ ru:
     0KjQsNCx0LvQvtC9INC00LvRjyDRgdC/0YDQuNC90YLQsCDRgdGC0YDQsNC9
     0LjRhtGLIHdpa2k=
 
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   button_edit_wiki: !binary |
     0KDQtdC00LDQutGC0LjRgNC+0LLQsNGC0Ywg0YHRgtGA0LDQvdC40YbRgyB3
     aWtp
@@ -109,7 +110,7 @@ ru:
     0LDQu9Cw
 
   error_taken: is already in use
-  event_sprint_summary: "{{project}}: {{summary}}"
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: !binary |
     0KLQuNC/INCx0Y3QutC70L7Qs9Cw
@@ -117,7 +118,6 @@ ru:
   field_blocks: !binary |
     0JHQu9C+0LrQuNGA0L7QstC60Lg=
 
-  field_remaining_hours: Remaining (hours)
   field_initial_story_points: !binary |
     0J3QsNGH0LDQu9GM0L3QsNGPINC+0YbQtdC90LrQsCDQuNGB0YLQvtGA0LjQ
     uA==
@@ -139,6 +139,7 @@ ru:
   field_release_start_date: !binary |
     0JTQsNGC0LAg0L3QsNGH0LDQu9CwINCy0LXRgNGB0LjQuA==
 
+  field_remaining_hours: Remaining (hours)
   field_story_points: !binary |
     0J7RhtC10L3QutCwINC40YHRgtC+0YDQuNC4ICjRh9C10LvQvtCy0LXQutC+
     LdGH0LDRgdGLKQ==
@@ -186,12 +187,12 @@ ru:
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_hours: !binary |
     0YfQsNGB0Ys=
 
+  label_ideal: ideal
   label_impediments: !binary |
     0JfQsNC00LXRgNC20LrQuA==
 
@@ -342,7 +343,7 @@ ru:
     stC40YLQtdC70YzQvdC+INC20LXQu9Cw0LXRgtC1INGB0L7RhdGA0LDQvdC4
     0YLRjCDRgdC90LjQvNC+0Lo/
 
-  todo_issue_summary: "{{type}}: {{summary}}"
+  todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
   warning_reset_sprint: |-
     YOU ARE ABOUT TO RESET THIS SPRINT!

@@ -9,6 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
+        safe_attributes 'position'
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
         after_destroy :backlogs_after_destroy
@@ -20,18 +21,39 @@ module Backlogs
 
     module InstanceMethods
       def journalized_update_attributes!(attribs)
-        init_journal(User.current)
-        return self.becomes(Issue).update_attributes!(attribs)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          return self.update_attributes!(attribs)
+        else
+          v = Issue.find(self.id).journalized_update_attributes!(attribs)
+          self.reload
+          return v
+        end
       end
 
       def journalized_update_attributes(attribs)
-        init_journal(User.current)
-        return self.becomes(Issue).update_attributes(attribs)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          return self.update_attributes(attribs)
+        else
+          v = Issue.find(self.id).journalized_update_attributes(attribs)
+          self.reload
+          return v
+        end
       end
 
       def journalized_update_attribute(attrib, v)
-        init_journal(User.current)
-        self.becomes(Issue).update_attribute(attrib, v)
+        # workaround for #493
+        if self.class == Issue
+          init_journal(User.current)
+          self.becomes(Issue).update_attribute(attrib, v)
+        else
+          v = Issue.find(self.id).journalized_update_attribute(attrib, v)
+          self.reload
+          return v
+        end
       end
 
       def is_story?
@@ -99,12 +121,17 @@ module Backlogs
 
           self.remaining_hours = 0 if self.status.backlog_is?(:success)
 
-          self.position = nil
           self.fixed_version_id = self.story.fixed_version_id if self.story
           self.tracker_id = RbTask.tracker
           self.start_date = Date.today if self.start_date.nil? && self.status_id != IssueStatus.default.id
         elsif self.is_story?
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
+        end
+
+        if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
+          self.position = (Issue.minimum(:position) || 1) - 1
+          # scrub position from the journal by copying the new value to the old
+          @attributes_before_change['position'] = self.position if @attributes_before_position
         end
 
         @backlogs_new_record = self.new_record?
@@ -119,6 +146,7 @@ module Backlogs
         ## parent_id are set at that point
 
         RbJournal.rebuild(self) if @backlogs_new_record
+
         return unless Backlogs.configured?(self.project)
 
         if self.is_story?
@@ -138,13 +166,16 @@ module Backlogs
                                               self.fixed_version_id, self.fixed_version_id]).each{|task|
             j = Journal.new
             j.journalized = task
-            case Backlogs.platform 
+            case Backlogs.platform
               when :redmine
                 j.created_on = self.updated_on
                 j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
               when :chiliproject
                 j.created_at = self.updated_on
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
+                j.type = 'IssueJournal'
+                j.activity_type = 'issues'
+                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
             end
             j.user = User.current
             j.save!
@@ -155,21 +186,13 @@ module Backlogs
           if tasks_updated.size > 0
             tasklist = '(' + tasks_updated.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{quoted_fixed_version}
+                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}
                                 where id in #{tasklist}")
-            tasks_updated.each{|task| RbJournal.rebuild(task)}
           end
 
           connection.execute("update issues
                               set tracker_id = #{RbTask.tracker}
                               where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
-
-          # safe to do by sql since we don't want any of this logged
-          unless self.position
-            max = 0
-            connection.execute('select coalesce(max(position), -1) + 1 from issues where not position is null').each {|i| max = i[0] }
-            connection.execute("update issues set position = #{connection.quote(max)} where id = #{id}")
-          end
         end
 
         if self.story || self.is_task?
@@ -178,7 +201,12 @@ module Backlogs
       end
 
       def backlogs_after_destroy
-        Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
+        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+        Issue.transaction do
+          Issue.connection.execute('update issues set position_lock = position') # damn you MySQL
+          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
+          Issue.connection.execute('update issues set position_lock = 0') # damn you MySQL
+        end
         RbJournal.destroy_all(:issue_id => self.id)
       end
 

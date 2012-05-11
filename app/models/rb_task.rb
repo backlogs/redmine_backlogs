@@ -63,7 +63,7 @@ class RbTask < Issue
       story.descendants.each_with_index {|task, i|
         task = task.becomes(RbTask)
         task.rank = i + 1
-        tasks << task 
+        tasks << task
       }
     end
     return tasks
@@ -88,7 +88,7 @@ class RbTask < Issue
                             true
                           end
 
-    if valid_relationships && result = self.becomes(Issue).journalized_update_attributes!(attribs)
+    if valid_relationships && result = self.journalized_update_attributes!(attribs)
       move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
 
@@ -102,7 +102,7 @@ class RbTask < Issue
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
         save
       end
-                                    
+
       result
     else
       false
@@ -165,15 +165,18 @@ class RbTask < Issue
 
     return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
       days = sprint.days(:active)
+
+      earliest_estimate = history(:estimated_hours, days).compact[0]
+
       series = Backlogs::MergedArray.new
       series.merge(:hours => history(:remaining_hours, days))
       series.merge(:sprint => history(:fixed_version_id, days))
-      series.merge(:sprint_start => days.collect{|d| (d == sprint.sprint_start_date)} + [false])
-      series.each{|d|
+      series.each_with_index{|d, i|
         if d.sprint != sprint.id
           d.hours = nil
-        elsif d.sprint_start
-          d.hours = self.estimated_hours # self.value_at(:estimated_hours, self.sprint_start_date)
+        elsif i == 0 && d.hours.to_f == 0 && earliest_estimate.to_f != 0.0
+          # set hours to earliest estimate *within sprint* if first day is not filled out
+          d.hours = earliest_estimate
         end
       }
       series.series(:hours)
@@ -181,11 +184,11 @@ class RbTask < Issue
   end
 
   def time_entry_add(params)
-    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user 
+    # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user
     # to loose a precious comment if hours is accidently left blank.
     if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
-      @time_entry = TimeEntry.new(:issue => self, :project => self.project) 
-      # Make sure user has permission to edit time entries to allow 
+      @time_entry = TimeEntry.new(:issue => self, :project => self.project)
+      # Make sure user has permission to edit time entries to allow
       # logging time for other users. Use current user in case none is selected
       if User.current.allowed_to?(:edit_time_entries, self.project) && params[:time_entry_user_id].to_i != 0
         @time_entry.user_id = params[:time_entry_user_id]

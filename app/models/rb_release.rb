@@ -99,57 +99,56 @@ end
 class RbRelease < ActiveRecord::Base
   set_table_name 'releases'
 
-    unloadable
+  unloadable
 
-    belongs_to :project
-    has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
+  belongs_to :project
+  has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
 
-    validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
-    validates_length_of :name, :maximum => 64
-    validate :dates_valid?
+  validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
+  validates_length_of :name, :maximum => 64
+  validate :dates_valid?
 
-    def dates_valid?
-        if self.release_start_date and self.release_end_date
-          errors.add_to_base(l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date
-        end
-    end
+  def dates_valid?
+    errors.add_to_base(l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
+  end
 
-    # Return sprints closed within this release
-    def closed_sprints
-      sprints = RbSprint.closed_sprints(self.project).reject!{ |s|
-        s.effective_date == nil ||
-        s.sprint_start_date < self.release_start_date ||
-        s.effective_date > self.release_end_date
-      }
-      return sprints
-    end
+  # Return sprints closed within this release
+  def closed_sprints
+    sprints = RbSprint.closed_sprints(self.project).reject!{ |s|
+      s.effective_date == nil ||
+      s.sprint_start_date < self.release_start_date ||
+      s.effective_date > self.release_end_date
+    }
+    return sprints
+  end
 
-    def stories
-      return RbStory.stories_open(@project)
-    end
+  def stories
+    return RbStory.stories_open(@project)
+  end
 
-    def burndown_days
-        self.release_burndown_days.sort { |a,b| a.day <=> b.day }
-    end
+  def burndown_days
+    self.release_burndown_days.sort { |a,b| a.day <=> b.day }
+  end
 
-    def days(cutoff = nil)
-        # assumes mon-fri are working days, sat-sun are not. this
-        # assumption is not globally right, we need to make this configurable.
-        cutoff = self.release_end_date if cutoff.nil?
-        workdays(self.release_start_date, cutoff)
-    end
+  def days(cutoff = nil)
+    # assumes mon-fri are working days, sat-sun are not. this
+    # assumption is not globally right, we need to make this configurable.
+    cutoff = self.release_end_date if cutoff.nil?
+    workdays(self.release_start_date, cutoff)
+  end
 
-    def has_burndown?
-        return !!(self.release_start_date and self.release_end_date and self.initial_story_points && !self.closed_sprints.nil?)
-    end
+  def has_burndown?
+    return !!(self.release_start_date and self.release_end_date and self.initial_story_points && !self.closed_sprints.nil?)
+  end
 
-    def burndown
-        return nil if not self.has_burndown?
-        @cached_burndown ||= ReleaseBurndown.new(self)
-        return @cached_burndown
-    end
+  def burndown
+    return nil if not self.has_burndown?
+    @cached_burndown ||= ReleaseBurndown.new(self)
+    return @cached_burndown
+  end
 
-    def today
-      ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
-    end
+  def today
+    ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
+  end
+
 end

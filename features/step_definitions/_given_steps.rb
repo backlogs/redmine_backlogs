@@ -48,7 +48,8 @@ Given /^I am logged out$/ do
 end
 
 Given /^I am viewing the master backlog$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project)
+  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier)
+  page.driver.response.status.should == 200
   click_link("Backlogs")
   page.driver.response.status.should == 200
 end
@@ -154,6 +155,9 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
 
   # Make sure these trackers are enabled in the project
   @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
+
+  # make sure existing stories don't occupy positions that the tests are going to use
+  Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
 end
 
 Given /^I have defined the following sprints:$/ do |table|
@@ -236,7 +240,7 @@ end
 Given /^I have defined the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
     params = initialize_story_params
-    params['subject'] = story.delete('subject')
+    params['subject'] = story.delete('subject').strip
     params['prev_id'] = story_before(story.delete('position'))
 
     story.should == {}

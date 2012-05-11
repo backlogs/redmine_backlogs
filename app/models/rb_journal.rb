@@ -16,33 +16,64 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class RbJournal < ActiveRecord::Base
-  REDMINE_PROPERTIES = ['fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
-  JOURNALED_PROPERTIES = ['fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
+  REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
+  JOURNALED_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
 
   belongs_to :issue
-  before_save :backlogs_before_save
 
   def self.journal(j)
     case Backlogs.platform
       when :redmine
-        issue_id = j.journalized_id
-        timestamp = j.created_on
-
         j.details.each{|detail|
-          next unless detail.property == 'attr'
-          next unless RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
-          RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => detail.prop_key, :value => detail.value).save
+          next unless detail.property == 'attr' && RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
+          create_journal(j, detail, j.journalized_id, j.created_on)
         }
 
       when :chiliproject
         if j.type == 'IssueJournal'
-          issue_id = j.journaled_id
-          timestamp = j.created_on
-
           RbJournal::REDMINE_PROPERTIES.each{|prop|
-            RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :property => prop, :value => j.details[prop][1]).save unless j.details[prop].nil?
+            next if j.details[prop].nil?
+            create_journal(j, prop, j.journaled_id, j.created_on)
           }
         end
+    end
+  end
+
+  def self.create_journal(j, prop, issue_id, timestamp)
+    if journal_property_key(prop) == 'status_id'
+      begin
+        status = IssueStatus.find(journal_property_value(prop, j))
+      rescue ActiveRecord::RecordNotFound
+        status = nil
+      end
+      properties = [ { :prop_key => 'status_open',              :prop_value => status && !status.is_closed },
+                     { :prop_key => 'status_success',           :prop_value => status && !status.backlog_is?(:success) } ]
+    else
+      properties = [ { :prop_key => journal_property_key(prop), :prop_value => journal_property_value(prop, j) } ]
+    end
+    properties.each{|property|
+      RbJournal.new(:issue_id => issue_id,
+                    :timestamp => timestamp,
+                    :property => property[:prop_key],
+                    :value => property[:prop_value]).save
+    }
+  end
+
+  def self.journal_property_key(property)
+    case Backlogs.platform
+      when :redmine
+        return property.prop_key
+      when :chiliproject
+        return property
+    end
+  end
+
+  def self.journal_property_value(property, j)
+    case Backlogs.platform
+      when :redmine
+        return property.value
+      when :chiliproject
+        return j.details[property][1]
     end
   end
 
@@ -60,7 +91,7 @@ class RbJournal < ActiveRecord::Base
                                                 RbJournal::REDMINE_PROPERTIES, issue.id]).each {|detail|
           changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
         }
-          
+
       when :chiliproject
         # has to be here because the ChiliProject journal design easily allows for one to delete issue statuses that remain
         # in the journal, because even the already-feeble rails integrity constraints can't be enforced. This also mean it's
@@ -98,8 +129,12 @@ class RbJournal < ActiveRecord::Base
       end
     }
 
-    changes['status_open'] = changes['status_id'].collect{|change| change.merge(:new => !(issue_status[change[:new]].is_closed?))}
-    changes['status_success'] = changes['status_id'].collect{|change| change.merge(:new => issue_status[change[:new]].backlog_is?(:success))}
+    ['status_open', 'status_success'].each{|p| changes[p] = [] }
+    changes['status_id'].each{|change|
+      status = issue_status[change[:new]]
+      changes['status_open'] << change.merge(:new => status && !status.is_closed?)
+      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success))
+    }
     changes.delete('status_id')
 
     changes.each_pair{|prop, updates|
@@ -124,34 +159,31 @@ class RbJournal < ActiveRecord::Base
     return s
   end
 
-  def backlogs_before_save
-    case self.value
-      when nil
-        #
-      when true
-        self.value = "true"
-      when false
-        self.value = "false"
-      else
-        self.value = self.value.to_s
-    end
-    self.property = self.property.to_s unless self.property.is_a?(String)
+  def property
+    return self[:property].to_sym
+  end
+  def property=(name)
+    raise "Unknown journal property #{name.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(name.to_s)
+    self[:property] = name.to_s
   end
 
-  def after_find
-    self.property = self.property.intern unless self.property.is_a?(Symbol)
+  def value
+    v = self[:value]
 
-    return if self.value.nil?
+    return nil if v.nil?
 
-    self.value = case self.property
+    case property
       when :status_open, :status_success
-        (self.value == 'true')
+        return (v == 'true')
       when :fixed_version_id
-        Integer(self.value)
-      when :story_points, :remaining_hours
-        Float(self.value)
+        return Integer(v)
+      when :story_points, :remaining_hours, :estimated_hours
+        return Float(v)
       else
-        raise "Unknown cache property #{property.inspect}"
+        raise "Unknown journal property #{property.inspect}"
     end
+  end
+  def value=(v)
+    self[:value] = v.nil? ? nil : v.to_s
   end
 end

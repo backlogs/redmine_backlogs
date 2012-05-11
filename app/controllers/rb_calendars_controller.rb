@@ -2,14 +2,15 @@ require 'icalendar'
 
 class RbCalendarsController < RbApplicationController
   unloadable
-  
+
   case Backlogs.platform
     when :redmine
+      before_filter :require_admin_or_api_request, :only => :ical
       accept_api_auth :ical
     when :chiliproject
       accept_key_auth :ical
   end
-  
+
   def ical
     respond_to do |format|
       format.api { send_data(generate_ical, :disposition => 'attachment') }
@@ -17,7 +18,7 @@ class RbCalendarsController < RbApplicationController
   end
 
   private
-  
+
   def generate_ical
     cal = Icalendar::Calendar.new
 
@@ -97,8 +98,8 @@ class RbCalendarsController < RbApplicationController
         transp      'TRANSPARENT'
       end
     }
-    
+
     cal.to_ical
   end
-  
+
 end

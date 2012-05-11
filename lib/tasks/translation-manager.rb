@@ -69,7 +69,7 @@ class Hash
   end
 end
 
-webdir = dir('www.redminebacklogs.net')
+webdir = dir('www')
 webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
 translations = dir('redmine_backlogs/config/locales')
 
@@ -103,7 +103,7 @@ h1. Translations
 
 *Want to help out with translating Backlogs? Excellent!*
 
-Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/relaxdiego/redmine_backlogs/fork the "Backlogs":http://github.com/relaxdiego/redmine_backlogs repository, in that repository browse to Source -> config -> locales, click on the translation you want to adapt, en click the "Edit this file" button. Change what you want, and then issue a "pull request":https://github.com/relaxdiego/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
+Create an account at "GitHub":http://www.github.com if you don't have one yet. "Fork":https://github.com/backlogs/redmine_backlogs/fork the "Backlogs":http://github.com/backlogs/redmine_backlogs repository, in that repository browse to Source -> config -> locales, click on the translation you want to adapt, en click the "Edit this file" button. Change what you want, and then issue a "pull request":https://github.com/backlogs/redmine_backlogs/pull/new/master, and I'll be able to fetch your changes. The changes will automatically be attributed to you.
 
 The messages below mean the following:
 
@@ -126,7 +126,7 @@ def translated(l, s)
   return true if ['zh', 'ja'].include?(l) # aspell doesn't have a language file for these
   speller = Aspell.new(l.gsub('-', '_'))
   speller.set_option('ignore-case', 'true')
-  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word| 
+  s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word|
     next if $jargon.include?(word.downcase)
     next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
     unless speller.check(word)

@@ -237,23 +237,19 @@ Then /^show me the burndown for task (.+)$/ do |subject|
   end
 end
 
-Then /^show me the (.+) journal for (.+)$/ do |property, issue|
-  issue = Issue.find(:first, :conditions => ['subject = ?', issue])
+Then /^show me the (.+) journal for (.+)$/ do |property, subject|
+  issue = Issue.find(:first, :conditions => ['subject = ?', subject.strip])
+  raise "No issue with subject '#{subject}'" unless issue
   puts "\n"
   puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
-  issue.journals.each {|j|
-    case Backlogs.platform
-      when :redmine
-        j.details.select {|detail| detail.prop_key == property}.each {|detail|
-          puts "  #{j.created_on}: #{detail.old_value} -> #{detail.value}"
-        }
-      when :chiliproject
-        if j.changes[property] && j.created_at > issue.created_on
-          puts "  #{j.created_at}: #{j.changes[property].first} -> #{j.changes[property].last}"
-        end
-    end
+
+  days = (issue.created_on.to_date .. Date.today).to_a
+  previous = nil
+  issue.history(property.intern, days).each_with_index {|value, i|
+    next if i != 0 && value == previous
+    previous = value
+    puts "  #{days[i]}: #{value}"
   }
-  puts "  #{issue.updated_on}: #{issue.send(property.intern)}"
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|

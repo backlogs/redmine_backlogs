@@ -77,6 +77,9 @@ module Backlogs
     def each(&block)
       @data.each {|cell| block.call(cell) }
     end
+    def each_with_index(&block)
+      @data.each_with_index {|cell, index| block.call(cell, index) }
+    end
 
     def collect(&block)
       @data.collect {|cell| block.call(cell) }
@@ -87,7 +90,10 @@ module Backlogs
     end
 
     def to_s
-      return @data.collect{|s| s.to_s}.join("\n")
+      return @data.to_s
+    end
+    def inspect
+      return @data.collect{|d| d.inspect}.join("\n")
     end
   end
 end
