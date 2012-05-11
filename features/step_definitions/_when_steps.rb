@@ -111,7 +111,7 @@ end
 When /^I (try to )?update the story$/ do |attempt|
   page.driver.process :post,
                       url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
-                      @story_params.merge({ "_method" => "put" })
+                      @story_params # .merge({ "_method" => "put" })
   page.driver.response.status.should == 200 if attempt == ''
 end
 

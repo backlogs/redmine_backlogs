@@ -324,11 +324,7 @@ module BacklogsPlugin
         if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
           remaining_hours = params[:remaining_hours].gsub(',','.').to_f
           if remaining_hours != issue.remaining_hours
-            if time_entry.save
-              issue.journalized_update_attribute(:remaining_hours,remaining_hours)
-              issue.remaining_hours = remaining_hours
-              issue.save
-            end
+            issue.journalized_update_attribute(:remaining_hours, remaining_hours) if time_entry.save
           end
         end
       end

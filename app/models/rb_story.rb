@@ -203,13 +203,11 @@ class RbStory < Issue
   end
 
   def set_points(p)
-    self.init_journal(User.current)
+    return self.journalized_update_attribute(:story_points, nil) if p.blank? || p == '-'
 
-    return self.update_attribute(:story_points, nil) if p.blank? || p == '-'
+    return self.journalized_update_attribute(:story_points, 0) if p.downcase == 's'
 
-    return self.update_attribute(:story_points, 0) if p.downcase == 's'
-
-    return self.update_attribute(:story_points, Float(p)) if Float(p) >= 0
+    return self.journalized_update_attribute(:story_points, Float(p)) if Float(p) >= 0
   end
 
   def points_display(notsized='-')
@@ -224,7 +222,7 @@ class RbStory < Issue
   def update_and_position!(params)
     attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
-    result = self.journalized_update_attributes attribs
+    result = self.journalized_batch_update_attributes attribs
     move_after(params[:prev]) if result and params[:prev]
     return result
   end

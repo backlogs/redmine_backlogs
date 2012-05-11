@@ -161,6 +161,8 @@ module Backlogs
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
+
+      include Backlogs::ActiveRecord
     end
 
     module ClassMethods

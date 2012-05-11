@@ -2,7 +2,7 @@ require 'rubygems'
 require 'timecop'
 
 Given /^I am a product owner of the project$/ do
-  role = Role.find_by_name('Manager')
+  role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :create_stories
   role.permissions << :update_stories
@@ -16,7 +16,7 @@ Given /^I am a product owner of the project$/ do
 end
 
 Given /^I am a scrum master of the project$/ do
-  role = Role.find_by_name('Manager')
+  role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -32,8 +32,8 @@ Given /^I am a scrum master of the project$/ do
   login_as_scrum_master
 end
 
-Given /^I am a team member of the projects?$/ do
-  role = Role.find_by_name('Manager')
+Given /^I am a team member of the project$/ do
+  role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards
@@ -55,13 +55,13 @@ Given /^I am viewing the master backlog$/ do
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find_by_name(sprint_name)
+  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find_by_name(sprint_name)
+  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id)
   page.driver.response.status.should == 200
 end
@@ -69,10 +69,10 @@ end
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
   if attribute=="tracker"
     attribute="tracker_id"
-    value = Tracker.find_by_name(value).id
+    value = Tracker.find(:first, :conditions => ["name=?", value]).id
   elsif attribute=="status"
     attribute="status_id"
-    value = IssueStatus.find_by_name(value).id
+    value = IssueStatus.find(:first, :conditions => ["name=?", value]).id
   end
   @story_params[attribute] = value
 end
@@ -87,13 +87,13 @@ Given /^I want to create a story$/ do
 end
 
 Given /^I want to create a task for (.+)$/ do |story_subject|
-  story = RbStory.find_by_subject(story_subject)
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   @task_params = initialize_task_params(story.id)
 end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
-  sprint = RbSprint.find_by_name(sprint_subject)
-  @impediment_params = initialize_impediment_params(:fixed_version_id => sprint.id)
+  sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
+  @impediment_params = initialize_impediment_params(sprint.id)
 end
 
 Given /^I want to create a sprint$/ do
@@ -101,25 +101,25 @@ Given /^I want to create a sprint$/ do
 end
 
 Given /^I want to edit the task named (.+)$/ do |task_subject|
-  task = RbTask.find_by_subject(task_subject)
+  task = RbTask.find(:first, :conditions => { :subject => task_subject })
   task.should_not be_nil
   @task_params = HashWithIndifferentAccess.new(task.attributes)
 end
 
 Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
-  impediment = RbTask.find_by_subject(impediment_subject)
+  impediment = RbTask.find(:first, :conditions => { :subject => impediment_subject })
   impediment.should_not be_nil
-  @impediment_params = initialize_impediment_params(impediment.attributes)
+  @impediment_params = HashWithIndifferentAccess.new(impediment.attributes)
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = RbSprint.find_by_name(name)
+  sprint = RbSprint.find(:first, :conditions => ["name=?", name])
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
 
 Given /^I want to indicate that the impediment blocks (.+)$/ do |blocks_csv|
-  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(',').collect{|b| b.strip} }).collect{ |s| s.id.to_s }.join(',')
+  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
   @impediment_params[:blocks] = blocks_csv
 end
 
@@ -134,7 +134,7 @@ Given /^I want to set the (.+) of the impediment to (.+)$/ do |attribute, value|
 end
 
 Given /^I want to edit the story with subject (.+)$/ do |subject|
-  @story = RbStory.find_by_subject(subject)
+  @story = RbStory.find(:first, :conditions => ["subject=?", subject])
   @story.should_not be_nil
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
@@ -147,33 +147,23 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
-  story_tracker = (Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id
-  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task')).id
-
-  Backlogs.setting[:story_trackers] = [story_tracker]
+  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
+  task_tracker = "#{Tracker.create!(:name => 'Task').id}"
+  plugin = Redmine::Plugin.find('redmine_backlogs')
+  Backlogs.setting[:story_trackers] = story_trackers
   Backlogs.setting[:task_tracker] = task_tracker
 
   # Make sure these trackers are enabled in the project
-  @project.update_attributes :tracker_ids => [story_tracker, task_tracker]
-end
-
-Given /^no versions or issues exist$/ do
-  Issue.find(:all).each{|i| i.destroy }
-  Version.find(:all).each{|v| v.destroy }
-end
-
-Given /^I have selected the (.*) project$/ do |project_id|
-  @project = get_project(project_id)
-  @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
+  @project.update_attribute :tracker_ids, (story_trackers << task_tracker)
 
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
 end
 
 Given /^I have defined the following sprints:$/ do |table|
-  @project.shared_versions.each {|s| s.destroy }
+  @project.versions.delete_all
   table.hashes.each do |version|
-    version['project_id'] = Project.find(version['project_id'] || @project.id).id
+    version['project_id'] = @project.id
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       if version[date_attr] == 'today'
         version[date_attr] = Date.today.strftime("%Y-%m-%d")
@@ -187,8 +177,6 @@ Given /^I have defined the following sprints:$/ do |table|
         raise "Unexpected date value '#{version[date_attr]}'"
       end
     end
-
-    version['sharing'] = 'none' if version['sharing'].nil?
 
     RbSprint.create! version
   end
@@ -266,7 +254,7 @@ end
 
 Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
-    params = initialize_story_params(story.delete('project_id'))
+    params = initialize_story_params
     params['subject'] = story.delete('subject')
     sprint = RbSprint.find(:first, :conditions => [ "name=?", story.delete('sprint') ])
     params['fixed_version_id'] = sprint.id
@@ -326,10 +314,10 @@ Given /^I have defined the following tasks:$/ do |table|
     # however, should NOT bypass the controller
     if offset
       Timecop.travel(story.created_on + offset) do
-        RbTask.create_with_relationships(params, @user.id, story.project_id)
+        RbTask.create_with_relationships(params, @user.id, @project.id)
       end
     else
-      RbTask.create_with_relationships(params, @user.id, story.project_id)
+      RbTask.create_with_relationships(params, @user.id, @project.id)
     end
   end
 end
@@ -337,11 +325,9 @@ end
 Given /^I have defined the following impediments:$/ do |table|
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
-    params = initialize_impediment_params({ "fixed_version_id" => sprint.id })
-    params['fixed_version_id'] = sprint.id
+    params = initialize_impediment_params(sprint.id)
+
     params['subject'] = impediment.delete('subject')
-## TODO: blocks might contain several stories...
-    story = RbStory.find_by_subject(impediment['blocks'])
     params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
 
     impediment.should == {}
@@ -349,8 +335,7 @@ Given /^I have defined the following impediments:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-## TODO: Which project should the impediment be created for?
-    RbTask.create_with_relationships(params, @user.id, story.project_id, true).should_not be_nil
+    RbTask.create_with_relationships(params, @user.id, @project.id, true).should_not be_nil
   end
 
 end
@@ -405,7 +390,7 @@ Given /^I have made (.+) the template page for sprint notes/ do |title|
 end
 
 Given /^there are no stories in the project$/ do
-  @project.issues.destroy_all
+  @project.issues.delete_all
 end
 
 Given /^show me the task hours$/ do
