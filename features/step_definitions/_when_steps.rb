@@ -97,7 +97,8 @@ end
 When /^I update the story$/ do
   page.driver.process :post,
                       url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
-                      @story_params.merge({ "_method" => "put" })
+                      @story_params #.merge({ "_method" => "put" })
+  @story.reload
 end
 
 When /^I update the task$/ do

@@ -154,7 +154,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Backlogs.setting[:task_tracker] = task_tracker
 
   # Make sure these trackers are enabled in the project
-  @project.update_attributes :tracker_ids => (story_trackers << task_tracker)
+  @project.update_attribute :tracker_ids, (story_trackers << task_tracker)
 
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")

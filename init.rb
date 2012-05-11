@@ -2,6 +2,8 @@ require 'redmine'
 require 'dispatcher'
 
 Dispatcher.to_prepare do
+  require_dependency 'backlogs_activerecord_mixin'
+
   require_dependency 'backlogs_setup'
 
   require_dependency 'issue'

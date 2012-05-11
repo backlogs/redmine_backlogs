@@ -9,6 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
+        include Backlogs::ActiveRecord
       end
     end
 
