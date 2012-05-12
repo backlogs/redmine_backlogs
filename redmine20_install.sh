@@ -34,8 +34,12 @@ bundle exec rake db:migrate RAILS_ENV=development --trace
 # install redmine database
 bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 
+# generate session store/secret token
+bundle exec rake generate_secret_token
+# bundle exec rake generate_session_store # for redmine < 2.0
+
 # install backlogs
-bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task override_unsupported=true RAILS_ENV=development --trace
+bundle exec rake redmine:backlogs:install labels=no story_tracker=Story task_tracker=Task RAILS_ENV=development --trace
 
 # run backlogs database migrations
 bundle exec rake redmine:plugins:migrate RAILS_ENV=test
