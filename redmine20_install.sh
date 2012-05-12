@@ -48,6 +48,9 @@ bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
 
+# enable development features
+touch backlogs.dev
+
 # install backlogs
 bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task RAILS_ENV=development --trace
 
