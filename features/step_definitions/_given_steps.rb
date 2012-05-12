@@ -199,7 +199,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days(:all).collect{|d| d.to_time}
+  days = @sprint.days(:all).collect{|d| Time.utc(d.year, d.month, d.day)}
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
