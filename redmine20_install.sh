@@ -27,6 +27,9 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
+# enable development features
+touch backlogs.dev
+
 # install gems
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 mkdir -p vendor/bundle
@@ -44,9 +47,6 @@ bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
-
-# enable development features
-touch backlogs.dev
 
 # install backlogs
 bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task RAILS_ENV=development --trace
