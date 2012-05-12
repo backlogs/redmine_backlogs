@@ -6,11 +6,15 @@ rvm:
 install: "echo skip bundle install"
 
 script:
+  - export WORKING_DIR=`pwd`
   - export WORKSPACE=`pwd`/workspace
   - export PATH_TO_BACKLOGS=`pwd`
   - export PATH_TO_REDMINE=$WORKSPACE/redmine
   - mkdir $WORKSPACE
   - cp config/database.yml.travis $WORKSPACE/database.yml
   - git clone  -b master --depth=100 --quiet git://github.com/Vanuan/redmine.git $PATH_TO_REDMINE
+  - cd $PATH_TO_REDMINE
+  - git checkout 1.4.1
+  - cd $WORKING_DIR
   - bash -x ./redmine20_install.sh
 
