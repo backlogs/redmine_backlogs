@@ -9,15 +9,24 @@ then
        " environment variables"
   exit 1;
 fi
+if [[ "$REDMINE_VER" = 2 ]];
+then
+  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  export GENERATE_SECRET=generate_secret_token
+  export MIGRATE_PLUGINS=redmine:plugins:migrate
+else
+  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+  export GENERATE_SECRET=generate_session_store
+  export MIGRATE_PLUGINS=db:migrate_plugins
+else
+fi
 
 # cd to redmine folder
-echo changing directory to $PATH_TO_REDMINE
 cd $PATH_TO_REDMINE
 echo current directory is `pwd`
 
 # create a link to the backlogs plugin
-echo creating a symbolic link ./plugins/redmine_backlogs to $PATH_TO_BACKLOGS
-ln -sf $PATH_TO_BACKLOGS ./plugins/redmine_backlogs
+ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
 # install gems
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
@@ -35,18 +44,17 @@ bundle exec rake db:migrate RAILS_ENV=development --trace
 bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 
 # generate session store/secret token
-bundle exec rake generate_secret_token
-# bundle exec rake generate_session_store # for redmine < 2.0
+bundle exec rake $GENERATE_SECRET
 
 # enable development features
 touch backlogs.dev
 
 # install backlogs
-bundle exec rake redmine:backlogs:install labels=no story_tracker=Story task_tracker=Task RAILS_ENV=development --trace
+bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task RAILS_ENV=development --trace
 
 # run backlogs database migrations
-bundle exec rake redmine:plugins:migrate RAILS_ENV=test
-bundle exec rake redmine:plugins:migrate RAILS_ENV=development
+bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test
+bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=development
 
 # create a link to cucumber features
 ln -sf $PATH_TO_BACKLOGS/features/ .
@@ -62,6 +70,6 @@ fi
 bundle exec cucumber $CUCUMBER_FLAGS features
 
 # clean up database
-bundle exec rake redmine:plugins:migrate NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
-bundle exec rake redmine:plugins:migrate NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
+bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
+bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
 
