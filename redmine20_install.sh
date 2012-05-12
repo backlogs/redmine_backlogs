@@ -18,7 +18,6 @@ else
   export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
   export GENERATE_SECRET=generate_session_store
   export MIGRATE_PLUGINS=db:migrate_plugins
-else
 fi
 
 # cd to redmine folder
