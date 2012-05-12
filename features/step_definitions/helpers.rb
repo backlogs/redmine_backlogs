@@ -13,6 +13,11 @@ def time_offset(o)
   return ((((d.to_i * 24) + h.to_i) * 60) + m.to_i) * 60 * (sign == '-' ? -1 : 1)
 end
 
+def offset_to_hours(o)
+  # seconds to hours
+  return o/60/60
+end
+
 def initialize_story_params
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
   @story['project_id'] = @project.id
