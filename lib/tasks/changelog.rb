@@ -5,7 +5,7 @@ require 'open-uri'
 require 'json'
 
 last_version = nil
-changelog = File.open('CHANGELOG').each{|line|
+changelog = File.open('CHANGELOG.rdoc').each{|line|
   m = line.match(/^== .* (v[0-9]+\.[0-9]+\.[0-9]+)$/)
   if m
     last_version = m[1]
