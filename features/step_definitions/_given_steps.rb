@@ -177,7 +177,6 @@ Given /^I have defined the following sprints:$/ do |table|
         raise "Unexpected date value '#{version[date_attr]}'"
       end
     end
-
     RbSprint.create! version
   end
 end
@@ -199,7 +198,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days(:all).collect{|d| d.to_time}
+  days = @sprint.days(:all).collect{|d| Time.utc(d.year, d.month, d.day)}
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
@@ -218,6 +217,7 @@ Given /^I have made the following task mutations:$/ do |table|
     remaining = mutation.delete('remaining')
 
     mutated = days[mutation.delete('day').to_i - 1]
+    mutated.utc?.should be_true
 
     mutated.to_date.should be >= task.created_on.to_date
 
@@ -267,12 +267,17 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
 
     if day_added
       if day_added == ''
-        created_on = (sprint.sprint_start_date - 1).to_time
+        # one day before sprint start
+        before_sprint_start = sprint.sprint_start_date - 1
+        created_on = before_sprint_start.to_time(:utc)
+        created_on.hour.should == 0
       else
-        created_on = sprint.days(:all)[Integer(day_added)-1].to_time + time_offset('1h')
+        created_on = sprint.days(:all)[Integer(day_added)-1].to_time(:utc) + time_offset('1h')
+        created_on.hour.should == 1
       end
     elsif offset
-      created_on = sprint.sprint_start_date.to_time + time_offset(offset)
+      created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(offset)
+      created_on.hour.should == offset_to_hours(time_offset(offset))
     end
 
     story.should == {}
