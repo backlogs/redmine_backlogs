@@ -38,6 +38,9 @@ bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 bundle exec rake generate_secret_token
 # bundle exec rake generate_session_store # for redmine < 2.0
 
+# enable development features
+touch backlogs.dev
+
 # install backlogs
 bundle exec rake redmine:backlogs:install labels=no story_tracker=Story task_tracker=Task RAILS_ENV=development --trace
 
@@ -47,9 +50,6 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=development
 
 # create a link to cucumber features
 ln -sf $PATH_TO_BACKLOGS/features/ .
-
-# enable development features
-touch backlogs.dev
 
 mkdir -p coverage
 ln -sf `pwd`/coverage $WORKSPACE
