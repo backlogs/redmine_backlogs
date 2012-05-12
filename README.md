@@ -3,7 +3,7 @@ REDMINE BACKLOGS
 A Redmine plugin for agile teams. For more information,
 please visit http://www.redminebacklogs.net
 
-Travis: [![Build Status](https://secure.travis-ci.org/Vanuan/redmine_backlogs_rails3.png?branch=backlogs_rails3_rebase100512)](http://travis-ci.org/Vanuan/redmine_backlogs_rails3)
+Travis: [![Build Status](https://secure.travis-ci.org/backlogs/redmine_backlogs.png?branch=master)](http://travis-ci.org/backlogs/redmine_backlogs)
 
 
 LICENSE
