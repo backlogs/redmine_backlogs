@@ -4,6 +4,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 require 'cucumber/rails/world'
 Cucumber::Rails::World.use_transactional_fixtures
 
+if Rails::VERSION::MAJOR >= 3
+  require 'rspec/rails/matchers'
+  World(Rspec::Rails::Matchers::RoutingMatchers)
+end
+
 #Seed the DB
 def seed_the_database
   if Rails::VERSION::MAJOR < 3
