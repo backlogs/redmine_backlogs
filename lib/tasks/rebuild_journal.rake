@@ -2,39 +2,29 @@ namespace :redmine do
   namespace :backlogs do
     desc "Rebuild unified journal"
     task :rebuild_journal => :environment do
-      if ENV['limit'] =~ /^[0-9]+$/
-        limit = Integer(ENV['limit'])
-      else
-        limit = nil
+      project = ENV['project'].to_s.strip
+      project = nil if project == '' || project == '*'
+
+      if project && Project.count(:conditions => ['identifier = ?', project]) != 1
+        puts "Project #{project.inspect} not found. Available projects:"
+        Project.all.each{|p| puts "* #{p.identifier}" }
+        exit
       end
 
-      reset = (ENV['reset'] == 'true')
-      RbJournal.delete_all if reset || limit.nil?
-
-      if limit.nil?
-        issues = Issue.all
+      if project
+        RbJournal.delete_all(['issue_id in (select issues.id from issues join projects on issues.project_id = projects.id and projects.identifier = ?)', project])
+        issues = Issue.find(:all, :joins => :project, :conditions => ['projects.identifier = ?', project])
       else
-        issues = Issue.find(:all, :conditions => 'rb_journals.issue_id is null', :joins => 'left join rb_journals on issues.id = rb_journals.issue_id', :limit => limit)
+        RbJournal.delete_all
+        issues = Issue.all
       end
 
       issues = issues.to_a
 
-      if issues.size > 0
-        puts "Migrating journals for #{issues.size} issues. This will take a while. Sorry."
-      else
-        puts "Nothing to do"
-      end
-
+      puts "Migrating journals for #{issues.size} issues. This will take a while. Sorry."
       migrated = 0
       issues.in_groups_of(50, false) do |chunk|
-        report = true
-        b = Benchmark.measure {
-          chunk.each{|issue|
-            puts "Issue #{issue.id} + #{chunk.size - 1} others" if report && limit
-            report = false
-            RbJournal.rebuild(issue)
-          }
-        }
+        b = Benchmark.measure { chunk.each{|issue| RbJournal.rebuild(issue) } }
 
         migrated += chunk.size
         speed = chunk.size.to_f / b.real
