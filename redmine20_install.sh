@@ -61,6 +61,9 @@ ln -sf $PATH_TO_BACKLOGS/features/ .
 mkdir -p coverage
 ln -sf `pwd`/coverage $WORKSPACE
 
+# patch fixtures
+bundle exec rake redmine:backlogs:prepare_fixtures
+
 # run cucumber
 if [ ! -n "${CUCUMBER_FLAGS}" ];
 then
