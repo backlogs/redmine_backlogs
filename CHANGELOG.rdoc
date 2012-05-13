@@ -1,3 +1,9 @@
+== 2012-05-13 v0.9.7
+
+* Removes journal rebuild from the migration
+* In-place fixes for test fixtures
+* Merge pull request "Travis on master" from Vanuan/travis_on_master
+
 == 2012-05-11 v0.9.6
 
 * Fixes "sub stories disappearing from task board", "Subtasks not updated when changing custom fields", "Dragging a closed story within a sprint causes it to be set to New"

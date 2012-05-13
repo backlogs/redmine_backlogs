@@ -89,13 +89,6 @@ if [ "$INSTALL" = "yes" ]; then
   if [ ! -f "$WORKSPACE/$PLATFORM-$RUBYVER/database.yml" -a ! -f "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" ] ; then
     errmsg "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml not found"
   fi
-  if [ ! -f "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" ]; then
-    case $PLATFORM in
-      redmine) ISSUES_FIXTURE_URL="http://redmine.rubyforge.org/svn/tags/$VERSION/test/fixtures/issues.yml";;
-      chiliproject) ISSUES_FIXTURE_URL="https://raw.github.com/chiliproject/chiliproject/master/test/fixtures/issues.yml";;
-    esac
-    wget -qO- "$ISSUES_FIXTURE_URL" | awk '/^issue/ {print $0; print "  position: " NR} !/^issue/ {print $0}' > "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml"
-  fi
 fi
 
 export RAILS_ENV=development
@@ -183,6 +176,7 @@ if [ "$DATABASE" = "yes" ] ; then
     REDMINE_LANG=en bundle exec rake $TRACE redmine:load_default_data
   fi
   bundle exec rake $TRACE db:migrate:plugins
+  bundle exec rake $TRACE redmine:backlogs:prepare_fixtures
   labels=no story_trackers=Story task_tracker=Task bundle exec rake $TRACE redmine:backlogs:install
 fi
 # if Options.adminpw.to_s != ''
