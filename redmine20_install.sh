@@ -74,7 +74,9 @@ then
 fi
 bundle exec cucumber $CUCUMBER_FLAGS features
 
+if [ ! "$SKIP_DB_CLEAN" = yes ];
+then
 # clean up database
 bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
 bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
-
+fi
