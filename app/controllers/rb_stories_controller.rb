@@ -52,7 +52,6 @@ class RbStoriesController < RbApplicationController
       return
     end
 
-    story.reload
     status = (result ? 200 : 400)
 
     respond_to do |format|

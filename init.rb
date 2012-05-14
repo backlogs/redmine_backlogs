@@ -2,6 +2,8 @@ require 'redmine'
 require 'dispatcher'
 
 Dispatcher.to_prepare do
+  require_dependency 'backlogs_activerecord_mixin'
+
   require_dependency 'backlogs_setup'
 
   require_dependency 'issue'
@@ -38,9 +40,9 @@ end
 
 Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
-  author 'friflaj,relaxdiego,mikoto20000,bohansen,rhulka,Vanuan,stevel'
+  author 'friflaj,Vanuan,relaxdiego,mikoto20000,bohansen,rhulka,stevel'
   description 'A plugin for agile teams'
-  version 'v0.9.5'
+  version 'v0.9.7'
 
   settings :default => { 
                          :story_trackers            => nil, 

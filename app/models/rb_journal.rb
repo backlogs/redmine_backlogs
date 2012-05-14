@@ -17,7 +17,14 @@
 
 class RbJournal < ActiveRecord::Base
   REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
-  JOURNALED_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_open', 'status_success', 'story_points', 'remaining_hours']
+  JOURNALED_PROPERTIES = {
+    'estimated_hours'   => :float,
+    'remaining_hours'   => :float,
+    'story_points'      => :float,
+    'fixed_version_id'  => :int,
+    'status_open'       => :bool,
+    'status_success'    => :bool,
+  }
 
   belongs_to :issue
 
@@ -46,16 +53,13 @@ class RbJournal < ActiveRecord::Base
       rescue ActiveRecord::RecordNotFound
         status = nil
       end
-      properties = [ { :prop_key => 'status_open',              :prop_value => status && !status.is_closed },
-                     { :prop_key => 'status_success',           :prop_value => status && !status.backlog_is?(:success) } ]
+      changes = [ { :property => 'status_open',              :value => status && !status.is_closed },
+                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success) } ]
     else
-      properties = [ { :prop_key => journal_property_key(prop), :prop_value => journal_property_value(prop, j) } ]
+      changes = [ { :property => journal_property_key(prop), :value => journal_property_value(prop, j) } ]
     end
-    properties.each{|property|
-      RbJournal.new(:issue_id => issue_id,
-                    :timestamp => timestamp,
-                    :property => property[:prop_key],
-                    :value => property[:prop_value]).save
+    changes.each{|change|
+      RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :change => change).save
     }
   end
 
@@ -139,7 +143,7 @@ class RbJournal < ActiveRecord::Base
 
     changes.each_pair{|prop, updates|
       updates.each{|change|
-        RbJournal.new(:issue_id => issue.id, :property => prop, :timestamp => change[:time], :value => change[:new]).save
+        RbJournal.new(:issue_id => issue.id, :timestamp => change[:time], :change => {:property => prop, :value => change[:new]}).save
       }
     }
   end
@@ -159,31 +163,47 @@ class RbJournal < ActiveRecord::Base
     return s
   end
 
+  def change=(prop)
+    self.property = prop[:property]
+    self.value = prop[:value]
+  end
   def property
     return self[:property].to_sym
   end
   def property=(name)
-    raise "Unknown journal property #{name.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(name.to_s)
-    self[:property] = name.to_s
+    name = name.to_s
+    raise "Unknown journal property #{name.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(name)
+    self[:property] = name
   end
 
   def value
     v = self[:value]
 
-    return nil if v.nil?
+    # this test against blank *only* works when not storing string properties! Otherwise test against nil? here and handle
+    # blank? per-type
+    return nil if v.blank?
 
-    case property
-      when :status_open, :status_success
+    case RbJournal::JOURNALED_PROPERTIES[self[:property]]
+      when :bool
         return (v == 'true')
-      when :fixed_version_id
+      when :int
         return Integer(v)
-      when :story_points, :remaining_hours, :estimated_hours
+      when :float
         return Float(v)
       else
-        raise "Unknown journal property #{property.inspect}"
+        raise "Unknown journal property #{self[:property].inspect}"
     end
   end
   def value=(v)
-    self[:value] = v.nil? ? nil : v.to_s
+    # this test against blank *only* works when not storing string properties! Otherwise test against nil? here and handle
+    # blank? per-type
+    self[:value] = v.blank? ? nil : case RbJournal::JOURNALED_PROPERTIES[self[:property]]
+      when :bool
+        v ? 'true' : 'false'
+      when :int, :float
+        v.to_s
+      else
+        raise "Unknown journal property #{self[:property].inspect}"
+    end
   end
 end

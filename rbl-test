@@ -2,6 +2,11 @@
 
 set -e
 
+function errmsg {
+  echo "$1"
+  exit 1
+}
+
 function print_usage {
 cat <<EOF
 
@@ -53,7 +58,10 @@ mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
 mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
 mysqladmin -u root -p$DBROOTPW create $GEMSET
 
-#zcat ../setup/$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
+if [ -f ../setup/cucumber-$GEMSET.sql.gz ]; then
+  echo 'Pre-loading data'
+  zcat ../setup/cucumber-$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
+fi
 
 echo migrations
 bundle exec rake generate_session_store
