@@ -113,6 +113,7 @@ When /^I (try to )?update the story$/ do |attempt|
                       url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
                       @story_params # .merge({ "_method" => "put" })
   page.driver.response.status.should == 200 if attempt == ''
+  @story.reload
 end
 
 When /^I (try to )?update the task$/ do |attempt|
