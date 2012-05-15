@@ -93,7 +93,7 @@ end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
-  @impediment_params = initialize_impediment_params(sprint.id)
+  @impediment_params = initialize_impediment_params({"fixed_version_id" => sprint.id})
 end
 
 Given /^I want to create a sprint$/ do
@@ -147,17 +147,25 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
 
   # Configure the story and task trackers
-  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
-  task_tracker = "#{Tracker.create!(:name => 'Task').id}"
-  plugin = Redmine::Plugin.find('redmine_backlogs')
+  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id]
+  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task')).id
+
   Backlogs.setting[:story_trackers] = story_trackers
   Backlogs.setting[:task_tracker] = task_tracker
 
   # Make sure these trackers are enabled in the project
   @project.update_attribute :tracker_ids, (story_trackers << task_tracker)
-
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
+end
+
+Given /^no versions or issues exist$/ do
+  Issue.find(:all).each{|i| i.destroy }
+  Version.find(:all).each{|v| v.destroy }
+end
+
+Given /^I have selected the (.*) project$/ do |project_id|
+  @project = get_project(project_id)
 end
 
 Given /^I have defined the following sprints:$/ do |table|
@@ -177,6 +185,9 @@ Given /^I have defined the following sprints:$/ do |table|
         raise "Unexpected date value '#{version[date_attr]}'"
       end
     end
+
+    version['sharing'] = 'none' if version['sharing'].nil?
+
     RbSprint.create! version
   end
 end
@@ -330,7 +341,7 @@ end
 Given /^I have defined the following impediments:$/ do |table|
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
-    params = initialize_impediment_params(sprint.id)
+    params = initialize_impediment_params({"fixed_version_id" => sprint.id})
 
     params['subject'] = impediment.delete('subject')
     params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')

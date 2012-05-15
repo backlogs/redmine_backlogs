@@ -47,7 +47,6 @@ class RbStory < Issue
       conditions << " and (" + options[:conditions].delete_at(0) + ")"
       parameters += options[:conditions]
     end
-
     options[:conditions] = [conditions] + parameters
 
     options[:joins].compact!
@@ -57,22 +56,12 @@ class RbStory < Issue
     return options
   end
 
-  def self.backlog(options={})
-    stories = []
-
-    RbStory.find(:all, RbStory.find_params(options.merge(:order => RbStory::ORDER))).each_with_index {|story, i|
-      story.rank = i + 1
-      stories << story
-    }
-
-    return stories
-  end
-
   # this forces NULLS-LAST ordering
   ORDER = 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC'
 
-  def self.backlog(project_id, sprint_id, options={})
+  def self.backlog(options={})
     stories = []
+
     RbStory.find(:all, RbStory.find_params(options.merge(:order => RbStory::ORDER))).each_with_index {|story, i|
       story.rank = i + 1
       stories << story
@@ -91,25 +80,6 @@ class RbStory < Issue
 
   def self.backlogs_by_sprint(project, sprints, options={})
     ret = RbStory.backlog(options.merge(:project_id => project.id, :sprint_id => sprints.map {|s| s.id}))
-    sprint_of = {}
-    ret.each do |backlog|
-      sprint_of[backlog.fixed_version_id] ||= []
-      sprint_of[backlog.fixed_version_id].push(backlog)
-    end
-    return sprint_of
-  end
-
-  def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(project.id, nil, :limit => limit)
-  end
-
-  def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(sprint.project.id, sprint.id, options)
-  end
->>>>>>> master
-
-  def self.backlogs_by_sprint(project, sprints, options={})
-    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, options)
     sprint_of = {}
     ret.each do |backlog|
       sprint_of[backlog.fixed_version_id] ||= []
@@ -235,7 +205,8 @@ class RbStory < Issue
     @rank ||= Issue.count(RbStory.find_params(
       :sprint_id => self.fixed_version_id,
       :project_id => self.project.id,
-      :conditions => ['issues.position <= ?', self.position]))
+      :conditions => ['issues.position <= ?', self.position]
+      ))
 
     return @rank
   end
