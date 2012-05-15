@@ -47,6 +47,7 @@ class RbStory < Issue
       conditions << " and (" + options[:conditions].delete_at(0) + ")"
       parameters += options[:conditions]
     end
+
     options[:conditions] = [conditions] + parameters
 
     options[:joins].compact!
@@ -61,7 +62,6 @@ class RbStory < Issue
 
   def self.backlog(options={})
     stories = []
-
     RbStory.find(:all, RbStory.find_params(options.merge(:order => RbStory::ORDER))).each_with_index {|story, i|
       story.rank = i + 1
       stories << story
@@ -205,8 +205,7 @@ class RbStory < Issue
     @rank ||= Issue.count(RbStory.find_params(
       :sprint_id => self.fixed_version_id,
       :project_id => self.project.id,
-      :conditions => ['issues.position <= ?', self.position]
-      ))
+      :conditions => ['issues.position <= ?', self.position]))
 
     return @rank
   end
