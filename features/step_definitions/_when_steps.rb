@@ -4,16 +4,19 @@ When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, p
   params = @impediment_params.dup
   params['project_id'] = Project.find(project) if project != ''
   page.driver.post(
-                      url_for(:controller => :rb_impediments, :action => :create),
+                      url_for(:controller => :rb_impediments,
+                              :action => :create,
+                              :only_path => true),
                       @impediment_params
                   )
-
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?create the story$/ do |attempt|
   page.driver.post(
-                      url_for(:controller => :rb_stories, :action => :create),
+                      url_for(:controller => :rb_stories,
+                              :action => :create,
+                              :only_path => true),
                       @story_params
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -22,7 +25,9 @@ end
 When /^I (try to )?create the task$/ do |attempt|
   initial_estimate = @task_params.delete('initial_estimate')
   page.driver.post(
-                      url_for(:controller => :rb_tasks, :action => :create),
+                      url_for(:controller => :rb_tasks,
+                              :action => :create,
+                              :only_path => true),
                       @task_params
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -30,7 +35,9 @@ end
 
 When /^I (try to )?create the sprint$/ do |attempt|
   page.driver.post(
-                      url_for(:controller => :rb_sprints, :action => :create),
+                      url_for(:controller => :rb_sprints,
+                              :action => :create,
+                              :only_path => true),
                       @sprint_params
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -45,7 +52,10 @@ When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_sub
   attributes[:fixed_version_id] = prev.fixed_version_id
 
   page.driver.post(
-                      url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
+                      url_for(:controller => 'rb_stories',
+                              :action => "update",
+                              :id => story.id,
+                              :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -63,7 +73,10 @@ When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|t
   # TODO: why do we need 'direction'?
 
   page.driver.post(
-                      url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
+                      url_for(:controller => 'rb_stories',
+                              :action => "update",
+                              :id => story.id,
+                              :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
   verify_request_status(200)
@@ -103,7 +116,10 @@ end
 
 When /^I (try to )?update the impediment$/ do |attempt|
   page.driver.post( 
-                      url_for(:controller => :rb_impediments, :action => :update, :id => @impediment_params['id']),
+                      url_for(:controller => :rb_impediments,
+                              :action => :update,
+                              :id => @impediment_params['id'],
+                              :only_path => true),
                       @impediment_params
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -111,7 +127,10 @@ end
 
 When /^I (try to )?update the sprint$/ do |attempt|
   page.driver.post(
-                      url_for(:controller => 'rb_sprints', :action => "update", :sprint_id => @sprint_params['id']),
+                      url_for(:controller => 'rb_sprints',
+                              :action => "update",
+                              :sprint_id => @sprint_params['id'],
+                              :only_path => true),
                       @sprint_params.merge({ "_method" => "put" })
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -119,7 +138,10 @@ end
 
 When /^I (try to )?update the story$/ do |attempt|
   page.driver.post(
-                      url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
+                      url_for(:controller => :rb_stories,
+                              :action => :update,
+                              :id => @story_params[:id],
+                              :only_path => true),
                       @story_params #.merge({ "_method" => "put" })
                   )
   page.driver.response.status.should == 200 if attempt == ''
@@ -128,7 +150,10 @@ end
 
 When /^I (try to )?update the task$/ do |attempt|
   page.driver.post(
-                      url_for(:controller => :rb_tasks, :action => :update, :id => @task_params[:id]),
+                      url_for(:controller => :rb_tasks,
+                              :action => :update,
+                              :id => @task_params[:id],
+                              :only_path => true),
                       @task_params.merge({ "_method" => "put" })
                   )
   page.driver.response.status.should == 200 if attempt == ''
