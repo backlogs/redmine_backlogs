@@ -20,6 +20,7 @@ group :development do
   gem "culerity", "=0.2.15"
   gem "database_cleaner"
   gem "gherkin", "~> 2.5.0"
+  gem "poltergeist"
   gem "redgreen" if RUBY_VERSION < "1.9"
   gem "rspec", "=1.3.1"
   gem "rspec-rails", "=1.3.3"
