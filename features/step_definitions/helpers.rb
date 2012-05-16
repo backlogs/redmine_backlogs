@@ -52,36 +52,28 @@ def initialize_sprint_params
   params
 end
 
-def login_as_product_owner
-  visit url_for(:controller => 'account', :action=>'login')
-  fill_in 'username', :with => 'jsmith'
-  fill_in 'password', :with => 'jsmith'
+def login_as(user, password)
+  visit url_for(:controller => 'account', :action=>'login', :only_path=>true)
+  fill_in 'username', :with => user
+  fill_in 'password', :with => password
   page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='jsmith'")
+  @user = User.find(:first, :conditions => "login='"+user+"'")
+end
+
+def login_as_product_owner
+  login_as('jsmith', 'jsmith')
 end
 
 def login_as_scrum_master
-  visit url_for(:controller => 'account', :action=>'login')
-  fill_in 'username', :with => 'jsmith'
-  fill_in 'password', :with => 'jsmith'
-  page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='jsmith'")
+  login_as('jsmith', 'jsmith')
 end
 
 def login_as_team_member
-  visit url_for(:controller => 'account', :action=>'login')
-  fill_in 'username', :with => 'jsmith'
-  fill_in 'password', :with => 'jsmith'
-  page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='jsmith'")
+  login_as('jsmith', 'jsmith')
 end
 
 def login_as_admin
-  visit url_for(:controller => 'account', :action=>'login')
-  fill_in 'username', :with => 'admin'
-  fill_in 'password', :with => 'admin'
-  page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='admin'")
+  login_as('admin', 'admin')
 end  
 
 def task_position(task)
@@ -101,7 +93,7 @@ def story_position(story)
 end
 
 def logout
-  visit url_for(:controller => 'account', :action=>'logout')
+  visit url_for(:controller => 'account', :action=>'logout', :only_path=>true)
   @user = nil
 end
 
@@ -143,3 +135,12 @@ def story_before(pos)
   stories.size.should be > (pos - 2)
   return stories[pos - 2].id
 end
+
+def assert_page_loaded(page)
+  if page.driver.respond_to?('response') # javascript drivers has no response
+    page.driver.response.status.should == 200
+  else
+    true # no way to check javascript driver page status yet
+  end
+end
+
