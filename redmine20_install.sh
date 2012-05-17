@@ -34,6 +34,30 @@ clone_redmine()
   git checkout $REDMINE_GIT_TAG
 }
 
+run_tests()
+{
+  # exit if tests fail
+  # set -e
+
+  cd $PATH_TO_REDMINE
+
+  # create a link to cucumber features
+  ln -sf $PATH_TO_BACKLOGS/features/ .
+
+  mkdir -p coverage
+  ln -sf `pwd`/coverage $WORKSPACE
+
+  # patch fixtures
+  bundle exec rake redmine:backlogs:prepare_fixtures
+
+  # run cucumber
+  if [ ! -n "${CUCUMBER_FLAGS}" ];
+  then
+    export CUCUMBER_FLAGS="--format progress"
+  fi
+  bundle exec cucumber $CUCUMBER_FLAGS features
+}
+
 uninstall()
 {
   set -e # exit if migrate fails
@@ -43,11 +67,12 @@ uninstall()
   bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
 }
 
-while getopts :ru opt
+while getopts :rtu opt
 do case "$opt" in
   r)  clone_redmine; exit 0;;
+  t)  run_tests;  exit 0;;
   u)  uninstall;  exit 0;;
-  [?]) echo "Without clone and uninstall";;
+  [?]) echo "install";;
   esac
 done
 
@@ -87,20 +112,4 @@ bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tr
 # run backlogs database migrations
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=development
-
-# create a link to cucumber features
-ln -sf $PATH_TO_BACKLOGS/features/ .
-
-mkdir -p coverage
-ln -sf `pwd`/coverage $WORKSPACE
-
-# patch fixtures
-bundle exec rake redmine:backlogs:prepare_fixtures
-
-# run cucumber
-if [ ! -n "${CUCUMBER_FLAGS}" ];
-then
-  export CUCUMBER_FLAGS="--format progress"
-fi
-bundle exec cucumber $CUCUMBER_FLAGS features
 

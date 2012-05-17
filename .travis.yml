@@ -13,5 +13,6 @@ script:
   - cp config/database.yml.travis $WORKSPACE/database.yml
   - bash -x ./redmine20_install.sh -r
   - bash -x ./redmine20_install.sh
+  - bash -x ./redmine20_install.sh -t
   - bash -x ./redmine20_install.sh -u
 
