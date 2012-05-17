@@ -24,6 +24,7 @@ RB.Backlog = RB.Object.create({
 
     // Make the list sortable
     list = this.getList();
+    list.bind('mousedown', this.mouseDown);
     list.sortable({connectWith: '.stories',
                    placeholder: 'placeholder',
                    forcePlaceholderSize: true,
@@ -124,18 +125,9 @@ RB.Backlog = RB.Object.create({
     this.drawMenu();
   },
   
-  dragStart: function(event, ui) {
-    if (jQuery.support.noCloneEvent){
-      ui.item.addClass("dragging");
-    } else {
-      // for IE    
-      ui.item.draggable('enabled');
-    }
-
-    var origin = ui.item.parents('.backlog').data('this');
-    ui.item.data('dragging', 'true');
-
-    var storyProject = ui.item.find(".story_project").text();
+  mouseDown: function(event) {
+    var item = RB.$(event.target).parents('.model');
+    var storyProject = item.find(".story_project").text();
     // disable invalid drag targets
     RB.$('#sprint_backlogs_container .stories').sortable('disable');
     if (RB.constants.project_versions[storyProject]) {
@@ -143,6 +135,16 @@ RB.Backlog = RB.Object.create({
         RB.$('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
       }
     }
+  },
+
+  dragStart: function(event, ui) {
+    if (jQuery.support.noCloneEvent){
+      ui.item.addClass("dragging");
+    } else {
+      // for IE    
+      ui.item.draggable('enabled');
+    }
+    ui.item.data('dragging', 'true');
   },
   
   dragBeforeStop: function(event, ui){ 
