@@ -24,6 +24,7 @@ else
   export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
   export REDMINE_GIT_TAG=1.4.1
 fi
+export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 
 clone_redmine()
 {
@@ -33,11 +34,21 @@ clone_redmine()
   git checkout $REDMINE_GIT_TAG
 }
 
-while getopts :r opt
-do	case "$opt" in
-	r)	clone_redmine; exit 0;;
-	[?])	echo "Without clone";;
-	esac
+uninstall()
+{
+  set -e # exit if migrate fails
+  cd $PATH_TO_REDMINE
+  # clean up database
+  bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
+  bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
+}
+
+while getopts :ru opt
+do case "$opt" in
+  r)  clone_redmine; exit 0;;
+  u)  uninstall;  exit 0;;
+  [?]) echo "Without clone and uninstall";;
+  esac
 done
 
 # cd to redmine folder
@@ -51,7 +62,6 @@ ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 touch backlogs.dev
 
 # install gems
-export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
 
@@ -94,9 +104,3 @@ then
 fi
 bundle exec cucumber $CUCUMBER_FLAGS features
 
-if [ ! "$SKIP_DB_CLEAN" = yes ];
-then
-# clean up database
-bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
-bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
-fi
