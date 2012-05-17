@@ -113,9 +113,8 @@ if [ "$INSTALL" = "yes" ] ; then
   ln -s "$WORKSPACE/redmine_backlogs" "$WORKSPACE/$PLATFORM-$RUBYVER/vendor/plugins"
   ln -s "$WORKSPACE/redmine_backlogs/features" "$WORKSPACE/$PLATFORM-$RUBYVER"
   cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/config/database.yml"
-  cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/issues.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/test/fixtures/issues.yml"
   echo rvm use `ruby --version | awk '{print $2}' | sed -e 's/p.*//'`@$PLATFORM > "$WORKSPACE/$PLATFORM-$RUBYVER/.rvmrc"
-  sed -i -e"s/gem 'capybara'/gem 'capybara', '=0.3.9'/" Gemfile
+  sed -i -e"s/gem 'capybara'/gem 'capybara', '~>1.1.0'/" Gemfile
 fi
 
 if [ "$RVM" = "yes" -a "$GEMS" = "yes" ] ; then
@@ -140,12 +139,6 @@ if [ "$GEMS" = "yes" ]; then
     gem list | grep ,
     exit
   fi
-fi
-
-if [ "$INSTALL" = "yes" ] ; then
-  command -v bundle >/dev/null 2>&1 || errmsg "Please set up gem environment first"
-  cd "$WORKSPACE/$PLATFORM-$RUBYVER"
-  ./script/generate cucumber --skip --spork
 fi
 
 if [ "$DATABASE" = "yes" ] ; then
@@ -182,3 +175,11 @@ fi
 # if Options.adminpw.to_s != ''
 #   script.database "cd ~/redmine/#{Options.platform}"
 #   script.database "./script/runner \"User.find(:all).reject{|user| user.login.to_s == ''}.each{|user| user.password, user.password_confirmation = '#{Options.adminpw}'; user.auth_source = nil; user.save!; puts '** password for ' + user.login + ' set to #{Options.adminpw}'}\""
+
+if [ "$INSTALL" = "yes" ] ; then
+  command -v bundle >/dev/null 2>&1 || errmsg "Please set up gem environment first"
+  cd "$WORKSPACE/$PLATFORM-$RUBYVER"
+  ./script/generate cucumber --skip --spork
+  rake redmine:backlogs:prepare_fixtures
+fi
+

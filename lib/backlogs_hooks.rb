@@ -234,6 +234,7 @@ module BacklogsPlugin
                 nt = Issue.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
+                nt.position = nil # will assign a new position
                 nt.save!
               }
             end

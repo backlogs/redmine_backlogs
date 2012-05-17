@@ -143,7 +143,7 @@ module Backlogs
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
                 j.type = 'IssueJournal'
                 j.activity_type = 'issues'
-                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
+                #j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
             end
             j.user = User.current
             j.save!
@@ -170,9 +170,10 @@ module Backlogs
 
       def backlogs_after_destroy
         # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
+        return if self.position.blank? || Issue.count(:conditions => ['position = ?', self.position]) != 0
         Issue.transaction do
           Issue.connection.execute('update issues set position_lock = position') # damn you MySQL
-          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
+          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}")
           Issue.connection.execute('update issues set position_lock = 0') # damn you MySQL
         end
         RbJournal.destroy_all(:issue_id => self.id)
