@@ -16,7 +16,7 @@ group :development do
   gem 'autotest-rails'
   gem "capybara", "~>1.1.0"
   gem "cucumber", "=1.1.0"
-  gem 'cucumber-rails', :git => 'git://github.com/Vanuan/cucumber-rails.git', :branch => 'cucumber-rails2_v0.3.3'
+  gem 'cucumber-rails', :git => 'https://github.com/Vanuan/cucumber-rails.git', :branch => 'cucumber-rails2_v0.3.3'
   gem "culerity", "=0.2.15"
   gem "database_cleaner"
   gem "gherkin", "~> 2.5.0"
