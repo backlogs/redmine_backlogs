@@ -100,7 +100,13 @@ if (RB.constants == null) {
     RbStory.find(:all, RbStory.find_params( :include_backlog => true, :project_id => @project.id, :sprint_id => @project.shared_versions.collect{|v| v.id})).each {|story|
       project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
     }
+    project_self_and_descendants = {} #make a hash to avoid inArray in javascript
+    projects = [ @project ] | @project.descendants || []
+    projects.each{|project|
+      project_self_and_descendants[project.id.to_s] = true
+    }
   %>
+  RB.constants.project_self_and_descendants = <%= project_self_and_descendants.to_json %>;
   RB.constants.project_versions = <%= project_versions.to_json %>;
   RB.constants.story_states = <%= transitions.to_json %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => 'json', :only_path => true) %>';

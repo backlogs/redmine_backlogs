@@ -135,6 +135,11 @@ RB.Backlog = RB.Object.create({
         RB.$('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
       }
     }
+
+    //disable product backlog if the dragged story is not in self or descendants
+    if (!RB.constants.project_self_and_descendants[storyProject]) {
+      RB.$('#product_backlog_container .stories').sortable('disable');
+    }
   },
 
   dragStart: function(event, ui) {
@@ -147,10 +152,10 @@ RB.Backlog = RB.Object.create({
     ui.item.data('dragging', 'true');
   },
   
-  dragBeforeStop: function(event, ui){ 
+  dragBeforeStop: function(event, ui){ //FIXME what does this function do?
     var dropTarget = ui.item.parents('.backlog').data('this');
 
-    // always allowed to go back to the product backlog
+    // always allowed to go back to the product backlog //FIXME this is not true for sharing
     if (!dropTarget.isSprintBacklog()) { return; }
 
     var targetSprint = dropTarget.getSprint().data('this').getID();
