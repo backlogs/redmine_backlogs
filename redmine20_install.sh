@@ -7,6 +7,10 @@ then
   echo "You should set"\
        " WORKSPACE, PATH_TO_REDMINE, PATH_TO_BACKLOGS"\
        " environment variables"
+  echo "You set:"\
+       "$WORKSPACE"\
+       "$PATH_TO_REDMINE"\
+       "$PATH_TO_BACKLOGS"
   exit 1;
 fi
 
@@ -67,14 +71,10 @@ uninstall()
   bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
 }
 
-while getopts :rtu opt
-do case "$opt" in
-  r)  clone_redmine; exit 0;;
-  t)  run_tests;  exit 0;;
-  u)  uninstall;  exit 0;;
-  [?]) echo "install";;
-  esac
-done
+run_install()
+{
+# exit if install fails
+set -e
 
 # cd to redmine folder
 cd $PATH_TO_REDMINE
@@ -112,4 +112,14 @@ bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tr
 # run backlogs database migrations
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=development
+}
 
+while getopts :irtu opt
+do case "$opt" in
+  i)  run_install;  exit 0;;
+  r)  clone_redmine; exit 0;;
+  t)  run_tests;  exit 0;;
+  u)  uninstall;  exit 0;;
+  [?]) echo "i: install; r: clone redmine; t: run tests; u: uninstall";;
+  esac
+done
