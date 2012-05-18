@@ -284,3 +284,20 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks = RbTask.find(:all, :conditions => { :subject => task_subject, :parent_id => stories.first.id })
   tasks.length.should == 1
 end
+
+Then /^I should see (\d+) stories in the sprint backlog of (.*)$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should (.*)be able to drag stories from project (.*) to the product backlog$/ do |neg, arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should (.*)be able to drag stories from project (.*) to the sprint backlog of (.*)$/ do |neg, arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
+  pending # express the regexp above with the code you wish you had
+end
+

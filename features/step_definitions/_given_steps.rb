@@ -513,3 +513,22 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
   end
 end
 
+
+Given /^backlogs sharing is enabled$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^the (.*) project is subproject of the (.*) project$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^the (.*) project has chosen to share its product backlog with its parents$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^the (.*) project has not chosen to share its product backlog$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+
+
