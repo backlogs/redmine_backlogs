@@ -1,11 +1,16 @@
 require 'redmine'
-require 'dispatcher'
 
-Dispatcher.to_prepare do
+if Rails::VERSION::MAJOR < 3
+  require 'dispatcher'
+  object_to_prepare = Dispatcher
+else
+  object_to_prepare = Rails.configuration
+  # if redmine plugins were railties:
+  # object_to_prepare = config
+end
+object_to_prepare.to_prepare do
   require_dependency 'backlogs_activerecord_mixin'
-
   require_dependency 'backlogs_setup'
-
   require_dependency 'issue'
 
   if Issue.const_defined? "SAFE_ATTRIBUTES"
