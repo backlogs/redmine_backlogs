@@ -2,7 +2,7 @@ if(RB==null){ var RB = {}; }
 
 if (RB.constants == null) {
   RB.buildImageTag = function(name) {
-    return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
+    return "<img src='<%= image_path('') %>"+ name + "'/>";
   };
 
   RB.constants = {
