@@ -60,22 +60,23 @@ Given /^I am logged out$/ do
 end
 
 Given /^I am viewing the master backlog$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
+  assert_page_loaded(page)
   click_link("Backlogs")
-  page.driver.response.status.should == 200
+  page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, :project_id => @project.identifier, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
@@ -154,6 +155,7 @@ end
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Rails.cache.clear
   @project = get_project(project_id)
+  @project.should_not be_nil
 
   # Enable the backlogs plugin
   @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
@@ -375,18 +377,21 @@ Given /^I have defined the following impediments:$/ do |table|
 end
 
 Given /^I am viewing the issues list$/ do
-  visit url_for(:controller => 'issues', :action=>'index', :project_id => @project)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => 'issues', :action=>'index', :project_id => @project, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I am viewing the issues sidebar$/ do
-  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
-  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :sprint_id => RbSprint.find_by_name(name).id)
-  page.driver.response.status.should == 200
+  visit url_for(:controller => 'rb_hooks_render',
+                :action=>'view_issues_sidebar',
+                :sprint_id => RbSprint.find_by_name(name).id,
+                :only_path => true)
+  assert_page_loaded(page)
 end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
@@ -471,13 +476,13 @@ Given /^I am logging time for task (.+)$/ do |subject|
   issue = Issue.find_by_subject(subject)
   visit "/issues/#{issue.id}/time_entries"
   click_link('Log time')
-  page.driver.response.status.should == 200
+  assert_page_loaded(page)
 end
 
 Given /^I am viewing log time for the (.*) project$/ do |project_id|
   visit "/projects/#{project_id}/time_entries"
   click_link('Log time')
-  page.driver.response.status.should == 200
+  assert_page_loaded(page)
 end
 
 Given /^I set the hours spent to (\d+)$/ do |arg1|
@@ -491,7 +496,7 @@ end
 Given /^I am duplicating (.+) to (.+) for (.+)$/ do |story_old, story_new, sprint_name|
   issue = Issue.find_by_subject(story_old)
   visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
-  page.driver.response.status.should == 200
+  assert_page_loaded(page)
   fill_in 'issue_subject', :with => story_new
   page.select(sprint_name, :from => "issue_fixed_version_id")
 end
@@ -500,10 +505,10 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
   if copy_option == "none"
     choose('copy_tasks_none')
   elsif copy_option == "open"
-    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_open")]').node['id']
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_open")]')['id']
     choose(field_id)
   else
-    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]').node['id']
+    field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]')['id']
     choose(field_id)
   end
 end

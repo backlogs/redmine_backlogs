@@ -37,9 +37,13 @@ When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_sub
   attributes[:prev]             = prev.id
   attributes[:fixed_version_id] = prev.fixed_version_id
 
-  page.driver.process :post,
-                      url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
+  page.driver.post(
+                      url_for(:controller => 'rb_stories',
+                              :action => "update",
+                              :id => story.id,
+                              :only_path => true),
                       attributes.merge({ "_method" => "put" })
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
@@ -58,9 +62,13 @@ When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|t
                         stories[position - (direction=="up" ? 2 : 1)].id
                       end
 
-  page.driver.process :post,
-                      url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
+  page.driver.post(
+                      url_for(:controller => 'rb_stories',
+                              :action => "update",
+                              :id => story.id,
+                              :only_path => true),
                       attributes.merge({ "_method" => "put" })
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
@@ -80,9 +88,13 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
            @story_ids[new_pos.to_i-1]
          end
 
-  page.driver.process :post, 
-                      url_for(:controller => :rb_stories, :action => :update, :id => story.text),
+  page.driver.post( 
+                      url_for(:controller => :rb_stories,
+                              :action => :update,
+                              :id => story.text,
+                              :only_path => true),
                       {:prev => (prev.nil? ? '' : prev.text), :project_id => @project.id, "_method" => "put"}
+                  )
 
   page.driver.response.status.should == 200 if attempt == ''
 
@@ -124,39 +136,39 @@ When /^I (try to )?update the task$/ do |attempt|
 end
 
 Given /^I visit the scrum statistics page$/ do
-  visit url_for(:controller => 'rb_all_projects', :action => 'statistics')
+  visit url_for(:controller => 'rb_all_projects', :action => 'statistics', :only_path => true)
 end
 
 When /^I try to download the calendar feed$/ do
-  visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project, :format => 'api' })
+  visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project, :format => 'api', :only_path => true})
 end
 
 When /^I view the master backlog$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project)
+  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
   click_link("Backlogs")
 end
 
 When /^I view the stories of (.+) in the issues tab/ do |sprint_name|
   sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id)
+  visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id, :only_path => true)
 end
 
 When /^I view the stories in the issues tab/ do
-  visit url_for(:controller => :rb_queries, :action => :show, :project_id=> @project.id)
+  visit url_for(:controller => :rb_queries, :action => :show, :project_id=> @project.id, :only_path => true)
 end
 
 When /^I view the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint.id)
+  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint.id, :only_path => true)
 end
 
 When /^I edit the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => @sprint.id)
+  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => @sprint.id, :only_path => true)
 end
 
 When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type, how_many, period, direction|
   date = eval("#{ how_many }.#{ period }.#{ direction=='from now' ? 'from_now' : 'ago' }")
   date = date.strftime("%B %d, %Y %H:%M:%S") + '.' + (date.to_f % 1 + 0.001).to_s.split('.')[1]
-  visit url_for(:controller => 'rb_updated_items', :action => :show, :project_id => @project.id, :only => object_type, :since => date)
+  visit url_for(:controller => 'rb_updated_items', :action => :show, :project_id => @project.id, :only => object_type, :since => date, :only_path => true)
 end
 
 When /^I click (create|copy|save)$/ do |command|
