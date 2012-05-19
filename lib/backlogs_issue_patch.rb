@@ -12,7 +12,6 @@ module Backlogs
         safe_attributes 'position'
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
-        after_destroy :backlogs_after_destroy
 
         include Backlogs::ActiveRecord
       end
@@ -166,17 +165,6 @@ module Backlogs
         if self.story || self.is_task?
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
-      end
-
-      def backlogs_after_destroy
-        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-        return if self.position.blank? || Issue.count(:conditions => ['position = ?', self.position]) != 0
-        Issue.transaction do
-          Issue.connection.execute('update issues set position_lock = position') # damn you MySQL
-          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}")
-          Issue.connection.execute('update issues set position_lock = 0') # damn you MySQL
-        end
-        RbJournal.destroy_all(:issue_id => self.id)
       end
 
       def value_at(property, time)

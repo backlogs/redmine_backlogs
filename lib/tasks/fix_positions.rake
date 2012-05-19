@@ -13,7 +13,7 @@ namespace :redmine do
           
           RbStory.connection.execute("
             insert into _backlogs_tmp_position (issue_id, new_position)
-            select id, (select count(*) from issues pred where pred.position < story.position)
+            select id, (select count(*) from issues pred where pred.position < story.position) * #{RbStory::POSITION_GAP}
             from issues story
           ")
 
