@@ -21,8 +21,13 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
 
+    var tasks_lists = j.find("#tasks .list");
+    if (!tasks_lists || !tasks_lists.length) {
+      alert("There are no task states. Please check the workflow of your tasks tracker in the administration section.");
+      return;
+    }
     // Initialize task lists
-    j.find("#tasks .list").sortable({ 
+    tasks_lists.sortable({ 
       connectWith: '#tasks .list', 
       placeholder: 'placeholder',
       start: self.dragStart,
