@@ -142,30 +142,28 @@ class RbStory < Issue
 
     conn = RbStory.connection
 
-    self.position = nil
     if prev.nil?
       self.position = (RbStory.minimum(:position) || RbStory::POSITION_GAP) - RbStory::POSITION_GAP
     else
-      2.times do
-        begin
-          nxt = RbStory.find(:first, :conditions => ['position > ?', prev.position], :order => :position)
-        rescue ActiveRecord::RecordNotFound
-          nxt = nil
+      begin
+        nxt = RbStory.find(:first, :conditions => ['position > ?', prev.position], :order => :position)
+      rescue ActiveRecord::RecordNotFound
+        nxt = nil
+      end
+
+      if nxt.nil?
+        self.position = prev.position + RbStory::POSITION_GAP
+      else
+        if (nxt.position - prev.position) < 2
+          RbStory.transaction do
+            conn.execute("update issues set position_lock = position where position > #{prev.position}") # damn you MySQL
+            conn.execute("update issues set position = position + #{RbStory::POSITION_GAP} where position > #{prev.position}") # make a gap
+            conn.execute('update issues set position_lock = 0 where position_lock <> 0') # damn you MySQL
+            nxt.position += RbStory::POSITION_GAP
+          end
         end
 
-        if nxt.nil?
-          self.position = prev.position + RbStory::POSITION_GAP
-          break
-        elsif (nxt.position - prev.position) > 1
-          self.position = (prev.position + nxt.position) / 2
-          break
-        end
-
-        RbStory.transaction do
-          conn.execute("update issues set position_lock = position where position > #{prev.position}") # damn you MySQL
-          conn.execute("update issues set position = position + #{RbStory::POSITION_GAP} where position > #{prev.position}") # make a gap
-          conn.execute('update issues set position_lock = 0 where position_lock <> 0') # damn you MySQL
-        end
+        self.position = (prev.position + nxt.position) / 2
       end
     end
 
