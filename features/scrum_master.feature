@@ -112,7 +112,7 @@ Feature: Scrum Master
       And I am logged out
       And I have guessed an API access key
      When I try to download the calendar feed
-     Then the request should complete successfully
+     Then the request should fail
       And calendar feed download should fail
 
   Scenario: Download printable cards for the product backlog

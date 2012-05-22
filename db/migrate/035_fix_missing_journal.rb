@@ -21,6 +21,7 @@ class FixMissingJournal < ActiveRecord::Migration
           nj.details << njd
   
           nj.save!
+          execute("delete from rb_journals where issue_id = #{task.id}")
         end
       }
     end
