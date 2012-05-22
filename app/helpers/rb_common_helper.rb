@@ -36,7 +36,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def breadcrumb_separator
-    "<span class='separator'>&gt;</span>"
+    "<span class='separator'>&gt;</span>".html_safe
   end
 
   def description_or_empty(story)
@@ -197,7 +197,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
         { :value => url_for(:controller => 'rb_master_backlogs', :action => 'show', :project_id => p, :jump => current_menu_item) }
       end
       s << '</select>'
-      s
+      s.html_safe
     end
   end
 
