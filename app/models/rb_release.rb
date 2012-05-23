@@ -116,8 +116,8 @@ class RbRelease < ActiveRecord::Base
 
   # Return sprints closed within this release
   def closed_sprints
-    sprints = RbSprint.closed_sprints(self.project).reject!{ |s|
-      s.effective_date == nil ||
+    sprints = RbSprint.closed_sprints(self.project).reject{ |s|
+      s.effective_date.nil? ||
       s.sprint_start_date < self.release_start_date ||
       s.effective_date > self.release_end_date
     }
