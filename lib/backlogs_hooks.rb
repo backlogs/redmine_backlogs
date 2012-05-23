@@ -257,6 +257,7 @@ module BacklogsPlugin
       end
 
       def view_layouts_base_html_head(context={})
+        return '' unless context[:request].fullpath().include?('/rb/')
         return '' if Setting.login_required? && !User.current.logged?
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]
