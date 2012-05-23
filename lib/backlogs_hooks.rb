@@ -7,7 +7,7 @@ module BacklogsPlugin
 
       def exception(context, ex)
         context[:controller].send(:flash)[:error] = "Backlogs error: #{ex.message} (#{ex.class})"
-        RAILS_DEFAULT_LOGGER.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
+        Rails.logger.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
       end
 
       def view_issues_sidebar_planning_bottom(context={ })
