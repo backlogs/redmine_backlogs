@@ -1,5 +1,5 @@
+if Rails::VERSION::MAJOR < 3
 ActionController::Routing::Routes.draw do |map|
-
   # Use rb/ as a URL 'namespace.' We're using a slightly different URL pattern
   # From Redmine so namespacing avoids any further problems down the line
   map.resource :rb, :only => :none do |rb|
@@ -39,7 +39,7 @@ ActionController::Routing::Routes.draw do |map|
     rb.connect    'story/create',                                   :controller => :rb_stories,          :action => 'create'
     rb.connect    'story/update/:id',                               :controller => :rb_stories,          :action => 'update'
 
-    rb.connect    'calendar/:key/:project_id.ics',                  :controller => :rb_calendars,        :action => 'ical', :format => 'api'
+    rb.connect    'calendar/:key/:project_id.ics',                  :controller => :rb_calendars,        :action => 'ical', :format => 'xml'
 
     rb.connect    'burndown/:sprint_id',                            :controller => :rb_burndown_charts,  :action => 'show'
     rb.connect    'burndown/:sprint_id/embed',                      :controller => :rb_burndown_charts,  :action => 'embedded'
@@ -50,3 +50,63 @@ ActionController::Routing::Routes.draw do |map|
   end
 
 end
+
+else
+  resource :rb, :only => :none do |rb|
+  match 'updated_items/:project_id', :to => 'rb_updated_items#show'
+
+  match 'queries/:project_id', :to => 'rb_queries#show'
+  match  'queries/:project_id/:sprint_id', :to => 'rb_queries#impediments'
+
+  match 'wikis/:sprint_id', :to => 'rb_wikis#show'
+  match 'wikis/:sprint_id', :to => 'rb_wikis#edit'
+
+  resources :task, :except => :index, :controller => :rb_tasks
+  match 'tasks/:story_id', :to => 'rb_tasks#index'
+
+  match 'taskboards/:sprint_id',
+            :to => 'rb_taskboards#show'
+
+  match 'releases/:project_id', :to => 'rb_releases#index'
+
+  match 'staticstics', :to => 'rb_all_projects#statistics'
+
+  match 'server_variables/sprint/:sprint_id.js',
+              :to => 'rb_server_variables#sprint'
+  match 'server_variables.js',
+              :to => 'rb_all_projects#server_variables'
+  match 'server_variables/project/:project_id.js',
+              :to => 'rb_server_variables#project'
+
+  match 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
+
+  match 'master_backlog/:project_id/menu.json', :to => 'rb_master_backlogs#menu', :format => 'json'
+
+  match 'impediment/create', :to => 'rb_impediments#create'
+  match 'impediment/update/:id', :to => 'rb_impediments#update'
+
+  match 'sprint/create', :to => 'rb_sprints#create'
+  match 'sprint/:sprint_id/update', :to => 'rb_sprints#update'
+  match 'sprint/:sprint_id/reset', :to => 'rb_sprints#reset'
+  match 'sprint/download/:sprint_id.xml', :to => 'rb_sprints#download', :format => 'xml'
+  match 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed'
+
+  match 'stories/:project_id/:sprint_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
+  match 'stories/:project_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
+  match 'story/create', :to => 'rb_stories#create'
+  match 'story/update/:id', :to => 'rb_stories#update'
+
+  match 'calendar/:key/:project_id.ics', :to => 'rb_calendars#ical',
+          :format => 'xml'
+
+  match 'burndown/:sprint_id',         :to => 'rb_burndown_charts#show'
+  match 'burndown/:sprint_id/embed',   :to => 'rb_burndown_charts#embedded'
+  match 'burndown/:sprint_id/print',   :to => 'rb_burndown_charts#print'
+
+  match 'hooks/sidebar/project/:project_id',
+          :to => 'rb_hooks_render#view_issues_sidebar'
+  match 'hooks/sidebar/project/:project_id/:sprint_id',
+          :to => 'rb_hooks_render#view_issues_sidebar'
+  end
+end
+

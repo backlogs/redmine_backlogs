@@ -3,6 +3,8 @@ class RbStory < Issue
 
   acts_as_list
 
+  POSITION_GAP = 50
+
   def self.find_params(options)
     project_id = options.delete(:project_id)
     sprint_ids = options.delete(:sprint_id)
@@ -155,21 +157,33 @@ class RbStory < Issue
     end
 
     conn = RbStory.connection
+
     if prev.nil?
-      pos = (RbStory.minimum(:position) || 1) - 1
-      conn.execute("update issues set position = #{pos} where id=#{self.id}")
+      self.position = (RbStory.minimum(:position) || RbStory::POSITION_GAP) - RbStory::POSITION_GAP
     else
-      RbStory.transaction do
-        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-        conn.execute('update issues set position_lock = position') # damn you MySQL
+      begin
+        nxt = RbStory.find(:first, :conditions => ['position > ?', prev.position], :order => :position)
+      rescue ActiveRecord::RecordNotFound
+        nxt = nil
+      end
 
-        conn.execute("update issues set position = position + 1 where position > #{prev.position}") # make a gap
-        conn.execute("update issues set position = #{prev.position} + 1 where id = #{self.id}") # put myself there
-        conn.execute("update issues set position = position - 1 where position >= #{self.position + (self.position > prev.position ? 1 : 0)}") # close the gap left by me, which my have shifted one down because of the first gap made
+      if nxt.nil?
+        self.position = prev.position + RbStory::POSITION_GAP
+      else
+        if (nxt.position - prev.position) < 2
+          RbStory.transaction do
+            conn.execute("update issues set position_lock = position where position > #{prev.position}") # damn you MySQL
+            conn.execute("update issues set position = position + #{RbStory::POSITION_GAP} where position > #{prev.position}") # make a gap
+            conn.execute('update issues set position_lock = 0 where position_lock <> 0') # damn you MySQL
+            nxt.position += RbStory::POSITION_GAP
+          end
+        end
 
-        conn.execute('update issues set position_lock = 0') # damn you MySQL
+        self.position = (prev.position + nxt.position) / 2
       end
     end
+
+    conn.execute("update issues set position = #{self.position} where id=#{self.id}")
   end
 
   def set_points(p)

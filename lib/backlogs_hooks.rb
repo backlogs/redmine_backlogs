@@ -7,7 +7,7 @@ module BacklogsPlugin
 
       def exception(context, ex)
         context[:controller].send(:flash)[:error] = "Backlogs error: #{ex.message} (#{ex.class})"
-        RAILS_DEFAULT_LOGGER.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
+        Rails.logger.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
       end
 
       def view_issues_sidebar_planning_bottom(context={ })
@@ -234,6 +234,7 @@ module BacklogsPlugin
                 nt = Issue.new
                 nt.copy_from(t)
                 nt.parent_issue_id = issue.id
+                nt.position = nil # will assign a new position
                 nt.save!
               }
             end
@@ -256,6 +257,7 @@ module BacklogsPlugin
       end
 
       def view_layouts_base_html_head(context={})
+        return '' unless context[:request].fullpath().include?('/rb/')
         return '' if Setting.login_required? && !User.current.logged?
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]
@@ -263,27 +265,7 @@ module BacklogsPlugin
           context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured) if !context[:request].session[:backlogs]
         end
 
-        return %{
-          <link rel="stylesheet" href="#{Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'javascripts', 'jquery/jquery.jqplot/jquery.jqplot.min.css')}" type="text/css" />
-
-          #{javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery-ui-1.8.16.custom.min.js', :plugin => 'redmine_backlogs'}
-
-          #{javascript_include_tag 'jquery/jquery.jeditable.mini.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery.scrollfollow.js' ,:plugin => 'redmine_backlogs'}
-
-          <!--[if IE]>#{javascript_include_tag 'jquery/jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs'}<![endif]-->
-          #{javascript_include_tag 'jquery/jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs'}
-          #{javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs'}
-
-          #{javascript_include_tag 'jquery/jquery.cookie.js' ,:plugin => 'redmine_backlogs'}
-
-          <script type="text/javascript" src="#{url_for(:controller => 'rb_all_projects', :action => 'server_variables')}"></script>
-          #{javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs'}
-        }
+        return context[:controller].send(:render_to_string, {:locals => context}.merge(:partial=> 'hooks/rb_include_scripts'))
       end
 
       def view_timelog_edit_form_bottom(context={ })
