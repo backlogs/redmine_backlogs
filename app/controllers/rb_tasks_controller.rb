@@ -13,7 +13,7 @@ class RbTasksController < RbApplicationController
       return
     end
 
-    result = @task.errors.length
+    result = @task.errors.size
     status = (result == 0 ? 200 : 400)
     @include_meta = true
 
