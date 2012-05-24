@@ -6,13 +6,17 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
     // Process tasks
     var items = RB.$(data).find('.task');
     items.each(function(i, v){
-      self.processItem(v, false);
+      try {
+        self.processItem(v, false);
+      } catch(e) {}
     });
 
     // Process impediments
     var items = RB.$(data).find('.impediment');
     items.each(function(i, v){
-      self.processItem(v, true);
+      try {
+        self.processItem(v, true);
+      } catch(e) {}
     });
   },
   
