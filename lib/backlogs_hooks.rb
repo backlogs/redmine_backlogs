@@ -7,7 +7,7 @@ module BacklogsPlugin
 
       def exception(context, ex)
         context[:controller].send(:flash)[:error] = "Backlogs error: #{ex.message} (#{ex.class})"
-        RAILS_DEFAULT_LOGGER.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
+        Rails.logger.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
       end
 
       def view_issues_sidebar_planning_bottom(context={ })
@@ -257,6 +257,7 @@ module BacklogsPlugin
       end
 
       def view_layouts_base_html_head(context={})
+        return '' unless context[:request].fullpath().include?('/rb/')
         return '' if Setting.login_required? && !User.current.logged?
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]

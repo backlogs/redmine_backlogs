@@ -63,7 +63,10 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^the request should complete successfully$/ do
-  page.driver.response.status.should == 200
+  page.driver.response.status.should equal(200),\
+    "Request failed with error: "\
+    "#{page.driver.response.status}\n"\
+    "#{page.driver.response.body}"
 end
 
 Then /^the request should fail$/ do
@@ -87,6 +90,8 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story.should_not be_nil
+  story.children.length.should be >= position.to_i
   story.children[position.to_i - 1].subject.should == task_subject
 end
 

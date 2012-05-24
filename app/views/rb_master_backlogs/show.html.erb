@@ -62,10 +62,10 @@
 			  function toggleDiv(divid){
 				if(document.getElementById(divid).style.display == 'none'){
 				  document.getElementById(divid).style.display = 'block';
-				  document.getElementById('toggle').innerHTML = <%= l(:label_hide_completed_sprints).to_json %>
+				  document.getElementById('toggle').innerHTML = "<%= l(:label_hide_completed_sprints) %>"
 				}else{
 				  document.getElementById(divid).style.display = 'none';
-				  document.getElementById('toggle').innerHTML = <%= l(:label_show_completed_sprints).to_json %>
+				  document.getElementById('toggle').innerHTML = "<%= l(:label_show_completed_sprints) %>"
 				}
 			  }
 		  </script>

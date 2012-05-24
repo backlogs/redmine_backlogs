@@ -63,11 +63,18 @@ class RbMasterBacklogsController < RbApplicationController
              } if @sprint && @sprint.has_burndown?
     links << {:label => l(:label_reset),
               :url => url_for(:controller => 'rb_sprints', :action => 'reset', :sprint_id => @sprint, :only_path => true),
-              :warning => @template.escape_javascript(l(:warning_reset_sprint)).gsub(/\/n/, "\n")
+              :warning => view_context().escape_javascript(l(:warning_reset_sprint)).gsub(/\/n/, "\n")
              } if @sprint && @sprint.sprint_start_date && User.current.allowed_to?(:reset_sprint, @project)
+
 
     respond_to do |format|
       format.json { render :json => links }
+    end
+  end
+
+  if Rails::VERSION::MAJOR < 3
+    def view_context
+      @template
     end
   end
 end

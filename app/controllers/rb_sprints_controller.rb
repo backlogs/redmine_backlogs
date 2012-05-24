@@ -19,7 +19,7 @@ class RbSprintsController < RbApplicationController
       return
     end
 
-    result = @sprint.errors.length
+    result = @sprint.errors.size
     status = (result == 0 ? 200 : 400)
 
     respond_to do |format|

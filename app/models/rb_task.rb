@@ -18,6 +18,8 @@ class RbTask < Issue
       ).safe_attribute_names
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
+    # lft and rgt fields are handled by acts_as_nested_set
+    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt' }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
     return attribs
   end
@@ -95,7 +97,7 @@ class RbTask < Issue
         begin
           self.remaining_hours = Float(params[:remaining_hours].to_s.gsub(',', '.'))
         rescue ArgumentError, TypeError
-          RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
+          Rails.logger.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
         sprint_start = self.story.fixed_version.becomes(RbSprint).sprint_start_date if self.story
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
