@@ -12,7 +12,6 @@ module Backlogs
         safe_attributes 'position'
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
-        after_destroy :backlogs_after_destroy
 
         include Backlogs::ActiveRecord
       end
@@ -143,7 +142,7 @@ module Backlogs
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
                 j.type = 'IssueJournal'
                 j.activity_type = 'issues'
-                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
+                #j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
             end
             j.user = User.current
             j.save!
@@ -166,16 +165,6 @@ module Backlogs
         if self.story || self.is_task?
           connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
-      end
-
-      def backlogs_after_destroy
-        # two extra updates needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
-        Issue.transaction do
-          Issue.connection.execute('update issues set position_lock = position') # damn you MySQL
-          Issue.connection.execute("update issues set position = position - 1 where position > #{self.position}") unless self.position.nil?
-          Issue.connection.execute('update issues set position_lock = 0') # damn you MySQL
-        end
-        RbJournal.destroy_all(:issue_id => self.id)
       end
 
       def value_at(property, time)

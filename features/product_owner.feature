@@ -40,7 +40,8 @@ Feature: Product Owner
       And I want to create a story
       And I set the subject of the story to A Whole New Story
      When I create the story
-     Then the 1st story in the product backlog should be A Whole New Story
+     Then the request should complete successfully
+      And the 1st story in the product backlog should be A Whole New Story
       And all positions should be unique
 
   Scenario: Update a story
@@ -49,8 +50,9 @@ Feature: Product Owner
       And I set the subject of the story to Relaxdiego was here
       And I set the tracker of the story to Story
      When I update the story
-     Then the story should have a subject of Relaxdiego was here
-      And the story should have a tracker of Story
+     Then the request should complete successfully
+      And the story should have a subject of Relaxdiego was here
+      And the story should have a tracker of Bug
       And the story should be at position 3
 
   Scenario: Close a story
@@ -58,7 +60,8 @@ Feature: Product Owner
       And I want to edit the story with subject Story 4
       And I set the status of the story to Closed
      When I update the story
-     Then the status of the story should be set as closed
+     Then the request should complete successfully
+      And the status of the story should be set as closed
 
   Scenario: Move a story to the top
     Given I am viewing the master backlog

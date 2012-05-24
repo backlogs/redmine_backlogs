@@ -78,7 +78,7 @@ module BacklogsPrintableCards
 
         geom = Prawn::Document::PageGeometry::SIZES[@papersize]
         if geom.nil?
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
+          Rails.logger.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
           @valid = false
           return
         end
@@ -89,18 +89,18 @@ module BacklogsPrintableCards
 
         @valid = false
         if @down < 1
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no rows"
+          Rails.logger.error "Backlogs printable cards: #{@name} has no rows"
         elsif @across < 1
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no columns"
+          Rails.logger.error "Backlogs printable cards: #{@name} has no columns"
         elsif @height > @vertical_pitch
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card height exceeds vertical pitch"
+          Rails.logger.error "Backlogs printable cards: #{@name} card height exceeds vertical pitch"
         elsif @width > @horizontal_pitch
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card width exceeds horizontal pitch"
+          Rails.logger.error "Backlogs printable cards: #{@name} card width exceeds horizontal pitch"
         else
           @valid = true
         end
       rescue => e
-        RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
+        Rails.logger.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
         @valid = false
       end
     end
@@ -228,7 +228,7 @@ module BacklogsPrintableCards
         @@layouts[key] = layout if layout.valid
       }
     rescue => e
-      RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
+      Rails.logger.error "Backlogs printable cards: problem loading labels: #{e}"
     end
   end
 

@@ -6,26 +6,15 @@ namespace :redmine do
         puts "Please run plugin migrations first"
       else
         RbStory.connection.execute("drop table if exists _backlogs_tmp_position")
-        RbStory.connection.execute("create table _backlogs_tmp_position (issue_id int not null unique, new_position int not null unique)")
 
         RbStory.transaction do
           RbStory.connection.execute("update issues set position_lock=position")
-          
-          RbStory.connection.execute("
-            insert into _backlogs_tmp_position (issue_id, new_position)
-            select id, (select count(*) from issues pred where pred.position < story.position)
-            from issues story
-          ")
-
-          RbStory.connection.execute("
-            update issues
-            set position = (select new_position from _backlogs_tmp_position where id = issue_id)
-          ")
-
+          ids = RbStory.connection.select_values('select id from issues order by position')
+          ids.each_with_index{|id, i|
+            RbStory.connection.execute("update issues set position = #{i * RbStory::POSITION_GAP} where id = #{id}")
+          }
           RbStory.connection.execute("update issues set position_lock=0")
         end
-
-        RbStory.connection.execute("drop table _backlogs_tmp_position")
       end
     end
   end

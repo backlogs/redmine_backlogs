@@ -2,7 +2,7 @@ if(RB==null){ var RB = {}; }
 
 if (RB.constants == null) {
   RB.buildImageTag = function(name) {
-    return "<img src='<%= Engines::RailsExtensions::AssetHelpers.plugin_asset_path('redmine_backlogs', 'images', nil) %>" + name + "'/>";
+    return "<img src='<%= image_path('') %>"+ name + "'/>";
   };
 
   RB.constants = {
@@ -102,6 +102,6 @@ if (RB.constants == null) {
     }
   %>
   RB.constants.project_versions = <%= project_versions.to_json %>;
-  RB.constants.story_states = <%= transitions.to_json %>;
+  RB.constants.story_states = <%= transitions.to_json.html_safe %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => 'json', :only_path => true) %>';
 <% end %>

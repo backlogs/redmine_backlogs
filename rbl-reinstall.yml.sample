@@ -1,7 +1,0 @@
---- 
-:rootpw: passwd
-:pw: passwd
-:redmine:
-  :install: true
-  :rvm: true
-  :database: true

@@ -140,6 +140,11 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
 
+Given /^backlogs is configured$/ do
+  Backlogs.configured?.should be_true
+end
+
+
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Rails.cache.clear
   @project = get_project(project_id)
@@ -240,7 +245,7 @@ Given /^I have made the following task mutations:$/ do |table|
     Timecop.travel(mutated) do
       task.remaining_hours = remaining.to_f unless remaining.blank?
       task.status_id = status if status
-      task.save!
+      task.save!.should be_true
     end
 
     mutation.should == {}
@@ -372,6 +377,7 @@ end
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
   visit url_for(:controller => 'rb_hooks_render',
                 :action=>'view_issues_sidebar',
+                :project_id => @project,
                 :sprint_id => RbSprint.find_by_name(name).id,
                 :only_path => true)
   assert_page_loaded(page)
