@@ -8,6 +8,8 @@ class FlattenStoryPositions < ActiveRecord::Migration
       t.column :position, :integer, :null => false
     end
 
+    execute "SET SQL_BIG_SELECTS=1"
+
     execute "insert into backlogs_tmp_issue_position
              select story.id, count(*) + 1
              from issues story
