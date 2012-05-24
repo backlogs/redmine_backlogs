@@ -5,7 +5,11 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     // Process all stories
     var items = RB.$(data).find('#stories .story');
     items.each(function(i, v){
-      self.processItem(v, false);
+      try {
+        self.processItem(v, false);
+      } catch(e) {
+//        console.log("BacklogsUpdater.processAllItems exception", e);
+      }
     });
   },
 
@@ -41,17 +45,20 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     var _ = target.$.find('div.story_tooltip');
     _.qtip(jQuery.qtipMakeOptions(_));
 
-    if(oldParent!==null) {
+    if(oldParent) { //catch null and undefined
         oldParent.recalcVelocity();
     }
-    target.$.parents(".backlog").first().data('this').recalcVelocity();
+    if (target.$.parents && target.$.parents(".backlog")) {
+      target.$.parents(".backlog").first().data('this').recalcVelocity();
+    }
 
     // Retain edit mode and focus if user was editing the
     // story before an update was received from the server    
     if(target.$.hasClass('editing')) {
         target.edit();
     }
-    if(target.$.data('focus')!==null && target.$.data('focus').length>0) {
+
+    if(target.$.data('focus') && target.$.data('focus').length>0) { //need to catch null and undefined.
         target.$.find("*[name=" + target.$.data('focus') + "]").focus();
     }
         
