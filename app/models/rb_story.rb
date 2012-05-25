@@ -1,9 +1,7 @@
 class RbStory < Issue
   unloadable
 
-  acts_as_list
-
-  POSITION_GAP = 50
+  acts_as_list_with_gaps
 
   def self.condition(project_id, sprint_id, extras=[])
     if Issue.respond_to? :visible_condition
@@ -97,8 +95,8 @@ class RbStory < Issue
     attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
+    s.move_after(RbStory.find(params['prev_id']), :commit => false) if params['prev_id']
     s.save!
-    s.move_after(params['prev_id'])
     return s
   end
 
@@ -135,47 +133,6 @@ class RbStory < Issue
     return RbTask.tasks_for(self.id)
   end
 
-  def move_after(prev_id)
-    if prev_id.to_s == ''
-      prev = nil
-    else
-      begin
-        prev = RbStory.find(prev_id)
-      rescue ActiveRecord::RecordNotFound
-        prev = nil
-      end
-    end
-
-    conn = RbStory.connection
-
-    if prev.nil?
-      self.position = (RbStory.minimum(:position) || RbStory::POSITION_GAP) - RbStory::POSITION_GAP
-    else
-      begin
-        nxt = RbStory.find(:first, :conditions => ['position > ?', prev.position], :order => :position)
-      rescue ActiveRecord::RecordNotFound
-        nxt = nil
-      end
-
-      if nxt.nil?
-        self.position = prev.position + RbStory::POSITION_GAP
-      else
-        if (nxt.position - prev.position) < 2
-          RbStory.transaction do
-            conn.execute("update issues set position_lock = position where position > #{prev.position}") # damn you MySQL
-            conn.execute("update issues set position = position + #{RbStory::POSITION_GAP} where position > #{prev.position}") # make a gap
-            conn.execute('update issues set position_lock = 0 where position_lock <> 0') # damn you MySQL
-            nxt.position += RbStory::POSITION_GAP
-          end
-        end
-
-        self.position = (prev.position + nxt.position) / 2
-      end
-    end
-
-    conn.execute("update issues set position = #{self.position} where id=#{self.id}")
-  end
-
   def set_points(p)
     return self.journalized_update_attribute(:story_points, nil) if p.blank? || p == '-'
 
@@ -198,9 +155,9 @@ class RbStory < Issue
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
     attribs = Hash[*attribs.flatten]
-    result = self.journalized_batch_update_attributes attribs
-    move_after(params[:prev]) if result and params[:prev]
-    return result
+    # don't need to save the move_after since the batch_update will do so
+    move_after(RbStory.find(params[:prev]), :commit => false) if params[:prev]
+    return self.journalized_batch_update_attributes attribs
   end
 
   def rank=(r)
@@ -264,29 +221,4 @@ class RbStory < Issue
       bd
     }
   end
-
-  def higher_item
-    begin
-      return RbStory.find(:first, :conditions => ['position < ?', self.position], :order => "position DESC")
-    rescue ActiveRecord::RecordNotFound
-      return nil
-    end
-  end
-
-  def lower_item
-    begin
-      return RbStory.find(:first, :conditions => ['position > ?', self.position], :order => :position)
-    rescue ActiveRecord::RecordNotFound
-      return nil
-    end
-  end
-
-#  def first?
-#    RbStory.find(:first, :conditions => "position = (select min(position)) from issues")
-#  end
-
-#  def last?
-#    RbStory.find(:first, :conditions => "position = (select max(position)) from issues")
-#  end
-
 end
