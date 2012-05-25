@@ -264,4 +264,29 @@ class RbStory < Issue
       bd
     }
   end
+
+  def higher_item
+    begin
+      return RbStory.find(:first, :conditions => ['position < ?', self.position], :order => "position DESC")
+    rescue ActiveRecord::RecordNotFound
+      return nil
+    end
+  end
+
+  def lower_item
+    begin
+      return RbStory.find(:first, :conditions => ['position > ?', self.position], :order => :position)
+    rescue ActiveRecord::RecordNotFound
+      return nil
+    end
+  end
+
+#  def first?
+#    RbStory.find(:first, :conditions => "position = (select min(position)) from issues")
+#  end
+
+#  def last?
+#    RbStory.find(:first, :conditions => "position = (select max(position)) from issues")
+#  end
+
 end
