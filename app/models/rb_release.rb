@@ -93,7 +93,7 @@ class RbRelease < ActiveRecord::Base
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
-  include Backlogs::ActiveRecord
+  include ActiveRecord::Backlogs::Attributes
 
   def dates_valid?
     errors.add_to_base(l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
