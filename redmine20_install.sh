@@ -41,7 +41,7 @@ clone_redmine()
 run_tests()
 {
   # exit if tests fail
-  # set -e
+  set -e
 
   cd $PATH_TO_REDMINE
 
