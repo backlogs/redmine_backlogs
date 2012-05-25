@@ -22,7 +22,13 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
 
     // Initialize task lists, restricting drop to the story
-    j.find('.story-swimlane').each(function(index){
+    var tasks_lists =j.find('.story-swimlane');
+    if (!tasks_lists || !tasks_lists.length) {
+      alert("There are no task states. Please check the workflow of your tasks tracker in the administration section.");
+      return;
+    }
+
+    tasks_list.each(function(index){
       var id = '#' + RB.$(this).attr('id') + ' .list';
 
       var tasks_lists = j.find("#tasks .list");

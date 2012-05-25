@@ -104,7 +104,13 @@ class RbStory < Issue
   end
 
   def self.create_and_position(params)
-    attribs = params.select{|k,v| k != 'prev_id' and k != 'id' and RbStory.column_names.include? k }
+    attribs = params.select{|k,v|
+      k != 'prev_id' and
+      k != 'id' and
+      RbStory.column_names.include? k
+    }
+    # lft and rgt fields are handled by acts_as_nested_set
+    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
@@ -205,6 +211,8 @@ class RbStory < Issue
 
   def update_and_position!(params)
     attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
+    # lft and rgt fields are handled by acts_as_nested_set
+    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
     attribs = Hash[*attribs.flatten]
     result = self.journalized_batch_update_attributes attribs
     move_after(params[:prev]) if result and params[:prev]

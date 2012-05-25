@@ -96,8 +96,8 @@ class RbSprint < Version
     return Project.find(project_id).shared_versions.open.scoped(:order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
   end
 
-  #TIB ajout du named_scope :closed_sprints
-  named_scope :closed_sprints, lambda { |project|
+  #TIB ajout du scope :closed_sprints
+  rb_scope :closed_sprints, lambda { |project|
     {
        :order => 'sprint_start_date ASC, effective_date ASC',
        :conditions => [ "status = 'closed' and project_id = ?", project.id ]
