@@ -40,9 +40,9 @@ Then /^show me the list of sprints$/ do
 end
 
 Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
+  header = [['id', 5], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
   data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
-    [story.id, story.position, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+    [story.id, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
   }
 
   show_table("Stories", header, data)
@@ -78,8 +78,9 @@ Then /^calendar feed download should (succeed|fail)$/ do |status|
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
-  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
-  story = RbStory.at_rank(@project.id, sprint, position.to_i)
+  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+
   story.should_not be_nil
   story.subject.should == subject
 end

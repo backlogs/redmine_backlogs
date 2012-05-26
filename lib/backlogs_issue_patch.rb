@@ -13,7 +13,7 @@ module Backlogs
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
 
-        include ActiveRecord::Backlogs::Attributes
+        include Backlogs::ActiveRecord::Attributes
       end
     end
 

@@ -1,7 +1,19 @@
-require 'pp'
-
-module ActiveRecord
-  module Backlogs
+module Backlogs
+  module ActiveRecord
+    def add_condition(options, condition, conjunction = 'AND')
+      if condition.is_a? String
+        add_condition(options, [condition], conjunction)
+      elsif condition.is_a? Hash
+        add_condition!(options, [condition.keys.map { |attr| "#{attr}=?" }.join(' AND ')] + condition.values, conjunction)
+      elsif condition.is_a? Array
+        options[:conditions] ||= []
+        options[:conditions][0] += " #{conjunction} (#{condition.shift})" unless options[:conditions].empty?
+        options[:conditions] = options[:conditions] + condition
+      else
+        raise "don't know how to handle this condition type"
+      end
+    end
+    module_function :add_condition
 
     module Attributes
       def batch_modify_attributes(attribs)
@@ -39,7 +51,7 @@ module ActiveRecord
       end
     end
 
-    module List
+    module ListWithGaps
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -47,9 +59,9 @@ module ActiveRecord
       module ClassMethods
         def acts_as_list_with_gaps(options={})
           class_eval <<-EOV
-            include ActiveRecord::Backlogs::List::InstanceMethods
+            include Backlogs::ActiveRecord::ListWithGaps::InstanceMethods
 
-            def list_spacing
+            def self.list_spacing
               #{options[:spacing] || 50}
             end
 
@@ -57,8 +69,8 @@ module ActiveRecord
               self.#{options[:column] || :position}
             end
 
-            def list_column
-              :#{options[:column] || :position}
+            def self.list_column
+              \"#{self.table_name}.#{options[:column] || :position}\"
             end
 
             def find_position(p)
@@ -73,34 +85,46 @@ module ActiveRecord
             def list_position=(p)
               self.#{options[:column] || :position} = p
             end
-          EOV
 
+            def self.find_by_rank(r, options)
+              self.find(:first, options.merge(:order => self.list_column, :limit => 1, :offset => r - 1))
+            end
+          EOV
         end
       end
 
       module InstanceMethods
         def move_to_top
-          list_position = self.first.list_position - list_spacing
+          list_position = self.first.list_position - self.class.list_spacing
         end
 
         def move_to_bottom
-          list_position = self.last.list_position + list_spacing
+          list_position = self.last.list_position + self.class.list_spacing
         end
 
         def first(options = {})
-          return find_position(self.class.minimum(list_column, options))
+          return find_position(self.class.minimum(self.class.list_column, options))
         end
         def last(options = {})
-          return find_position(self.class.maximum(list_column, options))
+          return find_position(self.class.maximum(self.class.list_column, options))
         end
 
         def higher_item(options = {})
-          return list_prev_next(:prev, options)
+          @higher_item ||= list_prev_next(:prev, options)
         end
+        attr_writer :higher_item
 
         def lower_item(options = {})
-          return list_prev_next(:next, options)
+          @lower_item ||= list_prev_next(:next, options)
         end
+        attr_writer :lower_item
+
+        def rank(options={})
+          options = options.dup
+          Backlogs::ActiveRecord.add_condition(options, ["#{self.class.list_column} <= ?", list_position])
+          @rank ||= self.class.count(options)
+        end
+        attr_writer :rank
 
         def move_after(reference, options={})
           options[:commit] = true unless options.include?(:commit)
@@ -113,9 +137,9 @@ module ActiveRecord
           else
             nxt_pos = nxt.list_position
             if (nxt_pos - ref_pos) < 2
-              col = list_column
-              self.class.update_all("#{list_column} = #{list_column} + #{list_spacing}", "#{list_column} >= #{nxt_pos}")
-              nxt_pos += list_spacing
+              col = self.class.list_column
+              self.class.update_all("#{self.class.list_column} = #{self.class.list_column} + #{self.class.list_spacing}", "#{self.class.list_column} >= #{nxt_pos}")
+              nxt_pos += self.class.list_spacing
             end
             list_position = (nxt_pos + ref_pos) / 2
           end
@@ -130,29 +154,13 @@ module ActiveRecord
         return nil if self.new_record?
         raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless list_position
         options = options.dup
-        add_condition(options, ["#{list_column} #{dir == :prev ? '<' : '>'} ?", list_position])
-        options[:order] = "#{list_column} #{dir == :prev ? 'desc' : 'asc'}"
+        Backlogs::ActiveRecord.add_condition(options, ["#{self.class.list_column} #{dir == :prev ? '<' : '>'} ?", list_position])
+        options[:order] = "#{self.class.list_column} #{dir == :prev ? 'desc' : 'asc'}"
         return self.class.find(:first, options)
-      end
-
-      def add_condition(options, condition, conjunction = 'AND')
-        if condition.is_a? String
-          add_condition(options, [condition], conjunction)
-        elsif condition.is_a? Hash
-          add_condition!(options, [condition.keys.map { |attr| "#{attr}=?" }.join(' AND ')] + condition.values, conjunction)
-        elsif condition.is_a? Array
-          options[:conditions] ||= []
-          options[:conditions][0] += " #{conjunction} (#{condition.shift})" unless options[:conditions].empty?
-          options[:conditions] << condition
-          options[:conditions].flatten!
-        else
-          raise "don't know how to handle this condition type"
-        end
       end
 
     end
   end
 end
 
-ActiveRecord::Base.send(:include, ActiveRecord::Backlogs::List) unless ActiveRecord::Base.included_modules.include? ActiveRecord::Backlogs::List
-
+ActiveRecord::Base.send(:include, Backlogs::ActiveRecord::ListWithGaps) unless ActiveRecord::Base.included_modules.include? Backlogs::ActiveRecord::ListWithGaps

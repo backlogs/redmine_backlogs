@@ -9,7 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        include ActiveRecord::Backlogs::Attributes
+        include Backlogs::ActiveRecord::Attributes
       end
     end
 

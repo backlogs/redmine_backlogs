@@ -3,52 +3,74 @@ class RbStory < Issue
 
   acts_as_list_with_gaps
 
-  def self.condition(project_id, sprint_id, extras=[])
-    if Issue.respond_to? :visible_condition
-      visible = Issue.visible_condition(User.current, :project => Project.find(project_id))
-    else
-    	visible = Project.allowed_to_condition(User.current, :view_issues)
-    end
-    visible = '1=1' # unless visible
+  def self.find_options(options)
+    options = options.dup
 
-    if sprint_id.nil?
-      c = ["
+    project = options.delete(:project)
+    if project.nil?
+      project_id = nil
+    elsif project.is_a?(Integer)
+      project_id = project
+      project = nil
+    else
+      project_id = project.id
+    end
+
+    sprint_ids = options.delete(:sprint)
+    sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
+    sprint_ids = sprint_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if sprint_ids
+
+    permission = options.delete(:permission)
+    permission = false if permission.nil?
+
+    options[:conditions] ||= []
+
+    if permission
+      if Issue.respond_to? :visible_condition
+        visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
+      else
+    	  visible = Project.allowed_to_condition(User.current, :view_issues)
+      end
+      Backlogs::ActiveRecord.add_condition(options, visible)
+    end
+
+    if sprint_ids.nil?
+      Backlogs::ActiveRecord.add_condition(options, ["
         project_id = ?
         and tracker_id in (?)
         and fixed_version_id is NULL
-        and is_closed = ? and #{visible}", project_id, RbStory.trackers, false]
+        and is_closed = ?", project_id, RbStory.trackers, false])
+      options[:joins] ||= []
+      options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
+      options[:joins] << :status
+      options[:joins] << :project
     else
-      unless sprint_id.kind_of? Array
-          sprint_id = [ sprint_id ]
-      end
-      c = ["
+      Backlogs::ActiveRecord.add_condition(options, ["
         project_id = ?
         and tracker_id in (?)
-        and fixed_version_id IN (?) and #{visible}",
-        project_id, RbStory.trackers, sprint_id]
+        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids])
     end
 
-    if extras.size > 0
-      c[0] += ' ' + extras.shift
-      c += extras
-    end
-
-    return c
+    return options
   end
-
-  # this forces NULLS-LAST ordering
-  ORDER = 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC'
 
   def self.backlog(project_id, sprint_id, options={})
     stories = []
 
-    RbStory.find(:all,
-                  :order => RbStory::ORDER,
-                  :conditions => RbStory.condition(project_id, sprint_id),
-                  :joins => [:status, :project],
-                  :limit => options[:limit]).each_with_index {|story, i|
-      story.rank = i + 1
+    prev = nil
+    RbStory.find(:all, RbStory.find_options(options.merge({
+      :project => project_id,
+      :sprint => sprint_id,
+      :order => :position,
+    }))).each_with_index {|story, i|
       stories << story
+
+      prev.higher_item = story if prev
+      story.lower_item = prev
+
+      story.rank = i + 1
+
+      prev = story
     }
 
     return stories
@@ -76,7 +98,7 @@ class RbStory < Issue
     stories = []
 
     RbStory.find(:all,
-                  :order => RbStory::ORDER,
+                  :order => :position,
                   :conditions => ["project_id = ? AND tracker_id in (?) and is_closed = ?",project.id,RbStory.trackers,false],
                   :joins => :status).each_with_index {|story, i|
       story.rank = i + 1
@@ -160,25 +182,6 @@ class RbStory < Issue
     return self.journalized_batch_update_attributes attribs
   end
 
-  def rank=(r)
-    @rank = r
-  end
-
-  def rank
-    @rank ||= Issue.count(:conditions => RbStory.condition(self.project.id, self.fixed_version_id, ['and issues.position <= ?', self.position]), :joins => [:status, :project])
-
-    return @rank
-  end
-
-  def self.at_rank(project_id, sprint_id, rank)
-    return RbStory.find(:first,
-                        :order => RbStory::ORDER,
-                        :conditions => RbStory.condition(project_id, sprint_id),
-                        :joins => [:status, :project],
-                        :limit => 1,
-                        :offset => rank - 1)
-  end
-
   def burndown(sprint=nil)
     return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
@@ -221,4 +224,9 @@ class RbStory < Issue
       bd
     }
   end
+
+  def rank
+    return super(RbStory.find_options(:project => self.project_id, :sprint => self.fixed_version_id))
+  end
+
 end
