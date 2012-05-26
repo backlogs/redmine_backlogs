@@ -192,7 +192,7 @@ Given /^I have defined the following sprints:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
 
-    version['project_id'] = get_project(version['project_id']).id #need to get current project defined in the table FIXME: (pa sharing) check this
+    version['project_id'] = get_project((version['project_id']||'ecookbook')).id #need to get current project defined in the table FIXME: (pa sharing) check this
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       if version[date_attr] == 'today'
         version[date_attr] = Date.today.strftime("%Y-%m-%d")
