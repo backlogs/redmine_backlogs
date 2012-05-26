@@ -14,8 +14,8 @@ Feature: Duplicate story
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
         | Sprint 004 | 2010-04-01        | 2010-04-30     |
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     |
-        | 1        | Story 1 | Sprint 001 |
+        | subject | sprint     |
+        | Story 1 | Sprint 001 |
       And I have defined the following tasks:
         | subject | story   |
         | Task 1  | Story 1 |

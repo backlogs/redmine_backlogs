@@ -2,6 +2,18 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
+def story_before(rank, project, sprint=nil)
+  return nil if rank.blank?
+
+  rank = rank.to_i
+  return nil if rank == 1
+
+  prev = RbStory.find_by_rank(rank - 1, RbStory.find_options(:project => project, :sprint => sprint))
+  prev.should_not be_nil
+
+  return prev.id
+end
+
 def time_offset(o)
   o = o.to_s.strip
   return nil if o == ''
@@ -93,7 +105,8 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  RbStory.at_rank(p1, :project_id => story.project_id, :sprint_id => story.fixed_version_id).id.should == story.id
+  RbStory.find_by_rank(p1, RbStory.find_options(:project => story.project, :sprint => story.fixed_version)).id.should == story.id
+
   return p1
 end
 
@@ -120,25 +133,6 @@ def show_table(title, header, data)
   }
 
   puts "\n\n"
-end
-
-def story_before(pos)
-  pos= pos.to_s
-
-  if pos == '' # add to the bottom
-    prev = Issue.find(:first, :conditions => ['not position is null'], :order => 'position desc')
-    return prev ? prev.id : nil
-  end
-
-  pos = pos.to_i
-
-  # add to the top
-  return nil if pos == 1
-
-  # position after
-  stories = [] + Issue.find(:all, :order =>  'position asc')
-  stories.size.should be > (pos - 2)
-  return stories[pos - 2].id
 end
 
 def assert_page_loaded(page)

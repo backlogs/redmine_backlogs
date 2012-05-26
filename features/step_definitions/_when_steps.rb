@@ -54,13 +54,9 @@ When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|t
   story.fixed_version = sprint
   
   attributes = story.attributes
-  attributes[:prev] = if position == 1
-                        ''
-                      else
-                        stories = RbStory.find(:all, :conditions => ["fixed_version_id=? AND tracker_id IN (?)", sprint.id, RbStory.trackers], :order => "position ASC")
-                        raise "You indicated an invalid position (#{position}) in a sprint with #{stories.length} stories" if 0 > position or position > stories.length
-                        stories[position - (direction=="up" ? 2 : 1)].id
-                      end
+  attributes[:prev] = story_before(position, sprint.project, sprint).to_s
+
+  # TODO: why do we need 'direction'?
 
   page.driver.post(
                       url_for(:controller => 'rb_stories',
@@ -78,22 +74,22 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
   story = @story_ids[old_pos.to_i-1]
   story.should_not == nil
 
-  prev = if new_pos.to_i == 1
-           nil
-         elsif new_pos=='last'
-           @story_ids.last
-         elsif old_pos.to_i > new_pos.to_i
-           @story_ids[new_pos.to_i-2]
-         else
-           @story_ids[new_pos.to_i-1]
-         end
+  new_pos = new_pos.to_i unless new_pos == 'last'
+
+  if new_pos == 'last'
+    prev = @story_ids.last.text
+  elsif new_pos == 1
+    prev = ''
+  else
+    prev = @story_ids[new_pos - 1].text
+  end
 
   page.driver.post( 
                       url_for(:controller => :rb_stories,
                               :action => :update,
                               :id => story.text,
                               :only_path => true),
-                      {:prev => (prev.nil? ? '' : prev.text), :project_id => @project.id, "_method" => "put"}
+                      {:prev => prev, :project_id => @project.id, "_method" => "put"}
                   )
 
   page.driver.response.status.should == 200 if attempt == ''

@@ -13,7 +13,7 @@ class RbCalendarsController < RbApplicationController
 
   def ical
     respond_to do |format|
-      format.api { send_data(generate_ical, :disposition => 'attachment') }
+      format.xml { send_data(generate_ical, :disposition => 'attachment') }
     end
   end
 
