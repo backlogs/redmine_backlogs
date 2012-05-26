@@ -1,6 +1,10 @@
 class RbServerVariablesController < RbApplicationController
   unloadable
 
+  # for index there's no @project
+  # (eliminates the need of RbAllProjectsController)
+  skip_before_filter :load_project, :only => [:index]
+
   def index
     @context = params[:context]
     respond_to do |format|
