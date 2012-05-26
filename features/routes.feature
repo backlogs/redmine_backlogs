@@ -20,6 +20,7 @@ Feature: Routes
      Then application should route me to:
           | controller | rb_server_variables |
           | action     | index               |
+          | format     | js                  |
       And the request should complete successfully
 
   Scenario: Task create page
