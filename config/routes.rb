@@ -18,9 +18,12 @@ ActionController::Routing::Routes.draw do |map|
 
     rb.connect    'statistics',                                     :controller => :rb_all_projects,      :action => 'statistics'
 
-    rb.connect    'server_variables/project/:project_id.:format',        :controller => :rb_server_variables,  :action => 'project',  :defaults => { :format => 'js' }
-    rb.connect    'server_variables/sprint/:sprint_id.:format',          :controller => :rb_server_variables,  :action => 'sprint',  :defaults => { :format => 'js' }
-    rb.connect    'server_variables.:format',                            :controller => :rb_server_variables,  :action => 'index',  :defaults => { :format => 'js' }
+    rb.connect    'server_variables/project/:project_id.js',        :controller => :rb_server_variables,  :action => 'project', :format => 'js'
+    rb.connect    'server_variables/project/:project_id',           :controller => :rb_server_variables,  :action => 'project', :format => nil
+    rb.connect    'server_variables/sprint/:sprint_id.js',          :controller => :rb_server_variables,  :action => 'sprint', :format => 'js'
+    rb.connect    'server_variables/sprint/:sprint_id',             :controller => :rb_server_variables,  :action => 'sprint', :format => nil
+    rb.connect    'server_variables.js',                            :controller => :rb_server_variables,  :action => 'index', :format => 'js'
+    rb.connect    'server_variables',                               :controller => :rb_server_variables,  :action => 'index', :format => nil
 
     rb.connect    'master_backlog/:project_id',                     :controller => :rb_master_backlogs,   :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.json',           :controller => :rb_master_backlogs,   :action => 'menu', :format => 'json'
@@ -71,15 +74,24 @@ else
 
   match 'staticstics', :to => 'rb_all_projects#statistics'
 
-  match 'server_variables/sprint/:sprint_id.:format',
+  match 'server_variables/sprint/:sprint_id.js',
               :to => 'rb_server_variables#sprint',
-              :defaults => { :format => 'js' }
-  match 'server_variables.:format',
+              :format => 'js'
+  match 'server_variables/sprint/:sprint_id.js',
+              :to => 'rb_server_variables#sprint',
+              :format => nil
+  match 'server_variables.js',
               :to => 'rb_server_variables#index',
-              :defaults => { :format => 'js' }
-  match 'server_variables/project/:project_id.:format',
+              :format => 'js'
+  match 'server_variables.js',
+              :to => 'rb_server_variables#index',
+              :format => nil
+  match 'server_variables/project/:project_id.js',
               :to => 'rb_server_variables#project',
-              :defaults => { :format => 'js' }
+              :format => 'js'
+  match 'server_variables/project/:project_id.js',
+              :to => 'rb_server_variables#project',
+              :format => nil
 
   match 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
 
