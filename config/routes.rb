@@ -18,9 +18,9 @@ ActionController::Routing::Routes.draw do |map|
 
     rb.connect    'statistics',                                     :controller => :rb_all_projects,      :action => 'statistics'
 
-    rb.connect    'server_variables/project/:project_id.js',        :controller => :rb_server_variables,  :action => 'project'
-    rb.connect    'server_variables/sprint/:sprint_id.js',          :controller => :rb_server_variables,  :action => 'sprint'
-    rb.connect    'server_variables.js',                            :controller => :rb_all_projects,      :action => 'server_variables'
+    rb.connect    'server_variables/project/:project_id.js',        :controller => :rb_server_variables,  :action => 'project', :format => 'js'
+    rb.connect    'server_variables/sprint/:sprint_id.js',          :controller => :rb_server_variables,  :action => 'sprint', :format => 'js'
+    rb.connect    'server_variables.js',                            :controller => :rb_all_projects,      :action => 'server_variables', :format => 'js'
 
     rb.connect    'master_backlog/:project_id',                     :controller => :rb_master_backlogs,   :action => 'show'
     rb.connect    'master_backlog/:project_id/menu.json',           :controller => :rb_master_backlogs,   :action => 'menu', :format => 'json'
@@ -72,11 +72,11 @@ else
   match 'staticstics', :to => 'rb_all_projects#statistics'
 
   match 'server_variables/sprint/:sprint_id.js',
-              :to => 'rb_server_variables#sprint'
+              :to => 'rb_server_variables#sprint', :format => 'js'
   match 'server_variables.js',
-              :to => 'rb_all_projects#server_variables'
+              :to => 'rb_all_projects#server_variables', :format => 'js'
   match 'server_variables/project/:project_id.js',
-              :to => 'rb_server_variables#project'
+              :to => 'rb_server_variables#project', :format => 'js'
 
   match 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
 
