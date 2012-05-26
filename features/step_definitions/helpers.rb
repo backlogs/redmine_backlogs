@@ -43,11 +43,11 @@ def sprint_id_from_name(name)
 end
 
 def initialize_impediment_params(attributes)
+  #requires project_id in attributes (pa sharing)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['status_id'] = IssueStatus.default.id
-  params['project_id'] = Version.find(params['fixed_version_id']).project.id if params['fixed_version_id']
   params
 end
 

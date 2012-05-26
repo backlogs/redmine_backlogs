@@ -5,7 +5,6 @@ Feature: Shared versions
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
-      And backlogs sharing is enabled
       And the p1 project has the backlogs plugin enabled
       And the p2 project has the backlogs plugin enabled
       And the p1s1 project has the backlogs plugin enabled
