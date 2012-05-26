@@ -128,3 +128,8 @@ Feature: Shared versions
      When I create the task
      Then task A Whole New Task should have estimated_hours set to 8
       And story Story 1 should have estimated_hours set to 10
+
+  Scenario: Create a story in a parent sprint which is not shared in a subproject
+    Given I have selected the ecookbook project
+      And I am viewing the taskboard for Sprint 001
+#create a story in a not-shared sprint but in a sub-project.

@@ -40,9 +40,9 @@ Then /^show me the list of sprints$/ do
 end
 
 Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20]]
+  header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20], ['project',12]]
   data = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true).collect {|story|
-    [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+    [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name, Project.find(:first, :conditions=>{'id'=>story.project_id}).name]
   }
 
   show_table("Stories", header, data)

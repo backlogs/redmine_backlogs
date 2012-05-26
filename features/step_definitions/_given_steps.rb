@@ -33,7 +33,7 @@ Given /^I am a scrum master of the project$/ do
 end
 
 Given /^I am a team member of the project$/ do
-  #FIXME: (pa sharing) is this correct?
+  #FIXME (pa sharing) is this correct?
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
@@ -86,6 +86,9 @@ Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
   elsif attribute=="status"
     attribute="status_id"
     value = IssueStatus.find(:first, :conditions => ["name=?", value]).id
+  elsif attribute=="project"
+    attribute = "project_id"
+    value = get_project(value).id
   end
   @story_params[attribute] = value
 end
@@ -175,6 +178,9 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # Make sure these trackers are enabled in the project
   @project.update_attribute :tracker_ids, (story_trackers << task_tracker)
 
+  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
+  assert_page_loaded(page)
+  puts  "#{page.driver.response.body}"
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
 end
@@ -186,13 +192,15 @@ end
 
 Given /^I have selected the (.*) project$/ do |project_id|
   @project = get_project(project_id)
+  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
+  assert_page_loaded(page)
 end
 
 Given /^I have defined the following sprints:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
 
-    version['project_id'] = get_project((version['project_id']||'ecookbook')).id #need to get current project defined in the table FIXME: (pa sharing) check this
+    version['project_id'] = get_project((version['project_id']||'ecookbook')).id #need to get current project defined in the table FIXME (pa sharing) check this
     ['effective_date', 'sprint_start_date'].each do |date_attr|
       if version[date_attr] == 'today'
         version[date_attr] = Date.today.strftime("%Y-%m-%d")
@@ -370,7 +378,7 @@ Given /^I have defined the following tasks:$/ do |table|
 end
 
 Given /^I have defined the following impediments:$/ do |table|
-  # FIXME pa sharing: what if an impediment blocks more than on issues, each from different projects?
+  # FIXME (pa sharing) what if an impediment blocks more than on issues, each from different projects?
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
     blocks = RbStory.find(:first, :conditions => ['subject in (?)', impediment['blocks'].split(', ')])
