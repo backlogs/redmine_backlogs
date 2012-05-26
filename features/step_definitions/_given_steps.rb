@@ -106,7 +106,7 @@ end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
-  @impediment_params = initialize_impediment_params({"fixed_version_id" => sprint.id})
+  @impediment_params = initialize_impediment_params(:project_id => sprint.project_id, :fixed_version_id => sprint.id)
 end
 
 Given /^I want to create a sprint$/ do
