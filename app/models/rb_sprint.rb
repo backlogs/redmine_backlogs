@@ -96,7 +96,14 @@ class RbSprint < Version
     return Project.find(project_id).shared_versions.open.scoped(:order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
   end
 
-  #TIB ajout du scope :closed_sprints
+  def self.rb_scope(symbol, func)
+    if Rails::VERSION::MAJOR < 3
+      named_scope symbol, func
+    else
+      scope symbol, func
+    end
+  end
+
   rb_scope :closed_sprints, lambda { |project|
     {
        :order => 'sprint_start_date ASC, effective_date ASC',
