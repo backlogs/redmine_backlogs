@@ -2,30 +2,33 @@ When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, p
   params = @impediment_params.dup
   params['project_id'] = Project.find(project) if project != ''
 
-  page.driver.process :post, url_for(:controller => :rb_impediments, :action => :create), params
+  page.driver.post(url_for(:controller => :rb_impediments, :action => :create), params )
 
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?create the story$/ do |attempt|
-  page.driver.process :post, 
+  page.driver.post(
                       url_for(:controller => :rb_stories, :action => :create),
                       @story_params
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?create the task$/ do |attempt|
   initial_estimate = @task_params.delete('initial_estimate')
-  page.driver.process :post, 
+  page.driver.post( 
                       url_for(:controller => :rb_tasks, :action => :create),
                       @task_params
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?create the sprint$/ do |attempt|
-  page.driver.process :post,
+  page.driver.post(
                       url_for(:controller => :rb_sprints, :action => :create),
                       @sprint_params
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
@@ -107,31 +110,35 @@ When /^I (try to )?request the server_variables resource$/ do |attempt|
 end
 
 When /^I (try to )?update the impediment$/ do |attempt|
-  page.driver.process :post, 
+  page.driver.post( 
                       url_for(:controller => :rb_impediments, :action => :update, :id => @impediment_params['id']),
                       @impediment_params
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?update the sprint$/ do |attempt|
-  page.driver.process :post,
+  page.driver.post(
                       url_for(:controller => 'rb_sprints', :action => "update", :sprint_id => @sprint_params['id']),
                       @sprint_params.merge({ "_method" => "put" })
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
 When /^I (try to )?update the story$/ do |attempt|
-  page.driver.process :post,
+  page.driver.post(
                       url_for(:controller => :rb_stories, :action => :update, :id => @story_params[:id]),
                       @story_params # .merge({ "_method" => "put" })
+                  )
   page.driver.response.status.should == 200 if attempt == ''
   @story.reload
 end
 
 When /^I (try to )?update the task$/ do |attempt|
-  page.driver.process :post,
+  page.driver.post(
                       url_for(:controller => :rb_tasks, :action => :update, :id => @task_params[:id]),
                       @task_params.merge({ "_method" => "put" })
+                  )
   page.driver.response.status.should == 200 if attempt == ''
 end
 
