@@ -287,11 +287,11 @@ end
 
 Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
-    params = initialize_story_params
-    params['subject'] = story.delete('subject')
     project = get_project(story.delete('project_id'))
     sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint'), "project_id" => project.id })
-    params['target_version'] = sprint # FIXME: (pa sharing) fixed_version_id does not work? check this
+    params = initialize_story_params project.id
+    params['subject'] = story.delete('subject')
+    params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
     params['prev_id'] = story_before(story.delete('position'))
 
@@ -353,30 +353,28 @@ Given /^I have defined the following tasks:$/ do |table|
     # however, should NOT bypass the controller
     if offset
       Timecop.travel(story.created_on + offset) do
-        RbTask.create_with_relationships(params, @user.id, @project.id)
+        RbTask.create_with_relationships(params, @user.id, story.project.id)
       end
     else
-      RbTask.create_with_relationships(params, @user.id, @project.id)
+      RbTask.create_with_relationships(params, @user.id, story.project.id)
     end
   end
 end
 
 Given /^I have defined the following impediments:$/ do |table|
+  # FIXME pa sharing: what if an impediment blocks more than on issues, each from different projects?
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
-    params = initialize_impediment_params({"fixed_version_id" => sprint.id}) # FIXME: (pa sharing) what is going on here? removed impediments from tests for now
-    p Tracker.find(params['tracker_id'])
-    p sprint
-    p params
+    blocks = RbStory.find(:first, :conditions => ['subject in (?)', impediment['blocks'].split(', ')])
+    params = initialize_impediment_params(:project_id => blocks.project_id, :fixed_version_id => sprint.id)
     params['subject'] = impediment.delete('subject')
     params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
-
     impediment.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id, true).should_not be_nil
+    RbTask.create_with_relationships(params, @user.id, blocks.project_id, true).should_not be_nil
   end
 
 end
