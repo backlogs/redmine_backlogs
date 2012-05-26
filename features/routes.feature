@@ -18,8 +18,8 @@ Feature: Routes
   Scenario: Server variables script
      When I get the "rb/server_variables.js" page using format "js"
      Then application should route me to:
-          | controller | rb_all_projects  |
-          | action     | server_variables |
+          | controller | rb_server_variables |
+          | action     | index               |
       And the request should complete successfully
 
   Scenario: Task create page
