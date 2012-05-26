@@ -52,7 +52,7 @@ Feature: Product Owner
      When I update the story
      Then the request should complete successfully
       And the story should have a subject of Relaxdiego was here
-      And the story should have a tracker of Bug
+      And the story should have a tracker of Story
       And the story should be at position 3
 
   Scenario: Close a story

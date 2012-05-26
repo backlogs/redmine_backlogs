@@ -271,10 +271,14 @@ end
 
 Given /^I have defined the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
-    params = initialize_story_params
+    if story['project_id']
+      project = get_project(story.delete('project_id'))
+    else
+      project = @project
+    end
+    params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
     params['prev_id'] = story_before(story.delete('position'))
-    params['project_id'] = get_project(story.delete('project_id'))
 
     story.should == {}
 
@@ -287,7 +291,11 @@ end
 
 Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
-    project = get_project(story.delete('project_id'))
+    if story['project_id']
+      project = get_project(story.delete('project_id'))
+    else
+      project = @project
+    end
     sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint'), "project_id" => project.id })
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
