@@ -15,11 +15,29 @@ Feature: Routes
           | project_id | ecookbook          |
       And the request should complete successfully
 
-  Scenario: Server variables script
-     When I get the "rb/server_variables.js" page using format "js"
+  Scenario: Server variables script for all projects
+     When I get the "rb/server_variables.js" page
      Then application should route me to:
           | controller | rb_server_variables |
           | action     | index               |
+          | format     | js                  |
+      And the request should complete successfully
+
+  Scenario: Server variables script for project
+     When I get the "rb/server_variables/project/ecookbook.js" page
+     Then application should route me to:
+          | controller | rb_server_variables |
+          | action     | project             |
+          | project_id | ecookbook           |
+          | format     | js                  |
+      And the request should complete successfully
+
+  Scenario: Server variables script for sprint
+     When I get the "rb/server_variables/sprint/1.js" page
+     Then application should route me to:
+          | controller | rb_server_variables |
+          | action     | sprint              |
+          | sprint_id  | 1                   |
           | format     | js                  |
       And the request should complete successfully
 
