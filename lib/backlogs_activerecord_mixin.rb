@@ -124,7 +124,7 @@ module Backlogs
             move_to_bottom
           else
             if (nxt.position - reference.position) < 2
-              self.class.update_all("position = position + #{self.class.list_spacing}", "position >= #{nxt.position}")
+              self.class.connection.execute("update #{self.class.table_name} set position = position + #{self.class.list_spacing} where position >= #{nxt.position}")
               nxt.position += self.class.list_spacing
             end
             self.position = (nxt.position + reference.position) / 2

@@ -75,7 +75,6 @@ Feature: Product Owner
   Scenario: Move a story down
     Given I am viewing the master backlog
      When I move the 2nd story to the 3rd position
-     And show me the list of stories
      Then the 2nd story in the product backlog should be Story 3
       And the 3rd story in the product backlog should be Story 2
       And the 4th story in the product backlog should be Story 4

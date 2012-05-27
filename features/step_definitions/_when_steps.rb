@@ -87,7 +87,7 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
     when 1
       prev = ''
     else
-      prev = @story_ids[new_pos - 1]
+      prev = @story_ids[new_pos - 2]
   end
 
   page.driver.post( 
