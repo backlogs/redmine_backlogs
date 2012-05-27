@@ -27,7 +27,7 @@ Then /^application should route me to:$/ do |controller|
   controller.map_headers! { |header| header.to_sym }
   controller_with_params = controller.hashes[0]
   @request.should route_to controller_with_params
-  controller_with_params[:format] = @format
+  controller_with_params[:format] = @format if @format
   controller_with_params.merge!(@params) if @params
   url = url_for(controller_with_params)
   if @method == 'put'
