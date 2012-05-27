@@ -77,7 +77,7 @@ end
 When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |old_pos, new_pos|
   @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v").collect{|s| s.text}
 
-  story_id = @story_ids[old_pos.to_i-1]
+  story_id = @story_ids.delete_at(old_pos.to_i-1)
   story_id.should_not == nil
 
   new_pos = new_pos.to_i unless new_pos == 'last'

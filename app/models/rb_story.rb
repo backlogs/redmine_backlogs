@@ -1,8 +1,6 @@
 class RbStory < Issue
   unloadable
 
-  acts_as_list_with_gaps
-
   def self.find_options(options)
     options = options.dup
 
