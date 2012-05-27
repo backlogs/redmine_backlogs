@@ -1,3 +1,5 @@
+require 'pp'
+
 When /^I create the impediment$/ do
   page.driver.post(
                       url_for(:controller => :rb_impediments,
@@ -53,8 +55,8 @@ end
 
 When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, direction, position, sprint_name|
   position = position.to_i
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
-  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  story = RbStory.find_by_subject(story_subject)
+  sprint = RbSprint.find_by_name(sprint_name)
   story.fixed_version = sprint
   
   attributes = story.attributes
@@ -69,33 +71,35 @@ When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) positio
                               :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
+  verify_request_status(200)
 end
 
 When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |old_pos, new_pos|
-  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v")
+  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v").collect{|s| s.text}
 
-  story = @story_ids[old_pos.to_i-1]
-  story.should_not == nil
+  story_id = @story_ids[old_pos.to_i-1]
+  story_id.should_not == nil
 
   new_pos = new_pos.to_i unless new_pos == 'last'
-
-  if new_pos == 'last'
-    prev = @story_ids.last.text
-  elsif new_pos == 1
-    prev = ''
-  else
-    prev = @story_ids[new_pos - 1].text
+  case new_pos
+    when 'last'
+      prev = @story_ids.last
+    when 1
+      prev = ''
+    else
+      prev = @story_ids[new_pos - 1]
   end
 
   page.driver.post( 
                       url_for(:controller => :rb_stories,
                               :action => :update,
-                              :id => story.text,
+                              :id => story_id,
                               :only_path => true),
                       {:prev => prev, :project_id => @project.id, "_method" => "put"}
                   )
+  verify_request_status(200)
 
-  @story = RbStory.find(story.text.to_i)
+  @story = RbStory.find(story_id.to_i)
 end
 
 When /^I request the server_variables resource$/ do

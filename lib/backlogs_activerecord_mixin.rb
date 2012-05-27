@@ -58,55 +58,46 @@ module Backlogs
 
       module ClassMethods
         def acts_as_list_with_gaps(options={})
+          options[:spacing] ||= 50
+          options[:default] ||= :top
+
           class_eval <<-EOV
             include Backlogs::ActiveRecord::ListWithGaps::InstanceMethods
 
             def self.list_spacing
-              #{options[:spacing] || 50}
-            end
-
-            def list_position
-              self.#{options[:column] || :position}
-            end
-
-            def self.list_column
-              \"#{self.table_name}.#{options[:column] || :position}\"
-            end
-
-            def find_position(p)
-              return nil if p.blank?
-              return self.class.find_by_#{options[:column] || :position}(p)
-            end
-
-            before_create  :move_to_#{options[:default] || :top}
-
-            private
-
-            def list_position=(p)
-              self.#{options[:column] || :position} = p
+              #{options[:spacing]}
             end
 
             def self.find_by_rank(r, options)
-              self.find(:first, options.merge(:order => self.list_column, :limit => 1, :offset => r - 1))
+              self.find(:first, options.merge(:order => '#{self.table_name}.position', :limit => 1, :offset => r - 1))
             end
+
+            before_create  :move_to_#{options[:default]}
           EOV
         end
       end
 
       module InstanceMethods
-        def move_to_top
-          list_position = self.first.list_position - self.class.list_spacing
+        def move_to_top(options={})
+          top = self.class.minimum(:position)
+          return if self.position == top
+          self.position = top - self.class.list_spacing
+          list_commit
         end
 
-        def move_to_bottom
-          list_position = self.last.list_position + self.class.list_spacing
+        def move_to_bottom(options={})
+          bottom = self.class.maximum(:position)
+          return if self.position == bottom
+          self.position = bottom + self.class.list_spacing
+          list_commit
         end
 
         def first(options = {})
-          return find_position(self.class.minimum(self.class.list_column, options))
+          return self.class.find_by_position(self.class.minimum(:position, options))
         end
+
         def last(options = {})
-          return find_position(self.class.maximum(self.class.list_column, options))
+          return self.class.find_by_position(self.class.maximum(:position, options))
         end
 
         def higher_item(options = {})
@@ -121,41 +112,40 @@ module Backlogs
 
         def rank(options={})
           options = options.dup
-          Backlogs::ActiveRecord.add_condition(options, ["#{self.class.list_column} <= ?", list_position])
+          Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.position <= ?", self.position])
           @rank ||= self.class.count(options)
         end
         attr_writer :rank
 
         def move_after(reference, options={})
-          options[:commit] = true unless options.include?(:commit)
-
-          ref_pos = reference.list_position
           nxt = reference.lower_item
 
           if nxt.blank?
             move_to_bottom
           else
-            nxt_pos = nxt.list_position
-            if (nxt_pos - ref_pos) < 2
-              col = self.class.list_column
-              self.class.update_all("#{self.class.list_column} = #{self.class.list_column} + #{self.class.list_spacing}", "#{self.class.list_column} >= #{nxt_pos}")
-              nxt_pos += self.class.list_spacing
+            if (nxt.position - reference.position) < 2
+              self.class.update_all("position = position + #{self.class.list_spacing}", "position >= #{nxt.position}")
+              nxt.position += self.class.list_spacing
             end
-            list_position = (nxt_pos + ref_pos) / 2
+            self.position = (nxt.position + reference.position) / 2
           end
 
-          self.save! if options[:commit]
+          list_commit
         end
       end
 
       private
 
+      def list_commit
+        self.class.connection.execute("update #{self.class.table_name} set position = #{self.position} where id = #{self.id}") unless self.new_record?
+      end
+
       def list_prev_next(dir, options)
         return nil if self.new_record?
-        raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless list_position
+        raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless self.position
         options = options.dup
-        Backlogs::ActiveRecord.add_condition(options, ["#{self.class.list_column} #{dir == :prev ? '<' : '>'} ?", list_position])
-        options[:order] = "#{self.class.list_column} #{dir == :prev ? 'desc' : 'asc'}"
+        Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.position #{dir == :prev ? '<' : '>'} ?", self.position])
+        options[:order] = "#{self.class.table_name}.position #{dir == :prev ? 'desc' : 'asc'}"
         return self.class.find(:first, options)
       end
 

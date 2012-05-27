@@ -2,10 +2,17 @@ def get_project(identifier)
   Project.find(:first, :conditions => "identifier='#{identifier}'")
 end
 
+def verify_request_status(status)
+  page.driver.response.status.should equal(status),\
+    "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
+    "#{page.driver.response.status}\n"\
+    "#{page.driver.response.body}"
+end
+
 def story_before(rank, project, sprint=nil)
   return nil if rank.blank?
 
-  rank = rank.to_i
+  rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
   return nil if rank == 1
 
   prev = RbStory.find_by_rank(rank - 1, RbStory.find_options(:project => project, :sprint => sprint))
@@ -100,7 +107,9 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => @sprint)).id.should == story.id
+  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => @sprint))
+  s2.should_not be_nil
+  s2.id.should == story.id
 
   return p1
 end

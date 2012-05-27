@@ -4,7 +4,7 @@ require 'timecop'
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
-  story_position(story).should == position.to_i
+  story.rank.should == position.to_i
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
@@ -63,14 +63,11 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^the request should complete successfully$/ do
-  page.driver.response.status.should equal(200),\
-    "Request failed with error: "\
-    "#{page.driver.response.status}\n"\
-    "#{page.driver.response.body}"
+  verify_request_status(200)
 end
 
 Then /^the request should fail$/ do
-  page.driver.response.status.should == 401
+  verify_request_status(401)
 end
 
 Then /^calendar feed download should (succeed|fail)$/ do |status|

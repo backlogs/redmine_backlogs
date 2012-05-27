@@ -108,17 +108,22 @@ class RbStory < Issue
   end
 
   def self.create_and_position(params)
-    attribs = params.select{|k,v|
-      k != 'prev_id' and
-      k != 'id' and
-      RbStory.column_names.include? k
-    }
+    params['prev'] = params.delete('prev_id') if params.include?('prev_id')
+
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
+    attribs = params.select{|k,v| !['prev', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
-    s.move_after(RbStory.find(params['prev_id']), :commit => false) if params['prev_id']
     s.save!
+
+    if params.include?('prev')
+      if params['prev'].blank?
+        s.move_to_top
+      else
+        s.move_after(RbStory.find(params['prev']))
+      end
+    end
+
     return s
   end
 
@@ -173,12 +178,20 @@ class RbStory < Issue
   end
 
   def update_and_position!(params)
-    attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
+    params['prev'] = params.delete('prev_id') if params.include?('prev_id')
+
+    if params.include?('prev')
+      if params['prev'].blank?
+        self.move_to_top
+      else
+        self.move_after(RbStory.find(params['prev']))
+      end
+    end
+
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
+    attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
-    # don't need to save the move_after since the batch_update will do so
-    move_after(RbStory.find(params[:prev]), :commit => false) if params[:prev]
+
     return self.journalized_batch_update_attributes attribs
   end
 
