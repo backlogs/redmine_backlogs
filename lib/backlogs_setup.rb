@@ -174,7 +174,7 @@ module Backlogs
     def safe_load
       settings = Setting.plugin_redmine_backlogs.dup
       if settings.is_a?(String)
-        RAILS_DEFAULT_LOGGER.error "Unable to load settings"
+        Rails.logger.error "Unable to load settings"
         return {}
       end
       settings

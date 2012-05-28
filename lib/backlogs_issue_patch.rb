@@ -61,7 +61,7 @@ module Backlogs
           return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
         rescue
           # stupid rails and their ignorance of proper relational databases
-          RAILS_DEFAULT_LOGGER.error "Cannot return the blocks list for #{self.id}: #{e}"
+          Rails.logger.error "Cannot return the blocks list for #{self.id}: #{e}"
           return []
         end
       end
