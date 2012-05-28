@@ -107,12 +107,6 @@ module Backlogs
       end
 
       def backlogs_after_save
-        ## automatically sets the tracker to the task tracker for
-        ## any descendant of story, and follow the version_id
-        ## Normally one of the _before_save hooks ought to take
-        ## care of this, but appearantly neither root_id nor
-        ## parent_id are set at that point
-
         RbJournal.rebuild(self) if @backlogs_new_record
 
         return unless Backlogs.configured?(self.project)
@@ -134,6 +128,7 @@ module Backlogs
                                               self.fixed_version_id, self.fixed_version_id]).each{|task|
             j = Journal.new
             j.journalized = task
+            j.user = User.current
             case Backlogs.platform
               when :redmine
                 j.created_on = self.updated_on
@@ -143,9 +138,8 @@ module Backlogs
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
                 j.type = 'IssueJournal'
                 j.activity_type = 'issues'
-                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
+                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, j.type]) || 0) + 1
             end
-            j.user = User.current
             j.save!
 
             tasks_updated << task
