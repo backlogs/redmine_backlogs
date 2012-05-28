@@ -45,9 +45,9 @@ end
 
 Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
-  author 'friflaj,relaxdiego,mikoto20000,Vanuan,bohansen,rhulka,stevel'
+  author 'friflaj,relaxdiego,Vanuan,mikoto20000,bohansen,rhulka,stevel'
   description 'A plugin for agile teams'
-  version 'v0.9.8'
+  version 'v0.9.9'
 
   settings :default => { 
                          :story_trackers            => nil, 
