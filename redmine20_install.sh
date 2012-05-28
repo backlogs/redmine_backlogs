@@ -26,7 +26,7 @@ else
   export GENERATE_SECRET=generate_session_store
   export MIGRATE_PLUGINS=db:migrate_plugins
   export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-  export REDMINE_GIT_TAG=1.4.1
+  export REDMINE_GIT_TAG=1.4.2
 fi
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 
