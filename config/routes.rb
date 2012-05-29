@@ -96,6 +96,30 @@ end
 
 else
   resource :rb, :only => :none do |rb|
+
+  # releases
+#  resources :projects do
+#    resources :releases, :only => [:index, :new,:show, :edit, :destroy, :snapshot], :controller => :rb_releases  do
+#      get 'snapshot', :on => :member 
+#      post 'edit', :on => :member
+#      post 'new', :on => :member
+#    end
+#  end
+
+  rb_match rb, 'releases/:project_id',
+               :to => 'rb_releases#index', :via => [:get]
+  rb_match rb, 'release/:project_id/new',
+               :to => 'rb_releases#new', :via => [:get, :post]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#show', :via => [:get]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#destroy', :via => [:delete]
+  rb_match rb, 'release/:release_id/edit',
+               :to => 'rb_releases#edit', :via => [:get, :post]
+  rb_match rb, 'release/:release_id/shapshot',
+               :to => 'rb_releases#snapshot', :via => [:get]
+
+
   rb_match rb, 'updated_items/:project_id', :to => 'rb_updated_items#show'
 
   rb_match rb, 'queries/:project_id', :to => 'rb_queries#show'
@@ -110,7 +134,6 @@ else
   rb_match rb, 'taskboards/:sprint_id',
             :to => 'rb_taskboards#show'
 
-  rb_match rb, 'releases/:project_id', :to => 'rb_releases#index'
 
   rb_match rb, 'staticstics', :to => 'rb_all_projects#statistics'
 
