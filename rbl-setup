@@ -133,7 +133,7 @@ if [ "$GEMS" = "yes" ]; then
   bundle install --system
   #bundle install --path=vendor/bundle
 
-  DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep -v '^bundler' | grep , | wc -l`
+  DUPLICATES=`gem list | grep -v '^rake ' | grep -v '^rack ' | grep , | wc -l`
   if [[ \"$DUPLICATES\" != \"0\" ]]; then
     echo 'Duplicate gems! Aborting installation'
     gem list | grep ,
