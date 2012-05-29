@@ -138,7 +138,7 @@ module Backlogs
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
                 j.type = 'IssueJournal'
                 j.activity_type = 'issues'
-                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, j.type]) || 0) + 1
+                j.version = last_version + 1
             end
             j.save!
 
