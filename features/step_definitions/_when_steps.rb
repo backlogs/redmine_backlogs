@@ -1,7 +1,8 @@
+require 'pp'
+
 When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, project|
   params = @impediment_params.dup
   params['project_id'] = Project.find(project) if project != ''
-
   page.driver.post(
                       url_for(:controller => :rb_impediments, :action => :create),
                       @impediment_params
@@ -52,54 +53,54 @@ end
 
 When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
   position = position.to_i
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
-  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  story = RbStory.find_by_subject(story_subject)
+  sprint = RbSprint.find_by_name(sprint_name)
   story.fixed_version = sprint
   
   attributes = story.attributes
-  attributes[:prev] = if position == 1
-                        ''
-                      else
-                        stories = RbStory.find(:all, :conditions => ["fixed_version_id=? AND tracker_id IN (?)", sprint.id, RbStory.trackers], :order => "position ASC")
-                        raise "You indicated an invalid position (#{position}) in a sprint with #{stories.length} stories" if 0 > position or position > stories.length
-                        stories[position - (direction=="up" ? 2 : 1)].id
-                      end
+  attributes[:prev] = story_before(position, sprint.project, sprint).to_s
+
+  # TODO: why do we need 'direction'?
 
   page.driver.post(
                       url_for(:controller => 'rb_stories', :action => "update", :id => story.id),
                       attributes.merge({ "_method" => "put" })
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200)
 end
 
 When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |attempt, old_pos, new_pos|
-  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v")
+  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v").collect{|s| s.text}
+#  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v")
 
-  story = @story_ids[old_pos.to_i-1]
-  story.should_not == nil
+  story_id = @story_ids.delete_at(old_pos.to_i-1)
+  story_id.should_not == nil
 
-  prev = if new_pos.to_i == 1
-           nil
-         elsif new_pos=='last'
-           @story_ids.last
-         elsif old_pos.to_i > new_pos.to_i
-           @story_ids[new_pos.to_i-2]
-         else
-           @story_ids[new_pos.to_i-1]
-         end
+  new_pos = new_pos.to_i unless new_pos == 'last'
+  case new_pos
+    when 'last'
+      prev = @story_ids.last
+    when 1
+      prev = ''
+    else
+      prev = @story_ids[new_pos - 2]
+  end
 
   page.driver.post( 
-                      url_for(:controller => :rb_stories, :action => :update, :id => story.text),
-                      {:prev => (prev.nil? ? '' : prev.text), :project_id => @project.id, "_method" => "put"}
+                      url_for(:controller => :rb_stories,
+                              :action => :update,
+                              :id => story_id,
+                              :only_path => true),
+                      {:prev => prev, :project_id => @project.id, "_method" => "put"}
                   )
+  verify_request_status(200)
 
-  page.driver.response.status.should == 200 if attempt == ''
-  @story = RbStory.find(story.text.to_i)
+  @story = RbStory.find(story_id.to_i)
 end
 
 When /^I (try to )?request the server_variables resource$/ do |attempt|
-  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id)
-  page.driver.response.status.should == 200 if attempt == ''
+  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true)
+  verify_request_status(200) # sharing
 end
 
 When /^I (try to )?update the impediment$/ do |attempt|

@@ -162,7 +162,7 @@ module Backlogs
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
 
-      include Backlogs::ActiveRecord
+      include Backlogs::ActiveRecord::Attributes
     end
 
     module ClassMethods

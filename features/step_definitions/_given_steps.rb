@@ -278,14 +278,13 @@ Given /^I have defined the following stories in the product backlog:$/ do |table
     end
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
-    params['prev_id'] = story_before(story.delete('position'))
 
     story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbStory.create_and_position params
+    RbStory.create_and_position(params).move_to_bottom
   end
 end
 
@@ -301,7 +300,6 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
-    params['prev_id'] = story_before(story.delete('position'))
 
     day_added = story.delete('day')
     offset = story.delete('offset')
@@ -329,10 +327,10 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     # however, should NOT bypass the controller
     if created_on
       Timecop.travel(created_on) do
-        RbStory.create_and_position params
+        RbStory.create_and_position(params).move_to_bottom
       end
     else
-      RbStory.create_and_position params
+      RbStory.create_and_position(params).move_to_bottom
     end
   end
 end

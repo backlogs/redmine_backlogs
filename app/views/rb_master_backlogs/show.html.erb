@@ -1,8 +1,11 @@
 <!-- MASTER BACKLOG VIEW -->
 <%- content_for :head_tags do %>
-  <script
-    type="text/javascript"
-    src="<%= url_for(:controller => 'rb_server_variables', :action => 'project', :project_id => @project.identifier, :context => 'backlogs') %>">
+  <script type="text/javascript"
+          src="<%= url_for(:controller => 'rb_server_variables',
+                           :action => 'project',
+                           :project_id => @project.identifier,
+                           :context => 'backlogs',
+                           :format => 'js') %>">
   </script>
 
   <%= javascript_include_tag(

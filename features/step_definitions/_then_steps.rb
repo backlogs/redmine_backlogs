@@ -4,7 +4,7 @@ require 'timecop'
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
-  story_position(story).should == position.to_i
+  story.rank.should == position.to_i
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
@@ -34,15 +34,23 @@ end
 
 Then /^show me the list of sprints$/ do
   header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
+  data = RbSprint.open_sprints(@project).collect{|sprint| [sprint.id, sprint.name, sprint.start_date, sprint.effective_date, sprint.updated_on] }
+
+  show_table("Sprints", header, data)
+end
+
+Then /^show me the list of shared sprints$/ do
+  header = [['id', 3], ['name', 18], ['project id', 5], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
+  sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
+  data = sprints.collect{|sprint| [sprint.id, sprint.name, sprint.project_id, sprint.start_date, sprint.effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
 end
 
 Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['status', 12], ['rank', 4], ['subject', 30], ['sprint', 20]]
-  data = RbStory.backlog(:project_id => @project.id, :sprint_id => :open, :include_backlog => true).collect {|story|
-    [story.id, story.position, story.status.name, story.rank, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+  header = [['id', 5], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
+  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
+    [story.id, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
   }
 
   show_table("Stories", header, data)
@@ -56,6 +64,10 @@ Then /^show me the projects$/ do
   show_projects
 end
 
+Then /^show me the response body$/ do
+  puts page.driver.response.body
+end
+
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
   higher = RbStory.find(:all, :conditions => { :subject => higher_subject })
   higher.length.should == 1
@@ -67,14 +79,11 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^the request should complete successfully$/ do
-  page.driver.response.status.should equal(200),\
-    "Request failed with error: "\
-    "#{page.driver.response.status}\n"\
-    "#{page.driver.response.body}"
+  verify_request_status(200)
 end
 
 Then /^the request should fail$/ do
-  page.driver.response.status.should == 401
+  verify_request_status(401)
 end
 
 Then /^calendar feed download should (succeed|fail)$/ do |status|
@@ -82,8 +91,9 @@ Then /^calendar feed download should (succeed|fail)$/ do |status|
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
-  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
-  story = RbStory.at_rank(position.to_i, :project_id => sprint.nil? ? @project.id : nil, :sprint_id => sprint)
+  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+
   story.should_not be_nil
   story.subject.should == subject
 end

@@ -23,18 +23,17 @@ Feature: Burndown
         | Sprint siegerv | 2011-08-19        | 2011-09-02      |
 
       And I have defined the following stories in the product backlog:
-        | position | subject |
-        | 1        | Story 1 |
-        | 2        | Story 2 |
-        | 3        | Story 3 |
-        | 4        | Story 4 |
+        | subject |
+        | Story 1 |
+        | Story 2 |
+        | Story 3 |
+        | Story 4 |
       And I have defined the following stories in the following sprints:
-        | position | subject         | sprint         | points | day |
-        | 1        | Story A         | Sprint 001     | 1      |     |
-        | 2        | Story B         | Sprint 001     | 2      |     |
-        | 3        | Story C         | Sprint 001     | 4      |     |
-
-        | 4        | Siegerv story 1 | Sprint siegerv | 1      |     |
+        | subject         | sprint         | points | day |
+        | Story A         | Sprint 001     | 1      |     |
+        | Story B         | Sprint 001     | 2      |     |
+        | Story C         | Sprint 001     | 4      |     |
+        | Siegerv story 1 | Sprint siegerv | 1      |     |
 
       And I have defined the following tasks:
         | subject      | story            | estimate | status | offset |
@@ -144,8 +143,8 @@ Feature: Burndown
     Given I am viewing the taskboard for Sprint 001
       And I have changed the sprint start date to tomorrow
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     | points |
-        | 4        | Story D | Sprint 001 | 1      |
+        | subject | sprint     | points |
+        | Story D | Sprint 001 | 1      |
       And I have changed the sprint start date to today
      Then the sprint burnup should be:
         | day     | points_resolved |

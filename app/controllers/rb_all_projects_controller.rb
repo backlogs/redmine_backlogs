@@ -11,9 +11,4 @@ class RbAllProjectsController < ApplicationController
     @projects.sort! {|a, b| a.scrum_statistics.score <=> b.scrum_statistics.score}
   end
 
-  def server_variables
-    respond_to do |format|
-      format.js { render :file => 'rb_server_variables/show.js.erb', :layout => false }
-    end
-  end
 end
