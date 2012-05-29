@@ -32,21 +32,22 @@ class RbStory < Issue
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
 
+    include_backlog = options.delete(:include_backlog) #FIXME (pa sharing): not used not switchable yet
+
     if sprint_ids.nil?
       Backlogs::ActiveRecord.add_condition(options, ["
-        project_id = ?
+        (#{Project.find(project_id).project_condition(true)})
         and tracker_id in (?)
         and fixed_version_id is NULL
-        and is_closed = ?", project_id, RbStory.trackers, false])
+        and is_closed = ?", RbStory.trackers, false])
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
     else
       Backlogs::ActiveRecord.add_condition(options, ["
-        project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids])
+        tracker_id in (?)
+        and fixed_version_id IN (?)", RbStory.trackers, sprint_ids])
     end
 
     return options
