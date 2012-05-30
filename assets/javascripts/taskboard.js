@@ -28,15 +28,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       return;
     }
 
-    tasks_list.each(function(index){
+    tasks_lists.each(function(index){
       var id = '#' + RB.$(this).attr('id') + ' .list';
 
-      var tasks_lists = j.find("#tasks .list");
-      if (!tasks_lists || !tasks_lists.length) {
-        alert("There are no task states. Please check the workflow of your tasks tracker in the administration section.");
-        return; // FIXME (pa sharing) needs validation
-      }
-      tasks_list.sortable({
+      j.find(id).sortable({
         connectWith: id, 
         placeholder: 'placeholder',
         start: self.dragStart,
