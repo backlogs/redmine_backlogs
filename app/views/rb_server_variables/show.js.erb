@@ -96,12 +96,13 @@ if (RB.constants == null) {
       }
     }
 
-    project_versions = {}
+    project_versions = {} # FIXME (pa sharing) need test
     RbStory.find(:all, RbStory.find_options( :include_backlog => true, :project => @project.id, :sprint => @project.shared_versions.collect{|v| v.id})).each {|story|
       project_versions[story.project.id.to_s] ||= story.project.shared_versions.open.collect{|v| v.id.to_s }
     }
     project_self_and_descendants = {} #make a hash to avoid inArray in javascript
     projects = [ @project ] | @project.descendants || []
+    #this ain't woikin: @project.self_and_descendants.collect(&:id).each{|project_id| #FIXME (pa sharing) need test
     projects.each{|project|
       project_self_and_descendants[project.id.to_s] = true
     }
