@@ -48,9 +48,9 @@ module BacklogsPlugin
           return %{
             <div id="backlogs_view_issues_sidebar"></div>
             <script type="text/javascript">
-              jQuery(document).ready(function() {
-                jQuery('#backlogs_view_issues_sidebar').load('#{url_for(url_options)}');
-              });
+            document.observe("dom:loaded", function() {
+              new Ajax.Updater('backlogs_view_issues_sidebar','#{url_for(url_options)}' );
+            });
             </script>
           }
         rescue => e
