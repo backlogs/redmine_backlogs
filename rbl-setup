@@ -51,7 +51,7 @@ if [ -z "$PLATFORM" ]; then
 fi
 
 case $PLATFORM in
-  redmine)      VERSION=1.4.1;;
+  redmine)      VERSION=1.4.2;;
   chiliproject) VERSION=3.1.0;;
   *) errmsg "Unsupported platform '$PLATFORM'";;
 esac

@@ -6,9 +6,10 @@
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
-  <script
-    type="text/javascript"
-    src="<%= url_for(:controller => 'rb_server_variables', :action => 'sprint', :sprint_id => @sprint.id) %>">
+  <script type="text/javascript"
+          src="<%= url_for(:controller => 'rb_server_variables',
+                           :action => 'sprint', :sprint_id => @sprint.id,
+                           :format => 'js') %>">
   </script>
 <% end %>
 

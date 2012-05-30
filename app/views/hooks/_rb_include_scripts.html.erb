@@ -15,5 +15,8 @@
 <%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery.cookie.js', :plugin => 'redmine_backlogs' %>
 
-<script type="text/javascript" src="<%= url_for(:controller => 'rb_all_projects', :action => 'server_variables') %>"></script>
+<script type="text/javascript"
+        src="<%= url_for(:controller => 'rb_server_variables',
+                         :action => 'index', :format => 'js') %>">
+</script>
 <%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
