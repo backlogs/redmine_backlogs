@@ -16,9 +16,6 @@ gem "prawn"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
-#puts "RBL dev mode: " + File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')
-#if File.exist?(File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')) # this is actually the main Gemfile
-# development gems, sorted alphabetically
 group :development do
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
@@ -58,5 +55,7 @@ group :development do
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
   gem "timecop"
-  gem "thin"
 end
+
+# moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
+gem "thin"
