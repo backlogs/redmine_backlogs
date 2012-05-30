@@ -2,12 +2,12 @@
 nl: 
   backlogs_active: lopend
   backlogs_any: alle
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_burndown_print_width: Burndown print width
+  backlogs_auto_assign_task: Automatisch taak toekennen aan huidige gebruiker
+  backlogs_burndown_print_height: Hoogte voor afdrukken burndown
+  backlogs_burndown_print_width: Breedte voor afdrukken burndown
   backlogs_card_specification: Label type voor kaartjes
   backlogs_impediment: Impediment
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
+  backlogs_include_sat_and_sun: Zaterdag en zondag opnemen in Burndown
   backlogs_points_burn_direction: Points burn omhoog/omlaag
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
@@ -15,7 +15,7 @@ nl:
   backlogs_statistics_active_failed: Project is niet actief
   backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over de sprints heen
   backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet stabiel over de sprints heen
-  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
+  backlogs_statistics_hours_per_point: "gemiddeld %{value} uren per point"
   backlogs_statistics_product_backlog_filled: Product backlog heeft stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is leeg
   backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog hebben sizes
@@ -63,7 +63,7 @@ nl:
   field_priority: Prioriteit
   field_release_end_date: Eind datum van de release
   field_release_start_date: Start datum release
-  field_remaining_hours: Remaining (hours)
+  field_remaining_hours: Resterend (uren)
   field_story_points: Story points
   field_subject: Onderwerp
   field_time_entry_comments: Tijd registratie commentaar
