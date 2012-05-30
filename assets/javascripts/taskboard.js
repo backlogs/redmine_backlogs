@@ -28,7 +28,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       return;
     }
 
-    tasks_list.each(function(index){
+    tasks_lists.each(function(index){
       var id = '#' + RB.$(this).attr('id') + ' .list';
 
       j.find(id).sortable({

@@ -1,71 +1,6 @@
 class RbStory < Issue
   unloadable
 
-  acts_as_list_with_gaps
-
-<<<<<<< HEAD
-  def self.find_params(options)
-    project_id = options.delete(:project_id)
-    sprint_ids = options.delete(:sprint_id)
-    include_backlog = options.delete(:include_backlog)
-
-    sprint_ids = RbSprint.open_sprints(Project.find(project_id)).collect{|s| s.id} if project_id && sprint_ids == :open
-
-    project_id = nil if !include_backlog && sprint_ids
-    sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
-
-    raise "Specify either sprint or project id" unless (sprint_ids || project_id)
-
-    options[:joins] = [options[:joins]] unless options[:joins].is_a?(Array)
-
-    conditions = []
-    parameters = []
-    options[:joins] << :project
-
-    if project_id
-      conditions << "(tracker_id in (?) and fixed_version_id is NULL and #{IssueStatus.table_name}.is_closed = ? and (#{Project.find(project_id).project_condition(true)}))"
-      parameters += [RbStory.trackers, false]
-      options[:joins] << :status
-    end
-
-    if sprint_ids
-      conditions << "(tracker_id in (?) and fixed_version_id in (?))"
-      parameters += [RbStory.trackers, sprint_ids]
-    end
-
-    conditions = conditions.join(' or ')
-
-    visible = []
-    visible = sprint_ids.collect{|s| Issue.visible_condition(User.current, :project => Version.find(s).project, :with_subprojects => true) } if sprint_ids
-    visible << Issue.visible_condition(User.current, :project => Project.find(project_id), :with_subprojects => true) if project_id
-    visible = visible.join(' or ')
-    visible = " and (#{visible})" unless visible == ''
-
-    conditions += visible
-
-    options[:conditions] = [options[:conditions]] if options[:conditions] && !options[:conditions].is_a?(Array)
-    if options[:conditions]
-      conditions << " and (" + options[:conditions].delete_at(0) + ")"
-      parameters += options[:conditions]
-    end
-
-    options[:conditions] = [conditions] + parameters
-
-    options[:joins].compact!
-    options[:joins].uniq!
-    options.delete(:joins) if options[:joins].size == 0
-
-    return options
-  end
-
-  # this forces NULLS-LAST ordering
-  ORDER = 'case when issues.position is null then 1 else 0 end ASC, case when issues.position is NULL then issues.id else issues.position end ASC'
-
-  def self.backlog(options={})
-    stories = []
-    RbStory.find(:all, RbStory.find_params(options.merge(:order => RbStory::ORDER))).each_with_index {|story, i|
-      story.rank = i + 1
-=======
   def self.find_options(options)
     options = options.dup
 
@@ -97,21 +32,22 @@ class RbStory < Issue
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
 
+    include_backlog = options.delete(:include_backlog) #FIXME (pa sharing): not used not switchable yet
+
     if sprint_ids.nil?
       Backlogs::ActiveRecord.add_condition(options, ["
-        project_id = ?
+        (#{Project.find(project_id).project_condition(true)})
         and tracker_id in (?)
         and fixed_version_id is NULL
-        and is_closed = ?", project_id, RbStory.trackers, false])
+        and is_closed = ?", RbStory.trackers, false])
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
     else
       Backlogs::ActiveRecord.add_condition(options, ["
-        project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids])
+        tracker_id in (?)
+        and fixed_version_id IN (?)", RbStory.trackers, sprint_ids])
     end
 
     return options
@@ -126,7 +62,6 @@ class RbStory < Issue
       :sprint => sprint_id,
       :order => :position,
     }))).each_with_index {|story, i|
->>>>>>> master
       stories << story
 
       prev.higher_item = story if prev
@@ -141,15 +76,15 @@ class RbStory < Issue
   end
 
   def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(:project_id => project.id, :limit => limit)
+    return RbStory.backlog(project.id, nil, :limit => limit)
   end
 
   def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(options.merge(:sprint_id => sprint.id))
+    return RbStory.backlog(sprint.project.id, sprint.id, options)
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
-    ret = RbStory.backlog(options.merge(:project_id => project.id, :sprint_id => sprints.map {|s| s.id}))
+    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, options)
     sprint_of = {}
     ret.each do |backlog|
       sprint_of[backlog.fixed_version_id] ||= []
@@ -172,17 +107,22 @@ class RbStory < Issue
   end
 
   def self.create_and_position(params)
-    attribs = params.select{|k,v|
-      k != 'prev_id' and
-      k != 'id' and
-      RbStory.column_names.include? k
-    }
+    params['prev'] = params.delete('prev_id') if params.include?('prev_id')
+
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
+    attribs = params.select{|k,v| !['prev', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
-    s.move_after(RbStory.find(params['prev_id']), :commit => false) if params['prev_id']
     s.save!
+
+    if params.include?('prev')
+      if params['prev'].blank?
+        s.move_to_top
+      else
+        s.move_after(RbStory.find(params['prev']))
+      end
+    end
+
     return s
   end
 
@@ -237,39 +177,21 @@ class RbStory < Issue
   end
 
   def update_and_position!(params)
-    attribs = params.select{|k,v| k != 'id' && k != 'project_id' && RbStory.column_names.include?(k) }
+    params['prev'] = params.delete('prev_id') if params.include?('prev_id')
+
+    if params.include?('prev')
+      if params['prev'].blank?
+        self.move_to_top
+      else
+        self.move_after(RbStory.find(params['prev']))
+      end
+    end
+
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt'}
+    attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
-<<<<<<< HEAD
-    result = self.journalized_batch_update_attributes attribs
-    move_after(params[:prev]) if result and params[:prev]
-    return result
-  end
 
-  def rank=(r)
-    @rank = r
-  end
-
-  def rank
-    @rank ||= Issue.count(RbStory.find_params(
-      :sprint_id => self.fixed_version_id,
-      :project_id => self.project.id,
-      :conditions => ['issues.position <= ?', self.position]))
-
-    return @rank
-  end
-
-  def self.at_rank(rank, options)
-    return RbStory.find(:first, RbStory.find_params(options.merge(
-                      :order => RbStory::ORDER,
-                      :limit => 1,
-                      :offset => rank - 1)))
-=======
-    # don't need to save the move_after since the batch_update will do so
-    move_after(RbStory.find(params[:prev]), :commit => false) if params[:prev]
     return self.journalized_batch_update_attributes attribs
->>>>>>> master
   end
 
   def burndown(sprint=nil)

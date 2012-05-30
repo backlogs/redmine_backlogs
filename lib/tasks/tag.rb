@@ -8,6 +8,7 @@ else
 end
 
 translate = {
+  'Zhou Xianhua' => 'xianhuazhou',
   'Robson R S Peixoto' => 'robsonpeixoto',
   'Bo Hansen' => 'bohansen',
   'Christoph Graumann' => 'cgraumann',

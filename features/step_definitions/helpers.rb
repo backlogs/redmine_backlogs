@@ -2,10 +2,17 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
+def verify_request_status(status)
+  page.driver.response.status.should equal(status),\
+    "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
+    "#{page.driver.response.status}\n"\
+    "#{page.driver.response.body}"
+end
+
 def story_before(rank, project, sprint=nil)
   return nil if rank.blank?
 
-  rank = rank.to_i
+  rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
   return nil if rank == 1
 
   prev = RbStory.find_by_rank(rank - 1, RbStory.find_options(:project => project, :sprint => sprint))
@@ -55,11 +62,11 @@ def sprint_id_from_name(name)
 end
 
 def initialize_impediment_params(attributes)
+  #requires project_id in attributes (pa sharing)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['status_id'] = IssueStatus.default.id
-  params['project_id'] = Version.find(params['fixed_version_id']).project.id if params['fixed_version_id']
   params
 end
 
@@ -101,11 +108,13 @@ def task_position(task)
 end
 
 def story_position(story)
-  p1 = RbStory.backlog(:project_id => story.fixed_version_id ? nil : story.project.id, :sprint_id => story.fixed_version_id).select{|s| s.id == story.id}[0].rank
+  p1 = RbStory.backlog(story.project, story.fixed_version_id).select{|s| s.id == story.id}[0].rank
   p2 = story.rank
   p1.should == p2
 
-  RbStory.find_by_rank(p1, RbStory.find_options(:project => story.project, :sprint => story.fixed_version)).id.should == story.id
+  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => @sprint))
+  s2.should_not be_nil
+  s2.id.should == story.id
 
   return p1
 end

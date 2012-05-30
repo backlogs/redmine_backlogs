@@ -19,11 +19,11 @@ Feature: Shared versions
         | Sprint 004 | 2010-03-01        | 2010-03-31     | system    | onlinestore   |
 
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     | project_id    |
-        | 1        | Story 1 | Sprint 001 | ecookbook     |
-        | 2        | Story 2 | Sprint 001 | ecookbook     |
-        | 3        | Story 3 | Sprint 001 | ecookbook     |
-        | 4        | Story 4 | Sprint 002 | private-child |
+        | subject | sprint     | project_id    |
+        | Story 1 | Sprint 001 | ecookbook     |
+        | Story 2 | Sprint 001 | ecookbook     |
+        | Story 3 | Sprint 001 | ecookbook     |
+        | Story 4 | Sprint 002 | private-child |
 
       And I have defined the following tasks:
         | subject | story  |

@@ -29,7 +29,7 @@ Feature: Product Owner
     Given I am viewing the master backlog
      Then I should see the product backlog
       And I should see 4 stories in the product backlog
-      And I should see 4 sprint backlogs
+      And I should see 7 sprint backlogs
 
   Scenario: View scrum statistics
      When I visit the scrum statistics page
@@ -52,7 +52,7 @@ Feature: Product Owner
      When I update the story
      Then the request should complete successfully
       And the story should have a subject of Relaxdiego was here
-      And the story should have a tracker of Bug
+      And the story should have a tracker of Story
       And the story should be at position 3
 
   Scenario: Close a story
