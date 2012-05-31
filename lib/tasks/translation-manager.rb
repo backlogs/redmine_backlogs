@@ -84,6 +84,8 @@ class Hash
 end
 
 webdir = dir('www')
+Dir.chdir(webdir)
+puts `git pull`
 webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
 translations = dir('redmine_backlogs/config/locales')
 
@@ -202,3 +204,7 @@ translation.keys.sort.each {|t|
     webpage.write("\n")
   }
 }
+
+puts `git add .`
+puts `git commit -m 'Translations updated'`
+puts `git push`
