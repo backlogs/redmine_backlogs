@@ -9,7 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        acts_as_list_with_gaps
+        acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
         safe_attributes 'position'
         before_save :backlogs_before_save

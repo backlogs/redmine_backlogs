@@ -179,3 +179,9 @@
   <%= check_box_tag("settings[include_sat_and_sun]", 'enabled',
       Backlogs.setting[:include_sat_and_sun]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_new_story_position)) %>
+  <%= radio_button_tag("settings[new_story_position]", 'top', Backlogs.setting[:new_story_position] == 'top') %><%= l(:backlogs_new_story_position_top) %>
+  <%= radio_button_tag("settings[new_story_position]", 'bottom', Backlogs.setting[:new_story_position] == 'bottom') %><%= l(:backlogs_new_story_position_bottom) %>
+</p>
