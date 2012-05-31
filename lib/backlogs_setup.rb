@@ -172,6 +172,9 @@ module Backlogs
     private
 
     def safe_load
+      # At the first migration, the settings table will not exist
+      return {} unless Setting.table_exists?
+
       settings = Setting.plugin_redmine_backlogs.dup
       if settings.is_a?(String)
         Rails.logger.error "Unable to load settings"
