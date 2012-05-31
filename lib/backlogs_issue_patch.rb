@@ -138,7 +138,7 @@ module Backlogs
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
                 j.activity_type = 'issues'
                 j.journaled = task
-                j.version = last_version + 1
+                j.version = task.last_version + 1
             end
             j.user = User.current
             j.save!
