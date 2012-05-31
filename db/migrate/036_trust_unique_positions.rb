@@ -8,7 +8,7 @@ class TrustUniquePositions < ActiveRecord::Migration
   end
 
   def self.down
-    add_column :issues, :position_lock
+    add_column :issues, :position_lock, :integer
     add_index :issues, [:position, :position_lock]
   end
 end
