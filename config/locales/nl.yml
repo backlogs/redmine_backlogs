@@ -162,3 +162,6 @@ nl:
     * De huidige waarde wordt de startwaarde voor alle
        eigenschappen van de story/taak
     * De status wordt teruggezet naar de standaard status
+  backlogs_new_story_position: Nieuwe stories verschijnen
+  backlogs_new_story_position_top: bovenaan
+  backlogs_new_story_position_bottom: onderaan (vereist herstart)
