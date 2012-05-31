@@ -28,7 +28,7 @@ group :development do
       gem "capybara", "~>1.1.0"
     end
     gem "cucumber", "=1.1.0"
-    gem 'cucumber-rails', :git => 'https://github.com/Vanuan/cucumber-rails.git', :branch => 'cucumber-rails2_v0.3.3'
+    gem 'cucumber-rails2', "=0.3.4"
     gem "culerity", "=0.2.15"
   end
   gem "database_cleaner"
