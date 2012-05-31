@@ -126,21 +126,21 @@ module Backlogs
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
                                               self.fixed_version_id, self.fixed_version_id]).each{|task|
-            j = Journal.new
-            j.user = User.current
             case Backlogs.platform
               when :redmine
+                j = Journal.new
                 j.journalized = task
                 j.created_on = self.updated_on
                 j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
               when :chiliproject
+                j = IssueJournal.new
                 j.created_at = self.updated_on
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
-                j.type = 'IssueJournal'
                 j.activity_type = 'issues'
                 j.journaled = task
                 j.version = last_version + 1
             end
+            j.user = User.current
             j.save!
 
             tasks_updated << task
