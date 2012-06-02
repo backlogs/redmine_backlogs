@@ -9,7 +9,7 @@ Feature: Shared versions
       And the project6 project has the backlogs plugin enabled
       And the onlinestore project has the backlogs plugin enabled
       And no versions or issues exist
-      And I am a team member of the projects
+      And I am a team member of the project
 
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date | sharing   | project_id    |

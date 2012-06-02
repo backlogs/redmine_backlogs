@@ -65,7 +65,7 @@ Then /^show me the projects$/ do
 end
 
 Then /^show me the response body$/ do
-  puts page.driver.response.body
+  puts page.driver.body
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -301,7 +301,9 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
 end
 
 Then /^I should see (\d+) stories in the sprint backlog of (.*)$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+  sprint = RbSprint.find(:first, :conditions => { :name => arg2 })
+  stories = page.all(:css, "#stories-for-#{sprint.id} .story")
+  stories.length.should == arg1.to_i
 end
 
 Then /^I should (.*)be able to drag stories from project (.*) to the product backlog$/ do |neg, arg1|
@@ -313,6 +315,50 @@ Then /^I should (.*)be able to drag stories from project (.*) to the sprint back
 end
 
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
-  pending # express the regexp above with the code you wish you had
+  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  project = get_project(arg3)
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint.id}']/..//a[contains(@class,'add_new_story')]")
+  found = check_backlog_menu_new_story(links, project)
+  found.should be !!(neg=='')
 end
 
+Then /^The menu of the product backlog should (.*)allow to create a new Story in project (.+)$/ do |neg, arg3|
+  project = get_project(arg3)
+  links = page.all(:css, "#product_backlog_container a.add_new_story")
+  found = check_backlog_menu_new_story(links, project)
+  found.should be !!(neg=='')
+end
+
+Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
+  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  begin
+    page.find(:css, "#sprint_#{sprint.id}")
+    found = true
+  rescue
+    found = false
+  end
+  found.should be !!(neg=='')
+end
+
+Then /^I should (.*)be able to drag story (.+) from sprint (.+) before the story (.+) in the product backlog$/ do |neg, story, sprint, target|
+  story = RbStory.find(:first, :conditions => {
+    :fixed_version_id => RbSprint.find(:first, :conditions => {:name => sprint }).id,
+    :subject => story})
+  story_id = story.id
+  old_v_id = story.fixed_version_id
+  element = page.find(:css, "#story_#{story_id}")
+
+  target_id = RbStory.find(:first, :conditions => {:fixed_version_id => nil, :subject => target}).id
+  target = page.find(:css, "#story_#{target_id}")
+
+  element.drag_to(page.find(:css, "#stories-for-product-backlog")) #extra step to trick out jquery sortable which needs movement???
+  element.drag_to(target)
+  sleep 1 #FIXME (pa sharing) wait for ajax to happen. capybara does not see the change since the dom node is still on the page
+
+  story.reload
+  story.fixed_version_id.should be neg=='' ? nil : old_v_id
+end
+
+Then /^show me a screenshot at (.+)$/ do |arg1|
+  page.driver.render(arg1)
+end
