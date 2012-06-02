@@ -65,7 +65,7 @@ Then /^show me the projects$/ do
 end
 
 Then /^show me the response body$/ do
-  puts page.driver.response.body
+  puts page.driver.body
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -301,7 +301,9 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
 end
 
 Then /^I should see (\d+) stories in the sprint backlog of (.*)$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+  sprint = RbSprint.find(:first, :conditions => { :name => arg2 })
+  stories = page.all(:css, "#stories-for-#{sprint.id} .story")
+  stories.length.should == arg1.to_i
 end
 
 Then /^I should (.*)be able to drag stories from project (.*) to the product backlog$/ do |neg, arg1|
