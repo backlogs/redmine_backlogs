@@ -185,4 +185,6 @@ en:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-
+  backlogs_new_story_position: Newly created stories go to the
+  backlogs_new_story_position_top: top
+  backlogs_new_story_position_bottom: bottom (requires restart)

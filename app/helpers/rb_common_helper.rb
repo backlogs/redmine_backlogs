@@ -227,7 +227,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     unless groups.empty?
       s << %(<optgroup label="#{h(l(:label_group_plural))}">#{groups}</optgroup>)
     end
-    s
+    s.html_safe
   end
 
 end

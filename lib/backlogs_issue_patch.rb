@@ -9,7 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        acts_as_list_with_gaps
+        acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
         safe_attributes 'position'
         before_save :backlogs_before_save
@@ -61,7 +61,7 @@ module Backlogs
           return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
         rescue
           # stupid rails and their ignorance of proper relational databases
-          RAILS_DEFAULT_LOGGER.error "Cannot return the blocks list for #{self.id}: #{e}"
+          Rails.logger.error "Cannot return the blocks list for #{self.id}: #{e}"
           return []
         end
       end
@@ -126,20 +126,21 @@ module Backlogs
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
                                               self.fixed_version_id, self.fixed_version_id]).each{|task|
-            j = Journal.new
-            j.journalized = task
-            j.user = User.current
             case Backlogs.platform
               when :redmine
+                j = Journal.new
+                j.journalized = task
                 j.created_on = self.updated_on
                 j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
               when :chiliproject
+                j = IssueJournal.new
                 j.created_at = self.updated_on
                 j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
-                j.type = 'IssueJournal'
                 j.activity_type = 'issues'
-                j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, j.type]) || 0) + 1
+                j.journaled = task
+                j.version = task.last_journal.version + 1
             end
+            j.user = User.current
             j.save!
 
             tasks_updated << task
