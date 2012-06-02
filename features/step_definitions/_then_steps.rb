@@ -317,9 +317,8 @@ end
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
   sprint = RbSprint.find(:first, :conditions => {:name => arg1})
   project = get_project(arg3)
-  puts "check if #{sprint} can create in project #{project} #{project.id}"
+  #puts "check if #{sprint} can create in project #{project} #{project.id}"
   #get the menu
-  Rails.logger.info( page.html )
   links = page.all(:xpath, "//div[@id='sprint_#{sprint.id}']/..//a[contains(@class,'add_new_story')]")
   #links.each{|a|
   #  puts "a class #{a[:class]}"
@@ -327,14 +326,14 @@ Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new S
   #find link with project
   found = false
   if links.length==1
-    puts "only one link, @project: #{@project}"
+    #puts "only one link, @project: #{@project}"
     project_id = @project.id
-    puts "can: #{project_id}"
+    #puts "can: #{project_id}"
     found = true if project_id.to_i == project.id
   else
     links.each{|a| 
       project_id = a[:class][%r[\d+$]]
-      puts "can: #{project_id}"
+      #puts "can: #{project_id}"
       found = true if project_id.to_i == project.id
     }
   end

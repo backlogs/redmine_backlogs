@@ -30,20 +30,30 @@ class RbMasterBacklogsController < RbApplicationController
     end
   end
 
-  def menu # FIXME (pa sharing) need test
+  def menu
     links = []
 
-    links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
 
     # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
-    if !@project.descendants.active.empty? then
-      links.first[:classname] = nil
-      links.first[:sub] = []
-      @project.self_and_descendants.active.each {|project|
-        # here we need to filter: only show 'new story' for versions which are shared and visible
-        project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id] #intersect
-        links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"} unless @sprint and project_version_ids.empty? #hide if its a sprint bl and the sprint is not shared in that project
+    projects = []
+    unless @sprint
+      projects = @project.self_and_descendants.active
+    else #menu for sprint
+      Project.visible.find(:all, :order => 'lft').each{|project| #exhaustive search FIXME (pa sharing)
+        project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id]
+        projects.push(project) unless project_version_ids.empty?
       }
+    end
+    #make the submenu or single link
+    if !projects.empty?
+      if projects.length > 1
+        links << {:label => l(:label_new_story), :url => '#', :sub => []}
+        projects.each{|project|
+          links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+        }
+      else
+        links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
+      end
     end
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'

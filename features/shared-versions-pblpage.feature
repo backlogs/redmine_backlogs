@@ -134,14 +134,14 @@ Feature: Shared versions
       And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p1s1s1
       And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p2
-      #failing :( And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1s1
       And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1s1s1
       And The menu of the sprint backlog of Sp004 should not allow to create a new Story in project p2
-      #failing :( And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s1
       And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s1s1
-      #failing :( And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s2
+      And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s2
       And The menu of the sprint backlog of Sp005 should not allow to create a new Story in project p2
 
       And The menu of the sprint backlog of Sp006 should allow to create a new Story in project p1s1
@@ -149,17 +149,16 @@ Feature: Shared versions
       And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p1s2
       And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p2
-      #failing :( And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1s1
-      #failing :( And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1s1s1
       And The menu of the sprint backlog of Sp010 should not allow to create a new Story in project p1s2
       And The menu of the sprint backlog of Sp010 should not allow to create a new Story in project p2
-      #failing :( And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s1
-      #failing :( And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s1s1
-      #failing :( And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s2
-      #failing :( And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p2
-
+      And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s2
+      And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p2
 
   Scenario: View the subjproject backlog page at a leaf project
     Given I have selected the p1s1s1 project
