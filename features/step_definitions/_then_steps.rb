@@ -315,6 +315,39 @@ Then /^I should (.*)be able to drag stories from project (.*) to the sprint back
 end
 
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
+  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  project = get_project(arg3)
+  puts "check if #{sprint} can create in project #{project} #{project.id}"
+  #get the menu
+  Rails.logger.info( page.html )
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint.id}']/..//a[contains(@class,'add_new_story')]")
+  #links.each{|a|
+  #  puts "a class #{a[:class]}"
+  #}
+  #find link with project
+  found = false
+  if links.length==1
+    puts "only one link, @project: #{@project}"
+    project_id = @project.id
+    puts "can: #{project_id}"
+    found = true if project_id.to_i == project.id
+  else
+    links.each{|a| 
+      project_id = a[:class][%r[\d+$]]
+      puts "can: #{project_id}"
+      found = true if project_id.to_i == project.id
+    }
+  end
+  if neg == ''
+    found.should_not be false
+  else
+    found.should be false
+  end
+end
+
+Then /^The menu of the product backlog should (.*)allow to create a new Story in project (.+)$/ do |neg, arg2|
+  links = page.all(:css, "#product_backlog_container a.add_new_story")
+  #the menu is not loaded???!@#$ puts page.html
   pending # express the regexp above with the code you wish you had
 end
 
