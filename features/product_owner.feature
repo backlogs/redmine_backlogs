@@ -29,7 +29,7 @@ Feature: Product Owner
     Given I am viewing the master backlog
      Then I should see the product backlog
       And I should see 4 stories in the product backlog
-      And I should see 7 sprint backlogs
+      And I should see 4 sprint backlogs
 
   Scenario: View scrum statistics
      When I visit the scrum statistics page
