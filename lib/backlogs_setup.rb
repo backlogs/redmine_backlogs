@@ -44,12 +44,6 @@ module Backlogs
         raise "Unsupported platform #{platform}"
     end
 
-    unless RUBY_VERSION =~ /^1\.8\./ || development?
-      msg = "#{Redmine::VERSION} (UNSUPPORTED ruby version #{RUBY_VERSION})"
-      raise msg if raise_error
-      return msg
-    end
-
     return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
     return "#{Redmine::VERSION} (unsupported but might work, 'official' support is for #{supported.collect{|d| d.to_s}.join('.')})" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
 
