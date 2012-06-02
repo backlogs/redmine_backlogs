@@ -122,9 +122,10 @@ Feature: Shared versions
 #      And I should not be able to drag stories from project p2 to the sprint backlog of Sp010
 #      And I should be able to drag stories from project p2 to the sprint backlog of Sp012
 #      And I should not be able to drag stories from project p1s1s1 to the sprint backlog of Sp003
-#      And The menu of the product backlog should not allow to create a new Story in project p1
-#      And The menu of the product backlog should allow to create a new Story in project p1s1
-#      And The menu of the product backlog should allow to create a new Story in project p1s1s1
+      And The menu of the product backlog should not allow to create a new Story in project p1
+      And The menu of the product backlog should not allow to create a new Story in project p2
+      And The menu of the product backlog should allow to create a new Story in project p1s1
+      And The menu of the product backlog should allow to create a new Story in project p1s1s1
       And The menu of the sprint backlog of Sp002 should allow to create a new Story in project p1
       And The menu of the sprint backlog of Sp002 should allow to create a new Story in project p1s1
       And The menu of the sprint backlog of Sp002 should allow to create a new Story in project p1s1s1
