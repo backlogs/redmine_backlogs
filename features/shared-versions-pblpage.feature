@@ -68,12 +68,25 @@ Feature: Shared versions
         | Impediment 1 | Sp001      | Story 1 |
         | Impediment 2 | Sp002      | Story 2 | 
         
+  @javascript
   Scenario: View the toplevel backlog page
     Given I have selected the p1 project
       And I am viewing the master backlog
      Then I should see the product backlog
       And I should see 4 stories in the product backlog
       And I should see 7 sprint backlogs
+      And I should see the backlog of Sprint Sp001
+      And I should see the backlog of Sprint Sp002
+      And I should not see the backlog of Sprint Sp003
+      And I should see the backlog of Sprint Sp004
+      And I should see the backlog of Sprint Sp005
+      And I should not see the backlog of Sprint Sp006
+      And I should not see the backlog of Sprint Sp007
+      And I should not see the backlog of Sprint Sp009
+      And I should see the backlog of Sprint Sp010
+      And I should not see the backlog of Sprint Sp011
+      And I should see the backlog of Sprint Sp012
+      And I should see the backlog of Sprint Sp013
       And I should see 1 stories in the sprint backlog of Sp001
       And I should see 1 stories in the sprint backlog of Sp002
       And I should see 1 stories in the sprint backlog of Sp013
@@ -81,10 +94,13 @@ Feature: Shared versions
       And I should see 1 stories in the sprint backlog of Sp005
       And I should see 1 stories in the sprint backlog of Sp010
       And I should see 1 stories in the sprint backlog of Sp012
-      #And I should be able to drag stories from project p1 to the product backlog
-      #And I should be able to drag stories from project p1s1 to the product backlog
-      #And I should be able to drag stories from project p1s1s1 to the product backlog
-      #And I should be able to drag stories from project p2 to the product backlog
+      And I should be able to drag story Story 2 from sprint Sp002 before the story Story d in the product backlog
+      And the 2nd story in the product backlog should be Story 2
+      And I should not be able to drag story Story12 from sprint Sp012 before the story Story d in the product backlog
+      And I should be able to drag story Story10 from sprint Sp010 before the story Story d in the product backlog
+      And I should be able to drag story Story 4 from sprint Sp004 before the story Story d in the product backlog
+      And I should be able to drag story Story 5 from sprint Sp005 before the story Story d in the product backlog
+      #And show me a screenshot at /tmp/screenshot.png
 
   @javascript
   Scenario: View the subjproject backlog page in the middle
@@ -93,18 +109,18 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should see 2 stories in the product backlog
       And I should see 7 sprint backlogs
-#      And I should not see the backlog of Sprint Sp001
-#      And I should see the backlog of Sprint Sp002
-#      And I should see the backlog of Sprint Sp003
-#      And I should see the backlog of Sprint Sp004
-#      And I should see the backlog of Sprint Sp005
-#      And I should see the backlog of Sprint Sp006
-#      And I should not see the backlog of Sprint Sp007
-#      And I should not see the backlog of Sprint Sp009
-#      And I should see the backlog of Sprint Sp010
-#      And I should not see the backlog of Sprint Sp011
-#      And I should see the backlog of Sprint Sp012
-#      And I should not see the backlog of Sprint Sp013
+      And I should not see the backlog of Sprint Sp001
+      And I should see the backlog of Sprint Sp002
+      And I should see the backlog of Sprint Sp003
+      And I should see the backlog of Sprint Sp004
+      And I should see the backlog of Sprint Sp005
+      And I should see the backlog of Sprint Sp006
+      And I should not see the backlog of Sprint Sp007
+      And I should not see the backlog of Sprint Sp009
+      And I should see the backlog of Sprint Sp010
+      And I should not see the backlog of Sprint Sp011
+      And I should see the backlog of Sprint Sp012
+      And I should not see the backlog of Sprint Sp013
 #      And I should be able to drag stories from project p1s1 to the product backlog
 #      And I should be able to drag stories from project p1s1s1 to the product backlog
 #      And I should be able to drag stories from project p1 to the sprint backlog of Sp004
@@ -167,6 +183,18 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should see 1 stories in the product backlog
       And I should see 7 sprint backlogs
+      And I should not see the backlog of Sprint Sp001
+      And I should see the backlog of Sprint Sp002
+      And I should not see the backlog of Sprint Sp003
+      And I should see the backlog of Sprint Sp004
+      And I should see the backlog of Sprint Sp005
+      And I should see the backlog of Sprint Sp006
+      And I should not see the backlog of Sprint Sp007
+      And I should see the backlog of Sprint Sp009
+      And I should see the backlog of Sprint Sp010
+      And I should not see the backlog of Sprint Sp011
+      And I should see the backlog of Sprint Sp012
+      And I should not see the backlog of Sprint Sp013
 
   Scenario: View the subjproject backlog page at a middle leaf project
     Given I have selected the p1s2 project
@@ -174,6 +202,18 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should see 1 stories in the product backlog
       And I should see 4 sprint backlogs
+      And I should not see the backlog of Sprint Sp001
+      And I should see the backlog of Sprint Sp002
+      And I should not see the backlog of Sprint Sp003
+      And I should not see the backlog of Sprint Sp004
+      And I should see the backlog of Sprint Sp005
+      And I should not see the backlog of Sprint Sp006
+      And I should see the backlog of Sprint Sp007
+      And I should not see the backlog of Sprint Sp009
+      And I should not see the backlog of Sprint Sp010
+      And I should not see the backlog of Sprint Sp011
+      And I should see the backlog of Sprint Sp012
+      And I should not see the backlog of Sprint Sp013
 
   Scenario: View the subjproject backlog page of a separate project
     Given I have selected the p2 project
@@ -181,4 +221,16 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should see 1 stories in the product backlog
       And I should see 2 sprint backlogs
+      And I should not see the backlog of Sprint Sp001
+      And I should not see the backlog of Sprint Sp002
+      And I should not see the backlog of Sprint Sp003
+      And I should not see the backlog of Sprint Sp004
+      And I should not see the backlog of Sprint Sp005
+      And I should not see the backlog of Sprint Sp006
+      And I should not see the backlog of Sprint Sp007
+      And I should not see the backlog of Sprint Sp009
+      And I should not see the backlog of Sprint Sp010
+      And I should see the backlog of Sprint Sp011
+      And I should see the backlog of Sprint Sp012
+      And I should not see the backlog of Sprint Sp013
 
