@@ -59,9 +59,7 @@ pt-BR:
   field_initial_story_points: Initial story points
   field_name: Nome
   field_number_of_snapshots: Saved point snapshots
-  field_position: !binary |
-    UG9zacOnw6Nv
-
+  field_position: 'Posição'
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
