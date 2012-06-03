@@ -24,7 +24,7 @@ case $REDMINE_VER in
   2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
       export GENERATE_SECRET=generate_secret_token
       export MIGRATE_PLUGINS=redmine:plugins:migrate
-      export REDMINE_GIT_REPO=git://github.com/Vanuan/redmine.git
+      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
       export REDMINE_GIT_TAG=master
       ;;
   cp) export PATH_TO_PLUGINS=./vendor/plugins
