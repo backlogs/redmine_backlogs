@@ -541,7 +541,7 @@ Given /^the (.*) project is subproject of the (.*) project$/ do |arg1, arg2|
 end
 
 Given /^sharing is (.*)enabled$/ do |neg|
-  Backlogs.setting[:sharing_enabled] = !!(neg)
+  Backlogs.setting[:sharing_enabled] = !!(neg=='')
 end
 
 Given /^sharing_mode is (.+)$/ do |mode|
