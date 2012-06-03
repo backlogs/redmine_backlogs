@@ -188,3 +188,6 @@ en:
   backlogs_new_story_position: Newly created stories go to the
   backlogs_new_story_position_top: top
   backlogs_new_story_position_bottom: bottom (requires restart)
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_sharing_enabled: Enable sharing
+  backlogs_sharing_mode: Sharing mode
