@@ -292,12 +292,12 @@ end
 
 Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
-    if story['project_id']
+    if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
       project = get_project(story.delete('project_id'))
     else
       project = @project
     end
-    sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint'), "project_id" => project.id })
+    sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint') }) #find by name only, please use unique sprint names over projects for tests
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id
