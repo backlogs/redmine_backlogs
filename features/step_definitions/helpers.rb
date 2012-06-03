@@ -152,3 +152,16 @@ def assert_page_loaded(page)
   end
 end
 
+def check_backlog_menu_new_story(links, project)
+  found = false
+  if links.length==1
+    project_id = @project.id
+    found = true if project_id.to_i == project.id
+  else
+    links.each{|a|
+      project_id = a[:class][%r[\d+$]]
+      found = true if project_id.to_i == project.id
+    }
+  end
+  return found
+end

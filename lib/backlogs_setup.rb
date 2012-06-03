@@ -44,12 +44,6 @@ module Backlogs
         raise "Unsupported platform #{platform}"
     end
 
-    unless RUBY_VERSION =~ /^1\.8\./ || development?
-      msg = "#{Redmine::VERSION} (UNSUPPORTED ruby version #{RUBY_VERSION})"
-      raise msg if raise_error
-      return msg
-    end
-
     return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
     return "#{Redmine::VERSION} (unsupported but might work, 'official' support is for #{supported.collect{|d| d.to_s}.join('.')})" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
 
@@ -172,9 +166,12 @@ module Backlogs
     private
 
     def safe_load
+      # At the first migration, the settings table will not exist
+      return {} unless Setting.table_exists?
+
       settings = Setting.plugin_redmine_backlogs.dup
       if settings.is_a?(String)
-        RAILS_DEFAULT_LOGGER.error "Unable to load settings"
+        Rails.logger.error "Unable to load settings"
         return {}
       end
       settings

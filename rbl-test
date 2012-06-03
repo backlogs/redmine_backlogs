@@ -116,7 +116,7 @@ if [ -n "$PUBLISH" ]; then
       ruby -e 'while gets; break if $_ =~ /^WARNING/; end; while gets; break if $_ =~ /^[+]-{10}/; puts "    #{$_.strip}  "; end' ~/redmine/cuke-$GEMSET.log >> index.markdown
 
     else
-      cp -r ~/redmine/$GEMSET/coverage/* "$HOME/redmine/www/coverage/$COVERAGE"
+      cp -r ~/redmine/$GEMSET-$RUBYVER/coverage/* "$HOME/redmine/www/coverage/$COVERAGE"
     fi
   fi
 
@@ -127,7 +127,7 @@ if [ -n "$PUBLISH" ]; then
   echo '---' >> index.markdown
   echo '# Code coverage' >> index.markdown
   echo '' >> index.markdown
-  ls -lt | grep ^d | awk '{print "[" $8, $6, $7 "](" $8 ")  "}' >> index.markdown
+  ls -lt | grep ^d | awk '{print "[" $8, $6, $7 "](" $9 ")  "}' >> index.markdown
 
   chmod a+rwX ~/redmine/www/coverage/*
 

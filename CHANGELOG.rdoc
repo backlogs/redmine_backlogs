@@ -1,3 +1,31 @@
+== 2012-05-28 v0.9.10
+
+* Small fix to migrations
+
+== 2012-05-28 v0.9.9
+
+* RM2.0 compatibility updates
+* General cleanup
+* acts_as_list replaced by a more performant replacement
+* Removed obsolete migration
+* Tests: Add SimpleCov report generation
+* Tests: Add initial feature test for settings
+* Tests: Improve test failure diagnostics
+* Tests: Print meaningful error message if cucumber test fails
+* Cucumber: Rails 3 compatibility
+
+== 2012-05-20 v0.9.8
+
+* Make sure older migrations don't use the new journals stuff
+* "Show warning on taskboard if tracker workflow is misconfigured" warn user if tasks workflow has no states
+* Fixes "Slowness and unresponsiveness when moving issues"
+* set all ticks so checkbox shows the correct state on load. helps with ""Show empty stories" should be selected by default (bug?)"
+* Update Gemfile for running cucumber tests with Rails 3
+* Better CP support, not complete yet
+* Use https instead of git to install cucumber-rails.
+* Fixes "Subtasks not updated when changing custom fields"
+* Use poltergeist driver for javascript testing.
+
 == 2012-05-13 v0.9.7
 
 * Removes journal rebuild from the migration

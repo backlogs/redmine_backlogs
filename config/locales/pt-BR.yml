@@ -5,7 +5,7 @@ pt-BR:
   backlogs_auto_assign_task: Auto assign task to current user
   backlogs_burndown_print_height: Burndown print height
   backlogs_burndown_print_width: Burndown print width
-  backlogs_card_specification: "Tipo de r\xC3\xB3tulo para impress\xC3\xA3o no cart\xC3\xA3o"
+  backlogs_card_specification: "Tipo de rótulo para impressão no cartão"
   backlogs_impediment: Impediment
   backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Pontos usados subir/descer
@@ -34,20 +34,20 @@ pt-BR:
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
   backlogs_statistics_yield: Project has good average yield
   backlogs_statistics_yield_failed: Project has low average yield
-  backlogs_story: "Est\xC3\xB3ria"
-  backlogs_story_tracker: "Seq\xC3\xBC\xC3\xAAncia da est\xC3\xB3ria"
+  backlogs_story: "Estória"
+  backlogs_story_tracker: "Sequência da estória"
   backlogs_task: Tarefas
-  backlogs_task_tracker: "Seq\xC3\xBC\xC3\xAAncia da tarefa"
-  backlogs_wiki_template: "Modelo para a p\xC3\xA1gina wiki sprint"
-  button_edit_wiki: "Editar a p\xC3\xA1gina no wiki"
+  backlogs_task_tracker: "Sequência da tarefa"
+  backlogs_wiki_template: "Modelo para a página wiki sprint"
+  button_edit_wiki: "Editar a página no wiki"
   comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"
-  error_blank: "n\xC3\xA3o pode ser branco"
-  error_greater_than_start_date: "n\xC3\xA3o pode ser anterior \xC3\xA0 data de in\xC3\xADcio"
+  error_blank: "não pode ser branco"
+  error_greater_than_start_date: "não pode ser anterior à data de início"
   error_inclusion: is not included in the list
   error_intro_plural: "Os seguintes erros foram encontrados:"
   error_intro_singular: "O seguinte erro foi encontrado:"
-  error_must_have_comma_delimited_list: "Deve haver uma lista separada por v\xC3\xADrgulas de est\xC3\xB3rias ou dos IDs das tarefas."
+  error_must_have_comma_delimited_list: "Deve haver uma lista separada por vírgulas de estórias ou dos IDs das tarefas."
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Por favor corriga os erros antes de enviar novamente.
   error_release_end_after_start: Release end date has to be after start date
@@ -59,14 +59,12 @@ pt-BR:
   field_initial_story_points: Initial story points
   field_name: Nome
   field_number_of_snapshots: Saved point snapshots
-  field_position: !binary |
-    UG9zacOnw6Nv
-
+  field_position: 'Posição'
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
   field_remaining_hours: Remaining (hours)
-  field_story_points: "Pontos de est\xC3\xB3ria"
+  field_story_points: "Pontos de estória"
   field_subject: Assunto
   field_time_entry_comments: Time Entry Comments
   field_time_entry_hours: Time Entry Hours
@@ -74,11 +72,11 @@ pt-BR:
   field_time_entry_user_id: Time Entry User Id
   field_tracker_id: "[[Tracker ID]]"
   field_velocity_based_estimate: Velocidade estimada
-  label_back_to_project: "Voltar \xC3\xA0 p\xC3\xA1gina do projeto"
+  label_back_to_project: "Voltar à página do projeto"
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: "Voc\xC3\xAA n\xC3\xA3o configurou os Backlogs ainda. Por Favor v\xC3\xA1 em, %{administration} > %{plugins}, e selecione %{configure}. Uma vez definidos os campos, retorne para esta p\xC3\xA1gina para come\xC3\xA7ar a usar a ferramenta."
+  label_backlogs_unconfigured: "Você não configurou os Backlogs ainda. Por Favor vá em, %{administration} > %{plugins}, e selecione %{configure}. Uma vez definidos os campos, retorne para esta página para começar a usar a ferramenta."
   label_burndown: Burndown
-  label_chart_options: "Op\xC3\xA7\xC3\xB5es do gr\xC3\xA1fico"
+  label_chart_options: "Opções do gráfico"
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
   label_download_sprint: Download
@@ -94,7 +92,7 @@ pt-BR:
   label_no_data_to_show: No data to show
   label_no_end: no end
   label_no_start: no start
-  label_not_prioritized: "N\xC3\xA3o priorizadas"
+  label_not_prioritized: "Não priorizadas"
   label_points: Pontos
   label_points_accepted: points accepted
   label_points_burn_down: Descer
@@ -105,7 +103,7 @@ pt-BR:
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
   label_product_backlog: Product backlog
-  label_product_cards: "Cart\xC3\xB5es do Product backlog"
+  label_product_cards: "Cartões do Product backlog"
   label_release: Release
   label_release_end_date: Release end date
   label_release_new: New release
@@ -113,15 +111,15 @@ pt-BR:
   label_release_plural: Releases
   label_release_start_date: Release start date
   label_reset: Reset
-  label_scrum_statistics: "Estat\xC3\xADsticas do scrum"
+  label_scrum_statistics: "Estatísticas do scrum"
   label_select_all: Selecinar Todos
   label_show_completed_sprints: Show Completed Sprints
   label_sprint_backlog: Sprint backlog
-  label_sprint_cards: "Cart\xC3\xB5es de Sprint"
+  label_sprint_cards: "Cartões de Sprint"
   label_sprint_impediments: Impedimentos do sprint
   label_sprint_name: Sprint "%{name}"
-  label_stories: "Est\xC3\xB3rias"
-  label_stories_tasks: "Est\xC3\xB3rias/Tarefas"
+  label_stories: "Estórias"
+  label_stories_tasks: "Estórias/Tarefas"
   label_task_board: Quadro de tarefas
   label_webcal: Webcal Feed
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
@@ -129,7 +127,7 @@ pt-BR:
   rb_label_copy_tasks_all: Todos
   rb_label_copy_tasks_none: Nenhum
   rb_label_copy_tasks_open: Abertas
-  rb_label_link_to_original: "Incluir link para a hist\xC3\xB3ria original"
+  rb_label_link_to_original: "Incluir link para a estória original"
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
