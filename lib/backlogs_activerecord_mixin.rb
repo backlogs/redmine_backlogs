@@ -80,15 +80,15 @@ module Backlogs
       module InstanceMethods
         def move_to_top(options={})
           top = self.class.minimum(:position)
-          return if self.position == top
-          self.position = top - self.class.list_spacing
+          return if self.position == top && !top.blank?
+          self.position = top.blank? ? 0 : (top - self.class.list_spacing)
           list_commit
         end
 
         def move_to_bottom(options={})
           bottom = self.class.maximum(:position)
-          return if self.position == bottom
-          self.position = bottom + self.class.list_spacing
+          return if self.position == bottom && !bottom.blank?
+          self.position = bottom.blank? ? 0 : (bottom + self.class.list_spacing)
           list_commit
         end
 

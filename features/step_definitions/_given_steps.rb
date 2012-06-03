@@ -13,6 +13,10 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :view_scrum_statistics
   role.save!
   login_as_product_owner
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am a scrum master of the project$/ do
@@ -30,10 +34,13 @@ Given /^I am a scrum master of the project$/ do
   role.permissions << :create_sprints
   role.save!
   login_as_scrum_master
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am a team member of the project$/ do
-  #FIXME: (pa sharing) is this correct?
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
@@ -42,17 +49,10 @@ Given /^I am a team member of the project$/ do
   role.permissions << :update_tasks
   role.save!
   login_as_team_member
-end
-
-Given /^I am a team member of the projects$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
-  role.permissions << :view_master_backlog
-  role.permissions << :view_releases
-  role.permissions << :view_taskboards
-  role.permissions << :create_tasks
-  role.permissions << :update_tasks
-  role.save!
-  login_as_team_member
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am logged out$/ do
@@ -160,10 +160,12 @@ end
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Rails.cache.clear
   @project = get_project(project_id)
+  @projects = [] if @projects.nil?
+  @projects.push(@project)
   @project.should_not be_nil
 
   # Enable the backlogs plugin
-  @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
+  @project.enable_module!('backlogs')
 
   # Configure the story and task trackers
   story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id]
@@ -180,9 +182,8 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
 end
 
 Given /^no versions or issues exist$/ do
-#  Issue.find(:all).each{|i| i.destroy } #this breaks acts_as_list_with_gaps FIXME (pa sharing)
-#  Version.find(:all).each{|v| v.destroy }
-  #"FIXME: no versions or issues exist test prerequisite is disabled"
+  Issue.find(:all).each{|i| i.destroy }
+  Version.find(:all).each{|v| v.destroy }
 end
 
 Given /^I have selected the (.*) project$/ do |project_id|
@@ -291,12 +292,12 @@ end
 
 Given /^I have defined the following stories in the following sprints:$/ do |table|
   table.hashes.each do |story|
-    if story['project_id']
+    if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
       project = get_project(story.delete('project_id'))
     else
       project = @project
     end
-    sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint'), "project_id" => project.id })
+    sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint') }) #find by name only, please use unique sprint names over projects for tests
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id
@@ -525,21 +526,25 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
 end
 
 
-Given /^backlogs sharing is enabled$/ do
-  pending # express the regexp above with the code you wish you had
+Given /^I have defined the following projects:$/ do |table|
+  table.hashes.each do |project|
+    name = project.delete('name')
+    project.should == {}
+    pr = Project.create! :identifier => name, :name => name
+  end
 end
 
 Given /^the (.*) project is subproject of the (.*) project$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+  sub = Project.find(arg1)
+  parent = Project.find(arg2)
+  sub.set_parent! parent
 end
 
-Given /^the (.*) project has chosen to share its product backlog with its parents$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^sharing is (.*)enabled$/ do |neg|
+  Backlogs.setting[:sharing_enabled] = !!(neg=='')
 end
 
-Given /^the (.*) project has not chosen to share its product backlog$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^sharing_mode is (.+)$/ do |mode|
+  Backlogs.setting[:sharing_mode] = mode
 end
-
-
 

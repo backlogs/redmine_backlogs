@@ -14,20 +14,27 @@ then
   exit 1;
 fi
 
-if [[ "$REDMINE_VER" = 2 ]];
-then
-  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-  export GENERATE_SECRET=generate_secret_token
-  export MIGRATE_PLUGINS=redmine:plugins:migrate
-  export REDMINE_GIT_REPO=git://github.com/Vanuan/redmine.git
-  export REDMINE_GIT_TAG=master
-else
-  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
-  export GENERATE_SECRET=generate_session_store
-  export MIGRATE_PLUGINS=db:migrate_plugins
-  export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-  export REDMINE_GIT_TAG=1.4.2
-fi
+case $REDMINE_VER in
+  1)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+      export GENERATE_SECRET=generate_session_store
+      export MIGRATE_PLUGINS=db:migrate_plugins
+      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+      export REDMINE_GIT_TAG=1.4.2
+      ;;
+  2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+      export GENERATE_SECRET=generate_secret_token
+      export MIGRATE_PLUGINS=redmine:plugins:migrate
+      export REDMINE_GIT_REPO=git://github.com/Vanuan/redmine.git
+      export REDMINE_GIT_TAG=master
+      ;;
+  cp) export PATH_TO_PLUGINS=./vendor/plugins
+      export GENERATE_SECRET=generate_session_store
+      export MIGRATE_PLUGINS=db:migrate:plugins
+      export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
+      export REDMINE_GIT_TAG=v3.1.0
+      ;;
+esac
+
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 
 clone_redmine()
