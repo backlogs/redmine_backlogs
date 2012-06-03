@@ -37,27 +37,30 @@ class RbMasterBacklogsController < RbApplicationController
   def menu
     links = []
 
-
-    # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
-    projects = []
-    unless @sprint
-      projects = @project.self_and_descendants.active
-    else #menu for sprint
-      Project.visible.find(:all, :order => 'lft').each{|project| #exhaustive search FIXME (pa sharing)
-        project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id]
-        projects.push(project) unless project_version_ids.empty?
-      }
-    end
-    #make the submenu or single link
-    if !projects.empty?
-      if projects.length > 1
-        links << {:label => l(:label_new_story), :url => '#', :sub => []}
-        projects.each{|project|
-          links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+    if @settings[:sharing_enabled]
+      # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
+      projects = []
+      unless @sprint
+        projects = @project.self_and_descendants.active
+      else #menu for sprint
+        Project.visible.find(:all, :order => 'lft').each{|project| #exhaustive search FIXME (pa sharing)
+          project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id]
+          projects.push(project) unless project_version_ids.empty?
         }
-      else
-        links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
       end
+      #make the submenu or single link
+      if !projects.empty?
+        if projects.length > 1
+          links << {:label => l(:label_new_story), :url => '#', :sub => []}
+          projects.each{|project|
+            links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+          }
+        else
+          links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
+        end
+      end
+    else
+      links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
     end
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
