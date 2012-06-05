@@ -96,11 +96,11 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
 
   saveDirectives: function(){
     var j = this.$;
-    var prev = this.$.prev();
+    var nxt = this.$.next();
     var sprint_id = this.$.parents('.backlog').data('this').isSprintBacklog() ? 
                     this.$.parents('.backlog').data('this').getSprint().data('this').getID() : '';
         
-    var data = "prev=" + (prev.length==1 ? this.$.prev().data('this').getID() : '') +
+    var data = "next=" + (nxt.length==1 ? this.$.next().data('this').getID() : '') +
                "&fixed_version_id=" + sprint_id;
     
     j.find('.editor').each(function() {

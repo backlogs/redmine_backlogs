@@ -79,11 +79,9 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
   new_pos = new_pos.to_i unless new_pos == 'last'
   case new_pos
     when 'last'
-      prev = @story_ids.last
-    when 1
-      prev = ''
+      nxt = ''
     else
-      prev = @story_ids[new_pos - 2]
+      nxt = @story_ids[new_pos-1]
   end
 
   page.driver.post( 
@@ -91,7 +89,7 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
                               :action => :update,
                               :id => story_id,
                               :only_path => true),
-                      {:prev => prev, :project_id => @project.id, "_method" => "put"}
+                      {:next => nxt, :project_id => @project.id, "_method" => "put"}
                   )
   verify_request_status(200)
 
