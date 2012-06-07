@@ -168,9 +168,13 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.enable_module!('backlogs')
 
   # Configure the story and task trackers
-  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story')).id]
-  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task')).id
+  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
+  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
+  story_trackers.each{|tracker| tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Feature request'})) }
+  task_tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Bug'}))
 
+  story_trackers = story_trackers.map{|tracker| tracker.id }
+  task_tracker = task_tracker.id
   Backlogs.setting[:story_trackers] = story_trackers
   Backlogs.setting[:task_tracker] = task_tracker
 
