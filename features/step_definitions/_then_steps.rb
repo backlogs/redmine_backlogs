@@ -362,3 +362,8 @@ end
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1)
 end
+
+Then /^dump the database to (.+)$/ do |arg1|
+  system("pg_dump redmine_test > #{arg1}")
+end
+
