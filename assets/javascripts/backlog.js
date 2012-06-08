@@ -24,14 +24,15 @@ RB.Backlog = RB.Object.create({
 
     // Make the list sortable
     list = this.getList();
-    list.bind('mousedown', this.mouseDown);
+    list.bind('mousedown', function(e){self.mouseDown(e);});
+    list.bind('mouseup', function(e){self.mouseUp(e);});
     list.sortable({connectWith: '.stories',
                    placeholder: 'placeholder',
                    forcePlaceholderSize: true,
                    dropOnEmpty: true,
                    start: this.dragStart,
-                   stop: this.dragStop,
-                   update: function(e,u){ self.dragComplete(e, u) }
+                   stop: function(e,u){ self.dragStop(e, u); },
+                   update: function(e,u){ self.dragComplete(e, u); }
                   });
 
     if(this.isSprintBacklog()){
@@ -128,6 +129,7 @@ RB.Backlog = RB.Object.create({
   mouseDown: function(event) {
     var item = RB.$(event.target).parents('.model');
     var storyProject = item.find(".story_project").text();
+
     // disable invalid drag targets
     RB.$('#sprint_backlogs_container .stories').sortable('disable');
     if (RB.constants.project_versions[storyProject]) {
@@ -140,6 +142,10 @@ RB.Backlog = RB.Object.create({
     if (!RB.constants.project_self_and_descendants[storyProject]) {
       RB.$('#product_backlog_container .stories').sortable('disable');
     }
+  },
+
+  mouseUp: function(event) {
+    this.enableAllSortables();
   },
 
   dragStart: function(event, ui) {
@@ -178,11 +184,14 @@ RB.Backlog = RB.Object.create({
       // for IE
       ui.item.draggable('disable');
     }
-
+    this.enableAllSortables();
+  },
+  
+  enableAllSortables: function() {
     // enable all backlogs as drop targets
     RB.$('.stories').sortable('enable');
   },
-  
+
   getSprint: function(){
     return RB.$(this.el).find(".model.sprint").first();
   },
