@@ -61,8 +61,6 @@ Feature: Burndown
       And I should see 2 sprint backlogs
      # And I should see 3 stories in the backlog of sprint Sprint 001
 
-  #FIXME: screenshots shows taskboard without states.
-  #FIXME Failing since story.descendants will not return task C.1 for story C
   Scenario: Tasks closed AFTER remaining hours is set to 0
     Given I am viewing the taskboard for Sprint 001
       And I have made the following task mutations:

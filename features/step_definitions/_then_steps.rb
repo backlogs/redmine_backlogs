@@ -49,7 +49,7 @@ end
 
 Then /^show me the list of stories$/ do
   header = [['id', 5], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
+  data = RbStory.find(:all, :order => "position ASC").collect {|story|
     [story.id, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
   }
 
@@ -362,3 +362,8 @@ end
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1)
 end
+
+Then /^dump the database to (.+)$/ do |arg1|
+  system("pg_dump redmine_test > #{arg1}")
+end
+

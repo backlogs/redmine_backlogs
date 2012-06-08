@@ -155,7 +155,8 @@ RB.Backlog = RB.Object.create({
   dragBeforeStop: function(event, ui){ //FIXME what does this function do?
     var dropTarget = ui.item.parents('.backlog').data('this');
 
-    // always allowed to go back to the product backlog //FIXME this is not true for sharing
+    // always allowed to go back to the product backlog
+    // actually, this is not true for sharing, but in that case the pbl should be disabled for sortable FIXME (pa sharing) needs proper implementation
     if (!dropTarget.isSprintBacklog()) { return; }
 
     var targetSprint = dropTarget.getSprint().data('this').getID();
