@@ -348,11 +348,30 @@ Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlo
   end
 end
 
+#taskboard visual checks:
+Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
+  taskboard_check_task(task, story, state)
+end
+
+Then /^task (.+) should have the status (.+)$/ do |task, state|
+  state = IssueStatus.find(:first, :conditions => { :name => state })
+  task = RbTask.find(:first, :conditions => { :subject => task })
+  task.status_id.should == state.id
+end
+
+Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
+  taskboard_check_impediment(impediment, state)
+end
+
 Then /^show me a screenshot at (.+)$/ do |arg1|
-  page.driver.render(arg1)
+  page.driver.render(arg1, :full=>true)
 end
 
 Then /^dump the database to (.+)$/ do |arg1|
   system("pg_dump redmine_test > #{arg1}")
+end
+
+Then /^open the remote inspector$/ do
+  page.driver.debug
 end
 

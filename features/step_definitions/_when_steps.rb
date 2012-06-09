@@ -174,6 +174,7 @@ When /^I click (create|copy|save)$/ do |command|
   page.find(:xpath, '//input[@name="commit"]').click
 end
 
+#backlog dnd
 When /^I drag story (.+) to the sprint backlog of (.+?)( before the story (.+))?$/ do |story, sprint, before, beforearg|
   drag_story(story, nil, sprint, beforearg)
 end
@@ -181,4 +182,10 @@ end
 When /^I drag story (.+?) to the product backlog( before the story (.+))?$/ do |story, before, beforearg|
   drag_story(story, nil, 'product-backlog', beforearg)
 end
+
+#taskboard dnd
+When /^I drag task (.+) to the state (.+) in the row of (.+)$/ do |task, state, story|
+  drag_task(task, state, story)
+end
+
 
