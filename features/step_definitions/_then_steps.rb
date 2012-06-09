@@ -300,8 +300,9 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks.length.should == 1
 end
 
-Then /^I should see (\d+) stories in the sprint backlog of (.*)$/ do |arg1, arg2|
-  sprint = RbSprint.find(:first, :conditions => { :name => arg2 })
+Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2|
+  sprint = RbSprint.find(:first, :conditions => { :name => arg2.strip })
+  sprint.should_not be_nil
   stories = page.all(:css, "#stories-for-#{sprint.id} .story")
   stories.length.should == arg1.to_i
 end
