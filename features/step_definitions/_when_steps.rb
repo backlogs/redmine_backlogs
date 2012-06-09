@@ -175,19 +175,10 @@ When /^I click (create|copy|save)$/ do |command|
 end
 
 When /^I drag story (.+) to the sprint backlog of (.+?)( before the story (.+))?$/ do |story, sprint, before, beforearg|
-  story = RbStory.find(:first, :conditions => { :subject => story.strip})
-  story.should_not be_nil
-  element = page.find(:css, "#story_#{story.id}")
-
-  sprint = RbSprint.find(:first, :conditions => {:name => sprint.strip })
-  sprint.should_not be_nil
-  target = page.find(:css, "#stories-for-#{sprint.id}")
-  element.drag_to(target)
-  if before and beforearg
-    before = RbStory.find(:first, :conditions => {:subject => beforearg.strip})
-    before.should_not be_nil
-    element.drag_to(page.find(:css, "#story_#{before.id}"))
-  end
-  sleep 1 #FIXME (pa sharing) wait for ajax to happen. capybara does not see the change since the dom node is still on the page
-  story.reload
+  drag_story(story, nil, sprint, beforearg)
 end
+
+When /^I drag story (.+?) to the product backlog( before the story (.+))?$/ do |story, before, beforearg|
+  drag_story(story, nil, 'product-backlog', beforearg)
+end
+

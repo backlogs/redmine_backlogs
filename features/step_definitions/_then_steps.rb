@@ -307,14 +307,6 @@ Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2
   stories.length.should == arg1.to_i
 end
 
-Then /^I should (.*)be able to drag stories from project (.*) to the product backlog$/ do |neg, arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^I should (.*)be able to drag stories from project (.*) to the sprint backlog of (.*)$/ do |neg, arg1, arg2|
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
   sprint = RbSprint.find(:first, :conditions => {:name => arg1})
   project = get_project(arg3)
@@ -341,23 +333,19 @@ Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
   found.should be !!(neg=='')
 end
 
-Then /^I should (.*)be able to drag story (.+) from sprint (.+) before the story (.+) in the product backlog$/ do |neg, story, sprint, target|
-  story = RbStory.find(:first, :conditions => {
-    :fixed_version_id => RbSprint.find(:first, :conditions => {:name => sprint }).id,
-    :subject => story})
-  story_id = story.id
-  old_v_id = story.fixed_version_id
-  element = page.find(:css, "#story_#{story_id}")
-
-  target_id = RbStory.find(:first, :conditions => {:fixed_version_id => nil, :subject => target}).id
-  target = page.find(:css, "#story_#{target_id}")
-
-  element.drag_to(page.find(:css, "#stories-for-product-backlog")) #extra step to trick out jquery sortable which needs movement???
-  element.drag_to(target)
-  sleep 1 #FIXME (pa sharing) wait for ajax to happen. capybara does not see the change since the dom node is still on the page
-
-  story.reload
-  story.fixed_version_id.should be neg=='' ? nil : old_v_id
+Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlog|in sprint (.+?))$/ do |success, story_name, where, sprint_name|
+  story = RbStory.find(:first, :conditions => {:subject => story_name})
+  @last_dnd.should_not be_nil
+  if where == 'unchanged'
+    @last_dnd[:position_before].should == story.position
+    @last_dnd[:version_id_before].should == story.fixed_version_id
+  elsif where == 'in the product backlog'
+    story.fixed_version_id.should be_nil
+  else
+    sprint = RbSprint.find(:first, :conditions => {:name => sprint_name})
+    sprint.should_not be_nil
+    story.fixed_version_id.should == sprint.id
+  end
 end
 
 Then /^show me a screenshot at (.+)$/ do |arg1|
