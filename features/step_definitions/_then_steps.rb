@@ -301,16 +301,15 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
 end
 
 Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2|
-  sprint = RbSprint.find(:first, :conditions => { :name => arg2.strip })
-  sprint.should_not be_nil
-  stories = page.all(:css, "#stories-for-#{sprint.id} .story")
+  sprint_id = sprint_id_from_name(arg2.strip)
+  stories = page.all(:css, "#stories-for-#{sprint_id} .story")
   stories.length.should == arg1.to_i
 end
 
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
-  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  sprint_id = sprint_id_from_name(arg1.strip)
   project = get_project(arg3)
-  links = page.all(:xpath, "//div[@id='sprint_#{sprint.id}']/..//a[contains(@class,'add_new_story')]")
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint_id}']/..//a[contains(@class,'add_new_story')]")
   found = check_backlog_menu_new_story(links, project)
   found.should be !!(neg=='')
 end
@@ -323,9 +322,9 @@ Then /^The menu of the product backlog should (.*)allow to create a new Story in
 end
 
 Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
-  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  sprint_id = sprint_id_from_name(arg1.strip)
   begin
-    page.find(:css, "#sprint_#{sprint.id}")
+    page.find(:css, "#sprint_#{sprint_id}")
     found = true
   rescue
     found = false
@@ -342,9 +341,8 @@ Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlo
   elsif where == 'in the product backlog'
     story.fixed_version_id.should be_nil
   else
-    sprint = RbSprint.find(:first, :conditions => {:name => sprint_name})
-    sprint.should_not be_nil
-    story.fixed_version_id.should == sprint.id
+    sprint_id = sprint_id_from_name(sprint_name.strip)
+    story.fixed_version_id.should == sprint_id
   end
 end
 

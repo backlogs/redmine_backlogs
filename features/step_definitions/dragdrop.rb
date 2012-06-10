@@ -25,9 +25,8 @@ def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
   if target_sprint_name == 'product-backlog'
     target = page.find(:css, "#stories-for-product-backlog")
   else
-    sprint = RbSprint.find(:first, :conditions => {:name => target_sprint_name })
-    sprint.should_not be_nil
-    target = page.find(:css, "#stories-for-#{sprint.id}")
+    sprint_id = sprint_id_from_name(target_sprint_name)
+    target = page.find(:css, "#stories-for-#{sprint_id}")
   end
   target.should_not be_nil
   @last_dnd[:target] = target
