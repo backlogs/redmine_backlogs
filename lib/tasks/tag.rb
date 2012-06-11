@@ -80,6 +80,7 @@ end
 
 Dir.chdir('../www')
 File.open('versions.yml', 'w') {|f| f.write(supported.to_yaml)}
+File.open('_includes/version.html', 'w') { |f| f.write(newversion) }
 File.open('_includes/supported.html', 'w') do |f|
   s = supported.dup
   while s[:chiliproject].size > 0 || s[:redmine].size > 0
@@ -97,6 +98,6 @@ File.open('_includes/supported.html', 'w') do |f|
   end
 end
 
-`git add versions.yml _includes/supported.html`
+`git add versions.yml _includes/supported.html _includes/version.html`
 `git commit -m #{newversion}`
 `git push`
