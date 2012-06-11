@@ -59,16 +59,14 @@ def taskboard_check_task(task, story, state)
   task_id = RbTask.find(:first, :conditions => {:subject => task}).id
   story_id = RbStory.find(:first, :conditions => {:subject => story}).id
   n = @taskboard_setup[:states][state]
-  tasknode = page.find(:css, "#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
-  tasknode.should_not be_nil
+  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
 end
 
 def taskboard_check_impediment(impediment, state)
   taskboard_states_setup unless @taskboard_setup
-  task_id = Issue.find(:first, :conditions => {:subject => impediment}).id
+  task = Issue.find_by_subject(impediment)
   n = @taskboard_setup[:states][state]
-  tasknode = page.find(:css, "#impediments td:nth-child(#{n}) div#issue_#{task_id}")
-  tasknode.should_not be_nil
+  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
 end
 
 def drag_task(task, state, story)

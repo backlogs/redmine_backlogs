@@ -361,6 +361,12 @@ Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
   taskboard_check_impediment(impediment, state)
 end
 
+Then /^impediment (.+) should be created without error$/ do |impediment_name|
+  impediment = Issue.find_by_subject(impediment_name)
+  impediment.should_not be_nil
+  page.should have_css("#issue_#{impediment.id}")
+end
+
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1, :full=>true)
 end
