@@ -32,6 +32,13 @@ class RbTask < Issue
     attribs['project_id'] = project_id
 
     blocks = params.delete('blocks')
+    if blocks and blocks.strip != '':
+      begin
+        first_blocked_id = blocks.split(/\D+/)[0].to_i
+        attribs['project_id'] = Issue.find_by_id(first_blocked_id).project_id if first_blocked_id
+      rescue
+      end
+    end
 
     task = new(attribs)
     if params['parent_issue_id']

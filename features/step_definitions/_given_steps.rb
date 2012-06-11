@@ -377,7 +377,8 @@ Given /^I have defined the following tasks:$/ do |table|
 end
 
 Given /^I have defined the following impediments:$/ do |table|
-  # FIXME pa sharing: what if an impediment blocks more than on issues, each from different projects?
+  # sharing: an impediment can block more than on issues, each from different projects, when
+  # cross_project_issue_relations is enabled. This is tested not here but using javascript tests.
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
     blocks = RbStory.find(:first, :conditions => ['subject in (?)', impediment['blocks'].split(', ')])
@@ -555,3 +556,6 @@ Given /^sharing_mode is (.+)$/ do |mode|
   Backlogs.setting[:sharing_mode] = mode
 end
 
+Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
+  Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
+end

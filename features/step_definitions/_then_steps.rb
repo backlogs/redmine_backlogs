@@ -364,7 +364,18 @@ end
 Then /^impediment (.+) should be created without error$/ do |impediment_name|
   impediment = Issue.find_by_subject(impediment_name)
   impediment.should_not be_nil
+  begin
+    msg = page.find(:css, "div#msgBox")
+    #puts "Got msg box: #{msg.text}" if msg
+  rescue
+  end
+  msg.should be_nil
   page.should have_css("#issue_#{impediment.id}")
+end
+
+Then /^I should see a msgbox with "([^"]*)"$/ do |arg1|
+  msg = page.find(:css, "div#msgBox")
+  msg.text.strip.should == arg1.strip
 end
 
 Then /^show me a screenshot at (.+)$/ do |arg1|
