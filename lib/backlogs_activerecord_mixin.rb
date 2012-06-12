@@ -132,6 +132,15 @@ module Backlogs
 
           list_commit
         end
+
+        def move_before(reference, options={})
+          prev = reference.higher_item
+          if prev.blank?
+            move_to_top
+          else
+            move_after(prev, options)
+          end
+        end
       end
 
       private

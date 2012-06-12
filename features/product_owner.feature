@@ -87,3 +87,35 @@ Feature: Product Owner
       And the 3rd story in the product backlog should be Story 2
       And the 4th story in the product backlog should be Story 3
 
+  Scenario: Move many stories up so the gapspace needs reassignment
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     Then the 2nd story in the product backlog should be Story 4
+      And the 3rd story in the product backlog should be Story 2
+      And the 4th story in the product backlog should be Story 3
+
