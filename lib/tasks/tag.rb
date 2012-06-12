@@ -98,6 +98,7 @@ File.open('_includes/supported.html', 'w') do |f|
   end
 end
 
+`git pull`
 `git add versions.yml _includes/supported.html _includes/version.html`
 `git commit -m #{newversion}`
 `git push`
