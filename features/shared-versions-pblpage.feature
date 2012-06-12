@@ -103,13 +103,21 @@ Feature: Shared versions
       And I should see 1 stories in the sprint backlog of Sp005
       And I should see 1 stories in the sprint backlog of Sp010
       And I should see 1 stories in the sprint backlog of Sp012
-      And I should be able to drag story Story 2 from sprint Sp002 before the story Story d in the product backlog
+     When I drag story Story 2 to the product backlog before the story Story d
+     Then the drop succeeded and Story 2 is in the product backlog
       And the 2nd story in the product backlog should be Story 2
-      And I should not be able to drag story Story12 from sprint Sp012 before the story Story d in the product backlog
-      And I should be able to drag story Story10 from sprint Sp010 before the story Story d in the product backlog
-      And I should be able to drag story Story 4 from sprint Sp004 before the story Story d in the product backlog
-      And I should be able to drag story Story 5 from sprint Sp005 before the story Story d in the product backlog
-      #And show me a screenshot at /tmp/screenshot.png
+     When I drag story Story12 to the product backlog before the story Story d
+     Then the drop failed and Story12 is unchanged
+      And the 1st story in Sp012 should be Story12
+     When I drag story Story10 to the product backlog before the story Story d
+     Then the drop succeeded and Story10 is in the product backlog
+      And the 3rd story in the product backlog should be Story10
+     When I drag story Story 4 to the product backlog before the story Story d
+     Then the drop succeeded and Story 4 is in the product backlog
+      And the 4th story in the product backlog should be Story 4
+     When I drag story Story 5 to the product backlog before the story Story d
+     Then the drop succeeded and Story 5 is in the product backlog
+      And the 5th story in the product backlog should be Story 5
 
   @javascript
   Scenario: View the subjproject backlog page in the middle
@@ -130,24 +138,7 @@ Feature: Shared versions
       And I should not see the backlog of Sprint Sp011
       And I should see the backlog of Sprint Sp012
       And I should not see the backlog of Sprint Sp013
-#      And I should be able to drag stories from project p1s1 to the product backlog
-#      And I should be able to drag stories from project p1s1s1 to the product backlog
-#      And I should be able to drag stories from project p1 to the sprint backlog of Sp004
-#      And I should be able to drag stories from project p1 to the sprint backlog of Sp005
-#      And I should be able to drag stories from project p1 to the sprint backlog of Sp012
-#      And I should not be able to drag stories from project p1 to the product backlog
-#      And I should not be able to drag stories from project p2 to the product backlog
-#      And I should not be able to drag stories from project p1 to the sprint backlog of Sp003
-#      And I should not be able to drag stories from project p1 to the sprint backlog of Sp006
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp002
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp003
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp004
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp005
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp006
-#      And I should not be able to drag stories from project p2 to the sprint backlog of Sp010
-#      And I should be able to drag stories from project p2 to the sprint backlog of Sp012
-#      And I should not be able to drag stories from project p1s1s1 to the sprint backlog of Sp003
-      And The menu of the product backlog should not allow to create a new Story in project p1
+     Then The menu of the product backlog should not allow to create a new Story in project p1
       And The menu of the product backlog should not allow to create a new Story in project p2
       And The menu of the product backlog should allow to create a new Story in project p1s1
       And The menu of the product backlog should allow to create a new Story in project p1s1s1
@@ -185,6 +176,57 @@ Feature: Shared versions
       And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s1s1
       And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p1s2
       And The menu of the sprint backlog of Sp012 should allow to create a new Story in project p2
+     When I drag story Story 3 to the product backlog
+     Then the drop succeeded and Story 3 is in the product backlog
+      And the 3rd story in the product backlog should be Story 3
+     When I drag story Story10 to the product backlog
+     Then the drop succeeded and Story10 is in the product backlog
+      And the 4th story in the product backlog should be Story10
+     When I drag story Story 2 to the sprint backlog of Sp004
+     Then the drop succeeded and Story 2 is in sprint Sp004
+      And the 2nd story in Sp004 should be Story 2
+     When I drag story Story 2 to the sprint backlog of Sp005
+     Then the drop succeeded and Story 2 is in sprint Sp005
+      And the 2nd story in Sp005 should be Story 2
+     When I drag story Story 2 to the sprint backlog of Sp012 before the story Story12
+     Then the drop succeeded and Story 2 is in sprint Sp012
+      And the 1st story in Sp012 should be Story 2
+     When I drag story Story12 to the product backlog
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the product backlog
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story 2 to the sprint backlog of Sp003
+     Then the drop failed and Story 2 is unchanged
+      And the 1st story in Sp012 should be Story 2
+     When I drag story Story 2 to the sprint backlog of Sp006
+     Then the drop failed and Story 2 is unchanged
+      And the 1st story in Sp012 should be Story 2
+     When I drag story Story12 to the sprint backlog of Sp002
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp003
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp004
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp005
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp006
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp010
+     Then the drop failed and Story12 is unchanged
+      And the 2nd story in Sp012 should be Story12
+     When I drag story Story12 to the sprint backlog of Sp012 before the story Story 2
+     Then the drop succeeded and Story12 is in sprint Sp012
+      And the 1st story in Sp012 should be Story12
+     When I drag story Story f to the sprint backlog of Sp003
+     Then the drop failed and Story f is unchanged
+      And the 2nd story in the product backlog should be Story f
 
   Scenario: View the subjproject backlog page at a leaf project
     Given I have selected the p1s1s1 project

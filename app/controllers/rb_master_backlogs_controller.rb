@@ -6,7 +6,15 @@ class RbMasterBacklogsController < RbApplicationController
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
     if @settings[:sharing_enabled]
-      sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+      if @settings[:sharing_mode] == 'subtree':
+        project_ids = Project.find(:all, :conditions=>Project.find(@project.id).project_condition(true)).map{|project| project.id} # FIXME (pa sharing) i'd like to make this easier in the scope condition but project_condition() is no array
+        sprints = @project.shared_versions.scoped(:conditions => {
+          :status => ['open', 'locked'],
+          :project_id => project_ids
+          }, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+      else
+        sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+      end
     else
       sprints = RbSprint.open_sprints(@project)
     end
@@ -16,6 +24,7 @@ class RbMasterBacklogsController < RbApplicationController
       c_sprints = []
     else
       c_sprints = RbSprint.closed_sprints(@project)
+      # FIXME (pa sharing) shared closed sprints not implemented yet
     end
 
     last_story = RbStory.find(
@@ -43,9 +52,14 @@ class RbMasterBacklogsController < RbApplicationController
       unless @sprint
         projects = @project.self_and_descendants.active
       else #menu for sprint
-        Project.visible.find(:all, :order => 'lft').each{|project| #exhaustive search FIXME (pa sharing)
+        if @settings[:sharing_mode] == 'subtree':
+          p = @project.hierarchy # parents and descendants
+        else
+          p = Project.visible.find(:all, :order => 'lft') #exhaustive search FIXME (pa sharing)
+        end
+        p.each{|project|
           project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id]
-          projects.push(project) unless project_version_ids.empty?
+          projects << project unless project_version_ids.empty?
         }
       end
       #make the submenu or single link

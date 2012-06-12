@@ -31,10 +31,6 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     end
   end
 
-  def build_inline_style_color(task)
-    task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User) ? '' : "#{task.assigned_to.backlogs_preference[:task_color]}"
-  end
-
   def breadcrumb_separator
     "<span class='separator'>&gt;</span>".html_safe
   end

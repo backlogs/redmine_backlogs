@@ -8,6 +8,7 @@ Feature: Shared versions
       And the private-child project has the backlogs plugin enabled
       And the project6 project has the backlogs plugin enabled
       And the onlinestore project has the backlogs plugin enabled
+      And sharing is enabled
       And no versions or issues exist
       And I am a team member of the project
 
