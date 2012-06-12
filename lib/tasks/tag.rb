@@ -63,26 +63,6 @@ supported[:backlogs] = newversion
 
 File.open('lib/versions.yml', 'w') {|f| f.write(supported.to_yaml)}
 
-if File.directory?('../www')
-  File.open('../www/versions.yml', 'w') {|f| f.write(supported.to_yaml)}
-  File.open('../www/_includes/supported.html', 'w') do |f|
-    s = supported.dup
-    while s[:chiliproject].size > 0 || s[:redmine].size > 0
-      f.write('<tr><td>&nbsp;</td>')
-      [:redmine, :chiliproject].each {|platform|
-        v = s[platform].shift
-        if v
-          status = v[:unsupported] ? ' (unsupported)' : ''
-          f.write("<td>#{v[:version]}/#{v[:ruby]}#{status}</td>")
-        else
-          f.write("<td>&nbsp;</td>")
-        end
-      }
-      f.write("</tr>\n")
-    end
-  end
-end
-
 code = nil
 File.open('init.rb') do |f|
   code = f.read
@@ -97,3 +77,27 @@ end
 `git tag #{newversion}`
 `git push`
 `git push --tags`
+
+Dir.chdir('../www')
+File.open('versions.yml', 'w') {|f| f.write(supported.to_yaml)}
+File.open('_includes/version.html', 'w') { |f| f.write(newversion) }
+File.open('_includes/supported.html', 'w') do |f|
+  s = supported.dup
+  while s[:chiliproject].size > 0 || s[:redmine].size > 0
+    f.write('<tr><td>&nbsp;</td>')
+    [:redmine, :chiliproject].each {|platform|
+      v = s[platform].shift
+      if v
+        status = v[:unsupported] ? ' (unsupported)' : ''
+        f.write("<td>#{v[:version]}/#{v[:ruby]}#{status}</td>")
+      else
+        f.write("<td>&nbsp;</td>")
+      end
+    }
+    f.write("</tr>\n")
+  end
+end
+
+`git add versions.yml _includes/supported.html _includes/version.html`
+`git commit -m #{newversion}`
+`git push`
