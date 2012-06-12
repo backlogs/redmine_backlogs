@@ -190,7 +190,7 @@ class RbStory < Issue
     attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
 
-    return self.journalized_batch_update_attributes attribs
+    return self.journalized_update_attributes attribs
   end
 
   def burndown(sprint=nil)

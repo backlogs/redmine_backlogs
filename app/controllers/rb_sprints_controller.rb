@@ -31,7 +31,7 @@ class RbSprintsController < RbApplicationController
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     begin
-      result  = @sprint.batch_update_attributes attribs
+      result  = @sprint.update_attributes attribs
     rescue => e
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
@@ -79,7 +79,7 @@ class RbSprintsController < RbApplicationController
     status = IssueStatus.default.id
     Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
       ids << issue.id.to_s
-      issue.batch_update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
+      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
     }
     if ids.size != 0
       ids = ids.join(',')
