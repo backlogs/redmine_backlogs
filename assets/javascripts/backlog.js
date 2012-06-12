@@ -78,7 +78,10 @@ RB.Backlog = RB.Object.create({
           if (data[i].classname) { a.attr('class', data[i].classname); }
           if (data[i].warning) {
             a.data('warning', data[i].warning);
-            a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
+            a.click(function(e) {
+              if (e.button > 1) return;
+              return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n"));
+            });
           }
           list.append(li);
         }
@@ -205,6 +208,7 @@ RB.Backlog = RB.Object.create({
   },
 
   handleNewStoryClick: function(event){
+    if(event.button > 1) return;
     event.preventDefault();
 
     var project_id = null;
@@ -217,6 +221,7 @@ RB.Backlog = RB.Object.create({
   },
 
   handleNewSprintClick: function(event){
+    if(event.button > 1) return;
     event.preventDefault();
     RB.$(this).parents('.backlog').data('this').newSprint();
   },

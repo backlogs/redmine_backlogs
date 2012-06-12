@@ -188,6 +188,7 @@ RB.Model = RB.Object.create({
   },
     
   handleClick: function(event){
+    if(event.button != 0) return; // only respond to left click
     var field = RB.$(this);
     var model = field.parents('.model').first().data('this');
     var j = model.$;
