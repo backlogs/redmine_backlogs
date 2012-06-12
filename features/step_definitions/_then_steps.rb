@@ -300,24 +300,16 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks.length.should == 1
 end
 
-Then /^I should see (\d+) stories in the sprint backlog of (.*)$/ do |arg1, arg2|
-  sprint = RbSprint.find(:first, :conditions => { :name => arg2 })
-  stories = page.all(:css, "#stories-for-#{sprint.id} .story")
+Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2|
+  sprint_id = sprint_id_from_name(arg2.strip)
+  stories = page.all(:css, "#stories-for-#{sprint_id} .story")
   stories.length.should == arg1.to_i
 end
 
-Then /^I should (.*)be able to drag stories from project (.*) to the product backlog$/ do |neg, arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^I should (.*)be able to drag stories from project (.*) to the sprint backlog of (.*)$/ do |neg, arg1, arg2|
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
-  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  sprint_id = sprint_id_from_name(arg1.strip)
   project = get_project(arg3)
-  links = page.all(:xpath, "//div[@id='sprint_#{sprint.id}']/..//a[contains(@class,'add_new_story')]")
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint_id}']/..//a[contains(@class,'add_new_story')]")
   found = check_backlog_menu_new_story(links, project)
   found.should be !!(neg=='')
 end
@@ -330,9 +322,9 @@ Then /^The menu of the product backlog should (.*)allow to create a new Story in
 end
 
 Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
-  sprint = RbSprint.find(:first, :conditions => {:name => arg1})
+  sprint_id = sprint_id_from_name(arg1.strip)
   begin
-    page.find(:css, "#sprint_#{sprint.id}")
+    page.find(:css, "#sprint_#{sprint_id}")
     found = true
   rescue
     found = false
@@ -340,30 +332,61 @@ Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
   found.should be !!(neg=='')
 end
 
-Then /^I should (.*)be able to drag story (.+) from sprint (.+) before the story (.+) in the product backlog$/ do |neg, story, sprint, target|
-  story = RbStory.find(:first, :conditions => {
-    :fixed_version_id => RbSprint.find(:first, :conditions => {:name => sprint }).id,
-    :subject => story})
-  story_id = story.id
-  old_v_id = story.fixed_version_id
-  element = page.find(:css, "#story_#{story_id}")
+Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlog|in sprint (.+?))$/ do |success, story_name, where, sprint_name|
+  story = RbStory.find(:first, :conditions => {:subject => story_name})
+  @last_dnd.should_not be_nil
+  if where == 'unchanged'
+    @last_dnd[:position_before].should == story.position
+    @last_dnd[:version_id_before].should == story.fixed_version_id
+  elsif where == 'in the product backlog'
+    story.fixed_version_id.should be_nil
+  else
+    sprint_id = sprint_id_from_name(sprint_name.strip)
+    story.fixed_version_id.should == sprint_id
+  end
+end
 
-  target_id = RbStory.find(:first, :conditions => {:fixed_version_id => nil, :subject => target}).id
-  target = page.find(:css, "#story_#{target_id}")
+#taskboard visual checks:
+Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
+  taskboard_check_task(task, story, state)
+end
 
-  element.drag_to(page.find(:css, "#stories-for-product-backlog")) #extra step to trick out jquery sortable which needs movement???
-  element.drag_to(target)
-  sleep 1 #FIXME (pa sharing) wait for ajax to happen. capybara does not see the change since the dom node is still on the page
+Then /^task (.+) should have the status (.+)$/ do |task, state|
+  state = IssueStatus.find(:first, :conditions => { :name => state })
+  task = RbTask.find(:first, :conditions => { :subject => task })
+  task.status_id.should == state.id
+end
 
-  story.reload
-  story.fixed_version_id.should be neg=='' ? nil : old_v_id
+Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
+  taskboard_check_impediment(impediment, state)
+end
+
+Then /^impediment (.+) should be created without error$/ do |impediment_name|
+  impediment = Issue.find_by_subject(impediment_name)
+  impediment.should_not be_nil
+  begin
+    msg = page.find(:css, "div#msgBox")
+    #puts "Got msg box: #{msg.text}" if msg
+  rescue
+  end
+  msg.should be_nil
+  page.should have_css("#issue_#{impediment.id}")
+end
+
+Then /^I should see a msgbox with "([^"]*)"$/ do |arg1|
+  msg = page.find(:css, "div#msgBox")
+  msg.text.strip.should == arg1.strip
 end
 
 Then /^show me a screenshot at (.+)$/ do |arg1|
-  page.driver.render(arg1)
+  page.driver.render(arg1, :full=>true)
 end
 
 Then /^dump the database to (.+)$/ do |arg1|
   system("pg_dump redmine_test > #{arg1}")
+end
+
+Then /^open the remote inspector$/ do
+  page.driver.debug
 end
 

@@ -174,3 +174,37 @@ When /^I click (create|copy|save)$/ do |command|
   page.find(:xpath, '//input[@name="commit"]').click
 end
 
+#backlog dnd
+When /^I drag story (.+) to the sprint backlog of (.+?)( before the story (.+))?$/ do |story, sprint, before, beforearg|
+  drag_story(story, nil, sprint, beforearg)
+end
+
+When /^I drag story (.+?) to the product backlog( before the story (.+))?$/ do |story, before, beforearg|
+  drag_story(story, nil, 'product-backlog', beforearg)
+end
+
+#taskboard dnd
+When /^I drag task (.+) to the state (.+) in the row of (.+)$/ do |task, state, story|
+  drag_task(task, state, story)
+end
+
+When /^I create an impediment named (.+) which blocks (.+?)(?: and (.+))?$/ do |impediment_name, blocked_name, blocked2_name|
+  blocked = Issue.find_by_subject(blocked_name)
+  blocked_list = [blocked.id.to_s]
+  blocked2 = Issue.find_by_subject(blocked2_name) if blocked2_name != ''
+  blocked_list << blocked2.id.to_s if blocked2
+  page.find("#impediments span.add_new").click
+  with_scope('#task_editor') do
+    fill_in("subject", :with => impediment_name)
+    fill_in("blocks", :with => blocked_list.join(','))
+  end
+  page.driver.render('/tmp/4.png', :full=>true)
+  with_scope('.task_editor_dialog') do
+    click_button("OK")
+  end
+  sleep 1
+  page.should have_xpath("//div", :text => impediment_name)
+#  page.driver.render('/tmp/4.png', :full=>true)
+#  page.driver.debug
+end
+
