@@ -39,17 +39,15 @@ Feature: Scrum Master impediments
      Then I should see the taskboard
      When I create an impediment named Impediment 4 which blocks Task 1
      Then impediment Impediment 4 should be created without error
-     Then show me a screenshot at /tmp/sc.png
-     Then I should see impediment Impediment 4 in the state New
+      And I should see impediment Impediment 4 in the state New
 
   @javascript
   Scenario: Create an impediment using the ajax task editor for a sub-project
     Given I am viewing the taskboard for Sprint 001
      Then I should see the taskboard
      When I create an impediment named Impediment 5 which blocks Task 3
-     Then show me a screenshot at /tmp/sc.png
      Then impediment Impediment 5 should be created without error
-     Then I should see impediment Impediment 5 in the state New
+      And I should see impediment Impediment 5 in the state New
 
   @javascript
   Scenario: Create an impediment using the ajax task editor for a sub-project with 2 blocks and cpir disabled

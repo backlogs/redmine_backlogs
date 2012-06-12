@@ -198,13 +198,10 @@ When /^I create an impediment named (.+) which blocks (.+?)(?: and (.+))?$/ do |
     fill_in("subject", :with => impediment_name)
     fill_in("blocks", :with => blocked_list.join(','))
   end
-  page.driver.render('/tmp/4.png', :full=>true)
   with_scope('.task_editor_dialog') do
     click_button("OK")
   end
   sleep 1
   page.should have_xpath("//div", :text => impediment_name)
-#  page.driver.render('/tmp/4.png', :full=>true)
-#  page.driver.debug
 end
 

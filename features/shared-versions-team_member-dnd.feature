@@ -46,8 +46,6 @@ Feature: Team Member
     Given I am viewing the taskboard for Sprint 001
      Then I should see the taskboard
      When I drag task Task 1 to the state Assigned in the row of Story 1
-     Then show me a screenshot at /tmp/screenshot.png
-#     Then open the remote inspector
      Then I should see task Task 1 in the row of story Story 1 in the state Assigned
       And task Task 1 should have the status Assigned
 
