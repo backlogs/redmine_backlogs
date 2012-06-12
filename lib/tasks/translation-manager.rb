@@ -204,6 +204,9 @@ translation.keys.sort.each {|t|
       webpage.write("|" + row.join("|") + "|\n")
     end
 
+    locale_hash = {t => nt}.each_pair{|key,value| [key, value.each_pair {|key,value| [key, value.force_encoding("UTF-8")] }]}
+    File.open("#{translations}/#{t}.yml", 'w') { |out| out.write(locale_hash.to_yaml) }
+
     webpage.write("\n")
   }
 }
