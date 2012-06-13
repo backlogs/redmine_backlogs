@@ -1,5 +1,5 @@
---- !ruby/object:Hash
-ru: !ruby/object:Hash
+---
+ru:
   backlogs_active: активный
   backlogs_any: любой
   backlogs_auto_assign_task: Auto assign task to current user
