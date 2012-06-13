@@ -1,5 +1,5 @@
---- 
-nl: 
+---
+nl:
   backlogs_active: lopend
   backlogs_any: alle
   backlogs_auto_assign_task: Automatisch taak toekennen aan huidige gebruiker
@@ -13,25 +13,38 @@ nl:
   backlogs_sprints: Sprints
   backlogs_statistics_active: Project is actief
   backlogs_statistics_active_failed: Project is niet actief
-  backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over de sprints heen
-  backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet stabiel over de sprints heen
-  backlogs_statistics_hours_per_point: "gemiddeld %{value} uren per point"
+  backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over
+    de sprints heen
+  backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet
+    stabiel over de sprints heen
+  backlogs_statistics_hours_per_point: gemiddeld %{value} uren per point
   backlogs_statistics_product_backlog_filled: Product backlog heeft stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is leeg
-  backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog hebben sizes
-  backlogs_statistics_product_backlog_sized_failed: Er zijn stories bovenaan de product backlog zonder sizes
-  backlogs_statistics_sizing_consistent: Story sizes zijn niet stabiel ten opzichte van de schattingen
-  backlogs_statistics_sizing_consistent_failed: Story sizes zijn stabiel ten opzichte van de schattingen
-  backlogs_statistics_sizing_stddev: "Standaard deviatie uren t.o.v. points: %{value} uren"
-  backlogs_statistics_sprint_notes_available: De recent afgesloten sprints hebben retrospective/review verslagen
-  backlogs_statistics_sprint_notes_available_failed: Recent afgesloten sprints missen retrospective/review verslagen
+  backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog
+    hebben sizes
+  backlogs_statistics_product_backlog_sized_failed: Er zijn stories bovenaan de product
+    backlog zonder sizes
+  backlogs_statistics_sizing_consistent: Story sizes zijn niet stabiel ten opzichte
+    van de schattingen
+  backlogs_statistics_sizing_consistent_failed: Story sizes zijn stabiel ten opzichte
+    van de schattingen
+  backlogs_statistics_sizing_stddev: ! 'Standaard deviatie uren t.o.v. points: %{value}
+    uren'
+  backlogs_statistics_sprint_notes_available: De recent afgesloten sprints hebben
+    retrospective/review verslagen
+  backlogs_statistics_sprint_notes_available_failed: Recent afgesloten sprints missen
+    retrospective/review verslagen
   backlogs_statistics_sprints: Gemeten over %{value} sprints
-  backlogs_statistics_sprints_estimated: De actieve en recent gesloten sprints hebben uren schattingen
-  backlogs_statistics_sprints_estimated_failed: De actieve of recent gesloten sprints hebben niet overal uren schattingen
-  backlogs_statistics_sprints_sized: De stories op de actieve en recent gesloten sprints hebben sizes
-  backlogs_statistics_sprints_sized_failed: Stories op de actieve of recent gesloten sprints missen sizes
-  backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standaard deviatie: %{value} points"
+  backlogs_statistics_sprints_estimated: De actieve en recent gesloten sprints hebben
+    uren schattingen
+  backlogs_statistics_sprints_estimated_failed: De actieve of recent gesloten sprints
+    hebben niet overal uren schattingen
+  backlogs_statistics_sprints_sized: De stories op de actieve en recent gesloten sprints
+    hebben sizes
+  backlogs_statistics_sprints_sized_failed: Stories op de actieve of recent gesloten
+    sprints missen sizes
+  backlogs_statistics_velocity: ! 'Velocity: %{value}'
+  backlogs_statistics_velocity_stddev: ! 'Velocity standaard deviatie: %{value} points'
   backlogs_statistics_yield: Project heeft een goede gemiddelde opbrengst
   backlogs_statistics_yield_failed: Project heeft een lage gemiddelde opbrengst
   backlogs_story: Story
@@ -45,18 +58,21 @@ nl:
   error_blank: mag niet leeg zijn
   error_greater_than_start_date: mag niet voor Start Datum liggen
   error_inclusion: is geen onderdeel van de lijst
-  error_intro_plural: "De volgende fouten zijn opgetreden:"
-  error_intro_singular: "De volgende fout is opgetreden:"
-  error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story of taak IDs hebben
-  error_no_workflow_for_task_tracker: Je hebt geen toegang tot de taak tracker. Indien dit een fout is, neem dan contact op met de beheerder om dit te laten corrigeren.
+  error_intro_plural: ! 'De volgende fouten zijn opgetreden:'
+  error_intro_singular: ! 'De volgende fout is opgetreden:'
+  error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story
+    of taak IDs hebben
+  error_no_workflow_for_task_tracker: Je hebt geen toegang tot de taak tracker. Indien
+    dit een fout is, neem dan contact op met de beheerder om dit te laten corrigeren.
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
-  error_release_end_after_start: De einddatum van de release moet na de start datum liggen
+  error_release_end_after_start: De einddatum van de release moet na de start datum
+    liggen
   error_taken: is al in gebruik
-  event_sprint_summary: "%{project}: %{summary}"
+  event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Toegekend aan
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_initial_story_points: "Initi\xC3\xABle story points"
+  field_initial_story_points: Initiële story points
   field_name: Naam
   field_number_of_snapshots: Opgeslagen point snapshots
   field_position: Positie
@@ -74,7 +90,10 @@ nl:
   field_velocity_based_estimate: Schatting op basis van velocity
   label_back_to_project: Terug naar het project
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen.
+  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft
+    naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor
+    deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze
+    pagina om de plugin in gebruik te nemen.
   label_burndown: Burndown
   label_chart_options: Grafiek Opties
   label_close_completed_sprints: Sluit gecompleteerde sprints
@@ -145,23 +164,20 @@ nl:
   story_remaining_hours: Resterend (uren)
   story_spent_time: Tijd besteed
   story_status: Status
-  today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt opslaan?
-  today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
-  todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: Gebruik tekst veld in plaats van drop-down lijst indien leeg
-  warning_reset_sprint: |-
-    JE STAAT OP HET PUNT DEZE SPRINT TE HER-INITIALISEREN!
-    
-    Weet je zeker dat je dit wilt doen? Her-initialisatie
-    heeft de volgende gevolgen voor de stories en taken
-    verbonden aan de sprint:
-    
-    * Creatie-datum wordt veranderd in de start datum van de sprint
-    * ALLE wijzigingen aan de stories en taken, behalve notities,
-       zullen worden VERWIJDERD
-    * De huidige waarde wordt de startwaarde voor alle
-       eigenschappen van de story/taak
-    * De status wordt teruggezet naar de standaard status
+  today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt
+    opslaan?
+  today_not_in_release_warning: ! 'Waarschuwing: huidige datum ligt niet binnen de
+    release.'
+  todo_issue_summary: ! '%{type}: %{summary}'
+  use_free_text_if_empty: Gebruik tekst veld in plaats van drop-down lijst indien
+    leeg
+  warning_reset_sprint: ! "JE STAAT OP HET PUNT DEZE SPRINT TE HER-INITIALISEREN!\n\nWeet
+    je zeker dat je dit wilt doen? Her-initialisatie\nheeft de volgende gevolgen voor
+    de stories en taken\nverbonden aan de sprint:\n\n* Creatie-datum wordt veranderd
+    in de start datum van de sprint\n* ALLE wijzigingen aan de stories en taken, behalve
+    notities,\n   zullen worden VERWIJDERD\n* De huidige waarde wordt de startwaarde
+    voor alle\n   eigenschappen van de story/taak\n* De status wordt teruggezet naar
+    de standaard status"
   backlogs_new_story_position: Nieuwe stories verschijnen
   backlogs_new_story_position_top: bovenaan
   backlogs_new_story_position_bottom: onderaan (vereist herstart)

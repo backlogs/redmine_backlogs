@@ -105,7 +105,6 @@ authors = {}
 Dir.glob("#{translations}/*.yml").each {|trans|
   strings = YAML::load_file(trans)
   translation[strings.keys[0]] = strings[strings.keys[0]]
-  puts "Logs for #{trans}"
   author = `git log #{trans} | grep -i ^author:`
   author = author.split("\n").collect{|a| a.gsub(/^author:/i, '').gsub(/<.*/, '').strip}
   author = author.uniq.sort{|a, b| a.downcase <=> b.downcase}.join(', ')
@@ -212,6 +211,7 @@ translation.keys.sort.each {|t|
   }
 }
 
+Dir.chdir(webdir)
 puts "Updating website"
 puts `git add .`
 puts `git commit -m 'Translations updated'`
