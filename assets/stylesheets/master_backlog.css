@@ -625,7 +625,7 @@
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
   margin:0;
-  width:55px;
+  max-width:80px;
   float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
