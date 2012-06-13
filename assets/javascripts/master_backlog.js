@@ -15,4 +15,12 @@ RB.$(function() {
       z--;
     });
   }
+
+  // hold down alt when clicking an issue id to open it in the current tab
+  RB.$('#backlogs_container').delegate('li.story > .id a', 'click', function(e) {
+    if (e.shiftKey) {
+      location.href = this.href;
+      return false;
+    }
+  });
 });
