@@ -6,7 +6,7 @@ class RbMasterBacklogsController < RbApplicationController
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
     if @settings[:sharing_enabled]
-      if @settings[:sharing_mode] == 'subtree':
+      if @settings[:sharing_mode] == 'subtree'
         project_ids = Project.find(:all, :conditions=>Project.find(@project.id).project_condition(true)).map{|project| project.id} # FIXME (pa sharing) i'd like to make this easier in the scope condition but project_condition() is no array
         sprints = @project.shared_versions.scoped(:conditions => {
           :status => ['open', 'locked'],
@@ -52,7 +52,7 @@ class RbMasterBacklogsController < RbApplicationController
       unless @sprint
         projects = @project.self_and_descendants.active
       else #menu for sprint
-        if @settings[:sharing_mode] == 'subtree':
+        if @settings[:sharing_mode] == 'subtree'
           p = @project.hierarchy # parents and descendants
         else
           p = Project.visible.find(:all, :order => 'lft') #exhaustive search FIXME (pa sharing)
