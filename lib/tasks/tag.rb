@@ -7,11 +7,10 @@ supported = {
     {:version => '3.1.0', :ruby => '1.8.7'}
   ],
   :redmine      => [
-    {:version => '1.4.2', :ruby => '1.8.7'},
-    {:version => '1.4.2', :ruby => '1.9.3'},
-    {:version => '2.0.1', :ruby => '1.8.7'},
-    {:version => '2.0.1', :ruby => '1.9.3'},
-    {:version => '1.4',   :ruby => '1.8', :unsupported => true}
+    {:version => '1.4', :ruby => '1.8.7'},
+    {:version => '1.4', :ruby => '1.9.3'},
+    {:version => '2.0', :ruby => '1.8.7'},
+    {:version => '2.0', :ruby => '1.9.3'}
   ]
 }
 if ARGV[0].nil?
