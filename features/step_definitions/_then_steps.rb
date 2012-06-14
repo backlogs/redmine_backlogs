@@ -332,18 +332,16 @@ Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
   found.should be !!(neg=='')
 end
 
-Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlog|in sprint (.+?))$/ do |success, story_name, where, sprint_name|
-  story = RbStory.find(:first, :conditions => {:subject => story_name})
+Then /^story (.+?) is unchanged$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
   @last_drag_and_drop.should_not be_nil
-  if where == 'unchanged'
-    @last_drag_and_drop[:position_before].should == story.position
-    @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
-  elsif where == 'in the product backlog'
-    story.fixed_version_id.should be_nil
-  else
-    sprint_id = sprint_id_from_name(sprint_name.strip)
-    story.fixed_version_id.should == sprint_id
-  end
+  @last_drag_and_drop[:position_before].should == story.position
+  @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
+end
+
+Then /^story (.+?) is in the product backlog$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.fixed_version_id.should be_nil
 end
 
 #taskboard visual checks:
