@@ -22,7 +22,7 @@ end
 #   target_sprint_name: name of the sprint the story should be dragged into
 #   before_story_name: name|nil (optional) of the story in the target sprint where to position the source
 def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
-  @last_dnd = {}
+  @last_drag_and_drop = {}
   if source_sprint
     story = RbStory.find(:first, :conditions => {
       :fixed_version_id => RbSprint.find(:first, :conditions => {:name => source_sprint.strip }),
@@ -31,11 +31,9 @@ def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
     story = RbStory.find(:first, :conditions => { :subject => story_name.strip})
   end
   story.should_not be_nil
-  @last_dnd[:story] = story
-  @last_dnd[:version_id_before] = story.fixed_version_id
-  @last_dnd[:position_before] = story.position
+  @last_drag_and_drop[:version_id_before] = story.fixed_version_id
+  @last_drag_and_drop[:position_before] = story.position
   element = page.find(:css, "#story_#{story.id}")
-  @last_dnd[:source_el] = element
 
   target_sprint_name.strip!
   if target_sprint_name == 'product-backlog'
@@ -45,7 +43,6 @@ def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
     target = page.find(:css, "#stories-for-#{sprint_id}")
   end
   target.should_not be_nil
-  @last_dnd[:target] = target
 
   element.drag_to(target)
   if before_story_name
@@ -56,8 +53,6 @@ def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
 
   wait_for_ajax
   story.reload
-  @last_dnd[:version_id_after] = story.fixed_version_id
-  @last_dnd[:position_after] = story.position
   return story
 end
 

@@ -334,10 +334,10 @@ end
 
 Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlog|in sprint (.+?))$/ do |success, story_name, where, sprint_name|
   story = RbStory.find(:first, :conditions => {:subject => story_name})
-  @last_dnd.should_not be_nil
+  @last_drag_and_drop.should_not be_nil
   if where == 'unchanged'
-    @last_dnd[:position_before].should == story.position
-    @last_dnd[:version_id_before].should == story.fixed_version_id
+    @last_drag_and_drop[:position_before].should == story.position
+    @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
   elsif where == 'in the product backlog'
     story.fixed_version_id.should be_nil
   else
