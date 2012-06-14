@@ -98,10 +98,6 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, bac
   story.subject.should == subject
 end
 
-Then /^all positions should be unique$/ do
-  RbStory.find_by_sql("select project_id, position, count(*) as dups from issues where not position is NULL group by project_id, position having count(*) > 1").length.should == 0
-end
-
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   story.should_not be_nil
