@@ -55,6 +55,8 @@ group :development do
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
   gem "timecop"
+  gem "octokit"
+  gem "inifile"
 end
 
 # moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.

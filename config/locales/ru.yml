@@ -8,6 +8,9 @@ ru:
   backlogs_card_specification: Типы меток для печати карт
   backlogs_impediment: Задержка
   backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
+  backlogs_new_story_position: Newly created stories go to the
+  backlogs_new_story_position_bottom: bottom (requires restart)
+  backlogs_new_story_position_top: top
   backlogs_points_burn_direction: Точки с указанием, сколько уже выполнено задания
     и сколько ещё остаётся сделать
   backlogs_product_backlog: Бэклог продукта (список требований к функциональности,
@@ -46,10 +49,10 @@ ru:
   backlogs_statistics_velocity_stddev: ! 'Velocity standard deviation: %{value} points'
   backlogs_statistics_yield: Project has good average yield
   backlogs_statistics_yield_failed: Project has low average yield
-  backlogs_story_tracker: Трекеры истории
   backlogs_story: История
-  backlogs_task_tracker: Трекер задания
+  backlogs_story_tracker: Трекеры истории
   backlogs_task: Задание
+  backlogs_task_tracker: Трекер задания
   backlogs_wiki_template: Шаблон для спринта страницы wiki
   button_edit_wiki: Редактировать страницу wiki
   comma_delimited_numbers: Comma delimited numbers
@@ -87,20 +90,20 @@ ru:
   field_tracker_id: ID трекера
   field_velocity_based_estimate: Оценка на основе скорости
   label_back_to_project: Назад на страницу проекта
+  label_backlogs: Бэклоги
   label_backlogs_unconfigured: Вы ещё не отконфигурировали бэклог. Пожалуйста, пройдите
     {{administration}} > {{plugins}}, затем нажмите {{configure}} для соединения с
     этим плагином. После того, как установили поля, возвращайтесь назад к этой странице,
     чтобы начать использование этого инструмента.
-  label_backlogs: Бэклоги
   label_burndown: Выполнение
   label_chart_options: Выборы карты
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
+  label_hours: часы
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
-  label_hours: часы
   label_ideal: ideal
   label_impediments: Задержки
   label_master_backlog: Бэклог Руководителя
@@ -110,6 +113,7 @@ ru:
   label_no_end: no end
   label_no_start: no start
   label_not_prioritized: без приоритета
+  label_points: точки
   label_points_accepted: points accepted
   label_points_burn_down: Сколько осталось выполнить
   label_points_burn_up: Сколько выполнено
@@ -118,15 +122,14 @@ ru:
   label_points_resolved: points resolved
   label_points_to_accept: points not accepted
   label_points_to_resolve: points not resolved
-  label_points: точки
   label_product_backlog: бэклог продукта
   label_product_cards: Карты бэклога продукта
+  label_release: Версия
   label_release_end_date: Поле_даты_окончания_версии
   label_release_new: Новая версия
   label_release_planning: Планирование версии
   label_release_plural: Версии
   label_release_start_date: Поле_даты_начала_версии
-  label_release: Версия
   label_reset: Reset
   label_scrum_statistics: Статистики скрама
   label_select_all: Выбрать всё
@@ -135,15 +138,15 @@ ru:
   label_sprint_cards: Карты спринта
   label_sprint_impediments: Препятствия для Спринта
   label_sprint_name: Спринт "{{name}}"
-  label_stories_tasks: Истории/Задания
   label_stories: Истории
+  label_stories_tasks: Истории/Задания
   label_task_board: Доска заданий
   label_webcal: Подача Web-календаря событий (Webcal)
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
+  rb_label_copy_tasks: Копировать задания
   rb_label_copy_tasks_all: Все (Копировать все задания)
   rb_label_copy_tasks_none: Нет (Не копировать задания)
   rb_label_copy_tasks_open: Открыть
-  rb_label_copy_tasks: Копировать задания
   rb_label_link_to_original: включить ссылку на оригинальную историю
   rb_label_timelog_disable: Disable
   rb_label_timelog_enable: Enable

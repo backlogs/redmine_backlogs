@@ -136,7 +136,7 @@ namespace :redmine do
                 end
               elsif selection.length == 0 or selection.first.to_i == j + 1
                 # If the user chose to create a new one, then ask for the name
-                Backlogs.settings[:task_tracker] = create_new_tracker
+                Backlogs.setting[:task_tracker] = create_new_tracker
                 invalid = false
               else
                 puts "Oooops! That's not a valid selection. Please try again."

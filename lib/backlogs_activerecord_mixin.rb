@@ -16,34 +16,27 @@ module Backlogs
     module_function :add_condition
 
     module Attributes
-      def batch_modify_attributes(attribs)
-        attribs.each_pair{|k, v|
-          # I can't find any damn combination of safe_attributes that works
-          next if ['parent_id', 'rgt', 'lft'].include?(k)
-  
-          begin
-            self.send("#{k}=", v)
-          rescue => e
-            puts "#{e} for #{k} = #{v}"
-          end
-        }
+      def self.included receiver
+        receiver.extend ClassMethods
       end
-  
-      def batch_update_attributes!(attribs)
-        self.batch_modify_attributes(attribs)
-        return self.save!
+
+      module ClassMethods
+        def rb_sti_class
+          return self.ancestors.select{|klass| klass.name !~ /^Rb/ && klass.ancestors.include?(::ActiveRecord::Base)}[0]
+        end
       end
-      def journalized_batch_update_attributes!(attribs)
+
+      def available_custom_fields
+        CustomField.find(:all, :conditions => "type = '#{self.class.rb_sti_class.name}CustomField'", :order => 'position')
+      end
+
+      def journalized_update_attributes!(attribs)
         self.init_journal(User.current)
-        return self.batch_update_attributes!(attribs)
+        return self.update_attributes!(attribs)
       end
-      def batch_update_attributes(attribs)
-        self.batch_modify_attributes(attribs)
-        return self.save
-      end
-      def journalized_batch_update_attributes(attribs)
+      def journalized_update_attributes(attribs)
         self.init_journal(User.current)
-        return self.batch_update_attributes(attribs)
+        return self.update_attributes(attribs)
       end
       def journalized_update_attribute(attrib, v)
         self.init_journal(User.current)

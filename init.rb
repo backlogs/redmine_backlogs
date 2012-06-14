@@ -29,6 +29,7 @@ object_to_prepare.to_prepare do
   require_dependency 'backlogs_project_patch'
   require_dependency 'backlogs_user_patch'
   require_dependency 'backlogs_journal_patch'
+  require_dependency 'backlogs_custom_field_patch'
 
   require_dependency 'backlogs_my_controller_patch'
   require_dependency 'backlogs_issues_controller_patch'
@@ -47,7 +48,7 @@ Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
   author "friflaj,Mark Maglana,John Yani,mikoto20000,Frank Blendinger,Bo Hansen,stevel"
   description 'A plugin for agile teams'
-  version 'v0.9.13'
+  version 'v0.9.15'
 
   settings :default => { 
                          :story_trackers            => nil, 
