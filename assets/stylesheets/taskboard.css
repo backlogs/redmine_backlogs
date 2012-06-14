@@ -86,14 +86,8 @@ See RB.Taskboard.initialize()
   border-bottom:none;
 }
 .board .add_new{
-  min-width:30px;
-  padding:0;
-  text-align:center;
+  display: inline-block;
   vertical-align:middle;
-  width:30px;
-}
-.board .story_tooltip .add_new{
-  margin-left:-0.5em;
 }
 .board .add_new:hover{
   cursor:pointer;
@@ -127,8 +121,13 @@ See RB.Taskboard.initialize()
   opacity:0.8;
   overflow:hidden;
   padding:1px 3px 1px 3px;
-  text-align:right;
-  width:95%;
+  line-height: 14px;
+}
+.story .id a{
+  float:right;
+}
+.story .id .assignee{
+  font-weight: bold;
 }
 .story .subject{
   height:63px;
@@ -235,6 +234,7 @@ See RB.Taskboard.initialize()
   padding:2px;
   padding-top:0;
   width:81px;
+  white-space:nowrap;
 }
 .issue .assigned_to_id .v{
   display:none;

@@ -119,7 +119,9 @@
             <span class="add_new">
               <%= image_tag("add.png", :alt => "+") %>
             </span>
-            <%= l(:label_sprint_impediments) %>
+            <span class="assignee">
+              <%= l(:label_sprint_impediments) %>
+            </span>
       </div></td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
@@ -136,13 +138,13 @@
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story) %>>
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
-            <div style="float:left; padding-left:3px; font-weight:bold;">
-              <span class="add_new">
-                <%= image_tag("add.png", :alt => "+") %>
-              </span>
-              <%= assignee_name_or_empty(story) %>
-            </div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <span class="add_new">
+              <%= image_tag("add.png", :alt => "+") %>
+            </span>
+            <span class="assignee">
+              <%= assignee_name_or_empty(story) %>
+            </span>
             (<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)
           </div>
           <div class="subject"><%= h story.subject %></div>
