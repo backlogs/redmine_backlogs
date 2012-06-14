@@ -342,17 +342,22 @@ end
 
 #taskboard visual checks:
 Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
-  taskboard_check_task(task, story, state)
+  task_id = RbTask.find_by_subject(task).id
+  story_id = RbStory.find_by_subject(story).id
+  n = get_taskboard_state_index[state]
+  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
 end
 
 Then /^task (.+) should have the status (.+)$/ do |task, state|
-  state = IssueStatus.find(:first, :conditions => { :name => state })
-  task = RbTask.find(:first, :conditions => { :subject => task })
+  state = IssueStatus.find_by_name(state)
+  task = RbTask.find_by_subject(task)
   task.status_id.should == state.id
 end
 
 Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
-  taskboard_check_impediment(impediment, state)
+  task = Issue.find_by_subject(impediment)
+  n = get_taskboard_state_index[state]
+  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
 end
 
 Then /^impediment (.+) should be created without error$/ do |impediment_name|

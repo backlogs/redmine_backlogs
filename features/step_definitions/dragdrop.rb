@@ -44,37 +44,21 @@ def drag_story(story_name, target_sprint_name, before_story_name)
   return story
 end
 
-
-def taskboard_states_setup
-  @taskboard_setup = {:states=>{}, :stories=>{}}
+def get_taskboard_state_index
+  taskboard_state_index = {}
   index = 1
   page.all(:css, "#taskboard #board_header td").each{|cell|
-    @taskboard_setup[:states][cell.text] = index
+    taskboard_state_index[cell.text] = index
     index += 1
   }
-end
-
-def taskboard_check_task(task, story, state)
-  taskboard_states_setup unless @taskboard_setup
-  task_id = RbTask.find(:first, :conditions => {:subject => task}).id
-  story_id = RbStory.find(:first, :conditions => {:subject => story}).id
-  n = @taskboard_setup[:states][state]
-  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
-end
-
-def taskboard_check_impediment(impediment, state)
-  taskboard_states_setup unless @taskboard_setup
-  task = Issue.find_by_subject(impediment)
-  n = @taskboard_setup[:states][state]
-  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
+  taskboard_state_index
 end
 
 def drag_task(task, state, story)
-  taskboard_states_setup unless @taskboard_setup
   task = RbTask.find(:first, :conditions => {:subject => task})
   story = RbStory.find(:first, :conditions => {:subject => story})
   source = page.find(:css, "#taskboard #issue_#{task.id}")
-  n = @taskboard_setup[:states][state]
+  n = get_taskboard_state_index[state]
   target = page.find(:css, "#taskboard #swimlane-#{story.id} td:nth-child(#{n})")
   source.drag_to(target)
 
