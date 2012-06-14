@@ -10,7 +10,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     //TODO: get localized Save and Cancel text
     var saveText = 'Save',
         cancelText = 'Cancel';
-    RB.$('<div class="edit-actions" style="clear:both"/>')
+    RB.$('<div class="edit-actions"/>')
       .append(
         RB.$('<a href="#" class="save"/>').text(saveText)
           .click(function(e) {
