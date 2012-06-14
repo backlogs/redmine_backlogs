@@ -201,7 +201,7 @@ When /^I create an impediment named (.+) which blocks (.+?)(?: and (.+))?$/ do |
   with_scope('.task_editor_dialog') do
     click_button("OK")
   end
-  sleep 1
-  page.should have_xpath("//div", :text => impediment_name)
+  wait_for_ajax
+  page.should have_xpath("//div", :text => impediment_name) #this did not work as documented. so wait explicitely for ajax above.
 end
 
