@@ -1,4 +1,20 @@
 
+#  sleep is a BAD THING(tm)
+# have_css does not work?
+#  page.should have_css("#story_#{story.id}.saving") #wait for throbber to appear
+#  page.should_not have_css("#story_#{story.id}.saving") #wait for throbber to disappear
+#wait until does not work?
+#  wait_until { page.find(:css, "#story_#{story.id}.saving") }
+#  wait_until { !page.find(:css, "#story_#{story.id}.saving") }
+#
+#check on the ajax request count of jQuery
+#raise Capybara::TimeoutError after some time (default 5s, here 15s, set in support/setup.rb).
+def wait_for_ajax
+  wait_until { 
+    page.evaluate_script('RB.$.active') == 0 #jQuery.ajax.active in the next release
+  }
+end
+
 # on the master backlog page drag a story
 # Params:
 #   story_name: subject of the dragged story
@@ -37,7 +53,8 @@ def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
     before.should_not be_nil
     element.drag_to(page.find(:css, "#story_#{before.id}"))
   end
-  sleep 1 #FIXME (pa sharing) wait for ajax to happen. capybara does not see the change since the dom node is still on the page
+
+  wait_for_ajax
   story.reload
   @last_dnd[:version_id_after] = story.fixed_version_id
   @last_dnd[:position_after] = story.position
@@ -77,7 +94,8 @@ def drag_task(task, state, story)
   n = @taskboard_setup[:states][state]
   target = page.find(:css, "#taskboard #swimlane-#{story.id} td:nth-child(#{n})")
   source.drag_to(target)
-  sleep 1
+  wait_for_ajax
+
   task.reload
   return task
 end
