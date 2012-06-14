@@ -14,7 +14,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.find(".editable").bind('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
 
   beforeSave: function(){
@@ -30,8 +30,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   },
 
   refreshed: function(){
-    // We have to do this since .live() does not work for some reason
-    j.find(".editable").bind('mouseup', this.handleClick);
+    // Do nothing
   },
 
   saveDirectives: function(){

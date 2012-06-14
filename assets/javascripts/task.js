@@ -15,7 +15,7 @@ RB.Task = RB.Object.create(RB.Issue, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
     
-    j.find(".editable").live('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
 
   beforeSave: function(){
