@@ -40,7 +40,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       var id = '#' + RB.$(this).attr('id') + ' .list';
 
       j.find(id).sortable(RB.$.extend({
-        connectWith: id,
+        connectWith: id
         }, sortableOpts));
     });
 
@@ -50,7 +50,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     });
 
     // Add handler for .add_new click
-    j.find('#tasks .add_new').bind('mouseup', self.handleAddNewTaskClick);
+    j.find('#tasks .add_new').bind('click', self.handleAddNewTaskClick);
 
 
     // Initialize impediment lists
@@ -64,7 +64,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     });
 
     // Add handler for .add_new click
-    j.find('#impediments .add_new').bind('mouseup', self.handleAddNewImpedimentClick);
+    j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
   },
   
   dragComplete: function(event, ui) {
