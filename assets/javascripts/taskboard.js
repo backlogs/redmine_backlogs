@@ -28,16 +28,20 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       return;
     }
 
+    var sortableOpts = {
+      placeholder: 'placeholder',
+      distance: 3,
+      start: self.dragStart,
+      stop: self.dragStop,
+      update: self.dragComplete
+    };
+
     tasks_lists.each(function(index){
       var id = '#' + RB.$(this).attr('id') + ' .list';
 
-      j.find(id).sortable({
-        connectWith: id, 
-        placeholder: 'placeholder',
-        start: self.dragStart,
-        stop: self.dragStop,
-        update: self.dragComplete
-      });
+      j.find(id).sortable(RB.$.extend({
+        connectWith: id,
+        }, sortableOpts));
     });
 
     // Initialize each task in the board
@@ -50,13 +54,9 @@ RB.Taskboard = RB.Object.create(RB.Model, {
 
 
     // Initialize impediment lists
-    j.find("#impediments .list").sortable({ 
-      connectWith: '#impediments .list', 
-      placeholder: 'placeholder',
-      start: self.dragStart,
-      stop: self.dragStop,
-      update: self.dragComplete
-    });
+    j.find("#impediments .list").sortable(RB.$.extend({
+      connectWith: '#impediments .list'
+    }, sortableOpts));
 
     // Initialize each task in the board
     j.find('.impediment').each(function(index){
