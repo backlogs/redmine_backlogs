@@ -96,11 +96,13 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
 
   handleAddNewImpedimentClick: function(event){
+    if (event.button > 1) return;
     var row = RB.$(this).parents("tr").first();
     RB.$('#taskboard').data('this').newImpediment(row);
   },
   
   handleAddNewTaskClick: function(event){
+    if (event.button > 1) return;
     var row = RB.$(this).parents("tr").first();
     RB.$('#taskboard').data('this').newTask(row);
   },
