@@ -18,6 +18,14 @@ RB.$(function() {
     RB.$(this).parents('.ui-dialog').css('background', '-moz-linear-gradient(top, '+c_light+', '+c+')');    
     RB.$(this).parents('.ui-dialog').css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr='+c_light+',EndColorStr='+c+')');
   });
+
+  // hold down alt when clicking an issue id to open it in the current tab
+  RB.$('#taskboard').delegate('.id a', 'click', function(e) {
+    if (e.shiftKey) {
+      location.href = this.href;
+      return false;
+    }
+  });
 });
 
 RB.showCharts = function(event){
