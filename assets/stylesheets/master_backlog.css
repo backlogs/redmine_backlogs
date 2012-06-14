@@ -662,6 +662,15 @@
     display: none;
 } 
 
+#backlogs_container .stories .editing .edit-actions {
+  clear: both;
+}
+#backlogs_container .stories .editing .edit-actions a {
+  display: inline-block;
+  padding: .5em;
+  margin-left: 1em;
+}
+
 
 #helpers{
   display:none;

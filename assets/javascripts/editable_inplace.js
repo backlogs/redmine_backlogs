@@ -1,12 +1,35 @@
 RB.EditableInplace = RB.Object.create(RB.Model, {
 
   displayEditor: function(editor){
+    var self = this;
+
     editor.find('textarea').attr('cols', '5');
+    this.$.addClass("editing");
+    editor.find(".editor").bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
+
+    //TODO: get localized Save and Cancel text
+    var saveText = 'Save',
+        cancelText = 'Cancel';
+    RB.$('<div class="edit-actions" style="clear:both"/>')
+      .append(
+        RB.$('<a href="#" class="save"/>').text(saveText)
+          .click(function(e) {
+            e.preventDefault();
+            self.saveEdits();
+          })
+      )
+      .append(
+        RB.$('<a href="#" class="cancel"/>').text(cancelText)
+          .click(function(e) {
+            e.preventDefault();
+            self.cancelEdit();
+          })
+      )
+      .appendTo(editor);
+
     if (editor.find('div.clearfix').length == 0) {
         editor.append('<div class="clearfix"></div>');
     }
-    this.$.addClass("editing");
-    editor.find(".editor").bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
   },
 
   getEditor: function(){
