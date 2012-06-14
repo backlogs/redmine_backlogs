@@ -18,30 +18,18 @@ end
 # on the master backlog page drag a story
 # Params:
 #   story_name: subject of the dragged story
-#   source_sprint: name|nil (optional) name of the sprint where to drag from
-#   target_sprint_name: name of the sprint the story should be dragged into
+#   target_sprint_name: name of the sprint the story should be dragged into or nil for product backlog
 #   before_story_name: name|nil (optional) of the story in the target sprint where to position the source
-def drag_story(story_name, source_sprint, target_sprint_name, before_story_name)
+def drag_story(story_name, target_sprint_name, before_story_name)
   @last_drag_and_drop = {}
-  if source_sprint
-    story = RbStory.find(:first, :conditions => {
-      :fixed_version_id => RbSprint.find(:first, :conditions => {:name => source_sprint.strip }),
-      :subject => story_name.strip})
-  else
-    story = RbStory.find(:first, :conditions => { :subject => story_name.strip})
-  end
+  story = RbStory.find_by_subject(story_name.strip)
   story.should_not be_nil
   @last_drag_and_drop[:version_id_before] = story.fixed_version_id
   @last_drag_and_drop[:position_before] = story.position
   element = page.find(:css, "#story_#{story.id}")
 
-  target_sprint_name.strip!
-  if target_sprint_name == 'product-backlog'
-    target = page.find(:css, "#stories-for-product-backlog")
-  else
-    sprint_id = sprint_id_from_name(target_sprint_name)
-    target = page.find(:css, "#stories-for-#{sprint_id}")
-  end
+  sprint_id = target_sprint_name.nil? ? 'product-backlog' : sprint_id_from_name(target_sprint_name.strip)
+  target = page.find(:css, "#stories-for-#{sprint_id}")
   target.should_not be_nil
 
   element.drag_to(target)
@@ -89,8 +77,8 @@ def drag_task(task, state, story)
   n = @taskboard_setup[:states][state]
   target = page.find(:css, "#taskboard #swimlane-#{story.id} td:nth-child(#{n})")
   source.drag_to(target)
-  wait_for_ajax
 
+  wait_for_ajax
   task.reload
   return task
 end

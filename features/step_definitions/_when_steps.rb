@@ -176,11 +176,11 @@ end
 
 #backlog dnd
 When /^I drag story (.+) to the sprint backlog of (.+?)( before the story (.+))?$/ do |story, sprint, before, beforearg|
-  drag_story(story, nil, sprint, beforearg)
+  drag_story(story, sprint, beforearg)
 end
 
 When /^I drag story (.+?) to the product backlog( before the story (.+))?$/ do |story, before, beforearg|
-  drag_story(story, nil, 'product-backlog', beforearg)
+  drag_story(story, nil, beforearg)
 end
 
 #taskboard dnd
