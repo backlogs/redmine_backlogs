@@ -19,7 +19,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.defaultColWidth = 2;
     self.loadColWidthPreference();
     self.updateColWidths();
-    RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
+    RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
     // Initialize task lists, restricting drop to the story
     var tasks_lists =j.find('.story-swimlane');
@@ -131,11 +131,11 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   updateColWidths: function(){
-    var w = parseInt(RB.$("#col_width input").val());
+    var w = parseInt(RB.$("#col_width input").val(), 10);
     if(w==null || isNaN(w)){
       w = this.defaultColWidth;
     }
-    RB.$("#col_width input").val(w)
+    RB.$("#col_width input").val(w);
     RB.UserPreferences.set('taskboardColWidth', w);
     RB.$(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
   }

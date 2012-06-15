@@ -112,7 +112,7 @@ RB.Backlog = RB.Object.create({
         menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
         menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
         // capture 'click' instead of 'mouseup' so we can preventDefault();
-        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) });
+        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev); });
       }
     });
   },
@@ -293,7 +293,7 @@ RB.Backlog = RB.Object.create({
     RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
     RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: this.getSprint().data('this').getID() }) );
     RB.$('#charts').dialog({ 
-                          buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
+                          buttons: { "Close": function() { RB.$('#charts').dialog("close"); } },
                           height: 590,
                           modal: true, 
                           title: 'Charts', 

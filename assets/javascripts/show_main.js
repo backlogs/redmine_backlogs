@@ -30,16 +30,16 @@ RB.$(function() {
 
 RB.showCharts = function(event){
   event.preventDefault();
-  if(RB.$("#charts").length==0){
+  if(!RB.$("#charts").length){
     RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
   }
   RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
   RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: RB.constants.sprint_id }) );
   RB.$('#charts').dialog({ 
-                        buttons: { "Close": function() { RB.$(this).dialog("close") } },
+                        buttons: { "Close": function() { RB.$(this).dialog("close"); } },
                         height: 590,
                         modal: true, 
                         title: 'Charts', 
                         width: 710 
                      });
-}
+};

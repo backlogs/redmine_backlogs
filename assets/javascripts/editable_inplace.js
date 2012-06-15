@@ -10,24 +10,22 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     //TODO: get localized Save and Cancel text
     var saveText = 'Save',
         cancelText = 'Cancel';
-    RB.$('<div class="edit-actions"/>')
-      .append(
-        RB.$('<a href="#" class="save"/>').text(saveText)
-          .click(function(e) {
+    RB.$('<div class="edit-actions"/>').
+      append(
+        RB.$('<a href="#" class="save"/>').text(saveText).
+          click(function(e) {
             e.preventDefault();
             self.saveEdits();
-          })
-      )
-      .append(
-        RB.$('<a href="#" class="cancel"/>').text(cancelText)
-          .click(function(e) {
+          })).
+      append(
+        RB.$('<a href="#" class="cancel"/>').text(cancelText).
+          click(function(e) {
             e.preventDefault();
             self.cancelEdit();
-          })
-      )
-      .appendTo(editor);
+          })).
+      appendTo(editor);
 
-    if (editor.find('div.clearfix').length == 0) {
+    if (!editor.find('div.clearfix')) {
         editor.append('<div class="clearfix"></div>');
     }
   },
@@ -35,7 +33,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
   getEditor: function(){
     // Create the model editor if it does not yet exist
     var editor = this.$.children(".editors").first();
-    if (editor.length == 0){
+    if (!editor.length){
       editor = RB.$(document.createElement("div")).addClass("editors").appendTo(this.$);
     }
     return editor;

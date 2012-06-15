@@ -67,10 +67,10 @@ RB.Model = RB.Object.create({
     
     editor.dialog({
       buttons: {
-        "Cancel" : function(){ self.cancelEdit(); RB.$(this).dialog("close") },
-        "OK" : function(){ self.copyFromDialog(); RB.$(this).dialog("close") }
+        "Cancel" : function(){ self.cancelEdit(); RB.$(this).dialog("close"); },
+        "OK" : function(){ self.copyFromDialog(); RB.$(this).dialog("close"); }
       },
-      close: function(event, ui){ if(event.which==27) self.cancelEdit() },
+      close: function(event, ui){ if(event.which==27) self.cancelEdit(); },
       dialogClass: self.getType().toLowerCase() + '_editor_dialog',
       modal: true,
       position: [pos.left - RB.$(document).scrollLeft(), pos.top - RB.$(document).scrollTop()],
@@ -108,14 +108,14 @@ RB.Model = RB.Object.create({
                            closeText: 'Close',
                            dateFormat: 'yy-mm-dd', 
                            firstDay: 1,
-                           onClose: function(){ RB.$(this).focus() },
+                           onClose: function(){ RB.$(this).focus(); },
                            selectOtherMonths: true,
                            showAnim:'',
                            showButtonPanel: true,
                            showOtherMonths: true
                        });
         // So that we won't need a datepicker button to re-show it
-        input.bind('mouseup', function(event){ RB.$(this).datepicker("show") });
+        input.bind('mouseup', function(event){ RB.$(this).datepicker("show"); });
       }
       
       // Copy the value in the field to the input element
@@ -125,8 +125,8 @@ RB.Model = RB.Object.create({
       // Record in the model's root element which input field had the last focus. We will
       // use this information inside RB.Model.refresh() to determine where to return the
       // focus after the element has been refreshed with info from the server.
-      input.focus( function(){ self.$.data('focus', RB.$(this).attr('name')) } )
-            .blur( function(){ self.$.data('focus', '') } );
+      input.focus( function(){ self.$.data('focus', RB.$(this).attr('name')); } ).
+            blur( function(){ self.$.data('focus', ''); } );
       
       input.appendTo(editor);
     });
@@ -138,7 +138,7 @@ RB.Model = RB.Object.create({
   
   // Override this method to change the dialog title
   editDialogTitle: function(){
-    return "Edit " + this.getType()
+    return "Edit " + this.getType();
   },
   
   editorDisplayed: function(editor){
@@ -172,9 +172,9 @@ RB.Model = RB.Object.create({
     var editor_id = this.getType().toLowerCase() + "_editor";
     var editor = RB.$("#" + editor_id).html("");
     if(editor.length==0){
-      editor = RB.$( document.createElement("div") )
-                 .attr('id', editor_id)
-                 .appendTo("body");
+      editor = RB.$( document.createElement("div") ).
+                 attr('id', editor_id).
+                 appendTo("body");
     }
     return editor;
   },
@@ -233,7 +233,7 @@ RB.Model = RB.Object.create({
 
   // Override this method to change the dialog title
   newDialogTitle: function(){
-    return "New " + this.getType()
+    return "New " + this.getType();
   },
     
   open: function(){
@@ -260,7 +260,7 @@ RB.Model = RB.Object.create({
   },
 
   saveDirectives: function(){
-    throw "Child object must implement saveDirectives()"
+    throw "Child object must implement saveDirectives()";
   },
 
   saveEdits: function(){
@@ -273,7 +273,7 @@ RB.Model = RB.Object.create({
       editor = RB.$(this);
       fieldName = editor.attr('name');
       if(this.type.match(/select/)){
-        j.children('div.' + fieldName).children('.v').text(editor.val())
+        j.children('div.' + fieldName).children('.v').text(editor.val());
         j.children('div.' + fieldName).children('.t').text(editor.children(':selected').text());
       // } else if(this.type.match(/textarea/)){
       //   this.setValue('div.' + fieldName + ' .textile', editors[ii].value);
@@ -311,7 +311,7 @@ RB.Model = RB.Object.create({
 
   refreshTooltip: function(model) {
     if (typeof jQuery.qtipMakeOptions != 'function') {
-        return false;
+        return;
     }
     if (typeof model == 'undefined') {
         model = this;
