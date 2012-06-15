@@ -106,10 +106,38 @@ Feature: Shared versions in subtree mode
       And I should see 1 stories in the sprint backlog of Sp008
       And I should see 1 stories in the sprint backlog of Sp010
 
+  @javascript
   Scenario: View the subjproject backlog page in the middle
     Given I have selected the p1s1 project
       And I am viewing the master backlog
      Then I should see the product backlog
+      And The menu of the product backlog should not allow to create a new Story in project p1
+      And The menu of the product backlog should not allow to create a new Story in project p2
+      And The menu of the product backlog should allow to create a new Story in project p1s1
+      And The menu of the product backlog should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp003 should allow to create a new Story in project p1s1
+      And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp003 should not allow to create a new Story in project p2
+      And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1s1
+      And The menu of the sprint backlog of Sp004 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp004 should not allow to create a new Story in project p2
+      And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s1
+      And The menu of the sprint backlog of Sp005 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp005 should not allow to create a new Story in project p1s2
+      And The menu of the sprint backlog of Sp005 should not allow to create a new Story in project p2
+      And The menu of the sprint backlog of Sp006 should allow to create a new Story in project p1s1
+      And The menu of the sprint backlog of Sp006 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p1s2
+      And The menu of the sprint backlog of Sp006 should not allow to create a new Story in project p2
+      And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1
+      And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1s1
+      And The menu of the sprint backlog of Sp010 should allow to create a new Story in project p1s1s1
+      And The menu of the sprint backlog of Sp010 should not allow to create a new Story in project p1s2
+      And The menu of the sprint backlog of Sp010 should not allow to create a new Story in project p2
       And I should see 2 stories in the product backlog
       And I should see 5 sprint backlogs
       And I should not see the backlog of Sprint Sp001
