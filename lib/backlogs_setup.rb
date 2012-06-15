@@ -2,6 +2,16 @@ require 'rubygems'
 require 'yaml'
 require 'singleton'
 
+unless defined?('ReliableTimout') || defined?(:ReliableTimout)
+  if Backlogs.gems.include?('system_timer')
+    require 'system_timer'
+    ReliableTimout = SystemTimer
+  else
+    require 'timeout'
+    ReliableTimout = Timeout
+  end
+end
+
 module Backlogs
   def version
     root = File.expand_path('..', File.dirname(__FILE__))
@@ -33,23 +43,36 @@ module Backlogs
   module_function :"development?"
 
   def platform_support(raise_error = false)
-    case platform
-      when :redmine
-        supported = [1,4]
-        unsupported = [2,0]
-      when :chiliproject
-        supported = [3,1,0]
-        unsupported = nil
-      else
-        raise "Unsupported platform #{platform}"
-    end
+    supported = Rails.cache.fetch("Backlogs.platform_supported", {:expires_in => 24.hours}) {
+      versions = nil # needed so versions isn't block-scoped in the timeout
+      begin
+        ReliableTimout.timeout(10) { versions = YAML::load(open('http://www.redminebacklogs.net/versions.yml').read) }
+      rescue
+        versions = YAML::load(File.open(File.join(File.dirname(__FILE__), 'versions.yml')).read)
+      end
+      versions
+    }
 
-    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
-    return "#{Redmine::VERSION} (unsupported but might work, 'official' support is for #{supported.collect{|d| d.to_s}.join('.')})" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
+    return "You are running backlogs #{Redmine::Plugin.find(:redmine_backlogs).version}, latest version is #{supported[:backlogs]}" if Redmine::Plugin.find(:redmine_backlogs).version != supported[:backlogs]
+
+    supported = supported[platform]
+    raise "Unsupported platform #{platform}" unless supported
+
+    currentversion = Redmine::VERSION.to_a.collect{|d| d.to_s}
+    supported.each{|version|
+      v = version[:version].split('.')
+      next unless currentversion[0,v.length] == v
+
+      v = version[:ruby].split('.')
+      r = RUBY_VERSION.split('.')
+      next unless r[0,v.length] == v
+
+      return "#{Redmine::VERSION}#{version[:unsupported] ? '(unsupported but might work)' : ''}"
+    }
 
     return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
 
-    msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.collect{|d| d.to_s}.join('.')})"
+    msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| v[:version]}.uniq.sort.join(' / ')}"
     raise msg if raise_error
     return msg
   end

@@ -1,112 +1,130 @@
---- 
-fr: 
+---
+fr:
   backlogs_active: actif
   backlogs_any: tous
-  backlogs_auto_assign_task: "Assigner automatiquement les t\xC3\xA2ches \xC3\xA0 l'utilisateur courant"
+  backlogs_auto_assign_task: Assigner automatiquement les tâches à l'utilisateur courant
   backlogs_burndown_print_height: Hauteur d'impression du Burndown
   backlogs_burndown_print_width: Largeur d'impression du Burndown
-  backlogs_card_specification: "Types d'\xC3\xA9tiquettes pour impression de cartes"
+  backlogs_card_specification: Types d'étiquettes pour impression de cartes
   backlogs_impediment: Obstacle
   backlogs_include_sat_and_sun: Inclure Le samedi et dimanche dans le Burndown
   backlogs_points_burn_direction: Point du burn Haut/bas
   backlogs_product_backlog: Backlog de produit
   backlogs_sprints: Sprints
-  backlogs_statistics_active: "Le projet affiche son activit\xC3\xA9"
-  backlogs_statistics_active_failed: "Le projet n'affiche aucune activit\xC3\xA9"
-  backlogs_statistics_committed_velocity_stable: "La v\xC3\xA9locit\xC3\xA9 est stable dans les sprints"
-  backlogs_statistics_committed_velocity_stable_failed: "La v\xC3\xA9locit\xC3\xA9 n'est pas stable dans les sprints"
-  backlogs_statistics_hours_per_point: "%{value} heures par point en moyenne"
-  backlogs_statistics_product_backlog_filled: Le backlog de produit contient des users stories
+  backlogs_statistics_active: Le projet affiche son activité
+  backlogs_statistics_active_failed: Le projet n'affiche aucune activité
+  backlogs_statistics_committed_velocity_stable: La vélocité est stable dans les sprints
+  backlogs_statistics_committed_velocity_stable_failed: La vélocité n'est pas stable
+    dans les sprints
+  backlogs_statistics_hours_per_point: ! '%{value} heures par point en moyenne'
+  backlogs_statistics_product_backlog_filled: Le backlog de produit contient des users
+    stories
   backlogs_statistics_product_backlog_filled_failed: Le backlog de produit est vide
-  backlogs_statistics_product_backlog_sized: "Les users stories en haut du backlog du produit sont estim\xC3\xA9es"
-  backlogs_statistics_product_backlog_sized_failed: "Les users stories en haut du backlog du produit ne sont pas estim\xC3\xA9es"
-  backlogs_statistics_sizing_consistent: La taille des users stories Story est stable par rapport aux estimations
-  backlogs_statistics_sizing_consistent_failed: La taille des users stories Story varie par rapport aux estimations
-  backlogs_statistics_sizing_stddev: "d\xC3\xA9viation standard des heures en relation abec les points: %{value} heures"
-  backlogs_statistics_sprint_notes_available: "Les sprints r\xC3\xA9cemments ferm\xC3\xA9s ont des informations de r\xC3\xA9trospective/revue"
-  backlogs_statistics_sprint_notes_available_failed: "Des sprints sont ferm\xC3\xA9s sans information concernant la r\xC3\xA9trospective/revue"
-  backlogs_statistics_sprints: "Mesur\xC3\xA9 sur %{value} sprints"
-  backlogs_statistics_sprints_estimated: "Des sprints actifs et r\xC3\xA9cemments ferm\xC3\xA9s ont des t\xC3\xA2ches estim\xC3\xA9es"
-  backlogs_statistics_sprints_estimated_failed: "Des sprints actifs et ferm\xC3\xA9s ont des users stories sans estimation"
-  backlogs_statistics_sprints_sized: "Des sprints actifs et r\xC3\xA9cemments ferm\xC3\xA9s ont \xC3\xA9t\xC3\xA9 estim\xC3\xA9s"
-  backlogs_statistics_sprints_sized_failed: "Des sprints actifs et r\xC3\xA9cemments ferm\xC3\xA9s n'ont pas d'estimation"
-  backlogs_statistics_velocity: "Velocit\xC3\xA9: %{value}"
-  backlogs_statistics_velocity_stddev: "D\xC3\xA9viation standard de la v\xC3\xA9locit\xC3\xA9 : %{value} points"
-  backlogs_statistics_yield: "Le projet a un bonne productivit\xC3\xA9"
-  backlogs_statistics_yield_failed: "Le projet a une faible productivit\xC3\xA9"
+  backlogs_statistics_product_backlog_sized: Les users stories en haut du backlog
+    du produit sont estimées
+  backlogs_statistics_product_backlog_sized_failed: Les users stories en haut du backlog
+    du produit ne sont pas estimées
+  backlogs_statistics_sizing_consistent: La taille des users stories Story est stable
+    par rapport aux estimations
+  backlogs_statistics_sizing_consistent_failed: La taille des users stories Story
+    varie par rapport aux estimations
+  backlogs_statistics_sizing_stddev: ! 'déviation standard des heures en relation
+    abec les points: %{value} heures'
+  backlogs_statistics_sprint_notes_available: Les sprints récemments fermés ont des
+    informations de rétrospective/revue
+  backlogs_statistics_sprint_notes_available_failed: Des sprints sont fermés sans
+    information concernant la rétrospective/revue
+  backlogs_statistics_sprints: Mesuré sur %{value} sprints
+  backlogs_statistics_sprints_estimated: Des sprints actifs et récemments fermés ont
+    des tâches estimées
+  backlogs_statistics_sprints_estimated_failed: Des sprints actifs et fermés ont des
+    users stories sans estimation
+  backlogs_statistics_sprints_sized: Des sprints actifs et récemments fermés ont été
+    estimés
+  backlogs_statistics_sprints_sized_failed: Des sprints actifs et récemments fermés
+    n'ont pas d'estimation
+  backlogs_statistics_velocity: ! 'Velocité: %{value}'
+  backlogs_statistics_velocity_stddev: ! 'Déviation standard de la vélocité : %{value}
+    points'
+  backlogs_statistics_yield: Le projet a un bonne productivité
+  backlogs_statistics_yield_failed: Le projet a une faible productivité
   backlogs_story_tracker: Tracker de stories
   backlogs_story: stories
-  backlogs_task: "T\xC3\xA2ches"
-  backlogs_task_tracker: "Tracker de t\xC3\xA2ches"
+  backlogs_task: Tâches
+  backlogs_task_tracker: Tracker de tâches
   backlogs_wiki_template: Maquette pour page wiki des sprints
   button_edit_wiki: Editer la page du wiki
-  comma_delimited_numbers: "Nombres d\xC3\xA9limit\xC3\xA9s par des virgules"
-  current_open_story_points: "Points actuels des stories ouvertes:"
-  error_blank: "Ne peut pas \xC3\xAAtre vide"
-  error_greater_than_start_date: "ne peut pas \xC3\xAAtre ant\xC3\xA9rieure \xC3\xA0 la date de d\xC3\xA9but"
+  comma_delimited_numbers: Nombres délimités par des virgules
+  current_open_story_points: ! 'Points actuels des stories ouvertes:'
+  error_blank: Ne peut pas être vide
+  error_greater_than_start_date: ne peut pas être antérieure à la date de début
   error_inclusion: n'est pas inclus dans la liste
-  error_intro_plural: "Les erreurs suivantes ont \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9es:"
-  error_intro_singular: "L'erreur suivante a \xC3\xA9t\xC3\xA9 rencontr\xC3\xA9e:"
-  error_must_have_comma_delimited_list: "doit avoir une liste de users stories ou num\xC3\xA9ros de t\xC3\xA2ches s\xC3\xA9par\xC3\xA9es de virgules"
-  error_no_workflow_for_task_tracker: "Vous n'avez pas acc\xC3\xA8s au tracker de t\xC3\xA2ches. Si vous pensez que c'est une erreur, demandez \xC3\xA0 votre administrateur de mettre \xC3\xA0 jour le workflow."
-  error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre \xC3\xA0 nouveau."
-  error_release_end_after_start: "La aate de fin de Release doit \xC3\xAAtre faite apr\xC3\xA8s la date de d\xC3\xA9but"
-  error_taken: !binary |
+  error_intro_plural: ! 'Les erreurs suivantes ont été rencontrées:'
+  error_intro_singular: ! 'L''erreur suivante a été rencontrée:'
+  error_must_have_comma_delimited_list: doit avoir une liste de users stories ou numéros
+    de tâches séparées de virgules
+  error_no_workflow_for_task_tracker: Vous n'avez pas accès au tracker de tâches.
+    Si vous pensez que c'est une erreur, demandez à votre administrateur de mettre
+    à jour le workflow.
+  error_outro: Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau.
+  error_release_end_after_start: La aate de fin de Release doit être faite après la
+    date de début
+  error_taken: !binary |-
     ZMOpasOgIHV0aWxpc8Op
-
-  event_sprint_summary: "%{project}: %{summary}"
-  field_assigned_to: !binary |
+  event_sprint_summary: ! '%{project}: %{summary}'
+  field_assigned_to: !binary |-
     QXNzaWduw6kgw6A=
-
   field_backlogs_issue_type: Type de backlog
   field_blocks: Blocks
   field_initial_story_points: Point de story initiale
   field_name: Nom
-  field_number_of_snapshots: "Sauvegarder l'instantan\xC3\xA9 des points"
+  field_number_of_snapshots: Sauvegarder l'instantané des points
   field_position: Position
-  field_priority: "Priorit\xC3\xA9"
+  field_priority: Priorité
   field_release_end_date: Date de fin de la release
-  field_release_start_date: "Date de d\xC3\xA9but de la release"
-  field_remaining_hours: "Restant \xC3\xA0 faire (heures)"
+  field_release_start_date: Date de début de la release
+  field_remaining_hours: Restant à faire (heures)
   field_story_points: Points de user stories
   field_subject: Sujet
   field_time_entry_comments: Commentaire sur les heures saisies
   field_time_entry_hours: Heures saisies en heures
-  field_time_entry_spend_on: "Entr\xC3\xA9e temps pass\xC3\xA9 sur"
+  field_time_entry_spend_on: Entrée temps passé sur
   field_time_entry_user_id: ID utilisateur pour les heures saisies
   field_tracker_id: Tracker ID
-  field_velocity_based_estimate: "Estimation bas\xC3\xA9e sur la v\xC3\xA9locit\xC3\xA9"
-  label_back_to_project: "Retour \xC3\xA0 la page backlog de produit"
+  field_velocity_based_estimate: Estimation basée sur la vélocité
+  label_back_to_project: Retour à la page backlog de produit
   label_backlogs: Backlog
-  label_backlogs_unconfigured: "Vous n'avez pas encore configur\xC3\xA9 les backlog. Aller \xC3\xA0 %{administration} > %{plugins}, et cliquez sur le lien %{configure} pour ce plugin. Une fois que vous aurez d\xC3\xA9fini les champs, revenez \xC3\xA0 cette page pour utiliser l'outil"
+  label_backlogs_unconfigured: Vous n'avez pas encore configuré les backlog. Aller
+    à %{administration} > %{plugins}, et cliquez sur le lien %{configure} pour ce
+    plugin. Une fois que vous aurez défini les champs, revenez à cette page pour utiliser
+    l'outil
   label_burndown: Burndown
   label_chart_options: Options du graphique
-  label_close_completed_sprints: "Sprints compl\xC3\xA9t\xC3\xA9s ferm\xC3\xA9s"
+  label_close_completed_sprints: Sprints complétés fermés
   label_column_width: Largeur des colonnes
-  label_download_sprint: !binary |
+  label_download_sprint: !binary |-
     VMOpbMOpY2hhcmdlcg==
-
-  label_hide_completed_sprints: "Cacher Sprints compl\xC3\xA9t\xC3\xA9s"
+  label_hide_completed_sprints: Cacher Sprints complétés
   label_hours_remaining: Heures restantes
   label_hours_required_burn_rate: Taux de consommation requis (heures)
   label_hours: heures
-  label_ideal: "id\xC3\xA9ale"
+  label_ideal: idéale
   label_impediments: Obstacles
-  label_master_backlog: "Backlog ma\xC3\xAEtre"
+  label_master_backlog: Backlog maître
   label_new_sprint: Nouveau Sprint
   label_new_story: Nouvelle Story
-  label_no_data_to_show: "Pas de donn\xC3\xA9e affich\xC3\xA9e"
+  label_no_data_to_show: Pas de donnée affichée
   label_no_end: Pas de fin
-  label_no_start: "pas de d\xC3\xA9but"
-  label_not_prioritized: "non prioris\xC3\xA9s"
-  label_points_accepted: "points accept\xC3\xA9s"
+  label_no_start: pas de début
+  label_not_prioritized: non priorisés
+  label_points_accepted: points acceptés
   label_points_burn_down: Bas
   label_points_burn_up: Haut
-  label_points_committed: "points engag\xC3\xA9s"
+  label_points_committed: points engagés
   label_points_required_burn_rate: Taux de consommation requis (points)
-  label_points_resolved: "points r\xC3\xA9solus"
-  label_points_to_accept: "points non accept\xC3\xA9s"
-  label_points_to_resolve: "points non r\xC3\xA9solus"
+  label_points_resolved: points résolus
+  label_points_to_accept: points non acceptés
+  label_points_to_resolve: points non résolus
   label_points: points
   label_product_backlog: Backlog de produit
   label_product_cards: Cartes de Backlog de produit
@@ -115,49 +133,53 @@ fr:
   label_release_new: Nouvelle release
   label_release_planning: Planification des releases
   label_release_plural: Releases
-  label_release_start_date: "Date de d\xC3\xA9but de la release"
+  label_release_start_date: Date de début de la release
   label_reset: Reinitialiser
   label_scrum_statistics: Statistiques Scrum
-  label_select_all: "s\xC3\xA9lectionner tout"
-  label_show_completed_sprints: "Afficher Sprints termin\xC3\xA9es"
+  label_select_all: sélectionner tout
+  label_show_completed_sprints: Afficher Sprints terminées
   label_sprint_backlog: Backlog dz sprint
   label_sprint_cards: Cartes de sprint
   label_sprint_impediments: Bloquants du Sprint
   label_sprint_name: Sprint "%{name}"
   label_stories: Stories
-  label_stories_tasks: "Stories/T\xC3\xA2ches"
-  label_task_board: "Tableau des t\xC3\xA2ches"
+  label_stories_tasks: Stories/Tâches
+  label_task_board: Tableau des tâches
   label_webcal: Fil Calendrier Web
-  rb_auto_refresh: "Auto-Rafraichir backlogs/tableau des t\xC3\xA2ches (seconds)"
-  rb_label_copy_tasks: "Copier t\xC3\xA2ches"
+  rb_auto_refresh: Auto-Rafraichir backlogs/tableau des tâches (seconds)
+  rb_label_copy_tasks: Copier tâches
   rb_label_copy_tasks_all: Toutes
   rb_label_copy_tasks_none: Aucune
   rb_label_copy_tasks_open: Ouvertes
   rb_label_link_to_original: Inclure le lien vers la story original
-  rb_label_timelog_disable: "D\xC3\xA9sactiver"
+  rb_label_timelog_disable: Désactiver
   rb_label_timelog_enable: Activer
   rb_show_burndown_in_sidebar: Afficher le burndown dans la barre des demandes
-  rb_task_cards_stories_then_tasks: "Tous les stories d'abord, les t\xC3\xA2ches ensuite"
-  rb_task_cards_story_follows_tasks: "T\xC3\xA2ches suivies par leur stories"
-  rb_task_cards_tasks_follow_story: "Stories suivis par leur t\xC3\xA2che"
+  rb_task_cards_stories_then_tasks: Tous les stories d'abord, les tâches ensuite
+  rb_task_cards_story_follows_tasks: Tâches suivies par leur stories
+  rb_task_cards_tasks_follow_story: Stories suivis par leur tâche
   rb_taskboard_card_order: Ordre d'impression des cartes
-  rb_timelog_from_taskboard: "Journal depuis le tableau des t\xC3\xA2ches"
-  release_create_snapshot_today: "Enregistrer un instantan\xC3\xA9 des points de stories d'aujourd'hui"
-  release_update_snapshot_today: "Mettre \xC3\xA0jour l'instantan\xC3\xA9 des points de stories d'aujourd'hui"
+  rb_timelog_from_taskboard: Journal depuis le tableau des tâches
+  release_create_snapshot_today: Enregistrer un instantané des points de stories d'aujourd'hui
+  release_update_snapshot_today: Mettre àjour l'instantané des points de stories d'aujourd'hui
   remaining_story_points: remaining story points
   story_description: Description
   story_estimation_hours: Estimation (heures)
   story_points: Points
-  story_remaining_hours: "Restant \xC3\xA0 faire (heures)"
-  story_spent_time: "Temps pass\xC3\xA9"
+  story_remaining_hours: Restant à faire (heures)
+  story_spent_time: Temps passé
   story_status: Statut
-  today_not_in_release_msg: La date actuelle n'est pas dans l'intervalle des dates de la release. Voulez-vous vraiment sauvegarder un snapshot ?
-  today_not_in_release_warning: "Avertissement : la date actuelle n'est dans l'intervalle des dates de la release."
-  todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: "Utiliser un champ texte au lieu d'une liste d\xC3\xA9roulante si c'est vide"
-  warning_reset_sprint: "VOUS \xC3\x8ATES SUR LE POINT DE R\xC3\x89INITIALISER CE SPRINT !\n\n\
-    \xC3\x8Ates-vous s\xC3\xBBr de vouloir faire cela ? R\xC3\xA9initialiser le sprint\n aura les effets suivants sur les stories et les t\xC3\xA2ches: \n\n\
-    * La Date de cr\xC3\xA9ation sera mise \xC3\xA0 la date de d\xC3\xA9but de sprint\n\
-    * TOUTES les modifications des stories et des t\xC3\xA2ches \xC3\xA0 l'exception des notes\n    seront supprim\xC3\xA9es\n\
-    * La valeur actuelle va devenir la valeur initiale pour toutes les stories et pour toutes les propri\xC3\xA9t\xC3\xA9s des t\xC3\xA2ches \n\
-    * Les \xC3\xA9tats seront mis \xC3\xA0 l'\xC3\xA9tat par d\xC3\xA9faut"
+  today_not_in_release_msg: La date actuelle n'est pas dans l'intervalle des dates
+    de la release. Voulez-vous vraiment sauvegarder un snapshot ?
+  today_not_in_release_warning: ! 'Avertissement : la date actuelle n''est dans l''intervalle
+    des dates de la release.'
+  todo_issue_summary: ! '%{type}: %{summary}'
+  use_free_text_if_empty: Utiliser un champ texte au lieu d'une liste déroulante si
+    c'est vide
+  warning_reset_sprint: ! "VOUS ÊTES SUR LE POINT DE RÉINITIALISER CE SPRINT !\n\nÊtes-vous
+    sûr de vouloir faire cela ? Réinitialiser le sprint\n aura les effets suivants
+    sur les stories et les tâches: \n\n* La Date de création sera mise à la date de
+    début de sprint\n* TOUTES les modifications des stories et des tâches à l'exception
+    des notes\n    seront supprimées\n* La valeur actuelle va devenir la valeur initiale
+    pour toutes les stories et pour toutes les propriétés des tâches \n* Les états
+    seront mis à l'état par défaut"

@@ -1,5 +1,5 @@
---- 
-"no": 
+---
+'no':
   backlogs_active: aktiv
   backlogs_any: noen
   backlogs_auto_assign_task: Auto assign task to current user
@@ -13,25 +13,35 @@
   backlogs_sprints: Sprinter
   backlogs_statistics_active: Project show activity
   backlogs_statistics_active_failed: Project shows no activity
-  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
-  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
-  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
+  backlogs_statistics_committed_velocity_stable: Committed velocity is stable across
+    sprints
+  backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not
+    stable across sprints
+  backlogs_statistics_hours_per_point: ! '%{value} hours per point on average'
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
-  backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
-  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog has unsized stories
+  backlogs_statistics_product_backlog_sized: The stories at the top of the product
+    backlog have sizes
+  backlogs_statistics_product_backlog_sized_failed: The top of the product backlog
+    has unsized stories
   backlogs_statistics_sizing_consistent: Story sizes are stable against their estimates
   backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
-  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review notes
-  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review notes
+  backlogs_statistics_sizing_stddev: ! 'Standard deviation on hours vs. points: %{value}
+    hours'
+  backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review
+    notes
+  backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review
+    notes
   backlogs_statistics_sprints: Measured over %{value} sprints
-  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task estimates
-  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated stories
+  backlogs_statistics_sprints_estimated: Active and recently closed sprint have task
+    estimates
+  backlogs_statistics_sprints_estimated_failed: Closed or active sprints with unestimated
+    stories
   backlogs_statistics_sprints_sized: Active and recently closed sprints were sized
-  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently closed sprints that were not sized
-  backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_sprints_sized_failed: Project has stories on active or recently
+    closed sprints that were not sized
+  backlogs_statistics_velocity: ! 'Velocity: %{value}'
+  backlogs_statistics_velocity_stddev: ! 'Velocity standard deviation: %{value} points'
   backlogs_statistics_yield: Project has good average yield
   backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: Story
@@ -41,18 +51,21 @@
   backlogs_wiki_template: Mal for sprintens wikiside
   button_edit_wiki: Endre wikiside
   comma_delimited_numbers: Kommaseparerte tall
-  current_open_story_points: "Gjeldende \xC3\xA5pen story sine poeng:"
-  error_blank: "kan ikke v\xC3\xA6re blank"
-  error_greater_than_start_date: "kan ikke v\xC3\xA6re f\xC3\xB8r Startdato"
+  current_open_story_points: ! 'Gjeldende åpen story sine poeng:'
+  error_blank: kan ikke være blank
+  error_greater_than_start_date: kan ikke være før Startdato
   error_inclusion: er ikke inkludert i listen
-  error_intro_plural: "F\xC3\xB8lgende feil oppsto:"
-  error_intro_singular: "F\xC3\xB8lgende feil oppsto:"
-  error_must_have_comma_delimited_list: krever en kommaseparert liste med story eller task IDer
-  error_no_workflow_for_task_tracker: "Du har ikke tilgang til tasktrackeren. Dersom du mener dette er en feil, s\xC3\xA5 vennligst ta kontakt med administrator for \xC3\xA5 f\xC3\xA5 tilgang."
-  error_outro: "Vennligst rett feilene over f\xC3\xB8r du fors\xC3\xB8ker igjen."
-  error_release_end_after_start: "Sluttdato for utgivelse m\xC3\xA5 v\xC3\xA6re etter startdato"
+  error_intro_plural: ! 'Følgende feil oppsto:'
+  error_intro_singular: ! 'Følgende feil oppsto:'
+  error_must_have_comma_delimited_list: krever en kommaseparert liste med story eller
+    task IDer
+  error_no_workflow_for_task_tracker: Du har ikke tilgang til tasktrackeren. Dersom
+    du mener dette er en feil, så vennligst ta kontakt med administrator for å få
+    tilgang.
+  error_outro: Vennligst rett feilene over før du forsøker igjen.
+  error_release_end_after_start: Sluttdato for utgivelse må være etter startdato
   error_taken: er allerede i bruk
-  event_sprint_summary: "%{project}: %{summary}"
+  event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokker
@@ -74,15 +87,17 @@
   field_velocity_based_estimate: Hastighetbasert estimat
   label_back_to_project: Tilbake til prosjektsiden
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: "Ingen backlogs er konfigurert enn\xC3\xA5. Vennligst g\xC3\xA5 til %{administration} > %{plugins}, klikk s\xC3\xA5 %{configure} - lenken for dette innstikket. S\xC3\xA5 snart feltene er satt kan dette verkt\xC3\xB8yet tas i bruk."
+  label_backlogs_unconfigured: Ingen backlogs er konfigurert ennå. Vennligst gå til
+    %{administration} > %{plugins}, klikk så %{configure} - lenken for dette innstikket.
+    Så snart feltene er satt kan dette verktøyet tas i bruk.
   label_burndown: Burndown
   label_chart_options: Valg for Charts
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
   label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_hours_remaining: "gjenv\xC3\xA6rende timer"
-  label_hours_required_burn_rate: "p\xC3\xA5krevet burn rate (timer)"
+  label_hours_remaining: gjenværende timer
+  label_hours_required_burn_rate: påkrevet burn rate (timer)
   label_hours: timer
   label_ideal: ideal
   label_impediments: Hindringer
@@ -96,11 +111,11 @@
   label_points_accepted: aksepterte poeng
   label_points_burn_down: Ned
   label_points_burn_up: Opp
-  label_points_committed: "l\xC3\xA5ste poenger"
-  label_points_required_burn_rate: "p\xC3\xA5krevet burn rate (poeng)"
-  label_points_resolved: "l\xC3\xB8ste poeng"
+  label_points_committed: låste poenger
+  label_points_required_burn_rate: påkrevet burn rate (poeng)
+  label_points_resolved: løste poeng
   label_points_to_accept: ikke antatte poeng
-  label_points_to_resolve: "ul\xC3\xB8ste poeng"
+  label_points_to_resolve: uløste poeng
   label_points: poeng
   label_product_backlog: produkt backlog
   label_product_cards: Produkt backlogkort
@@ -126,35 +141,35 @@
   rb_label_copy_tasks: Kopier tasks
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Ingen
-  rb_label_copy_tasks_open: !binary |
+  rb_label_copy_tasks_open: !binary |-
     w4VwbmU=
-
   rb_label_link_to_original: Inkluder lenke til orginal story
   rb_label_timelog_disable: Deaktiver
   rb_label_timelog_enable: Aktiver
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
-  rb_task_cards_stories_then_tasks: "F\xC3\xB8rst alle, deretter alle tasks"
-  rb_task_cards_story_follows_tasks: "Tasks etterfulgt av tilh\xC3\xB8rende story"
-  rb_task_cards_tasks_follow_story: "Story etterfulgt av tilh\xC3\xB8rende tasks"
-  rb_taskboard_card_order: "Kort utskriftsrekkef\xC3\xB8lge"
+  rb_task_cards_stories_then_tasks: Først alle, deretter alle tasks
+  rb_task_cards_story_follows_tasks: Tasks etterfulgt av tilhørende story
+  rb_task_cards_tasks_follow_story: Story etterfulgt av tilhørende tasks
+  rb_taskboard_card_order: Kort utskriftsrekkefølge
   rb_timelog_from_taskboard: Tidslog fra taskboard
   release_create_snapshot_today: Lagre story poengsnapshot for i dag
   release_update_snapshot_today: Oppdater story poengsnapshot for i dag
-  remaining_story_points: "gjenv\xC3\xA6rende storypoeng"
+  remaining_story_points: gjenværende storypoeng
   story_description: Beskrivelse
   story_estimation_hours: Estimert (timer)
   story_points: Poeng
-  story_remaining_hours: "Gjenv\xC3\xA6rene (timer)"
+  story_remaining_hours: Gjenværene (timer)
   story_spent_time: Brukt tid
   story_status: Status
-  today_not_in_release_msg: Gjeldende dato er ikke innenfor tidsperioden for utgivelsen. Skal snapshot likevel lagres?
-  today_not_in_release_warning: "Advarsel: Gjeldende dato er ikke innenfor tidsperioden for utgivelsen."
-  todo_issue_summary: "%{type}: %{summary}"
+  today_not_in_release_msg: Gjeldende dato er ikke innenfor tidsperioden for utgivelsen.
+    Skal snapshot likevel lagres?
+  today_not_in_release_warning: ! 'Advarsel: Gjeldende dato er ikke innenfor tidsperioden
+    for utgivelsen.'
+  todo_issue_summary: ! '%{type}: %{summary}'
   use_free_text_if_empty: Bruk tekstfelt i steden for nedtrekksmeny om denne er tom
-  warning_reset_sprint: "DU ER I FERD MED \xC3\x85 NULLSTILLE DENNE SPRINTEN!\n\n\
-    Er du sikker p\xC3\xA5 at dette er det du \xC3\xB8nsker \xC3\xA5 gj\xC3\xB8re? Ved \xC3\xA5\n\
-    gj\xC3\xB8re dette vil f\xC3\xB8lgende skje med stories og tasker:\n\n\
-    * Dato for opprettelse vil settes til sprintens startdato\n\
-    * ALLE endringer til stories og tasker, unntatt notater,\n  vil bli SLETTET.\n\
-    * Gjeldende verdi vil bli forvalgt verdi for alle story /\n  task - paramtre.\n\
-    * Status settes til forvalgt verdi"
+  warning_reset_sprint: ! "DU ER I FERD MED Å NULLSTILLE DENNE SPRINTEN!\n\nEr du
+    sikker på at dette er det du ønsker å gjøre? Ved å\ngjøre dette vil følgende skje
+    med stories og tasker:\n\n* Dato for opprettelse vil settes til sprintens startdato\n*
+    ALLE endringer til stories og tasker, unntatt notater,\n  vil bli SLETTET.\n*
+    Gjeldende verdi vil bli forvalgt verdi for alle story /\n  task - paramtre.\n*
+    Status settes til forvalgt verdi"

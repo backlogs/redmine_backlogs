@@ -1,3 +1,26 @@
+== 2012-06-12 v0.9.14
+* Online version check
+* Fixes "Install task: can't modify frozen Hash ".
+* Translations updated
+* Give stories the same Start/Due date as the sprint
+* Allow story cards to take on custom colours if assigned to a user
+* fixes "My Pages Exception"
+
+== 2012-06-02 v0.9.13
+* Ruby 1.9 supported
+* Chiliproject fixes
+
+== 2012-05-31 v0.9.12
+* Down migrations added
+* Fixes "New Stories appear at the top of the Product Backlog"
+
+== 2012-05-31 v0.9.11
+
+* Fixing issue "The users select is empty in the "Edit task" form (Redmine 2 only)"
+* Skip authorize for rb_server_variables#index. Fixes "403 on rb_server_variables#index"
+* Potential solution for "closing task generates 'Version has already been taken' error"
+* RM 1.4.2
+
 == 2012-05-28 v0.9.10
 
 * Small fix to migrations

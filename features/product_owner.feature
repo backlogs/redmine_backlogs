@@ -42,7 +42,6 @@ Feature: Product Owner
      When I create the story
      Then the request should complete successfully
       And the 1st story in the product backlog should be A Whole New Story
-      And all positions should be unique
 
   Scenario: Update a story
     Given I am viewing the master backlog

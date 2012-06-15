@@ -98,10 +98,6 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, bac
   story.subject.should == subject
 end
 
-Then /^all positions should be unique$/ do
-  RbStory.find_by_sql("select project_id, position, count(*) as dups from issues where not position is NULL group by project_id, position having count(*) > 1").length.should == 0
-end
-
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   story.should_not be_nil
@@ -332,33 +328,36 @@ Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
   found.should be !!(neg=='')
 end
 
-Then /^the drop (succeeded|failed) and (.+?) is (unchanged|in the product backlog|in sprint (.+?))$/ do |success, story_name, where, sprint_name|
-  story = RbStory.find(:first, :conditions => {:subject => story_name})
-  @last_dnd.should_not be_nil
-  if where == 'unchanged'
-    @last_dnd[:position_before].should == story.position
-    @last_dnd[:version_id_before].should == story.fixed_version_id
-  elsif where == 'in the product backlog'
-    story.fixed_version_id.should be_nil
-  else
-    sprint_id = sprint_id_from_name(sprint_name.strip)
-    story.fixed_version_id.should == sprint_id
-  end
+Then /^story (.+?) is unchanged$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  @last_drag_and_drop.should_not be_nil
+  @last_drag_and_drop[:position_before].should == story.position
+  @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
+end
+
+Then /^story (.+?) is in the product backlog$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.fixed_version_id.should be_nil
 end
 
 #taskboard visual checks:
 Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
-  taskboard_check_task(task, story, state)
+  task_id = RbTask.find_by_subject(task).id
+  story_id = RbStory.find_by_subject(story).id
+  n = get_taskboard_state_index[state]
+  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
 end
 
 Then /^task (.+) should have the status (.+)$/ do |task, state|
-  state = IssueStatus.find(:first, :conditions => { :name => state })
-  task = RbTask.find(:first, :conditions => { :subject => task })
+  state = IssueStatus.find_by_name(state)
+  task = RbTask.find_by_subject(task)
   task.status_id.should == state.id
 end
 
 Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
-  taskboard_check_impediment(impediment, state)
+  task = Issue.find_by_subject(impediment)
+  n = get_taskboard_state_index[state]
+  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
 end
 
 Then /^impediment (.+) should be created without error$/ do |impediment_name|

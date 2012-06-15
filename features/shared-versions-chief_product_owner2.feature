@@ -55,19 +55,14 @@ Feature: Shared versions one backlog multiple subproject team sprints
       And The menu of the sprint backlog of Sp001 should not allow to create a new Story in project p1s2
       And The menu of the sprint backlog of Sp002 should not allow to create a new Story in project p1s1
      When I drag story Story 2 to the sprint backlog of Sp001
-     Then the drop succeeded and Story 2 is in sprint Sp001
-      And Story 2 should be in the 1st position of the sprint named Sp001
+     Then Story 2 should be in the 1st position of the sprint named Sp001
      When I drag story Story 3 to the sprint backlog of Sp001
-     Then the drop succeeded and Story 3 is in sprint Sp001
-      And Story 3 should be in the 2nd position of the sprint named Sp001
+     Then Story 3 should be in the 2nd position of the sprint named Sp001
      When I drag story Story 4 to the sprint backlog of Sp002
-     Then the drop succeeded and Story 4 is in sprint Sp002
-      And Story 4 should be in the 1st position of the sprint named Sp002
+     Then Story 4 should be in the 1st position of the sprint named Sp002
      When I drag story Story 5 to the sprint backlog of Sp002
-     Then the drop succeeded and Story 5 is in sprint Sp002
-      And Story 5 should be in the 2nd position of the sprint named Sp002
+     Then Story 5 should be in the 2nd position of the sprint named Sp002
      When I drag story Story 6 to the sprint backlog of Sp001 before the story Story 3
-     Then the drop succeeded and Story 6 is in sprint Sp001
-      And Story 6 should be in the 2nd position of the sprint named Sp001
+     Then Story 6 should be in the 2nd position of the sprint named Sp001
       And I should see 3 stories in the sprint backlog of Sp001
       And I should see 2 stories in the sprint backlog of Sp002
