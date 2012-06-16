@@ -202,13 +202,12 @@ module Backlogs
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
           if Backlogs.setting[:sharing_mode] == 'subtree'
-            project_ids = Project.find(:all,
-              :conditions => Project.find(id).project_condition(true)
-            ).map{|__project| __project.id} # FIXME (pa sharing) i'd like to make this easier in the scope condition but project_condition() is a string and wont help to create a x in () query
-            shared_versions.scoped(:conditions => {
-              :status => ['open', 'locked'],
-              :project_id => project_ids
-              }, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+            shared_versions.scoped(:include => :project,
+              :conditions => 
+                " (#{Project.table_name}.id = #{id} "+
+                "  OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt}))"+
+                " AND #{Version.table_name}.status in ('open','locked')",
+              :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
           else #sharing mode 'versions'
             shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
           end
