@@ -221,12 +221,21 @@ module Backlogs
         if Backlogs.setting[:disable_closed_sprints_to_master_backlogs]
           return []
         else
-          return RbSprint.closed_sprints(self)
-# FIXME (pa sharing) shared closed sprints not implemented yet
-#      if Backlogs.setting[:sharing_enabled]
-#        _project.shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-#      end
-        end
+          if Backlogs.setting[:sharing_enabled]
+            if Backlogs.setting[:sharing_mode] == 'subtree'
+              shared_versions.scoped(:include => :project,
+                :conditions => 
+                  " (#{Project.table_name}.id = #{id} "+
+                  "  OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt}))"+
+                  " AND #{Version.table_name}.status in ('closed')",
+                :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+            else #sharing mode 'versions'
+              shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+            end
+          else #no backlog sharing
+            RbSprint.closed_sprints(self)
+          end
+        end #disable_closed
       end
 
     end
