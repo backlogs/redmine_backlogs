@@ -106,7 +106,7 @@ Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, sto
 end
 
 Then /^the server should return an update error$/ do
-  page.driver.response.status.should == 400
+  verify_request_status(400)
 end
 
 Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|

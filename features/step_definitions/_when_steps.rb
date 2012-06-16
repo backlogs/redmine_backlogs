@@ -9,7 +9,7 @@ When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, p
                               :only_path => true),
                       @impediment_params
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the story$/ do |attempt|
@@ -19,7 +19,7 @@ When /^I (try to )?create the story$/ do |attempt|
                               :only_path => true),
                       @story_params
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the task$/ do |attempt|
@@ -30,7 +30,7 @@ When /^I (try to )?create the task$/ do |attempt|
                               :only_path => true),
                       @task_params
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the sprint$/ do |attempt|
@@ -40,7 +40,7 @@ When /^I (try to )?create the sprint$/ do |attempt|
                               :only_path => true),
                       @sprint_params
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_subject, prev_subject|
@@ -58,7 +58,7 @@ When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_sub
                               :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
@@ -79,7 +79,7 @@ When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|t
                               :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
-  verify_request_status(200)
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |attempt, old_pos, new_pos|
@@ -104,14 +104,14 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
                               :only_path => true),
                       {:next => nxt, :project_id => @project.id, "_method" => "put"}
                   )
-  verify_request_status(200)
+  verify_request_status(200) if attempt == ''
 
   @story = RbStory.find(story_id.to_i)
 end
 
 When /^I (try to )?request the server_variables resource$/ do |attempt|
   visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true)
-  verify_request_status(200) # sharing
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?update the impediment$/ do |attempt|
@@ -122,7 +122,7 @@ When /^I (try to )?update the impediment$/ do |attempt|
                               :only_path => true),
                       @impediment_params
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?update the sprint$/ do |attempt|
@@ -133,7 +133,7 @@ When /^I (try to )?update the sprint$/ do |attempt|
                               :only_path => true),
                       @sprint_params.merge({ "_method" => "put" })
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?update the story$/ do |attempt|
@@ -144,7 +144,7 @@ When /^I (try to )?update the story$/ do |attempt|
                               :only_path => true),
                       @story_params #.merge({ "_method" => "put" })
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
   @story.reload
 end
 
@@ -156,7 +156,7 @@ When /^I (try to )?update the task$/ do |attempt|
                               :only_path => true),
                       @task_params.merge({ "_method" => "put" })
                   )
-  page.driver.response.status.should == 200 if attempt == ''
+  verify_request_status(200) if attempt == ''
 end
 
 Given /^I visit the scrum statistics page$/ do

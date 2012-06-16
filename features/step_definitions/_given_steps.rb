@@ -61,22 +61,22 @@ end
 
 Given /^I am viewing the master backlog$/ do
   visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
   click_link("Backlogs")
   page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, :project_id => @project.identifier, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
@@ -397,12 +397,12 @@ end
 
 Given /^I am viewing the issues list$/ do
   visit url_for(:controller => 'issues', :action=>'index', :project_id => @project, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar$/ do
   visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
@@ -411,7 +411,7 @@ Given /^I am viewing the issues sidebar for (.+)$/ do |name|
                 :project_id => @project,
                 :sprint_id => RbSprint.find_by_name(name).id,
                 :only_path => true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
@@ -496,13 +496,13 @@ Given /^I am logging time for task (.+)$/ do |subject|
   issue = Issue.find_by_subject(subject)
   visit "/issues/#{issue.id}/time_entries"
   click_link('Log time')
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing log time for the (.*) project$/ do |project_id|
   visit "/projects/#{project_id}/time_entries"
   click_link('Log time')
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I set the hours spent to (\d+)$/ do |arg1|
@@ -516,7 +516,7 @@ end
 Given /^I am duplicating (.+) to (.+) for (.+)$/ do |story_old, story_new, sprint_name|
   issue = Issue.find_by_subject(story_old)
   visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
-  assert_page_loaded(page)
+  verify_request_status(200)
   fill_in 'issue_subject', :with => story_new
   page.select(sprint_name, :from => "issue_fixed_version_id")
 end
