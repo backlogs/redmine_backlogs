@@ -183,6 +183,53 @@ module Backlogs
         return @scrum_statistics
       end
 
+      def projects_in_shared_product_backlog
+        #sharing off: only the product itself is in the product backlog
+        #sharing on: subtree is included in the product backlog
+        if Backlogs.setting[:sharing_enabled]
+          self.self_and_descendants.active
+        else
+          self
+        end
+        #TODO have an explicit association map which project shares its issues into other product backlogs
+      end
+
+      #return sprints which are 
+      # 1. open in project,
+      # 2. share to project, 
+      # 3. share to project but are scoped to project and subprojects
+      #depending on sharing mode
+      def open_shared_sprints
+        if Backlogs.setting[:sharing_enabled]
+          if Backlogs.setting[:sharing_mode] == 'subtree'
+            project_ids = Project.find(:all,
+              :conditions => Project.find(id).project_condition(true)
+            ).map{|__project| __project.id} # FIXME (pa sharing) i'd like to make this easier in the scope condition but project_condition() is a string and wont help to create a x in () query
+            shared_versions.scoped(:conditions => {
+              :status => ['open', 'locked'],
+              :project_id => project_ids
+              }, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+          else #sharing mode 'versions'
+            shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+          end
+        else #no backlog sharing
+          RbSprint.open_sprints(self)
+        end 
+      end
+
+      #depending on sharing mode
+      def closed_shared_sprints
+        if Backlogs.setting[:disable_closed_sprints_to_master_backlogs]
+          return []
+        else
+          return RbSprint.closed_sprints(self)
+# FIXME (pa sharing) shared closed sprints not implemented yet
+#      if Backlogs.setting[:sharing_enabled]
+#        _project.shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+#      end
+        end
+      end
+
     end
   end
 end

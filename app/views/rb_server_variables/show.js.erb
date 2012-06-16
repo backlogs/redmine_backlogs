@@ -105,17 +105,16 @@ if (RB.constants == null) {
  Most simple way: use all projects the user can see, trading some bytes of bandwidth against many server cycles of comparison and filtering.
 =end
     project_versions = Hash[Project.visible.find(:all).map{|project|
-      [project.id.to_s, project.shared_versions.open.collect{|v| v.id.to_s }] if project
+      [
+        project.id.to_s,
+        project.open_shared_sprints.collect{|v| v.id.to_s }
+      ] if project
     }]
 
 #project_self_and_descendants is used by the js ui to determine if a dragged story can be dropped onto the product backlog.
-    if Backlogs.settings[:sharing_enabled]
-      project_self_and_descendants = Hash[@project.self_and_descendants.map{|p| [p.id.to_s, true]}]
-    else
-      project_self_and_descendants = { @project.id.to_s => true }
-    end
+    projects_in_product_backlog = Hash[@project.projects_in_shared_product_backlog.map{|p| [p.id.to_s, true]}]
   %>
-  RB.constants.project_self_and_descendants = <%= project_self_and_descendants.to_json.html_safe %>;
+  RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
   RB.constants.story_states = <%= transitions.to_json.html_safe %>;
   RB.routes.backlog_menu = '<%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :format => 'json', :only_path => true) %>';
