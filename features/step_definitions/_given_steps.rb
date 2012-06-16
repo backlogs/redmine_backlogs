@@ -556,10 +556,6 @@ Given /^sharing is (.*)enabled$/ do |neg|
   Backlogs.setting[:sharing_enabled] = !!(neg=='')
 end
 
-Given /^sharing_mode is (.+)$/ do |mode|
-  Backlogs.setting[:sharing_mode] = mode
-end
-
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
 end

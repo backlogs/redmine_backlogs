@@ -117,17 +117,10 @@ class RbSprint < Version
 
   #depending on sharing mode
   #return array of projects where this sprint is visible
-  #for subtree mode: scoped to the current project hierarchy
   def shared_to_projects(scope_project)
     projects = []
-    if Backlogs.setting[:sharing_mode] == 'subtree'
-      p = scope_project.hierarchy # parents and descendants
-    else
-      p = Project.visible.find(:all, :order => 'lft') #exhaustive search FIXME (pa sharing)
-    end
-    p.each{|_project|
-      project_version_ids = _project.shared_versions.collect{|v| v.id} & [id]
-      projects << _project unless project_version_ids.empty?
+    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
+      projects << _project unless (_project.shared_versions.collect{|v| v.id} & [id]).empty?
     }
     projects
   end

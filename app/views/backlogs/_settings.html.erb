@@ -193,13 +193,4 @@
     <%= check_box_tag("settings[sharing_enabled]", 'enabled',
         Backlogs.setting[:sharing_enabled]) %>
   </p>
-
-  <p>
-    <%= content_tag(:label, l(:backlogs_sharing_mode)) %>
-    <%= select_tag("settings[sharing_mode]",
-              options_for_select([
-                      ['follow redmine version sharing', 'versions'],
-                      ['subtree only', 'subtree'],
-                  ], Backlogs.setting[:sharing_mode])) %>
-  </p>
 </fieldset>

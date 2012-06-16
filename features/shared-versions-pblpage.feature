@@ -6,7 +6,6 @@ Feature: Shared versions
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And sharing is enabled
-      And sharing_mode is versions
       And I have defined the following projects:
         | name   |
         | p1     |

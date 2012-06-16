@@ -201,16 +201,7 @@ module Backlogs
       #depending on sharing mode
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
-          if Backlogs.setting[:sharing_mode] == 'subtree'
-            shared_versions.scoped(:include => :project,
-              :conditions => 
-                " (#{Project.table_name}.id = #{id} "+
-                "  OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt}))"+
-                " AND #{Version.table_name}.status in ('open','locked')",
-              :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-          else #sharing mode 'versions'
-            shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-          end
+          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end 
@@ -222,16 +213,7 @@ module Backlogs
           return []
         else
           if Backlogs.setting[:sharing_enabled]
-            if Backlogs.setting[:sharing_mode] == 'subtree'
-              shared_versions.scoped(:include => :project,
-                :conditions => 
-                  " (#{Project.table_name}.id = #{id} "+
-                  "  OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt}))"+
-                  " AND #{Version.table_name}.status in ('closed')",
-                :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-            else #sharing mode 'versions'
-              shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-            end
+            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
           else #no backlog sharing
             RbSprint.closed_sprints(self)
           end
