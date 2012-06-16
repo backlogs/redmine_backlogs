@@ -214,8 +214,12 @@ Given /^I have defined the following sprints:$/ do |table|
     end
 
     version['sharing'] = 'none' if version['sharing'].nil?
+    status = version.delete('status')
 
-    RbSprint.create! version
+    sprint = RbSprint.create! version
+    if status == 'closed'
+      sprint.update_attribute(:status, 'closed')
+    end
   end
 end
 
