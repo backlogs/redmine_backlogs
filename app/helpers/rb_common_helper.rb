@@ -229,4 +229,20 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     s.html_safe
   end
 
+  def release_options_for_select(releases, selected=nil)
+    grouped = Hash.new {|h,k| h[k] = []}
+    releases.each do |release|
+      grouped[release.project.name] << [release.name, release.id]
+    end
+    # Add in the selected
+    if selected && !releases.include?(selected)
+      grouped[selected.project.name] << [selected.name, selected.id]
+    end
+
+    if grouped.keys.size > 1
+      grouped_options_for_select(grouped, selected && selected.id)
+    else
+      options_for_select((grouped.values.first || []), selected && selected.id)
+    end
+  end
 end
