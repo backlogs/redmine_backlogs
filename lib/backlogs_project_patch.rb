@@ -170,7 +170,11 @@ module Backlogs
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
 
-      include Backlogs::ActiveRecord::Attributes
+      base.class_eval do
+        unloadable
+        has_many :releases, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy, :order => "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC"
+        include Backlogs::ActiveRecord::Attributes
+      end
     end
 
     module ClassMethods

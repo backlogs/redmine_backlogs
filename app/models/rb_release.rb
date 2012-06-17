@@ -86,7 +86,7 @@ class RbRelease < ActiveRecord::Base
 
   unloadable
 
-  belongs_to :project
+  belongs_to :project, :inverse_of => :releases
   has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
   has_many :issues, :class_name => 'Issue', :foreign_key => 'release_id', :dependent => :nullify
 

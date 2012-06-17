@@ -1,10 +1,11 @@
 Feature: Product Owner
   As a product owner
   I want to manage releases
-  So that i can track a large product backlog
+  So that i can break down a large product backlog
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And no versions or issues exist
       And I am a product owner of the project
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
