@@ -102,7 +102,10 @@ class RbSprint < Version
 
   rb_scope :open_sprints, lambda { |project|
     {
-      :order => 'sprint_start_date ASC, effective_date ASC',
+      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END ASC,
+                 sprint_start_date ASC,
+                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END ASC,
+                 effective_date ASC",
       :conditions => [ "status = 'open' and project_id = ?", project.id ]
     }
   }
@@ -110,8 +113,11 @@ class RbSprint < Version
   #TIB ajout du scope :closed_sprints
   rb_scope :closed_sprints, lambda { |project|
     {
-       :order => 'sprint_start_date ASC, effective_date ASC',
-       :conditions => [ "status = 'closed' and project_id = ?", project.id ]
+      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END ASC,
+                 sprint_start_date ASC,
+                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END ASC,
+                 effective_date ASC",
+      :conditions => [ "status = 'closed' and project_id = ?", project.id ]
     }
   }
 
