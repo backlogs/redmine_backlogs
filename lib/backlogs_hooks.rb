@@ -85,7 +85,7 @@ module BacklogsPlugin
             snippet += "</tr>"
             vbe = issue.velocity_based_estimate
             snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
-            snippet += "<tr><th>#{l(:field_release)}</th><td>RELEASE</td></tr>"
+            snippet += "<tr><th>#{l(:field_release)}</th><td>#{RbRelease.find(issue.release_id).name}</td></tr>" unless issue.release_id.nil?
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
@@ -118,13 +118,9 @@ module BacklogsPlugin
             snippet += context[:form].text_field(:story_points, :size => 3)
             snippet += '</p>'
 
-            if issue.safe_attribute?('release_id') && issue.assignable_versions.any?
+            if issue.safe_attribute?('release_id') && issue.assignable_releases.any?
               snippet += '<p>'
               snippet += context[:form].select :release_id, release_options_for_select(issue.assignable_releases, issue.release), :include_blank => true 
-#<%= link_to_remote(image_tag('add.png', :style => 'vertical-align: middle;'),
-#                   {:url => new_project_version_path(issue.project), :method => 'get'},
-#                   :title => l(:label_version_new),
-#                   :tabindex => 200) if User.current.allowed_to?(:manage_versions, issue.project) %>
               snippet += '</p>'
             end
 

@@ -88,12 +88,15 @@ class RbRelease < ActiveRecord::Base
 
   belongs_to :project
   has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
+  has_many :issues, :class_name => 'Issue', :foreign_key => 'release_id', :dependent => :nullify
 
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
   include Backlogs::ActiveRecord::Attributes
+
+  def to_s; name end
 
   def dates_valid?
     errors.add(:base, l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date

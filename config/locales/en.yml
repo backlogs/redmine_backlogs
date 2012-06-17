@@ -64,6 +64,7 @@ en:
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_release: Release
   field_story_points: Story points
   field_subject: Subject
   field_tracker_id: Tracker ID
