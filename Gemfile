@@ -50,7 +50,7 @@ group :development do
   if RUBY_VERSION >= "1.9"
     gem "simplecov", "~>0.6"
   else
-    gem "rcov"
+    gem "rcov",  "=0.9.11"
   end
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
