@@ -60,4 +60,5 @@ group :development do
 end
 
 # moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
-gem "thin"
+# thin doesn't work for jruby
+gem "thin", :platforms => [:ruby]
