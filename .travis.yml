@@ -7,6 +7,9 @@ env:
   - REDMINE_VER=1
   - REDMINE_VER=2
   #- REDMINE_VER=cp
+matrix:
+  allow_failures:
+    - rvm: jruby-18mode
 
 install: "echo skip bundle install"
 
