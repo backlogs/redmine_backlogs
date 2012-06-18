@@ -5,27 +5,12 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
-    if @settings[:sharing_enabled]
-      if @settings[:sharing_mode] == 'subtree'
-        project_ids = Project.find(:all, :conditions=>Project.find(@project.id).project_condition(true)).map{|project| project.id} # FIXME (pa sharing) i'd like to make this easier in the scope condition but project_condition() is no array
-        sprints = @project.shared_versions.scoped(:conditions => {
-          :status => ['open', 'locked'],
-          :project_id => project_ids
-          }, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-      else
-        sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
-      end
-    else
-      sprints = RbSprint.open_sprints(@project)
-    end
+
+    #collect all sprints which are sharing into @project
+    sprints = @project.open_shared_sprints
 
     #TIB (ajout des sprints fermés)
-    if @settings[:disable_closed_sprints_to_master_backlogs]
-      c_sprints = []
-    else
-      c_sprints = RbSprint.closed_sprints(@project)
-      # FIXME (pa sharing) shared closed sprints not implemented yet
-    end
+    c_sprints = @project.closed_shared_sprints
 
     last_story = RbStory.find(
                           :first,
@@ -48,19 +33,10 @@ class RbMasterBacklogsController < RbApplicationController
 
     if @settings[:sharing_enabled]
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
-      projects = []
-      unless @sprint
-        projects = @project.self_and_descendants.active
+      unless @sprint #menu for product backlog
+        projects = @project.projects_in_shared_product_backlog
       else #menu for sprint
-        if @settings[:sharing_mode] == 'subtree'
-          p = @project.hierarchy # parents and descendants
-        else
-          p = Project.visible.find(:all, :order => 'lft') #exhaustive search FIXME (pa sharing)
-        end
-        p.each{|project|
-          project_version_ids = project.shared_versions.collect{|v| v.id} & [@sprint.id]
-          projects << project unless project_version_ids.empty?
-        }
+        projects = @sprint.shared_to_projects(@project)
       end
       #make the submenu or single link
       if !projects.empty?
@@ -73,7 +49,7 @@ class RbMasterBacklogsController < RbApplicationController
           links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
         end
       end
-    else
+    else #no sharing, only own project in the menu
       links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
     end
 

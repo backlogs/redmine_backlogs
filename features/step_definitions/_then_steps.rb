@@ -8,7 +8,7 @@ Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint")
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint", :visible => true)
   sprint_backlogs.length.should == count.to_i
 end
 
@@ -106,7 +106,7 @@ Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, sto
 end
 
 Then /^the server should return an update error$/ do
-  page.driver.response.status.should == 400
+  verify_request_status(400)
 end
 
 Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
@@ -307,25 +307,27 @@ Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new S
   project = get_project(arg3)
   links = page.all(:xpath, "//div[@id='sprint_#{sprint_id}']/..//a[contains(@class,'add_new_story')]")
   found = check_backlog_menu_new_story(links, project)
-  found.should be !!(neg=='')
+  found.should == !!(neg=='')
 end
 
 Then /^The menu of the product backlog should (.*)allow to create a new Story in project (.+)$/ do |neg, arg3|
   project = get_project(arg3)
   links = page.all(:css, "#product_backlog_container a.add_new_story")
   found = check_backlog_menu_new_story(links, project)
-  found.should be !!(neg=='')
+  found.should == !!(neg=='')
 end
 
 Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
   sprint_id = sprint_id_from_name(arg1.strip)
+#  page.should_not have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg != ''
+#  page.should have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg == ''
   begin
-    page.find(:css, "#sprint_#{sprint_id}")
+    page.find(:css, "#sprint_#{sprint_id}", :visible => true)
     found = true
   rescue
     found = false
   end
-  found.should be !!(neg=='')
+  found.should == !!(neg=='')
 end
 
 Then /^story (.+?) is unchanged$/ do |story_name|

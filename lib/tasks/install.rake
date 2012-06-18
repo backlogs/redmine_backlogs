@@ -27,7 +27,6 @@ namespace :redmine do
       # Necessary because adding key-value pairs one by one doesn't seem to work
       Backlogs.setting[:points_burn_direction] ||= 'down'
       Backlogs.setting[:wiki_template] ||= ''
-      Backlogs.setting[:sharing_mode] ||= 'versions'
 
       puts "\n"
       puts "====================================================="

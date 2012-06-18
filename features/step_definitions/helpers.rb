@@ -3,10 +3,14 @@ def get_project(identifier)
 end
 
 def verify_request_status(status)
-  page.driver.response.status.should equal(status),\
-    "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
-    "#{page.driver.response.status}\n"\
-    "#{page.driver.response.body}"
+  if page.driver.respond_to?('response') # javascript drivers has no response
+    page.driver.response.status.should equal(status),\
+      "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
+      "#{page.driver.response.status}\n"\
+      "#{page.driver.response.body}"
+  else
+    true
+  end
 end
 
 def story_before(rank, project, sprint=nil)
@@ -142,14 +146,6 @@ def show_table(title, header, data)
   }
 
   puts "\n\n"
-end
-
-def assert_page_loaded(page)
-  if page.driver.respond_to?('response') # javascript drivers has no response
-    page.driver.response.status.should == 200
-  else
-    true # no way to check javascript driver page status yet
-  end
 end
 
 def check_backlog_menu_new_story(links, project)
