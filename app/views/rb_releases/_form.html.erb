@@ -1,5 +1,6 @@
 <div class="box tabular">
-<%= labelled_fields_for :release, @release do |f| %>
+
+<% rb_labelled_fields_for :release, @release do |f| %>
   <p>
     <%= f.text_field :name, :required => true %>
   </p>
