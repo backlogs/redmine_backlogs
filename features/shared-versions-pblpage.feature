@@ -6,7 +6,6 @@ Feature: Shared versions
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And sharing is enabled
-      And sharing_mode is versions
       And I have defined the following projects:
         | name   |
         | p1     |
@@ -26,19 +25,21 @@ Feature: Shared versions
       And no versions or issues exist
       And I am a product owner of the project
       And I have defined the following sprints:
-        | name       | sprint_start_date | effective_date | sharing     | project_id    |
-        | Sp001      | 2010-01-01        | 2010-01-31     | none        | p1            |
-        | Sp002      | 2010-01-01        | 2010-01-31     | tree        | p1            |
-        | Sp003      | 2010-01-01        | 2010-01-31     | none        | p1s1          |
-        | Sp004      | 2010-01-01        | 2010-01-31     | hierarchy   | p1s1          |
-        | Sp005      | 2010-01-01        | 2010-01-31     | tree        | p1s1          |
-        | Sp006      | 2010-01-01        | 2010-01-31     | descendants | p1s1          |
-        | Sp007      | 2010-01-01        | 2010-01-31     | none        | p1s2          |
-        | Sp009      | 2010-01-01        | 2010-01-31     | none        | p1s1s1        |
-        | Sp010      | 2010-01-01        | 2010-01-31     | hierarchy   | p1s1s1        |
-        | Sp011      | 2010-01-01        | 2010-01-31     | none        | p2            |
-        | Sp012      | 2010-01-01        | 2010-01-31     | system      | p2            |
-        | Sp013      | 2010-01-01        | 2010-01-31     | none        | p1            |
+        | name       | sprint_start_date | effective_date | sharing     | project_id    | status |
+        | Sp001      | 2010-01-01        | 2010-01-31     | none        | p1            |        |
+        | Sp002      | 2010-01-01        | 2010-01-31     | tree        | p1            |        |
+        | Sp002c     | 2010-01-01        | 2010-01-31     | tree        | p1            | closed |
+        | Sp003      | 2010-01-01        | 2010-01-31     | none        | p1s1          |        |
+        | Sp004      | 2010-01-01        | 2010-01-31     | hierarchy   | p1s1          |        |
+        | Sp004c     | 2009-08-08        | 2009-09-08     | hierarchy   | p1s1          | closed |
+        | Sp005      | 2010-01-01        | 2010-01-31     | tree        | p1s1          |        |
+        | Sp006      | 2010-01-01        | 2010-01-31     | descendants | p1s1          |        |
+        | Sp007      | 2010-01-01        | 2010-01-31     | none        | p1s2          |        |
+        | Sp009      | 2010-01-01        | 2010-01-31     | none        | p1s1s1        |        |
+        | Sp010      | 2010-01-01        | 2010-01-31     | hierarchy   | p1s1s1        |        |
+        | Sp011      | 2010-01-01        | 2010-01-31     | none        | p2            |        |
+        | Sp012      | 2010-01-01        | 2010-01-31     | system      | p2            |        |
+        | Sp013      | 2010-01-01        | 2010-01-31     | none        | p1            |        |
 
       And I have defined the following stories in the following sprints:
         | subject | sprint     | project_id    |
@@ -274,4 +275,27 @@ Feature: Shared versions
       And I should see the backlog of Sprint Sp011
       And I should see the backlog of Sprint Sp012
       And I should not see the backlog of Sprint Sp013
+
+  @javascript
+  Scenario: View closed sprints on toplevel project
+    Given I have selected the p1 project
+      And I am viewing the master backlog
+     Then I should see the product backlog
+      And I should not see the backlog of Sprint Sp002c
+      And I should not see the backlog of Sprint Sp004c
+     When I follow "Show Completed Sprints"
+     Then I should see the backlog of Sprint Sp002c
+      And I should see the backlog of Sprint Sp004c
+
+  @javascript
+  Scenario: View closed sprints on the middle project
+    Given I have selected the p1s1 project
+      And I am viewing the master backlog
+     Then I should see the product backlog
+      And I should not see the backlog of Sprint Sp002c
+      And I should not see the backlog of Sprint Sp004c
+     When I follow "Show Completed Sprints"
+     Then I should see the backlog of Sprint Sp002c
+      And I should see the backlog of Sprint Sp004c
+
 
