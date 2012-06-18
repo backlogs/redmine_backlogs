@@ -51,7 +51,7 @@ def initialize_task_params(story_id)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
-  params['status_id'] = IssueStatus.find(:first).id
+  params['status_id'] = IssueStatus.default.id
   params
 end
 
@@ -61,7 +61,7 @@ def initialize_impediment_params(sprint_id)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['fixed_version_id'] = sprint_id
-  params['status_id'] = IssueStatus.find(:first).id
+  params['status_id'] = IssueStatus.default.id
   params
 end
 
