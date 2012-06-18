@@ -11,6 +11,11 @@ matrix:
   allow_failures:
     - rvm: jruby-18mode
     - env: REDMINE_VER=cp
+  exclude:
+    - rvm: jruby-18mode
+      env: REDMINE_VER=2
+    - rvm: jruby-18mode
+      env: REDMINE_VER=cp
 
 install: "echo skip bundle install"
 
