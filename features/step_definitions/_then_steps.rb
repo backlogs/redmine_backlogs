@@ -283,3 +283,12 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks = RbTask.find(:all, :conditions => { :subject => task_subject, :parent_id => stories.first.id })
   tasks.length.should == 1
 end
+
+#only with phantomjs driver:
+Then /^show me a screenshot at (.+)$/ do |arg1|
+  page.driver.render(arg1, :full=>true)
+end
+
+Then /^open the remote inspector$/ do
+  page.driver.debug
+end

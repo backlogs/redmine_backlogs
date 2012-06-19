@@ -488,3 +488,17 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
   end
 end
 
+Given /^I have defined the following releases:$/ do |table|
+  RbRelease.delete_all
+  table.hashes.each do |release|
+    release['project_id'] = get_project((release.delete('project')||'ecookbook')).id
+    RbRelease.create! release
+  end
+end
+
+Given /^I view the release page$/ do
+  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
+  click_link("Releases")
+end
+
+
