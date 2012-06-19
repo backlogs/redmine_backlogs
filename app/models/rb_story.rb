@@ -18,6 +18,8 @@ class RbStory < Issue
     sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
     sprint_ids = sprint_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if sprint_ids
 
+    release_id = options.delete(:release)
+
     permission = options.delete(:permission)
     permission = false if permission.nil?
 
@@ -40,15 +42,23 @@ class RbStory < Issue
     if Backlogs.settings[:sharing_enabled]
       sprint_condition = ["
         tracker_id in (?)
+        and release_id is NULL
         and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
     else
       sprint_condition = ["
         project_id = ?
         and tracker_id in (?)
+        and release_id is NULL
         and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
     end
+    release_condition = ["
+      tracker_id in (?)
+      and fixed_version_id is NULL
+      and release_id = ?", RbStory.trackers, release_id]
 
-    if sprint_ids.nil?
+    if release_id
+      Backlogs::ActiveRecord.add_condition(options, release_condition)
+    elsif sprint_ids.nil?
       Backlogs::ActiveRecord.add_condition(options, pbl_condition)
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
@@ -61,14 +71,15 @@ class RbStory < Issue
     return options
   end
 
-  def self.backlog(project_id, sprint_id, options={})
+  def self.backlog(project_id, sprint_id, release_id, options={})
     stories = []
 
     prev = nil
     RbStory.visible.find(:all, RbStory.find_options(options.merge({
       :project => project_id,
       :sprint => sprint_id,
-      :order => 'issues.position',
+      :release => release_id,
+      :order => 'issues.position'
     }))).each_with_index {|story, i|
       stories << story
 
@@ -84,11 +95,15 @@ class RbStory < Issue
   end
 
   def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(project.id, nil, :limit => limit)
+    return RbStory.backlog(project.id, nil, nil, :limit => limit)
   end
 
   def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(sprint.project.id, sprint.id, options)
+    return RbStory.backlog(sprint.project.id, sprint.id, nil, options)
+  end
+
+  def self.release_backlog(release, options={})
+    return RbStory.backlog(release.project.id, nil, release.id, options)
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})

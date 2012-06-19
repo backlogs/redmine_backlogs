@@ -25,6 +25,15 @@ Then /^show me release (.+)$/ do |release_name|
   release.issues.each{|issue| puts "  Issue: #{issue}" }
 end
 
+Then /^show me the release backlog of (.+)$/ do |release_name|
+  release = RbRelease.find_by_name(release_name)
+  release.should_not be_nil
+  puts "Release backlog for: #{release}"
+  RbStory.release_backlog(release).each{|issue|
+    puts "  #{issue}"
+  }
+end
+
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
   release = RbRelease.find_by_name(release_name)
   release.should_not be_nil

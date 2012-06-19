@@ -73,3 +73,16 @@ Feature: Product Owner
       And I press "Save"
      Then I should see "Successful update"
       And I should see "A changed release" within "#content"
+
+  @javascript
+  Scenario: Add a story to a release
+    Given I view the release page
+     Then show me the releases
+     Then show me release Rel 1
+     When I add story Story 1 to release Rel 1
+     Then story Story 1 should belong to release Rel 1
+     Then show me release Rel 1
+#     Then I should see the product backlog
+#      And I should see 4 stories in the product backlog
+#      And I should see 1 sprint backlogs
+     Then show me the release backlog of Rel 1

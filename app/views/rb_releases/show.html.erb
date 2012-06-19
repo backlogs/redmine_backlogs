@@ -49,6 +49,12 @@
 </div>
 <% end %>
 
+<div id="releasebacklog">
+<h3>Release Backlog</h3>
+<% RbStory.release_backlog(@release).each{|story| %>
+<p><%= story.subject %></p>
+<% } %>
+</div>
 
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>
