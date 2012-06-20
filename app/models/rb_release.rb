@@ -100,7 +100,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories
-    return RbStory.stories_open(@project)
+    return RbStory.stories_open(project)
   end
 
   def burndown_days
