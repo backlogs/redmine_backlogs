@@ -7,9 +7,7 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :create_stories
   role.permissions << :update_stories
   role.permissions << :view_releases
-  role.permissions << :create_releases
-  role.permissions << :update_releases
-  role.permissions << :destroy_releases
+  role.permissions << :modify_releases
   role.permissions << :view_scrum_statistics
   role.save!
   login_as_product_owner
