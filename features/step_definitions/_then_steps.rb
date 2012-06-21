@@ -379,6 +379,7 @@ Then /^I should see a msgbox with "([^"]*)"$/ do |arg1|
   msg.text.strip.should == arg1.strip
 end
 
+#only with phantomjs driver:
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1, :full=>true)
 end
@@ -390,4 +391,3 @@ end
 Then /^open the remote inspector$/ do
   page.driver.debug
 end
-

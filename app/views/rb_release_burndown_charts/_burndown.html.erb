@@ -81,7 +81,12 @@
 
     function burndown_configure(cb)
     {
-      disabled = '|' + RB.$.cookies.get('release_burndown_series') + '|';
+      var series = '';
+      try {
+        series =  RB.$.cookies.get('release_burndown_series');
+      } catch(e) {}
+
+      disabled = '|' + series + '|';
 
       if (!(cb == undefined)) {
         _disabled = [];
