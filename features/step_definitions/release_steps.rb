@@ -1,17 +1,3 @@
-Given /^I have defined the following releases:$/ do |table|
-  @project.releases.delete_all
-  table.hashes.each do |release|
-    release['project_id'] = get_project((release.delete('project')||'ecookbook')).id
-    puts "Creating release #{release['name']}"
-    RbRelease.create! release
-  end
-end
-
-Given /^I view the release page$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
-  click_link("Releases")
-end
-
 Then /^show me the releases$/ do
   RbRelease.find(:all).each{|release|
     puts "Release: #{release}"
