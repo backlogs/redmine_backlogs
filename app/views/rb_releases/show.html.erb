@@ -1,6 +1,6 @@
 <div class="contextual">
 <%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases', :action => 'edit',    :release_id => @release}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
-<%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del', :method => :delete %>
 </div>
 
 <h2><%= h @release.name %></h2>

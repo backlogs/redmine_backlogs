@@ -7,9 +7,7 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :create_stories
   role.permissions << :update_stories
   role.permissions << :view_releases
-  role.permissions << :create_releases
-  role.permissions << :update_releases
-  role.permissions << :destroy_releases
+  role.permissions << :modify_releases
   role.permissions << :view_scrum_statistics
   role.save!
   login_as_product_owner
@@ -537,7 +535,6 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
   end
 end
 
-
 Given /^I have defined the following projects:$/ do |table|
   table.hashes.each do |project|
     name = project.delete('name')
@@ -559,3 +556,17 @@ end
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
 end
+
+Given /^I have defined the following releases:$/ do |table|
+  RbRelease.delete_all
+  table.hashes.each do |release|
+    release['project_id'] = get_project((release.delete('project')||'ecookbook')).id
+    RbRelease.create! release
+  end
+end
+
+Given /^I view the release page$/ do
+  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
+  click_link("Releases")
+end
+

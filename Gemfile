@@ -50,7 +50,7 @@ group :development do
   if RUBY_VERSION >= "1.9"
     gem "simplecov", "~>0.6"
   else
-    gem "rcov"
+    gem "rcov",  "=0.9.11"
   end
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
@@ -60,4 +60,5 @@ group :development do
 end
 
 # moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
-gem "thin"
+# thin doesn't work for jruby
+gem "thin", :platforms => [:ruby]

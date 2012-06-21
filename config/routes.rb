@@ -1,3 +1,14 @@
+def rb_match(object, path, hash)
+  if Rails::VERSION::MAJOR < 3
+    hash[:controller] = hash[:to].split('#')[0].to_sym
+    hash[:action] = hash[:to].split('#')[1]
+    hash.delete(:to)
+    object.connect path, hash
+  else
+    match path, hash
+  end
+end
+
 if Rails::VERSION::MAJOR < 3
 ActionController::Routing::Routes.draw do |map|
   # Use rb/ as a URL 'namespace.' We're using a slightly different URL pattern
@@ -12,115 +23,167 @@ ActionController::Routing::Routes.draw do |map|
     rb.resources  :release,          :only => :new,                 :controller => :rb_releases,        :as => "release/:project_id",   :new => { :new => :post }
     rb.resources  :releases,         :only => :index,               :controller => :rb_releases,        :as => "releases/:project_id"
 
-    rb.connect    'issues/backlog/product/:project_id',             :controller => :rb_queries,           :action => 'show'
-    rb.connect    'issues/backlog/sprint/:sprint_id',               :controller => :rb_queries,           :action => 'show'
-    rb.connect    'issues/impediments/sprint/:sprint_id',           :controller => :rb_queries,           :action => 'impediments'
+    rb_match rb, 'issues/backlog/product/:project_id',
+                 :to => 'rb_queries#show'
+    rb_match rb, 'issues/backlog/sprint/:sprint_id',
+                 :to => 'rb_queries#show'
+    rb_match rb, 'issues/impediments/sprint/:sprint_id',
+                 :to => 'rb_queries#impediments'
 
-    rb.connect    'statistics',                                     :controller => :rb_all_projects,      :action => 'statistics'
+    rb_match rb, 'statistics',
+                 :to => 'rb_all_projects#statistics'
 
-    rb.connect    'server_variables/project/:project_id.js',        :controller => :rb_server_variables,  :action => 'project', :format => 'js'
-    rb.connect    'server_variables/project/:project_id',           :controller => :rb_server_variables,  :action => 'project', :format => nil
-    rb.connect    'server_variables/sprint/:sprint_id.js',          :controller => :rb_server_variables,  :action => 'sprint', :format => 'js'
-    rb.connect    'server_variables/sprint/:sprint_id',             :controller => :rb_server_variables,  :action => 'sprint', :format => nil
-    rb.connect    'server_variables.js',                            :controller => :rb_server_variables,  :action => 'index', :format => 'js'
-    rb.connect    'server_variables',                               :controller => :rb_server_variables,  :action => 'index', :format => nil
+    rb_match rb, 'server_variables/project/:project_id.js',
+                 :to => 'rb_server_variables#project', :format => 'js'
+    rb_match rb, 'server_variables/project/:project_id',
+                 :to => 'rb_server_variables#project', :format => nil
+    rb_match rb, 'server_variables/sprint/:sprint_id.js',
+                 :to => 'rb_server_variables#sprint', :format => 'js'
+    rb_match rb, 'server_variables/sprint/:sprint_id',
+                 :to => 'rb_server_variables#sprint', :format => nil
+    rb_match rb, 'server_variables.js',
+                 :to => 'rb_server_variables#index', :format => 'js'
+    rb_match rb, 'server_variables',
+                 :to => 'rb_server_variables#index', :format => nil
 
-    rb.connect    'master_backlog/:project_id',                     :controller => :rb_master_backlogs,   :action => 'show'
-    rb.connect    'master_backlog/:project_id/menu.json',           :controller => :rb_master_backlogs,   :action => 'menu', :format => 'json'
+    rb_match rb, 'master_backlog/:project_id',
+                 :to => 'rb_master_backlogs#show'
+    rb_match rb, 'master_backlog/:project_id/menu.json',
+                 :to => 'rb_master_backlogs#menu', :format => 'json'
 
-    rb.connect    'impediment/create',                              :controller => :rb_impediments,       :action => 'create'
-    rb.connect    'impediment/update/:id',                          :controller => :rb_impediments,       :action => 'update'
+    rb_match rb, 'impediment/create',
+                 :to => 'rb_impediments#create'
+    rb_match rb, 'impediment/update/:id',
+                 :to => 'rb_impediments#update'
 
-    rb.connect    'sprint/create',                                  :controller => :rb_sprints,          :action => 'create'
-    rb.connect    'sprint/:sprint_id/update',                       :controller => :rb_sprints,          :action => 'update'
-    rb.connect    'sprint/:sprint_id/reset',                        :controller => :rb_sprints,          :action => 'reset'
-    rb.connect    'sprint/download/:sprint_id.xml',                 :controller => :rb_sprints,          :action => 'download', :format => 'xml'
-    rb.connect    'sprints/:project_id/close_completed',            :controller => :rb_sprints,          :action => 'close_completed'
+    rb_match rb, 'sprint/create',
+                 :to => 'rb_sprints#create'
+    rb_match rb, 'sprint/:sprint_id/update',
+                 :to => 'rb_sprints#update'
+    rb_match rb, 'sprint/:sprint_id/reset',
+                 :to => 'rb_sprints#reset'
+    rb_match rb, 'sprint/download/:sprint_id.xml',
+                 :to => 'rb_sprints#download', :format => 'xml'
+    rb_match rb, 'sprints/:project_id/close_completed',
+                 :to => 'rb_sprints#close_completed'
 
-    rb.connect    'stories/sprint/:sprint_id.pdf',                  :controller => :rb_stories,          :action => 'index', :format => 'pdf'
-    rb.connect    'stories/project/:project_id.pdf',                :controller => :rb_stories,          :action => 'index', :format => 'pdf'
-    rb.connect    'story/create',                                   :controller => :rb_stories,          :action => 'create'
-    rb.connect    'story/update/:id',                               :controller => :rb_stories,          :action => 'update'
+    rb_match rb, 'stories/sprint/:sprint_id.pdf',
+                 :to => 'rb_stories#index', :format => 'pdf'
+    rb_match rb, 'stories/project/:project_id.pdf',
+                 :to => 'rb_stories#index', :format => 'pdf'
+    rb_match rb, 'story/create',
+                 :to => 'rb_stories#create'
+    rb_match rb, 'story/update/:id',
+                 :to => 'rb_stories#update'
 
-    rb.connect    'calendar/:key/:project_id.ics',                  :controller => :rb_calendars,        :action => 'ical', :format => 'xml'
+    rb_match rb, 'calendar/:key/:project_id.ics',
+                 :to => 'rb_calendars#ical', :format => 'xml'
 
-    rb.connect    'burndown/:sprint_id',                            :controller => :rb_burndown_charts,  :action => 'show'
-    rb.connect    'burndown/:sprint_id/embed',                      :controller => :rb_burndown_charts,  :action => 'embedded'
-    rb.connect    'burndown/:sprint_id/print',                      :controller => :rb_burndown_charts,  :action => 'print'
+    rb_match rb, 'burndown/:sprint_id',
+                 :to => 'rb_burndown_charts#show'
+    rb_match rb, 'burndown/:sprint_id/embed',
+                 :to => 'rb_burndown_charts#embedded'
+    rb_match rb, 'burndown/:sprint_id/print',
+                 :to => 'rb_burndown_charts#print'
 
-    rb.connect    'hooks/sidebar/sprint/:sprint_id',                :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
-    rb.connect    'hooks/sidebar/project/:project_id',              :controller => :rb_hooks_render,     :action => 'view_issues_sidebar'
+    rb_match rb, 'hooks/sidebar/sprint/:sprint_id',
+                 :to => 'rb_hooks_render#view_issues_sidebar'
+    rb_match rb, 'hooks/sidebar/project/:project_id',
+                 :to => 'rb_hooks_render#view_issues_sidebar'
   end
 
 end
 
 else
   resource :rb, :only => :none do |rb|
-  match 'updated_items/:project_id', :to => 'rb_updated_items#show'
 
-  match 'queries/:project_id', :to => 'rb_queries#show'
-  match  'queries/:project_id/:sprint_id', :to => 'rb_queries#impediments'
+  # releases
+#  resources :projects do
+#    resources :releases, :only => [:index, :new,:show, :edit, :destroy, :snapshot], :controller => :rb_releases  do
+#      get 'snapshot', :on => :member 
+#      post 'edit', :on => :member
+#      post 'new', :on => :member
+#    end
+#  end
 
-  match 'wikis/:sprint_id', :to => 'rb_wikis#show'
-  match 'wikis/:sprint_id', :to => 'rb_wikis#edit'
+  rb_match rb, 'releases/:project_id',
+               :to => 'rb_releases#index', :via => [:get]
+  rb_match rb, 'release/:project_id/new',
+               :to => 'rb_releases#new', :via => [:get, :post]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#show', :via => [:get]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#destroy', :via => [:delete]
+  rb_match rb, 'release/:release_id/edit',
+               :to => 'rb_releases#edit', :via => [:get, :post]
+  rb_match rb, 'release/:release_id/shapshot',
+               :to => 'rb_releases#snapshot', :via => [:get]
+
+
+  rb_match rb, 'updated_items/:project_id', :to => 'rb_updated_items#show'
+
+  rb_match rb, 'queries/:project_id', :to => 'rb_queries#show'
+  rb_match rb, 'queries/:project_id/:sprint_id', :to => 'rb_queries#impediments'
+
+  rb_match rb, 'wikis/:sprint_id', :to => 'rb_wikis#show'
+  rb_match rb, 'wikis/:sprint_id', :to => 'rb_wikis#edit'
 
   resources :task, :except => :index, :controller => :rb_tasks
-  match 'tasks/:story_id', :to => 'rb_tasks#index'
+  rb_match rb, 'tasks/:story_id', :to => 'rb_tasks#index'
 
-  match 'taskboards/:sprint_id',
+  rb_match rb, 'taskboards/:sprint_id',
             :to => 'rb_taskboards#show'
 
-  match 'releases/:project_id', :to => 'rb_releases#index'
 
-  match 'staticstics', :to => 'rb_all_projects#statistics'
+  rb_match rb, 'staticstics', :to => 'rb_all_projects#statistics'
 
-  match 'server_variables/sprint/:sprint_id.js',
+  rb_match rb, 'server_variables/sprint/:sprint_id.js',
               :to => 'rb_server_variables#sprint',
               :format => 'js'
-  match 'server_variables/sprint/:sprint_id.js',
+  rb_match rb, 'server_variables/sprint/:sprint_id.js',
               :to => 'rb_server_variables#sprint',
               :format => nil
-  match 'server_variables.js',
+  rb_match rb, 'server_variables.js',
               :to => 'rb_server_variables#index',
               :format => 'js'
-  match 'server_variables.js',
+  rb_match rb, 'server_variables.js',
               :to => 'rb_server_variables#index',
               :format => nil
-  match 'server_variables/project/:project_id.js',
+  rb_match rb, 'server_variables/project/:project_id.js',
               :to => 'rb_server_variables#project',
               :format => 'js'
-  match 'server_variables/project/:project_id.js',
+  rb_match rb, 'server_variables/project/:project_id.js',
               :to => 'rb_server_variables#project',
               :format => nil
 
-  match 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
+  rb_match rb, 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
 
-  match 'master_backlog/:project_id/menu.json', :to => 'rb_master_backlogs#menu', :format => 'json'
+  rb_match rb, 'master_backlog/:project_id/menu.json', :to => 'rb_master_backlogs#menu', :format => 'json'
 
-  match 'impediment/create', :to => 'rb_impediments#create'
-  match 'impediment/update/:id', :to => 'rb_impediments#update'
+  rb_match rb, 'impediment/create', :to => 'rb_impediments#create'
+  rb_match rb, 'impediment/update/:id', :to => 'rb_impediments#update'
 
-  match 'sprint/create', :to => 'rb_sprints#create'
-  match 'sprint/:sprint_id/update', :to => 'rb_sprints#update'
-  match 'sprint/:sprint_id/reset', :to => 'rb_sprints#reset'
-  match 'sprint/download/:sprint_id.xml', :to => 'rb_sprints#download', :format => 'xml'
-  match 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed'
+  rb_match rb, 'sprint/create', :to => 'rb_sprints#create'
+  rb_match rb, 'sprint/:sprint_id/update', :to => 'rb_sprints#update'
+  rb_match rb, 'sprint/:sprint_id/reset', :to => 'rb_sprints#reset'
+  rb_match rb, 'sprint/download/:sprint_id.xml', :to => 'rb_sprints#download', :format => 'xml'
+  rb_match rb, 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed'
 
-  match 'stories/:project_id/:sprint_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
-  match 'stories/:project_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
-  match 'story/create', :to => 'rb_stories#create'
-  match 'story/update/:id', :to => 'rb_stories#update'
+  rb_match rb, 'stories/:project_id/:sprint_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
+  rb_match rb, 'stories/:project_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
+  rb_match rb, 'story/create', :to => 'rb_stories#create'
+  rb_match rb, 'story/update/:id', :to => 'rb_stories#update'
 
-  match 'calendar/:key/:project_id.ics', :to => 'rb_calendars#ical',
+  rb_match rb, 'calendar/:key/:project_id.ics', :to => 'rb_calendars#ical',
           :format => 'xml'
 
-  match 'burndown/:sprint_id',         :to => 'rb_burndown_charts#show'
-  match 'burndown/:sprint_id/embed',   :to => 'rb_burndown_charts#embedded'
-  match 'burndown/:sprint_id/print',   :to => 'rb_burndown_charts#print'
+  rb_match rb, 'burndown/:sprint_id',         :to => 'rb_burndown_charts#show'
+  rb_match rb, 'burndown/:sprint_id/embed',   :to => 'rb_burndown_charts#embedded'
+  rb_match rb, 'burndown/:sprint_id/print',   :to => 'rb_burndown_charts#print'
 
-  match 'hooks/sidebar/project/:project_id',
+  rb_match rb, 'hooks/sidebar/project/:project_id',
           :to => 'rb_hooks_render#view_issues_sidebar'
-  match 'hooks/sidebar/project/:project_id/:sprint_id',
+  rb_match rb, 'hooks/sidebar/project/:project_id/:sprint_id',
           :to => 'rb_hooks_render#view_issues_sidebar'
   end
 end

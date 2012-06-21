@@ -80,11 +80,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def status_id_or_default(story)
-    story.new_record? ? IssueStatus.find(:first, :order => "position ASC").id : story.status.id
+    story.new_record? ? IssueStatus.default.id : story.status.id
   end
 
   def status_label_or_default(story)
-    story.new_record? ? IssueStatus.find(:first, :order => "position ASC").name : story.status.name
+    story.new_record? ? IssueStatus.default.name : story.status.name
   end
 
   def sprint_html_id_or_empty(sprint)
@@ -224,6 +224,26 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       s << %(<optgroup label="#{h(l(:label_group_plural))}">#{groups}</optgroup>)
     end
     s.html_safe
+  end
+
+  # Streamline the difference between <%=  %> and <%  %>
+  def rb_labelled_fields_for(*args, &proc)
+    fields_string = labelled_fields_for(*args, &proc)
+    if Rails::VERSION::MAJOR < 3
+      fields_string
+    else
+      concat(fields_string)
+    end
+  end
+
+  # Streamline the difference between <%=  %> and <%  %>
+  def rb_labelled_form_for(*args, &proc)
+    form_string = labelled_form_for(*args, &proc)
+    if Rails::VERSION::MAJOR < 3
+      form_string
+    else
+      concat(form_string)
+    end
   end
 
 end

@@ -162,7 +162,6 @@ module BacklogsPrintableCards
         end
 
         doc = Nokogiri::XML(labels)
-        doc.remove_namespaces!
 
         doc.xpath('Glabels-templates/Template').each { |specs|
           label = nil
@@ -266,12 +265,11 @@ module BacklogsPrintableCards
       }
       raise "No template for #{template}" unless f
       label = Nokogiri::XML(Zlib::GzipReader.open(f))
-      label.remove_namespaces!
 
-      bounds = label.xpath('//Template/Label-rectangle')[0]
+      bounds = label.xpath('//ns:Template/ns:Label-rectangle', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points}
 
-      @card = label.xpath('//Objects')[0]
+      @card = label.xpath('//ns:Objects', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       @width = width
       @height = height
     end
@@ -286,7 +284,7 @@ module BacklogsPrintableCards
     end
 
     def style(b)
-      s = b.xpath('Span')[0]
+      s = b.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
       style = 'normal' if style == ''
       return {
@@ -351,10 +349,10 @@ module BacklogsPrintableCards
             when 'Object-text'
               dim = box(obj)
 
-              pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
+              pdf.fill_color = color(obj.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0], 'color') || default_fill_color
 
               content = ''
-              obj.xpath('Span')[0].children.each {|t|
+              obj.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0].children.each {|t|
                 if t.text?
                   content << t.text
                 elsif t.name == 'Field'
