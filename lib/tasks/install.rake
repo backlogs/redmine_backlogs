@@ -50,6 +50,10 @@ namespace :redmine do
         end
       end
 
+      if BacklogsPrintableCards::CardPageLayout.selected.blank? && BacklogsPrintableCards::CardPageLayout.available.size > 0 
+        Backlogs.setting[:card_spec] = BacklogsPrintableCards::CardPageLayout.available[0]
+      end
+
       trackers = Tracker.find(:all)
 
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
