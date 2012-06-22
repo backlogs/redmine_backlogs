@@ -11,6 +11,8 @@ module NavigationHelpers
     when /the home\s?page/
       '/'
 
+    when /project (.*) page/
+      url_for(:controller => :projects, :action => :show, :id => Project.find($1).id, :only_path => true)
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

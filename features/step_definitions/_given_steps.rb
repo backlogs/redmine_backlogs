@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'timecop'
 
+Given /^I am admin$/ do
+  login_as_admin
+end
+
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
