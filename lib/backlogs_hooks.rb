@@ -314,6 +314,10 @@ module BacklogsPlugin
         end
       end
 
+      def helper_projects_settings_tabs(context={})
+        context[:tabs] << {:name => 'backlogs', :action => :manage_project_backlogs, :partial => 'backlogs/projectsettings', :label => :label_backlogs}
+      end
+
     end
   end
 end
