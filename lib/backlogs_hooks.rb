@@ -315,7 +315,8 @@ module BacklogsPlugin
       end
 
       def helper_projects_settings_tabs(context={})
-        context[:tabs] << {:name => 'backlogs', :action => :manage_project_backlogs, :partial => 'backlogs/projectsettings', :label => :label_backlogs}
+        project = context[:project]
+        context[:tabs] << {:name => 'backlogs', :action => :manage_project_backlogs, :partial => 'backlogs/projectsettings', :label => :label_backlogs} if project.module_enabled?('backlogs')
       end
 
     end
