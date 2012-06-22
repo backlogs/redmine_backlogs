@@ -189,7 +189,7 @@ module Backlogs
         if Backlogs.setting[:sharing_enabled]
           self.self_and_descendants.active
         else
-          self
+          [self]
         end
         #TODO have an explicit association map which project shares its issues into other product backlogs
       end
