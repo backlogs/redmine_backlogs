@@ -32,21 +32,16 @@ class RbStory < Issue
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
 
+    pbl_condition = ["
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      and tracker_id in (?)
+      and fixed_version_id is NULL
+      and is_closed = ?", RbStory.trackers, false]
     if Backlogs.settings[:sharing_enabled]
-      pbl_condition = ["
-        (#{Project.find(project_id).project_condition(true)})
-        and tracker_id in (?)
-        and fixed_version_id is NULL
-        and is_closed = ?", RbStory.trackers, false]
       sprint_condition = ["
         tracker_id in (?)
         and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
     else
-      pbl_condition = ["
-        project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id is NULL
-        and is_closed = ?", project_id, RbStory.trackers, false]
       sprint_condition = ["
         project_id = ?
         and tracker_id in (?)
