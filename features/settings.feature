@@ -19,13 +19,14 @@ Feature: Configuration
   Scenario: view the project local settings
     Given I am a product owner of the project
       And I am viewing the backlog settings page for project ecookbook
-     Then show me a screenshot at /tmp/1.png
+     Then I should see "Show stories from subprojects"
+      And the "settings[show_stories_from_subprojects]" checkbox should be checked
+     When I uncheck "settings[show_stories_from_subprojects]"
+      And I press "Save"
      Then I should see "Show stories from subprojects"
       And the "settings[show_stories_from_subprojects]" checkbox should not be checked
      When I check "settings[show_stories_from_subprojects]"
       And I press "Save"
-     Then show me a screenshot at /tmp/2.png
      Then I should see "Show stories from subprojects"
-     Then show me a screenshot at /tmp/3.png
       And the "settings[show_stories_from_subprojects]" checkbox should be checked
 
