@@ -1,4 +1,4 @@
-<%= labelled_remote_form_for @project,
+<% rb_labelled_remote_form_for @project,
                    :as => :rb_projectsettings,
                    :url => { :controller => 'rb_master_backlogs', :action => 'projectsettings', :project_id => @project }, :method => 'post' do |f| %>
 

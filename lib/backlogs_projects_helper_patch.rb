@@ -21,6 +21,17 @@ module Backlogs
         call_hook(:helper_projects_settings_tabs, { :tabs => tabs })
         return tabs
       end
+
+      # Streamline the difference between <%=  %> and <%  %>
+      def rb_labelled_remote_form_for(*args, &proc)
+        form_string = labelled_remote_form_for(*args, &proc)
+        if Rails::VERSION::MAJOR < 3
+          form_string
+        else
+          concat(form_string)
+        end
+      end
+
     end
   end
 end
