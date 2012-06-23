@@ -8,7 +8,7 @@
 <p>
   <%= content_tag(:label, l(:backlogs_show_stories_from_subprojects_in_backlog)) %>
   <%= check_box_tag("settings[show_stories_from_subprojects]", 'enabled',
-      !Backlogs.settings["dont_show_stories_from_subprojects_#{@project.id}"]) %>
+      !Backlogs.setting["dont_show_stories_from_subprojects_#{@project.id}"]) %>
 </p>
 </div>
 <%= submit_tag(l(:button_save)) %>
