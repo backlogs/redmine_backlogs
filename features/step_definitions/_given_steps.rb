@@ -584,6 +584,10 @@ Given /^sharing is (.*)enabled$/ do |neg|
   Backlogs.setting[:sharing_enabled] = !!(neg=='')
 end
 
+Given /^the project selected not to include subprojects in the product backlog$/ do
+  Backlogs.setting["dont_show_stories_from_subprojects_#{@project.id}"]=true
+end
+
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
 end
