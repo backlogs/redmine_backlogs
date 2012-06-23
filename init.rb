@@ -68,6 +68,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :reset_sprint,         {
                                         :rb_sprints           => :reset
                                       }
+    permission :configure_backlogs,   { :rb_master_backlogs => :projectsettings }
     permission :view_master_backlog,  { 
                                         :rb_master_backlogs  => [:show, :menu],
                                         :rb_sprints          => [:index, :show, :download],

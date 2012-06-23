@@ -91,6 +91,16 @@ class RbMasterBacklogsController < RbApplicationController
     end
   end
 
+  def projectsettings
+    enabled = false
+    if params[:settings] and params[:settings]["show_stories_from_subprojects"]=="enabled"
+      enabled = true
+    end
+    Backlogs.setting["show_stories_from_subprojects_#{@project.id}"] = enabled
+    res = Backlogs.settings["show_stories_from_subprojects_#{@project.id}"]
+    render(:update) {|page| page.replace_html "tab-content-backlogs", :partial => 'backlogs/projectsettings'}
+  end
+
   if Rails::VERSION::MAJOR < 3
     def view_context
       @template

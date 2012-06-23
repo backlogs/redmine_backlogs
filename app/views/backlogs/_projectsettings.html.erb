@@ -1,2 +1,17 @@
-OJECTSETTINGPS
+<%= labelled_remote_form_for @project,
+                   :as => :rb_projectsettings,
+                   :url => { :controller => 'rb_master_backlogs', :action => 'projectsettings', :project_id => @project }, :method => 'post' do |f| %>
+
+<%= error_messages_for 'rb_projectsettings' %>
+
+<div class="box">
+<p>
+  <%= content_tag(:label, l(:backlogs_show_stories_from_subprojects_in_backlog)) %>
+  <%= check_box_tag("settings[show_stories_from_subprojects]", 'enabled',
+      Backlogs.settings["show_stories_from_subprojects_#{@project.id}"]) %>
+</p>
+</div>
+<%= submit_tag(l(:button_save)) %>
+<% end %>
+
 
