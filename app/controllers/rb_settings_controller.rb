@@ -1,4 +1,5 @@
 include RbCommonHelper
+include ProjectsHelper
 
 class RbSettingsController < RbApplicationController
   unloadable
