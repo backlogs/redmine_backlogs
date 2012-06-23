@@ -310,6 +310,11 @@ module BacklogsPlugin
         end
       end
 
+      def helper_projects_settings_tabs(context={})
+        project = context[:project]
+        context[:tabs] << {:name => 'backlogs', :action => :manage_project_backlogs, :partial => 'backlogs/projectsettings', :label => :label_backlogs} if project.module_enabled?('backlogs') and User.current.allowed_to?(:configure_backlogs, nil, :global=>true)
+      end
+
     end
   end
 end

@@ -33,6 +33,7 @@ object_to_prepare.to_prepare do
 
   require_dependency 'backlogs_my_controller_patch'
   require_dependency 'backlogs_issues_controller_patch'
+  require_dependency 'backlogs_projects_helper_patch'
 
   require_dependency 'backlogs_hooks'
 
@@ -67,6 +68,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :reset_sprint,         {
                                         :rb_sprints           => :reset
                                       }
+    permission :configure_backlogs,   { :rb_settings => :projectsettings }
     permission :view_master_backlog,  { 
                                         :rb_master_backlogs  => [:show, :menu],
                                         :rb_sprints          => [:index, :show, :download],

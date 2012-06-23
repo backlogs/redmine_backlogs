@@ -50,6 +50,8 @@ ActionController::Routing::Routes.draw do |map|
                  :to => 'rb_master_backlogs#show'
     rb_match rb, 'master_backlog/:project_id/menu.json',
                  :to => 'rb_master_backlogs#menu', :format => 'json'
+    rb_match rb, 'project/:id/backlogs',
+                 :to => 'rb_settings#projectsettings'
 
     rb_match rb, 'impediment/create',
                  :to => 'rb_impediments#create'
@@ -96,15 +98,6 @@ end
 
 else
   resource :rb, :only => :none do |rb|
-
-  # releases
-#  resources :projects do
-#    resources :releases, :only => [:index, :new,:show, :edit, :destroy, :snapshot], :controller => :rb_releases  do
-#      get 'snapshot', :on => :member 
-#      post 'edit', :on => :member
-#      post 'new', :on => :member
-#    end
-#  end
 
   rb_match rb, 'releases/:project_id',
                :to => 'rb_releases#index', :via => [:get]
@@ -159,6 +152,8 @@ else
   rb_match rb, 'master_backlog/:project_id', :to => 'rb_master_backlogs#show'
 
   rb_match rb, 'master_backlog/:project_id/menu.json', :to => 'rb_master_backlogs#menu', :format => 'json'
+
+  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_settings#projectsettings'
 
   rb_match rb, 'impediment/create', :to => 'rb_impediments#create'
   rb_match rb, 'impediment/update/:id', :to => 'rb_impediments#update'
