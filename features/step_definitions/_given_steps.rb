@@ -13,6 +13,7 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :view_releases
   role.permissions << :modify_releases
   role.permissions << :view_scrum_statistics
+  role.permissions << :configure_backlogs
   role.save!
   login_as_product_owner
   @projects.each{|project|
@@ -78,6 +79,11 @@ end
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  verify_request_status(200)
+end
+
+Given /^I am viewing the backlog settings page for project (.*)$/ do |project_name|
+  visit url_for(:controller => :projects, :action => :settings, :id => Project.find(project_name).id, :tab => 'backlogs', :only_path=>true)
   verify_request_status(200)
 end
 

@@ -191,3 +191,4 @@ en:
   backlogs_new_story_position_bottom: bottom (requires restart)
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
+  backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
