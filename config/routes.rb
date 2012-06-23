@@ -70,7 +70,7 @@ ActionController::Routing::Routes.draw do |map|
     rb_match rb, 'master_backlog/:project_id/menu.json',
                  :to => 'rb_master_backlogs#menu', :format => 'json'
     rb_match rb, 'project/:id/backlogs',
-                 :to => 'rb_master_backlogs#projectsettings'
+                 :to => 'rb_settings#projectsettings'
 
     rb_match rb, 'impediment/create',
                  :to => 'rb_impediments#create'
@@ -169,7 +169,7 @@ else
 
   rb_match rb, 'master_backlog/:project_id/menu.json', :to => 'rb_master_backlogs#menu', :format => 'json'
 
-  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_master_backlogs#projectsettings'
+  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_settings#projectsettings'
 
   rb_match rb, 'impediment/create', :to => 'rb_impediments#create'
   rb_match rb, 'impediment/update/:id', :to => 'rb_impediments#update'
