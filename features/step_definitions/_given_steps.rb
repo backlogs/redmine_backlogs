@@ -165,6 +165,10 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
 end
 
+Given /^backlogs setting show_burndown_in_sidebar is enabled$/ do
+    Backlogs.setting[:show_burndown_in_sidebar] = 'enabled' #app/views/backlogs/view_issues_sidebar.html.erb
+end
+
 Given /^I have defined the following sprints:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
@@ -484,6 +488,14 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
     field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]')['id']
     choose(field_id)
   end
+end
+
+Given /^the current date is (.+)$/ do |new_time|
+  Timecop.travel(Date.parse(new_time))
+end
+
+Given /^the current time is restored$/ do
+  Timecop.return
 end
 
 Given /^I have defined the following releases:$/ do |table|
