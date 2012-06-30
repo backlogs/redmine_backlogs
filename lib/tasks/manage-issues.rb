@@ -11,6 +11,7 @@ config[:oauth_token] = config.delete('token')
 
 REPO = "backlogs/redmine_backlogs"
 CLIENT = Octokit::Client.new(config)
+
 STATES = {
   'IMPORTANT-READ'    =>  [:keep, :no_feedback_required],
   'on-hold'           =>  [:keep, :no_feedback_required],
@@ -31,18 +32,20 @@ class Issue
     @comments = CLIENT.issue_comments(REPO, @id)
   end
 
-  def states(cond)
+  def self.states(cond)
     return STATES.keys.select{|k| STATES[k] == cond || (STATES[k].is_a?(Array) && STATES[k].include?(cond))}
   end
 
   def labels(action = nil)
     return @labels if action.nil?
 
+    oldlabels = @labels.dup
+
     l = @labels.reject{|l| l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
 
     if @comments.size > 0
       # last comment by a repo committer and not labeled with a 'no-feedback-required' label
-      if @@collaborators.include?(@comments[-1].user.login) && (l & states(:no_feedback_required)).size == 0
+      if @@collaborators.include?(@comments[-1].user.login) && (l & Issue.states(:no_feedback_required)).size == 0
         l << "feedback-required"
 
         last_non_collab_comment = nil
@@ -65,11 +68,26 @@ class Issue
     end
 
     @labels = l.compact.uniq.collect{|lb| lb.downcase}
-    CLIENT.replace_all_labels(REPO, @id, @labels)
+    repolabels = {}
+    CLIENT.labels(REPO).each{|l| repolabels[l.name] = l}
+
+    # remove unused labels from the issue
+    (oldlabels - @labels).each{|l| CLIENT.remove_label(REPO, @issue.number, l) }
+
+    # pre-declare new labels
+    (@labels - repolabels.keys).each {|label| CLIENT.add_label(REPO, label) }
+    # add new labels
+    CLIENT.add_labels_to_an_issue(REPO, @issue.number, (@labels - oldlabels))
+
+    @labels
   end
 
   attr_reader :id, :comments
 end
 
 issues = CLIENT.list_issues(REPO, :state => 'open').collect{|i| Issue.new(i)}
-issues.each{|issue| issue.labels(:recalc) }
+labels = Issue.states(:keep)
+issues.each{|issue| labels = labels + issue.labels(:recalc) }
+labels.uniq!
+puts (CLIENT.labels(REPO).collect{|l| l.name} - labels).inspect
+#(CLIENT.labels(REPO).collect{|l| l.name} - labels).each {|label| CLIENT.delete_label(REPO, label) }
