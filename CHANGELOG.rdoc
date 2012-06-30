@@ -1,3 +1,21 @@
+== 2012-06-30 v0.9.16
+
+* Fix redmine2 sidebar on apache with relative url root, from patrickatamaniuk/tests/sidebar
+* Fix issues sidebar is not displayed when installed to suburi (Rails 3)
+* give product owner modify_releases permission
+* security enhancements
+* more automated tests
+* Fixes for releases
+* Rails 3 compatibility fixes
+* Select a default label if none was selected (fixes "Printable cards option not showing with Bitanmi Redmine 2.0.2")
+* Postgresql compatibilities
+
+== 2012-06-13 v0.9.15
+
+* Looser support restrictions
+* "Locales are broken for 1.9.3"
+* Fixes for CustomizedField 
+
 == 2012-06-12 v0.9.14
 * Online version check
 * Fixes "Install task: can't modify frozen Hash ".
