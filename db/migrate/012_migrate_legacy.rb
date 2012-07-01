@@ -95,8 +95,14 @@ class MigrateLegacy < ActiveRecord::Migration
         stories.each { |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
+          story = nil
+          begin
+            story = RbStory.find(id)
+          rescue ActiveRecord::RecordNotFound
+            say "Skipping non-existant story #{id}"
+            next
+          end
           say "Updating story #{id}"
-          story = RbStory.find(id)
 
           if ! RbStory.trackers.include?(story.tracker_id)
             raise "Project #{project} does not have a story tracker configured" unless trackers[project] && trackers[project][:story]
