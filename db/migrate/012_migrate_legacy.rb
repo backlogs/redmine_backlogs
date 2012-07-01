@@ -99,7 +99,7 @@ class MigrateLegacy < ActiveRecord::Migration
           story = RbStory.find(id)
 
           if ! RbStory.trackers.include?(story.tracker_id)
-            raise "Project #{project} does not have a story tracker configured" unless trackers[project][:story]
+            raise "Project #{project} does not have a story tracker configured" unless trackers[project] && trackers[project][:story]
             story.tracker_id = trackers[project][:story]
             story.save!
           end
