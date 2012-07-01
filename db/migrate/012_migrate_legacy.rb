@@ -99,7 +99,7 @@ class MigrateLegacy < ActiveRecord::Migration
           begin
             story = RbStory.find(id)
           rescue ActiveRecord::RecordNotFound
-            say "Skipping non-existant story #{id}"
+            say "Skipping non-existent story #{id}"
             next
           end
           say "Updating story #{id}"
