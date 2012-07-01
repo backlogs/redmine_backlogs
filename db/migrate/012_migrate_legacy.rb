@@ -95,6 +95,13 @@ class MigrateLegacy < ActiveRecord::Migration
         stories.each { |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
+          begin
+            Project.find(project)
+          rescue ActiveRecord::RecordNotFound
+            say "Skipping story #{id} on non-existent project #{project}"
+            next
+          end
+
           story = nil
           begin
             story = RbStory.find(id)
