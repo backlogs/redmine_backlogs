@@ -1,5 +1,7 @@
 class MigrateLegacy < ActiveRecord::Migration
   def self.normalize_value(v, t)
+    v = v[1] if v.is_a?(Array)
+
     return nil if v.class == NilClass
 
     case t
