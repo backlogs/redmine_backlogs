@@ -1,3 +1,7 @@
+== 2012-06-30 v0.9.18
+
+* Postgresql fixes
+
 == 2012-06-30 v0.9.16
 
 * Fix redmine2 sidebar on apache with relative url root, from patrickatamaniuk/tests/sidebar
