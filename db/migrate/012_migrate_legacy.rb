@@ -6,13 +6,15 @@ class MigrateLegacy < ActiveRecord::Migration
 
     case t
       when :int
-        return Integer(v)
+        v = v.to_s
+        v.gsub(/\.[0-9]*$/, '')
+        return (v.to_s =~ /^[0-9]+$/ ? Integer(v) : nil)
 
       when :bool
         if [TrueClass, FalseClass].include?(v.class)
           return v
         else
-          return ! (['', '0'].include?("#{v}"))
+          return ! (['', '0', 'false', 'f'].include?("#{v}"))
         end
 
       else
@@ -29,18 +31,11 @@ class MigrateLegacy < ActiveRecord::Migration
   end
 
   def self.up
-    begin
-      execute "select count(*) from backlogs"
-      legacy = true
-    rescue
-      legacy = false
-    end
-
     adapter = ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter].downcase
 
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
-    if legacy
+    if ActiveRecord::Base.connection.tables.include?('backlogs')
       RbStory.reset_column_information
       Issue.reset_column_information
       RbTask.reset_column_information
