@@ -90,7 +90,7 @@ class MigrateLegacy < ActiveRecord::Migration
           left join backlogs sprint on story.backlog_id = sprint.id and sprint.id <> 0
           left join versions on versions.id = sprint.version_id and sprint.version_id <> 0
           where parent.id is null
-          order by coalesce(story.position, #{bottom}) desc, story.created_at desc"
+          order by coalesce(story.position, #{bottom}) asc, story.created_at asc"
 
         stories.each { |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
@@ -114,10 +114,7 @@ class MigrateLegacy < ActiveRecord::Migration
           story.story_points = points
           story.save!
 
-          # because we're inserting the stories last-first, this
-          # position gets shifted down 1 spot each time, yielding a
-          # neatly compacted position list
-          story.insert_at 1
+          story.move_to_bottom
         }
 
         tasks = execute "
