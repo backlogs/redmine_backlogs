@@ -159,8 +159,8 @@ class MigrateLegacy < ActiveRecord::Migration
           version, start_date, is_closed = MigrateLegacy.row(row, [:int, :string, :bool])
 
           status = connection.quote(is_closed ? 'closed' : 'open')
-          version = connection.quote(version == 0 ? nil : version)
-          start_date = connection.quote(start_date)
+          version = connection.quote(version == 0 || version.to_s.strip == '' ? nil : version)
+          start_date = connection.quote(start_date.to_s.strip == '' ? nil : start_date)
 
           execute "update versions set status = #{status}, sprint_start_date = #{start_date} where id = #{version}"
         }
