@@ -3,6 +3,10 @@ def rb_match(object, path, hash)
     hash[:controller] = hash[:to].split('#')[0].to_sym
     hash[:action] = hash[:to].split('#')[1]
     hash.delete(:to)
+    if hash[:via]
+      hash[:conditions] = { :method => hash[:via] }
+      hash.delete(:via)
+    end
     object.connect path, hash
   else
     match path, hash
