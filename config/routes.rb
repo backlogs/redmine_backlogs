@@ -9,6 +9,22 @@ def rb_match(object, path, hash)
   end
 end
 
+def rb_common_routes(rb)
+  rb_match rb, 'releases/:project_id',
+               :to => 'rb_releases#index', :via => [:get]
+  rb_match rb, 'release/:project_id/new',
+               :to => 'rb_releases#new', :via => [:get, :post]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#show', :via => [:get]
+  rb_match rb, 'release/:release_id',
+               :to => 'rb_releases#destroy', :via => [:delete]
+  rb_match rb, 'release/:release_id/edit',
+               :to => 'rb_releases#edit', :via => [:get, :post]
+  rb_match rb, 'release/:release_id/shapshot',
+               :to => 'rb_releases#snapshot', :via => [:get]
+
+end
+
 if Rails::VERSION::MAJOR < 3
 ActionController::Routing::Routes.draw do |map|
   # Use rb/ as a URL 'namespace.' We're using a slightly different URL pattern
@@ -19,9 +35,8 @@ ActionController::Routing::Routes.draw do |map|
     rb.resource   :task,             :except => :index,             :controller => :rb_tasks,           :as => "task/:id"
     rb.resources  :tasks,            :only => :index,               :controller => :rb_tasks,           :as => "tasks/:story_id"
     rb.resource   :taskboard,        :only => :show,                :controller => :rb_taskboards,      :as => "taskboards/:sprint_id"
-    rb.resource   :release, :only => [:show, :edit, :destroy, :snapshot], :controller => :rb_releases,  :as => "release/:release_id",   :member => {:snapshot => :get, :edit => :post}
-    rb.resources  :release,          :only => :new,                 :controller => :rb_releases,        :as => "release/:project_id",   :new => { :new => :post }
-    rb.resources  :releases,         :only => :index,               :controller => :rb_releases,        :as => "releases/:project_id"
+
+    rb_common_routes rb
 
     rb_match rb, 'issues/backlog/product/:project_id',
                  :to => 'rb_queries#show'
@@ -106,19 +121,7 @@ else
 #    end
 #  end
 
-  rb_match rb, 'releases/:project_id',
-               :to => 'rb_releases#index', :via => [:get]
-  rb_match rb, 'release/:project_id/new',
-               :to => 'rb_releases#new', :via => [:get, :post]
-  rb_match rb, 'release/:release_id',
-               :to => 'rb_releases#show', :via => [:get]
-  rb_match rb, 'release/:release_id',
-               :to => 'rb_releases#destroy', :via => [:delete]
-  rb_match rb, 'release/:release_id/edit',
-               :to => 'rb_releases#edit', :via => [:get, :post]
-  rb_match rb, 'release/:release_id/shapshot',
-               :to => 'rb_releases#snapshot', :via => [:get]
-
+    rb_common_routes rb
 
   rb_match rb, 'updated_items/:project_id', :to => 'rb_updated_items#show'
 
