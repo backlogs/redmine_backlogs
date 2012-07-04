@@ -72,7 +72,7 @@ module Backlogs
 
     return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
 
-    msg = "#{Redmine::VERSION} on #{RUBY_VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| v[:version]}.uniq.sort.join(' / ')}"
+    msg = "#{Redmine::VERSION} on #{RUBY_VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| "#{v[:version]} on #{v[:ruby]}"}.uniq.sort.join(' / ')}"
     raise msg if raise_error
     return msg
   end
