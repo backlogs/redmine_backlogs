@@ -11,6 +11,8 @@ supported = {
     {:version => '1.4', :ruby => '1.9.3'},
     {:version => '2.0', :ruby => '1.8.7'},
     {:version => '2.0', :ruby => '1.9.3'}
+    {:version => '1.4', :ruby => '1.9', :unsupported => true},
+    {:version => '2.0', :ruby => '1.9', :unsupported => true},
   ]
 }
 if ARGV[0].nil?
