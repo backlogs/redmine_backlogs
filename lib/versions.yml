@@ -1,5 +1,4 @@
 --- 
-:backlogs: v0.9.22
 :redmine: 
 - :version: "1.4"
   :ruby: 1.8.7
@@ -9,6 +8,13 @@
   :ruby: 1.8.7
 - :version: "2.0"
   :ruby: 1.9.3
+- :version: "1.4"
+  :ruby: "1.9"
+  :unsupported: true
+- :version: "2.0"
+  :ruby: "1.9"
+  :unsupported: true
+:backlogs: v0.9.23
 :chiliproject: 
 - :version: 3.1.0
   :ruby: 1.8.7
