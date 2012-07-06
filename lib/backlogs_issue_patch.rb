@@ -11,6 +11,7 @@ module Backlogs
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
+        safe_attributes 'position'
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
 
