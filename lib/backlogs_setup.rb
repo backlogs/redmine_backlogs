@@ -33,12 +33,7 @@ module Backlogs
   module_function :version
 
   def development?
-    return File.exist?(File.join(
-      case Rails::VERSION::MAJOR
-        when 2 then RAILS_ROOT.to_s
-        when 3 then Rails.root.to_s
-        else return false  end,
-      'backlogs.dev'))
+    return !Rails.env.production?
   end
   module_function :"development?"
 

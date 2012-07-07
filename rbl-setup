@@ -51,7 +51,7 @@ if [ -z "$PLATFORM" ]; then
 fi
 
 case $PLATFORM in
-  redmine)      VERSION=1.4.2;;
+  redmine)      VERSION=2.0.3;;
   chiliproject) VERSION=3.1.0;;
   *) errmsg "Unsupported platform '$PLATFORM'";;
 esac
@@ -110,7 +110,10 @@ if [ "$INSTALL" = "yes" ] ; then
   esac
 
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
-  ln -s "$WORKSPACE/redmine_backlogs" "$WORKSPACE/$PLATFORM-$RUBYVER/vendor/plugins"
+  case $PLATFORM in
+    redmine) ln -s "$WORKSPACE/redmine_backlogs" "$WORKSPACE/$PLATFORM-$RUBYVER/plugins";;
+    chiliproject) ln -s "$WORKSPACE/redmine_backlogs" "$WORKSPACE/$PLATFORM-$RUBYVER/vendor/plugins";;
+  esac
   ln -s "$WORKSPACE/redmine_backlogs/features" "$WORKSPACE/$PLATFORM-$RUBYVER"
   cp "$WORKSPACE/setup/$PLATFORM-$RUBYVER/database.yml" "$WORKSPACE/$PLATFORM-$RUBYVER/config/database.yml"
   echo rvm use `ruby --version | awk '{print $2}' | sed -e 's/p.*//'`@$PLATFORM > "$WORKSPACE/$PLATFORM-$RUBYVER/.rvmrc"
@@ -118,6 +121,7 @@ if [ "$INSTALL" = "yes" ] ; then
 fi
 
 if [ "$RVM" = "yes" -a "$GEMS" = "yes" ] ; then
+  rvm --force gemset empty global
   rvm --force gemset empty $PLATFORM
   case $RUBYVER in
     1.8) rvm rubygems 1.6.2;; # removes annoying "Gem.source_index is deprecated, use Specification." warnings
@@ -127,7 +131,6 @@ fi
 
 if [ "$GEMS" = "yes" ]; then
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
-  touch "$WORKSPACE/$PLATFORM-$RUBYVER/backlogs.dev"
   gem install bundler
 
   bundle install --system
@@ -164,11 +167,11 @@ if [ "$DATABASE" = "yes" ] ; then
   fi
 
   bundle exec rake $TRACE db:migrate
-  bundle exec rake $TRACE generate_session_store
+  bundle exec rake $TRACE generate_secret_token
   if [ ! -f "$WORKSPACE/setup/$PLATFORM.sql.gz" ]; then
     REDMINE_LANG=en bundle exec rake $TRACE redmine:load_default_data
   fi
-  bundle exec rake $TRACE db:migrate:plugins
+  bundle exec rake $TRACE redmine:plugins:migrate
   bundle exec rake $TRACE redmine:backlogs:prepare_fixtures
   labels=no story_trackers=Story task_tracker=Task bundle exec rake $TRACE redmine:backlogs:install
 fi
@@ -179,7 +182,7 @@ fi
 if [ "$INSTALL" = "yes" ] ; then
   command -v bundle >/dev/null 2>&1 || errmsg "Please set up gem environment first"
   cd "$WORKSPACE/$PLATFORM-$RUBYVER"
-  ./script/generate cucumber --skip --spork
+  #./script/generate cucumber --skip --spork
   rake redmine:backlogs:prepare_fixtures
 fi
 
