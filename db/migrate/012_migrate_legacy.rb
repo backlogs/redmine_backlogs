@@ -1,16 +1,20 @@
 class MigrateLegacy < ActiveRecord::Migration
   def self.normalize_value(v, t)
+    v = v[1] if v.is_a?(Array)
+
     return nil if v.class == NilClass
 
     case t
       when :int
-        return Integer(v)
+        v = v.to_s
+        v.gsub(/\.[0-9]*$/, '')
+        return (v.to_s =~ /^[0-9]+$/ ? Integer(v) : nil)
 
       when :bool
         if [TrueClass, FalseClass].include?(v.class)
           return v
         else
-          return ! (['', '0'].include?("#{v}"))
+          return ! (['', '0', 'false', 'f'].include?("#{v}"))
         end
 
       else
@@ -27,18 +31,11 @@ class MigrateLegacy < ActiveRecord::Migration
   end
 
   def self.up
-    begin
-      execute "select count(*) from backlogs"
-      legacy = true
-    rescue
-      legacy = false
-    end
-
     adapter = ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter].downcase
 
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
 
-    if legacy
+    if ActiveRecord::Base.connection.tables.include?('backlogs')
       RbStory.reset_column_information
       Issue.reset_column_information
       RbTask.reset_column_information
@@ -88,16 +85,29 @@ class MigrateLegacy < ActiveRecord::Migration
           left join backlogs sprint on story.backlog_id = sprint.id and sprint.id <> 0
           left join versions on versions.id = sprint.version_id and sprint.version_id <> 0
           where parent.id is null
-          order by coalesce(story.position, #{bottom}) desc, story.created_at desc"
+          order by coalesce(story.position, #{bottom}) asc, story.created_at asc"
 
         stories.each { |row|
           id, points, sprint, project = MigrateLegacy.row(row, [:int, :int, :int, :int])
 
+          begin
+            Project.find(project)
+          rescue ActiveRecord::RecordNotFound
+            say "Skipping story #{id} on non-existent project #{project}"
+            next
+          end
+
+          story = nil
+          begin
+            story = RbStory.find(id)
+          rescue ActiveRecord::RecordNotFound
+            say "Skipping non-existent story #{id}"
+            next
+          end
           say "Updating story #{id}"
-          story = RbStory.find(id)
 
           if ! RbStory.trackers.include?(story.tracker_id)
-            raise "Project #{project} does not have a story tracker configured" unless trackers[project][:story]
+            raise "Project #{project} does not have a story tracker configured" unless trackers[project] && trackers[project][:story]
             story.tracker_id = trackers[project][:story]
             story.save!
           end
@@ -106,10 +116,7 @@ class MigrateLegacy < ActiveRecord::Migration
           story.story_points = points
           story.save!
 
-          # because we're inserting the stories last-first, this
-          # position gets shifted down 1 spot each time, yielding a
-          # neatly compacted position list
-          story.insert_at 1
+          story.move_to_bottom
         }
 
         tasks = execute "
@@ -147,8 +154,8 @@ class MigrateLegacy < ActiveRecord::Migration
           version, start_date, is_closed = MigrateLegacy.row(row, [:int, :string, :bool])
 
           status = connection.quote(is_closed ? 'closed' : 'open')
-          version = connection.quote(version == 0 ? nil : version)
-          start_date = connection.quote(start_date)
+          version = connection.quote(version == 0 || version.to_s.strip == '' ? nil : version)
+          start_date = connection.quote(start_date.to_s.strip == '' ? nil : start_date)
 
           execute "update versions set status = #{status}, sprint_start_date = #{start_date} where id = #{version}"
         }

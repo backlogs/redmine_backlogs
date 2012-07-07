@@ -153,7 +153,11 @@ RB.Backlog = RB.Object.create({
   newStory: function() {
     var story = RB.$('#story_template').children().first().clone();
     
-    this.getList().prepend(story);
+    if (RB.constants.new_story_position == 'bottom') {
+      this.getList().append(story);
+    } else {
+      this.getList().prepend(story);
+    }
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();
