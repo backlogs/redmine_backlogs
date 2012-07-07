@@ -55,7 +55,7 @@ group :development do
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
   gem "timecop"
-  gem "octokit"
+  gem "github-v3-api"
   gem "inifile"
 end
 
