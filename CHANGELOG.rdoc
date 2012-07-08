@@ -1,4 +1,4 @@
-== 2012-07-08 v0.9.24
+== 2012-07-08 v0.9.25
 
 * 2.0 travis build works again
 * Javascript overrided new story placement (fixes "New Stories appear at the top of the Product Backlog" again)
