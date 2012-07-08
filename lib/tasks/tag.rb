@@ -36,52 +36,41 @@ tags.each {|version|
   
 newversion = versions[versions.keys.sort[-1]][:parts]
 
+if ARGV[0].nil?
+  level = 2
+else
+  level = Integer(ARGV[0])
+  raise "Unexpected level #{ARGV[0]}" if level < 0 || level > 2
+end
+  
+newversion[level] += 1
+(level + 1).upto(2) {|l| newversion[l] = 0}
+  
+newversion = 'v' + newversion.collect{|p| p.to_s}.join('.')
+
+changelog = `grep '^== .* #{newversion}' CHANGELOG.rdoc`
+if changelog == '' && tag
+  puts "CHANGELOG.rdoc not up to date for #{newversion}"
+  exit
+end
+  
+supported[:backlogs] = newversion
+  
+File.open('lib/versions.yml', 'w') {|f| f.write(supported.to_yaml)}
+
+authors = `git shortlog -s -n | head -8`.split("\n").collect{|l| l.gsub(/^\s*[0-9]+\s*/, '').gsub(/"/, "'") }
+  
+code = nil
+File.open('init.rb') do |f|
+  code = f.read
+end
+code.gsub!(/version\s+'[^']+'/m, "version '#{newversion}'")
+code.gsub!(/author\s+'[^']+'/m, "author \"#{authors}\"")
+File.open('init.rb', 'w') do |f|
+  f.write(code)
+end
+
 if tag
-  if ARGV[0].nil?
-    level = 2
-  else
-    level = Integer(ARGV[0])
-    raise "Unexpected level #{ARGV[0]}" if level < 0 || level > 2
-  end
-  
-  newversion[level] += 1
-  (level + 1).upto(2) {|l| newversion[l] = 0}
-  
-  newversion = 'v' + newversion.collect{|p| p.to_s}.join('.')
-
-  changelog = `grep '^== .* #{newversion}' CHANGELOG.rdoc`
-  if changelog == ''
-    puts "CHANGELOG.rdoc not up to date for #{newversion}"
-    exit
-  end
-  
-  supported[:backlogs] = newversion
-  
-  File.open('lib/versions.yml', 'w') {|f| f.write(supported.to_yaml)}
-
-  blame = {}
-  `git ls-files`.split("\n").reject{|f| f =~ /\/jquery\// || f =~ /\.(gif|png|ttf|glabels)$/i}.each{|f|
-    `git blame #{f}`.split("\n").each{|line|
-      m = line.match(/\(([^)]+)[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [-+ 0-9]+\)/)
-      name = m[1].strip.gsub(/"/, "'")
-  
-      next if name == ''
-      blame[name] ||= 0
-      blame[name] += 1
-    }
-  }
-  
-  authors = blame.keys.sort{|a, b| blame[b] <=> blame[a]}[0,7].join(',')
-  
-  code = nil
-  File.open('init.rb') do |f|
-    code = f.read
-  end
-  code.gsub!(/version\s+'[^']+'/m, "version '#{newversion}'")
-  code.gsub!(/author\s+'[^']+'/m, "author \"#{authors}\"")
-  File.open('init.rb', 'w') do |f|
-    f.write(code)
-  end
   `git add init.rb lib/versions.yml CHANGELOG.rdoc`
   `git commit -m #{newversion}`
   `git tag #{newversion}`
@@ -99,7 +88,9 @@ File.open('_includes/version.html', 'w') { |f| f.write(newversion) }
 File.open('_includes/supported.html', 'w') do |f|
   s = supported.dup
   s.each_pair{|platform, versions|
-    versions.each_with_index{|v, i|
+    next if platform == :backlogs
+
+    versions.each{|v|
       v[:platform] = platform.to_s
       v[:status] = v[:unsupported] ? 'Unsupported' : 'Supported'
     }
