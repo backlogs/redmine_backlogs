@@ -181,8 +181,19 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # Configure the story and task trackers
   story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
   task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
-  story_trackers.each{|tracker| tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Feature request'})) }
-  task_tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Bug'}))
+
+  story_trackers.each{|tracker|
+    if Tracker.respond_to? :workflows
+      tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Feature request'}))
+    elsif Tracker.respond_to? :workflow_rules #redmine 2 master
+      tracker.workflow_rules.copy(Tracker.find(:first, :conditions=>{:name => 'Feature request'}))
+    end
+  }
+  if Tracker.respond_to? :workflows
+    task_tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Bug'}))
+  elsif Tracker.respond_to? :workflow_rules
+    task_tracker.workflow_rules.copy(Tracker.find(:first, :conditions=>{:name => 'Bug'}))
+  end
 
   story_trackers = story_trackers.map{|tracker| tracker.id }
   task_tracker = task_tracker.id
