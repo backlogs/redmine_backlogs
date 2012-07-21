@@ -205,6 +205,10 @@ Given /^I have selected the (.*) project$/ do |project_id|
   @project = get_project(project_id)
 end
 
+Given /^backlogs setting show_burndown_in_sidebar is enabled$/ do
+    Backlogs.setting[:show_burndown_in_sidebar] = 'enabled' #app/views/backlogs/view_issues_sidebar.html.erb
+end
+
 Given /^I have defined the following sprints:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
@@ -572,6 +576,14 @@ end
 
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
+end
+
+Given /^the current date is (.+)$/ do |new_time|
+  Timecop.travel(Date.parse(new_time))
+end
+
+Given /^the current time is restored$/ do
+  Timecop.return
 end
 
 Given /^I have defined the following releases:$/ do |table|

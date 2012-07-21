@@ -232,7 +232,11 @@ RB.Backlog = RB.Object.create({
       RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
     }
     
-    this.getList().prepend(story);
+    if (RB.constants.new_story_position == 'bottom') {
+      this.getList().append(story);
+    } else {
+      this.getList().prepend(story);
+    }
     o = RB.Factory.initialize(RB.Story, story[0]);
     o.edit();
     story.find('.editor' ).first().focus();

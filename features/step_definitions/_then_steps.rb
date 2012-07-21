@@ -16,6 +16,11 @@ Then /^I should see the burndown chart$/ do
   page.should have_css("#burndown_#{@sprint.id.to_s}")
 end
 
+Then /^I should see the burndown chart of sprint (.+)$/ do |sprint_name|
+  sprint = RbSprint.find_by_name(sprint_name)
+  page.should have_css("#burndown_#{sprint.id.to_s}")
+end
+
 Then /^I should see the Issues page$/ do
   page.should have_css("#query_form")
 end
@@ -388,6 +393,14 @@ Then /^the backlogs setting "([^"]*)" for (.+) should be (true|false)$/ do |sett
   else
     Backlogs.settings[setting].should_not be_true
   end
+end
+
+Then /^I should see the mini-burndown-chart in the sidebar$/ do
+  page.should have_css("#sidebar .burndown_chart canvas.jqplot-base-canvas")
+end
+
+Then /^show me the html content$/ do
+  puts page.html
 end
 
 #only with phantomjs driver:
