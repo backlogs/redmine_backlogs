@@ -1,6 +1,5 @@
 require_dependency 'issues_controller'
 require 'rubygems'
-require 'nokogiri'
 require 'json'
 
 module Backlogs
@@ -24,12 +23,14 @@ module Backlogs
 
         case params[:format]
           when 'xml'
-            body = Nokogiri::XML(response.body)
-            body.xpath('//issue').each{|issue|
-              next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
-              issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
+            body = REXML::Document.new(response.body)
+            REXML::XPath.each(body, '//issue') {|issue|
+              next unless story_trackers.include?(Integer(REXML::XPath.first(issue, './tracker').attributes['id']))
+              issue.add_element('story_points').text = RbStory.find(REXML::XPath.first(issue, './id').text).story_points.to_s
             }
-            response.body = body.to_xml
+            to_xml = ''
+            body.write(to_xml)
+            response.body = to_xml
           when 'json'
             body = JSON.parse(response.body)
             body['issues'].each{|issue|
