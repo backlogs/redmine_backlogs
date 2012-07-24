@@ -29,10 +29,14 @@ class RbJournal < ActiveRecord::Base
   belongs_to :issue
 
   def self.journal(j)
+    j.rb_journal_properties_saved ||= []
+
     case Backlogs.platform
       when :redmine
         j.details.each{|detail|
+          next if j.rb_journal_properties_saved.include?(detail.prop_key)
           next unless detail.property == 'attr' && RbJournal::REDMINE_PROPERTIES.include?(detail.prop_key)
+          j.rb_journal_properties_saved << detail.prop_key
           create_journal(j, detail, j.journalized_id, j.created_on)
         }
 

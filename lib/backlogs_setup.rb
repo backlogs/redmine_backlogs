@@ -33,12 +33,7 @@ module Backlogs
   module_function :version
 
   def development?
-    return File.exist?(File.join(
-      case Rails::VERSION::MAJOR
-        when 2 then RAILS_ROOT.to_s
-        when 3 then Rails.root.to_s
-        else return false  end,
-      'backlogs.dev'))
+    return !Rails.env.production?
   end
   module_function :"development?"
 
@@ -59,12 +54,12 @@ module Backlogs
     raise "Unsupported platform #{platform}" unless supported
 
     currentversion = Redmine::VERSION.to_a.collect{|d| d.to_s}
+    r = RUBY_VERSION.split('.')
     supported.each{|version|
       v = version[:version].split('.')
       next unless currentversion[0,v.length] == v
 
       v = version[:ruby].split('.')
-      r = RUBY_VERSION.split('.')
       next unless r[0,v.length] == v
 
       return "#{Redmine::VERSION}#{version[:unsupported] ? '(unsupported but might work)' : ''}"
@@ -72,7 +67,7 @@ module Backlogs
 
     return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
 
-    msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| v[:version]}.uniq.sort.join(' / ')}"
+    msg = "#{Redmine::VERSION} on #{RUBY_VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| "#{v[:version]} on #{v[:ruby]}"}.uniq.sort.join(' / ')}"
     raise msg if raise_error
     return msg
   end
