@@ -9,7 +9,10 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        after_create  :backlogs_after_create
+        after_save  :backlogs_after_save
+
+        # added because acts_as_journal acts wonky -- some properties only show up after the 2nd save
+        attr_accessor :rb_journal_properties_saved
       end
     end
 
@@ -17,7 +20,7 @@ module Backlogs
     end
 
     module InstanceMethods
-      def backlogs_after_create
+      def backlogs_after_save
         RbJournal.journal(self)
       end
     end

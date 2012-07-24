@@ -94,7 +94,7 @@ module Backlogs
           self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
         elsif self.is_story?
           self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
-          if self.fixed_version_id
+          if self.fixed_version
             self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
             self.due_date = self.fixed_version.effective_date || Date.today
             self.due_date = self.start_date if self.due_date < self.start_date if self.due_date

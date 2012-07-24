@@ -143,6 +143,7 @@
               <%= assignee_name_or_empty(story) %>
             </div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            (<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)
           </div>
           <div class="subject"><%= h story.subject %></div>
           <%- if @project != story.project %>
