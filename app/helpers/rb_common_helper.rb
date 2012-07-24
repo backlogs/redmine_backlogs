@@ -121,7 +121,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def date_string_with_milliseconds(d, add=0)
     return '' if d.blank?
-    d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
+    d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1] + d.strftime(" %z")
   end
 
   def remaining_hours(item)
