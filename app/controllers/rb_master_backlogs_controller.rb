@@ -5,14 +5,12 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
-    sprints = RbSprint.open_sprints(@project)
+
+    #collect all sprints which are sharing into @project
+    sprints = @project.open_shared_sprints
 
     #TIB (ajout des sprints fermés)
-    if @settings[:disable_closed_sprints_to_master_backlogs]
-      c_sprints = []
-    else
-      c_sprints = RbSprint.closed_sprints(@project)
-    end
+    c_sprints = @project.closed_shared_sprints
 
     last_story = RbStory.find(
                           :first,
@@ -33,7 +31,28 @@ class RbMasterBacklogsController < RbApplicationController
   def menu
     links = []
 
-    links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
+    if @settings[:sharing_enabled]
+      # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
+      unless @sprint #menu for product backlog
+        projects = @project.projects_in_shared_product_backlog
+      else #menu for sprint
+        projects = @sprint.shared_to_projects(@project)
+      end
+      #make the submenu or single link
+      if !projects.empty?
+        if projects.length > 1
+          links << {:label => l(:label_new_story), :url => '#', :sub => []}
+          projects.each{|project|
+            links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+          }
+        else
+          links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
+        end
+      end
+    else #no sharing, only own project in the menu
+      links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
+    end
+
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
              } unless @sprint
     links << {:label => l(:label_task_board),

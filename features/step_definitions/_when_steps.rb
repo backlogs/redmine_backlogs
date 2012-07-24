@@ -1,42 +1,49 @@
 require 'pp'
 
-When /^I create the impediment$/ do
+When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, project|
+  params = @impediment_params.dup
+  params['project_id'] = Project.find(project) if project != ''
   page.driver.post(
                       url_for(:controller => :rb_impediments,
                               :action => :create,
                               :only_path => true),
                       @impediment_params
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I create the story$/ do
+When /^I (try to )?create the story$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_stories,
                               :action => :create,
                               :only_path => true),
                       @story_params
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I create the task$/ do
+When /^I (try to )?create the task$/ do |attempt|
+  initial_estimate = @task_params.delete('initial_estimate')
   page.driver.post(
                       url_for(:controller => :rb_tasks,
                               :action => :create,
                               :only_path => true),
                       @task_params
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I create the sprint$/ do
+When /^I (try to )?create the sprint$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_sprints,
                               :action => :create,
                               :only_path => true),
                       @sprint_params
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
+When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_subject, prev_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   prev  = RbStory.find(:first, :conditions => ["subject=?", prev_subject])
   
@@ -51,9 +58,10 @@ When /^I move the story named (.+) below (.+)$/ do |story_subject, prev_subject|
                               :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, direction, position, sprint_name|
+When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
   position = position.to_i
   story = RbStory.find_by_subject(story_subject)
   sprint = RbSprint.find_by_name(sprint_name)
@@ -71,11 +79,12 @@ When /^I move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) positio
                               :only_path => true),
                       attributes.merge({ "_method" => "put" })
                   )
-  verify_request_status(200)
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |old_pos, new_pos|
+When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |attempt, old_pos, new_pos|
   @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v").collect{|s| s.text}
+#  @story_ids = page.all(:css, "#product_backlog_container .stories .story .id .v")
 
   story_id = @story_ids.delete_at(old_pos.to_i-1)
   story_id.should_not == nil
@@ -83,11 +92,9 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
   new_pos = new_pos.to_i unless new_pos == 'last'
   case new_pos
     when 'last'
-      prev = @story_ids.last
-    when 1
-      prev = ''
+      nxt = ''
     else
-      prev = @story_ids[new_pos - 2]
+      nxt = @story_ids[new_pos-1]
   end
 
   page.driver.post( 
@@ -95,18 +102,19 @@ When /^I move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? p
                               :action => :update,
                               :id => story_id,
                               :only_path => true),
-                      {:prev => prev, :project_id => @project.id, "_method" => "put"}
+                      {:next => nxt, :project_id => @project.id, "_method" => "put"}
                   )
-  verify_request_status(200)
+  verify_request_status(200) if attempt == ''
 
   @story = RbStory.find(story_id.to_i)
 end
 
-When /^I request the server_variables resource$/ do
-  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true)
+When /^I (try to )?request the server_variables resource$/ do |attempt|
+  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true, :context => 'backlogs')
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I update the impediment$/ do
+When /^I (try to )?update the impediment$/ do |attempt|
   page.driver.post( 
                       url_for(:controller => :rb_impediments,
                               :action => :update,
@@ -114,9 +122,10 @@ When /^I update the impediment$/ do
                               :only_path => true),
                       @impediment_params
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I update the sprint$/ do
+When /^I (try to )?update the sprint$/ do |attempt|
   page.driver.post(
                       url_for(:controller => 'rb_sprints',
                               :action => "update",
@@ -124,9 +133,10 @@ When /^I update the sprint$/ do
                               :only_path => true),
                       @sprint_params.merge({ "_method" => "put" })
                   )
+  verify_request_status(200) if attempt == ''
 end
 
-When /^I update the story$/ do
+When /^I (try to )?update the story$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_stories,
                               :action => :update,
@@ -134,10 +144,11 @@ When /^I update the story$/ do
                               :only_path => true),
                       @story_params #.merge({ "_method" => "put" })
                   )
+  verify_request_status(200) if attempt == ''
   @story.reload
 end
 
-When /^I update the task$/ do
+When /^I (try to )?update the task$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_tasks,
                               :action => :update,
@@ -145,6 +156,7 @@ When /^I update the task$/ do
                               :only_path => true),
                       @task_params.merge({ "_method" => "put" })
                   )
+  verify_request_status(200) if attempt == ''
 end
 
 Given /^I visit the scrum statistics page$/ do
@@ -185,5 +197,36 @@ end
 
 When /^I click (create|copy|save)$/ do |command|
   page.find(:xpath, '//input[@name="commit"]').click
+end
+
+#backlog dnd
+When /^I drag story (.+) to the sprint backlog of (.+?)( before the story (.+))?$/ do |story, sprint, before, beforearg|
+  drag_story(story, sprint, beforearg)
+end
+
+When /^I drag story (.+?) to the product backlog( before the story (.+))?$/ do |story, before, beforearg|
+  drag_story(story, nil, beforearg)
+end
+
+#taskboard dnd
+When /^I drag task (.+) to the state (.+) in the row of (.+)$/ do |task, state, story|
+  drag_task(task, state, story)
+end
+
+When /^I create an impediment named (.+) which blocks (.+?)(?: and (.+))?$/ do |impediment_name, blocked_name, blocked2_name|
+  blocked = Issue.find_by_subject(blocked_name)
+  blocked_list = [blocked.id.to_s]
+  blocked2 = Issue.find_by_subject(blocked2_name) if blocked2_name != ''
+  blocked_list << blocked2.id.to_s if blocked2
+  page.find("#impediments span.add_new").click
+  with_scope('#task_editor') do
+    fill_in("subject", :with => impediment_name)
+    fill_in("blocks", :with => blocked_list.join(','))
+  end
+  with_scope('.task_editor_dialog') do
+    click_button("OK")
+  end
+  wait_for_ajax
+  page.should have_xpath("//div", :text => impediment_name) #this did not work as documented. so wait explicitely for ajax above.
 end
 

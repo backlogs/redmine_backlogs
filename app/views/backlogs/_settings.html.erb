@@ -185,3 +185,12 @@
   <%= radio_button_tag("settings[new_story_position]", 'top', Backlogs.setting[:new_story_position] == 'top') %><%= l(:backlogs_new_story_position_top) %>
   <%= radio_button_tag("settings[new_story_position]", 'bottom', Backlogs.setting[:new_story_position] == 'bottom') %><%= l(:backlogs_new_story_position_bottom) %>
 </p>
+
+<fieldset>
+  <legend><%= l(:backlogs_sharing_support) %></legend>
+  <p>
+    <%= content_tag(:label, l(:backlogs_sharing_enabled)) %>
+    <%= check_box_tag("settings[sharing_enabled]", 'enabled',
+        Backlogs.setting[:sharing_enabled]) %>
+  </p>
+</fieldset>

@@ -43,6 +43,8 @@ Capybara.javascript_driver = :poltergeist
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, :inspector => true)
 end
+#give travis some time for ajax requests to complete
+Capybara.default_wait_time = 15
 
 if Rails::VERSION::MAJOR >= 3
   require 'rake'

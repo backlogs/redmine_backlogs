@@ -9,4 +9,5 @@ graph.dot
 nbproject
 *.rc
 Gemfile.lock
+backlogs.dev
 .ruby-version

@@ -5,6 +5,7 @@ Feature: Product Owner
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
+      And no versions or issues exist
       And I am a product owner of the project
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
@@ -41,17 +42,16 @@ Feature: Product Owner
      When I create the story
      Then the request should complete successfully
       And the 1st story in the product backlog should be A Whole New Story
-      And all positions should be unique
 
   Scenario: Update a story
     Given I am viewing the master backlog
       And I want to edit the story with subject Story 3
       And I set the subject of the story to Relaxdiego was here
-      And I set the tracker of the story to Bug
+      And I set the tracker of the story to Story
      When I update the story
      Then the request should complete successfully
       And the story should have a subject of Relaxdiego was here
-      And the story should have a tracker of Bug
+      And the story should have a tracker of Story
       And the story should be at position 3
 
   Scenario: Close a story
@@ -82,6 +82,38 @@ Feature: Product Owner
   Scenario: Move a story up
     Given I am viewing the master backlog
      When I move the 4th story to the 2nd position
+     Then the 2nd story in the product backlog should be Story 4
+      And the 3rd story in the product backlog should be Story 2
+      And the 4th story in the product backlog should be Story 3
+
+  Scenario: Move many stories up so the gapspace needs reassignment
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
+     When I move the 4th story to the 2nd position
+    Given I am viewing the master backlog
      Then the 2nd story in the product backlog should be Story 4
       And the 3rd story in the product backlog should be Story 2
       And the 4th story in the product backlog should be Story 3

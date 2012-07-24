@@ -33,6 +33,16 @@ class RbTask < Issue
 
     blocks = params.delete('blocks')
 
+#if we are an impediment and have blocks, set our project_id.
+#if we have multiple blocked tasks, cross-project relations must be enabled, otherwise save-validation will fail. TODO: make this more user friendly by pre-validating here and suggesting to enable cross-project relation support in redmine base setup.
+    if is_impediment and blocks and blocks.strip != ''
+      begin
+        first_blocked_id = blocks.split(/\D+/)[0].to_i
+        attribs['project_id'] = Issue.find_by_id(first_blocked_id).project_id if first_blocked_id
+      rescue
+      end
+    end
+
     task = new(attribs)
     if params['parent_issue_id']
       parent = Issue.find(params['parent_issue_id'])
@@ -40,7 +50,7 @@ class RbTask < Issue
     end
     task.save!
 
-    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks)
+    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks) # could we do that before save and integrate cross-project checks?
 
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
     task.update_blocked_list blocks.split(/\D+/) if is_impediment

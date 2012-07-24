@@ -72,6 +72,7 @@ en:
   field_time_entry_user_id: Time Entry User Id
   field_time_entry_spend_on: Time Entry Spend on
   field_time_entry_comments: Time Entry Comments
+  field_project_id: Project Id
   label_back_to_project: Back to project page
   label_backlogs: Backlogs
   label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
@@ -188,3 +189,5 @@ en:
   backlogs_new_story_position: Newly created stories go to the
   backlogs_new_story_position_top: top
   backlogs_new_story_position_bottom: bottom (requires restart)
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_sharing_enabled: Enable sharing

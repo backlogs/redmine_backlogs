@@ -106,7 +106,7 @@ class RbSprint < Version
                  sprint_start_date ASC,
                  CASE effective_date WHEN NULL THEN 1 ELSE 0 END ASC,
                  effective_date ASC",
-      :conditions => [ "status = 'open' and project_id = ?", project.id ]
+      :conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
     }
   }
 
@@ -120,6 +120,16 @@ class RbSprint < Version
       :conditions => [ "status = 'closed' and project_id = ?", project.id ]
     }
   }
+
+  #depending on sharing mode
+  #return array of projects where this sprint is visible
+  def shared_to_projects(scope_project)
+    projects = []
+    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
+      projects << _project unless (_project.shared_versions.collect{|v| v.id} & [id]).empty?
+    }
+    projects
+  end
 
   def stories
     return RbStory.sprint_backlog(self)

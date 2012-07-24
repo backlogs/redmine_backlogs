@@ -1,12 +1,16 @@
 def get_project(identifier)
-  Project.find(:first, :conditions => "identifier='#{identifier}'")
+  Project.find(identifier)
 end
 
 def verify_request_status(status)
-  page.driver.response.status.should equal(status),\
-    "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
-    "#{page.driver.response.status}\n"\
-    "#{page.driver.response.body}"
+  if page.driver.respond_to?('response') # javascript drivers has no response
+    page.driver.response.status.should equal(status),\
+      "Request returned #{page.driver.response.status} instead of the expected #{status}: "\
+      "#{page.driver.response.status}\n"\
+      "#{page.driver.response.body}"
+  else
+    true
+  end
 end
 
 def story_before(rank, project, sprint=nil)
@@ -37,9 +41,9 @@ def offset_to_hours(o)
   return o/60/60
 end
 
-def initialize_story_params
+def initialize_story_params(project_id = nil)
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
-  @story['project_id'] = @project.id
+  @story['project_id'] = project_id ? Project.find(project_id).id : @project.id
   @story['tracker_id'] = RbStory.trackers.first
   @story['author_id']  = @user.id
   @story
@@ -47,7 +51,7 @@ end
 
 def initialize_task_params(story_id)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes)
-  params['project_id'] = @project.id
+  params['project_id'] = RbStory.find_by_id(story_id).project_id
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
@@ -55,12 +59,17 @@ def initialize_task_params(story_id)
   params
 end
 
-def initialize_impediment_params(sprint_id)
-  params = HashWithIndifferentAccess.new(RbTask.new.attributes)
-  params['project_id'] = @project.id
+def sprint_id_from_name(name)
+  sprint = RbSprint.find_by_name(name)
+  raise "No sprint by name #{name}" unless sprint
+  return sprint.id
+end
+
+def initialize_impediment_params(attributes)
+  #requires project_id in attributes (pa sharing)
+  params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['fixed_version_id'] = sprint_id
   params['status_id'] = IssueStatus.default.id
   params
 end
@@ -139,11 +148,16 @@ def show_table(title, header, data)
   puts "\n\n"
 end
 
-def assert_page_loaded(page)
-  if page.driver.respond_to?('response') # javascript drivers has no response
-    page.driver.response.status.should == 200
+def check_backlog_menu_new_story(links, project)
+  found = false
+  if links.length==1
+    project_id = @project.id
+    found = true if project_id.to_i == project.id
   else
-    true # no way to check javascript driver page status yet
+    links.each{|a|
+      project_id = a[:class][%r[\d+$]]
+      found = true if project_id.to_i == project.id
+    }
   end
+  return found
 end
-

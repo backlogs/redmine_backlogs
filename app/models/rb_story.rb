@@ -32,21 +32,35 @@ class RbStory < Issue
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
 
-    if sprint_ids.nil?
-      Backlogs::ActiveRecord.add_condition(options, ["
+    if Backlogs.settings[:sharing_enabled]
+      pbl_condition = ["
+        (#{Project.find(project_id).project_condition(true)})
+        and tracker_id in (?)
+        and fixed_version_id is NULL
+        and is_closed = ?", RbStory.trackers, false]
+      sprint_condition = ["
+        tracker_id in (?)
+        and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
+    else
+      pbl_condition = ["
         project_id = ?
         and tracker_id in (?)
         and fixed_version_id is NULL
-        and is_closed = ?", project_id, RbStory.trackers, false])
+        and is_closed = ?", project_id, RbStory.trackers, false]
+      sprint_condition = ["
+        project_id = ?
+        and tracker_id in (?)
+        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
+    end
+
+    if sprint_ids.nil?
+      Backlogs::ActiveRecord.add_condition(options, pbl_condition)
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
     else
-      Backlogs::ActiveRecord.add_condition(options, ["
-        project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids])
+      Backlogs::ActiveRecord.add_condition(options, sprint_condition)
     end
 
     return options
@@ -107,21 +121,14 @@ class RbStory < Issue
 
   def self.create_and_position(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
+    params['next'] = params.delete('next_id') if params.include?('next_id')
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,v| !['prev', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
-
-    if params.include?('prev')
-      if params['prev'].blank?
-        s.move_to_top
-      else
-        s.move_after(RbStory.find(params['prev']))
-      end
-    end
-
+    s.position!(params)
     return s
   end
 
@@ -177,20 +184,30 @@ class RbStory < Issue
 
   def update_and_position!(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
-
-    if params.include?('prev')
-      if params['prev'].blank?
-        self.move_to_top
-      else
-        self.move_after(RbStory.find(params['prev']))
-      end
-    end
+    params['next'] = params.delete('next_id') if params.include?('next_id')
+    self.position!(params)
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
 
     return self.journalized_update_attributes attribs
+  end
+
+  def position!(params)
+    if params.include?('prev')
+      if params['prev'].blank?
+        self.move_to_top
+      else
+        self.move_after(RbStory.find(params['prev']))
+      end
+    elsif params.include?('next')
+      if params['next'].blank?
+        self.move_to_bottom
+      else
+        self.move_before(RbStory.find(params['next']))
+      end
+    end
   end
 
   def burndown(sprint=nil)

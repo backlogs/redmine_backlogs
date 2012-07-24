@@ -131,7 +131,7 @@
 
   <table id="tasks" class="board" cellspacing="0">
     <%- @sprint.stories.each do |story| %>
-    <tr>
+    <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story) %>>
           <div class="id story_tooltip">

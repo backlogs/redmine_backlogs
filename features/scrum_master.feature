@@ -50,7 +50,6 @@ Feature: Scrum Master
      Then the request should complete successfully
      When I follow "Impediments"
      Then the request should complete successfully
-      And dump the page to "log/ViewImpediments.html"
       And I should see "Impediment 1"
 
   Scenario: Create a new sprint

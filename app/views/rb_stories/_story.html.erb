@@ -4,6 +4,10 @@
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
+  <div class="project editable" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
+    <div class="t"><%= story.project %></div>
+    <div class="v"><%= story.project_id %></div>
+  </div>
   <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>">
     <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
@@ -24,6 +28,7 @@
   <% end %>
   <div class="fixed_version_id"><%= story.fixed_version_id %></div>
   <div class="user_status"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
+  <div class="story_project"><%= story.project_id %></div>
   <div class="higher_item_id"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors %>

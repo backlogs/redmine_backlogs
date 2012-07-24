@@ -8,7 +8,7 @@ Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint")
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint", :visible => true)
   sprint_backlogs.length.should == count.to_i
 end
 
@@ -39,14 +39,22 @@ end
 
 Then /^show me the list of sprints$/ do
   header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
+  data = RbSprint.open_sprints(@project).collect{|sprint| [sprint.id, sprint.name, sprint.start_date, sprint.effective_date, sprint.updated_on] }
+
+  show_table("Sprints", header, data)
+end
+
+Then /^show me the list of shared sprints$/ do
+  header = [['id', 3], ['name', 18], ['project id', 5], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
+  sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
+  data = sprints.collect{|sprint| [sprint.id, sprint.name, sprint.project_id, sprint.start_date, sprint.effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
 end
 
 Then /^show me the list of stories$/ do
   header = [['id', 5], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
+  data = RbStory.find(:all, :order => "position ASC").collect {|story|
     [story.id, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
   }
 
@@ -55,6 +63,14 @@ end
 
 Then /^show me the sprint impediments$/ do
   puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
+end
+
+Then /^show me the projects$/ do
+  show_projects
+end
+
+Then /^show me the response body$/ do
+  puts page.driver.body
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -87,10 +103,6 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, bac
   story.subject.should == subject
 end
 
-Then /^all positions should be unique$/ do
-  RbStory.find_by_sql("select project_id, position, count(*) as dups from issues where not position is NULL group by project_id, position having count(*) > 1").length.should == 0
-end
-
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   story.should_not be_nil
@@ -99,7 +111,7 @@ Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, sto
 end
 
 Then /^the server should return an update error$/ do
-  page.driver.response.status.should == 400
+  verify_request_status(400)
 end
 
 Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
@@ -188,7 +200,7 @@ end
 
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
   issue = Issue.find_by_subject(subject)
-  issue[attribute].should == value.to_i
+  issue.send(attribute.intern).should == value.to_i
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
@@ -289,6 +301,89 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks.length.should == 1
 end
 
+Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2|
+  sprint_id = sprint_id_from_name(arg2.strip)
+  stories = page.all(:css, "#stories-for-#{sprint_id} .story")
+  stories.length.should == arg1.to_i
+end
+
+Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
+  sprint_id = sprint_id_from_name(arg1.strip)
+  project = get_project(arg3)
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint_id}']/..//a[contains(@class,'add_new_story')]")
+  found = check_backlog_menu_new_story(links, project)
+  found.should == !!(neg=='')
+end
+
+Then /^The menu of the product backlog should (.*)allow to create a new Story in project (.+)$/ do |neg, arg3|
+  project = get_project(arg3)
+  links = page.all(:css, "#product_backlog_container a.add_new_story")
+  found = check_backlog_menu_new_story(links, project)
+  found.should == !!(neg=='')
+end
+
+Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
+  sprint_id = sprint_id_from_name(arg1.strip)
+#  page.should_not have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg != ''
+#  page.should have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg == ''
+  begin
+    page.find(:css, "#sprint_#{sprint_id}", :visible => true)
+    found = true
+  rescue
+    found = false
+  end
+  found.should == !!(neg=='')
+end
+
+Then /^story (.+?) is unchanged$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  @last_drag_and_drop.should_not be_nil
+  @last_drag_and_drop[:position_before].should == story.position
+  @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
+end
+
+Then /^story (.+?) is in the product backlog$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.fixed_version_id.should be_nil
+end
+
+#taskboard visual checks:
+Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
+  task_id = RbTask.find_by_subject(task).id
+  story_id = RbStory.find_by_subject(story).id
+  n = get_taskboard_state_index[state]
+  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
+end
+
+Then /^task (.+) should have the status (.+)$/ do |task, state|
+  state = IssueStatus.find_by_name(state)
+  task = RbTask.find_by_subject(task)
+  task.status_id.should == state.id
+end
+
+Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
+  task = Issue.find_by_subject(impediment)
+  n = get_taskboard_state_index[state]
+  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
+end
+
+Then /^impediment (.+) should be created without error$/ do |impediment_name|
+  impediment = Issue.find_by_subject(impediment_name)
+  impediment.should_not be_nil
+  begin
+    msg = page.find(:css, "div#msgBox")
+    #puts "Got msg box: #{msg.text}" if msg
+  rescue
+  end
+  msg.should be_nil
+  page.should have_css("#issue_#{impediment.id}")
+end
+
+Then /^I should see a msgbox with "([^"]*)"$/ do |arg1|
+  msg = page.find(:css, "div#msgBox")
+  msg.text.strip.should == arg1.strip
+end
+
 Then /^I should see the mini-burndown-chart in the sidebar$/ do
   page.should have_css("#sidebar .burndown_chart canvas.jqplot-base-canvas")
 end
@@ -300,6 +395,10 @@ end
 #only with phantomjs driver:
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1, :full=>true)
+end
+
+Then /^dump the database to (.+)$/ do |arg1|
+  system("pg_dump redmine_test > #{arg1}")
 end
 
 Then /^open the remote inspector$/ do

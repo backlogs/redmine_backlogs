@@ -21,18 +21,23 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
 
-    var tasks_lists = j.find("#tasks .list");
+    // Initialize task lists, restricting drop to the story
+    var tasks_lists =j.find('.story-swimlane');
     if (!tasks_lists || !tasks_lists.length) {
       alert("There are no task states. Please check the workflow of your tasks tracker in the administration section.");
       return;
     }
-    // Initialize task lists
-    tasks_lists.sortable({ 
-      connectWith: '#tasks .list', 
-      placeholder: 'placeholder',
-      start: self.dragStart,
-      stop: self.dragStop,
-      update: self.dragComplete
+
+    tasks_lists.each(function(index){
+      var id = '#' + RB.$(this).attr('id') + ' .list';
+
+      j.find(id).sortable({
+        connectWith: id, 
+        placeholder: 'placeholder',
+        start: self.dragStart,
+        stop: self.dragStop,
+        update: self.dragComplete
+      });
     });
 
     // Initialize each task in the board

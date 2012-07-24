@@ -218,11 +218,3 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
-
-Then /^dump the page to "(.+)"$/ do |file|
-  raise "#{file} can only be /(log\/)?[A-Z0-9]+\.html/i, #{file.inspect} passed" unless file =~ /^(log\/)[A-Z0-9]+\.html$/i
-
-  File.open(file, 'w') do |f|
-    f.write(page.body)
-  end
-end
