@@ -110,7 +110,7 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
 end
 
 When /^I (try to )?request the server_variables resource$/ do |attempt|
-  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true)
+  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true, :context => 'backlogs')
   verify_request_status(200) if attempt == ''
 end
 

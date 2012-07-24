@@ -1,4 +1,53 @@
+== 2012-07-08 v0.9.26
+
+* 2.0 travis build works again
+* Javascript overrided new story placement (fixes "New Stories appear at the top of the Product Backlog" again)
+
+== 2012-07-04 v0.9.23
+
+* Add "support" for 1.9.2
+
+== 2012-07-04 v0.9.20
+
+* Specify ruby versions
+* Merge branch 'master' of github.com:backlogs/redmine_backlogs
+* Clearer message for non-supported versions
+* Try to make the via route work in ruby 1.8
+* Refactor releases routes
+* Fixes "Burndown doesn't take updates of "Remaining time"" -- acts_as_journal acting_randomly.
+* More DB wonkyness
+* empty string means null
+* More DB corruption handlers
+* More DB corruption handling
+* typo
+* Old insert_at call
+* More database brokenness workarounds
+* Configuration oddities
+
+== 2012-06-30 v0.9.19
+
+* Postgresql fixes
+
+== 2012-06-30 v0.9.16
+
+* Fix redmine2 sidebar on apache with relative url root, from patrickatamaniuk/tests/sidebar
+* Fix issues sidebar is not displayed when installed to suburi (Rails 3)
+* give product owner modify_releases permission
+* security enhancements
+* more automated tests
+* Fixes for releases
+* Rails 3 compatibility fixes
+* Select a default label if none was selected (fixes "Printable cards option not showing with Bitanmi Redmine 2.0.2")
+* Postgresql compatibilities
+
+== 2012-06-13 v0.9.15
+
+* Looser support restrictions
+* "Locales are broken for 1.9.3"
+* Fixes for CustomizedField 
+
 == 2012-06-12 v0.9.14
+
 * Online version check
 * Fixes "Install task: can't modify frozen Hash ".
 * Translations updated
@@ -7,10 +56,12 @@
 * fixes "My Pages Exception"
 
 == 2012-06-02 v0.9.13
+
 * Ruby 1.9 supported
 * Chiliproject fixes
 
 == 2012-05-31 v0.9.12
+
 * Down migrations added
 * Fixes "New Stories appear at the top of the Product Backlog"
 

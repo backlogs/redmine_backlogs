@@ -36,6 +36,7 @@ def drag_story(story_name, target_sprint_name, before_story_name)
   if before_story_name
     before = RbStory.find(:first, :conditions => {:subject => before_story_name.strip})
     before.should_not be_nil
+#jquery DnD is weird. sortable will not work with drag_to. this is known. selenium drag_by might work.
     element.drag_to(page.find(:css, "#story_#{before.id}"))
   end
 

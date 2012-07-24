@@ -168,8 +168,22 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # Configure the story and task trackers
   story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
   task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
-  story_trackers.each{|tracker| tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Feature request'})) }
-  task_tracker.workflows.copy(Tracker.find(:first, :conditions=>{:name => 'Bug'}))
+
+  copy_from = Tracker.find(:first, :conditions=>{:name => 'Feature request'})
+  story_trackers.each{|tracker|
+    if copy_from.respond_to? :workflow_rules #redmine 2 master
+      tracker.workflow_rules.copy(copy_from)
+    else
+      tracker.workflows.copy(copy_from)
+    end
+  }
+  copy_from = Tracker.find(:first, :conditions=>{:name => 'Bug'})
+  if copy_from.respond_to? :workflow_rules
+    task_tracker.save!
+    task_tracker.workflow_rules.copy(copy_from)
+  else
+    task_tracker.workflows.copy(copy_from)
+  end
 
   story_trackers = story_trackers.map{|tracker| tracker.id }
   task_tracker = task_tracker.id
@@ -190,6 +204,10 @@ end
 
 Given /^I have selected the (.*) project$/ do |project_id|
   @project = get_project(project_id)
+end
+
+Given /^backlogs setting show_burndown_in_sidebar is enabled$/ do
+    Backlogs.setting[:show_burndown_in_sidebar] = 'enabled' #app/views/backlogs/view_issues_sidebar.html.erb
 end
 
 Given /^I have defined the following sprints:$/ do |table|
@@ -555,6 +573,14 @@ end
 
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
+end
+
+Given /^the current date is (.+)$/ do |new_time|
+  Timecop.travel(Date.parse(new_time))
+end
+
+Given /^the current time is restored$/ do
+  Timecop.return
 end
 
 Given /^I have defined the following releases:$/ do |table|
