@@ -74,3 +74,19 @@ Spork.each_run do
     end
   end
 end
+
+# Profile the code
+if ENV["RUBY_PROF"]=="true"
+  Before do
+    require 'ruby-prof'
+    RubyProf.start
+  end
+
+  After do |s|
+    result = RubyProf.stop
+    printer = RubyProf::CallStackPrinter.new(result)
+    f = File.open("ruby-prof_#{s.name}.html", 'w')
+    printer.print(f)
+    f.close
+  end
+end

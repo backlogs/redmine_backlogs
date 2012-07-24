@@ -57,6 +57,7 @@ group :test do
   else
     gem "rcov",  "=0.9.11"
   end
+  gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
   gem "timecop"
