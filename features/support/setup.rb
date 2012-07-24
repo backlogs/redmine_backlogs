@@ -16,9 +16,7 @@ def seed_the_database
   else
     fixtures = ActiveRecord::Fixtures
   end
-  Before do # a little longer, but more reliable
-    seed_the_database_with(fixtures)
-  end
+  seed_the_database_with(fixtures)
 end
 
 def seed_the_database_with(fixtures)
