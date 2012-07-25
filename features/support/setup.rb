@@ -32,6 +32,8 @@ if Cucumber::Rails.const_defined?(:Database)
   # only for recent cucumber-rails
   # do not clean the database between @javascript scenarios
   Cucumber::Rails::Database.javascript_strategy = :transaction
+else
+  DatabaseCleaner.strategy = nil
 end
 
 # use headless webkit to test javascript ui
