@@ -78,9 +78,14 @@ run_tests()
   bundle exec rake redmine:backlogs:prepare_fixtures
 
   # run cucumber
+  if [ ! -n "${CUCUMBER_TAGS}" ];
+  then
+    CUCUMBER_TAGS="--tags ~@optional"
+  fi
+
   if [ ! -n "${CUCUMBER_FLAGS}" ];
   then
-    export CUCUMBER_FLAGS="--format progress --tags ~@optional"
+    export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
   fi
   bundle exec cucumber $CUCUMBER_FLAGS features
 }
