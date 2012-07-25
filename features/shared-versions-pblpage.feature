@@ -78,7 +78,7 @@ Feature: Shared versions
       And I should see 3 sprint backlogs
       And I should see 1 stories in the product backlog
 
-  @javascript
+#  @javascript
   Scenario: View the toplevel backlog page
     Given I have selected the p1 project
       And I am viewing the master backlog
@@ -116,7 +116,7 @@ Feature: Shared versions
 #     When I drag story Story 5 to the product backlog before the story Story d
 #     Then the 5th story in the product backlog should be Story 5
 
-  @javascript
+  @javascript @optional
   Scenario: View the subjproject backlog page in the middle
     Given I have selected the p1s1 project
       And I am viewing the master backlog
@@ -219,6 +219,7 @@ Feature: Shared versions
 #     Then story Story f is unchanged
 #      And the 2nd story in the product backlog should be Story f
 
+  @optional
   Scenario: View the subjproject backlog page at a leaf project
     Given I have selected the p1s1s1 project
       And I am viewing the master backlog
@@ -238,6 +239,7 @@ Feature: Shared versions
       And I should see the backlog of Sprint Sp012
       And I should not see the backlog of Sprint Sp013
 
+  @optional
   Scenario: View the subjproject backlog page at a middle leaf project
     Given I have selected the p1s2 project
       And I am viewing the master backlog
@@ -257,6 +259,7 @@ Feature: Shared versions
       And I should see the backlog of Sprint Sp012
       And I should not see the backlog of Sprint Sp013
 
+  @optional
   Scenario: View the subjproject backlog page of a separate project
     Given I have selected the p2 project
       And I am viewing the master backlog
@@ -287,7 +290,7 @@ Feature: Shared versions
      Then I should see the backlog of Sprint Sp002c
       And I should see the backlog of Sprint Sp004c
 
-  @javascript
+  @javascript @optional
   Scenario: View closed sprints on the middle project
     Given I have selected the p1s1 project
       And I am viewing the master backlog
