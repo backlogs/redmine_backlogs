@@ -6,6 +6,7 @@ rvm:
 env:
   - REDMINE_VER=1
   - REDMINE_VER=2
+  - REDMINE_VER=2 CUCUMBER_TAGS="--tags @optional"
   - REDMINE_VER=m
 matrix:
   allow_failures:
@@ -15,6 +16,8 @@ matrix:
   exclude:
     - rvm: jruby-18mode
       env: REDMINE_VER=2
+    - rvm: jruby-18mode
+      env: REDMINE_VER=2 CUCUMBER_TAGS="--tags @optional"
 
 install: "echo skip bundle install"
 

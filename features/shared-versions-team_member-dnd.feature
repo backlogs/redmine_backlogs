@@ -41,7 +41,7 @@ Feature: Team Member
       And I should see impediment Impediment 1 in the state New 
       And I should see impediment Impediment 3 in the state New 
 
-  @javascript
+  @javascript @optional
   Scenario: Drag a task to a new state in the same story
     Given I am viewing the taskboard for Sprint 001
      Then I should see the taskboard
