@@ -43,7 +43,7 @@ group :test do
   else
     gem "gherkin", "~> 2.5.0"
   end
-  gem "poltergeist", "=0.5.0"
+  gem "poltergeist", "~>0.5.0"
   gem "redgreen" if RUBY_VERSION < "1.9"
   if RAILS_VERSION_IS_3
     gem "rspec", "=2.5.0"
