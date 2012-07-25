@@ -2,7 +2,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 require 'cucumber/rails/world'
-Cucumber::Rails::World.use_transactional_fixtures
+Cucumber::Rails::World.use_transactional_fixtures = true
 
 if Rails::VERSION::MAJOR >= 3
   require 'rspec/rails/matchers'
@@ -28,12 +28,11 @@ end
 
 seed_the_database
 
-if Cucumber::Rails.respond_to?('Database')
+if Cucumber::Rails.const_defined?(:Database)
   # only for recent cucumber-rails
   # do not clean the database between @javascript scenarios
   Cucumber::Rails::Database.javascript_strategy = :transaction
 end
-DatabaseCleaner.strategy = nil # much faster than truncation
 
 # use headless webkit to test javascript ui
 require 'capybara/poltergeist'
@@ -49,3 +48,4 @@ if Rails::VERSION::MAJOR >= 3
   require 'rails/tasks'
   Rake::Task["tmp:create"].invoke
 end
+
