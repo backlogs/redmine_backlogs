@@ -80,7 +80,7 @@ run_tests()
   # run cucumber
   if [ ! -n "${CUCUMBER_FLAGS}" ];
   then
-    export CUCUMBER_FLAGS="--format progress"
+    export CUCUMBER_FLAGS="--format progress --tags ~@optional"
   fi
   bundle exec cucumber $CUCUMBER_FLAGS features
 }

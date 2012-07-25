@@ -1,3 +1,4 @@
+@optional
 Feature: Shared versions one backlog multiple subproject team sprints
   As a chief project manager 
   I want to manage one backlogs but two teams
