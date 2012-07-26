@@ -174,7 +174,7 @@ else
   rb_match rb, 'sprint/:sprint_id/update', :to => 'rb_sprints#update'
   rb_match rb, 'sprint/:sprint_id/reset', :to => 'rb_sprints#reset'
   rb_match rb, 'sprint/download/:sprint_id.xml', :to => 'rb_sprints#download', :format => 'xml'
-  rb_match rb, 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed'
+  rb_match rb, 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed', :via => [:put]
 
   rb_match rb, 'stories/:project_id/:sprint_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
   rb_match rb, 'stories/:project_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
