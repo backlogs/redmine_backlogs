@@ -34,6 +34,9 @@ if Cucumber::Rails.const_defined?(:Database)
   Cucumber::Rails::Database.javascript_strategy = :transaction
 else
   DatabaseCleaner.strategy = nil
+  Before do
+    seed_the_database
+  end
 end
 
 # use headless webkit to test javascript ui
