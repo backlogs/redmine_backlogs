@@ -176,13 +176,16 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     export
   end
 
-  # Renders the project quick-jump box
-  def render_backlog_project_jump_box
+  def self.find_backlogs_enabled_active_projects
     projects = EnabledModule.find(:all,
                              :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
                              :include => :project,
                              :joins => :project).collect { |mod| mod.project}
+  end
 
+  # Renders the project quick-jump box
+  def render_backlog_project_jump_box
+    projects = RbCommonHelper.find_backlogs_enabled_active_projects
     projects = Member.find(:all, :conditions => ["user_id = ? and project_id IN (?)", User.current.id, projects.collect(&:id)]).collect{ |m| m.project}
 
     if projects.any?
