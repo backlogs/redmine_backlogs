@@ -23,8 +23,8 @@ module Backlogs
       end
 
       # Streamline the difference between <%=  %> and <%  %>
-      def rb_labelled_remote_form_for(*args, &proc)
-        form_string = labelled_remote_form_for(*args, &proc)
+      def rb_form_for(*args, &proc)
+        form_string = form_for(*args, &proc)
         if Rails::VERSION::MAJOR < 3
           form_string
         else

@@ -6,11 +6,11 @@ class RbSettingsController < RbApplicationController
 
   def projectsettings
     enabled = false
-    if params[:settings] and params[:settings]["show_stories_from_subprojects"]=="enabled"
+    if request.post? and params[:settings] and params[:settings]["show_stories_from_subprojects"]=="enabled"
       enabled = true
     end
     Backlogs.setting["dont_show_stories_from_subprojects_#{@project.id}"] = !enabled
-    render(:update) {|page| page.replace_html "tab-content-backlogs", :partial => 'backlogs/projectsettings'}
+    redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'backlogs'
   end
 
 end

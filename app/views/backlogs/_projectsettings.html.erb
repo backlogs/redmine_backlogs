@@ -1,6 +1,9 @@
-<% rb_labelled_remote_form_for @project,
+<% rb_form_for @project,
                    :as => :rb_projectsettings,
-                   :url => { :controller => 'rb_settings', :action => 'projectsettings', :project_id => @project }, :method => 'post' do |f| %>
+                   :url => { :controller => 'rb_settings',
+                             :action => 'projectsettings', :project_id => @project },
+                   :html => {:id => 'backlogs-form',
+                             :method => :post} do |f| %>
 
 <%= error_messages_for 'rb_projectsettings' %>
 
