@@ -233,14 +233,17 @@ module BacklogsPrintableCards
 
   # put the mixins in a separate class, seems to interfere with prawn otherwise
   class Gravatar
-    if Backlogs.platform == :redmine # temporary workaround until we figure out how gravitarify works
-      include GravatarHelper::PublicMethods
-      include ERB::Util
+    case Backlogs.platform
+      when :redmine
+        include GravatarHelper::PublicMethods
+      when :chiliproject
+        include Gravatarify::Helper
     end
+    include ERB::Util
 
     def initialize(email, size)
       # see conversion chart pt -> px @ http://sureshjain.wordpress.com/2007/07/06/53/
-      @url = gravatar_url(email, :size => (size * 16) / 12) if Backlogs.platform == :redmine
+      @url = gravatar_url(email, :size => (size * 16) / 12)
     end
 
     def image
