@@ -144,7 +144,7 @@ class RbStory < Issue
 
     # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
     trackers = []
-    if ActiveRecord::Base.connection.tables.include?('settings')
+    if has_settings_table
       trackers = Backlogs.setting[:story_trackers]
       trackers = [] if trackers.blank?
     end
@@ -159,6 +159,10 @@ class RbStory < Issue
         when :string      then return trackers.collect{|t| t.id.to_s}.join(',')
         else                   raise "Unexpected return type #{options[:type].inspect}"
     end
+  end
+
+  def self.has_settings_table
+    ActiveRecord::Base.connection.tables.include?('settings')
   end
 
   def tasks
