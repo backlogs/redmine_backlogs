@@ -87,6 +87,7 @@ class RbMasterBacklogsController < RbApplicationController
 
 
     respond_to do |format|
+      format.html { render :json => links }
       format.json { render :json => links }
     end
   end
