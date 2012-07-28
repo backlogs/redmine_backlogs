@@ -192,3 +192,5 @@ en:
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
+  rb_settings_updated: Settings updated
+  rb_settings_update_error: Error while updating settings

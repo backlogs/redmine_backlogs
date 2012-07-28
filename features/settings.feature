@@ -19,11 +19,11 @@ Feature: Configuration
     Given I am a product owner of the project
       And I am viewing the backlog settings page for project ecookbook
      Then I should see "Show stories from subprojects"
-      And the backlogs setting "dont_show_stories_from_subprojects" for ecookbook should be false
+      And show_stories_from_subprojects for ecookbook should be true
       And the "settings[show_stories_from_subprojects]" checkbox should be checked
      When I uncheck "settings[show_stories_from_subprojects]"
       And I press "Save"
-     Then the backlogs setting "dont_show_stories_from_subprojects" for ecookbook should be true
+     Then show_stories_from_subprojects for ecookbook should be false
 
   Scenario: disable subproject for product backlog
     Given I am a product owner of the project
@@ -31,9 +31,9 @@ Feature: Configuration
       And the project selected not to include subprojects in the product backlog
       And I am viewing the backlog settings page for project ecookbook
      Then I should see "Show stories from subprojects"
-      And the backlogs setting "dont_show_stories_from_subprojects" for ecookbook should be true
+      And show_stories_from_subprojects for ecookbook should be false
       And the "settings[show_stories_from_subprojects]" checkbox should not be checked
      When I check "settings[show_stories_from_subprojects]"
       And I press "Save"
-     Then the backlogs setting "dont_show_stories_from_subprojects" for ecookbook should be false
+     Then show_stories_from_subprojects for ecookbook should be true
 

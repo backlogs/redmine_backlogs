@@ -392,14 +392,14 @@ Then /^show me the html content$/ do
   puts page.html
 end
 
-Then /^the backlogs setting "([^"]*)" for (.+) should be (true|false)$/ do |setting, project, value|
+Then /^show_stories_from_subprojects for (.+) should be (true|false)$/ do |project, value|
   project = Project.find(project)
   project.should_not be nil
-  setting = setting+"_#{project.id}"
+  setting = project.rb_projectsettings.show_stories_from_subprojects
   if value=="true"
-    Backlogs.settings[setting].should be_true
+    setting.should be_true
   else
-    Backlogs.settings[setting].should_not be_true
+    setting.should_not be_true
   end
 end
 

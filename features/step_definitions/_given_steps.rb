@@ -175,9 +175,6 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # Enable the backlogs plugin
   @project.enable_module!('backlogs')
 
-  # sanitize per-project backlog settings
-  Backlogs.setting["dont_show_stories_from_subprojects_#{@project.id}"]=nil
-
   # Configure the story and task trackers
   story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
   task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
@@ -585,7 +582,9 @@ Given /^sharing is (.*)enabled$/ do |neg|
 end
 
 Given /^the project selected not to include subprojects in the product backlog$/ do
-  Backlogs.setting["dont_show_stories_from_subprojects_#{@project.id}"]=true
+  settings = @project.rb_projectsettings
+  settings.show_stories_from_subprojects = false
+  settings.save
 end
 
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
