@@ -307,9 +307,11 @@ module BacklogsPlugin
                       Backlogs.setting[:timelog_from_taskboard]=='enabled'
 
         if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
-          remaining_hours = params[:remaining_hours].gsub(',','.').to_f
-          if remaining_hours != issue.remaining_hours
-            issue.journalized_update_attribute(:remaining_hours, remaining_hours) if time_entry.save
+          if params.include?("remaining_hours")
+            remaining_hours = params[:remaining_hours].gsub(',','.').to_f
+            if remaining_hours != issue.remaining_hours
+              issue.journalized_update_attribute(:remaining_hours, remaining_hours) if time_entry.save
+            end
           end
         end
       end
