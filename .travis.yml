@@ -23,6 +23,8 @@ matrix:
       env: REDMINE_VER=2 CUCUMBER_TAGS="--tags @optional"
     - rvm: 1.8.7
       env: REDMINE_VER=cp
+    - rvm: jruby-18mode
+      env: REDMINE_VER=cp
 
 install: "echo skip bundle install"
 
