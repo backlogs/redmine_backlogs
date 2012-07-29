@@ -8,12 +8,14 @@ env:
   - REDMINE_VER=2
   - REDMINE_VER=2 CUCUMBER_TAGS="--tags @optional"
   - REDMINE_VER=m
+  - REDMINE_VER=cp
 matrix:
   allow_failures:
     - rvm: jruby-18mode
     - rvm: 1.8.7
     - env: REDMINE_VER=1
     - env: REDMINE_VER=m
+    - env: REDMINE_VER=cp
   exclude:
     - rvm: jruby-18mode
       env: REDMINE_VER=2
