@@ -46,7 +46,7 @@ case $REDMINE_VER in
       export GENERATE_SECRET=generate_session_store
       export MIGRATE_PLUGINS=db:migrate:plugins
       export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
-      export REDMINE_GIT_TAG=v3.1.0
+      export REDMINE_GIT_TAG=v3.3.0
       ;;
 esac
 
