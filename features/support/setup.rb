@@ -6,7 +6,7 @@ Cucumber::Rails::World.use_transactional_fixtures = true
 
 if Rails::VERSION::MAJOR >= 3
   require 'rspec/rails/matchers'
-  World(Rspec::Rails::Matchers::RoutingMatchers)
+  World(RSpec::Rails::Matchers::RoutingMatchers)
 end
 
 #Seed the DB
