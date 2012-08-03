@@ -1,4 +1,5 @@
 require_dependency 'projects_helper'
+require_dependency 'rb_form_helper'
 
 module Backlogs
   module ProjectsHelperPatch
@@ -23,14 +24,7 @@ module Backlogs
       end
 
       # Streamline the difference between <%=  %> and <%  %>
-      def rb_form_for(*args, &proc)
-        form_string = form_for(*args, &proc)
-        if Rails::VERSION::MAJOR < 3
-          form_string
-        else
-          concat(form_string)
-        end
-      end
+      include RbFormHelper
 
     end
   end

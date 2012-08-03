@@ -229,24 +229,4 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     s.html_safe
   end
 
-  # Streamline the difference between <%=  %> and <%  %>
-  def rb_labelled_fields_for(*args, &proc)
-    fields_string = labelled_fields_for(*args, &proc)
-    if Rails::VERSION::MAJOR < 3
-      fields_string
-    else
-      concat(fields_string)
-    end
-  end
-
-  # Streamline the difference between <%=  %> and <%  %>
-  def rb_labelled_form_for(*args, &proc)
-    form_string = labelled_form_for(*args, &proc)
-    if Rails::VERSION::MAJOR < 3
-      form_string
-    else
-      concat(form_string)
-    end
-  end
-
 end
