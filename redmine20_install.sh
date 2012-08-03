@@ -111,6 +111,8 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
+#ignore redmine-master's test-unit dependency, we need 1.2.3
+sed -i -e 's=.*gem "test-unit".*==g' ${PATH_TO_REDMINE}/Gemfile
 # install gems
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
