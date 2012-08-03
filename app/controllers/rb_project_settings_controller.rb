@@ -1,7 +1,7 @@
 include RbCommonHelper
 include ProjectsHelper
 
-class RbSettingsController < RbApplicationController
+class RbProjectSettingsController < RbApplicationController
   unloadable
 
   def projectsettings
@@ -12,9 +12,9 @@ class RbSettingsController < RbApplicationController
     settings = @project.rb_projectsettings
     settings.show_stories_from_subprojects = enabled
     if settings.save
-      flash[:notice] = t(:rb_settings_updated)
+      flash[:notice] = t(:rb_project_settings_updated)
     else
-      flash[:error] = t(:rb_settings_update_error)
+      flash[:error] = t(:rb_project_settings_update_error)
     end
     redirect_to :controller => 'projects', :action => 'settings', :id => @project,
                 :tab => 'backlogs'

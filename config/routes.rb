@@ -88,7 +88,7 @@ def rb_common_routes(rb)
   rb_match rb, 'hooks/sidebar/project/:project_id/:sprint_id',
           :to => 'rb_hooks_render#view_issues_sidebar'
 
-  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_settings#projectsettings'
+  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_project_settings#projectsettings'
 end
 
 if Rails::VERSION::MAJOR < 3

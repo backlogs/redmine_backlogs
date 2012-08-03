@@ -1,6 +1,6 @@
 <% rb_form_for @project,
                    :as => :rb_projectsettings,
-                   :url => { :controller => 'rb_settings',
+                   :url => { :controller => 'rb_project_settings',
                              :action => 'projectsettings', :project_id => @project },
                    :html => {:id => 'backlogs-form',
                              :method => :post} do |f| %>
