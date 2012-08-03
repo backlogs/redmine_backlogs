@@ -183,19 +183,19 @@ module Backlogs
         return @scrum_statistics
       end
 
-      def rb_projectsettings
-        projectsettings = RbProjectsettings.first(:conditions => ["project_id = ?", self.id])
-        unless projectsettings
-          projectsettings = RbProjectsettings.new( :project_id => self.id)
-          projectsettings.save
+      def rb_project_settings
+        project_settings = RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
+        unless project_settings
+          project_settings = RbProjectSettings.new( :project_id => self.id)
+          project_settings.save
         end
-        projectsettings
+        project_settings
       end
 
       def projects_in_shared_product_backlog
         #sharing off: only the product itself is in the product backlog
         #sharing on: subtree is included in the product backlog
-        if Backlogs.setting[:sharing_enabled] and self.rb_projectsettings.show_stories_from_subprojects
+        if Backlogs.setting[:sharing_enabled] and self.rb_project_settings.show_stories_from_subprojects
           self.self_and_descendants.active
         else
           [self]

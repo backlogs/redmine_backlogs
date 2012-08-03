@@ -582,7 +582,7 @@ Given /^sharing is (.*)enabled$/ do |neg|
 end
 
 Given /^the project selected not to include subprojects in the product backlog$/ do
-  settings = @project.rb_projectsettings
+  settings = @project.rb_project_settings
   settings.show_stories_from_subprojects = false
   settings.save
 end

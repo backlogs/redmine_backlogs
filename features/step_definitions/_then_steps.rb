@@ -395,7 +395,7 @@ end
 Then /^show_stories_from_subprojects for (.+) should be (true|false)$/ do |project, value|
   project = Project.find(project)
   project.should_not be nil
-  setting = project.rb_projectsettings.show_stories_from_subprojects
+  setting = project.rb_project_settings.show_stories_from_subprojects
   if value=="true"
     setting.should be_true
   else
