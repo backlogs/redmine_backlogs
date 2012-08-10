@@ -166,10 +166,14 @@ module Backlogs
     include Singleton
 
     def [](key)
-      return safe_load[key]
+      key = key.intern if key.is_a?(String)
+      settings = safe_load
+      # add alternate loading because settings loading on ruby 1.9.3 seems to sometimes convert keys to strings on save.
+      return settings[key] || settings[key.to_s]
     end
 
     def []=(key, value)
+      key = key.intern if key.is_a?(String)
       settings = safe_load
       settings[key] = value
       Setting.plugin_redmine_backlogs = settings

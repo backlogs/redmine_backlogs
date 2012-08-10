@@ -40,7 +40,9 @@ module Backlogs
           backlogs_filters = {
             "backlogs_issue_type" => {  :type => :list,
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 20 }
+                                        :order => 20 },
+            "story_points" => { :type => :float,
+                                :order => 21 }
                              }
         end
 

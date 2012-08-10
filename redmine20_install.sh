@@ -46,7 +46,7 @@ case $REDMINE_VER in
       export GENERATE_SECRET=generate_session_store
       export MIGRATE_PLUGINS=db:migrate:plugins
       export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
-      export REDMINE_GIT_TAG=v3.1.0
+      export REDMINE_GIT_TAG=v3.3.0
       ;;
 esac
 
@@ -78,9 +78,14 @@ run_tests()
   bundle exec rake redmine:backlogs:prepare_fixtures
 
   # run cucumber
+  if [ ! -n "${CUCUMBER_TAGS}" ];
+  then
+    CUCUMBER_TAGS="--tags ~@optional"
+  fi
+
   if [ ! -n "${CUCUMBER_FLAGS}" ];
   then
-    export CUCUMBER_FLAGS="--format progress"
+    export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
   fi
   bundle exec cucumber $CUCUMBER_FLAGS features
 }
@@ -106,6 +111,8 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
+#ignore redmine-master's test-unit dependency, we need 1.2.3
+sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
 # install gems
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle

@@ -233,7 +233,12 @@ module BacklogsPrintableCards
 
   # put the mixins in a separate class, seems to interfere with prawn otherwise
   class Gravatar
-    include GravatarHelper::PublicMethods
+    case Backlogs.platform
+      when :redmine
+        include GravatarHelper::PublicMethods
+      when :chiliproject
+        include Gravatarify::Helper
+    end
     include ERB::Util
 
     def initialize(email, size)

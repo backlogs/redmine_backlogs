@@ -29,6 +29,7 @@ Feature: Chief Product Owner story ordering
         | Story A | Sp001      | ecookbook     |
         | Story B | Sp001      | subproject1   |
 
+  @optional
   Scenario: View the toplevel product backlog
     Given I am viewing the master backlog
      Then I should see the product backlog
@@ -44,6 +45,7 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 8
       And the 9th story in the product backlog should be Story 9
 
+  @optional
   Scenario: View the sub product backlog
     Given I have selected the subproject1 project
       And I am viewing the master backlog
@@ -77,6 +79,7 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 7
       And the 9th story in the product backlog should be Story 9
 
+  @optional
   Scenario: Move story 6 in subproject to 2nd pos and expect 6 to be after 5 and before 8
     Given I have selected the subproject1 project
       And I am viewing the master backlog
@@ -121,6 +124,7 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 8
       And the 9th story in the product backlog should be Story 9
 
+  @optional
   Scenario: Move story 8 in subproject to 2nd pos and expect 8 to be after 6 and before 7
     Given I have selected the subproject1 project
       And I am viewing the master backlog
@@ -143,6 +147,7 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 5
       And the 9th story in the product backlog should be Story 9
 
+  @optional
   Scenario: Move story 9 in subproject to 3rd pos and expect 9 to be after 5 and before 8
     Given I have selected the subproject1 project
       And I am viewing the master backlog
@@ -165,6 +170,7 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 9
       And the 9th story in the product backlog should be Story 8
 
+  @optional
   Scenario: Move story 7 in subproject to the bottom and expect 7 to be after 9
     Given I have selected the subproject1 project
       And I am viewing the master backlog
@@ -187,11 +193,10 @@ Feature: Chief Product Owner story ordering
       And the 8th story in the product backlog should be Story 9
       And the 9th story in the product backlog should be Story 7
 
-  Scenario: Create new story in subproject and expect it to be before the first of subproject but after all others which where before already
-
-  Scenario: Move a story from a sprint back to the subproject backlog  at the top
-  Scenario: Move a story from a sprint back to the subproject backlog  at the 2nd position
-  Scenario: Move a story from a sprint back to the subproject backlog  at the 3rd position
-  Scenario: Move a story from a sprint back to the subproject backlog  at the bottom
-  Scenario: Create a new story in subproject when new stories default to top and expect it before 6 and after 2
-  Scenario: Create a new story in subproject when new stories default to bottom and expect after 9
+#  Scenario: Create new story in subproject and expect it to be before the first of subproject but after all others which where before already
+#  Scenario: Move a story from a sprint back to the subproject backlog  at the top
+#  Scenario: Move a story from a sprint back to the subproject backlog  at the 2nd position
+#  Scenario: Move a story from a sprint back to the subproject backlog  at the 3rd position
+#  Scenario: Move a story from a sprint back to the subproject backlog  at the bottom
+#  Scenario: Create a new story in subproject when new stories default to top and expect it before 6 and after 2
+#  Scenario: Create a new story in subproject when new stories default to bottom and expect after 9
