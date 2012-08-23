@@ -12,6 +12,8 @@ module BacklogsPlugin
 
       def view_issues_sidebar_planning_bottom(context={ })
         begin
+          return '' if User.current.anonymous?
+
           project = context[:project]
 
           return '' unless project && !project.blank?
