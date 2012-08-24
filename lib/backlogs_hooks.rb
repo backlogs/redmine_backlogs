@@ -302,7 +302,6 @@ module BacklogsPlugin
         return '' if time_entry[:issue_id].blank?
 
         params = context[:params]
-        return unless params.include?("commit")
 
         issue = Issue.find(time_entry.issue_id)
         return unless Backlogs.configured?(issue.project) &&
