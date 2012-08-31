@@ -392,6 +392,17 @@ Then /^show me the html content$/ do
   puts page.html
 end
 
+Then /^show_stories_from_subprojects for (.+) should be (true|false)$/ do |project, value|
+  project = Project.find(project)
+  project.should_not be nil
+  setting = project.rb_project_settings.show_stories_from_subprojects
+  if value=="true"
+    setting.should be_true
+  else
+    setting.should_not be_true
+  end
+end
+
 #only with phantomjs driver:
 Then /^show me a screenshot at (.+)$/ do |arg1|
   page.driver.render(arg1, :full=>true)
