@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'timecop'
 
+Given /^I am admin$/ do
+  login_as_admin
+end
+
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
   role.permissions << :view_master_backlog
@@ -9,6 +13,7 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :view_releases
   role.permissions << :modify_releases
   role.permissions << :view_scrum_statistics
+  role.permissions << :configure_backlogs
   role.save!
   login_as_product_owner
   @projects.each{|project|
@@ -74,6 +79,11 @@ end
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
   @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  verify_request_status(200)
+end
+
+Given /^I am viewing the backlog settings page for project (.*)$/ do |project_name|
+  visit url_for(:controller => :projects, :action => :settings, :id => Project.find(project_name).id, :tab => 'backlogs', :only_path=>true)
   verify_request_status(200)
 end
 
@@ -569,6 +579,12 @@ end
 
 Given /^sharing is (.*)enabled$/ do |neg|
   Backlogs.setting[:sharing_enabled] = !!(neg=='')
+end
+
+Given /^the project selected not to include subprojects in the product backlog$/ do
+  settings = @project.rb_project_settings
+  settings.show_stories_from_subprojects = false
+  settings.save
 end
 
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |

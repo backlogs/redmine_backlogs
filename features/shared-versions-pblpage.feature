@@ -70,7 +70,7 @@ Feature: Shared versions
         | Impediment 1 | Sp001      | Story 1 |
         | Impediment 2 | Sp002      | Story 2 | 
         
-  Scenario: View the toplevel backlog page
+  Scenario: View the toplevel backlog page without sharing
     Given I have selected the p1 project
       And sharing is not enabled
       And I am viewing the master backlog
@@ -78,8 +78,15 @@ Feature: Shared versions
       And I should see 3 sprint backlogs
       And I should see 1 stories in the product backlog
 
-#  @javascript
-  Scenario: View the toplevel backlog page
+  Scenario: View the toplevel backlog page with subprojects excluded
+    Given I have selected the p1 project
+      And the project selected not to include subprojects in the product backlog
+      And I am viewing the master backlog
+     Then I should see the product backlog
+      And I should see 1 stories in the product backlog
+
+  @javascript
+  Scenario: View the toplevel backlog page with sharing defaults
     Given I have selected the p1 project
       And I am viewing the master backlog
      Then I should see the product backlog
