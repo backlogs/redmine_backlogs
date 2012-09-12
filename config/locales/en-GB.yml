@@ -51,10 +51,12 @@ en-GB:
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
+  field_base: ""
   field_blocks: Blocks
   field_initial_story_points: Initial story points
   field_name: Name

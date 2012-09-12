@@ -51,9 +51,11 @@ ja:
   error_no_workflow_for_task_tracker: "タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください"
   error_outro: 送信する前に、上記のエラーを訂正してください
   error_release_end_after_start: リリース終了日は開始日の後に設定してください
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: バックログタイプ
+  field_base: ""
   field_blocks: ブロック
   field_initial_story_points: 初期ストーリーポイント
   field_name: 名前

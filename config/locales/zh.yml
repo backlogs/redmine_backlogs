@@ -65,9 +65,11 @@ zh:
     If you believe this is an error, please have your administrator update the workflow.
   error_outro: 在再次提交之前，请先更正以上的错误。
   error_release_end_after_start: Release end date has to be after start date
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Assigned To
+  field_base: ""
   field_backlogs_issue_type: Backlog类型
   field_blocks: ! '[[Blocks]]'
   field_initial_story_points: Initial story points

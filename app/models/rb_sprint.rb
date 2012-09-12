@@ -89,7 +89,7 @@ class RbSprint < Version
   validate :start_and_end_dates
 
   def start_and_end_dates
-    errors.add_to_base("Sprint cannot end before it starts") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
+    errors.add(:base, "sprint_end_before_start") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
 
   def self.rb_scope(symbol, func)

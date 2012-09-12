@@ -64,10 +64,12 @@
     tilgang.
   error_outro: Vennligst rett feilene over før du forsøker igjen.
   error_release_end_after_start: Sluttdato for utgivelse må være etter startdato
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: er allerede i bruk
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
+  field_base: ""
   field_blocks: Blokker
   field_initial_story_points: Initielle storypoenger
   field_name: Navn

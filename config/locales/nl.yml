@@ -67,9 +67,11 @@ nl:
   error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
   error_release_end_after_start: De einddatum van de release moet na de start datum
     liggen
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is al in gebruik
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Toegekend aan
+  field_base: ""
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
   field_initial_story_points: Initiële story points
