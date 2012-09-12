@@ -65,10 +65,12 @@ es:
   error_outro: Por favor, corrija los errores antes de volver a realizar la solicitud.
   error_release_end_after_start: Fecha del release final tiene que ser después de
     la fecha de inicio
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: ya se encuentra en uso
   event_sprint_summary: ! '%{projecto}: %{resumen}'
   field_assigned_to: Asignado a
   field_backlogs_issue_type: Tipo de backlog
+  field_base: ""
   field_blocks: Bloques
   field_initial_story_points: Puntos iniciales de la historia
   field_name: Nombre
