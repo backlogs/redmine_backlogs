@@ -69,11 +69,13 @@ fr:
   error_outro: Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau.
   error_release_end_after_start: La aate de fin de Release doit être faite après la
     date de début
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: !binary |-
     ZMOpasOgIHV0aWxpc8Op
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: !binary |-
     QXNzaWduw6kgw6A=
+  field_base: ""
   field_backlogs_issue_type: Type de backlog
   field_blocks: Blocks
   field_initial_story_points: Point de story initiale

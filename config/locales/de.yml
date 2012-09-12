@@ -68,9 +68,11 @@ de:
     Falls sie dies als Fehler empfinden, so kontaktieren Sie den Administrator
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: Release Enddatum muss nach dem Startdatum liegen
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: ist bereits in Bearbeitung
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Zugeordnet zu
+  field_base: ""
   field_backlogs_issue_type: Backlog Typ
   field_blocks: blockiert
   field_initial_story_points: Storypunkte zu Beginn

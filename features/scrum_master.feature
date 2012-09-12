@@ -143,3 +143,11 @@ Feature: Scrum Master
      Then the request should complete successfully
      Then the wiki page Sprint 001 should contain Sprint Template
 
+  Scenario: Update sprint with start date greater than end date
+    Given I am viewing the master backlog
+      And I want to edit the sprint named Sprint 001
+      And I want to set the sprint_start_date of the sprint to 2012-03-01
+      And I want to set the effective_date of the sprint to 2012-02-20
+     When I update the sprint
+     Then the server should return an update error
+      And the error message should say "Sprint cannot end before it starts"

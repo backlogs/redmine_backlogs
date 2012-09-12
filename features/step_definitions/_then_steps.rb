@@ -415,3 +415,8 @@ end
 Then /^open the remote inspector$/ do
   page.driver.debug
 end
+
+Then /^the error message should say "([^"]*)"$/ do |msg|
+  response_msg = page.find(:xpath,"//div[@class='errors']/div")
+  response_msg.text.strip.should == msg
+end

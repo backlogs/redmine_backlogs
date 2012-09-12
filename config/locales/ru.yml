@@ -68,10 +68,12 @@ ru:
     If you believe this is an error, please have your administrator update the workflow.
   error_outro: Пожалуйста, исправьте вышепреведенные ошибки перед следующим запуском.
   error_release_end_after_start: Дата окончания версии должна быть после даты  начала
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Тип бэклога
+  field_base: ""
   field_blocks: Блокировки
   field_initial_story_points: Начальная оценка истории
   field_name: Название
