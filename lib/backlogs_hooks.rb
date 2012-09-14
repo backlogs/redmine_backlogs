@@ -189,6 +189,7 @@ module BacklogsPlugin
       def view_my_account(context={ })
         begin
           return %{
+            </fieldset>
             <h3>#{l(:label_backlogs)}</h3>
             <div class="box tabular">
             <p>
