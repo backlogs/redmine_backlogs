@@ -9,7 +9,7 @@ namespace :redmine do
           ids = RbStory.connection.select_values('select id
                                                   from issues
                                                   join enumerations on issues.priority_id = enumerations.id
-                                                  order by enumerations.position')
+                                                  order by enumerations.position desc')
           ids.each_with_index{|id, i|
             RbStory.connection.execute("update issues set position = #{i * RbStory.list_spacing} where id = #{id}")
           }
