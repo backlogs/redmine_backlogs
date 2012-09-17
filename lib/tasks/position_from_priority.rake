@@ -1,7 +1,7 @@
 namespace :redmine do
   namespace :backlogs do
     desc "Remove duplicate positions in the issues table"
-    task :fix_positions => :environment do
+    task :position_from_priority => :environment do
       unless Backlogs.migrated?
         puts "Please run plugin migrations first"
       else
