@@ -20,7 +20,7 @@ class RbMasterBacklogsController < RbApplicationController
     @last_update = (last_story ? last_story.updated_on : nil)
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
     sprints_backlog_storie_of = RbStory.backlogs_by_sprint(@project, [sprints, c_sprints].flatten)
-    @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
+    @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }.reverse
     @c_sprint_backlogs = c_sprints.map{|s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
 
     respond_to do |format|
