@@ -10,14 +10,6 @@ namespace :redmine do
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
-      begin
-        Rails.cache.clear
-      rescue NoMethodError
-        puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
-      rescue SystemCallError
-        puts "Cache directory is not found"
-      end
-
       Backlogs.gems.each_pair {|gem, installed|
         raise "You are missing the '#{gem}' gem" unless installed
       }

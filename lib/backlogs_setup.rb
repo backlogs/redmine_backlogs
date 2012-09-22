@@ -38,15 +38,12 @@ module Backlogs
   module_function :"development?"
 
   def platform_support(raise_error = false)
-    supported = Rails.cache.fetch("Backlogs.platform_supported", {:expires_in => 24.hours}) {
-      versions = nil # needed so versions isn't block-scoped in the timeout
-      begin
-        ReliableTimout.timeout(10) { versions = YAML::load(open('http://www.redminebacklogs.net/versions.yml').read) }
-      rescue
-        versions = YAML::load(File.open(File.join(File.dirname(__FILE__), 'versions.yml')).read)
-      end
-      versions
-    }
+    supported = nil # needed so versions isn't block-scoped in the timeout
+    begin
+      ReliableTimout.timeout(10) { versions = YAML::load(open('http://www.redminebacklogs.net/versions.yml').read) }
+    rescue
+      versions = YAML::load(File.open(File.join(File.dirname(__FILE__), 'versions.yml')).read)
+    end
 
     return "You are running backlogs #{Redmine::Plugin.find(:redmine_backlogs).version}, latest version is #{supported[:backlogs]}" if Redmine::Plugin.find(:redmine_backlogs).version != supported[:backlogs]
 
