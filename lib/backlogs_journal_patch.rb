@@ -18,7 +18,7 @@ module Backlogs
 
     module InstanceMethods
       def backlogs_after_save
-        RbHistory.process(self)
+        RbIssueHistory.process(self)
       end
     end
   end

@@ -1,7 +1,7 @@
 require 'pp'
 
-class RbHistory < ActiveRecord::Base
-  set_table_name 'rb_history'
+class RbIssueHistory < ActiveRecord::Base
+  set_table_name 'rb_issue_history'
   belongs_to :issue
 
   serialize :history, Array
@@ -28,7 +28,7 @@ class RbHistory < ActiveRecord::Base
   def expand(status=nil)
     h = self.history.dup
 
-    status ||= RbHistory.statuses
+    status ||= RbIssueHistory.statuses
     h << {
       :date => Date.today + 1,
       :estimated_hours => self.issue.estimated_hours,
@@ -60,7 +60,7 @@ class RbHistory < ActiveRecord::Base
     end
 
     startdate = issue.created_on.to_date
-    rb = (RbHistory.find_by_issue_id(issue.id) || RbHistory.new(:issue_id => issue.id))
+    rb = (RbIssueHistory.find_by_issue_id(issue.id) || RbIssueHistory.new(:issue_id => issue.id))
 
     if rb.history.size == 0
       rb.history = [{:date => startdate}]
@@ -125,7 +125,7 @@ class RbHistory < ActiveRecord::Base
 
     status = self.statuses
 
-    Issue.all.each{|issue| RbHistory.process(issue, status) }
+    Issue.all.each{|issue| RbIssueHistory.process(issue, status) }
   end
 
   private

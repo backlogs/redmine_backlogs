@@ -56,7 +56,10 @@ clone_redmine()
 {
   set -e # exit if clone fails
   rm -rf $PATH_TO_REDMINE
-  git clone -b master --depth=100 --quiet $REDMINE_GIT_REPO $PATH_TO_REDMINE
+  if [ ! "$VERBOSE" = "yes" ]; then
+    QUIET=--quiet
+  fi
+  git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
   cd $PATH_TO_REDMINE
   git checkout $REDMINE_GIT_TAG
 }
@@ -110,6 +113,16 @@ echo current directory is `pwd`
 
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
+
+if [ ! "$DB_TO_RESTORE" = "" ]; then
+  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
+  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
+  if [ "$DBTYPE" = "mysql2" ]; then
+    mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
+    mysqladmin -u root -p$DBROOTPW create $DBNAME
+    mysql -u root -p$DBROOTPW $DBNAME < $DB_TO_RESTORE
+  fi
+fi
 
 #ignore redmine-master's test-unit dependency, we need 1.2.3
 sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile

@@ -11,7 +11,7 @@ module Backlogs
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :history, :class_name => RbHistory
+        has_one :history, :class_name => RbIssueHistory
 
         safe_attributes 'position'
         before_save :backlogs_before_save
@@ -117,7 +117,7 @@ module Backlogs
       end
 
       def backlogs_after_save
-        RbHistory.process(self) if @backlogs_new_record
+        RbIssueHistory.process(self) if @backlogs_new_record
 
         return unless Backlogs.configured?(self.project)
 
