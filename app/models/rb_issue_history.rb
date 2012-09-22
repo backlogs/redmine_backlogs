@@ -75,6 +75,7 @@ class RbIssueHistory < ActiveRecord::Base
     status ||= self.statuses
 
     sprints_touched = []
+    sprints_touched << issue.fixed_version_id if issue.fixed_version_id
 
     journals.each{|journal|
       date = journal.created_on.to_date
@@ -134,19 +135,21 @@ class RbIssueHistory < ActiveRecord::Base
     rb.save
 
     sprints_touched.uniq.each{|sprint_id|
-      h = (RbSprintHistory.find_by_version_id(sprint_id) || RbSprintHistory.new(:version_id => sprint_id))
-      next if h.issues.include?(issue.id)
-      h.issues << issue.id
-      h.save
+      h = (RbSprintBurndown.find_by_version_id(sprint_id) || RbSprintBurndown.new(:version_id => sprint_id))
+      h.touch!(issue.id)
     }
   end
 
   def self.rebuild
     self.delete_all
+    RbSprintBurndown.delete_all
 
     status = self.statuses
 
-    Issue.all.each{|issue| RbIssueHistory.process(issue, status) }
+    Issue.all.each{|issue|
+      puts "#{issue.id}..."
+      RbIssueHistory.process(issue, status)
+    }
   end
 
   private

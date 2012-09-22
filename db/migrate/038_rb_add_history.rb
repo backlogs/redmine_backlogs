@@ -10,14 +10,18 @@ class RbAddHistory < ActiveRecord::Migration
       t.text   :history
     end
 
-    create_table :rb_sprint_history do |t|
+    create_table :rb_sprint_burndown do |t|
       t.column :version_id,    :integer, :default => 0,  :null => false
       t.text   :issues
+      t.text   :burndown
+      t.timestamps
     end
 
+    puts "Rebuilding history..."
     RbIssueHistory.rebuild
+    puts "Rebuild done"
     add_index :rb_issue_history, :issue_id, :unique => true
-    add_index :rb_sprint_history, :version_id, :unique => true
+    add_index :rb_sprint_burndown, :version_id, :unique => true
   end
 
   def self.down

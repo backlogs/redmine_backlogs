@@ -146,13 +146,12 @@ bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
 
-
-# install backlogs
-bundle exec rake redmine:backlogs:install labels=no RAILS_ENV=development --trace
-
 # run backlogs database migrations
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=development
+
+# install backlogs
+bundle exec rake redmine:backlogs:install labels=no RAILS_ENV=development --trace
 }
 
 while getopts :irtu opt

@@ -1,79 +1,5 @@
 require 'date'
 
-class Burndown
-  def initialize(sprint, direction)
-    @direction = direction
-    @sprint_id = sprint.id
-
-    @days = sprint.days
-    @data = {}
-    [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| @data[k] = [nil] * @days.size }
-    statuses = RbIssueHistory.statuses
-    RbStory.find(:all, :conditions => ['id in (?)', sprint.history.issues]).each{|story|
-      bd = story.burndown(sprint, statuses)
-      next unless bd
-      bd.each_pair {|k, data|
-        puts "#{k.inspect} #{data.inspect}"
-        data.each_with_index{|d, i|
-          next unless d
-          @data[k][i] ||= 0
-          @data[k][i] += d
-        }
-      }
-    }
-    @data.keys.each{|k| @data[k] = @data[k].collect{|v| v == :nil ? nil : v} }
-
-    @data[:ideal] = (0..@days.size - 1).to_a.reverse
-    [[:points_to_resolve, :points_resolved], [:points_to_accept, :points_accepted]].each{|todo|
-      tgt, src = *todo
-      @data[tgt] = (0..@days.size - 1).to_a.collect{|i| @data[:points_committed][i] && @data[src][i] ? @data[:points_committed][i] - @data[src][i] : nil }
-    }
-    [[:points_required_burn_rate, :points_to_resolve], [:hours_required_burn_rate, :hours_remaining]].each{|todo|
-      tgt, src = *todo
-      @data[tgt] = (0..@days.size - 1).to_a.collect{|i| @data[src][i] ? Float(@data[src][i]) / (@data[:ideal][i] == 0 ? 1 : @data[:ideal][i]) : nil }
-    }
-
-    case direction
-      when 'up'
-        @data.delete(:points_to_resolve)
-        @data.delete(:points_to_accept)
-      when 'down'
-        @data.delete(:points_resolved)
-        @data.delete(:points_accepted)
-      else
-        raise "Unexpected burn direction #{direction.inspect}"
-    end
-  end
-
-  def [](i)
-    i = i.intern if i.is_a?(String)
-    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
-    return @data[i]
-  end
-
-  def series(remove_empty = true)
-    @series ||= {}
-    return @series[remove_empty] if @series[remove_empty]
-
-    @series[remove_empty] = @data.keys.collect{|k| k.to_s}.sort
-    return @series[remove_empty] unless remove_empty
-
-    # delete :points_committed if flatline
-    @series[remove_empty].delete('points_committed') if @data[:points_committed].uniq.compact.size < 1
-
-    # delete any series that is flat-line 0/nil
-    @series[remove_empty].each {|k|
-      @series[remove_empty].delete(k) if k != 'points_committed' && @data[k.intern].collect{|d| d.to_f }.uniq == [0.0]
-    }
-    return @series[remove_empty]
-  end
-
-  attr_reader :days
-  attr_reader :sprint_id
-  attr_reader :data
-  attr_reader :direction
-end
-
 class RbSprint < Version
   unloadable
 
@@ -207,24 +133,12 @@ class RbSprint < Version
   end
 
   def activity
-    bd = self.burndown('up')
-    return false if !bd
+    bd = self.burndown
 
     # assume a sprint is active if it's only 2 days old
     return true if bd[:hours_remaining].compact.size <= 2
 
     return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
-  end
-
-  def burndown(direction=nil)
-    return nil if not self.has_burndown?
-
-    direction ||= Backlogs.setting[:points_burn_direction]
-    direction = 'down' if direction != 'up'
-
-    @burndown ||= {'up' => nil, 'down' => nil}
-    @burndown[direction] ||= Burndown.new(self, direction)
-    return @burndown[direction]
   end
 
   def impediments
@@ -242,5 +156,4 @@ class RbSprint < Version
             self.id]
       ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
   end
-
 end

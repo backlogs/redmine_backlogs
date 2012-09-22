@@ -9,7 +9,10 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        has_one :history, :class_name => RbSprintHistory
+        has_one :burndown, :class_name => RbSprintBurndown
+        after_create :create_burndown
+
+        after_save :clear_burndown
 
         include Backlogs::ActiveRecord::Attributes
       end
@@ -19,10 +22,9 @@ module Backlogs
     end
 
     module InstanceMethods
-      def burndown
-        return RbSprint.find_by_id(self.id).burndown
+      def clear_burndown
+        self.burndown.touch!
       end
-
     end
   end
 end

@@ -7,7 +7,7 @@ namespace :redmine do
       project = Project.find_by_name('1_problem')
       RbSprint.find(:all, :conditions => ['not (sprint_start_date is null or effective_date is null) and project_id = ?', project.id]).each{|sprint|
         puts "Sprint #{sprint.name} (#{sprint.sprint_start_date} - #{sprint.effective_date})"
-        puts sprint.burndown.inspect
+        puts sprint.burndown.data.inspect
 
 #        sprint.stories.each{|story|
 #          puts "  Story #{story.id.to_s.ljust(4, ' ')} (#{story.story_points.inspect.rjust(5, ' ')} pts) #{story.subject} / #{story.burndown.inspect}"
