@@ -17,7 +17,6 @@ gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
 group :development do
-  gem "github-v3-api"
   gem "inifile"
 end
 

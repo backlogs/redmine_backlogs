@@ -12,7 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-class RbJournal < ActiveRecord::Base
+class RbStats < ActiveRecord::Base
   REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
   JOURNALED_PROPERTIES = {
     'estimated_hours'   => :float,

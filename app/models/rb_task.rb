@@ -67,19 +67,6 @@ class RbTask < Issue
          :order => "updated_on ASC")
   end
 
-  def self.tasks_for(story_id)
-    tasks = []
-    story = RbStory.find_by_id(story_id)
-    if RbStory.trackers.include?(story.tracker_id)
-      story.descendants.each_with_index {|task, i|
-        task = task.becomes(RbTask)
-        task.rank = i + 1
-        tasks << task
-      }
-    end
-    return tasks
-  end
-
   def update_with_relationships(params, is_impediment = false)
     time_entry_add(params)
 
@@ -169,28 +156,21 @@ class RbTask < Issue
     return @rank
   end
 
-  def burndown(sprint = nil)
+  def burndown(sprint = nil, status=nil)
     return nil unless self.is_task?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
-    return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
-      days = sprint.days(:active)
-
-      earliest_estimate = history(:estimated_hours, days).compact[0]
-
-      series = Backlogs::MergedArray.new
-      series.merge(:hours => history(:remaining_hours, days))
-      series.merge(:sprint => history(:fixed_version_id, days))
-      series.each_with_index{|d, i|
-        if d.sprint != sprint.id
-          d.hours = nil
-        elsif i == 0 && d.hours.to_f == 0 && earliest_estimate.to_f != 0.0
-          # set hours to earliest estimate *within sprint* if first day is not filled out
-          d.hours = earliest_estimate
-        end
-      }
-      series.series(:hours)
+    self.history.filter(sprint, status).collect{|d|
+      if d.nil? || d[:sprint] != sprint.id
+        nil
+      elsif d[:status_open] == false
+        0
+      elsif d[:date] == sprint.sprint_start_date
+        d[:estimated_hours] || d[:remaining_hours]
+      else
+        d[:remaining_hours] || d[:estimated_hours]
+      end
     }
   end
 
