@@ -209,49 +209,24 @@ class RbStory < Issue
     end
   end
 
-  def burndown(sprint=nil)
+  def burndown(sprint = nil, status=nil)
     return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
-    tasks = 
+    bd = {:points => [], :points_accepted => [], :points_resolved => [], :hours => []}
 
-    return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
-      bd = {}
-
-      if sprint.has_burndown?
-        days = sprint.days(:active)
-
-        series = Backlogs::MergedArray.new
-        series.merge(:in_sprint => history(:fixed_version_id, days).collect{|s| s == sprint.id})
-        series.merge(:points => history(:story_points, days))
-        series.merge(:open => history(:status_open, days))
-        series.merge(:accepted => history(:status_success, days))
-        series.merge(:hours => ([0] * (days.size + 1)))
-
-        tasks.each{|task| series.add(:hours => task.burndown(sprint)) }
-
-        series.each {|datapoint|
-          if datapoint.in_sprint
-            datapoint.hours = 0 unless datapoint.open
-            datapoint.points_accepted = (datapoint.accepted ? datapoint.points : nil)
-            datapoint.points_resolved = (datapoint.accepted || datapoint.hours.to_f == 0.0 ? datapoint.points : nil)
-          else
-            datapoint.nilify
-            datapoint.points_accepted = nil
-            datapoint.points_resolved = nil
-          end
-        }
-
-        # collect points on this sprint
-        bd[:points] = series.series(:points)
-        bd[:points_accepted] = series.series(:points_accepted)
-        bd[:points_resolved] = series.series(:points_resolved)
-        bd[:hours] = series.collect{|datapoint| datapoint.open ? datapoint.hours : nil}
+    self.history.filter(sprint, status).each{|d|
+      if d.nil? || d[:sprint] != sprint.id
+        [:points, :points_accepted, :points_resolved, :hours].each{|k| bd[k] << nil}
+      else
+        bd[:points] << d[:story_points]
+        bd[:points_accepted] << (! d[:status_success] ? 0 : d[:story_points])
+        bd[:points_resolved] << (! d[:hours_remaining].to_f != 0.0 ? 0 : d[:story_points])
+        bd[:hours] << (d[:status_closed] ? 0 : (d[:date] == sprint.sprint_start_date ? d[:estimated_hours] || d[:remaining_hours] : d[:remaining_hours] || d[:estimated_hours]))
       end
-
-      bd
     }
+    return bd
   end
 
   def rank

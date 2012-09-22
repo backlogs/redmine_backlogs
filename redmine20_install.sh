@@ -114,7 +114,10 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
-if [ ! "$DB_TO_RESTORE" = "" ]; then
+if [ "$DB_TO_RESTORE" = "" ]; then
+  story_trackers=Story
+  task_tracker=Task
+else
   DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
   DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ]; then
@@ -143,11 +146,9 @@ bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
 
-# enable development features
-touch backlogs.dev
 
 # install backlogs
-bundle exec rake redmine:backlogs:install labels=no story_trackers=Story task_tracker=Task RAILS_ENV=development --trace
+bundle exec rake redmine:backlogs:install labels=no RAILS_ENV=development --trace
 
 # run backlogs database migrations
 bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test

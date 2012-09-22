@@ -164,7 +164,7 @@ class RbTask < Issue
     self.history.filter(sprint, status).collect{|d|
       if d.nil? || d[:sprint] != sprint.id
         nil
-      elsif d[:status_open] == false
+      elsif ! d[:status_open]
         0
       elsif d[:date] == sprint.sprint_start_date
         d[:estimated_hours] || d[:remaining_hours]

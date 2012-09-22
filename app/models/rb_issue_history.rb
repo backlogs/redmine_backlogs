@@ -7,11 +7,6 @@ class RbIssueHistory < ActiveRecord::Base
   serialize :history, Array
   after_initialize :set_default_history
 
-
-  def to_a
-    self.history
-  end
-
   def self.statuses
     Hash.new{|h, k|
       s = (IssueStatus.find_by_id(k.to_i) || IssueStatus.default)
@@ -22,7 +17,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   def filter(sprint, status=nil)
     h = Hash[*(self.expand(status).collect{|d| [d[:date], d]}.flatten)]
-    (sprint.sprint_start_date .. sprint.effective_date + 1).to_a.collect{|d| h[d]}
+    (sprint.sprint_start_date .. sprint.effective_date + 1).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] ? true : !(d.saturday? || d.sunday?)}.collect{|d| h[d]}
   end
 
   def expand(status=nil)
