@@ -9,6 +9,8 @@ module Backlogs
       base.class_eval do
         unloadable
 
+        has_one :history, :class_name => RbSprintHistory
+
         include Backlogs::ActiveRecord::Attributes
       end
     end

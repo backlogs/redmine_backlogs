@@ -214,16 +214,16 @@ class RbStory < Issue
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
-    bd = {:points => [], :points_accepted => [], :points_resolved => [], :hours => []}
+    bd = {:points_committed => [], :points_accepted => [], :points_resolved => [], :hours_remaining => []}
 
     self.history.filter(sprint, status).each{|d|
-      if d.nil? || d[:sprint] != sprint.id
-        [:points, :points_accepted, :points_resolved, :hours].each{|k| bd[k] << nil}
+      if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :story
+        [:points_committed, :points_accepted, :points_resolved, :hours_remaining].each{|k| bd[k] << nil}
       else
-        bd[:points] << d[:story_points]
+        bd[:points_committed] << d[:story_points]
         bd[:points_accepted] << (! d[:status_success] ? 0 : d[:story_points])
         bd[:points_resolved] << (! d[:hours_remaining].to_f != 0.0 ? 0 : d[:story_points])
-        bd[:hours] << (d[:status_closed] ? 0 : (d[:date] == sprint.sprint_start_date ? d[:estimated_hours] || d[:remaining_hours] : d[:remaining_hours] || d[:estimated_hours]))
+        bd[:hours_remaining] << (d[:status_closed] ? 0 : (d[:date] == sprint.sprint_start_date ? d[:estimated_hours] || d[:remaining_hours] : d[:remaining_hours] || d[:estimated_hours]))
       end
     }
     return bd

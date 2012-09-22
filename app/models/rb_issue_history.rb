@@ -17,7 +17,15 @@ class RbIssueHistory < ActiveRecord::Base
 
   def filter(sprint, status=nil)
     h = Hash[*(self.expand(status).collect{|d| [d[:date], d]}.flatten)]
-    (sprint.sprint_start_date .. sprint.effective_date + 1).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] ? true : !(d.saturday? || d.sunday?)}.collect{|d| h[d]}
+    sprint.days.collect{|d| h[d]}
+  end
+
+  def self.issue_type(tracker_id)
+    return if tracker_id.nil? || tracker_id == ''
+    tracker_id = tracker_id.to_i
+    return :story if RbStory.trackers && RbStory.trackers.include?(tracker_id)
+    return :task if tracker_id == RbTask.tracker
+    return nil
   end
 
   def expand(status=nil)
@@ -29,6 +37,7 @@ class RbIssueHistory < ActiveRecord::Base
       :estimated_hours => self.issue.estimated_hours,
       :story_points => self.issue.story_points,
       :remaining_hours => self.issue.remaining_hours,
+      :tracker => RbIssueHistory.issue_type(self.issue.tracker_id),
       :sprint => self.issue.fixed_version_id,
       :status_open => status[self.issue.status_id][:open],
       :status_success => status[self.issue.status_id][:success]
@@ -65,6 +74,8 @@ class RbIssueHistory < ActiveRecord::Base
 
     status ||= self.statuses
 
+    sprints_touched = []
+
     journals.each{|journal|
       date = journal.created_on.to_date
       if date == startdate
@@ -83,13 +94,20 @@ class RbIssueHistory < ActiveRecord::Base
           [:old, :new].each{|k| changes[0][k] = Float(changes[0][k]) unless changes[0][k].nil? }
         when :fixed_version_id
           changes[0][:prop] = :sprint
-          [:old, :new].each{|k| changes[0][k] = Integer(changes[0][k]) unless changes[0][k].nil? }
+          [:old, :new].each{|k|
+            next if changes[0][k].nil?
+            changes[0][k] = Integer(changes[0][k])
+            sprints_touched << changes[0][k]
+          }
         when :status_id
           changes << changes[0].dup
           [:open, :success].each_with_index{|prop, i|
             changes[i][:prop] = "status_#{prop}".intern
             [:old, :new].each{|k| changes[i][k] = status[changes[i][k]][k] }
           }
+        when :tracker_id
+          changes[0][:prop] = :tracker
+          [:old, :new].each{|k| changes[0][k] = RbIssueHistory.issue_type(changes[0][k]) }
         else
           next
         end
@@ -107,12 +125,20 @@ class RbIssueHistory < ActiveRecord::Base
       h[:estimated_hours] = issue.estimated_hours             unless h.include?(:estimated_hours)
       h[:story_points] = issue.story_points                   unless h.include?(:story_points)
       h[:remaining_hours] = issue.remaining_hours             unless h.include?(:remaining_hours)
+      h[:tracker] = RbIssueHistory.issue_type(issue.tracker_id)              unless h.include?(:tracker)
       h[:sprint] = issue.fixed_version_id                     unless h.include?(:sprint)
       h[:status_open] = status[issue.status_id][:open]        unless h.include?(:status_open)
       h[:status_success] = status[issue.status_id][:success]  unless h.include?(:status_success)
     } if fill
 
     rb.save
+
+    sprints_touched.uniq.each{|sprint_id|
+      h = (RbSprintHistory.find_by_version_id(sprint_id) || RbSprintHistory.new(:version_id => sprint_id))
+      next if h.issues.include?(issue.id)
+      h.issues << issue.id
+      h.save
+    }
   end
 
   def self.rebuild

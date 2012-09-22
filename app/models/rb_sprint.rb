@@ -4,43 +4,34 @@ class Burndown
   def initialize(sprint, direction)
     @direction = direction
     @sprint_id = sprint.id
-    @days = sprint.days(:all)
 
-    baseline = [0] * (sprint.days(:active).size + 1)
-    baseline += [nil] * (1 + (@days.size - baseline.size))
-
-    series = Backlogs::MergedArray.new
-    series.merge(:hours => baseline.dup)
-    series.merge(:points => baseline.dup)
-    series.merge(:points_resolved => baseline.dup)
-    series.merge(:points_accepted => baseline.dup)
-
-    if RbStory.trackers.size > 0
-      stories = sprint.stories + RbStory.find(:all, 
-        :joins => ["JOIN rb_journals ON rb_journals.issue_id = issues.id and property = 'fixed_version_id' and value = '#{sprint.id}'"],
-        :conditions => ["tracker_id in (?) and fixed_version_id <> #{sprint.id}", RbStory.trackers])
-
-      stories.each { |story| series.add(story.burndown(sprint)) }
-
-      series.merge(:to_resolve => series.collect{|r| r.points && r.points_resolved ? r.points - r.points_resolved : nil})
-      series.merge(:to_accept => series.collect{|a| a.points && a.points_accepted ? a.points - a.points_accepted : nil})
-
-      series.merge(:days_left => (0..@days.size).collect{|d| @days.size - d})
-    end
-
+    @days = sprint.days
     @data = {}
+    [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| @data[k] = [nil] * @days.size }
+    statuses = RbIssueHistory.statuses
+    RbStory.find(:all, :conditions => ['id in (?)', sprint.history.issues]).each{|story|
+      bd = story.burndown(sprint, statuses)
+      next unless bd
+      bd.each_pair {|k, data|
+        puts "#{k.inspect} #{data.inspect}"
+        data.each_with_index{|d, i|
+          next unless d
+          @data[k][i] ||= 0
+          @data[k][i] += d
+        }
+      }
+    }
+    @data.keys.each{|k| @data[k] = @data[k].collect{|v| v == :nil ? nil : v} }
 
-    @data[:hours_remaining] = series.collect{|s| s.hours }
-    @data[:points_committed] = series.collect{|s| s.points }
-    @data[:points_accepted] = series.collect{|s| s.points_accepted }
-    @data[:points_resolved] = series.collect{|s| s.points_resolved }
-    @data[:points_to_resolve] = series.collect{|s| s.to_resolve }
-    @data[:points_to_accept] = series.collect{|s| s.to_accept }
-
-    @data[:ideal] = (0..@days.size).to_a.reverse
-
-    @data[:points_required_burn_rate] = series.collect{|r| r.to_resolve ? Float(r.to_resolve) / (r.days_left == 0 ? 1 : r.days_left) : nil }
-    @data[:hours_required_burn_rate] = series.collect{|r| r.hours ? Float(r.hours) / (r.days_left == 0 ? 1 : r.days_left) : nil }
+    @data[:ideal] = (0..@days.size - 1).to_a.reverse
+    [[:points_to_resolve, :points_resolved], [:points_to_accept, :points_accepted]].each{|todo|
+      tgt, src = *todo
+      @data[tgt] = (0..@days.size - 1).to_a.collect{|i| @data[:points_committed][i] && @data[src][i] ? @data[:points_committed][i] - @data[src][i] : nil }
+    }
+    [[:points_required_burn_rate, :points_to_resolve], [:hours_required_burn_rate, :hours_remaining]].each{|todo|
+      tgt, src = *todo
+      @data[tgt] = (0..@days.size - 1).to_a.collect{|i| @data[src][i] ? Float(@data[src][i]) / (@data[:ideal][i] == 0 ? 1 : @data[:ideal][i]) : nil }
+    }
 
     case direction
       when 'up'
@@ -191,24 +182,9 @@ class RbSprint < Version
     return wiki_page_title
   end
 
-  def days(cutoff)
-    return nil unless self.effective_date && self.sprint_start_date
-
-    case cutoff
-    when :active
-      d = (self.sprint_start_date .. [self.effective_date, Date.today].min)
-    when :all
-      d = (self.sprint_start_date .. self.effective_date)
-    else
-      raise "Unexpected day range '#{cutoff.inspect}'"
-    end
-
-    if Backlogs.setting[:include_sat_and_sun]
-      return d.to_a
-    else
-      # mon-fri are working days, sat-sun are not
-      return d.select {|d| (d.wday > 0 and d.wday < 6) }
-    end
+  def days
+    return nil unless self.sprint_start_date && self.effective_date
+    (self.sprint_start_date .. self.effective_date + 1).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || !(d.saturday? || d.sunday?)}
   end
 
   def eta
@@ -227,7 +203,7 @@ class RbSprint < Version
   end
 
   def has_burndown?
-    return (days(:active) || []).size != 0
+    return (self.days || []).size != 0
   end
 
   def activity

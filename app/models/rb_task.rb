@@ -162,7 +162,7 @@ class RbTask < Issue
     return nil if sprint.nil? || !sprint.has_burndown?
 
     self.history.filter(sprint, status).collect{|d|
-      if d.nil? || d[:sprint] != sprint.id
+      if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :task
         nil
       elsif ! d[:status_open]
         0
