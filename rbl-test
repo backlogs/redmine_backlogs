@@ -29,65 +29,25 @@ while getopts "phf:" OPT; do
   esac
 done
 
-command -v ruby >/dev/null 2>&1 || errmsg "no ruby available"
-RUBYVER=`ruby --version | awk '{print $2}' | awk -F. '{print $1 "." $2}'`
+source ~/.backlogs.rc
 
-GEMSET=`rvm-prompt g | sed -e 's/@//'`
-
-export RAILS_ENV=cucumber
-
-case "$GEMSET" in
-  redmine) ;;
-  chiliproject) ;;
-  *) echo 'No gemset active'; exit 1;;
-esac
-
-CONFIG="$( cd "$( dirname "$0" )" && pwd )"
-CONFIG="$CONFIG/rbl-test.rc"
-
-if [ ! -f $CONFIG ]; then
-    echo "$CONFIG does not exist"
-    exit 1
-fi
-
-source $CONFIG
-
-cd ~/redmine/$GEMSET-$RUBYVER
-
-mysqldump -u root -p$DBROOTPW $GEMSET > ../setup/blcuke-salvage.sql
-mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
-mysqladmin -u root -p$DBROOTPW create $GEMSET
-
-if [ -f ../setup/cucumber-$GEMSET.sql.gz ]; then
-  echo 'Pre-loading data'
-  zcat ../setup/cucumber-$GEMSET.sql.gz| mysql -u root -p$DBROOTPW $GEMSET 
-fi
+echo "Running from $PATH_TO_REDMINE"
+cd $PATH_TO_REDMINE
 
 echo migrations
-bundle exec rake $TRACE generate_session_store
-script -e -c "rake $TRACE db:migrate" -f ~/redmine/cuke-$GEMSET.log
-#script -e -c "REDMINE_LANG=en rake $TRACE redmine:load_default_data" -f ~/redmine/defaults.log
-script -e -c "rake $TRACE db:migrate:plugins" -f ~/redmine/cuke-$GEMSET.log
-#rake redmine:backlogs:install batch=true corruptiontest=false labels=false RAILS_ENV=cucumber
+bundle exec rake $TRACE generate_secret_token
+script -e -c "$PATH_TO_BACKLOGS/redmine20_install.sh -i; $PATH_TO_BACKLOGS/redmine20_install.sh -t" -f ~/redmine/cuke.log
 
 rm -f log/cucumber.log
 if [ -z "$TEST_FEATURE" ]; then
   echo "Running all tests"
-  if [ "$RUBYVER" = "1.9" ]; then
-    script -e -c "cucumber features" -f ~/redmine/cuke-$GEMSET.log
-  else
-    script -e -c "rake $TRACE redmine:backlogs:rcov" -f ~/redmine/cuke-$GEMSET.log
-  fi
+  script -e -c "cucumber features" -f ~/redmine/cuke.log
 else
   echo "Testing feature: $TEST_FEATURE"
-  script -e -c "cucumber $TEST_FEATURE" -f ~/redmine/cuke-$GEMSET.log
+  script -e -c "cucumber $TEST_FEATURE" -f ~/redmine/cuke.log
 fi
 
-sed '/^$/d' -i ~/redmine/cuke-$GEMSET.log
-
-#mysqladmin --force -u root -p$DBROOTPW drop $GEMSET
-#mysqladmin -u root -p$DBROOTPW create $GEMSET
-#cat ../setup/blcuke-salvage.sql | mysql -u root -p$DBROOTPW $GEMSET 
+sed '/^$/d' -i ~/redmine/cuke.log
 
 if [ -n "$PUBLISH" ]; then
   cd ~/redmine/redmine_backlogs

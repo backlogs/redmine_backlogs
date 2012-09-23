@@ -161,7 +161,7 @@ class RbStory < Issue
   end
 
   def tasks
-    return RbTask.tasks_for(self.id)
+    return self.children
   end
 
   def set_points(p)

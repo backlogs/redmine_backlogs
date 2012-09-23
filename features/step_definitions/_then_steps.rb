@@ -209,8 +209,7 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
     bd = @sprint.burndown(direction)
   end
 
-  days = @sprint.days(:all)
-  days = [:first] + days
+  days = @sprint.days
 
   table.hashes.each do |metrics|
     day = metrics.delete('day')
@@ -235,8 +234,7 @@ Then /^show me the sprint burn(.*)$/ do |direction|
     bd = @sprint.burndown(direction)
   end
 
-  dates = @sprint.days(:all)
-  dates = [:start] + dates
+  dates = @sprint.days
 
   header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
 
@@ -253,7 +251,7 @@ Then /^show me the burndown for task (.+)$/ do |subject|
   task = RbTask.find_by_subject(subject)
   sprint = task.fixed_version.becomes(RbSprint)
   Timecop.travel((sprint.effective_date + 1).to_time) do
-    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], (['start'] + sprint.days(:active)).zip(task.burndown))
+    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days.zip(task.burndown))
   end
 end
 
@@ -277,7 +275,7 @@ Then /^show me the story burndown for (.+)$/ do |story|
     story = RbStory.find(:first, :conditions => ['subject = ?', story])
     bd = story.burndown
     header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
-    bd['day'] = ['start'] + @sprint.days(:active)
+    bd['day'] = @sprint.days
     data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
     show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
   end

@@ -23,7 +23,7 @@ class RbSprintBurndown < ActiveRecord::Base
 
   def touch!(issue_id = nil)
     if issue_id
-      issue_id = Integer(issue_id) if issue_id
+      issue_id = Integer(issue_id)
       return if self.issues.include?(issue_id)
       self.issues << issue_id
     end
@@ -40,20 +40,23 @@ class RbSprintBurndown < ActiveRecord::Base
 
   def series(remove_empty = true)
     self.recalculate!
+
     @series ||= {}
-    return @series[remove_empty] if @series[remove_empty]
+    key = "#{@direction}_#{remove_empty ? 'filled' : 'all'}"
+    if @series[key].nil?
+      @series[key] = self.burndown[@direction].keys.collect{|k| k.to_s}.sort
+      if remove_empty
+        # delete :points_committed if flatline
+        @series[key].delete('points_committed') if self.burndown[@direction][:points_committed].uniq.compact.size < 1
 
-    @series[remove_empty] = self.burndown[@direction].keys.reject{|k| k == :date}.collect{|k| k.to_s}.sort
-    return @series[remove_empty] unless remove_empty
+        # delete any series that is flat-line 0/nil
+        @series[key].each {|k|
+          @series[remove_empty].delete(k) if k != 'points_committed' && self.burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
+        }
+      end
+    end
 
-    # delete :points_committed if flatline
-    @series[remove_empty].delete('points_committed') if self.burndown[@direction][:points_committed].uniq.compact.size < 1
-
-    # delete any series that is flat-line 0/nil
-    @series[remove_empty].each {|k|
-      @series[remove_empty].delete(k) if k != 'points_committed' && self.burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
-    }
-    return @series[remove_empty]
+    return @series[key]
   end
 
   #compatibility
@@ -78,6 +81,12 @@ class RbSprintBurndown < ActiveRecord::Base
 
     # if I use self.version.id I get a "stack level too deep?!
     sprint = RbSprint.find(self.version_id)
+
+    if !sprint.has_burndown?
+      self.burndown = nil
+      return
+    end
+
     puts "Recalculating for #{sprint.id}"
 
     _burndown = {}

@@ -266,7 +266,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days(:all).collect{|d| Time.utc(d.year, d.month, d.day)}
+  days = @sprint.days.collect{|d| Time.utc(d.year, d.month, d.day)}
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
@@ -348,7 +348,7 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
         created_on = before_sprint_start.to_time(:utc)
         created_on.hour.should == 0
       else
-        created_on = sprint.days(:all)[Integer(day_added)-1].to_time(:utc) + time_offset('1h')
+        created_on = sprint.days[Integer(day_added)-1].to_time(:utc) + time_offset('1h')
         created_on.hour.should == 1
       end
     elsif offset
