@@ -42,7 +42,7 @@ module Backlogs
     begin
       ReliableTimout.timeout(10) { versions = YAML::load(open('http://www.redminebacklogs.net/versions.yml').read) }
     rescue
-      versions = YAML::load(File.open(File.join(File.dirname(__FILE__), 'versions.yml')).read)
+      supported = YAML::load(File.open(File.join(File.dirname(__FILE__), 'versions.yml')).read)
     end
 
     return "You are running backlogs #{Redmine::Plugin.find(:redmine_backlogs).version}, latest version is #{supported[:backlogs]}" if Redmine::Plugin.find(:redmine_backlogs).version != supported[:backlogs]
