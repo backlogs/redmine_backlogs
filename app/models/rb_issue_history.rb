@@ -118,6 +118,7 @@ class RbIssueHistory < ActiveRecord::Base
           next if date <= startdate
           rb.history << rb.history[-1].dup if date != rb.history[-1][:date]
           rb.history[-1][:date] = date
+          rb.history[-1][change[:prop]] = change[:new]
           rb.history.each{|h| h[change[:prop]] = change[:new] unless h.include?(change[:prop]) } if fill
         }
       }

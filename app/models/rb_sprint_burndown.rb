@@ -87,8 +87,6 @@ class RbSprintBurndown < ActiveRecord::Base
       return
     end
 
-    puts "Recalculating for #{sprint.id}"
-
     _burndown = {}
     days = sprint.days
     ndays = days.size
@@ -98,7 +96,6 @@ class RbSprintBurndown < ActiveRecord::Base
       bd = story.burndown(sprint, statuses)
       next unless bd
       bd.each_pair {|k, data|
-        puts "#{k.inspect} #{data.inspect}"
         data.each_with_index{|d, i|
           next unless d
           _burndown[k][i] ||= 0

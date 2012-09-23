@@ -22,13 +22,13 @@ object_to_prepare.to_prepare do
   end
 
   require_dependency 'backlogs_query_patch'
+  require_dependency 'backlogs_journal_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
   require_dependency 'backlogs_tracker_patch'
   require_dependency 'backlogs_version_patch'
   require_dependency 'backlogs_project_patch'
   require_dependency 'backlogs_user_patch'
-  require_dependency 'backlogs_journal_patch'
   require_dependency 'backlogs_custom_field_patch'
 
   require_dependency 'backlogs_my_controller_patch'

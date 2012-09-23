@@ -13,7 +13,6 @@ module Backlogs
 
         has_one :history, :class_name => RbIssueHistory
 
-        safe_attributes 'position'
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
 
@@ -84,27 +83,29 @@ module Backlogs
       end
 
       def backlogs_before_save
-        if Backlogs.configured?(project) && (self.is_task? || self.story)
-          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
-          self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
+        if Backlogs.configured?(project)
+          if (self.is_task? || self.story)
+            self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
+            self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
 
-          self.remaining_hours = 0 if self.status.backlog_is?(:success)
+            self.remaining_hours = 0 if self.status.backlog_is?(:success)
 
-          self.fixed_version = self.story.fixed_version if self.story
-          self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
+            self.fixed_version = self.story.fixed_version if self.story
+            self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
 
-          self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
-        elsif self.is_story?
-          self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
-          if self.fixed_version
-            self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
-            self.due_date ||= self.fixed_version.effective_date
-            self.due_date ||= self.start_date if self.due_date < self.start_date
-          else
-            self.start_date = nil
-            self.due_date = nil
+            self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+          elsif self.is_story?
+            if self.fixed_version
+              self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
+              self.due_date ||= self.fixed_version.effective_date
+              self.due_date ||= self.start_date if self.due_date < self.start_date
+            else
+              self.start_date = nil
+              self.due_date = nil
+            end
           end
         end
+        self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f unless self.leaves.empty?
 
         self.move_to_top if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
 
