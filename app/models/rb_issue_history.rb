@@ -22,6 +22,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   def filter(sprint, status=nil)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
+    puts "<<FILTER (#{self.issue.created_on} -- #{Date.today} : #{h.inspect}>>"
     sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
   end
 
@@ -131,7 +132,11 @@ class RbIssueHistory < ActiveRecord::Base
   def set_default_history
     _statuses = self.class.statuses
     self.history ||= []
-    self.history << {:date => Date.today, :origin => :default} if self.history.size == 0 || self.history[-1][:date] != Date.today
+    if self.history.size == 0
+      self.history << {:date => Date.today - 1, :origin => :default}
+    elsif self.history[-1][:date] != Date.today
+      self.history << {:date => Date.today, :origin => :default}
+    end
     self.history[-1].merge!({
       :estimated_hours => self.issue.estimated_hours,
       :story_points => self.issue.story_points,

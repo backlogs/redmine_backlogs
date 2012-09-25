@@ -58,6 +58,9 @@ Feature: Burndown
         | 4       | C.1  | 10        |             |
         | 5       | C.1  | 0         |             |
         | 5       | C.1  |           | Closed      |
+      Then show me the hours burndown for story Story A
+      Then show me the hours burndown for story Story B
+      Then show me the hours burndown for story Story C
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |

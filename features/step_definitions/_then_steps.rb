@@ -252,6 +252,12 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   show_table("Burndown for #{@sprint.name} (#{@sprint.sprint_start_date} - #{@sprint.effective_date})", header, data)
 end
 
+Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
+  story = RbStory.find_by_subject(subject)
+  sprint = story.fixed_version
+  puts story.burndown.inspect
+  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], sprint.days.zip(story.burndown[series.intern]))
+end
 Then /^show me the burndown for task (.+)$/ do |subject|
   task = RbTask.find_by_subject(subject)
   sprint = task.fixed_version.becomes(RbSprint)
