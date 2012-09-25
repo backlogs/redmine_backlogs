@@ -90,7 +90,14 @@ run_tests()
   then
     export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
   fi
-  bundle exec cucumber $CUCUMBER_FLAGS features
+
+  if [ "$1" = "" ]; then
+    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
+  else
+    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
+  fi
+  sed '/^$/d' -i $WORKSPACE/cuke.log
+  sed 's/$//' -i $WORKSPACE/cuke.log
 }
 
 uninstall()
@@ -115,8 +122,8 @@ echo current directory is `pwd`
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
 if [ "$DB_TO_RESTORE" = "" ]; then
-  story_trackers=Story
-  task_tracker=Task
+  export story_trackers=Story
+  export task_tracker=Task
 else
   DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
   DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
@@ -158,7 +165,7 @@ while getopts :irtu opt
 do case "$opt" in
   r)  clone_redmine; exit 0;;
   i)  run_install;  exit 0;;
-  t)  run_tests;  exit 0;;
+  t)  run_tests $2;  exit 0;;
   u)  uninstall;  exit 0;;
   [?]) echo "i: install; r: clone redmine; t: run tests; u: uninstall";;
   esac

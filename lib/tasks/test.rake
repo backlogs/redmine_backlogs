@@ -7,17 +7,21 @@ require 'timecop'
 namespace :redmine do
   namespace :backlogs do
     task :test => :environment do
+      hours = 60 * 60
+
+      Time.zone = 'Amsterdam'
+
       project = Project.find_by_name('1_problem')
       user = User.find(:first)
 
       raise "No project" unless project
 
-      start_date = Date.today - 10
+      start_date = Date.today - 20
       end_date = Date.today - 2
 
       story_id = nil
       sprint = nil
-      Timecop.travel(start_date.to_time) do
+      Timecop.travel(start_date.to_time + 1 * hours) do
         sprint = RbSprint.new(:project_id => project.id, :name => SecureRandom.uuid, :sprint_start_date => start_date, :effective_date => end_date)
         sprint.save!
 
@@ -27,18 +31,26 @@ namespace :redmine do
         puts story_id
       end
 
-      step = 5
-      hours = 60 * 60
-      (start_date + 1 .. start_date + step + 1).to_a.each_with_index{|day, i|
+      remaining = 5
+      sprint.days.each_with_index{|day, i|
+        next if i == 0
         Timecop.travel(day.to_time + (4 * hours)) do
           story = RbStory.find(story_id)
           story.init_journal(user)
-          story.remaining_hours = step - i
+          story.remaining_hours = remaining
           story.save
         end
+        break if remaining == 0
+        remaining -= 1
       }
       story = RbStory.find(story_id)
+      puts "#{start_date} -- #{end_date}"
+      puts sprint.days.inspect
       pp story.burndown
+
+      sprint = RbSprint.find(sprint.id) # refresh, because it points to a stale burndown
+      puts '------ here we go ----'
+      pp sprint.burndown.data
     end
   end
 end

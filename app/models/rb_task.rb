@@ -157,7 +157,6 @@ class RbTask < Issue
   end
 
   def burndown(sprint = nil, status=nil)
-    return nil unless self.is_task?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
@@ -166,10 +165,8 @@ class RbTask < Issue
         nil
       elsif ! d[:status_open]
         0
-      elsif d[:date] == sprint.sprint_start_date
-        d[:estimated_hours] || d[:remaining_hours]
       else
-        d[:remaining_hours] || d[:estimated_hours]
+        d[:hours]
       end
     }
   end

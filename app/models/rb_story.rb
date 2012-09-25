@@ -210,7 +210,6 @@ class RbStory < Issue
   end
 
   def burndown(sprint = nil, status=nil)
-    return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
@@ -222,8 +221,8 @@ class RbStory < Issue
       else
         bd[:points_committed] << d[:story_points]
         bd[:points_accepted] << (! d[:status_success] ? 0 : d[:story_points])
-        bd[:points_resolved] << (! d[:hours_remaining].to_f != 0.0 ? 0 : d[:story_points])
-        bd[:hours_remaining] << (d[:status_closed] ? 0 : (d[:date] == sprint.sprint_start_date ? d[:estimated_hours] || d[:remaining_hours] : d[:remaining_hours] || d[:estimated_hours]))
+        bd[:points_resolved] << (d[:hours].to_f == 0.0 ? d[:story_points] : 0)
+        bd[:hours_remaining] << (d[:status_closed] ? 0 : d[:hours])
       end
     }
     return bd

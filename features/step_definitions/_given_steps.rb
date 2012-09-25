@@ -167,6 +167,10 @@ end
 
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   Rails.cache.clear
+
+  # Time zone must be set correctly, or ActiveRecord will store local, but retrieve UTC, which screws to Time.to_date. WTF people.
+  Time.zone = "UTC"
+
   @project = get_project(project_id)
   @projects = [] if @projects.nil?
   @projects.push(@project)

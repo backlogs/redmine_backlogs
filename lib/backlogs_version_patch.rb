@@ -9,8 +9,7 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        has_one :burndown, :class_name => RbSprintBurndown
-        after_create :create_burndown
+        has_one :sprint_burndown, :class_name => RbSprintBurndown
 
         after_save :clear_burndown
 
@@ -25,6 +24,21 @@ module Backlogs
       def clear_burndown
         self.burndown.touch!
       end
+
+      # load on demand
+      def burndown
+        self.sprint_burndown = self.create_sprint_burndown(:version_id => self.id) unless self.new_record? || self.sprint_burndown
+        return self.sprint_burndown
+      end
+
+      def days
+        return nil unless self.sprint_start_date && self.effective_date
+        (self.sprint_start_date - 1 .. self.effective_date).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || !(d.saturday? || d.sunday?)}
+      end
+      def has_burndown?
+        return (self.days || []).size != 0
+      end
+
     end
   end
 end

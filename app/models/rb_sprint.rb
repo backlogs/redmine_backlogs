@@ -108,11 +108,6 @@ class RbSprint < Version
     return wiki_page_title
   end
 
-  def days
-    return nil unless self.sprint_start_date && self.effective_date
-    (self.sprint_start_date .. self.effective_date + 1).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || !(d.saturday? || d.sunday?)}
-  end
-
   def eta
     return nil if ! self.sprint_start_date
 
@@ -126,10 +121,6 @@ class RbSprint < Version
                      Integer(self.points * dpp * 7.0/5)
                    end
     return self.sprint_start_date + derived_days
-  end
-
-  def has_burndown?
-    return (self.days || []).size != 0
   end
 
   def activity

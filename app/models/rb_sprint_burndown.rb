@@ -9,8 +9,6 @@ class RbSprintBurndown < ActiveRecord::Base
   serialize :burndown, Hash
   after_initialize :set_defaults
 
-  attr_reader :dirty
-
   def direction
     @direction
   end
@@ -28,15 +26,16 @@ class RbSprintBurndown < ActiveRecord::Base
       self.issues << issue_id
     end
     self.burndown = nil
-    self.save
+    self.save!
   end
 
-  def [](key)
-    self.recalculate!
-    key = key.intern if key.is_a?(String)
-    raise "No burn#{@direction} data series '#{key}', available: #{self.burndown[@direction].keys.inspect}" unless self.burndown[@direction][key]
-    return self.burndown[@direction][key]
-  end
+#  This causes a recursive call to recalculate. I don't know why yet
+#  def [](key)
+#    self.recalculate!
+#    key = key.intern if key.is_a?(String)
+#    raise "No burn#{@direction} data series '#{key}', available: #{self.burndown[@direction].keys.inspect}" unless self.burndown[@direction][key]
+#    return self.burndown[@direction][key]
+#  end
 
   def series(remove_empty = true)
     self.recalculate!
@@ -62,25 +61,27 @@ class RbSprintBurndown < ActiveRecord::Base
   #compatibility
   def days
     self.recalculate!
-    self.burndown[:days]
+    return self.burndown[:days]
   end
 
   def data
     self.recalculate!
-    self.burndown[@direction]
+    return self.burndown[@direction]
   end
 
   def set_defaults
     self.issues ||= []
     self.direction = Backlogs.setting[:points_burn_direction]
-    @dirty = self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today
+    @state = (self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today ? :stale : :ok)
   end
 
   def recalculate!
-    return unless @dirty
+    raise "Recursive call to recalculate!" if @state == :busy
+    return unless @state == :stale
+    @state = :busy
 
     # if I use self.version.id I get a "stack level too deep?!
-    sprint = RbSprint.find(self.version_id)
+    sprint = self.version # RbSprint.find(self.version_id)
 
     if !sprint.has_burndown?
       self.burndown = nil
@@ -119,6 +120,6 @@ class RbSprintBurndown < ActiveRecord::Base
                       :days => days
                     }
     self.save
-    @dirty = false
+    @state = :ok
   end
 end

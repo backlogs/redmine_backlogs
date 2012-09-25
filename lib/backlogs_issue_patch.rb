@@ -11,7 +11,7 @@ module Backlogs
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :history, :class_name => RbIssueHistory
+        has_one :backlogs_history, :class_name => RbIssueHistory
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
@@ -24,6 +24,10 @@ module Backlogs
     end
 
     module InstanceMethods
+      def history
+        @history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
+      end
+
       def is_story?
         return RbStory.trackers.include?(tracker_id)
       end
@@ -118,7 +122,7 @@ module Backlogs
       end
 
       def backlogs_after_save
-        RbIssueHistory.process(self) if @backlogs_new_record
+        self.history.save!
 
         return unless Backlogs.configured?(self.project)
 
@@ -126,51 +130,47 @@ module Backlogs
           # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
           # update_parent :<
-          tasks_updated = []
-          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
+          tasklist = RbTask.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
                                           (
                                             (? is NULL and not fixed_version_id is NULL)
                                             or
                                             (not ? is NULL and fixed_version_id is NULL)
                                             or
                                             (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
+                                            or
+                                            (tracker_id <> ?)
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
-                                              self.fixed_version_id, self.fixed_version_id]).each{|task|
-            case Backlogs.platform
-              when :redmine
-                j = Journal.new
-                j.journalized = task
-                j.created_on = self.updated_on
-                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
-              when :chiliproject
-                j = IssueJournal.new
-                j.created_at = self.updated_on
-                j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
-                j.activity_type = 'issues'
-                j.journaled = task
-                j.version = task.last_journal.version + 1
-            end
-            j.user = User.current
-            j.save!
+                                              self.fixed_version_id, self.fixed_version_id,
+                                              RbTask.tracker]).to_a
+#          tasklist.each{|task|
+#            case Backlogs.platform
+#              when :redmine
+#                j = Journal.new
+#                j.journalized = task
+#                j.created_on = self.updated_on
+#                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id) unless task.fixed_version_id == fixed_version_id
+#                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'tracker_id', :old_value => task.tracker_id, :value => RbTask.tracker) unless task.tracker_id == RbTask.tracker
+#              when :chiliproject
+#                j = IssueJournal.new
+#                j.created_at = self.updated_on
+#                j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id] unless task.fixed_version_id == fixed_version_id
+#                j.details['tracker_id'] = [task.tracker_id, RbTask.tracker] unless task.tracker_id == RbTask.tracker
+#                j.activity_type = 'issues'
+#                j.journaled = task
+#                j.version = task.last_journal.version + 1
+#            end
+#            j.user = User.current
+#            j.save!
+#          }
 
-            tasks_updated << task
-          }
-
-          if tasks_updated.size > 0
-            tasklist = '(' + tasks_updated.collect{|task| connection.quote(task.id)}.join(',') + ')'
+          tasklist.each{|task| task.history.update! }
+          if tasklist.size > 0
+            task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}
-                                where id in #{tasklist}")
+                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
+                                where id in #{task_ids}")
           end
-
-          connection.execute("update issues
-                              set tracker_id = #{RbTask.tracker}
-                              where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
-        end
-
-        if self.story || self.is_task?
-          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
       end
 

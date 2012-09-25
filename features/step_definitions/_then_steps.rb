@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'timecop'
+require 'pp'
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
@@ -208,6 +209,7 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   Timecop.travel((@sprint.effective_date + 1).to_time) do
     bd = @sprint.burndown
     bd.direction = direction
+    bd = bd.data
   end
 
   days = @sprint.days
@@ -234,6 +236,7 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   Timecop.travel((@sprint.effective_date + 1).to_time) do
     bd = @sprint.burndown
     bd.direction = direction
+    bd = bd.data
   end
 
   dates = @sprint.days
