@@ -22,7 +22,6 @@ class RbIssueHistory < ActiveRecord::Base
 
   def filter(sprint, status=nil)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
-    puts "<<FILTER (#{self.issue.created_on} -- #{Date.today} : #{h.inspect}>>"
     sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
   end
 
@@ -130,14 +129,10 @@ class RbIssueHistory < ActiveRecord::Base
   private
 
   def set_default_history
-    _statuses = self.class.statuses
     self.history ||= []
-    if self.history.size == 0
-      self.history << {:date => Date.today - 1, :origin => :default}
-    elsif self.history[-1][:date] != Date.today
-      self.history << {:date => Date.today, :origin => :default}
-    end
-    self.history[-1].merge!({
+
+    _statuses ||= self.class.statuses
+    current = {
       :estimated_hours => self.issue.estimated_hours,
       :story_points => self.issue.story_points,
       :remaining_hours => self.issue.remaining_hours,
@@ -145,8 +140,17 @@ class RbIssueHistory < ActiveRecord::Base
       :sprint => self.issue.fixed_version_id,
       :status_id => self.issue.status_id,
       :status_open => _statuses[self.issue.status_id][:open],
-      :status_success => _statuses[self.issue.status_id][:success]
-    })
+      :status_success => _statuses[self.issue.status_id][:success],
+      :origin => :default
+    }
+    [[Date.today - 1, lambda{|this, date| this.history.size == 0}], [Date.today, lambda{|this, date| this.history[-1][:date] != date}]].each{|action|
+      date, test = *action
+      next unless test.call(self, date)
+
+      self.history << {:date => date}.merge(current)
+      self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
+    }
+    self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
   end

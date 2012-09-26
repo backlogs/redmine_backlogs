@@ -255,7 +255,7 @@ end
 Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
   story = RbStory.find_by_subject(subject)
   sprint = story.fixed_version
-  puts story.burndown.inspect
+  puts "\n\nBD: #{series.intern.inspect} from #{story.burndown.inspect}\n\n"
   show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], sprint.days.zip(story.burndown[series.intern]))
 end
 Then /^show me the burndown for task (.+)$/ do |subject|
