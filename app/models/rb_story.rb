@@ -216,7 +216,6 @@ class RbStory < Issue
     bd = {:points_committed => [], :points_accepted => [], :points_resolved => [], :hours_remaining => []}
 
     self.history.filter(sprint, status).each{|d|
-      print "<<#{subject}: #{d.inspect}>>"
       if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :story
         [:points_committed, :points_accepted, :points_resolved, :hours_remaining].each{|k| bd[k] << nil}
       else

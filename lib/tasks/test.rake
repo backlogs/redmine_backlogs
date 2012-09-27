@@ -7,50 +7,71 @@ require 'timecop'
 namespace :redmine do
   namespace :backlogs do
     task :test => :environment do
-      hours = 60 * 60
-
       Time.zone = 'Amsterdam'
+      puts "Stories = #{RbStory.trackers.inspect}"
+      puts "Task = #{RbTask.tracker}"
+      Timecop.travel(Time.local(2012, 7, 27, 8, 0, 0)) do
+        project = Project.find_by_name('1_problem')
 
-      project = Project.find_by_name('1_problem')
-      user = User.find(:first)
+        active = RbSprint.find(:first,
+                               :conditions => ["project_id = ?
+                                                and status = 'open'
+                                                and not (sprint_start_date is null or effective_date is null)
+                                                and ? between sprint_start_date and effective_date", project.id, Date.today])
+        past_sprints = RbSprint.find(:all,
+                :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", project.id, Date.today],
+                :order => "effective_date desc",
+                :limit => 5).select(&:has_burndown?)
 
-      raise "No project" unless project
+        puts "active sprint = #{active.id}"
+        past_sprints.collect{|sprint|
+          next unless sprint.id == 39
+          #puts sprint.burndown.data[:points_committed].inspect
+          stories = sprint.stories.collect{|s| s.id}
 
-      start_date = Date.today - 20
-      end_date = Date.today - 2
+          total = 0
+          RbStory.find(:all, :conditions => ['id in (?)', sprint.burndown.issues]).each{|story|
+            #puts "#{story.id}" #, tracker=#{story.tracker_id}, story?=#{story.is_story?}, task?=#{story.is_task?}"
+            bd = story.burndown(sprint)
+            h = story.history.history[0]
+            points = bd ? bd[:points_committed] : nil
+            raise "Story without burndown #{bd.inspect}/#{h.inspect}" if story.is_story? && (!points || h[:tracker] != :story)
+            points = points[0] if points
+            next if bd.nil? && !story.is_task? && !story.is_story?
+            next if h[:tracker] == :task && story.is_task?
 
-      story_id = nil
-      sprint = nil
-      Timecop.travel(start_date.to_time + 1 * hours) do
-        sprint = RbSprint.new(:project_id => project.id, :name => SecureRandom.uuid, :sprint_start_date => start_date, :effective_date => end_date)
-        sprint.save!
+            raise "Task #{story.id} with burndown #{story.history.history.inspect}" if story.is_task? && points
+            raise "#{story.id} not a sprint story" unless stories.include?(story.id) || points.nil?
+            next if points.nil?
+            total += points
+          }
 
-        story = RbStory.new(:author_id => user.id, :tracker_id => RbStory.trackers[0], :project_id => project.id, :fixed_version_id => sprint.id, :subject => Time.now.to_s, :story_points => 5.0, :estimated_hours => 10, :remaining_hours => 10.0)
-        story.save!
-        story_id = story.id
-        puts story_id
+          puts total
+        }
       end
-
-      remaining = 5
-      sprint.days.each_with_index{|day, i|
-        next if i == 0
-        Timecop.travel(day.to_time + (4 * hours)) do
-          story = RbStory.find(story_id)
-          story.init_journal(user)
-          story.remaining_hours = remaining
-          story.save
-        end
-        break if remaining == 0
-        remaining -= 1
-      }
-      story = RbStory.find(story_id)
-      puts "#{start_date} -- #{end_date}"
-      puts sprint.days.inspect
-      pp story.burndown
-
-      sprint = RbSprint.find(sprint.id) # refresh, because it points to a stale burndown
-      puts '------ here we go ----'
-      pp sprint.burndown.data
     end
   end
 end
+
+#I printed the IDs from current date which gave me this:
+#27-09-2012:
+#active: nil
+#Past sprints:
+#40 - sprint 16 - not closed but due date past
+#39 - sprint 15
+#38 - sprint 14
+#36 - sprint 13
+#33 - sprint 12
+#
+#Going back to 27-07-2012 gives me the following:
+#active: 40
+#Past sprints:
+#39   - 54 points
+#38   - 38 points
+#36   - 31 points
+#33   - 31,5 points
+#32   - 46,5 points
+#
+#This should be an average of 40,2 points per sprint.
+#I manually found the closed stories of each sprint in the issues view and calculated the average.
+#If I remove sprint ID 32 and recalculate I get an average around 30 points, but the scrum statistics says around 19.
