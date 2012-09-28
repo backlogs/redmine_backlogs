@@ -59,55 +59,103 @@ class RbIssueHistory < ActiveRecord::Base
 
     status ||= self.statuses
 
-    current = Journal.new
-    current.journalized = issue
-    current.created_on = issue.updated_on
-    ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id'].each{|prop_key|
-      current.details << JournalDetail.new(:property => 'attr', :prop_key => prop_key, :old_value => nil, :value => issue.send(prop_key))
+    convert = lambda {|prop, v|
+      if v.nil?
+        nil
+      elsif [:estimated_hours, :remaining_hours, :story_points].include?(prop)
+        Float(v)
+      else
+        Integer(v)
+      end
     }
 
-    (issue.journals.to_a + [current]).each{|journal|
+    full_journal = {}
+    is_leaf = issue.leaf?
+    issue.journals.each{|journal|
       date = journal.created_on.to_date
 
       ## TODO: SKIP estimated_hours and remaining_hours if not a leaf node
       journal.details.each{|jd|
-        next unless jd.property == 'attr'
+        next unless jd.property == 'attr' && ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id'].include?(jd.prop_key)
 
-        changes = {:prop => jd.prop_key.intern, :old => jd.old_value, :new => jd.value}
+        prop = jd.prop_key.intern
+        update = {:old => convert.call(prop, jd.old_value), :new => convert.call(prop, jd.value)}
 
-        case changes[:prop]
-        when :estimated_hours, :story_points, :remaining_hours
-          [:old, :new].each{|k| changes[k] = Float(changes[k]) unless changes[k].nil? }
+        full_journal[date] ||= {}
+
+        case prop
+        when :estimated_hours, :remaining_hours # these sum to their parents
+          next unless is_leaf
+          full_journal[date][prop] = update
+        when :story_points
+          full_journal[date][prop] = update
         when :fixed_version_id
-          changes[:prop] = :sprint
-          [:old, :new].each{|k| changes[k] = Integer(changes[k]) unless changes[k].nil? }
+          full_journal[date][:sprint] = update
         when :status_id
-          changes = [changes.dup, changes.dup, changes.dup]
-          [:id, :open, :success].each_with_index{|prop, i|
-            changes[i][:prop] = "status_#{prop}".intern
-            [:old, :new].each{|k| changes[i][k] = status[changes[i][k]][prop] }
+          [:id, :open, :success].each_with_index{|status_prop, i|
+            full_journal[date]["status_#{prop}".intern] = {:old => status[update[:old]][status_prop], :new => status[update[:new]][status_prop]}
           }
         when :tracker_id
-          changes[:prop] = :tracker
-          [:old, :new].each{|k| changes[k] = RbIssueHistory.issue_type(changes[k]) }
+          full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old]), :new => RbIssueHistory.issue_type(update[:new])}
         else
-          next
+          raise "Unhandled property #{jd.prop}"
         end
+      }
+    }
+    full_journal[issue.updated_on.to_date] = {
+      :story_points => {:new => issue.story_points},
+      :fixed_version_id => {:new => issue.fixed_version_id },
+      :status_id => {:new => issue.status_id },
+      :status_open => {:new => status[issue.status_id][:open] },
+      :status_success => {:new => status[issue.status_id][:success] },
+      :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id) }
+    }
+    if is_leaf
+      full_journal[issue.updated_on.to_date][:estimated_hours] = {:new => issue.estimated_hours}
+      full_journal[issue.updated_on.to_date][:remaining_hours] = {:new => issue.remaining_hours}
+    end
 
-        changes = [changes] unless changes.is_a?(Array)
-        changes.each{|change|
-          rb.history[0][change[:prop]] = change[:old] unless rb.history[0].include?(change[:prop])
-          if date != rb.history[-1][:date]
-            rb.history << rb.history[-1].dup
-            rb.history[-1][:date] = date
-          end
-          rb.history[-1][change[:prop]] = change[:new]
-          rb.history.each{|h| h[change[:prop]] = change[:new] unless h.include?(change[:prop]) }
+    # Wouldn't be needed if redmine just created journals for update_parent_properties
+    # subissues will only get filled is_leaf? is false. Assumes issues move to parent and stay there.
+    subissues = Issue.find(:all, :conditions => ['parent_id = ?', issue.id]).to_a
+    subdates = {:estimated_hours => [], :remaining_hours => []}
+    subhist = []
+    # get history of direct child issues and dates for relevant updates
+    subissues.each{|sub|
+      subhist << Hash[*(sub.history.expand.collect{|d| [d[:date], d]}.flatten)]
+      sub.journals.select{|j| j.created_on > issue.created_on}.each{|j|
+        j.details.each{|jd|
+          next unless jd.property == 'attr' && ['estimated_hours', 'remaining_hours'].include?(jd.prop_key)
+          subdates[jd.prop_key.intern] << j.created_on.to_date
         }
       }
     }
-    ## TODO: add estimated_hours and remaining_hours from underlying leaf nodes
+    # for each relevant update, get old-new values from sum of child issue history and add to the in-mem journal
+    subdates.each_pair{|prop, dates|
+      dates.uniq.sort.each{|date|
+        thatday = subhist.collect{|h| h[date] ? h[date][prop] : nil}.compact
+        daybefore = subhist.collect{|h| h[date - 1] ? h[date - 1][prop] : nil}.compact
+        full_journal[date] ||= {}
+        full_journal[date][prop] = {:old => (daybefore.empty? ? nil : daybefore.sum), :new => (thatday.empty? ? nil : thatday.sum) }
+      }
+    }
+    ## end of child journal picking ##
 
+    # process combined journal in order of timestamp
+    full_journal.keys.sort.collect{|date| {:date => date, :update => full_journal[date]} }.each {|entry|
+      if entry[:date] != rb.history[-1][:date]
+        rb.history << rb.history[-1].dup
+        rb.history[-1][:date] = entry[:date]
+      end
+
+      entry[:update].each_pair{|prop, old_new|
+        rb.history[0][prop] = old_new[:old] unless rb.history[0].include?(prop)
+        rb.history[-1][prop] = old_new[:new]
+        rb.history.each{|h| h[prop] = old_new[:new] unless h.include?(prop) }
+      }
+    }
+
+    # fill out journal so each journal entry is complete on each day
     rb.history.each{|h|
       h[:estimated_hours] = issue.estimated_hours             unless h.include?(:estimated_hours)
       h[:story_points] = issue.story_points                   unless h.include?(:story_points)

@@ -12,10 +12,6 @@ namespace :redmine do
       puts "Stories = #{RbStory.trackers.inspect}"
       puts "Task = #{RbTask.tracker}"
 
-      story = RbStory.find(590)
-      pp story.history.history
-      exit
-
       expected = {
         39  => 46.5,
         38  => 31.5,
