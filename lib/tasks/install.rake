@@ -36,9 +36,9 @@ namespace :redmine do
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
         end
       else
-        if ! File.exist?(File.dirname(__FILE__) + '/../labels.yaml')
+        if ! File.exist?(File.dirname(__FILE__) + '/../labels/labels.yaml')
           print "Default labels installed\n"
-          FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
+          FileUtils.cp(File.dirname(__FILE__) + '/../labels/labels.yaml.default', File.dirname(__FILE__) + '/../labels/labels.yaml')
         end
       end
 

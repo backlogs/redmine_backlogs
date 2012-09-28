@@ -5,7 +5,7 @@ class RbSprintBurndown < ActiveRecord::Base
   set_table_name 'rb_sprint_burndown'
   belongs_to :version
 
-  serialize :issues, Array
+  serialize :stories, Array
   serialize :burndown, Hash
   after_initialize :set_defaults
 
@@ -22,8 +22,8 @@ class RbSprintBurndown < ActiveRecord::Base
   def touch!(issue_id = nil)
     if issue_id
       issue_id = Integer(issue_id)
-      return if self.issues.include?(issue_id)
-      self.issues << issue_id
+      return if self.stories.include?(issue_id)
+      self.stories << issue_id
     end
     self.burndown = nil
     self.save!
@@ -70,7 +70,7 @@ class RbSprintBurndown < ActiveRecord::Base
   end
 
   def set_defaults
-    self.issues ||= []
+    self.stories ||= []
     self.direction = Backlogs.setting[:points_burn_direction]
     @state = (self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today ? :stale : :ok)
   end
@@ -93,7 +93,7 @@ class RbSprintBurndown < ActiveRecord::Base
     ndays = days.size
     [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| _burndown[k] = [nil] * ndays }
     statuses = RbIssueHistory.statuses
-    RbStory.find(:all, :conditions => ['id in (?)', self.issues]).each{|story|
+    RbStory.find(:all, :conditions => ['id in (?)', self.stories]).each{|story|
       bd = story.burndown(sprint, statuses)
       next unless bd
       bd.each_pair {|k, data|

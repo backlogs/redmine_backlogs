@@ -12,7 +12,7 @@ class RbAddHistory < ActiveRecord::Migration
 
     create_table :rb_sprint_burndown do |t|
       t.column :version_id,    :integer, :default => 0,  :null => false
-      t.text   :issues
+      t.text   :stories
       t.text   :burndown
       t.timestamps
     end

@@ -8,8 +8,21 @@ namespace :redmine do
   namespace :backlogs do
     task :test => :environment do
       Time.zone = 'Amsterdam'
+
       puts "Stories = #{RbStory.trackers.inspect}"
       puts "Task = #{RbTask.tracker}"
+
+      story = RbStory.find(590)
+      pp story.history.history
+      exit
+
+      expected = {
+        39  => 46.5,
+        38  => 31.5,
+        36  => 31,
+        33  => 38,
+        32  => 54,
+      }
       Timecop.travel(Time.local(2012, 7, 27, 8, 0, 0)) do
         project = Project.find_by_name('1_problem')
 
@@ -25,52 +38,45 @@ namespace :redmine do
 
         puts "active sprint = #{active.id}"
         past_sprints.collect{|sprint|
-          next unless sprint.id == 39
+          next unless sprint.id == 38
           #puts sprint.burndown.data[:points_committed].inspect
           stories = sprint.stories.collect{|s| s.id}
 
+          sprint.burndown.direction = :up
           total = 0
-          RbStory.find(:all, :conditions => ['id in (?)', sprint.burndown.issues]).each{|story|
-            #puts "#{story.id}" #, tracker=#{story.tracker_id}, story?=#{story.is_story?}, task?=#{story.is_task?}"
+          RbStory.find(:all, :conditions => ['id in (?)', sprint.burndown.stories]).each{|story|
+            h = story.history.history[-1]
+            #puts "#{story.id}, points = #{h[:status_success] ? h[:story_points] : '-'}, success = #{h[:status_success]}"
             bd = story.burndown(sprint)
-            h = story.history.history[0]
-            points = bd ? bd[:points_committed] : nil
+            points = bd ? bd[:points_accepted] : nil
             raise "Story without burndown #{bd.inspect}/#{h.inspect}" if story.is_story? && (!points || h[:tracker] != :story)
-            points = points[0] if points
+            points = points[-1] if points
             next if bd.nil? && !story.is_task? && !story.is_story?
             next if h[:tracker] == :task && story.is_task?
 
             raise "Task #{story.id} with burndown #{story.history.history.inspect}" if story.is_task? && points
             raise "#{story.id} not a sprint story" unless stories.include?(story.id) || points.nil?
             next if points.nil?
+            puts "#{story.id}, points = #{h[:status_success] ? h[:story_points] : "<#{h[:story_points]}>"}, success = #{h[:status_success]}"
+            raise "#{story.id}: #{points} vs. #{h[:status_success] ? h[:story_points] : '0'}" if points != (h[:status_success] ? h[:story_points] : 0)
             total += points
           }
 
-          puts total
+          puts "sprint #{sprint.id}, calculated: #{total}, burndown result: #{sprint.burndown.data[:points_accepted][-1]}, expected: #{expected[sprint.id]}"
         }
       end
     end
   end
 end
 
-#I printed the IDs from current date which gave me this:
-#27-09-2012:
-#active: nil
-#Past sprints:
-#40 - sprint 16 - not closed but due date past
-#39 - sprint 15
-#38 - sprint 14
-#36 - sprint 13
-#33 - sprint 12
-#
 #Going back to 27-07-2012 gives me the following:
 #active: 40
 #Past sprints:
-#39   - 54 points
-#38   - 38 points
-#36   - 31 points
-#33   - 31,5 points
-#32   - 46,5 points
+#39  - 46,5 points
+#38  - 31,5 points
+#36  - 31 points
+#33  - 38 points
+#32  - 54 points
 #
 #This should be an average of 40,2 points per sprint.
 #I manually found the closed stories of each sprint in the issues view and calculated the average.

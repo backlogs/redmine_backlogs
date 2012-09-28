@@ -22,7 +22,18 @@ class RbIssueHistory < ActiveRecord::Base
 
   def filter(sprint, status=nil)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
-    sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
+    filtered = sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
+    
+    # see if this issue was closed after sprint end
+    if filtered[-1][:status_open]
+      self.history.select{|h| h[:date] > sprint.effective_date}.each{|h|
+        if h[:sprint] == sprint.id && !h[:status_open]
+          filtered[-1] = h
+          break
+        end
+      }
+    end
+    return filtered
   end
 
   def self.issue_type(tracker_id)
@@ -48,11 +59,17 @@ class RbIssueHistory < ActiveRecord::Base
 
     status ||= self.statuses
 
-    sprints_touched = []
-    sprints_touched << issue.fixed_version_id if issue.fixed_version_id
+    current = Journal.new
+    current.journalized = issue
+    current.created_on = issue.updated_on
+    ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id'].each{|prop_key|
+      current.details << JournalDetail.new(:property => 'attr', :prop_key => prop_key, :old_value => nil, :value => issue.send(prop_key))
+    }
 
-    issue.journals.each{|journal|
+    (issue.journals.to_a + [current]).each{|journal|
       date = journal.created_on.to_date
+
+      ## TODO: SKIP estimated_hours and remaining_hours if not a leaf node
       journal.details.each{|jd|
         next unless jd.property == 'attr'
 
@@ -63,11 +80,7 @@ class RbIssueHistory < ActiveRecord::Base
           [:old, :new].each{|k| changes[k] = Float(changes[k]) unless changes[k].nil? }
         when :fixed_version_id
           changes[:prop] = :sprint
-          [:old, :new].each{|k|
-            next if changes[k].nil?
-            changes[k] = Integer(changes[k])
-            sprints_touched << changes[k]
-          }
+          [:old, :new].each{|k| changes[k] = Integer(changes[k]) unless changes[k].nil? }
         when :status_id
           changes = [changes.dup, changes.dup, changes.dup]
           [:id, :open, :success].each_with_index{|prop, i|
@@ -93,6 +106,8 @@ class RbIssueHistory < ActiveRecord::Base
         }
       }
     }
+    ## TODO: add estimated_hours and remaining_hours from underlying leaf nodes
+
     rb.history.each{|h|
       h[:estimated_hours] = issue.estimated_hours             unless h.include?(:estimated_hours)
       h[:story_points] = issue.story_points                   unless h.include?(:story_points)
@@ -109,9 +124,11 @@ class RbIssueHistory < ActiveRecord::Base
 
     rb.save
 
-    sprints_touched.uniq.each{|sprint_id|
-      RbSprintBurndown.find_or_initialize_by_version_id(sprint_id).touch!(issue.id)
-    }
+    if rb.history.detect{|h| h[:tracker] == :story }
+      rb.history.collect{|h| h[:sprint] }.compact.uniq.each{|sprint_id|
+        RbSprintBurndown.find_or_initialize_by_version_id(sprint_id).touch!(issue.id)
+      }
+    end
   end
 
   def self.rebuild
@@ -120,8 +137,9 @@ class RbIssueHistory < ActiveRecord::Base
 
     status = self.statuses
 
-    Issue.all.each{|issue|
-      puts "#{issue.id}..."
+    issues = Issue.count
+    Issue.find(:all, :order => 'root_id asc, lft desc').each_with_index{|issue, n|
+      puts "#{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{issues})..."
       RbIssueHistory.rebuild_issue(issue, status)
     }
   end
@@ -156,6 +174,6 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def touch_sprint
-    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint]
+    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
   end
 end
