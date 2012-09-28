@@ -211,17 +211,17 @@ module BacklogsPrintableCards
         }
       }
 
-      File.open(File.dirname(__FILE__) + '/labels.yaml', 'w') do |dump|
+      File.open(File.dirname(__FILE__) + '/labels/labels.yaml', 'w') do |dump|
         YAML.dump(@@layouts, dump)
       end
-      File.open(File.dirname(__FILE__) + '/labels-malformed.yaml', 'w') do |dump|
+      File.open(File.dirname(__FILE__) + '/labels/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
       end
     end
 
     @@layouts ||= {}
     begin
-      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
+      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels/labels.yaml')
       layouts.each_pair{|key, spec|
         layout = CardPageLayout.new(spec.merge({'name' => key}))
         @@layouts[key] = layout if layout.valid
@@ -265,7 +265,7 @@ module BacklogsPrintableCards
 
       f = nil
       ['-default', ''].each {|postfix|
-        t = File.dirname(__FILE__) + "/#{template}#{postfix}.glabels"
+        t = File.dirname(__FILE__) + "/labels/#{template}#{postfix}.glabels"
         f = t if File.exists?(t)
       }
       raise "No template for #{template}" unless f
