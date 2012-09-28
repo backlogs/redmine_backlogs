@@ -220,8 +220,8 @@ class RbStory < Issue
         [:points_committed, :points_accepted, :points_resolved, :hours_remaining].each{|k| bd[k] << nil}
       else
         bd[:points_committed] << d[:story_points]
-        bd[:points_accepted] << (! d[:status_success] ? 0 : d[:story_points])
-        bd[:points_resolved] << (d[:hours].to_f == 0.0 ? d[:story_points] : 0)
+        bd[:points_accepted] << (d[:status_success] ? d[:story_points] : 0)
+        bd[:points_resolved] << (d[:status_success] || d[:hours].to_f == 0.0 ? d[:story_points] : 0)
         bd[:hours_remaining] << (d[:status_closed] ? 0 : d[:hours])
       end
     }

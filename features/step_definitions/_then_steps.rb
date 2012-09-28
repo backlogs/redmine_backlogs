@@ -1,6 +1,16 @@
 require 'rubygems'
 require 'timecop'
-require 'pp'
+
+Then /^the history for (.+) should be:$/ do |subject, table|
+  story = RbStory.find_by_subject(subject)
+  history = story.history.filter(@sprint)
+  puts "\n\nstory #{subject} = #{history.inspect}\n\n"
+  table.hashes.each_with_index do |metrics, i|
+    metrics.each_pair{|k, v|
+      "#{i}, #{k}: #{history[i][k.intern]}".should == "#{i}, #{k}: #{v}"
+    }
+  end
+end
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
@@ -254,9 +264,7 @@ end
 
 Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
   story = RbStory.find_by_subject(subject)
-  sprint = story.fixed_version
-  puts "\n\nBD: #{series.intern.inspect} from #{story.burndown.inspect}\n\n"
-  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], sprint.days.zip(story.burndown[series.intern]))
+  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], @sprint.days.zip(story.burndown[series.intern]))
 end
 Then /^show me the burndown for task (.+)$/ do |subject|
   task = RbTask.find_by_subject(subject)
@@ -266,19 +274,10 @@ Then /^show me the burndown for task (.+)$/ do |subject|
   end
 end
 
-Then /^show me the (.+) journal for (.+)$/ do |property, subject|
-  issue = Issue.find(:first, :conditions => ['subject = ?', subject.strip])
+Then /^show me the journal for (.+)$/ do |subject|
+  issue = RbStory.find_by_subject(subject.strip)
   raise "No issue with subject '#{subject}'" unless issue
-  puts "\n"
-  puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
-
-  days = (issue.created_on.to_date .. Date.today).to_a
-  previous = nil
-  issue.history(property.intern, days).each_with_index {|value, i|
-    next if i != 0 && value == previous
-    previous = value
-    puts "  #{days[i]}: #{value}"
-  }
+  puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|

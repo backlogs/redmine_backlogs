@@ -288,7 +288,7 @@ Given /^I have made the following task mutations:$/ do |table|
 
     remaining = mutation.delete('remaining')
 
-    mutated = days[mutation.delete('day').to_i - 1]
+    mutated = days[mutation.delete('day').to_i]
     mutated.utc?.should be_true
 
     mutated.to_date.should be >= task.created_on.to_date
@@ -341,23 +341,14 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
 
-    day_added = story.delete('day')
-    offset = story.delete('offset')
+    added = story.delete('created').to_s
+    added = '-1d5h' if added == ''
     created_on = nil
 
-    if day_added
-      if day_added == ''
-        # one day before sprint start
-        before_sprint_start = sprint.sprint_start_date - 1
-        created_on = before_sprint_start.to_time(:utc)
-        created_on.hour.should == 0
-      else
-        created_on = sprint.days[Integer(day_added)-1].to_time(:utc) + time_offset('1h')
-        created_on.hour.should == 1
-      end
-    elsif offset
-      created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(offset)
-      created_on.hour.should == offset_to_hours(time_offset(offset))
+    if added =~ /-/
+      created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(added)
+    else
+      created_on = sprint.days[added.to_i].to_time(:utc) + time_offset('1h')
     end
 
     story.should == {}
@@ -365,11 +356,7 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    if created_on
-      Timecop.travel(created_on) do
-        RbStory.create_and_position(params).move_to_bottom
-      end
-    else
+    Timecop.travel(created_on) do
       RbStory.create_and_position(params).move_to_bottom
     end
   end
@@ -383,7 +370,7 @@ Given /^I have defined the following tasks:$/ do |table|
     params = initialize_task_params(story.id)
     params['subject'] = task.delete('subject')
 
-    offset = time_offset(task.delete('offset'))
+    offset = time_offset(task.delete('offset') || '1h')
 
     status = task.delete('status')
     params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
@@ -397,15 +384,11 @@ Given /^I have defined the following tasks:$/ do |table|
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    if offset
-      Timecop.travel(story.created_on + offset) do
-        task = RbTask.create_with_relationships(params, @user.id, story.project.id)
-        task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
-        task.save! # workaround racktest driver weirdness
-        task
-      end
-    else
-      RbTask.create_with_relationships(params, @user.id, story.project.id)
+    Timecop.travel(story.created_on + offset) do
+      task = RbTask.create_with_relationships(params, @user.id, story.project.id)
+      task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
+      task.save! # workaround racktest driver weirdness
+      task
     end
   end
 end
@@ -499,9 +482,9 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
     when 'tomorrow'
       date = (Date.today + 1).to_time
     else
-      raise "Unsupported date '#{date}'"
+      date = Date.parse(date)
   end
-  @sprint.created_on = date
+  @sprint.sprint_start_date = date
   @sprint.save!
 end
 

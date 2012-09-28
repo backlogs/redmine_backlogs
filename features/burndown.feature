@@ -19,7 +19,7 @@ Feature: Burndown
         | Rejected    |         1 |          0 |                  1 |
       And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  |
-        | Sprint 001     | today             | 1.week.from_now |
+        | Sprint 001     | 2012-02-02        | 2012-02-09      |
         | Sprint siegerv | 2011-08-19        | 2011-09-02      |
 
       And I have defined the following stories in the product backlog:
@@ -29,18 +29,17 @@ Feature: Burndown
         | Story 3 |
         | Story 4 |
       And I have defined the following stories in the following sprints:
-        | subject         | sprint         | points | day |
-        | Story A         | Sprint 001     | 1      |     |
-        | Story B         | Sprint 001     | 2      |     |
-        | Story C         | Sprint 001     | 4      |     |
-        | Siegerv story 1 | Sprint siegerv | 1      |     |
+        | subject         | sprint         | points |
+        | Story A         | Sprint 001     | 1      |
+        | Story B         | Sprint 001     | 2      |
+        | Story C         | Sprint 001     | 4      |
+        | Siegerv story 1 | Sprint siegerv | 1      |
 
       And I have defined the following tasks:
         | subject      | story            | estimate | status | offset |
         | A.1          | Story A          | 10       | New    | 1h     |
         | B.1          | Story B          | 20       | New    | 1h     |
         | C.1          | Story C          | 40       | New    | 1h     |
-
         | S.1          | Siegerv story 1  | 10       | New    | 1h     |
 
   Scenario: Tasks closed AFTER remaining hours is set to 0
@@ -58,9 +57,6 @@ Feature: Burndown
         | 4       | C.1  | 10        |             |
         | 5       | C.1  | 0         |             |
         | 5       | C.1  |           | Closed      |
-      Then show me the hours burndown for story Story A
-      Then show me the hours burndown for story Story B
-      Then show me the hours burndown for story Story C
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -114,8 +110,8 @@ Feature: Burndown
         | 2       | C.1  | 30        | In Progress |
 
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points | day |
-        | Story D | Sprint 001 | 4      | 3   |
+        | subject | sprint     | points | created |
+        | Story D | Sprint 001 | 4      | 3       |
 
       And I have defined the following tasks:
         | subject      | story     | estimate | status | offset |
@@ -144,11 +140,12 @@ Feature: Burndown
 
   Scenario: Change sprint start date
     Given I am viewing the taskboard for Sprint 001
-      And I have changed the sprint start date to tomorrow
+      And I have changed the sprint start date to 2012-02-03
       And I have defined the following stories in the following sprints:
         | subject | sprint     | points |
         | Story D | Sprint 001 | 1      |
-      And I have changed the sprint start date to today
+      And I have changed the sprint start date to 2012-02-02
+     Then show me the journal for Story D
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |
