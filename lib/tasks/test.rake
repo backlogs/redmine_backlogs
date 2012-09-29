@@ -17,9 +17,9 @@ namespace :redmine do
       expected = {
         39  => 46.5,
         38  => 31.5,
-        36  => 31,
-        33  => 38,
-        32  => 54,
+        36  => 31.0,
+        33  => 38.0,
+        32  => 54.0,
       }
       Timecop.travel(Time.local(2012, 7, 27, 8, 0, 0)) do
         active = RbSprint.find(:first,
@@ -32,6 +32,7 @@ namespace :redmine do
                 :order => "effective_date desc",
                 :limit => 5).select(&:has_burndown?)
         past_sprints.collect{|sprint|
+          raise "Unexpected sprint #{sprint.id}" unless expected[sprint.id]
 #          next unless sprint.id == 38
 #          #puts sprint.burndown.data[:points_committed].inspect
 #          stories = sprint.stories.collect{|s| s.id}
@@ -56,7 +57,7 @@ namespace :redmine do
 #            total += points
 #          }
 #
-          puts "sprint #{sprint.id}, burndown result: #{sprint.burndown.data[:points_accepted][-1]}, expected: #{expected[sprint.id]}"
+          puts "sprint #{sprint.id}, burndown result: #{sprint.burndown.data[:points_accepted][-1]}, expected: #{expected[sprint.id]}" if sprint.burndown.data[:points_accepted][-1] != expected[sprint.id]
         }
       end
     end
