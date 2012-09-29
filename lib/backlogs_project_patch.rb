@@ -168,7 +168,7 @@ module Backlogs
 
       def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
-        @scrum_statistics ||= stats = Backlogs::Statistics.new(self)
+        @scrum_statistics ||= Backlogs::Statistics.new(self)
       end
 
       def rb_project_settings

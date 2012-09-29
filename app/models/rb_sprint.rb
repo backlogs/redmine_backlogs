@@ -127,7 +127,7 @@ class RbSprint < Version
     bd = self.burndown
 
     # assume a sprint is active if it's only 2 days old
-    return true if bd[:hours_remaining].compact.size <= 2
+    return true if bd[:hours_remaining] && bd[:hours_remaining].compact.size <= 2
 
     return Issue.exists?(['fixed_version_id = ? and ((updated_on between ? and ?) or (created_on between ? and ?))', self.id, -2.days.from_now, Time.now, -2.days.from_now, Time.now])
   end
