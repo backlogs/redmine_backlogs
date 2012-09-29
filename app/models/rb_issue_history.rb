@@ -219,6 +219,9 @@ class RbIssueHistory < ActiveRecord::Base
     self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
+
+    # detect timecop test artifact -- remove later
+    raise "Update before create" if Date.today <= self.history[0][:date]
   end
 
   def touch_sprint

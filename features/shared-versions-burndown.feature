@@ -22,7 +22,7 @@ Feature: Burndown
         | Rejected    |         1 |          0 |                  1 |
       And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  | sharing     | project_id |
-        | Sprint 001     | today             | 1.week.from_now | descendants | ecookbook  |
+        | Sprint 001     | 2012-02-02        | 2012-02-09      | descendants | ecookbook  |
         | Sprint siegerv | 2011-08-19        | 2011-09-02      | descendants | ecookbook  |
 
       And I have defined the following stories in the product backlog:
@@ -32,11 +32,11 @@ Feature: Burndown
         | Story 3 | ecookbook   |
         | Story 4 | subproject1 |
       And I have defined the following stories in the following sprints:
-        | subject         | sprint         | points | day | project_id  |
-        | Story A         | Sprint 001     | 1      |     | ecookbook   |
-        | Story B         | Sprint 001     | 2      |     | ecookbook   |
-        | Story C         | Sprint 001     | 4      |     | subproject1 |
-        | Siegerv story 1 | Sprint siegerv | 1      |     | ecookbook   |
+        | subject         | sprint         | points | project_id  |
+        | Story A         | Sprint 001     | 1      | ecookbook   |
+        | Story B         | Sprint 001     | 2      | ecookbook   |
+        | Story C         | Sprint 001     | 4      | subproject1 |
+        | Siegerv story 1 | Sprint siegerv | 1      | ecookbook   |
 
       And I have defined the following tasks:
         | subject      | story            | estimate | status | offset |
@@ -129,8 +129,8 @@ Feature: Burndown
         | 2       | C.1  | 30        | In Progress |
 
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points | day |
-        | Story D | Sprint 001 | 4      | 3   |
+        | subject | sprint     | points | created |
+        | Story D | Sprint 001 | 4      | 3       |
 
       And I have defined the following tasks:
         | subject      | story     | estimate | status | offset |
@@ -159,11 +159,11 @@ Feature: Burndown
 
   Scenario: Change sprint start date
     Given I am viewing the taskboard for Sprint 001
-      And I have changed the sprint start date to tomorrow
+      And I have changed the sprint start date to 2012-02-03
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points |
-        | Story D | Sprint 001 | 1      |
-      And I have changed the sprint start date to today
+        | subject | sprint     | points | created             |
+        | Story D | Sprint 001 | 1      | 2012-02-02 01:00:00 |
+      And I have changed the sprint start date to 2012-02-02
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |

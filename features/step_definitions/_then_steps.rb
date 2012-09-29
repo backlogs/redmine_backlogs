@@ -3,8 +3,7 @@ require 'timecop'
 
 Then /^the history for (.+) should be:$/ do |subject, table|
   story = RbStory.find_by_subject(subject)
-  history = story.history.filter(@sprint)
-  puts "\n\nstory #{subject} = #{history.inspect}\n\n"
+  history = story.history.filter(current_sprint)
   table.hashes.each_with_index do |metrics, i|
     metrics.each_pair{|k, v|
       "#{i}, #{k}: #{history[i][k.intern]}".should == "#{i}, #{k}: #{v}"
@@ -24,7 +23,7 @@ Then /^I should see (\d+) sprint backlogs$/ do |count|
 end
 
 Then /^I should see the burndown chart$/ do
-  page.should have_css("#burndown_#{@sprint.id.to_s}")
+  page.should have_css("#burndown_#{current_sprint.id.to_s}")
 end
 
 Then /^I should see the burndown chart of sprint (.+)$/ do |sprint_name|
@@ -73,7 +72,7 @@ Then /^show me the list of stories$/ do
 end
 
 Then /^show me the sprint impediments$/ do
-  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
+  puts "Impediments for #{current_sprint.name}: #{current_sprint.impediments.collect{|i| i.subject}.inspect}"
 end
 
 Then /^show me the projects$/ do
@@ -216,13 +215,13 @@ end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   bd = nil
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown
+  Timecop.travel((current_sprint.effective_date + 1).to_time) do
+    bd = current_sprint.burndown
     bd.direction = direction
     bd = bd.data
   end
 
-  days = @sprint.days
+  days = current_sprint.days
 
   table.hashes.each do |metrics|
     day = metrics.delete('day')
@@ -243,13 +242,13 @@ end
 
 Then /^show me the sprint burn(.*)$/ do |direction|
   bd = nil
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown
+  Timecop.travel((current_sprint.effective_date + 1).to_time) do
+    bd = current_sprint.burndown
     bd.direction = direction
     bd = bd.data
   end
 
-  dates = @sprint.days
+  dates = current_sprint.days
 
   header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
 
@@ -259,12 +258,12 @@ Then /^show me the sprint burn(.*)$/ do |direction|
     data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
   end
 
-  show_table("Burndown for #{@sprint.name} (#{@sprint.sprint_start_date} - #{@sprint.effective_date})", header, data)
+  show_table("Burndown for #{current_sprint.name} (#{current_sprint.sprint_start_date} - #{current_sprint.effective_date})", header, data)
 end
 
 Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
   story = RbStory.find_by_subject(subject)
-  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], @sprint.days.zip(story.burndown[series.intern]))
+  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], current_sprint.days.zip(story.burndown[series.intern]))
 end
 Then /^show me the burndown for task (.+)$/ do |subject|
   task = RbTask.find_by_subject(subject)
@@ -281,11 +280,11 @@ Then /^show me the journal for (.+)$/ do |subject|
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
+  Timecop.travel((current_sprint.effective_date + 1).to_time) do
     story = RbStory.find(:first, :conditions => ['subject = ?', story])
     bd = story.burndown
     header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
-    bd['day'] = @sprint.days
+    bd['day'] = current_sprint.days
     data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
     show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
   end

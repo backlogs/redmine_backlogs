@@ -4,7 +4,7 @@
   <%-
       burndown = sprint.burndown
       series = burndown.series.sort{|a, b| l("label_#{a}") <=> l("label_#{b}") }
-      dates = sprint.days(:all)
+      dates = sprint.days
 
       ticks = dates.collect{|d|
         t = Time.utc(d.year, d.mon, d.mday)
@@ -15,7 +15,7 @@
 
       chart = {
         :mode => mode,
-        :series => series.collect{|s| burndown[s].enum_for(:each_with_index).collect{|d,i| [i*2, d]}},
+        :series => series.collect{|s| burndown.data[s.intern].enum_for(:each_with_index).collect{|d,i| [i*2, d]}},
         :position => Hash[*(0.upto(series.size - 1).collect{|i| [series[i], i]}.flatten)],
         :options => {
           :series => series.collect{|s|

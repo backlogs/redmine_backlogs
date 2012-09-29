@@ -50,7 +50,7 @@ class RbSprintBurndown < ActiveRecord::Base
 
         # delete any series that is flat-line 0/nil
         @series[key].each {|k|
-          @series[remove_empty].delete(k) if k != 'points_committed' && self.burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
+          @series[key].delete(k) if k != 'points_committed' && self.burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
         }
       end
     end

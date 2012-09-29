@@ -182,11 +182,11 @@ When /^I view the stories in the issues tab/ do
 end
 
 When /^I view the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint.id, :only_path => true)
+  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => current_sprint.id, :only_path => true)
 end
 
 When /^I edit the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => @sprint.id, :only_path => true)
+  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => current_sprint.id, :only_path => true)
 end
 
 When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type, how_many, period, direction|

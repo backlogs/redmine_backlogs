@@ -142,10 +142,9 @@ Feature: Burndown
     Given I am viewing the taskboard for Sprint 001
       And I have changed the sprint start date to 2012-02-03
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points |
-        | Story D | Sprint 001 | 1      |
+        | subject | sprint     | points | created             |
+        | Story E | Sprint 001 | 1      | 2012-02-02 01:00:00 |
       And I have changed the sprint start date to 2012-02-02
-     Then show me the journal for Story D
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |

@@ -2,6 +2,33 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
+def current_sprint(subject = nil)
+  if @sprint.nil? || @sprint.new_record?
+    modified = false
+  else
+    modified = Version.exists?(["exists(select 1 from versions where id = ? and updated_on > ?)
+                                 or
+                                (? = 'exists' and exists(select 1 from rb_sprint_burndown where version_id = ? and updated_at > ?))",
+                                @sprint.id, @sprint.updated_on,
+                                @sprint.sprint_burndown.nil? ? '' : 'exists', @sprint.id, @sprint.sprint_burndown.nil? ? nil : @sprint.sprint_burndown.updated_at])
+  end
+
+  if subject.is_a?(Symbol)
+    case subject
+    when :reload then subject = @sprint.name
+    when :force_reload then subject = @sprint.name; modified = false
+    else raise "Unsupported command #{subject.inspect}"
+    end
+  end
+
+  if modified
+    raise "Replacing modified sprint #{@sprint.name}" if subject
+    raise "Requesting modified sprint #{@sprint.name}"
+  end
+  @sprint = RbSprint.find_by_name(subject) if subject
+  return @sprint
+end
+
 def verify_request_status(status)
   if page.driver.respond_to?('response') # javascript drivers has no response
     page.driver.response.status.should equal(status),\
@@ -116,7 +143,7 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => @sprint))
+  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => current_sprint))
   s2.should_not be_nil
   s2.id.should == story.id
 

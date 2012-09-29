@@ -71,14 +71,12 @@ Given /^I am viewing the master backlog$/ do
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => current_sprint(sprint_name).id, :only_path=>true)
   verify_request_status(200)
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
+  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => current_sprint(sprint_name).id, :only_path=>true)
   verify_request_status(200)
 end
 
@@ -270,7 +268,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days.collect{|d| Time.utc(d.year, d.month, d.day)}
+  days = current_sprint(:reload).days.collect{|d| Time.utc(d.year, d.month, d.day)}
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
@@ -345,8 +343,10 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     added = '-1d5h' if added == ''
     created_on = nil
 
-    if added =~ /-/
+    if added =~ /^-/
       created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(added)
+    elsif added =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
+      created_on = Time.parse("#{added} UTC")
     else
       created_on = sprint.days[added.to_i].to_time(:utc) + time_offset('1h')
     end
@@ -471,7 +471,7 @@ end
 
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
-  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
+  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
   show_table("Task hours", header, data)
 end
 
@@ -484,8 +484,8 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
     else
       date = Date.parse(date)
   end
-  @sprint.sprint_start_date = date
-  @sprint.save!
+  current_sprint(:reload).sprint_start_date = date
+  current_sprint.save!
 end
 
 Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do

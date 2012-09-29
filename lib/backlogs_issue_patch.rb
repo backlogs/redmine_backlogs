@@ -143,28 +143,7 @@ module Backlogs
                                               self.fixed_version_id, self.fixed_version_id,
                                               self.fixed_version_id, self.fixed_version_id,
                                               RbTask.tracker]).to_a
-#          tasklist.each{|task|
-#            case Backlogs.platform
-#              when :redmine
-#                j = Journal.new
-#                j.journalized = task
-#                j.created_on = self.updated_on
-#                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id) unless task.fixed_version_id == fixed_version_id
-#                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'tracker_id', :old_value => task.tracker_id, :value => RbTask.tracker) unless task.tracker_id == RbTask.tracker
-#              when :chiliproject
-#                j = IssueJournal.new
-#                j.created_at = self.updated_on
-#                j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id] unless task.fixed_version_id == fixed_version_id
-#                j.details['tracker_id'] = [task.tracker_id, RbTask.tracker] unless task.tracker_id == RbTask.tracker
-#                j.activity_type = 'issues'
-#                j.journaled = task
-#                j.version = task.last_journal.version + 1
-#            end
-#            j.user = User.current
-#            j.save!
-#          }
-
-          tasklist.each{|task| task.history.update! }
+          tasklist.each{|task| task.history.save! }
           if tasklist.size > 0
             task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
