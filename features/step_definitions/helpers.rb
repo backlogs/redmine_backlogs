@@ -16,15 +16,11 @@ def current_sprint(subject = nil)
   if subject.is_a?(Symbol)
     case subject
     when :reload then subject = @sprint.name
-    when :force_reload then subject = @sprint.name; modified = false
     else raise "Unsupported command #{subject.inspect}"
     end
   end
 
-  if modified
-    raise "Replacing modified sprint #{@sprint.name}" if subject
-    raise "Requesting modified sprint #{@sprint.name}"
-  end
+  raise "Requesting modified sprint #{@sprint.name}" if modified && subject.nil?
   @sprint = RbSprint.find_by_name(subject) if subject
   return @sprint
 end

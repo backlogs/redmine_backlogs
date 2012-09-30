@@ -148,6 +148,7 @@ Feature: Burndown
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
 
+      #Then show me the journal for Story D
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
