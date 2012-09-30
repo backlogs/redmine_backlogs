@@ -40,7 +40,7 @@ case $REDMINE_VER in
       export GENERATE_SECRET=generate_secret_token
       export MIGRATE_PLUGINS=redmine:plugins:migrate
       export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=2.0.4
+      export REDMINE_GIT_TAG=2.0.3
       ;;
   m)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
       export GENERATE_SECRET=generate_secret_token
@@ -111,8 +111,11 @@ uninstall()
   set -e # exit if migrate fails
   cd $PATH_TO_REDMINE
   # clean up database
-  bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
-  bundle exec rake $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
+  if [ "$VERBOSE" = "yes" ]; then
+    TRACE=--trace
+  fi
+  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
+  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
 }
 
 run_install()
@@ -126,6 +129,15 @@ echo current directory is `pwd`
 
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
+
+if [ "$CLEARDB" = "yes" ]; then
+  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
+  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
+  if [ "$DBTYPE" = "mysql2" ]; then
+    mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
+    mysqladmin -u root -p$DBROOTPW create $DBNAME
+  fi
+fi
 
 if [ "$DB_TO_RESTORE" = "" ]; then
   export story_trackers=Story
