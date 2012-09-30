@@ -10,7 +10,7 @@ namespace :redmine do
       Time.zone = 'Amsterdam'
       project = Project.find_by_name('1_problem')
       Timecop.travel(Time.local(2012, 7, 27, 8, 0, 0)) do
-        project.scrum_statistics
+        pp project.scrum_statistics
       end
 
       expected = {
