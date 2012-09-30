@@ -268,7 +268,7 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = current_sprint(:reload).days.collect{|d| Time.utc(d.year, d.month, d.day)}
+  days = current_sprint.days.collect{|d| Time.utc(d.year, d.month, d.day)}
 
   table.hashes.each_with_index do |mutation, no|
     task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
@@ -484,8 +484,8 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
     else
       date = Date.parse(date)
   end
-  current_sprint(:reload).sprint_start_date = date
-  current_sprint.save!
+  current_sprint.sprint_start_date = date
+  current_sprint(:keep).save!
 end
 
 Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do

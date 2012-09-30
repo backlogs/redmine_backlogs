@@ -195,12 +195,12 @@ class RbIssueHistory < ActiveRecord::Base
   private
 
   def set_default_history
-    if Time.now < issue.created_on # timecop BTTF artifact
+    self.history ||= []
+
+    if Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
       puts "Goodbye time traveller"
       return
     end
-
-    self.history ||= []
 
     _statuses ||= self.class.statuses
     current = {

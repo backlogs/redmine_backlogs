@@ -2,26 +2,21 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
-def current_sprint(subject = nil)
-  if @sprint.nil? || @sprint.new_record?
-    modified = false
-  else
-    modified = Version.exists?(["exists(select 1 from versions where id = ? and updated_on > ?)
-                                 or
-                                (? = 'exists' and exists(select 1 from rb_sprint_burndown where version_id = ? and updated_at > ?))",
-                                @sprint.id, @sprint.updated_on,
-                                @sprint.sprint_burndown.nil? ? '' : 'exists', @sprint.id, @sprint.sprint_burndown.nil? ? nil : @sprint.sprint_burndown.updated_at])
-  end
-
-  if subject.is_a?(Symbol)
-    case subject
-    when :reload then subject = @sprint.name
-    else raise "Unsupported command #{subject.inspect}"
+def current_sprint(name = nil)
+  if name.is_a?(Symbol)
+    case name
+    when :keep
+      # keep
+    else
+      raise "Unexpected command #{name.inspect}"
     end
+  elsif name.is_a?(String)
+    @sprint =  RbSprint.find_by_name(name)
+  elsif name.nil?
+    @sprint = @sprint ? RbSprint.find_by_id(@sprint.id) : nil
+  else
+    raise "Unexpected #{name.class}"
   end
-
-  raise "Requesting modified sprint #{@sprint.name}" if modified && subject.nil?
-  @sprint = RbSprint.find_by_name(subject) if subject
   return @sprint
 end
 

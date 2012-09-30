@@ -72,7 +72,7 @@ Then /^show me the list of stories$/ do
 end
 
 Then /^show me the sprint impediments$/ do
-  puts "Impediments for #{current_sprint.name}: #{current_sprint.impediments.collect{|i| i.subject}.inspect}"
+  puts "Impediments for #{current_sprint.name}: #{current_sprint(:keep).impediments.collect{|i| i.subject}.inspect}"
 end
 
 Then /^show me the projects$/ do
@@ -216,12 +216,12 @@ end
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   bd = nil
   Timecop.travel((current_sprint.effective_date + 1).to_time) do
-    bd = current_sprint.burndown
+    bd = current_sprint(:keep).burndown
     bd.direction = direction
     bd = bd.data
   end
 
-  days = current_sprint.days
+  days = current_sprint(:keep).days
 
   table.hashes.each do |metrics|
     day = metrics.delete('day')
@@ -243,12 +243,12 @@ end
 Then /^show me the sprint burn(.*)$/ do |direction|
   bd = nil
   Timecop.travel((current_sprint.effective_date + 1).to_time) do
-    bd = current_sprint.burndown
+    bd = current_sprint(:keep).burndown
     bd.direction = direction
     bd = bd.data
   end
 
-  dates = current_sprint.days
+  dates = current_sprint(:keep).days
 
   header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
 
@@ -258,7 +258,7 @@ Then /^show me the sprint burn(.*)$/ do |direction|
     data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
   end
 
-  show_table("Burndown for #{current_sprint.name} (#{current_sprint.sprint_start_date} - #{current_sprint.effective_date})", header, data)
+  show_table("Burndown for #{current_sprint(:keep).name} (#{current_sprint(:keep).sprint_start_date} - #{current_sprint(:keep).effective_date})", header, data)
 end
 
 Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
@@ -284,7 +284,7 @@ Then /^show me the story burndown for (.+)$/ do |story|
     story = RbStory.find(:first, :conditions => ['subject = ?', story])
     bd = story.burndown
     header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
-    bd['day'] = current_sprint.days
+    bd['day'] = current_sprint(:keep).days
     data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
     show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
   end
