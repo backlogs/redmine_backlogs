@@ -93,7 +93,7 @@ class RbIssueHistory < ActiveRecord::Base
           full_journal[date][:sprint] = update
         when :status_id
           [:id, :open, :success].each_with_index{|status_prop, i|
-            full_journal[date]["status_#{prop}".intern] = {:old => status[update[:old]][status_prop], :new => status[update[:new]][status_prop]}
+            full_journal[date]["status_#{status_prop}".intern] = {:old => status[update[:old]][status_prop], :new => status[update[:new]][status_prop]}
           }
         when :tracker_id
           full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old]), :new => RbIssueHistory.issue_type(update[:new])}
@@ -149,7 +149,7 @@ class RbIssueHistory < ActiveRecord::Base
       end
 
       entry[:update].each_pair{|prop, old_new|
-        rb.history[0][prop] = old_new[:old] unless rb.history[0].include?(prop)
+        rb.history[0][prop] = old_new[:old] if old_new.include?(:old) && !rb.history[0].include?(prop)
         rb.history[-1][prop] = old_new[:new]
         rb.history.each{|h| h[prop] = old_new[:new] unless h.include?(prop) }
       }
@@ -195,6 +195,11 @@ class RbIssueHistory < ActiveRecord::Base
   private
 
   def set_default_history
+    if Time.now < issue.created_on # timecop BTTF artifact
+      puts "Goodbye time traveller"
+      return
+    end
+
     self.history ||= []
 
     _statuses ||= self.class.statuses
@@ -219,9 +224,6 @@ class RbIssueHistory < ActiveRecord::Base
     self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
-
-    # detect timecop test artifact -- remove later
-    raise "Update before create" if Date.today <= self.history[0][:date]
   end
 
   def touch_sprint
