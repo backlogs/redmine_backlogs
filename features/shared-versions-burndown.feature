@@ -20,6 +20,9 @@ Feature: Burndown
         | Closed      |         1 |          0 |                    |
         | Accepted    |         1 |          0 |                    |
         | Rejected    |         1 |          0 |                  1 |
+
+      And the current time is 2011-01-01 08:00:00
+
       And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  | sharing     | project_id |
         | Sprint 001     | 2012-02-02        | 2012-02-09      | descendants | ecookbook  |
@@ -129,8 +132,8 @@ Feature: Burndown
         | 2       | C.1  | 30        | In Progress |
 
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points | created |
-        | Story D | Sprint 001 | 4      | 3       |
+        | subject | sprint     | points | day |
+        | Story D | Sprint 001 | 4      | 3   |
 
       And I have defined the following tasks:
         | subject      | story     | estimate | status | offset |
@@ -148,7 +151,7 @@ Feature: Burndown
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
 
-      Then show me the journal for Story D
+      #Then show me the journal for Story A, Story B, Story C, Story D
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -162,7 +165,7 @@ Feature: Burndown
     Given I am viewing the taskboard for Sprint 001
       And I have changed the sprint start date to 2012-02-03
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | points | created             |
+        | subject | sprint     | points | day                 |
         | Story D | Sprint 001 | 1      | 2012-02-02 01:00:00 |
       And I have changed the sprint start date to 2012-02-02
      Then the sprint burnup should be:

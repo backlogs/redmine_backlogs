@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'timecop'
 
 Given /^I am admin$/ do
   login_as_admin
@@ -68,6 +67,15 @@ Given /^I am viewing the master backlog$/ do
   click_link("Backlogs")
   page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, :project_id => @project.identifier, :only_path=>true)
   verify_request_status(200)
+end
+
+Given /^the current (time|date) (is|forwards to) (.+)$/ do |dummy, action, time|
+  reset = case action
+          when 'is' then true
+          when 'forwards to' then false
+          else raise "I don't know how to #{action} time"
+          end
+  set_now(time, :reset => reset)
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
@@ -164,11 +172,6 @@ end
 
 
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
-  Rails.cache.clear
-
-  # Time zone must be set correctly, or ActiveRecord will store local, but retrieve UTC, which screws to Time.to_date. WTF people.
-  Time.zone = "UTC"
-
   @project = get_project(project_id)
   @projects = [] if @projects.nil?
   @projects.push(@project)
@@ -245,9 +248,7 @@ Given /^I have defined the following sprints:$/ do |table|
     status = version.delete('status')
 
     sprint = RbSprint.create! version
-    if status == 'closed'
-      sprint.update_attribute(:status, 'closed')
-    end
+    sprint.update_attribute(:status, 'closed') if status == 'closed'
   end
 end
 
@@ -268,11 +269,14 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = current_sprint.days.collect{|d| Time.utc(d.year, d.month, d.day)}
-
-  table.hashes.each_with_index do |mutation, no|
-    task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
+  table.hashes.each do |mutation|
+    mutation.delete_if{|k, v| v.to_s.strip == '' }
+    task = RbTask.find_by_subject(mutation.delete('task'))
     task.should_not be_nil
+
+    set_now(mutation.delete('day'), :msg => task.subject, :sprint => current_sprint)
+    Time.now.should be >= task.created_on
+
     task.init_journal(User.current)
 
     status_name = mutation.delete('status').to_s
@@ -286,18 +290,9 @@ Given /^I have made the following task mutations:$/ do |table|
 
     remaining = mutation.delete('remaining')
 
-    mutated = days[mutation.delete('day').to_i]
-    mutated.utc?.should be_true
-
-    mutated.to_date.should be >= task.created_on.to_date
-
-    mutated = task.created_on if (mutated.to_date == task.created_on.to_date)
-    mutated += time_offset("#{(no + 1)*10}m")
-    Timecop.travel(mutated) do
-      task.remaining_hours = remaining.to_f unless remaining.blank?
-      task.status_id = status if status
-      task.save!.should be_true
-    end
+    task.remaining_hours = remaining.to_f unless remaining.blank?
+    task.status_id = status if status
+    task.save!.should be_true
 
     mutation.should == {}
   end
@@ -333,32 +328,21 @@ Given /^I have defined the following stories in the following sprints:$/ do |tab
     else
       project = @project
     end
-    sprint = RbSprint.find(:first, :conditions => { "name" => story.delete('sprint') }) #find by name only, please use unique sprint names over projects for tests
+    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
+    sprint.should_not be_nil
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
 
-    added = story.delete('created').to_s
-    added = '-1d5h' if added == ''
-    created_on = nil
-
-    if added =~ /^-/
-      created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(added)
-    elsif added =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-      created_on = Time.parse("#{added} UTC")
-    else
-      created_on = sprint.days[added.to_i].to_time(:utc) + time_offset('1h')
-    end
+    set_now(story.delete('day'), :msg => params['subject'], :sprint => sprint)
 
     story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    Timecop.travel(created_on) do
-      RbStory.create_and_position(params).move_to_bottom
-    end
+    RbStory.create_and_position(params).move_to_bottom
   end
 end
 
@@ -381,15 +365,15 @@ Given /^I have defined the following tasks:$/ do |table|
 
     task.should == {}
 
+    set_now(story.created_on + offset, :ignore => 60, :msg => story.subject)
+
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    Timecop.travel(story.created_on + offset) do
-      task = RbTask.create_with_relationships(params, @user.id, story.project.id)
-      task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
-      task.save! # workaround racktest driver weirdness
-      task
-    end
+    task = RbTask.create_with_relationships(params, @user.id, story.project.id)
+    task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
+    task.save! # workaround racktest driver weirdness
+    task
   end
 end
 
@@ -576,14 +560,6 @@ end
 
 Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
   Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
-end
-
-Given /^the current date is (.+)$/ do |new_time|
-  Timecop.travel(Date.parse(new_time))
-end
-
-Given /^the current time is restored$/ do
-  Timecop.return
 end
 
 Given /^I have defined the following releases:$/ do |table|

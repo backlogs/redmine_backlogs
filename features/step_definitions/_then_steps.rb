@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'timecop'
 
 Then /^the history for (.+) should be:$/ do |subject, table|
   story = RbStory.find_by_subject(subject)
@@ -214,12 +213,11 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
-  bd = nil
-  Timecop.travel((current_sprint.effective_date + 1).to_time) do
-    bd = current_sprint(:keep).burndown
-    bd.direction = direction
-    bd = bd.data
-  end
+  set_now((current_sprint.effective_date + 1).to_time.force_utc)
+
+  bd = current_sprint(:keep).burndown
+  bd.direction = direction
+  bd = bd.data
 
   days = current_sprint(:keep).days
 
@@ -241,12 +239,10 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
 end
 
 Then /^show me the sprint burn(.*)$/ do |direction|
-  bd = nil
-  Timecop.travel((current_sprint.effective_date + 1).to_time) do
-    bd = current_sprint(:keep).burndown
-    bd.direction = direction
-    bd = bd.data
-  end
+  set_now((current_sprint.effective_date + 1).to_time)
+  bd = current_sprint(:keep).burndown
+  bd.direction = direction
+  bd = bd.data
 
   dates = current_sprint(:keep).days
 
@@ -266,28 +262,30 @@ Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
   show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], current_sprint.days.zip(story.burndown[series.intern]))
 end
 Then /^show me the burndown for task (.+)$/ do |subject|
+  set_now((sprint.effective_date + 1).to_time)
+
   task = RbTask.find_by_subject(subject)
   sprint = task.fixed_version.becomes(RbSprint)
-  Timecop.travel((sprint.effective_date + 1).to_time) do
-    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days.zip(task.burndown))
-  end
+  show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days.zip(task.burndown))
 end
 
 Then /^show me the journal for (.+)$/ do |subject|
-  issue = RbStory.find_by_subject(subject.strip)
-  raise "No issue with subject '#{subject}'" unless issue
-  puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
+  subject.split(',').each{|s|
+    issue = RbStory.find_by_subject(s.strip)
+    raise "No issue with subject '#{subject}'" unless issue
+    puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
+  }
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|
-  Timecop.travel((current_sprint.effective_date + 1).to_time) do
-    story = RbStory.find(:first, :conditions => ['subject = ?', story])
-    bd = story.burndown
-    header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
-    bd['day'] = current_sprint(:keep).days
-    data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
-    show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
-  end
+  set_now((current_sprint.effective_date + 1).to_time)
+
+  story = RbStory.find(:first, :conditions => ['subject = ?', story])
+  bd = story.burndown
+  header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
+  bd['day'] = current_sprint(:keep).days
+  data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
+  show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
 end
 
 Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,value|
