@@ -6,6 +6,7 @@ Before do
   @projects = nil
   @sprint = nil
   @story = nil
+  Backlogs.setting[:include_sat_and_sun] = false
 end
 
 After do |scenario|
@@ -497,7 +498,6 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
 end
 
 Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do
-  Rails.cache.clear
   Backlogs.setting[:include_sat_and_sun] = true
 end
 

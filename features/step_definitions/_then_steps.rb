@@ -273,17 +273,18 @@ Then /^show me the journal for (.+)$/ do |subject|
     raise "No issue with subject '#{subject}'" unless issue
 
     columns = (columns + issue.history.history.collect{|d| d.keys}.flatten).uniq
-    data << issue.history.history.collect{|d| d.merge(:issue => issue.subject, :saved => issue.history.saved)}
+    data << issue.history.history.collect{|d| d.reject{|k, v| [:origin, :status_id].include?(k)}.merge(:issue => issue.subject)}
     #puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
   }
-  columns.sort!{|a, b| a.to_s <=> b.to_s}
-  columns = [:issue, :saved] + columns
+  columns = [:issue, :date] + columns.reject{|c| [:issue, :date].include?(c)}.sort{|a, b| a.to_s <=> b.to_s}
+  data.flatten!
+  data.sort!{|a, b| "#{a[:date]}:#{a[:issue]}" <=> "#{b[:date]}:#{b[:issue]}"}
+
   puts "\n"
   puts columns.collect{|c| c.to_s}.join("\t")
-  data.each{|history|
-    history.each{|days|
-      puts columns.collect{|c| days[c].to_s}.join("\t")
-    }
+
+  data.each{|mutation|
+    puts columns.collect{|c| mutation[c].to_s}.join("\t")
   }
   puts "\n"
 end

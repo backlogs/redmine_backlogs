@@ -50,15 +50,10 @@ def set_now(time, options={})
   if (time.is_a?(String) && time =~ /^-?[0-9]+/) || time.is_a?(Integer) || time.nil?
     raise "No sprint provided for offset #{time}" unless options[:sprint]
     time = time.to_i
-    if time == 0
-      puts "#{msg}no change"
-      return
-    end
+    return if time == 0
     time = time < 0 ? options[:sprint].days[1].to_time.force_utc + (time * 24*60*60) : options[:sprint].days[time].to_time.force_utc
-    if time.to_date == Date.today
-      puts "#{msg}no change; already on day #{time} of sprint #{options[:sprint].name}"
-      return
-    end
+
+    return if time.to_date == Date.today
   end
 
   time = time.to_time.force_utc if time.is_a?(Date)
@@ -79,7 +74,6 @@ def set_now(time, options={})
     raise "#{msg}You may not travel back in time (it is now #{now}, and you want it to be #{time}" if timediff > 0
   end
 
-  puts "#{msg}#{time > Time.now ? 'Fast-forward' : 'Back'} to #{time}"
   Timecop.travel(time)
 end
 
