@@ -65,6 +65,7 @@ Feature: Burndown
         | 4       | C.1  | 10        |             |
         | 5       | C.1  | 0         |             |
         | 5       | C.1  |           | Closed      |
+      Then after the current sprint
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -98,6 +99,7 @@ Feature: Burndown
         | 5       | C.1  |           | Closed      |
         | 5       | C.1  | 0         |             |
 
+      Then after the current sprint
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -137,6 +139,7 @@ Feature: Burndown
         | 5       | D.1  | 0         |             |
         | 5       | D.1  |           | Closed      |
 
+      Then after the current sprint
       Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |
@@ -153,6 +156,7 @@ Feature: Burndown
         | subject | sprint     | points | day                 |
         | Story E | Sprint 001 | 1      | 2012-02-02 01:00:00 |
       And I have changed the sprint start date to 2012-02-02
+     Then after the current sprint
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |
@@ -182,6 +186,7 @@ Feature: Burndown
         | 6       | C.1  | 1         |             |
         | 7       | C.1  | 0         |             |
         | 7       | C.1  |           | Closed      |
+     Then after the current sprint
      Then the sprint burndown should be:
         | day     | points_committed | points_to_resolve | hours_remaining |
         | start   | 7                | 7                 | 70              |

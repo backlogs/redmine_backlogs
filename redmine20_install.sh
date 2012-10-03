@@ -92,9 +92,12 @@ run_tests()
     CUCUMBER_TAGS="--tags ~@optional"
   fi
 
-  if [ ! -n "${CUCUMBER_FLAGS}" ];
-  then
-    export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
+  if [ ! -n "${CUCUMBER_FLAGS}" ]; then
+    if [ "$VERBOSE" = "yes" ]; then
+      export CUCUMBER_FLAGS="--format pretty ${CUCUMBER_TAGS}"
+    else
+      export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
+    fi
   fi
 
   if [ "$1" = "" ]; then

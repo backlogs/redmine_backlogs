@@ -1,4 +1,16 @@
 require 'rubygems'
+require 'timecop'
+
+Before do
+  Timecop.return
+  @projects = nil
+  @sprint = nil
+  @story = nil
+end
+
+After do |scenario|
+  Timecop.return
+end
 
 Given /^I am admin$/ do
   login_as_admin
@@ -69,13 +81,25 @@ Given /^I am viewing the master backlog$/ do
   verify_request_status(200)
 end
 
-Given /^the current (time|date) (is|forwards to) (.+)$/ do |dummy, action, time|
+Then /^at ([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})$/ do |time|
+  set_now(time, :msg => "at #{time}")
+end
+Then /^on ([0-9]{4}-[0-9]{2}-[0-9]{2})$/ do |date|
+  set_now(time, :msg => "on #{date}")
+end
+Then /^after (the current )?sprint(.*)$/ do |current, name|
+  raise "Improperly phrased" if (current == '' && name == '') || (current != '' && name != '')
+  sprint = current == '' ? RbSprint.find_by_name(name) : current_sprint
+  set_now(sprint.effective_date + 1, :msg => "after sprint #{sprint.name}")
+end
+
+Given /^the current (time|date) (is|forwards to) (.+)$/ do |what, action, time|
   reset = case action
           when 'is' then true
           when 'forwards to' then false
           else raise "I don't know how to #{action} time"
           end
-  set_now(time, :reset => reset)
+  set_now(time, :msg => "#{what} #{action} #{time}", :reset => reset)
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
@@ -365,7 +389,7 @@ Given /^I have defined the following tasks:$/ do |table|
 
     task.should == {}
 
-    set_now(story.created_on + offset, :ignore => 60, :msg => story.subject)
+    set_now(story.created_on + offset, :ignore => 60, :msg => params['subject'])
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,

@@ -213,8 +213,6 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
-  set_now((current_sprint.effective_date + 1).to_time.force_utc)
-
   bd = current_sprint(:keep).burndown
   bd.direction = direction
   bd = bd.data
@@ -239,7 +237,6 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
 end
 
 Then /^show me the sprint burn(.*)$/ do |direction|
-  set_now((current_sprint.effective_date + 1).to_time)
   bd = current_sprint(:keep).burndown
   bd.direction = direction
   bd = bd.data
@@ -262,24 +259,36 @@ Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
   show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], current_sprint.days.zip(story.burndown[series.intern]))
 end
 Then /^show me the burndown for task (.+)$/ do |subject|
-  set_now((sprint.effective_date + 1).to_time)
+  sprint = task.fixed_version.becomes(RbSprint)
 
   task = RbTask.find_by_subject(subject)
-  sprint = task.fixed_version.becomes(RbSprint)
   show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days.zip(task.burndown))
 end
 
 Then /^show me the journal for (.+)$/ do |subject|
+  columns = []
+  data = []
   subject.split(',').each{|s|
     issue = RbStory.find_by_subject(s.strip)
     raise "No issue with subject '#{subject}'" unless issue
-    puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
+
+    columns = (columns + issue.history.history.collect{|d| d.keys}.flatten).uniq
+    data << issue.history.history.collect{|d| d.merge(:issue => issue.subject, :saved => issue.history.saved)}
+    #puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
   }
+  columns.sort!{|a, b| a.to_s <=> b.to_s}
+  columns = [:issue, :saved] + columns
+  puts "\n"
+  puts columns.collect{|c| c.to_s}.join("\t")
+  data.each{|history|
+    history.each{|days|
+      puts columns.collect{|c| days[c].to_s}.join("\t")
+    }
+  }
+  puts "\n"
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|
-  set_now((current_sprint.effective_date + 1).to_time)
-
   story = RbStory.find(:first, :conditions => ['subject = ?', story])
   bd = story.burndown
   header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
