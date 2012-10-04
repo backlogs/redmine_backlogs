@@ -12,4 +12,7 @@
   :ruby: '1.9'
   :unsupported: true
 :chiliproject:
+- :version: '3.3.0'
+  :ruby: '1.9'
+  :unsupported: true
 :backlogs: v0.9.26
