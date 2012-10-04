@@ -6,7 +6,6 @@ rvm:
   - jruby-18mode
   - jruby-19mode
 env:
-  - BACKLOGS=0.9.26
   - REDMINE_VER=1.4.4
   - REDMINE_VER=2.0.4
   - REDMINE_VER=2.1.2
