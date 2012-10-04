@@ -24,7 +24,7 @@ then
 fi
 
 case $REDMINE_VER in
-  1.1.4)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+  1.4.4)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
@@ -53,6 +53,9 @@ case $REDMINE_VER in
           export MIGRATE_PLUGINS=db:migrate:plugins
           export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
           export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
+  *)      echo "Unsupported platform $REDMINE_VER"
+          exit 1
           ;;
 esac
 
