@@ -34,14 +34,20 @@ case $REDMINE_VER in
       export GENERATE_SECRET=generate_secret_token
       export MIGRATE_PLUGINS=redmine:plugins:migrate
       export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=2.1.0
+      export REDMINE_GIT_TAG=2.1.2
       ;;
-  2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-      export GENERATE_SECRET=generate_secret_token
-      export MIGRATE_PLUGINS=redmine:plugins:migrate
-      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=2.0.3
-      ;;
+  203)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+        export GENERATE_SECRET=generate_secret_token
+        export MIGRATE_PLUGINS=redmine:plugins:migrate
+        export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+        export REDMINE_GIT_TAG=2.0.3
+        ;;
+  204)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+        export GENERATE_SECRET=generate_secret_token
+        export MIGRATE_PLUGINS=redmine:plugins:migrate
+        export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+        export REDMINE_GIT_TAG=2.0.4
+        ;;
   m)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
       export GENERATE_SECRET=generate_secret_token
       export MIGRATE_PLUGINS=redmine:plugins:migrate
