@@ -94,19 +94,21 @@ run_tests()
 
   if [ ! -n "${CUCUMBER_FLAGS}" ]; then
     if [ "$VERBOSE" = "yes" ]; then
-      export CUCUMBER_FLAGS="--format pretty ${CUCUMBER_TAGS}"
+      export CUCUMBER_FLAGS="${CUCUMBER_TAGS}"
     else
       export CUCUMBER_FLAGS="--format progress ${CUCUMBER_TAGS}"
     fi
   fi
 
   if [ "$1" = "" ]; then
-    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
+    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
   else
-    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
+    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
   fi
-  sed '/^$/d' -i $WORKSPACE/cuke.log
-  sed 's/$//' -i $WORKSPACE/cuke.log
+  sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
+  sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
+  sed "s/\x1b\[.\{1,5\}m//g"  -i $WORKSPACE/cuke.log # ansi coloring
+  sed -e 's/_^H//g' -e 's/^H.//g' -e 's/^[\[[0-9]*m//g' -i $WORKSPACE/cuke.log # underscore and bold
 }
 
 uninstall()

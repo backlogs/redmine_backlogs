@@ -1,50 +1,53 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'github-v3-api'
+require 'octokit'
 require 'inifile'
 require 'time'
 
 config = IniFile.load(File.expand_path('~/.gitconfig'))['github-issues']
-GITHUB = GitHubV3API.new(config['token'])
-ORG = 'backlogs'
-REPO = 'redmine_backlogs'
+config[:login] = config.delete('user')
+#config[:password] = config.delete('password')
+config[:oauth_token] = config.delete('token')
 
-puts GITHUB.repos.get(ORG, REPO).list_collaborators.inspect
-exit
-#puts github.issues.list(:user => 'backlogs', :repo => 'redmine_backlogs').collect{|i| i.state}.uniq.inspect
+REPO = "backlogs/redmine_backlogs"
+CLIENT = Octokit::Client.new(config)
+
+STATES = {
+  'IMPORTANT-READ'    =>  [:keep, :no_feedback_required],
+  'on-hold'           =>  [:keep, :no_feedback_required],
+  'in-progress'       =>  [:keep, :no_feedback_required],
+  'feature-request'   =>  [:keep, :no_feedback_required],
+  'release-blocker'   =>  :keep,
+  'no-feedback'       =>  :keep,
+  'redmine2'          =>  :keep
+}
 
 class Issue
-  STATES = {
-    'IMPORTANT-READ'    =>  [:keep, :no_feedback_required],
-    'on-hold'           =>  [:keep, :no_feedback_required],
-    'in-progress'       =>  [:keep, :no_feedback_required],
-    'feature-request'   =>  [:keep, :no_feedback_required],
-    'release-blocker'   =>  :keep,
-    'no-feedback'       =>  :keep,
-    'redmine2'          =>  :keep
-  }
-  @@collaborators = GITHUB.repos.get(ORG, REPO).list_collaborators.collect{|u| u.login}
+  @@collaborators = CLIENT.collaborators(REPO).collect{|u| u.login}
 
   def initialize(issue)
     @issue = issue
+    @labels = issue.labels.collect{|l| l.name}
+    @id = issue.number.to_s
+    @comments = CLIENT.issue_comments(REPO, @id)
   end
 
   def self.states(cond)
-    return Issue::STATES.keys.select{|k| Issue::STATES[k] == cond || (Issue::STATES[k].is_a?(Array) && Issue::STATES[k].include?(cond))}
+    return STATES.keys.select{|k| STATES[k] == cond || (STATES[k].is_a?(Array) && STATES[k].include?(cond))}
   end
 
-  def labels
-    @issue.labels
-  end
+  def labels(action = nil)
+    return @labels if action.nil?
 
-  def relabel!
-    newlabels = labels.reject{|l| l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+    oldlabels = @labels.dup
 
-    if @issue.comments.size > 0
+    l = @labels.reject{|l| l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+
+    if @comments.size > 0
       # last comment by a repo committer and not labeled with a 'no-feedback-required' label
-      if @@collaborators.include?(@comments[-1].user.login) && (newlabels & Issue.states(:no_feedback_required)).size == 0
-        newlabels << "feedback-required"
+      if @@collaborators.include?(@comments[-1].user.login) && (l & Issue.states(:no_feedback_required)).size == 0
+        l << "feedback-required"
 
         last_non_collab_comment = nil
         @comments.reverse.each{|c|
@@ -58,25 +61,15 @@ class Issue
           when 0 then nil
           when 1 then l << '1day'
           else
-            newlabels << "#{diff}days"
-            newlabels << 'no-feedback' if diff > 4
+            l << "#{diff}days"
+            l << 'no-feedback' if diff > 4
           end
         end
       end
     end
 
-    newlabels = newlabels.compact.uniq.collect{|lb| lb.downcase}
-    repolabels = {}
-    CLIENT.labels(REPO).each{|l| repolabels[l.name] = l}
-
-    # remove unused labels from the issue
-    (oldlabels - @labels).each{|l| CLIENT.remove_label(REPO, @issue.number, l) }
-
-    # pre-declare new labels
-    (@labels - repolabels.keys).each {|label| CLIENT.add_label(REPO, label) }
-    # add new labels
-    CLIENT.add_labels_to_an_issue(REPO, @issue.number, (@labels - oldlabels))
-
+    @labels = l.compact.uniq.collect{|lb| lb.downcase}
+    CLIENT.replace_all_labels(REPO, @issue.number, @labels)
     @labels
   end
 
