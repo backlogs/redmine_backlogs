@@ -1,43 +1,43 @@
 language: ruby
+release: 0.9.26
 rvm:
   - 1.8.7
   - 1.9.3
   - jruby-18mode
   - jruby-19mode
 env:
-  - REDMINE_VER=1
-  - REDMINE_VER=203
-  - REDMINE_VER=204
-  - REDMINE_VER=21
-  - REDMINE_VER=m
-  - REDMINE_VER=cp
+  - BACKLOGS=0.9.26
+  - REDMINE_VER=1.4.4
+  - REDMINE_VER=2.0.4
+  - REDMINE_VER=2.1.2
+  - REDMINE_VER=master
+  - REDMINE_VER=v3.3.0
 matrix:
   allow_failures:
     - rvm: jruby-18mode
     - rvm: jruby-19mode
     - rvm: 1.8.7
-    - env: REDMINE_VER=1
-    - env: REDMINE_VER=m
-    - env: REDMINE_VER=cp
+    - env: REDMINE_VER=1.4.4
+    - env: REDMINE_VER=master
+    - env: REDMINE_VER=v3.3.0
+    - env: REDMINE_VER=2.1.2
   exclude:
     - rvm: jruby-18mode
-      env: REDMINE_VER=203
+      env: REDMINE_VER=2.0.4
     - rvm: jruby-18mode
-      env: REDMINE_VER=204
-    - rvm: jruby-18mode
-      env: REDMINE_VER=21
+      env: REDMINE_VER=2.1.2
     - rvm: 1.9.3
-      env: REDMINE_VER=1
+      env: REDMINE_VER=1.4.4
     - rvm: 1.8.7
-      env: REDMINE_VER=cp
+      env: REDMINE_VER=v3.3.0
     - rvm: jruby-18mode
-      env: REDMINE_VER=cp
+      env: REDMINE_VER=v3.3.0
     - rvm: jruby-19mode
-      env: REDMINE_VER=1
+      env: REDMINE_VER=1.4.4
     - rvm: jruby-18mode
-      env: REDMINE_VER=1
+      env: REDMINE_VER=1.4.4
     - rvm: jruby-18mode
-      env: REDMINE_VER=m
+      env: REDMINE_VER=master
 
 install: "echo skip bundle install"
 
@@ -47,8 +47,8 @@ script:
   - export PATH_TO_REDMINE=$WORKSPACE/redmine
   - mkdir $WORKSPACE
   - cp config/database.yml.travis $WORKSPACE/database.yml
-  - bash -x ./redmine20_install.sh -r
-  - bash -x ./redmine20_install.sh -i
-  - bash -x ./redmine20_install.sh -t
-  - bash -x ./redmine20_install.sh -u
+  - bash -x ./redmine_install.sh -r
+  - bash -x ./redmine_install.sh -i
+  - bash -x ./redmine_install.sh -t
+  - bash -x ./redmine_install.sh -u
 

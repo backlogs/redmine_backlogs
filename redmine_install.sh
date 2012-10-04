@@ -24,42 +24,36 @@ then
 fi
 
 case $REDMINE_VER in
-  1)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
-      export GENERATE_SECRET=generate_session_store
-      export MIGRATE_PLUGINS=db:migrate_plugins
-      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=1.4.4
-      ;;
-  21)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-      export GENERATE_SECRET=generate_secret_token
-      export MIGRATE_PLUGINS=redmine:plugins:migrate
-      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=2.1.2
-      ;;
-  203)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-        export GENERATE_SECRET=generate_secret_token
-        export MIGRATE_PLUGINS=redmine:plugins:migrate
-        export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-        export REDMINE_GIT_TAG=2.0.3
-        ;;
-  204)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-        export GENERATE_SECRET=generate_secret_token
-        export MIGRATE_PLUGINS=redmine:plugins:migrate
-        export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-        export REDMINE_GIT_TAG=2.0.4
-        ;;
-  m)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
-      export GENERATE_SECRET=generate_secret_token
-      export MIGRATE_PLUGINS=redmine:plugins:migrate
-      export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-      export REDMINE_GIT_TAG=master
-      ;;
-  cp) export PATH_TO_PLUGINS=./vendor/plugins
-      export GENERATE_SECRET=generate_session_store
-      export MIGRATE_PLUGINS=db:migrate:plugins
-      export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
-      export REDMINE_GIT_TAG=v3.3.0
-      ;;
+  1.1.4)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+          export GENERATE_SECRET=generate_session_store
+          export MIGRATE_PLUGINS=db:migrate_plugins
+          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
+  2.1.2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+          export GENERATE_SECRET=generate_secret_token
+          export MIGRATE_PLUGINS=redmine:plugins:migrate
+          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
+  2.0.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+          export GENERATE_SECRET=generate_secret_token
+          export MIGRATE_PLUGINS=redmine:plugins:migrate
+          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
+  master) export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+          export GENERATE_SECRET=generate_secret_token
+          export MIGRATE_PLUGINS=redmine:plugins:migrate
+          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
+  v3.3.0) export PATH_TO_PLUGINS=./vendor/plugins
+          export GENERATE_SECRET=generate_session_store
+          export MIGRATE_PLUGINS=db:migrate:plugins
+          export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
+          export REDMINE_GIT_TAG=$REDMINE_VER
+          ;;
 esac
 
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
