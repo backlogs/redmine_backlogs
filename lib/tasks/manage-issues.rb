@@ -4,11 +4,13 @@ require 'rubygems'
 require 'octokit'
 require 'inifile'
 require 'time'
+require 'workflow' # http://www.geekq.net/workflow/
 
 config = IniFile.load(File.expand_path('~/.gitconfig'))['github-issues']
-config[:login] = config.delete('user')
-#config[:password] = config.delete('password')
-config[:oauth_token] = config.delete('token')
+config.keys.each{|k|
+  sk = k.gsub(/[A-Z]/){|c| "_#{c.downcase}"}.intern
+  config[sk] = config.delete(k)
+}
 
 REPO = "backlogs/redmine_backlogs"
 CLIENT = Octokit::Client.new(config)
@@ -46,39 +48,50 @@ class Issue
 
     if @comments.size > 0
       # last comment by a repo committer and not labeled with a 'no-feedback-required' label
-      if @@collaborators.include?(@comments[-1].user.login) && (l & Issue.states(:no_feedback_required)).size == 0
-        l << "feedback-required"
+      if @@collaborators.include?(@comments[-1].user.login)
+        if (l & Issue.states(:no_feedback_required)).size == 0
+          l << "feedback-required"
 
-        last_non_collab_comment = nil
-        @comments.reverse.each{|c|
-          next if @@collaborators.include?(c.user.login)
-          last_non_collab_comment = Time.parse(c.updated_at)
-        }
+          last_non_collab_comment = nil
+          @comments.reverse.each{|c|
+            next if @@collaborators.include?(c.user.login)
+            last_non_collab_comment = Time.parse(c.updated_at)
+          }
 
-        if last_non_collab_comment
-          diff = Integer((Time.now - last_non_collab_comment)) / (60 * 60 * 24)
-          case diff
-          when 0 then nil
-          when 1 then l << '1day'
-          else
-            l << "#{diff}days"
-            l << 'no-feedback' if diff > 4
+          if last_non_collab_comment
+            diff = Integer((Time.now - last_non_collab_comment)) / (60 * 60 * 24)
+            case diff
+            when 0 then nil
+            when 1 then l << '1day'
+            else
+              l << "#{diff}days"
+              l << 'no-feedback' if diff > 4
+            end
           end
+        end
+      else
+        if (l & Issue.states(:no_feedback_required)).size == 0
+          l << 'attention'
         end
       end
     end
 
+    puts "#{@id}: #{@labels.inspect}"
     @labels = l.compact.uniq.collect{|lb| lb.downcase}
-    CLIENT.replace_all_labels(REPO, @issue.number, @labels)
+    if @labels.size == 0
+      CLIENT.remove_all_labels(REPO, @issue.number)
+    else
+      CLIENT.replace_all_labels(REPO, @issue.number, @labels)
+    end
     @labels
   end
 
   attr_reader :id, :comments
 end
 
-issues = CLIENT.list_issues(REPO, :state => 'open').collect{|i| Issue.new(i)}
-labels = Issue.states(:keep)
-issues.each{|issue| labels = labels + issue.labels(:recalc) }
-labels.uniq!
-puts (CLIENT.labels(REPO).collect{|l| l.name} - labels).inspect
-#(CLIENT.labels(REPO).collect{|l| l.name} - labels).each {|label| CLIENT.delete_label(REPO, label) }
+begin
+  page ||= 0
+  page += 1
+  issues = CLIENT.list_issues(REPO, :page => page, :state => 'open').collect{|i| Issue.new(i)}
+  issues.each{|issue| issue.labels(:save) }
+end while issues.size != 0
