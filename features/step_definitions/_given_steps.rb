@@ -203,12 +203,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   @project.should_not be_nil
 
   # Enable the backlogs plugin
-  case Backlogs.platform
-  when :redmine
-    @project.enable_module!('backlogs')
-  when :chiliproject
-    @project.enabled_module_names = @project.enabled_module_names + ['backlogs'] unless @project.enabled_module_names.include?('backlogs')
-  end
+  @project.enable_module!('backlogs')
 
   # Configure the story and task trackers
   story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]

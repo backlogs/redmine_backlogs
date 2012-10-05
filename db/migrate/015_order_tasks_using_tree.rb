@@ -1,9 +1,5 @@
 class OrderTasksUsingTree < ActiveRecord::Migration
-  extend Backlogs::Migrate
-
   def self.up
-    self.rb_common_migrate_up
-
     last_task = {}
     if RbTask.tracker
       ActiveRecord::Base.transaction do

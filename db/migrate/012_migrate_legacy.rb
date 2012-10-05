@@ -1,6 +1,4 @@
 class MigrateLegacy < ActiveRecord::Migration
-  extend Backlogs::Migrate
-
   def self.normalize_value(v, t)
     v = v[1] if v.is_a?(Array)
 
@@ -33,8 +31,6 @@ class MigrateLegacy < ActiveRecord::Migration
   end
 
   def self.up
-    self.rb_common_migrate_up
-
     adapter = ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter].downcase
 
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')

@@ -7,6 +7,7 @@ class RbIssueHistory < ActiveRecord::Base
   serialize :history, Array
   after_initialize :set_default_history
   after_save :touch_sprint
+  attr_accessor :saved
 
   def self.statuses
     Hash.new{|h, k|
@@ -195,12 +196,14 @@ class RbIssueHistory < ActiveRecord::Base
   private
 
   def set_default_history
-    self.history ||= []
+    return unless ActiveRecord::Base.connection.table_exists?(RbIssueHistory.table_name) # migrating
 
     if Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
       raise "Goodbye time traveller"
       return
     end
+
+    self.history ||= []
 
     _statuses ||= self.class.statuses
     current = {
@@ -218,15 +221,20 @@ class RbIssueHistory < ActiveRecord::Base
       date, test = *action
       next unless test.call(self, date)
 
+      @saved = false
       self.history << {:date => date}.merge(current)
       self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     }
+    @saved = false if current != self.history[-1]
     self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
   end
 
   def touch_sprint
+    return unless ActiveRecord::Base.connection.table_exists?(RbSprintBurndown.table_name) # migrating
+
+    @saved = true
     RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
   end
 end
