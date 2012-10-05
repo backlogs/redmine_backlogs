@@ -196,14 +196,12 @@ class RbIssueHistory < ActiveRecord::Base
   private
 
   def set_default_history
-    return unless ActiveRecord::Base.connection.table_exists?(RbIssueHistory.table_name) # migrating
+    self.history ||= []
 
     if Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
       raise "Goodbye time traveller"
       return
     end
-
-    self.history ||= []
 
     _statuses ||= self.class.statuses
     current = {
@@ -232,8 +230,6 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def touch_sprint
-    return unless ActiveRecord::Base.connection.table_exists?(RbSprintBurndown.table_name) # migrating
-
     @saved = true
     RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
   end
