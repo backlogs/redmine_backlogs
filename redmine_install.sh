@@ -141,7 +141,7 @@ ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 if [ "$CLEARDB" = "yes" ]; then
   DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
   DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
-  if [ "$DBTYPE" = "mysql2" ]; then
+  if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
   fi
@@ -153,7 +153,7 @@ if [ "$DB_TO_RESTORE" = "" ]; then
 else
   DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
   DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
-  if [ "$DBTYPE" = "mysql2" ]; then
+  if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
     mysql -u root -p$DBROOTPW $DBNAME < $DB_TO_RESTORE
@@ -168,6 +168,10 @@ bundle install --path vendor/bundle
 
 # copy database.yml
 cp $WORKSPACE/database.yml config/
+RUBYVER=`ruby -v | awk '{print $2}' | awk -F. '{print $1"."$2}'`
+if [ "$RUBYVER" = "1.8" ]; then
+  sed -i -e 's/mysql2/mysql/g' config/database.yml
+fi
 
 # run redmine database migrations
 bundle exec rake db:migrate RAILS_ENV=test --trace
