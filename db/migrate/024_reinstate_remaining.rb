@@ -1,6 +1,7 @@
 require 'benchmark'
 
 class ReinstateRemaining < ActiveRecord::Migration
+  extend Backlogs::Migrate
 
   def self.initial_estimate(issue)
     if issue.leaf?
@@ -18,6 +19,8 @@ class ReinstateRemaining < ActiveRecord::Migration
   end
 
   def self.up
+    self.rb_common_migrate_up
+
     catch (:done) do
       throw :done if Issue.column_names.include?('remaining_hours')
 

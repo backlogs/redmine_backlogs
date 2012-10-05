@@ -23,6 +23,8 @@ then
   exit 1;
 fi
 
+export RAILS_ENV=test
+
 case $REDMINE_VER in
   1.4.4)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
@@ -104,9 +106,9 @@ run_tests()
   fi
 
   if [ "$1" = "" ]; then
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
+    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
   else
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
+    script -e -c "bundle exec cucumber --no-color $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
   fi
   sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
   sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
@@ -122,8 +124,8 @@ uninstall()
   if [ "$VERBOSE" = "yes" ]; then
     TRACE=--trace
   fi
-  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=test
-  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0 RAILS_ENV=development
+  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0
+  bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=redmine_backlogs VERSION=0
 }
 
 run_install()
@@ -139,8 +141,8 @@ echo current directory is `pwd`
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
 if [ "$CLEARDB" = "yes" ]; then
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
+  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
+  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
@@ -151,8 +153,8 @@ if [ "$DB_TO_RESTORE" = "" ]; then
   export story_trackers=Story
   export task_tracker=Task
 else
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['test']['adapter']"`
+  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
+  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
@@ -174,21 +176,22 @@ if [ "$RUBYVER" = "1.8" ]; then
 fi
 
 # run redmine database migrations
-bundle exec rake db:migrate RAILS_ENV=test --trace
-bundle exec rake db:migrate RAILS_ENV=development --trace
+if [ "$VERBOSE" = "yes" ]; then
+  TRACE=--trace
+fi
+bundle exec rake db:migrate $TRACE
 
 # install redmine database
-bundle exec rake redmine:load_default_data REDMINE_LANG=en RAILS_ENV=development
+bundle exec rake redmine:load_default_data REDMINE_LANG=en
 
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
 
 # run backlogs database migrations
-bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=test
-bundle exec rake $MIGRATE_PLUGINS RAILS_ENV=development
+bundle exec rake $MIGRATE_PLUGINS
 
 # install backlogs
-bundle exec rake redmine:backlogs:install labels=no RAILS_ENV=development --trace
+bundle exec rake redmine:backlogs:install labels=no $TRACE
 }
 
 while getopts :irtu opt
