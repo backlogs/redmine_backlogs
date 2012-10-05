@@ -38,6 +38,10 @@ matrix:
       env: REDMINE_VER=master
     - rvm: 1.8.7
       env: REDMINE_VER=1.4.4
+    - rvm: 1.8.7
+      env: REDMINE_VER=2.1.2
+    - rvm: 1.8.7
+      env: REDMINE_VER=master
 
 install: "echo skip bundle install"
 
