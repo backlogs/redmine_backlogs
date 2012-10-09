@@ -143,7 +143,7 @@ class RbSprint < Version
                 and blocked.fixed_version_id = (?)
               where ir.relation_type = 'blocks'
               )",
-            RbStory.trackers + [RbTask.tracker],
+            RbStory.trackers + RbTask.trackers,
             self.id]
       ) #.sort {|a,b| a.closed? == b.closed? ?  a.updated_on <=> b.updated_on : (a.closed? ? 1 : -1) }
   end

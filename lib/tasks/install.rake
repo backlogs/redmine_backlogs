@@ -105,7 +105,7 @@ namespace :redmine do
         end
         Backlogs.setting[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
       else
-        if !RbTask.tracker
+        if RbTask.trackers.size == 0
           # Check if there is at least one tracker available
           puts "-----------------------------------------------------"
           if Backlogs.setting[:story_trackers].length < trackers.length

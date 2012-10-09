@@ -97,7 +97,7 @@ module Backlogs
     end
 
     def test_sprints_estimated
-      return !Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id = ?", @all_sprints.collect{|s| s.id}, RbTask.tracker])
+      return !Issue.exists?(["estimated_hours is null and fixed_version_id in (?) and tracker_id in (?)", @all_sprints.collect{|s| s.id}, RbTask.trackers])
     end
 
     def test_sprint_notes_available

@@ -33,7 +33,7 @@ module Backlogs
       end
 
       def is_task?
-        return (tracker_id == RbTask.tracker)
+        return RbTask.trackers.include?(tracker_id)
       end
 
       def story
@@ -97,7 +97,7 @@ module Backlogs
             self.fixed_version = self.story.fixed_version if self.story
             self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
 
-            self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+            self.tracker = Tracker.find(RbTask.trackers[0]) unless RbTask.trackers.include?(self.tracker_id)
           elsif self.is_story?
             if self.fixed_version
               self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
@@ -137,17 +137,14 @@ module Backlogs
                                             (not ? is NULL and fixed_version_id is NULL)
                                             or
                                             (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
-                                            or
-                                            (tracker_id <> ?)
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
-                                              self.fixed_version_id, self.fixed_version_id,
-                                              RbTask.tracker]).to_a
+                                              self.fixed_version_id, self.fixed_version_id]).to_a
           tasklist.each{|task| task.history.save! }
           if tasklist.size > 0
             task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
+                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}
                                 where id in #{task_ids}")
           end
         end

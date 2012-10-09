@@ -116,7 +116,7 @@ end
 def initialize_task_params(story_id)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes)
   params['project_id'] = RbStory.find_by_id(story_id).project_id
-  params['tracker_id'] = RbTask.tracker
+  params['tracker_id'] = RbTask.trackers[0]
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
   params['status_id'] = IssueStatus.default.id
@@ -132,7 +132,7 @@ end
 def initialize_impediment_params(attributes)
   #requires project_id in attributes (pa sharing)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
-  params['tracker_id'] = RbTask.tracker
+  params['tracker_id'] = RbTask.trackers[0]
   params['author_id']  = @user.id
   params['status_id'] = IssueStatus.default.id
   params

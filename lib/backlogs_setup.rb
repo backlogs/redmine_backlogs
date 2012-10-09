@@ -116,15 +116,15 @@ module Backlogs
   module_function :gems
 
   def trackers
-    return {:task => !RbTask.tracker.nil?, :story => RbStory.trackers.size != 0, :default_priority => !IssuePriority.default.nil?}
+    return {:task => !RbTask.trackers.size != 0, :story => RbStory.trackers.size != 0, :default_priority => !IssuePriority.default.nil?}
   end
   module_function :trackers
 
   def task_workflow(project)
-    return false unless RbTask.tracker
+    return false if RbTask.trackers.size == 0
 
     roles = User.current.roles_for_project(@project)
-    tracker = Tracker.find(RbTask.tracker)
+    tracker = Tracker.find(RbTask.trackers[0]) # TODO this is fishy
 
     [false, true].each{|creator|
       [false, true].each{|assignee|

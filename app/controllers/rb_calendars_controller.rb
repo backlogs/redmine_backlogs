@@ -71,7 +71,7 @@ class RbCalendarsController < RbApplicationController
 
     # open stories/tasks
     conditions << false
-    conditions << RbStory.trackers + [RbTask.tracker]
+    conditions << RbStory.trackers + RbTask.trackers
     conditions << @project.id
     conditions << Date.today
 
@@ -80,7 +80,7 @@ class RbCalendarsController < RbApplicationController
 
     # ... for open stories/tasks
     conditions << false
-    conditions << RbStory.trackers + [RbTask.tracker]
+    conditions << RbStory.trackers + RbTask.trackers
     conditions << @project.id
     conditions << Date.today
 

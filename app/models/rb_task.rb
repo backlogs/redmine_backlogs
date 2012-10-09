@@ -3,10 +3,21 @@ require 'date'
 class RbTask < Issue
   unloadable
 
-  def self.tracker
+  def self.trackers
     task_tracker = Backlogs.setting[:task_tracker]
-    return nil if task_tracker.blank?
-    return Integer(task_tracker)
+    return [] if task_tracker.blank?
+    task_tracker = Tracker.find_by_id(Integer(task_tracker)
+    return [] if task_tracker.nil?
+
+    trackers = [task_tracker.id]
+    statuses = task_tracker.issue_statuses.collect{|s| s.id}.sort
+
+    Tracker.all.each{|t|
+      s = t.issue_statuses.collect{|s| s.id}.sort
+      trackers << t.id if !trackers.include?(t.id) && s == statuses
+    }
+
+    return trackers
   end
 
   def self.rb_safe_attributes(params)
@@ -28,7 +39,7 @@ class RbTask < Issue
     attribs = rb_safe_attributes(params)
 
     attribs['author_id'] = user_id
-    attribs['tracker_id'] = RbTask.tracker
+    attribs['tracker_id'] = RbTask.trackers[0]
     attribs['project_id'] = project_id
 
     blocks = params.delete('blocks')
@@ -152,7 +163,7 @@ class RbTask < Issue
     s = self.story
     return nil if !s
 
-    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
+    @rank ||= Issue.count( :conditions => ['tracker_id in (?) and root_id = ? and lft > ? and lft <= ?', RbTask.trackers, s.root_id, s.lft, self.lft])
     return @rank
   end
 

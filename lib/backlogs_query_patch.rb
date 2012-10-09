@@ -34,7 +34,7 @@ module Backlogs
       def available_filters_with_backlogs_issue_type
         @available_filters = available_filters_without_backlogs_issue_type
 
-        if RbStory.trackers.length == 0 or RbTask.tracker.blank?
+        if RbStory.trackers.empty? or RbTask.trackers.empty?
           backlogs_filters = { }
         else
           backlogs_filters = {
@@ -60,7 +60,8 @@ module Backlogs
         selected_values = ['story', 'task'] if selected_values.include?('any')
 
         story_trackers = RbStory.trackers(:type=>:string)
-        all_trackers = (RbStory.trackers + [RbTask.tracker]).collect{|val| "#{val}"}.join(",")
+        task_trackers = RbStory.trackers(:type=>:string)
+        all_trackers = (RbStory.trackers + RbTask.trackers).collect{|val| "#{val}"}.join(",")
 
         selected_values.each { |val|
           case val
@@ -68,7 +69,7 @@ module Backlogs
               sql << "(#{db_table}.tracker_id in (#{story_trackers}))"
 
             when "task"
-              sql << "(#{db_table}.tracker_id = #{RbTask.tracker})"
+              sql << "(#{db_table}.tracker_id in (#{task_trackers}))"
 
             when "impediment"
               sql << "(#{db_table}.id in (

@@ -5,7 +5,7 @@
   roles_projs = User.current.projects_by_role
   roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
   Rails.logger.info "in my project"
-  tracker = Tracker.find_by_id(RbTask.tracker)
+  tracker = Tracker.find_by_id(RbTask.trackers[0])
   statuses = tracker.issue_statuses
  -%>
 <div class="mypage-box">

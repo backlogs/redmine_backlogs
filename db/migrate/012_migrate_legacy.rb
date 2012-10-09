@@ -58,7 +58,7 @@ class MigrateLegacy < ActiveRecord::Migration
       Issue.reset_column_information
       RbTask.reset_column_information
 
-      if RbStory.trackers.size == 0 || RbTask.tracker.nil?
+      if RbStory.trackers.size == 0 || RbTask.trackers.size == 0
         raise "Please configure the Backlogs Story and Task trackers before migrating.
 
         You do this by starting Redmine and going to \"Administration -> Plugins -> Redmine Scrum Plugin -> Configure\"
@@ -80,7 +80,7 @@ class MigrateLegacy < ActiveRecord::Migration
 
         trackers[project_id] ||= {}
         trackers[project_id][:story] = tracker_id if RbStory.trackers.include?(tracker_id)
-        trackers[project_id][:task] = tracker_id if RbTask.tracker == tracker_id
+        trackers[project_id][:task] = tracker_id if RbTask.trackers.include?(tracker_id)
       }
 
       # close existing transactions and turn on autocommit
@@ -154,7 +154,7 @@ class MigrateLegacy < ActiveRecord::Migration
 
           task = RbTask.find(id)
 
-          if ! RbTask.tracker == task.tracker_id
+          if ! RbTask.trackers.include?(task.tracker_id)
             raise "Project #{project} does not have a task tracker configured" unless trackers[project][:task]
             task.tracker_id = trackers[project][:task]
             task.save!

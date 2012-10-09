@@ -10,7 +10,7 @@ class RbTaskboardsController < RbApplicationController
     @settings = Backlogs.settings
 
     ## determine status columns to show
-    tracker = Tracker.find_by_id(RbTask.tracker)
+    tracker = Tracker.find_by_id(RbTask.trackers[0])
     statuses = tracker.issue_statuses
     # disable columns by default
     if User.current.admin?
@@ -42,7 +42,7 @@ class RbTaskboardsController < RbApplicationController
       @last_updated = nil
     else
       @last_updated = RbTask.find(:first,
-                        :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.stories[0].fixed_version_id],
+                        :conditions => ['tracker_id in (?) and fixed_version_id = ?', RbTask.trackers, @sprint.stories[0].fixed_version_id],
                         :order      => "updated_on DESC")
     end
 

@@ -480,7 +480,7 @@ end
 
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
-  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
+  data = Issue.find(:all, :conditions => ['tracker_id in (?) and fixed_version_id = ?', RbTask.trackers, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
   show_table("Task hours", header, data)
 end
 
