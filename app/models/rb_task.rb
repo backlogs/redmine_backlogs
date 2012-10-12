@@ -6,7 +6,7 @@ class RbTask < Issue
   def self.trackers
     task_tracker = Backlogs.setting[:task_tracker]
     return [] if task_tracker.blank?
-    task_tracker = Tracker.find_by_id(Integer(task_tracker)
+    task_tracker = Tracker.find_by_id(Integer(task_tracker))
     return [] if task_tracker.nil?
 
     trackers = [task_tracker.id]
