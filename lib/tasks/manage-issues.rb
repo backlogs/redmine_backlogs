@@ -65,7 +65,6 @@ class Repository
 
     @labels.each_pair{|l, status|
       next if status == :keep
-      next unless l =~ /days$/
       puts "delete label #{l}"
     }
   end
