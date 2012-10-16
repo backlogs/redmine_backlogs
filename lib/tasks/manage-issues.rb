@@ -15,7 +15,9 @@ class Issue
 
     @comments = @repo.client.issue_comments(@repo.repo, issue.number.to_s)
 
-    @labels.delete_if{|l| l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+    @labels.delete_if{|l| l =~ /release/ || l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+
+    @labels << 'release-blocker' if issue.milestone && issue.milestone == @repo.next_milestone
 
     if (@labels & ['on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
       comment = {
@@ -60,6 +62,10 @@ class Repository
       @labels[label] = :delete
     }
 
+    @milestones = @client.milestones(@repo, :state => 'open')
+    @milestones.sort!{|a, b| a.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') <=> b.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') }
+    @next_milestone = @milestones.size == 0 ? nil : @milestones[0]
+
     begin
       page ||= 0
       page += 1
@@ -73,7 +79,7 @@ class Repository
     }
   end
 
-  attr_accessor :client, :repo, :collaborators, :labels
+  attr_accessor :client, :repo, :collaborators, :labels, :milestones, :next_milestone
 end
 
 config = IniFile.load(File.expand_path('~/.gitconfig'))['github-issues']
