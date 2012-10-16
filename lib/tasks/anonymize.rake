@@ -1,7 +1,8 @@
 desc "Anonymize your database -- DON'T USE THIS UNLESS YOU REALLY, REALLY KNOW WHAT YOU'RE DOING. NOT KIDDING HERE!"
 
-$ALPHANUMERICS = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
-$PASSWORD = ((0... 8).map { $ALPHANUMERICS[rand($ALPHANUMERICS.size)] }.join)
+#$ALPHANUMERICS = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
+#$PASSWORD = ((0... 8).map { $ALPHANUMERICS[rand($ALPHANUMERICS.size)] }.join)
+$PASSWORD='insecure'
 
 $count = {}
 def random_string(model_attr, v)
@@ -22,7 +23,7 @@ namespace :redmine do
       puts "If so, type 'Yes!' (case matters!)"
 
       answer = STDIN.gets.chomp
-      return if answer != "Yes!"
+      exit if answer != "Yes!"
 
       Issue.connection.execute('delete from auth_sources')
 
@@ -30,15 +31,17 @@ namespace :redmine do
       Member.update_all(:mail_notification => false)
       User.update_all(:mail_notification => '')
 
+      clear = ['Message', 'News', 'Comment', 'Changeset', 'Document', 'Attachment', 'Board', 'Change']
       ignore = [
+        'Role#',
+        'Tracker#name',
         'AnonymousUser#language',
+        'EnabledModule#',
         'Version#status',
         'Version#sharing',
         'CustomField#regexp',
         'CustomField#field_format',
         'Principal#language',
-        'JournalDetail#property',
-        'JournalDetail#prop_key',
         'Query#column_names',
         'Query#group_by',
         'Query#sort_criteria',
@@ -48,12 +51,22 @@ namespace :redmine do
         'User#language',
         'AnonymousUser#login',
         'Setting#',
-        'Principal#mail_notification'
+        'Principal#mail_notification',
+        'JournalDetail#',
+        'RbIssueHistory#',
+        'RbSprintBurndown#',
+        'Project#identifier',
       ]
 
       admins = []
       Rails.application.eager_load!
-      ActiveRecord::Base.descendants.each do |model|
+      ActiveRecord::Base.descendants.sort{|a, b| a.name <=> b.name}.each do |model|
+        if clear.include?(model.name)
+          puts "Deleting all #{model.name}s"
+          model.delete_all
+          next
+        end
+
         attrs = []
         model.columns_hash.each_pair { |attrib, column|
           #next unless model.content_columns.include?(column)
@@ -66,7 +79,9 @@ namespace :redmine do
         }
 
         if attrs.size != 0
+          attrs.sort!
           puts "Anonymizing #{model.name} (#{attrs.join(',')})..."
+          next ##
           model.all.each { |obj|
             vals = {}
             attrs.each{|k|
@@ -83,6 +98,8 @@ namespace :redmine do
       end
 
       User.find(:all).each { |user|
+        user.mail = "#{user.id}@example.com"
+        user.mail_notification = ''
         user.password = $PASSWORD
         user.save!
       }
