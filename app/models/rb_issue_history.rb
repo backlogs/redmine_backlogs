@@ -85,7 +85,6 @@ class RbIssueHistory < ActiveRecord::Base
 
         case prop
         when :estimated_hours, :remaining_hours # these sum to their parents
-          next unless is_leaf
           full_journal[date][prop] = update
         when :story_points
           full_journal[date][prop] = update
