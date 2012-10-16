@@ -25,7 +25,7 @@ class Issue
         comment[(@repo.collaborators.include?(c.user.login) ? :collab : :user)] = Time.parse(c.created_at)
       }
 
-      response = comment[:user] ? Integer((Time.now - comment[:user])) / (60 * 60 * 24) : nil
+      response = comment[:collab] ? Integer((Time.now - comment[:collab])) / (60 * 60 * 24) : nil
 
       if comment[:user] && (comment[:collab].nil? || comment[:user] > comment[:collab])
         @labels << 'attention'
