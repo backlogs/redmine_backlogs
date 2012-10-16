@@ -7,7 +7,6 @@ class RbIssueHistory < ActiveRecord::Base
   serialize :history, Array
   after_initialize :set_default_history
   after_save :touch_sprint
-  attr_accessor :saved
 
   def self.statuses
     Hash.new{|h, k|
@@ -38,7 +37,7 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def self.issue_type(tracker_id)
-    return if tracker_id.nil? || tracker_id == ''
+    return nil if tracker_id.nil? || tracker_id == ''
     tracker_id = tracker_id.to_i
     return :story if RbStory.trackers && RbStory.trackers.include?(tracker_id)
     return :task if tracker_id == RbTask.tracker
@@ -223,18 +222,15 @@ class RbIssueHistory < ActiveRecord::Base
       date, test = *action
       next unless test.call(self, date)
 
-      @saved = false
       self.history << {:date => date}.merge(current)
       self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     }
-    @saved = false if current != self.history[-1]
     self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
   end
 
   def touch_sprint
-    @saved = true
     RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
   end
 end

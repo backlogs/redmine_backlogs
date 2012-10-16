@@ -3,28 +3,23 @@ release: 0.9.26
 rvm:
   - 1.8.7
   - 1.9.3
-  - jruby-18mode
-  - jruby-19mode
+# - jruby-18mode # build times out, needs chunked runs to pass
+# - jruby-19mode # build times out, needs chunked runs to pass
 env:
   - REDMINE_VER=1.4.4
   - REDMINE_VER=2.0.4
   - REDMINE_VER=2.1.2
   - REDMINE_VER=master
-  - REDMINE_VER=v3.3.0
+#  - REDMINE_VER=v3.3.0 # needs a champion
 matrix:
   allow_failures:
-    - rvm: jruby-18mode
-    - rvm: jruby-19mode
     - env: REDMINE_VER=1.4.4
     - env: REDMINE_VER=master
     - env: REDMINE_VER=v3.3.0
     - env: REDMINE_VER=2.1.2
   exclude: # anyone is free to adopt a build, until then, no builds that don't have a maintainer
-    - rvm: jruby-19mode # times out, probably needs chunked testing
-    - rvm: jruby-18mode
     - rvm: 1.9.3
       env: REDMINE_VER=1.4.4
-    - env: REDMINE_VER=v3.3.0
     - rvm: 1.8.7
       env: REDMINE_VER=2.1.2
     - rvm: 1.8.7

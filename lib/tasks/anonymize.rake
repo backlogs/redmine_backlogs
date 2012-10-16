@@ -24,6 +24,8 @@ namespace :redmine do
       answer = STDIN.gets.chomp
       return if answer != "Yes!"
 
+      Issue.connection.execute('delete from auth_sources')
+
       Issue.update_all({:due_date => nil}, ['not due_date is null and not start_date is null and due_date < start_date'])
       Member.update_all(:mail_notification => false)
       User.update_all(:mail_notification => '')
@@ -50,7 +52,8 @@ namespace :redmine do
       ]
 
       admins = []
-      ActiveRecord::Base.send(:subclasses).each do |model|
+      Rails.application.eager_load!
+      ActiveRecord::Base.descendants.each do |model|
         attrs = []
         model.columns_hash.each_pair { |attrib, column|
           #next unless model.content_columns.include?(column)
