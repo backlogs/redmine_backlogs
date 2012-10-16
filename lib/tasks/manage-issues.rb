@@ -15,7 +15,7 @@ class Issue
 
     @comments = @repo.client.issue_comments(@repo.repo, issue.number.to_s)
 
-    @labels.delete_if{|l| l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+    @labels.delete_if{|l| l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
 
     if (@labels & ['on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
       comment = {
@@ -25,18 +25,18 @@ class Issue
         comment[(@repo.collaborators.include?(c.user.login) ? :collab : :user)] = Time.parse(c.created_at)
       }
 
-      puts comment.inspect if STDOUT.tty?
-
       response = comment[:user] ? Integer((Time.now - comment[:user])) / (60 * 60 * 24) : nil
 
       if comment[:user] && (comment[:collab].nil? || comment[:user] > comment[:collab])
         @labels << 'attention'
-      elsif comment[:user] && comment[:collab] && comment[:collab] >= comment[:user] && response < 5
+      elsif (comment[:user] && comment[:collab] && comment[:collab] >= comment[:user] && response < 5) || comment[:user].nil?
         @labels << 'feedback-required'
-      elsif comment[:user] && comment[:collab] && comment[:collab] >= comment[:user]
+      elsif (comment[:user] && comment[:collab] && comment[:collab] >= comment[:user]) || comment[:user].nil?
         @labels << 'no-feedback'
         @labels << "#{response}days"
       end
+
+      @labels << 'internal' if comment[:user].nil?
     end
 
     if @labels.size == 0
