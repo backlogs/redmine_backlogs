@@ -29,33 +29,28 @@ module Backlogs
       end
 
       def is_story?
-        return RbStory.trackers.include?(tracker_id)
+        return RbStory.trackers.include?(tracker_id) && self.story.nil?
       end
 
       def is_task?
-        return RbTask.trackers.include?(tracker_id)
+        return RbTask.trackers.include?(tracker_id) && self.story
       end
 
       def story
-        if @rb_story.nil?
-          if self.new_record?
-            parent_id = self.parent_id
-            parent_id = self.parent_issue_id if parent_id.blank?
-            parent_id = nil if parent_id.blank?
-            parent = parent_id ? Issue.find(parent_id) : nil
+        return @rb_story if @rb_story_cached
 
-            if parent.nil?
-              @rb_story = nil
-            elsif parent.is_story?
-              @rb_story = parent.becomes(RbStory)
-            else
-              @rb_story = parent.story
-            end
-          else
-            @rb_story = Issue.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and rgt > ? and tracker_id in (?)", root_id, lft, rgt, RbStory.trackers ])
-            @rb_story = @rb_story.becomes(RbStory) if @rb_story
-          end
+        @rb_story_cached = true
+
+        if self.new_record?
+          parent_id = self.parent_id
+          parent_id = self.parent_issue_id if parent_id.blank?
+          parent_id = nil if parent_id.blank?
+          @rb_story = parent_id ? RbStory.find(parent_id) : nil
+          @rb_story = RbStory.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft <= ? and rgt >= ? and tracker_id in (?)", @rb_story.root_id, @rb_story.lft, @rb_story.rgt, RbStory.trackers ]) if @rb_story && !RbStory.trackers.include?(@rb_story.tracker_id)
+        else
+          @rb_story = RbStory.find(:first, :order => 'lft DESC', :conditions => [ "root_id = ? and lft < ? and rgt > ? and tracker_id in (?)", root_id, lft, rgt, RbStory.trackers ])
         end
+
         return @rb_story
       end
 
