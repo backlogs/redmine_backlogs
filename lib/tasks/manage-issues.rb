@@ -65,8 +65,8 @@ class Repository
 
     @labels.each_pair{|l, status|
       next if status == :keep
-      next unless l =~ /days$/
-      puts "delete label #{l}"
+      puts "Delete label #{l.name}" if STDOUT.tty?
+      #@client.delete_label!(@repo, l.name)
     }
   end
 

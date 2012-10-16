@@ -118,15 +118,19 @@ class RbIssueHistory < ActiveRecord::Base
     # Wouldn't be needed if redmine just created journals for update_parent_properties
     # subissues will only get filled is_leaf? is false. Assumes issues move to parent and stay there.
     subissues = Issue.find(:all, :conditions => ['parent_id = ?', issue.id]).to_a
-    subdates = {:estimated_hours => [], :remaining_hours => []}
+    subdates = {:estimated_hours => [], :remaining_hours => [], :sprint => []}
     subhist = []
     # get history of direct child issues and dates for relevant updates
     subissues.each{|sub|
       subhist << Hash[*(sub.history.expand.collect{|d| [d[:date], d]}.flatten)]
       sub.journals.select{|j| j.created_on > issue.created_on}.each{|j|
         j.details.each{|jd|
-          next unless jd.property == 'attr' && ['estimated_hours', 'remaining_hours'].include?(jd.prop_key)
-          subdates[jd.prop_key.intern] << j.created_on.to_date
+          next unless jd.property == 'attr' && ['estimated_hours', 'remaining_hours', 'fixed_version_id'].include?(jd.prop_key)
+          if jd.prop_key == 'fixed_version_id'
+            subdates[:sprint] << j.created_on.to_date
+          else
+            subdates[jd.prop_key.intern] << j.created_on.to_date
+          end
         }
       }
     }
