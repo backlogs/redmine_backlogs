@@ -70,7 +70,6 @@ class RbIssueHistory < ActiveRecord::Base
     }
 
     full_journal = {}
-    is_leaf = issue.leaf?
     issue.journals.each{|journal|
       date = journal.created_on.to_date
 
@@ -103,13 +102,13 @@ class RbIssueHistory < ActiveRecord::Base
     }
     full_journal[issue.updated_on.to_date] = {
       :story_points => {:new => issue.story_points},
-      :fixed_version_id => {:new => issue.fixed_version_id },
+      :sprint => {:new => issue.fixed_version_id },
       :status_id => {:new => issue.status_id },
       :status_open => {:new => status[issue.status_id][:open] },
       :status_success => {:new => status[issue.status_id][:success] },
       :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id) },
       :estimated_hours => {:new => issue.estimated_hours},
-      :remaining_hours => {:new => issue.remaining_hours}
+      :remaining_hours => {:new => issue.remaining_hours},
     }
 
     # Wouldn't be needed if redmine just created journals for update_parent_properties
@@ -123,12 +122,17 @@ class RbIssueHistory < ActiveRecord::Base
     subdates.uniq!
     subdates.sort!
 
-    subdates.each{|date|
+    subdates.sort.each{|date|
       next if date < issue.created_on.to_date
 
-      current = full_journal.keys.select{|d| d <= date}
-      current = current.size == 0 ? nil : full_journal[current[0]].dup
-      next if current.nil? || current[:tracker].nil? # only process issues that exist at that date and are either story or task
+      current = {}
+      full_journal.keys.sort.select{|d| d <= date}.each{|d|
+        current[:sprint] = full_journal[d][:sprint][:new] if full_journal[d][:sprint]
+        current[:estimated_hours] = full_journal[d][:estimated_hours][:new] if full_journal[d][:estimated_hours]
+        current[:remaining_hours] = full_journal[d][:remaining_hours][:new] if full_journal[d][:remaining_hours]
+        current[:tracker] = full_journal[d][:tracker][:new] if full_journal[d][:tracker]
+      }
+      next unless current[:tracker] # only process issues that exist at that date and are either story or task
 
       change = {
         :sprint => [],
@@ -137,7 +141,7 @@ class RbIssueHistory < ActiveRecord::Base
       }
       subhists.each{|h|
         [:sprint, :remaining_hours, :estimated_hours].each{|prop|
-          change[prop] << h[date][prop] if h[date]
+          change[prop] << h[date][prop] if h[date] && h[date].include?(prop)
         }
       }
       change[:sprint].uniq!
@@ -154,19 +158,24 @@ class RbIssueHistory < ActiveRecord::Base
       }
       puts "#{current[:tracker][:new]} #{issue.id} has tasks on multiple sprints: #{change[:sprint].inspect}, picking #{change[:sprint][0]} at random" if change[:sprint].size > 1
 
-      change[:remaining_hours] = change[:remaining_hours].compact.sum
-      change[:estimated_hours] = change[:estimated_hours].compact.sum
+      [:remaining_hours, :estimated_hours].each{|prop|
+        if change[prop].size == 0
+          change.delete(prop)
+        else
+          change[prop] = change[prop].compact.sum
+        end
+      }
 
       if change[:sprint].size != 0 && current[:sprint] != change[:sprint][0]
-        full_journal[date] ||= current
+        full_journal[date] ||= {}
         full_journal[date][:sprint] = {:old => current[:sprint], :new => change[:sprint][0]}
       end
-      if current[:estimated_hours] != change[:estimated_hours]
-        full_journal[date] ||= current
+      if change.include?(:estimated_hours) && current[:estimated_hours] != change[:estimated_hours]
+        full_journal[date] ||= {}
         full_journal[date][:estimated_hours] = {:old => current[:estimated_hours], :new => change[:estimated_hours]}
       end
-      if current[:remaining_hours] != change[:remaining_hours]
-        full_journal[date] ||= current
+      if change.include?(:remaining_hours) && current[:remaining_hours] != change[:remaining_hours]
+        full_journal[date] ||= {}
         full_journal[date][:remaining_hours] = {:old => current[:remaining_hours], :new => change[:remaining_hours]}
       end
     }
