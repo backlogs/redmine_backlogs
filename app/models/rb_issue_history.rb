@@ -107,42 +107,70 @@ class RbIssueHistory < ActiveRecord::Base
       :status_id => {:new => issue.status_id },
       :status_open => {:new => status[issue.status_id][:open] },
       :status_success => {:new => status[issue.status_id][:success] },
-      :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id) }
+      :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id) },
+      :estimated_hours => {:new => issue.estimated_hours},
+      :remaining_hours => {:new => issue.remaining_hours}
     }
-    if is_leaf
-      full_journal[issue.updated_on.to_date][:estimated_hours] = {:new => issue.estimated_hours}
-      full_journal[issue.updated_on.to_date][:remaining_hours] = {:new => issue.remaining_hours}
-    end
 
     # Wouldn't be needed if redmine just created journals for update_parent_properties
-    # subissues will only get filled is_leaf? is false. Assumes issues move to parent and stay there.
     subissues = Issue.find(:all, :conditions => ['parent_id = ?', issue.id]).to_a
-    subdates = {:estimated_hours => [], :remaining_hours => [], :sprint => []}
-    subhist = []
-    # get history of direct child issues and dates for relevant updates
-    subissues.each{|sub|
-      subhist << Hash[*(sub.history.expand.collect{|d| [d[:date], d]}.flatten)]
-      sub.journals.select{|j| j.created_on > issue.created_on}.each{|j|
-        j.details.each{|jd|
-          next unless jd.property == 'attr' && ['estimated_hours', 'remaining_hours', 'fixed_version_id'].include?(jd.prop_key)
-          if jd.prop_key == 'fixed_version_id'
-            subdates[:sprint] << j.created_on.to_date
-          else
-            subdates[jd.prop_key.intern] << j.created_on.to_date
-          end
+    subhists = []
+    subdates = []
+    subissues.each{|i|
+      subdates.concat(i.history.history.collect{|h| h[:date]})
+      subhists << Hash[*(i.history.expand.collect{|d| [d[:date], d]}.flatten)]
+    }
+    subdates.uniq!
+    subdates.sort!
+
+    subdates.each{|date|
+      next if date < issue.created_on.to_date
+
+      current = full_journal.keys.select{|d| d <= date}
+      current = current.size == 0 ? nil : full_journal[current[0]].dup
+      next if current.nil? || current[:tracker].nil? # only process issues that exist at that date and are either story or task
+
+      change = {
+        :sprint => [],
+        :estimated_hours => [],
+        :remaining_hours => [],
+      }
+      subhists.each{|h|
+        [:sprint, :remaining_hours, :estimated_hours].each{|prop|
+          change[prop] << h[date][prop] if h[date]
         }
       }
-    }
-    # for each relevant update, get old-new values from sum of child issue history and add to the in-mem journal
-    subdates.each_pair{|prop, dates|
-      dates.uniq.sort.each{|date|
-        thatday = subhist.collect{|h| h[date] ? h[date][prop] : nil}.compact
-        daybefore = subhist.collect{|h| h[date - 1] ? h[date - 1][prop] : nil}.compact
-        full_journal[date] ||= {}
-        full_journal[date][prop] = {:old => (daybefore.empty? ? nil : daybefore.sum), :new => (thatday.empty? ? nil : thatday.sum) }
+      change[:sprint].uniq!
+      change[:sprint].sort!{|a, b|
+        if a.nil? && b.nil?
+          0
+        elsif a.nil?
+          1
+        elsif b.nil?
+          -1
+        else
+          a <=> b
+        end
       }
+      puts "#{current[:tracker][:new]} #{issue.id} has tasks on multiple sprints: #{change[:sprint].inspect}, picking #{change[:sprint][0]} at random" if change[:sprint].size > 1
+
+      change[:remaining_hours] = change[:remaining_hours].compact.sum
+      change[:estimated_hours] = change[:estimated_hours].compact.sum
+
+      if change[:sprint].size != 0 && current[:sprint] != change[:sprint][0]
+        full_journal[date] ||= current
+        full_journal[date][:sprint] = {:old => current[:sprint], :new => change[:sprint][0]}
+      end
+      if current[:estimated_hours] != change[:estimated_hours]
+        full_journal[date] ||= current
+        full_journal[date][:estimated_hours] = {:old => current[:estimated_hours], :new => change[:estimated_hours]}
+      end
+      if current[:remaining_hours] != change[:remaining_hours]
+        full_journal[date] ||= current
+        full_journal[date][:remaining_hours] = {:old => current[:remaining_hours], :new => change[:remaining_hours]}
+      end
     }
-    ## end of child journal picking ##
+    # End of child journal picking
 
     # process combined journal in order of timestamp
     full_journal.keys.sort.collect{|date| {:date => date, :update => full_journal[date]} }.each {|entry|
