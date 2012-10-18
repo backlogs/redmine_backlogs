@@ -88,4 +88,8 @@ config.keys.each{|k|
   config[sk] = config.delete(k)
 }
 
-Repository.new('backlogs/redmine_backlogs', config)
+begin
+  Repository.new('backlogs/redmine_backlogs', config)
+rescue => e
+  raise e if STDOUT.tty?
+end
