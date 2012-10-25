@@ -237,7 +237,7 @@ class RbIssueHistory < ActiveRecord::Base
   def set_default_history
     self.history ||= []
 
-    if Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
+    if !issue.new_record? && Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
       raise "Goodbye time traveller"
       return
     end
