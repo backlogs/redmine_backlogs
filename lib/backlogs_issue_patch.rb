@@ -102,7 +102,7 @@ module Backlogs
             if self.fixed_version
               self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
               self.due_date ||= self.fixed_version.effective_date
-              self.due_date ||= self.start_date if self.due_date < self.start_date
+              self.due_date = self.start_date if self.due_date && self.due_date < self.start_date
             else
               self.start_date = nil
               self.due_date = nil
