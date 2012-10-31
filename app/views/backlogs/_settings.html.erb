@@ -186,6 +186,12 @@
   <%= radio_button_tag("settings[new_story_position]", 'bottom', Backlogs.setting[:new_story_position] == 'bottom') %><%= l(:backlogs_new_story_position_bottom) %>
 </p>
 
+<p>
+  <%= content_tag(:label, l(:backlogs_set_start_and_duedates_from_sprint)) %>
+  <%= check_box_tag("settings[set_start_and_duedates_from_sprint]", 'enabled',
+      Backlogs.setting[:set_start_and_duedates_from_sprint]) %>
+</p>
+
 <fieldset>
   <legend><%= l(:backlogs_sharing_support) %></legend>
   <p>
