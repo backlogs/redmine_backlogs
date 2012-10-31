@@ -196,3 +196,5 @@ en:
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
   rb_project_settings_updated: Settings updated
   rb_project_settings_update_error: Error while updating settings
+  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
+  
