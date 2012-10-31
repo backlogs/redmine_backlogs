@@ -199,4 +199,12 @@ ja:
     * コメントを除いた全てのストーリーとタスクの変更は削除されます
     * 現在の値は、全てのストーリーとタスクの初期値になります
     * ステータスはチケットのデフォルトのステータスになります
+  backlogs_new_story_position: "新しく作成されたストーリーが追加される位置"
+  backlogs_new_story_position_top: "上に"
+  backlogs_new_story_position_bottom: "下に (再起動が必要)"
+  backlogs_sharing_support: "バックログの共有"
+  backlogs_sharing_enabled: "有効化"
+  backlogs_show_stories_from_subprojects_in_backlog: "バックログでサブプロジェクトのストーリーを表示する"
+  rb_project_settings_updated: "更新しました。"
+  rb_project_settings_update_error: "失敗しました。"
 
