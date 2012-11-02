@@ -24,6 +24,9 @@ module Backlogs
         @velocity_stddev = stddev(@velocity)
       end
 
+      spent_hours = @past_sprints.collect{|sprint| sprint.spent_hours}
+      @spent_hours_per_point = spent_hours.sum / @velocity.sum unless spent_hours.nil? || @velocity.nil? || @velocity.sum == 0
+
       @product_backlog = RbStory.product_backlog(@project, 10)
 
       hours_per_point = []
@@ -56,6 +59,7 @@ module Backlogs
     attr_reader :statistics, :score
     attr_reader :active_sprint, :past_sprints
     attr_reader :hours_per_point
+    attr_reader :spent_hours_per_point
 
     def stddev(values)
       median = values.sum / values.size.to_f
@@ -150,6 +154,11 @@ module Backlogs
 
     def stat_hours_per_point
       return @hours_per_point
+    end
+
+    def stat_spent_hours_per_point
+      return nil unless @spent_hours_per_point
+      return @spent_hours_per_point.round(2)
     end
   end
 
