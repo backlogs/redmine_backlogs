@@ -119,7 +119,7 @@ RB.Model = RB.Object.create({
       }
       
       // Copy the value in the field to the input element
-      value = ( fieldType=='select' ? field.children('.v').first().text() : field.text() );
+      value = ( fieldType=='select' ? field.children('.v').first().text() : field.text().trim() );
       input.val(value);
       
       // Record in the model's root element which input field had the last focus. We will
@@ -315,8 +315,10 @@ RB.Model = RB.Object.create({
     if (typeof model == 'undefined') {
         model = this;
     }
-    var _ = model.$.find('div.story_tooltip');
-    _.qtip(jQuery.qtipMakeOptions(_));
+    model.$.find('div.story_tooltip').each(function(el) {
+        var _ = jQuery(this);
+        _.qtip(jQuery.qtipMakeOptions(_));
+    });
   },
   
   unmarkError: function(){
