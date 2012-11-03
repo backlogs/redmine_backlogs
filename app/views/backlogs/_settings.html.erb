@@ -187,6 +187,12 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_sprint_sort_order)) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'asc', Backlogs.setting[:sprint_sort_order].nil?|| Backlogs.setting[:sprint_sort_order] == 'asc') %><%= l(:backlogs_sprint_sort_order_asc) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'desc', Backlogs.setting[:sprint_sort_order] == 'desc') %><%= l(:backlogs_sprint_sort_order_desc) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:backlogs_set_start_and_duedates_from_sprint)) %>
   <%= check_box_tag("settings[set_start_and_duedates_from_sprint]", 'enabled',
       Backlogs.setting[:set_start_and_duedates_from_sprint]) %>
