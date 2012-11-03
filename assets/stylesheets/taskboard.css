@@ -123,8 +123,10 @@ See RB.Taskboard.initialize()
   padding:1px 3px 1px 3px;
   line-height: 14px;
 }
-.story .id a{
+.story .id a,
+.story .id .remaininghours {
   float:right;
+  margin-left: 4px;
 }
 .story .id .assignee{
   font-weight: bold;
