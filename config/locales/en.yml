@@ -200,3 +200,8 @@ en:
   backlogs_sprint_sort_order: Sort Sprints by start date 
   backlogs_sprint_sort_order_asc: ascending
   backlogs_sprint_sort_order_desc: descending
+  backlogs_general_settings: General settings
+  backlogs_sprint_card_settings: Card printing
+  backlogs_burndown_settings: Burndown settings
+  backlogs_pblpage_settings: Product backlog page settings
+  backlogs_story_settings: Story and Task settings
