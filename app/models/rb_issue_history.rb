@@ -156,7 +156,6 @@ class RbIssueHistory < ActiveRecord::Base
           a <=> b
         end
       }
-      puts "#{current[:tracker][:new]} #{issue.id} has tasks on multiple sprints: #{change[:sprint].inspect}, picking #{change[:sprint][0]} at random" if change[:sprint].size > 1
 
       [:remaining_hours, :estimated_hours].each{|prop|
         if change[prop].size == 0
