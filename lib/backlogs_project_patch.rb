@@ -146,22 +146,22 @@ module Backlogs
 
     def stat_velocity_stddev
       return @velocity_stddev unless @velocity_stddev.is_a? Float
-      return @velocity_stddev.round(2)
+      return '%.2f' % @velocity_stddev      
     end
 
     def stat_sizing_stddev
       return @hours_per_point_stddev unless @hours_per_point_stddev.is_a? Float
-      return @hours_per_point_stddev.round(2)
+      return '%.2f' % @hours_per_point_stddev
     end
 
     def stat_hours_per_point
       return @hours_per_point unless @hours_per_point.is_a? Float
-      return @hours_per_point.round(2)
+      return '%.2f' % @hours_per_point
     end
 
     def stat_spent_hours_per_point
       return nil unless @spent_hours_per_point
-      return @spent_hours_per_point.round(2)
+      return '%.2f' % @spent_hours_per_point
     end
   end
 
