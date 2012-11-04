@@ -2,7 +2,12 @@ desc 'Test'
 
 require 'pp'
 require 'date'
-require 'timecop'
+
+begin
+  require 'timecop' # redmine pre-loads all tasks
+rescue LoadError
+end
+
 
 namespace :redmine do
   namespace :backlogs do
