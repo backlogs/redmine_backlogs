@@ -18,20 +18,28 @@ RB.$(function() {
     RB.$(this).parents('.ui-dialog').css('background', '-moz-linear-gradient(top, '+c_light+', '+c+')');    
     RB.$(this).parents('.ui-dialog').css('filter', 'progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr='+c_light+',EndColorStr='+c+')');
   });
+
+  // hold down alt when clicking an issue id to open it in the current tab
+  RB.$('#taskboard').delegate('.id a', 'click', function(e) {
+    if (e.shiftKey) {
+      location.href = this.href;
+      return false;
+    }
+  });
 });
 
 RB.showCharts = function(event){
   event.preventDefault();
-  if(RB.$("#charts").length==0){
+  if(!RB.$("#charts").length){
     RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
   }
   RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
   RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: RB.constants.sprint_id }) );
   RB.$('#charts').dialog({ 
-                        buttons: { "Close": function() { RB.$(this).dialog("close") } },
+                        buttons: { "Close": function() { RB.$(this).dialog("close"); } },
                         height: 590,
                         modal: true, 
                         title: 'Charts', 
                         width: 710 
                      });
-}
+};

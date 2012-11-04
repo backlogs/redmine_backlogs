@@ -181,3 +181,20 @@ de:
     an Stories und Tasks (ausgenommen der Notizen) werden GELÖSCHT * Alle aktuellen
     Werte der Stories/Tasks werden auf die  initialen Werte zurückgesetzt * Der Status
     wird auf den Standardwert zurückgesetzt'
+  backlogs_new_story_position: Neue Stories gehen nach
+  backlogs_new_story_position_top: oben
+  backlogs_new_story_position_bottom: unten (neustart erforderlich)
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_sharing_enabled: Sharing aktivieren
+  backlogs_show_stories_from_subprojects_in_backlog: Zeige Stories von Unterprojecten im Backlog
+  rb_project_settings_updated: Einstellungen aktualisiert
+  rb_project_settings_update_error: Fehler bei der Aktualisierung der Einstellungen
+  backlogs_set_start_and_duedates_from_sprint: Setze Start- und Endedatum von Stories von Sprintdaten
+  backlogs_sprint_sort_order: Sortiere Sprints
+  backlogs_sprint_sort_order_asc: aufsteigend
+  backlogs_sprint_sort_order_desc: absteigend
+  backlogs_general_settings: Allgemeine Einstellungen
+  backlogs_sprint_card_settings: Sprintkarten drucken
+  backlogs_burndown_settings: Burndown
+  backlogs_pblpage_settings: Product Backlog Ansicht
+  backlogs_story_settings: Story und Task Einstellungen

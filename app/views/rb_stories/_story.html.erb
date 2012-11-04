@@ -4,7 +4,8 @@
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
-  <div class="project editable" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
+  <div class="project editable story_tooltip" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
+    <div class="tooltip_text"><%= story.project %></div>
     <div class="t"><%= story.project %></div>
     <div class="v"><%= story.project_id %></div>
   </div>
@@ -12,7 +13,9 @@
     <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
-  <div class="subject editable story_field" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %></div>
+  <div class="subject editable story_field story_tooltip" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %>
+    <div class="tooltip_text"><%=h story.subject %></div>
+  </div>
   <div class="status_id editable story_field" fieldtype="select" fieldname="status_id" fieldlabel="<%=l(:field_status_id)%>">
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>

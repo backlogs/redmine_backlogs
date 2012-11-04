@@ -12,7 +12,7 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
     });
 
     // Process impediments
-    var items = RB.$(data).find('.impediment');
+    items = RB.$(data).find('.impediment');
     items.each(function(i, v){
       try {
         self.processItem(v, true);

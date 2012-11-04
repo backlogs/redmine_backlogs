@@ -14,7 +14,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.find(".editable").bind('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
 
   beforeSave: function(){
@@ -30,26 +30,25 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
   },
 
   refreshed: function(){
-    // We have to do this since .live() does not work for some reason
-    j.find(".editable").bind('mouseup', this.handleClick);
+    // Do nothing
   },
 
   saveDirectives: function(){
     var j = this.$;
-
+    var url;
     var data = j.find('.editor').serialize();
 
     if( this.isNew() ){
-      var url = RB.urlFor( 'create_sprint' );
+      url = RB.urlFor( 'create_sprint' );
     } else {
-      var url = RB.urlFor( 'update_sprint', { id: this.getID() } );
-      data += "&_method=put"
+      url = RB.urlFor( 'update_sprint', { id: this.getID() } );
+      data += "&_method=put";
     }
 
     return {
       url : url,
       data: data
-    }
+    };
   },
 
   beforeSaveDragResult: function(){

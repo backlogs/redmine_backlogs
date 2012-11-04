@@ -18,22 +18,24 @@ class RbSprint < Version
   end
 
   rb_scope :open_sprints, lambda { |project|
+    order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
     {
-      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END ASC,
-                 sprint_start_date ASC,
-                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END ASC,
-                 effective_date ASC",
+      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+                 sprint_start_date #{order},
+                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
+                 effective_date #{order}",
       :conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
     }
   }
 
   #TIB ajout du scope :closed_sprints
   rb_scope :closed_sprints, lambda { |project|
+    order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
     {
-      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END ASC,
-                 sprint_start_date ASC,
-                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END ASC,
-                 effective_date ASC",
+      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+                 sprint_start_date #{order},
+                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
+                 effective_date #{order}",
       :conditions => [ "status = 'closed' and project_id = ?", project.id ]
     }
   }
