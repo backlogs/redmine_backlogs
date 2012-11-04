@@ -19,7 +19,7 @@ class Issue
 
     @labels << 'release-blocker' if issue.milestone && issue.milestone == @repo.next_milestone
 
-    if (@labels & ['rm2.1', 'on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
+    if (@labels & ['on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
       comment = {
         (@repo.collaborators.include?(issue.user.login) ? :collab : :user) => Time.parse(issue.created_at)
       }
