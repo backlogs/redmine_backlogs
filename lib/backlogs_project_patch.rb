@@ -198,7 +198,8 @@ module Backlogs
       #depending on sharing mode
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
-          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+          order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end 
@@ -210,7 +211,8 @@ module Backlogs
           return []
         else
           if Backlogs.setting[:sharing_enabled]
-            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+            order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
           else #no backlog sharing
             RbSprint.closed_sprints(self)
           end
