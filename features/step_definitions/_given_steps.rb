@@ -440,6 +440,12 @@ Given /^I am viewing the issues sidebar for (.+)$/ do |name|
   verify_request_status(200)
 end
 
+Given /^I am viewing the issue named "([^"]*)"$/ do |name|
+  issue = Issue.find_by_subject(name)
+  visit url_for(:controller => 'issues', :action=>'show', :id => issue.id, :project_id => @project, :only_path=>true)
+  verify_request_status(200)
+end
+
 Given /^I have selected card label stock (.+)$/ do |stock|
   Backlogs.setting[:card_spec] = stock
   BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil

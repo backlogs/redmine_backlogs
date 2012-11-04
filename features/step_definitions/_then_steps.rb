@@ -435,3 +435,9 @@ Then /^the error message should say "([^"]*)"$/ do |msg|
   response_msg = page.find(:xpath,"//div[@class='errors']/div")
   response_msg.text.strip.should == msg
 end
+
+Then /^the issue should display (\d+) remaining hours$/ do |hours|
+  field = page.find(:xpath, "//th[contains(normalize-space(text()),'Remaining')]/following-sibling::td")
+  field.text.should == "#{"%.2f" % hours.to_f} hours"
+end
+
