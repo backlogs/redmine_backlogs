@@ -13,6 +13,11 @@
   <%= check_box_tag("settings[show_stories_from_subprojects]", 'enabled',
       @project.rb_project_settings.show_stories_from_subprojects) %>
 </p>
+<p>
+  <%= content_tag(:label, l(:backlogs_show_in_scrum_stats)) %>
+  <%= check_box_tag("settings[show_in_scrum_stats]", 'enabled',
+      @project.rb_project_settings.show_in_scrum_stats) %>
+</p>
 </div>
 <%= submit_tag(l(:button_save)) %>
 <% end %>

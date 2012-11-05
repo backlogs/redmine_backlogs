@@ -24,6 +24,7 @@ en:
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
   backlogs_statistics_hours_per_point: "%{value} hours per point on average"
+  backlogs_statistics_spent_hours_per_point: "%{value} hours spent per accepted point on average"
   backlogs_statistics_sprints: Measured over %{value} sprints
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
@@ -194,6 +195,7 @@ en:
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics 
   rb_project_settings_updated: Settings updated
   rb_project_settings_update_error: Error while updating settings
   backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
