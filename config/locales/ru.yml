@@ -83,7 +83,7 @@ ru:
   label_back_to_project: Назад на страницу проекта
   label_backlogs: Бэклоги
   label_backlogs_unconfigured: Вы ещё не отконфигурировали бэклог. Пожалуйста, пройдите
-    %{administration} > %{plugins}, затем нажмите {configure} для соединения с
+    %{administration} > %{plugins}, затем нажмите %{configure} для соединения с
     этим плагином. После того, как установили поля, возвращайтесь назад к этой странице,
     чтобы начать использование этого инструмента.
   label_burndown: Выполнение
