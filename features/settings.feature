@@ -37,3 +37,12 @@ Feature: Configuration
       And I press "Save"
      Then show_stories_from_subprojects for ecookbook should be true
 
+  Scenario: Change setting Show project in Scrum statistics
+    Given I am a product owner of the project
+      And I am viewing the backlog settings page for project ecookbook
+     Then I should see "Show project in Scrum statistics"
+      And show_in_scrum_stats for ecookbook should be true
+      And the "settings[show_in_scrum_stats]" checkbox should be checked
+     When I uncheck "settings[show_in_scrum_stats]"
+      And I press "Save"
+     Then show_in_scrum_stats for ecookbook should be false

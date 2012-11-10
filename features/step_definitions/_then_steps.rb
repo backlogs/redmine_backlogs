@@ -407,10 +407,10 @@ Then /^show me the html content$/ do
   puts page.html
 end
 
-Then /^show_stories_from_subprojects for (.+) should be (true|false)$/ do |project, value|
+Then /^(.+) for (.+) should be (true|false)$/ do |key, project, value|
   project = Project.find(project)
   project.should_not be nil
-  setting = project.rb_project_settings.show_stories_from_subprojects
+  setting = project.rb_project_settings.send(key)
   if value=="true"
     setting.should be_true
   else
