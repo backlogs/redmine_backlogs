@@ -51,9 +51,22 @@
 
 <div id="releasebacklog">
 <h3>Release Backlog</h3>
+<table class="list issues">
+<tr>
+  <th>#</th>
+  <th>Tracker</th>
+  <th>Subject</th>
+  <th>Story Points</th>
+</tr>
 <% RbStory.release_backlog(@release).each{|story| %>
-<p><%= story.subject %></p>
+<tr>
+<td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
+<td><%= h tracker_name_or_empty(story) %></td>
+<td><%= story.subject %></td>
+<td><%= story_points_or_empty(story) %></td>
+</tr>
 <% } %>
+</table>
 </div>
 
   <% other_formats_links do |f| %>
