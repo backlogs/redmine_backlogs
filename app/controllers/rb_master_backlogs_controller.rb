@@ -23,6 +23,10 @@ class RbMasterBacklogsController < RbApplicationController
     @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
     @c_sprint_backlogs = c_sprints.map{|s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
 
+    releases = RbRelease.find(:all, :conditions => { :project_id => @project.id })
+    releases_backlog_storie_of = RbStory.backlogs_by_release(@project, releases)
+    @release_backlogs = releases.map{ |r| { :release => r, :stories => releases_backlog_storie_of[r.id] } }
+
     respond_to do |format|
       format.html { render :layout => "rb"}
     end

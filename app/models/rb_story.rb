@@ -18,7 +18,9 @@ class RbStory < Issue
     sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
     sprint_ids = sprint_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if sprint_ids
 
-    release_id = options.delete(:release)
+    release_ids = options.delete(:release)
+    release_ids = [release_ids] if release_ids && !release_ids.is_a?(Array)
+    release_ids = release_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if release_ids
 
     permission = options.delete(:permission)
     permission = false if permission.nil?
@@ -37,6 +39,7 @@ class RbStory < Issue
     pbl_condition = ["
       project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
+      and release_id is NULL
       and fixed_version_id is NULL
       and is_closed = ?", RbStory.trackers, false]
     if Backlogs.settings[:sharing_enabled]
@@ -54,9 +57,9 @@ class RbStory < Issue
     release_condition = ["
       tracker_id in (?)
       and fixed_version_id is NULL
-      and release_id = ?", RbStory.trackers, release_id]
+      and release_id in (?)", RbStory.trackers, release_ids]
 
-    if release_id
+    if release_ids
       Backlogs::ActiveRecord.add_condition(options, release_condition)
     elsif sprint_ids.nil?
       Backlogs::ActiveRecord.add_condition(options, pbl_condition)
@@ -107,13 +110,23 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
-    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, options)
+    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, nil, options)
     sprint_of = {}
     ret.each do |backlog|
       sprint_of[backlog.fixed_version_id] ||= []
       sprint_of[backlog.fixed_version_id].push(backlog)
     end
     return sprint_of
+  end
+
+  def self.backlogs_by_release(project, releases, options={})
+    ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
+    release_of = {}
+    ret.each do |backlog|
+      release_of[backlog.fixed_version_id] ||= []
+      release_of[backlog.fixed_version_id].push(backlog)
+    end
+    return release_of
   end
 
   def self.stories_open(project)

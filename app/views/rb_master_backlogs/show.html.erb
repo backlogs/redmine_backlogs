@@ -83,6 +83,7 @@
     </div>
     <div class="backlogs-panel right">
       <div id="product_backlog_container">
+        <%= render :partial => 'backlog', :collection => @release_backlogs %>
         <%= render :partial => 'backlog', :object => @product_backlog %>
       </div>
     </div>
