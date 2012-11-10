@@ -496,6 +496,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .stories .story.editing .subject.editor{
   font-size: 11px;
   margin:0;
+  padding: 4px 4px 4px 4px;
 }
 #backlogs_container .stories .story.editing .status_id{
   margin:0;

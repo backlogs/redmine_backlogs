@@ -4,6 +4,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     var self = this;
 
     editor.find('textarea').attr('cols', '5');
+    editor.find('textarea').attr('rows', '3');
     this.$.addClass("editing");
     editor.find(".editor").bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
 
