@@ -207,6 +207,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   margin-left:8px;
   line-height:28px;
   overflow:hidden;
+  white-space: nowrap;
   width:200px;
 }
 
