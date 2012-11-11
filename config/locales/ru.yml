@@ -11,22 +11,21 @@ ru:
   backlogs_new_story_position: Новые истории отправить в
   backlogs_new_story_position_bottom: низ (требует перезагрузки)
   backlogs_new_story_position_top: верх
-  backlogs_points_burn_direction: Очки с указанием, сколько уже выполнено задания
-    и сколько ещё остаётся сделать
+  backlogs_points_burn_direction: Очки с указанием, сколько уже выполнено задания и сколько ещё остаётся сделать
   backlogs_product_backlog: Бэклог продукта
   backlogs_sprints: Спринты
   backlogs_statistics_active: По проекту видна активность
   backlogs_statistics_active_failed: По проекту не видно активности
   backlogs_statistics_committed_velocity_stable: Скорость команды стабильна на протяжении спринтов
   backlogs_statistics_committed_velocity_stable_failed: Скорость команды нестабильна на протяжении спринтов
-  backlogs_statistics_hours_per_point: ! '%{value} часов на очко в среднем'
+  backlogs_statistics_hours_per_point: "%{value} часов на очко в среднем"
   backlogs_statistics_product_backlog_filled: В бэклоге продукта есть истории
   backlogs_statistics_product_backlog_filled_failed: Бэклог продукта пуст
   backlogs_statistics_product_backlog_sized: У верхних историй из бэклога продукта указан размер
   backlogs_statistics_product_backlog_sized_failed: Наверху бэклога продукта есть истории без размера
   backlogs_statistics_sizing_consistent: Размер историй соответствует оценке
   backlogs_statistics_sizing_consistent_failed: Фактический размер историй расходится с оценкой
-  backlogs_statistics_sizing_stddev: ! 'Стандартное отклонение стоимости очка в часах: %{value} часов'
+  backlogs_statistics_sizing_stddev: "Стандартное отклонение стоимости очка в часах: %{value} часов"
   backlogs_statistics_sprint_notes_available: По недавно закрытым спринтам проведена ретроспектива
   backlogs_statistics_sprint_notes_available_failed: Спринты закрыты без ретроспективы
   backlogs_statistics_sprints: Измерено по %{value} спринтам
@@ -34,8 +33,8 @@ ru:
   backlogs_statistics_sprints_estimated_failed: Активные или недавно закрытые спринты содержат неоценённые задачи
   backlogs_statistics_sprints_sized: У активных и недавно закрытых спринтов указан размер
   backlogs_statistics_sprints_sized_failed: В активных или недавно закрытых спринтах есть истории без размера
-  backlogs_statistics_velocity: ! 'Скорость: %{value}'
-  backlogs_statistics_velocity_stddev: ! 'Стандартное отклонение скорости: %{value} очков'
+  backlogs_statistics_velocity: "Скорость: %{value}"
+  backlogs_statistics_velocity_stddev: "Стандартное отклонение скорости: %{value} очков"
   backlogs_statistics_yield: Средняя производительность в норме
   backlogs_statistics_yield_failed: Низкая средняя производительность
   backlogs_story: История
@@ -44,22 +43,21 @@ ru:
   backlogs_task_tracker: Трекер задания
   backlogs_wiki_template: Шаблон для спринта страницы wiki
   button_edit_wiki: Редактировать страницу wiki
-  comma_delimited_numbers: Comma delimited numbers
-  current_open_story_points: ! 'Current open story points:'
+  comma_delimited_numbers: Список чисел через запятую
+  current_open_story_points: "Current open story points:"
   error_blank: Не может быть чистым
   error_greater_than_start_date: Не может быть раньше, чем дата начала
   error_inclusion: отсутствует в списке
-  error_intro_plural: ! 'Были обнаружены следующие ошибки:'
-  error_intro_singular: ! 'Была обнаружена следующая ошибка:'
-  error_must_have_comma_delimited_list: должно иметь запятую, разделяющую список истории
-    или ID заданий
+  error_intro_plural: "Были обнаружены следующие ошибки:"
+  error_intro_singular: "Была обнаружена следующая ошибка:"
+  error_must_have_comma_delimited_list: должно иметь запятую, разделяющую список истории или ID заданий
   error_no_workflow_for_task_tracker: У Вас нет доступа к трекеру задачи.
     Если Вы уверены, что это ошибка, попросите администратора настроить рабочий процесс.
   error_outro: Пожалуйста, исправьте вышепреведенные ошибки перед следующим запуском.
   error_release_end_after_start: Дата окончания версии должна быть после даты  начала
   error_sprint_end_before_start: Дата окончания спринта должна быть после даты начала
   error_taken: уже занят
-  event_sprint_summary: ! '%{project}: %{summary}'
+  event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Ответственный
   field_backlogs_issue_type: Тип бэклога
   field_base: ""
@@ -75,6 +73,7 @@ ru:
   field_story_points: Оценка истории (очки)
   field_subject: Содержание
   field_time_entry_comments: Time Entry Comments
+  field_project_id: ИД проекта
   field_time_entry_hours: Time Entry Hours
   field_time_entry_spend_on: Time Entry Spend on
   field_time_entry_user_id: Time Entry User Id
@@ -121,7 +120,7 @@ ru:
   label_release_planning: Планирование версии
   label_release_plural: Версии
   label_release_start_date: Поле_даты_начала_версии
-  label_reset: Reset
+  label_reset: Сбросить
   label_scrum_statistics: Статистики скрама
   label_select_all: Выбрать всё
   label_show_completed_sprints: Показать завершённые спринты
@@ -146,7 +145,7 @@ ru:
   rb_task_cards_story_follows_tasks: История следует за своими задачами
   rb_task_cards_tasks_follow_story: Задачи следуют за своей историей
   rb_taskboard_card_order: Порядок печати карт
-  rb_timelog_from_taskboard: Timelog from taskboard
+  rb_timelog_from_taskboard: Записывать время с доски заданий
   release_create_snapshot_today: Сохранить снимок оценки истории  на сегодняшнюю дату
   release_update_snapshot_today: Обновить снимок оценки истории  на сегодняшнюю дату
   remaining_story_points: Оставшиеся оценки истории
@@ -158,14 +157,31 @@ ru:
   story_status: Статус
   today_not_in_release_msg: Текущая дата не находится в пределах дат версии. Вы действительно
     хотите сохранить снимок?
-  today_not_in_release_warning: ! 'Предупреждение: текущая дата не находится в пределах
-    дат версии. Вы действительно желаете сохранить снимок?'
-  todo_issue_summary: ! '%{type}: %{summary}'
-  use_free_text_if_empty: Use text field instead of dropdown if empty
-  warning_reset_sprint: ! "ВЫ СОБИРАЕТЕСЬ СБРОСИТЬ СПРИНТ!\n
-    \nУверены что хотите этого? Сброс спринта
-    \nповлияет на истории и задачи следующим образом:\n
-    \n* Дата создания будет приравнена к начальной дате спринта
-    \n* В задачах и историях все изменения кроме комментариев будут УДАЛЕНЫ
-    \n* Текущая величина станет начальной величиной для всех свойств историй/задач
-    \n* Состояние будет установлено в значение по умолчанию"
+  today_not_in_release_warning: "Предупреждение: текущая дата не находится в пределах
+    дат версии. Вы действительно желаете сохранить снимок?"
+  todo_issue_summary: "%{type}: %{summary}"
+  use_free_text_if_empty: Если список пуст, будет использовано текстовое поле
+  warning_reset_sprint: |
+    ВЫ СОБИРАЕТЕСЬ СБРОСИТЬ СПРИНТ!
+
+    Уверены что хотите это сделать? Сброс спринта
+    повлияет на истории и задачи следующим образом:
+
+    * Дата создания будет приравнена к начальной дате спринта
+    * В задачах и историях все изменения кроме комментариев будут УДАЛЕНЫ
+    * Текущая величина станет начальной величиной для всех свойств историй/задач
+    * Состояние будет установлено в значение по умолчанию
+  backlogs_sharing_support: Совместное использование бэклогов
+  backlogs_sharing_enabled: Разрешить совместное использование
+  backlogs_show_stories_from_subprojects_in_backlog: Показывать в бэклоге истории из подпроектов
+  rb_project_settings_updated: Настройки обновлены
+  rb_project_settings_update_error: При обновлении настроек произошла ошибка
+  backlogs_set_start_and_duedates_from_sprint: Установиь даты начала и завершения из спринта
+  backlogs_sprint_sort_order: Сортировать спринты по дате начала
+  backlogs_sprint_sort_order_asc: по возрастанию
+  backlogs_sprint_sort_order_desc: по убыванию
+  backlogs_general_settings: Общие настройки
+  backlogs_sprint_card_settings: Печать карт спринта
+  backlogs_burndown_settings: Настройки диаграммы сгорания
+  backlogs_pblpage_settings: Настройки бэклога продукта
+  backlogs_story_settings: Настройки историй и задач
