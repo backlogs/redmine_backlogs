@@ -39,7 +39,10 @@ RB.Backlog = RB.Object.create({
                   });
 
     if(this.isSprintBacklog()){
-      sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
+      RB.Factory.initialize(RB.Sprint, this.getSprint());
+    }
+    else if (this.isReleaseBacklog()) {
+      RB.Factory.initialize(RB.Sprint, this.getRelease());
     }
 
     this.drawMenu();
@@ -202,6 +205,11 @@ RB.Backlog = RB.Object.create({
     return RB.$(this.el).find(".model.sprint").first();
   },
     
+  getRelease: function(){
+    var x= RB.$(this.el).find(".model.release").first();
+    return RB.$(this.el).find(".model.release").first();
+  },
+    
   getStories: function(){
     return this.getList().children(".story");
   },
@@ -231,6 +239,10 @@ RB.Backlog = RB.Object.create({
 
   isSprintBacklog: function(){
     return RB.$(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
+  },
+    
+  isReleaseBacklog: function(){
+    return RB.$(this.el).find('.release').length == 1; // return true if backlog has an element with class="release"
   },
     
   newStory: function(project_id) {
