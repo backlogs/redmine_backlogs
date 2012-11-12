@@ -1,6 +1,6 @@
 <div class="closedbacklog">
   <div class="header">
-      <%= render :partial => "rb_sprints/sprint", :object => closedbacklog[:sprint] %>
+      <%= render :partial => "rb_sprints/sprint", :object => closedbacklog[:sprint], :locals => {:cls => 'sprint'} %>
   </div>
   <ul class="stories" id="stories_closed" style="display:block">
     <%= render :partial => "rb_stories/story", :collection => closedbacklog[:stories] %>
