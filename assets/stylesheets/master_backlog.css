@@ -1,4 +1,13 @@
-  
+/**
+ * reserved classes are
+ * .backlog (used in master_backlog.js to initialize all backlogs)
+ * .model (used in backlog.js editable_inplace.js model.js)
+ * .sprint (used in backlog.js 
+ * .stories (used in backlog.js for sortable)
+ * .editor
+ * .editable (bind click on)
+ * .close_sprint (bind click on)
+ */
 ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 #backlogs_container{
@@ -21,7 +30,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
 /*the close completed sprint button in pbl header */
-#product_backlog_container .header > .close_sprint {
+#product_backlog_container .header .close_sprint {
   font-size:11px;
   height:28px;
   line-height:30px;
@@ -191,13 +200,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   font-weight:bold;
 }
 
-/* backlog header */
-#backlogs_container .header .model > div,
-#backlogs_container .header .name,
-#backlogs_container .header .date {
-  float: left;
-}
-
 #backlogs_container .header .velocity {
   font-size:12px;
   height:28px;
@@ -210,7 +212,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
   /* container for sprint header (read) */
-#backlogs_container .header .model{
+#backlogs_container .header .headertext{
   background-color:transparent;
   display:block;
   cursor:pointer;
@@ -235,31 +237,35 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-position:center;
 }
 
+/* backlog header name,dates etc.*/
+#backlogs_container .header .headertext > div {
+  float: left;
+  height:28px;
+  line-height:28px;
+  white-space: nowrap;
+}
+
 /* backlog header*/
 #backlogs_container .header .name {
   font-size: 15px;
   font-weight: bold;
-  height:28px;
-  line-height:28px;
   width: 264px;
   overflow: hidden;
   margin-left: 8px;
 }
 
 /* backlog header*/
-#backlogs_container .header .id,
-#backlogs_container .sprint .description,
-#backlogs_container .sprint .status{
-  display:none;
-}
-
-.header .sprint_start_date,
-.header .effective_date{
+.header .date {
   font-size:12px;
-  height:28px;
-  line-height:28px;
   width: 8em;
   margin-left: 6px;
+}
+
+/* backlog header invisibles */
+#backlogs_container .header .id,
+#backlogs_container .header .description,
+#backlogs_container .header .status{
+  display:none;
 }
 
 #backlogs_container .stories{
@@ -511,7 +517,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   float: left;
   display: block;
 }
-#backlogs_container #backlogs_container editing .editable {
+#backlogs_container #backlogs_container .editing .editable {
   display: none;
 }
 
@@ -557,7 +563,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 .debug .story .subject,
 .debug .story .status_id,
 .debug .story .story_points,
-.debug .sprint .name,
+.debug .header .name,
 .debug .header .sprint_start_date,
 .debug .header .effective_date,
 .debug .header .actions,
