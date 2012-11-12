@@ -61,7 +61,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background: -moz-linear-gradient(top, #EEE, #CCC);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#CCCCCC);
   position:relative;
-  overflow: hidden;
+  white-space: nowrap;
   height:30px;
   width:100%;
   border-bottom: 1px solid #AAAAAA
