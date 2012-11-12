@@ -123,8 +123,8 @@ class RbStory < Issue
     ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
     release_of = {}
     ret.each do |backlog|
-      release_of[backlog.fixed_version_id] ||= []
-      release_of[backlog.fixed_version_id].push(backlog)
+      release_of[backlog.release_id] ||= []
+      release_of[backlog.release_id].push(backlog)
     end
     return release_of
   end
