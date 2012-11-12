@@ -279,7 +279,9 @@ module BacklogsPlugin
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]
           context[:request].session[:backlogs] = Backlogs.configured?
-          context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured) if !context[:request].session[:backlogs]
+          unless context[:request].session[:backlogs]
+            context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured, {:administration => l(:label_administration), :plugins => l(:label_plugins), :configure => l(:button_configure)})
+          end
         end
 
         return context[:controller].send(:render_to_string, {:locals => context}.merge(:partial=> 'hooks/rb_include_scripts'))
