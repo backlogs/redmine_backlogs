@@ -27,7 +27,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   line-height:30px;
   padding:0;
   float: left;
-  margin-left:50px;
   text-align:right;
   width:150px;
   white-space: nowrap;
@@ -192,23 +191,11 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   font-weight:bold;
 }
 
-#backlogs_container .header > div,
-#backlogs_container .sprint .name,
-#backlogs_container .sprint .date,
-.closedbacklog .sprint .name,
-.closedbacklog .sprint .date {
+/* backlog header */
+#backlogs_container .header .model > div,
+#backlogs_container .header .name,
+#backlogs_container .header .date {
   float: left;
-}
-#product_backlog_container .header .label{ /* the name of the backlog */
-  float: left;
-  font-size:15px;
-  font-weight:bold;
-  height:28px;
-  margin-left:8px;
-  line-height:28px;
-  overflow:hidden;
-  white-space: nowrap;
-  width:200px;
 }
 
 #backlogs_container .header .velocity {
@@ -223,17 +210,17 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
   /* container for sprint header (read) */
-#backlogs_container .backlog .sprint{
+#backlogs_container .header .model{
   background-color:transparent;
   display:block;
   cursor:pointer;
   position: relative;
   height:30px;
-  margin-left: 8px;
+  float: left;
 }
 #backlogs_container .closedbacklog .sprint{
   cursor: default;
-  margin-left: 64px; /*compensate for menu*/
+  margin-left: 30px; /*compensate for menu*/
 }
 
 #backlogs_container .sprint.saving{
@@ -248,23 +235,26 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-position:center;
 }
 
-#backlogs_container .sprint .name {
+/* backlog header*/
+#backlogs_container .header .name {
   font-size: 15px;
   font-weight: bold;
   height:28px;
   line-height:28px;
   width: 264px;
   overflow: hidden;
+  margin-left: 8px;
 }
 
-#backlogs_container .sprint .id,
+/* backlog header*/
+#backlogs_container .header .id,
 #backlogs_container .sprint .description,
 #backlogs_container .sprint .status{
   display:none;
 }
 
-.sprint .sprint_start_date,
-.sprint .effective_date{
+.header .sprint_start_date,
+.header .effective_date{
   font-size:12px;
   height:28px;
   line-height:28px;
@@ -568,12 +558,11 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 .debug .story .status_id,
 .debug .story .story_points,
 .debug .sprint .name,
-.debug .sprint .sprint_start_date,
-.debug .sprint .effective_date,
+.debug .header .sprint_start_date,
+.debug .header .effective_date,
 .debug .header .actions,
 .debug .menu,
 .debug .velocity,
-.debug #product_backlog_container .header .label,
 .debug #new_story{
   background-color:red;
 }
