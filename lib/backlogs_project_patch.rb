@@ -235,6 +235,11 @@ module Backlogs
         end #disable_closed
       end
 
+      def releases_by_date
+        order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+        RbRelease.find(:all, :conditions => { :project_id => id }, :order => "release_start_date #{order}, release_end_date #{order}")
+      end
+
     end
   end
 end
