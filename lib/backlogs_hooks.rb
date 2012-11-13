@@ -173,6 +173,17 @@ module BacklogsPlugin
         return '<script type="text/javascript">$(function(){try{$("#copy_subtasks")[0].checked=false;$($("#copy_subtasks")[0].parentNode).hide();}catch(e){}});</script>' if (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 1) || Redmine::VERSION::MAJOR > 2
       end
 
+      def view_issues_bulk_edit_details_bottom(context={ })
+        project = context[:project]
+        snippet = ''
+        snippet += "<p>
+          <label for='issue_release_id'>#{ l(:field_release)}</label>
+          #{ select_tag('issue[release_id]', content_tag('option', l(:label_no_change_option), :value => '') +
+                                   content_tag('option', l(:label_none), :value => 'none') +
+                                   release_options_for_select(project.releases)) }
+          </p>"
+      end
+
       def view_versions_show_bottom(context={ })
         begin
           version = context[:version]
