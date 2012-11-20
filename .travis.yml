@@ -15,6 +15,7 @@ matrix:
   allow_failures:
     - env: REDMINE_VER=1.4.4
     - env: REDMINE_VER=v3.3.0
+    - env: REDMINE_VER=master
     - rvm: 1.8.7
   exclude: # anyone is free to adopt a build, until then, no builds that don't have a maintainer
     - rvm: 1.9.3
