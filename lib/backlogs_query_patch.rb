@@ -48,7 +48,7 @@ module Backlogs
                              }
         end
 
-        return @available_filters.merge(backlogs_filters)
+        @available_filters = @available_filters.merge(backlogs_filters)
       end
 
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)
