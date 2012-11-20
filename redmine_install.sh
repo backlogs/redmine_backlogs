@@ -170,6 +170,11 @@ sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
 
+#sed -i -e "s/require 'rake\/gempackagetask'/require 'rubygems\/package_task'/" -e 's/require "rake\/gempackagetask"/require "rubygems\/package_task"/' `find . -type f -exec grep -l 'require.*rake.gempackagetask' {} \;` README.rdoc
+sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GONE"' {} \;` README.rdoc
+
+if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
+
 # copy database.yml
 cp $WORKSPACE/database.yml config/
 RUBYVER=`ruby -v | awk '{print $2}' | awk -F. '{print $1"."$2}'`
@@ -178,22 +183,30 @@ if [ "$RUBYVER" = "1.8" ]; then
 fi
 
 if [ "$VERBOSE" = "yes" ]; then
-  TRACE=--trace
+  export TRACE=--trace
 fi
+
 # run redmine database migrations
+if [ "$VERBOSE" = "yes" ]; then echo 'Migrations'; fi
 bundle exec rake db:migrate $TRACE
 
 # install redmine database
+if [ "$VERBOSE" = "yes" ]; then echo 'Load defaults'; fi
 bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 
+if [ "$VERBOSE" = "yes" ]; then echo 'Tokens'; fi
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET $TRACE
 
 # run backlogs database migrations
+if [ "$VERBOSE" = "yes" ]; then echo 'Plugin migrations'; fi
 bundle exec rake $MIGRATE_PLUGINS $TRACE
 
 # install backlogs
+if [ "$VERBOSE" = "yes" ]; then echo 'Backlogs install'; fi
 bundle exec rake redmine:backlogs:install labels=no $TRACE
+
+if [ "$VERBOSE" = "yes" ]; then echo 'Done!'; fi
 }
 
 while getopts :irtu opt
