@@ -23,10 +23,10 @@
     <%- charts.each do |chart| %>
       burndown_charts[<%= chart.release_id%>] = {
         chart: null,
-        dataset_position: {<%= chart.series(:all).enum_for(:each_with_index).collect{|s, i| "#{s.name}: #{i}"}.join(', ') %>},
-        datasets: [<%= chart.series(:all).collect{|s| "[#{s.join(',')}]"}.join(', ') %>],
-        series: [<%= chart.series(:all).collect{|s| "{ label: '#{escape_javascript(l(s.name))}', yaxis: 'yaxis' }"}.join(',') %>],
-        xticks: [<%= chart.days.enum_for(:each_with_index).collect{|d,i| "[#{i+1}, '#{escape_javascript(::I18n.t('date.abbr_day_names')[d.wday % 7])}']"}.join(',') %>],
+        dataset_position: {<%= chart.series(:all).enum_for(:each_with_index).collect{|s, i| "#{s.name}: #{i}"}.join(', ').html_safe %>},
+        datasets: [<%= chart.series(:all).collect{|s| "[#{s.join(',')}]"}.join(', ').html_safe %>],
+        series: [<%= chart.series(:all).collect{|s| "{ label: '#{escape_javascript(l(s.name))}', yaxis: 'yaxis' }"}.join(',').html_safe %>],
+        xticks: [<%= chart.days.enum_for(:each_with_index).collect{|d,i| "[#{i+1}, '#{escape_javascript(::I18n.t('date.abbr_day_names')[d.wday % 7])}']"}.join(',').html_safe %>],
 
         // add a little clearance to the chart
         max_y: <%= chart.max == 0 ? 1 : 1.01 * chart.max %>,
@@ -50,8 +50,8 @@
               formatString: '%s'
             }
           }); */
-          snapshots=<%= @release.js_snapshots %>
-          ideal=<%= @release.js_ideal %>
+          snapshots=<%= @release.js_snapshots.html_safe %>
+          ideal=<%= @release.js_ideal.html_safe %>
           this.chart = RB.$.jqplot('<%= "#{div}#{chart.release_id}" %>', [ideal,snapshots], {
               //gridPadding:{right:35},
               axes:{

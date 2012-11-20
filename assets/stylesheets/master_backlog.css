@@ -58,6 +58,7 @@
   text-align:right;
   top:1px;
   width:150px;
+  white-space: nowrap;
 }
 
 #backlogs_container .closedbacklog,
@@ -98,6 +99,7 @@
 
 
 #backlogs_container .backlog .header{
+  white-space: nowrap;
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
   border-radius:5px 5px 0px 0px;
@@ -434,6 +436,8 @@
   margin:1px 0 0 1px;
   padding-left:2px;
   padding-top:2px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 #backlogs_container .stories .story .project .t {
   overflow:hidden;
@@ -623,7 +627,7 @@
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
   margin:0;
-  width:55px;
+  max-width:80px;
   float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
@@ -659,6 +663,15 @@
 #backlogs_container .stories .editing .story_points {
     display: none;
 } 
+
+#backlogs_container .stories .editing .edit-actions {
+  clear: both;
+}
+#backlogs_container .stories .editing .edit-actions a {
+  display: inline-block;
+  padding: .5em;
+  margin-left: 1em;
+}
 
 
 #helpers{

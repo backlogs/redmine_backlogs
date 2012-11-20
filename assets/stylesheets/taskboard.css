@@ -86,14 +86,8 @@ See RB.Taskboard.initialize()
   border-bottom:none;
 }
 .board .add_new{
-  min-width:30px;
-  padding:0;
-  text-align:center;
+  display: inline-block;
   vertical-align:middle;
-  width:30px;
-}
-.board .story_tooltip .add_new{
-  margin-left:-0.5em;
 }
 .board .add_new:hover{
   cursor:pointer;
@@ -123,12 +117,19 @@ See RB.Taskboard.initialize()
   -webkit-border-radius:4px 4px 4px 4px;
   border-radius:4px 4px 4px 4px;
   background-color:#FFFFFF;
-  font-size:9px;
+  font-size:.9em;
   opacity:0.8;
   overflow:hidden;
   padding:1px 3px 1px 3px;
-  text-align:right;
-  width:95%;
+  line-height: 14px;
+}
+.story .id a,
+.story .id .remaininghours {
+  float:right;
+  margin-left: 4px;
+}
+.story .id .assignee{
+  font-weight: bold;
 }
 .story .subject{
   height:63px;
@@ -154,7 +155,6 @@ See RB.Taskboard.initialize()
   border:2px solid #FFFFFF;
   background-color:#FF8800;
   color:#FFFFFF;
-  font-size:1em;
   position:absolute;
   padding:1em;
   bottom:-5px;
@@ -235,6 +235,7 @@ See RB.Taskboard.initialize()
   padding:2px;
   padding-top:0;
   width:81px;
+  white-space:nowrap;
 }
 .issue .assigned_to_id .v{
   display:none;

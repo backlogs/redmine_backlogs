@@ -28,6 +28,8 @@ Feature: Duplicate story
       Then the request should complete successfully
       And sprint Sprint 002 should contain Story 1A
 
+  #using javascript to disable redmine2.1 copy_subtasks button
+  @javascript
   Scenario: Duplicate story with tasks
     Given I am duplicating Story 1 to Story 1B for Sprint 003
       And I choose to copy open tasks

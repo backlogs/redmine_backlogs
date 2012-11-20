@@ -15,11 +15,12 @@ RB.Impediment = RB.Object.create(RB.Task, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
     
-    j.find(".editable").live('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
   
   // Override saveDirectives of RB.Task
   saveDirectives: function(){
+    var url;
     var j = this.$;
     var nxt = this.$.next();
     var statusID = j.parents('td').first().attr('id').split("_")[1];
@@ -32,16 +33,16 @@ RB.Impediment = RB.Object.create(RB.Task, {
                (this.isNew() ? "" : "&id=" + j.children('.id').text());
 
     if( this.isNew() ){
-      var url = RB.urlFor('create_impediment');
+      url = RB.urlFor('create_impediment');
     } else {
-      var url = RB.urlFor('update_impediment', { id: this.getID() });
-      data += "&_method=put"
+      url = RB.urlFor('update_impediment', { id: this.getID() });
+      data += "&_method=put";
     }
         
     return {
       url: url,
       data: data
-    }
+    };
   }
 
 });

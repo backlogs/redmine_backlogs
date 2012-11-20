@@ -30,6 +30,8 @@ RB.Backlog = RB.Object.create({
                    placeholder: 'placeholder',
                    forcePlaceholderSize: true,
                    dropOnEmpty: true,
+                   distance: 3,
+                   cancel: '.editing',
                    start: this.dragStart,
                    stop: function(e,u){ self.dragStop(e, u); },
                    update: function(e,u){ self.dragComplete(e, u); }
@@ -78,7 +80,10 @@ RB.Backlog = RB.Object.create({
           if (data[i].classname) { a.attr('class', data[i].classname); }
           if (data[i].warning) {
             a.data('warning', data[i].warning);
-            a.click(function() { return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n")); });
+            a.click(function(e) {
+              if (e.button > 1) return;
+              return confirm(RB.$(this).data('warning').replace(/\\n/g, "\n"));
+            });
           }
           list.append(li);
         }
@@ -107,7 +112,7 @@ RB.Backlog = RB.Object.create({
         menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
         menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
         // capture 'click' instead of 'mouseup' so we can preventDefault();
-        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev) });
+        menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev); });
       }
     });
   },
@@ -205,6 +210,7 @@ RB.Backlog = RB.Object.create({
   },
 
   handleNewStoryClick: function(event){
+    if(event.button > 1) return;
     event.preventDefault();
 
     var project_id = null;
@@ -217,6 +223,7 @@ RB.Backlog = RB.Object.create({
   },
 
   handleNewSprintClick: function(event){
+    if(event.button > 1) return;
     event.preventDefault();
     RB.$(this).parents('.backlog').data('this').newSprint();
   },
@@ -286,7 +293,7 @@ RB.Backlog = RB.Object.create({
     RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
     RB.$('#charts').load( RB.urlFor('show_burndown_embedded', { id: this.getSprint().data('this').getID() }) );
     RB.$('#charts').dialog({ 
-                          buttons: { "Close": function() { RB.$('#charts').dialog("close") } },
+                          buttons: { "Close": function() { RB.$('#charts').dialog("close"); } },
                           height: 590,
                           modal: true, 
                           title: 'Charts', 

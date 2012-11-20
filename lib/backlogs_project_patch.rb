@@ -24,6 +24,9 @@ module Backlogs
         @velocity_stddev = stddev(@velocity)
       end
 
+      spent_hours = @past_sprints.collect{|sprint| sprint.spent_hours}
+      @spent_hours_per_point = spent_hours.sum / @velocity.sum unless spent_hours.nil? || @velocity.nil? || @velocity.sum == 0
+
       @product_backlog = RbStory.product_backlog(@project, 10)
 
       hours_per_point = []
@@ -56,6 +59,7 @@ module Backlogs
     attr_reader :statistics, :score
     attr_reader :active_sprint, :past_sprints
     attr_reader :hours_per_point
+    attr_reader :spent_hours_per_point
 
     def stddev(values)
       median = values.sum / values.size.to_f
@@ -141,15 +145,23 @@ module Backlogs
     end
 
     def stat_velocity_stddev
-      return @velocity_stddev
+      return @velocity_stddev unless @velocity_stddev.is_a? Float
+      return '%.2f' % @velocity_stddev      
     end
 
     def stat_sizing_stddev
-      return @hours_per_point_stddev
+      return @hours_per_point_stddev unless @hours_per_point_stddev.is_a? Float
+      return '%.2f' % @hours_per_point_stddev
     end
 
     def stat_hours_per_point
-      return @hours_per_point
+      return @hours_per_point unless @hours_per_point.is_a? Float
+      return '%.2f' % @hours_per_point
+    end
+
+    def stat_spent_hours_per_point
+      return nil unless @spent_hours_per_point
+      return '%.2f' % @spent_hours_per_point
     end
   end
 
@@ -198,7 +210,8 @@ module Backlogs
       #depending on sharing mode
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
-          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+          order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end 
@@ -210,7 +223,8 @@ module Backlogs
           return []
         else
           if Backlogs.setting[:sharing_enabled]
-            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) }
+            order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
           else #no backlog sharing
             RbSprint.closed_sprints(self)
           end

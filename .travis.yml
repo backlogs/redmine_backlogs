@@ -16,7 +16,6 @@ matrix:
     - env: REDMINE_VER=1.4.4
     - env: REDMINE_VER=master
     - env: REDMINE_VER=v3.3.0
-    - env: REDMINE_VER=2.1.2
   exclude: # anyone is free to adopt a build, until then, no builds that don't have a maintainer
     - rvm: 1.9.3
       env: REDMINE_VER=1.4.4

@@ -15,7 +15,7 @@ RB.Task = RB.Object.create(RB.Issue, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
     
-    j.find(".editable").live('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
 
   beforeSave: function(){
@@ -35,7 +35,7 @@ RB.Task = RB.Object.create(RB.Issue, {
     dialog_bg=this.$.css('background-image');
     if(dialog_bgcolor=='initial'||dialog_bgcolor=='rgba(0, 0, 0, 0)'||dialog_bgcolor=='transparent'){
       // Chrome could not handling background-color css when use -webkit-gradient.
-      if((dialog_bg!=null)&&(dialog_bg!='')){
+      if(dialog_bg){
         dialog.parents('.ui-dialog').css('background', dialog_bg);      
       } else {
         dialog.parents('.ui-dialog').css('background', '-webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa))');
@@ -61,8 +61,9 @@ RB.Task = RB.Object.create(RB.Issue, {
 
   saveDirectives: function(){
     var j = this.$;
+    var url;
     var nxt = this.$.next();
-    var project = j.parents('tr').find('.story .project .v')
+    var project = j.parents('tr').find('.story .project .v');
     var cellID = j.parents('td').first().attr('id').split("_");
 
     var data = j.find('.editor').serialize() +
@@ -76,16 +77,16 @@ RB.Task = RB.Object.create(RB.Issue, {
     }
 
     if( this.isNew() ){
-      var url = RB.urlFor( 'create_task' );
+      url = RB.urlFor( 'create_task' );
     } else {
-      var url = RB.urlFor( 'update_task', { id: this.getID() } );
-      data += "&_method=put"
+      url = RB.urlFor( 'update_task', { id: this.getID() } );
+      data += "&_method=put";
     }
     
     return {
       url: url,
       data: data
-    }
+    };
   },
 
   beforeSaveDragResult: function(){

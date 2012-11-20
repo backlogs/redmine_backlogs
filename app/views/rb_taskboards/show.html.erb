@@ -47,7 +47,7 @@
 
         //Parse through all the stories and hide the ones not used
         RB.$('.story').each(function() {
-          var sprintInfo = this.getElementsByClassName("id")[0].getElementsByTagName('a')[0];
+          var sprintInfo = RB.$(this).children('.id').children('a')[0];
           var storyID = sprintInfo.innerHTML;
 
           RB.$(this).closest('tr').show();
@@ -136,14 +136,14 @@
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story) %>>
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
-            <div style="float:left; padding-left:3px; font-weight:bold;">
-              <span class="add_new">
-                <%= image_tag("add.png", :alt => "+") %>
-              </span>
-              <%= assignee_name_or_empty(story) %>
-            </div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
-            (<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)
+            <span class="add_new">
+              <%= image_tag("add.png", :alt => "+") %>
+            </span>
+            <span class="assignee">
+              <%= assignee_name_or_empty(story) %>
+            </span>
+            <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
           </div>
           <div class="subject"><%= h story.subject %></div>
           <%- if @project != story.project %>

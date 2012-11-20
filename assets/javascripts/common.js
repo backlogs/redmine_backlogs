@@ -22,7 +22,7 @@ RB.Object = {
     }
     return obj;
   }  
-}
+};
 
 
 // Object factory for redmine_backlogs
@@ -52,22 +52,22 @@ RB.Dialog = RB.Object.create({
   }
 });
 
-RB.ajaxQueue = new Array()
+RB.ajaxQueue = new Array();
 RB.ajaxOngoing = false;
 
 RB.ajax = function(options){
   RB.ajaxQueue.push(options);
   if(!RB.ajaxOngoing){ RB.processAjaxQueue(); }
-}
+};
 
 RB.processAjaxQueue = function(){
   var options = RB.ajaxQueue.shift();
 
-  if(options!=null){
+  if(options){
     RB.ajaxOngoing = true;
     RB.$.ajax(options);
   }
-}
+};
 
 RB.$(document).ajaxComplete(function(event, xhr, settings){
   RB.ajaxOngoing = false;

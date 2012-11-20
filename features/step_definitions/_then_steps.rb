@@ -407,10 +407,10 @@ Then /^show me the html content$/ do
   puts page.html
 end
 
-Then /^show_stories_from_subprojects for (.+) should be (true|false)$/ do |project, value|
+Then /^(.+) for (.+) should be (true|false)$/ do |key, project, value|
   project = Project.find(project)
   project.should_not be nil
-  setting = project.rb_project_settings.show_stories_from_subprojects
+  setting = project.rb_project_settings.send(key)
   if value=="true"
     setting.should be_true
   else
@@ -435,3 +435,9 @@ Then /^the error message should say "([^"]*)"$/ do |msg|
   response_msg = page.find(:xpath,"//div[@class='errors']/div")
   response_msg.text.strip.should == msg
 end
+
+Then /^the issue should display (\d+) remaining hours$/ do |hours|
+  field = page.find(:xpath, "//th[contains(normalize-space(text()),'Remaining')]/following-sibling::td")
+  field.text.should == "#{"%.2f" % hours.to_f} hours"
+end
+

@@ -76,9 +76,14 @@ module BacklogsPlugin
           project = context[:project]
 
           if issue.is_story?
-            snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td></tr>"
+            snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td>"
+            unless issue.remaining_hours.nil?
+              snippet += "<th>#{l(:field_remaining_hours)}</th><td>#{l_hours(issue.remaining_hours)}</td>"
+            end
+            snippet += "</tr>"
             vbe = issue.velocity_based_estimate
             snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
+
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
@@ -151,6 +156,13 @@ module BacklogsPlugin
           exception(context, e)
           return ''
         end
+      end
+
+      def view_issues_new_top(context={ })
+        #Remove the copy_subtasks functionality from redmine 2.1+ since backlogs offers it with a choice to copy only open tasks
+        project = context[:project]
+        return '' unless project.module_enabled?('backlogs')
+        return '<script type="text/javascript">$(function(){try{$("#copy_subtasks")[0].checked=false;$($("#copy_subtasks")[0].parentNode).hide();}catch(e){}});</script>' if (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 1) || Redmine::VERSION::MAJOR > 2
       end
 
       def view_versions_show_bottom(context={ })
@@ -267,7 +279,9 @@ module BacklogsPlugin
 
         if User.current.admin? && !context[:request].session[:backlogs_configured]
           context[:request].session[:backlogs] = Backlogs.configured?
-          context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured) if !context[:request].session[:backlogs]
+          unless context[:request].session[:backlogs]
+            context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured, {:administration => l(:label_administration), :plugins => l(:label_plugins), :configure => l(:button_configure)})
+          end
         end
 
         return context[:controller].send(:render_to_string, {:locals => context}.merge(:partial=> 'hooks/rb_include_scripts'))

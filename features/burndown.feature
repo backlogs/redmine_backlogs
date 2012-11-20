@@ -207,3 +207,7 @@ Feature: Burndown
         | 5       | 7                | 3               | 5               |
         | 6       | 7                | 3               | 1               |
         | 7       | 7                | 7               | 0               |
+
+  Scenario: View remaining hours in story view
+    Given I am viewing the issue named "Story A"
+     Then the issue should display 10 remaining hours

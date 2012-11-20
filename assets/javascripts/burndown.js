@@ -9,12 +9,12 @@ RB.burndown.options.disabled_series = function(new_value) {
   } else {
     RB.UserPreferences.set('disabled_burndown_series', new_value.join(','));
   }
-}
+};
 RB.burndown.options.show_legend = function() {
   var legend = RB.UserPreferences.get('burndown_show_legend');
   if (!legend) { return 'sw'; }
   return legend;
-}
+};
 
 RB.burndown.initialize = function() {
   for (id in RB.burndown.charts) {
@@ -26,7 +26,7 @@ RB.burndown.initialize = function() {
   }
 
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.redraw = function() {
   var disabled = RB.burndown.options.disabled_series();
@@ -50,12 +50,12 @@ RB.burndown.redraw = function() {
 
     chart.chart.replot();
   }
-}
+};
 
 RB.burndown.change_legend = function(rb) {
   RB.UserPreferences.set('burndown_show_legend', rb.value);
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.change_series = function(cb) {
   var disabled = RB.burndown.options.disabled_series();
@@ -65,7 +65,7 @@ RB.burndown.change_series = function(cb) {
   if (!cb.checked) { disabled.push(cb.value); }
   RB.burndown.options.disabled_series(disabled);
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.configure = function() {
   var disabled = RB.burndown.options.disabled_series();
@@ -78,4 +78,4 @@ RB.burndown.configure = function() {
 
   var legend = RB.burndown.options.show_legend();
   RB.$('#burndown_legend_' + legend).attr('checked', true);
-}
+};

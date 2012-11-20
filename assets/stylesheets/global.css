@@ -2,7 +2,7 @@
 body{
   background-color:#FFFFFF;
   font-family:Verdana, Arial, sans-serif;
-  font-size:1em;
+  font-size:12px;
   height:100%;
   margin:0;
   width:100%;
@@ -27,7 +27,6 @@ a:hover{
 }
 #toolbar .breadcrumbs{
   float: left;
-  font-size: 0.8em;
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -35,21 +34,18 @@ a:hover{
   font-size:1.2em;
 }
 #toolbar .breadcrumbs .separator{
-  bottom:2px;
   color: #999999;
-  font-size:0.7em;
+  font-size:0.9em;
   font-weight:bold;
-/*  position:relative;*/
+  padding: 0 .2em;
 }
 #toolbar .userselect{
   float: left;
-  font-size: 0.7em;
   position:relative;
 }
 #toolbar .links{
   bottom:5px;
   display:block;
-  font-size:0.7em;
   right:10px;
   position:absolute;
 }
