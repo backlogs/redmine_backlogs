@@ -60,7 +60,7 @@ class RbIssueHistory < ActiveRecord::Base
     status ||= self.statuses
 
     convert = lambda {|prop, v|
-      if v.nil?
+      if v.to_s == ''
         nil
       elsif [:estimated_hours, :remaining_hours, :story_points].include?(prop)
         Float(v)
