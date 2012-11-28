@@ -1,3 +1,21 @@
+== 2012-11-28 v0.9.27
+
+* fixes "Can't create new stories, issues", "Migration issue"
+* Fixes "failed to initialize story positions based on existing priorities in Redmine"
+* Fixes "close completed Sprints button on master backlogs."
+* Russian translations.
+* Hide projects from scrum statistics if they are not visible for current user + added project setting to show/hide a project from scrum statistics.
+* Show remaining time on Story level
+* Added spent hours vs accepted points to scrum stats
+* 2.1.2 passes tests
+* Use a higher drag distance threshold for tasks on the taskboard to prevent starting a drag when you intended to click.
+* Added "Save" and "Cancel" links when creating or editing a story inline.
+* german translations
+* reorganize settings page, group related settings
+* make sorting of sprints in mbp configurable
+* Reverse the order of the sprints on the Master Backlog page.
+* show nice qtip tooltips for project name and subject on master backlog
+
 == 2012-07-08 v0.9.26
 
 * 2.0 travis build works again

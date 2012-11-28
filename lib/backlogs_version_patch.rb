@@ -9,7 +9,12 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        has_one :sprint_burndown, :class_name => 'RbSprintBurndown'
+        # all these ^%@%#!^& incompatible redmine versions!!
+        if Backlogs.platform == :redmine && Redmine::VERSION.to_a[0,2] == [2,1]
+          has_one :sprint_burndown, :class_name => 'RbSprintBurndown'
+        else
+          has_one :sprint_burndown, :class_name => RbSprintBurndown
+        end
 
         after_save :clear_burndown
 
