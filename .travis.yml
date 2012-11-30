@@ -1,14 +1,11 @@
 ---
 language: ruby
-release: 0.9.27
+release: 0.9.28
 rvm:
-#- 1.8.7 # until someone volunteers to fix this, it's a waste of time to do a travis build on this
 - 1.9.3
 env:
-# - REDMINE_VER=1.4.4 # until someone volunteers to fix this, it's a waste of time to do a travis build on this
 - REDMINE_VER=2.0.4
 - REDMINE_VER=2.1.2
-# - REDMINE_VER=master # until someone volunteers to fix this, it's a waste of time to do a travis build on this
 matrix:
   allow_failures:
   - env: REDMINE_VER=1.4.4

@@ -61,7 +61,7 @@ File.open(dot_travis, 'w') { |out| out.write(travis.to_yaml) }
 
 puts "Tagging #{newversion}"
 if tag
-  `git add init.rb CHANGELOG.rdoc`
+  `git add .travis.yml init.rb CHANGELOG.rdoc`
   `git commit -m #{newversion}`
   `git tag #{newversion}`
   `git push`
