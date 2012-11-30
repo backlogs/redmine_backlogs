@@ -15,6 +15,8 @@ class RbSprintsController < RbApplicationController
     begin
       @sprint.save!
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
@@ -33,6 +35,8 @@ class RbSprintsController < RbApplicationController
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
