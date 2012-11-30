@@ -1,3 +1,7 @@
+== 2012-11-30 v0.9.28
+
+* fixed build
+
 == 2012-11-28 v0.9.27
 
 * fixes "Can't create new stories, issues", "Migration issue"
