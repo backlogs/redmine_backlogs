@@ -1,5 +1,5 @@
---- 
-en: 
+---
+en:
   backlogs_active: active
   backlogs_any: any
   backlogs_card_specification: Label types for card printing
@@ -128,7 +128,7 @@ en:
 
   # Version fields
   field_name: "Name"
-  
+
   # Error messages
   error_blank: "cannot be blank"
   error_greater_than_start_date: "cannot be earlier than Start Date"
@@ -169,6 +169,7 @@ en:
   rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
+  rb_show_project_name: Show project name in backlogs
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
   release_create_snapshot_today: Save story point snapshot for today
   release_update_snapshot_today: Update story point snapshot for today
@@ -179,10 +180,10 @@ en:
   use_free_text_if_empty: Use text field instead of dropdown if empty
   warning_reset_sprint: |
     YOU ARE ABOUT TO RESET THIS SPRINT!
-    
+
     Are you sure you want to do this? Resetting the sprint
     will have the following effects on stories and tasks:
-    
+
     * Creation date will be set to the sprint start date
     * ALL modifications to the stories and tasks except notes
        will be DELETED
@@ -195,11 +196,11 @@ en:
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
-  backlogs_show_in_scrum_stats: Show project in Scrum statistics 
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics
   rb_project_settings_updated: Settings updated
   rb_project_settings_update_error: Error while updating settings
   backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
-  backlogs_sprint_sort_order: Sort Sprints by start date 
+  backlogs_sprint_sort_order: Sort Sprints by start date
   backlogs_sprint_sort_order_asc: ascending
   backlogs_sprint_sort_order_desc: descending
   backlogs_general_settings: General settings
