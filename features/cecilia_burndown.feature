@@ -4,7 +4,7 @@ Feature: Cecilia Burndown
   So that they get done according the product owner's requirements
 
   Background:
-    Given the Burndown project has the backlogs plugin enabled
+    Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
       And I have deleted all existing issues
       And I have the following issue statuses available:
@@ -36,11 +36,11 @@ Feature: Cecilia Burndown
         | subject     | sprint         | points |
         | Story 1 	  | Sprint 1       | 8      |
       And I have defined the following tasks:
-        | subject      | story            | estimate | status | remaining |
-        | S.1 task 1   | Story 1          | 40       | New    | 40        |
+        | subject      | story            | estimate | status |
+        | S.1 task 1   | Story 1          | 40       | New    |
 
   Scenario: See burndown chart for Sprint 1 in a correct way directly
-    Given I am viewing the sprint burndown for Sprint 1
+    Given I am viewing the burndown for Sprint 1
     Then the sprint burndown should be:
       | day     | points_committed | points_to_resolve | hours_remaining |
       | start   | 0                | 8                 | 40              |
