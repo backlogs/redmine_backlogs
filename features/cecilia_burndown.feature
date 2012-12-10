@@ -43,4 +43,4 @@ Feature: Cecilia Burndown
     Given I am viewing the burndown for Sprint 1
     Then the sprint burndown should be:
       | day     | points_committed | points_to_resolve | hours_remaining |
-      | start   | 0                | 8                 | 40              |
+      | start   | 8                | 8                 | 40              |
