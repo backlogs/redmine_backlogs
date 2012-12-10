@@ -250,7 +250,7 @@ Given /^backlogs setting show_burndown_in_sidebar is enabled$/ do
     Backlogs.setting[:show_burndown_in_sidebar] = 'enabled' #app/views/backlogs/view_issues_sidebar.html.erb
 end
 
-Given /^I have defined the following sprints:$/ do |table|
+Given /^I have defined the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
 
@@ -346,7 +346,7 @@ Given /^I have defined the following stories in the product backlog:$/ do |table
   end
 end
 
-Given /^I have defined the following stories in the following sprints:$/ do |table|
+Given /^I have defined the following stories in the following sprints?:$/ do |table|
   table.hashes.each do |story|
     if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
       project = get_project(story.delete('project_id'))

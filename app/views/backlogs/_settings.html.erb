@@ -166,6 +166,12 @@
 	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',
             Backlogs.setting[:show_burndown_in_sidebar]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:rb_show_project_name)) %>
+  <%= check_box_tag("settings[show_project_name]",'enabled',
+            Backlogs.setting[:show_project_name]) %>
+</p>
 </fieldset>
 
 <fieldset>
