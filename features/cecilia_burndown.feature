@@ -45,6 +45,6 @@ Feature: Cecilia Burndown
     Then show me the history for Story 1.1
     Then show me the history for Task 1.1.1
     Then show me the sprint burndown
-    Then the sprint burndown on day 0 should be:
+    Then the sprint burndown should be:
       | day     | points_committed | points_to_resolve | hours_remaining |
       | start   | 8                | 8                 | 40              |

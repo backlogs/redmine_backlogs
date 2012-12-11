@@ -5,8 +5,8 @@ class RbIssueHistory < ActiveRecord::Base
   belongs_to :issue
 
   serialize :history, Array
-  after_initialize :set_default_history
-  after_save :backlogs_after_save
+  after_save :touch_sprint
+  after_create :update_parent
 
   def self.statuses
     Hash.new{|h, k|
@@ -21,6 +21,8 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def filter(sprint, status=nil)
+    puts "History of #{self.issue.subject} filtered for #{sprint.name} (#{sprint.days})"
+    puts "Expanded: #{self.expand.inspect}"
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
     filtered = sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
     
@@ -231,69 +233,77 @@ class RbIssueHistory < ActiveRecord::Base
     }
   end
 
-  private
+  def history
+    _history = read_attribute(:history) || []
+    _issue = self.issue
 
-  def set_default_history
-    self.history ||= []
-    @initializing = (self.history.size == 0)
+    todo = []
+    todo << Date.today - 1 if _history.size == 0
+    todo << Date.today if _history.size != 0 && _history[-1][:date] != Date.today
 
-    if !issue.new_record? && Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
-      raise "Goodbye time traveller"
-      return
+    if todo.size > 0
+      _statuses ||= self.class.statuses
+      current = {
+        :estimated_hours => _issue.estimated_hours,
+        :story_points => _issue.story_points,
+        :remaining_hours => _issue.remaining_hours,
+        :tracker => RbIssueHistory.issue_type(_issue.tracker_id),
+        :sprint => _issue.fixed_version_id,
+        :status_id => _issue.status_id,
+        :status_open => _statuses[_issue.status_id][:open],
+        :status_success => _statuses[_issue.status_id][:success],
+        :origin => :default
+      }
+      todo.each{|date|
+        _history << {:date => date}.merge(current)
+        _history[-1][:hours] = _history[-1][:remaining_hours] || _history[-1][:estimated_hours]
+      }
+      _history[-1].merge!(current)
+      _history[-1][:hours] = _history[-1][:remaining_hours] || _history[-1][:estimated_hours]
+      _history[0][:hours] = _history[0][:estimated_hours] || _history[0][:remaining_hours]
+
+      write_attribute(:history, _history)
     end
 
-    _statuses ||= self.class.statuses
-    current = {
-      :estimated_hours => self.issue.estimated_hours,
-      :story_points => self.issue.story_points,
-      :remaining_hours => self.issue.remaining_hours,
-      :tracker => RbIssueHistory.issue_type(self.issue.tracker_id),
-      :sprint => self.issue.fixed_version_id,
-      :status_id => self.issue.status_id,
-      :status_open => _statuses[self.issue.status_id][:open],
-      :status_success => _statuses[self.issue.status_id][:success],
-      :origin => :default
-    }
-    [[Date.today - 1, lambda{|this, date| @initializing}], [Date.today, lambda{|this, date| this.history[-1][:date] != date}]].each{|action|
-      date, test = *action
-      next unless test.call(self, date)
-
-      self.history << {:date => date}.merge(current)
-      self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
-    }
-    self.history[-1].merge!(current)
-    self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
-    self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
+    return _history
   end
 
-  def backlogs_after_save
-    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
+  def touch_sprint
+    return unless self.history[-1][:sprint] && self.history[-1][:tracker] == :story
+    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) 
+  end
 
-    # hours fields must affect parent history during creation.
-    if @initializing && (p = self.issue.parent)
-      fd = self.history[0][:date]
-      i = p.history.history.index{|d| d[:date] == fd}
-      if i.nil?
-        hd = p.history.expand.detect{|d| d[:date] == fd}
+  def update_parent
+    puts "Updating parent start record for #{self.issue.subject}"
+    if (p = self.issue.parent)
+      first_date = self.history[0][:date]
+      puts "Parent = #{p.subject}, date = #{first_date}, history = #{p.history.history.inspect}"
+      parent_history_index = p.history.history.index{|d| d[:date] == first_date}
+      if parent_history_index.nil?
+        parent_data = p.history.expand.detect{|d| d[:date] == first_date}
       else
-        hd = p.history.history[i]
+        parent_data = p.history.history[parent_history_index]
       end
 
-      if hd
-        [:estimated_hours, :remaining_hours, :hours].each{|h| hd[h] = nil }
-        p.children.each{|child|
-          cd = child.history.expand.detect{|d| d[:date] == fd}
-          next unless cd
-          [:estimated_hours, :remaining_hours, :hours].each{|h| hd[h] = hd[h].to_i + cd[h] if cd[h] }
-        }
+      raise "Issue #{self.issue_id} has parent #{p.id} that was created after #{self.issue_id}!" unless parent_data
 
-        if i.nil?
-          p.history.history = (p.history.history + hd).sort{|a, b| a[:date] <=> b[:date]}
-        else
-          p.history.history[i] = hd
-        end
-        p.history.save
+      [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
+      p.children.each{|child|
+        child_data = child.history.expand.detect{|d| d[:date] == first_date}
+        next unless child_data
+        [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = parent_data[h].to_i + child_data[h] if child_data[h] }
+      }
+
+      puts "parent record for #{first_date} set to #{parent_data.inspect}"
+
+      if parent_history_index.nil?
+        p.history.history = (p.history.history + parent_data).sort{|a, b| a[:date] <=> b[:date]}
+      else
+        p.history.history[parent_history_index] = parent_data
       end
+      p.history.save
+
+      puts "Patched history: #{Issue.find(p.id).history.history.inspect}"
     end
   end
 end

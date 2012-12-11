@@ -61,6 +61,7 @@ def set_now(time, options={})
     else
       time = sprint.days[day].to_time.force_utc
     end
+    time += 60*60
 
     puts "time on day #{day} is #{time}, now = #{Date.today}"
 

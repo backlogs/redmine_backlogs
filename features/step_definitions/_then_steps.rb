@@ -229,12 +229,10 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
   issue.send(attribute.intern).should == value.to_i
 end
 
-Then /^the sprint burn(down|up) on (.+) should be:$/ do |direction, at, table|
-  if at =~ /^day\s+[0-9]+$/
-    set_now(at.gsub(/^day\s+/, ''), :sprint => @sprint)
-  else
-    set_now(at)
-  end
+Then /^the sprint burn(down|up) should be:$/ do |direction, table|
+  dayno = table.hashes[-1]['day']
+  dayno = '0' if dayno == 'start'
+  set_now(dayno, :sprint => @sprint)
 
   bd = current_sprint(:keep).burndown
   bd.direction = direction
