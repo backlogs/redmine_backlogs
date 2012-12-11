@@ -93,6 +93,7 @@ class RbSprintBurndown < ActiveRecord::Base
     ndays = days.size
     [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| _burndown[k] = [nil] * ndays }
     statuses = RbIssueHistory.statuses
+
     RbStory.find(:all, :conditions => ['id in (?)', self.stories]).each{|story|
       bd = story.burndown(sprint, statuses)
       next unless bd

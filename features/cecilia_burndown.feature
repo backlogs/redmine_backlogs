@@ -20,27 +20,31 @@ Feature: Cecilia Burndown
         | Rejected              |         1 |          0 |                 
         | Approved              |         1 |          0 | 
         | Implemented           |         1 |          0 |
-      And the current time is 2012-11-21 08:00:00
+      And the current time is 2012-11-20 08:00:00
 
       And I have defined the following stories in the product backlog:
-        | subject |
-        | Story 1 |
-        | Story 2 |
-        | Story 3 |
-        | Story 4 |
+        | subject   |
+        | Story B.1 |
+        | Story B.2 |
+        | Story B.3 |
+        | Story B.4 |
 
       And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  |
         | Sprint 1       | 2012-11-21        | 2012-11-28      |
       And I have defined the following stories in the following sprint:
         | subject     | sprint         | points |
-        | Story 1 	  | Sprint 1       | 8      |
+        | Story 1.1   | Sprint 1       | 8      |
       And I have defined the following tasks:
         | subject      | story            | estimate | status |
-        | S.1 task 1   | Story 1          | 40       | New    |
+        | Task 1.1.1   | Story 1.1        | 40       | New    |
 
   Scenario: See burndown chart for Sprint 1 in a correct way directly
     Given I am viewing the burndown for Sprint 1
-    Then the sprint burndown should be:
+    Then show me the list of issues
+    Then show me the history for Story 1.1
+    Then show me the history for Task 1.1.1
+    Then show me the sprint burndown
+    Then the sprint burndown on day 0 should be:
       | day     | points_committed | points_to_resolve | hours_remaining |
       | start   | 8                | 8                 | 40              |

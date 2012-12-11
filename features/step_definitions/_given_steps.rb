@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'timecop'
+require 'chronic'
 
 Before do
   Timecop.return
@@ -254,19 +255,11 @@ Given /^I have defined the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
 
-    version['project_id'] = get_project((version['project_id']||'ecookbook')).id #need to get current project defined in the table FIXME: (pa sharing) check this
+    #need to get current project defined in the table FIXME: (pa sharing) check this
+    version['project_id'] = get_project((version['project_id']||'ecookbook')).id
+
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      if version[date_attr] == 'today'
-        version[date_attr] = Date.today.strftime("%Y-%m-%d")
-      elsif version[date_attr].blank?
-        version[date_attr] = nil
-      elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
-        # we're OK as-is
-      elsif version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
-        version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d")
-      else
-        raise "Unexpected date value '#{version[date_attr]}'"
-      end
+      version[date_attr] = Chronic.parse(version[date_attr]).strftime("%Y-%m-%d")
     end
 
     version['sharing'] = 'none' if version['sharing'].nil?
@@ -379,8 +372,6 @@ Given /^I have defined the following tasks:$/ do |table|
     params = initialize_task_params(story.id)
     params['subject'] = task.delete('subject')
 
-    offset = time_offset(task.delete('offset') || '1h')
-
     status = task.delete('status')
     params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
 
@@ -388,9 +379,15 @@ Given /^I have defined the following tasks:$/ do |table|
     params['estimated_hours'] = hours.to_f unless hours.blank?
     params['remaining_hours'] = hours.to_f unless hours.blank?
 
-    task.should == {}
+    at = task.delete('at')
+    if at =~ /^0-9+/
+      set_now(at, :sprint => story.fixed_version, :msg => params['subject'])
+    else
+      set_now(at, :msg => params['subject'])
+    end
+    Time.now.should be >= story.created_on
 
-    set_now(story.created_on + offset, :ignore => 60, :msg => params['subject'])
+    task.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,

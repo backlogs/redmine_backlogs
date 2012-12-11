@@ -6,7 +6,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   serialize :history, Array
   after_initialize :set_default_history
-  after_save :touch_sprint
+  after_save :backlogs_after_save
 
   def self.statuses
     Hash.new{|h, k|
@@ -235,6 +235,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   def set_default_history
     self.history ||= []
+    @initializing = (self.history.size == 0)
 
     if !issue.new_record? && Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
       raise "Goodbye time traveller"
@@ -253,7 +254,7 @@ class RbIssueHistory < ActiveRecord::Base
       :status_success => _statuses[self.issue.status_id][:success],
       :origin => :default
     }
-    [[Date.today - 1, lambda{|this, date| this.history.size == 0}], [Date.today, lambda{|this, date| this.history[-1][:date] != date}]].each{|action|
+    [[Date.today - 1, lambda{|this, date| @initializing}], [Date.today, lambda{|this, date| this.history[-1][:date] != date}]].each{|action|
       date, test = *action
       next unless test.call(self, date)
 
@@ -265,7 +266,34 @@ class RbIssueHistory < ActiveRecord::Base
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
   end
 
-  def touch_sprint
+  def backlogs_after_save
     RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
+
+    # hours fields must affect parent history during creation.
+    if @initializing && (p = self.issue.parent)
+      fd = self.history[0][:date]
+      i = p.history.history.index{|d| d[:date] == fd}
+      if i.nil?
+        hd = p.history.expand.detect{|d| d[:date] == fd}
+      else
+        hd = p.history.history[i]
+      end
+
+      if hd
+        [:estimated_hours, :remaining_hours, :hours].each{|h| hd[h] = nil }
+        p.children.each{|child|
+          cd = child.history.expand.detect{|d| d[:date] == fd}
+          next unless cd
+          [:estimated_hours, :remaining_hours, :hours].each{|h| hd[h] = hd[h].to_i + cd[h] if cd[h] }
+        }
+
+        if i.nil?
+          p.history.history = (p.history.history + hd).sort{|a, b| a[:date] <=> b[:date]}
+        else
+          p.history.history[i] = hd
+        end
+        p.history.save
+      end
+    end
   end
 end

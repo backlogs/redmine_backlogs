@@ -1,5 +1,7 @@
 #/bin/bash
 
+trap "cleanup" EXIT
+
 if [[ -e "$HOME/.backlogs.rc" ]]; then
   source "$HOME/.backlogs.rc"
 fi
@@ -111,11 +113,19 @@ run_tests()
   if [ "$1" = "" ]; then
     script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
   else
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
+    FEATURE=$1
+    if [ ! -e "$FEATURE" ]; then
+      FEATURE="features/$1.feature"
+    fi
+    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS $FEATURE" -f $WORKSPACE/cuke.log
   fi
+}
+
+cleanup()
+{
   sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
   sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
-  sed "s/\x1b\[.\{1,5\}m//g"  -i $WORKSPACE/cuke.log # ansi coloring
+  sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
   sed -e 's/_^H//g' -e 's/^H.//g' -e 's/^[\[[0-9]*m//g' -i $WORKSPACE/cuke.log # underscore and bold
 }
 
