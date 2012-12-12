@@ -7,7 +7,7 @@ class RbSprintBurndown < ActiveRecord::Base
 
   serialize :stories, Array
   serialize :burndown, Hash
-  after_initialize :set_defaults
+  after_initialize :calculate
 
   def direction
     @direction
@@ -19,11 +19,11 @@ class RbSprintBurndown < ActiveRecord::Base
     @direction = dir
   end
 
-  def touch!(issue_id = nil)
-    if issue_id
-      issue_id = Integer(issue_id)
-      return if self.stories.include?(issue_id)
-      self.stories << issue_id
+  def touch!(story_id = nil)
+    if story_id
+      story_id = Integer(story_id)
+      return if self.stories.include?(story_id)
+      self.stories << story_id
     end
     self.burndown = nil
     self.save!
@@ -38,8 +38,6 @@ class RbSprintBurndown < ActiveRecord::Base
 #  end
 
   def series(remove_empty = true)
-    self.recalculate!
-
     @series ||= {}
     key = "#{@direction}_#{remove_empty ? 'filled' : 'all'}"
     if @series[key].nil?
@@ -60,25 +58,18 @@ class RbSprintBurndown < ActiveRecord::Base
 
   #compatibility
   def days
-    self.recalculate!
     return self.burndown[:days]
   end
 
   def data
-    self.recalculate!
     return self.burndown[@direction]
   end
 
-  def set_defaults
+  def calculate
     self.stories ||= []
     self.direction = Backlogs.setting[:points_burn_direction]
-    @state = (self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today ? :stale : :ok)
-  end
 
-  def recalculate!
-    raise "Recursive call to recalculate!" if @state == :busy
-    return unless @state == :stale
-    @state = :busy
+    #return unless self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today
 
     # if I use self.version.id I get a "stack level too deep?!
     sprint = self.version # RbSprint.find(self.version_id)
@@ -121,6 +112,5 @@ class RbSprintBurndown < ActiveRecord::Base
                       :days => days
                     }
     self.save
-    @state = :ok
   end
 end

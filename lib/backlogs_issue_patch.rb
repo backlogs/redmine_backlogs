@@ -123,6 +123,14 @@ module Backlogs
 
       def backlogs_after_save
         self.history.save!
+        [self.parent_id, self.parent_id_was].compact.uniq.each{|pid|
+          p = Issue.find(pid)
+          r = p.leaves.sum("COALESCE(remaining_hours, 0)").to_f
+          if r != p.remaining_hours
+            p.update_attribute(:remaining_hours, r)
+            p.history.save
+          end
+        }
 
         return unless Backlogs.configured?(self.project)
 

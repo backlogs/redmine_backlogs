@@ -33,8 +33,8 @@ Feature: Burndown
         | subject         | sprint         | points |
         | Siegerv story 1 | Sprint siegerv | 1      |
       And I have defined the following tasks:
-        | subject      | story            | estimate | status | offset |
-        | S.1          | Siegerv story 1  | 10       | New    | 1h     |
+        | subject      | story            | estimate | status |
+        | S.1          | Siegerv story 1  | 10       | New    |
 
       And I have defined the following sprints:
         | name           | sprint_start_date | effective_date  |
@@ -45,10 +45,10 @@ Feature: Burndown
         | Story B         | Sprint 001     | 2      |
         | Story C         | Sprint 001     | 4      |
       And I have defined the following tasks:
-        | subject      | story            | estimate | status | offset |
-        | A.1          | Story A          | 10       | New    | 1h     |
-        | B.1          | Story B          | 20       | New    | 1h     |
-        | C.1          | Story C          | 40       | New    | 1h     |
+        | subject      | story            | estimate | status |
+        | A.1          | Story A          | 10       | New    |
+        | B.1          | Story B          | 20       | New    |
+        | C.1          | Story C          | 40       | New    |
 
   Scenario: Tasks closed AFTER remaining hours is set to 0
     Given I am viewing the taskboard for Sprint 001
@@ -124,8 +124,8 @@ Feature: Burndown
         | Story D | Sprint 001 | 4      | 3   |
 
       And I have defined the following tasks:
-        | subject      | story     | estimate | status | offset |
-        | D.1          | Story D   | 40       | New    | 1h     |
+        | subject      | story     | estimate | status | when |
+        | D.1          | Story D   | 40       | New    | 3    |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |

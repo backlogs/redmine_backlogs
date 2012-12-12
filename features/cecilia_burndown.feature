@@ -41,10 +41,6 @@ Feature: Cecilia Burndown
 
   Scenario: See burndown chart for Sprint 1 in a correct way directly
     Given I am viewing the burndown for Sprint 1
-    Then show me the list of issues
-    Then show me the history for Story 1.1
-    Then show me the history for Task 1.1.1
-    Then show me the sprint burndown
     Then the sprint burndown should be:
       | day     | points_committed | points_to_resolve | hours_remaining |
       | start   | 8                | 8                 | 40              |

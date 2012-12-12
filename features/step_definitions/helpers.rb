@@ -1,5 +1,7 @@
 require 'timecop'
 require 'chronic'
+require 'cucumber/ast/background'
+require 'benchmark'
 
 class Time
   def force_utc
@@ -7,9 +9,48 @@ class Time
   end
 end
 
+#module Cucumber
+#  module Ast
+#    class Background #:nodoc:
+#      alias_method :accept_org, :accept
+#
+#      def accept(visitor)
+#        #cache_file = self.feature.file + '.background'
+#        #return backlogs_load(cache_file) if File.exist?(cache_file) && File.mtime(cache_file) > File.mtime(self.feature.file)
+#        total = Benchmark.measure{ accept_org(visitor) }.total
+#        puts "Background #{File.basename(self.feature.file, File.extname(self.feature.file))}: #{total}s"
+#        #backlogs_dump(cache_file) if !File.exist?(cache_file) || File.mtime(cache_file) < File.mtime(self.feature.file)
+#      end
+#
+#      def backlogs_dump(filename)
+#        skip_tables = ["schema_info"]
+#        dump = {}
+#        (ActiveRecord::Base.connection.tables - skip_tables).each{|table_name|
+#          dump[table_name] = ActiveRecord::Base.connection.select_all("select * from #{table_name}")
+#        }
+#        File.open(filename, 'w'){|file| file.write(dump.to_yaml)}
+#      end
+#
+#      def backlogs_load(filename)
+#        dump = YAML::load_file(filename)
+#        dump.each_pair{|table_name, rows|
+#          ActiveRecord::Base.connection.execute("delete from #{table_name}")
+#          next unless rows.size > 0
+#          columns = rows[0].keys
+#          sql = "insert into #{table_name} (#{columns.join(',')}) values (#{columns.collect{|c| '%s'}.join(',')})"
+#          rows.each{|row|
+#            ActiveRecord::Base.connection.execute(sql % columns.collect{|c| ActiveRecord::Base::sanitize(row[c])})
+#          }
+#        }
+#      end
+#    end
+#  end
+#end
+
 def get_project(identifier)
   Project.find(identifier)
 end
+
 
 def current_sprint(name = nil)
   if name.is_a?(Symbol)
@@ -44,7 +85,6 @@ def set_now(time, options={})
   return if time.to_s == ''
   raise "options must be a hash" unless options.is_a?(Hash)
 
-  puts "set_now(#{time}, #{options.inspect})"
   sprint = options.delete(:sprint)
   reset = options.delete(:reset)
   msg = options.delete(:msg).to_s
@@ -62,8 +102,6 @@ def set_now(time, options={})
       time = sprint.days[day].to_time.force_utc
     end
     time += 60*60
-
-    puts "time on day #{day} is #{time}, now = #{Date.today}"
 
     # if we're setting the date to today again, don't do anything
     return if time.force_utc.to_date == Date.today
@@ -84,7 +122,6 @@ def set_now(time, options={})
   end
 
   Timecop.travel(time)
-  puts "#{msg}It is now #{Time.now.force_utc}"
 end
 
 def story_before(rank, project, sprint=nil)

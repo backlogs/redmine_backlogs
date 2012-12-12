@@ -6,6 +6,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   serialize :history, Array
   after_save :touch_sprint
+  after_initialize :init_history
   after_create :update_parent
 
   def self.statuses
@@ -21,8 +22,6 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def filter(sprint, status=nil)
-    puts "History of #{self.issue.subject} filtered for #{sprint.name} (#{sprint.days})"
-    puts "Expanded: #{self.expand.inspect}"
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
     filtered = sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
     
@@ -47,11 +46,11 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def expand
-    (0..self.history.size - 2).to_a.collect{|i|
+    ((0..self.history.size - 2).to_a.collect{|i|
       (self.history[i][:date] .. self.history[i+1][:date] - 1).to_a.collect{|d|
         self.history[i].merge(:date => d)
       }
-    }.flatten
+    } + [self.history[-1]]).flatten
   end
 
   def self.rebuild_issue(issue, status=nil)
@@ -233,54 +232,52 @@ class RbIssueHistory < ActiveRecord::Base
     }
   end
 
-  def history
-    _history = read_attribute(:history) || []
+  def init_history
+    self.history ||= []
     _issue = self.issue
 
+    _statuses ||= self.class.statuses
+    current = {
+      :estimated_hours => _issue.estimated_hours,
+      :story_points => _issue.story_points,
+      :remaining_hours => _issue.remaining_hours,
+      :tracker => RbIssueHistory.issue_type(_issue.tracker_id),
+      :sprint => _issue.fixed_version_id,
+      :status_id => _issue.status_id,
+      :status_open => _statuses[_issue.status_id][:open],
+      :status_success => _statuses[_issue.status_id][:success],
+      :origin => :default
+    }
+
     todo = []
-    todo << Date.today - 1 if _history.size == 0
-    todo << Date.today if _history.size != 0 && _history[-1][:date] != Date.today
-
+    todo << Date.today - 1 if self.history.size == 0
+    todo << Date.today if self.history.size == 0 || self.history[-1][:date] != Date.today
     if todo.size > 0
-      _statuses ||= self.class.statuses
-      current = {
-        :estimated_hours => _issue.estimated_hours,
-        :story_points => _issue.story_points,
-        :remaining_hours => _issue.remaining_hours,
-        :tracker => RbIssueHistory.issue_type(_issue.tracker_id),
-        :sprint => _issue.fixed_version_id,
-        :status_id => _issue.status_id,
-        :status_open => _statuses[_issue.status_id][:open],
-        :status_success => _statuses[_issue.status_id][:success],
-        :origin => :default
-      }
       todo.each{|date|
-        _history << {:date => date}.merge(current)
-        _history[-1][:hours] = _history[-1][:remaining_hours] || _history[-1][:estimated_hours]
+        self.history << {:date => date}.merge(current)
+        self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
       }
-      _history[-1].merge!(current)
-      _history[-1][:hours] = _history[-1][:remaining_hours] || _history[-1][:estimated_hours]
-      _history[0][:hours] = _history[0][:estimated_hours] || _history[0][:remaining_hours]
-
-      write_attribute(:history, _history)
     end
 
-    return _history
+    self.history[-1].merge!(current)
+    self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
+    self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
+
+    raise "init_history failed: #{todo.inspect} => #{self.history.inspect}" unless self.history.size >= 2
   end
 
   def touch_sprint
-    return unless self.history[-1][:sprint] && self.history[-1][:tracker] == :story
-    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) 
+    self.history.select{|h| h[:sprint]}.uniq{|h| "#{h[:sprint]}::#{h[:tracker]}"}.each{|h|
+      RbSprintBurndown.find_or_initialize_by_version_id(h[:sprint]).touch!(h[:tracker] == :story ? self.issue.id : nil) 
+    }
   end
 
-  def update_parent
-    puts "Updating parent start record for #{self.issue.subject}"
+  def update_parent(date=nil)
     if (p = self.issue.parent)
-      first_date = self.history[0][:date]
-      puts "Parent = #{p.subject}, date = #{first_date}, history = #{p.history.history.inspect}"
-      parent_history_index = p.history.history.index{|d| d[:date] == first_date}
+      date ||= self.history[0][:date]
+      parent_history_index = p.history.history.index{|d| d[:date] == date}
       if parent_history_index.nil?
-        parent_data = p.history.expand.detect{|d| d[:date] == first_date}
+        parent_data = p.history.expand.detect{|d| d[:date] == date}
       else
         parent_data = p.history.history[parent_history_index]
       end
@@ -289,12 +286,11 @@ class RbIssueHistory < ActiveRecord::Base
 
       [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
       p.children.each{|child|
-        child_data = child.history.expand.detect{|d| d[:date] == first_date}
+        raise "child history broken (#{child.history.history.size})" unless child.history.history.size >= 2
+        child_data = child.history.expand.detect{|d| d[:date] == date }
         next unless child_data
         [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = parent_data[h].to_i + child_data[h] if child_data[h] }
       }
-
-      puts "parent record for #{first_date} set to #{parent_data.inspect}"
 
       if parent_history_index.nil?
         p.history.history = (p.history.history + parent_data).sort{|a, b| a[:date] <=> b[:date]}
@@ -303,7 +299,7 @@ class RbIssueHistory < ActiveRecord::Base
       end
       p.history.save
 
-      puts "Patched history: #{Issue.find(p.id).history.history.inspect}"
+      p.history.update_parent(date)
     end
   end
 end

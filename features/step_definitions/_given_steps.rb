@@ -379,7 +379,7 @@ Given /^I have defined the following tasks:$/ do |table|
     params['estimated_hours'] = hours.to_f unless hours.blank?
     params['remaining_hours'] = hours.to_f unless hours.blank?
 
-    at = task.delete('at')
+    at = task.delete('when').to_s
     if at =~ /^0-9+/
       set_now(at, :sprint => story.fixed_version, :msg => params['subject'])
     else

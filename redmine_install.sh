@@ -123,10 +123,11 @@ run_tests()
 
 cleanup()
 {
-  sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
-  sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
-  sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
-  sed -e 's/_^H//g' -e 's/^H.//g' -e 's/^[\[[0-9]*m//g' -i $WORKSPACE/cuke.log # underscore and bold
+  if [[ -e "$WORKSPACE/cuke.log" ]]; then
+    sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
+    sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
+    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
+  fi
 }
 
 uninstall()

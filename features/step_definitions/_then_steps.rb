@@ -265,8 +265,6 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   series = burndown.series(false)
   dates = burndown.days
 
-  pp burndown.data
-
   ticks = dates.collect{|d|
     t = Time.utc(d.year, d.mon, d.mday)
     zone = User.current.time_zone
@@ -276,9 +274,11 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   data = series.collect{|s| burndown.data[s.intern].enum_for(:each_with_index).collect{|d,i| [i*2, d]}}
 
   puts "== #{sprint.name} =="
-  puts series.inspect
   puts dates.inspect
+  puts series.inspect
   puts data.inspect
+  puts burndown.data.inspect
+  puts "// #{sprint.name} //"
   #show_table("Burndown for #{current_sprint(:keep).name} (#{current_sprint(:keep).sprint_start_date} - #{current_sprint(:keep).effective_date})", header, data)
 end
 
