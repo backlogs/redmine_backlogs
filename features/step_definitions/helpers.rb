@@ -93,7 +93,7 @@ def set_now(time, options={})
 
   msg = "#{msg}: " unless msg == ''
 
-  if sprint
+  if time =~ /^[0-9]+$/ && sprint
     day = time.to_s == '' ? 0 : Integer(time)
 
     if day < 0
