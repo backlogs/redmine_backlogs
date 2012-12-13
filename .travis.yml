@@ -4,48 +4,8 @@ release: 0.9.28
 rvm:
 - 1.9.3
 env:
-- REDMINE_VER=2.0.4 FEATURE=burndown
-- REDMINE_VER=2.0.4 FEATURE=cecilia_burndown
-- REDMINE_VER=2.0.4 FEATURE=common
-- REDMINE_VER=2.0.4 FEATURE=duplicate_story
-- REDMINE_VER=2.0.4 FEATURE=extended_timelog
-- REDMINE_VER=2.0.4 FEATURE=product_owner
-- REDMINE_VER=2.0.4 FEATURE=release
-- REDMINE_VER=2.0.4 FEATURE=routes
-- REDMINE_VER=2.0.4 FEATURE=scrum_master
-- REDMINE_VER=2.0.4 FEATURE=settings
-- REDMINE_VER=2.0.4 FEATURE=shared-versions
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-burndown
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-chief_product_owner
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-chief_product_owner2
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-pblpage
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-positioning
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-scrum_master-dnd
-- REDMINE_VER=2.0.4 FEATURE=shared-versions-team_member-dnd
-- REDMINE_VER=2.0.4 FEATURE=sidebar
-- REDMINE_VER=2.0.4 FEATURE=team_member
-- REDMINE_VER=2.0.4 FEATURE=ui
-- REDMINE_VER=2.1.4 FEATURE=burndown
-- REDMINE_VER=2.1.4 FEATURE=cecilia_burndown
-- REDMINE_VER=2.1.4 FEATURE=common
-- REDMINE_VER=2.1.4 FEATURE=duplicate_story
-- REDMINE_VER=2.1.4 FEATURE=extended_timelog
-- REDMINE_VER=2.1.4 FEATURE=product_owner
-- REDMINE_VER=2.1.4 FEATURE=release
-- REDMINE_VER=2.1.4 FEATURE=routes
-- REDMINE_VER=2.1.4 FEATURE=scrum_master
-- REDMINE_VER=2.1.4 FEATURE=settings
-- REDMINE_VER=2.1.4 FEATURE=shared-versions
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-burndown
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-chief_product_owner
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-chief_product_owner2
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-pblpage
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-positioning
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-scrum_master-dnd
-- REDMINE_VER=2.1.4 FEATURE=shared-versions-team_member-dnd
-- REDMINE_VER=2.1.4 FEATURE=sidebar
-- REDMINE_VER=2.1.4 FEATURE=team_member
-- REDMINE_VER=2.1.4 FEATURE=ui
+- REDMINE_VER=2.0.4
+- REDMINE_VER=2.1.4
 matrix:
   allow_failures:
   - env: REDMINE_VER=1.4.5
@@ -69,4 +29,4 @@ script:
 - bash -x ./redmine_install.sh -r
 - bash -x ./redmine_install.sh -i
 - bash -x ./redmine_install.sh -t
-- bash -x ./redmine_install.sh -u
+#- bash -x ./redmine_install.sh -u
