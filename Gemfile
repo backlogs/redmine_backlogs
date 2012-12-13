@@ -1,5 +1,7 @@
 source :rubygems
 
+gem 'rake', '~>0.9'
+
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
 
