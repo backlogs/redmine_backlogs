@@ -112,16 +112,22 @@ run_tests()
     fi
   fi
 
-  if [ "$1" != ""]; then
-    FEATURE="$1"
+  if [ ! "$1" = "" ]; then
+    FEATURE=$1
   fi
   if [ "$FEATURE" = "" ]; then
     script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
   else
-    if [ ! -e "$FEATURE" ]; then
-      FEATURE="features/$FEATURE.feature"
+    if [ "$FEATURE" = "+" ]; then
+      FEATURE=`ls features/*.feature`
     fi
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS $FEATURE" -f $WORKSPACE/cuke.log
+    for FT in $FEATURE; do
+      if [ ! -e "$FT" ]; then
+        FEATURE="features/$FT.feature"
+      fi
+      LG=`basename $FT`.cucumber
+      script -e -c "bundle exec cucumber $CUCUMBER_FLAGS $FT" -f $WORKSPACE/$LG
+    done
   fi
 }
 

@@ -13,7 +13,7 @@ travis['env'] = []
 
 vers.each{|ver|
   Dir['features/*.feature'].collect{|feature| File.basename(feature, File.extname(feature))}.sort.each{|feature|
-    travis['env'] << "REDMINE_VER=#{ver} FEATURE=#{feature}"
+    travis['env'] << "REDMINE_VER=#{ver} FEATURE=#{feature} RAILS_ENV=test"
   }
 }
 

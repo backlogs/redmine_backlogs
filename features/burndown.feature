@@ -153,7 +153,6 @@ Feature: Burndown
         | subject | sprint     | points | day                 |
         | Story E | Sprint 001 | 1      | 2012-02-02 01:00:00 |
       And I have changed the sprint start date to 2012-02-02
-     Then show me the sprint burnup
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |
