@@ -232,7 +232,7 @@ end
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   dayno = table.hashes[-1]['day']
   dayno = '0' if dayno == 'start'
-  set_now(dayno, :sprint => @sprint)
+  set_now(dayno.to_i + 1, :sprint => @sprint)
 
   bd = current_sprint(:keep).burndown
   bd.direction = direction

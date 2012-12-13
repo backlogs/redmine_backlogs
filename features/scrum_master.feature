@@ -12,7 +12,7 @@ Feature: Scrum Master
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
         | Sprint 002 | 2010-02-01        | 2010-02-28      |
         | Sprint 003 | 2010-03-01        | 2010-03-31      |
-        | Sprint 004 | 2.weeks.ago       | 1.week.from_now |
+        | Sprint 004 | 2 weeks ago       | next week       |
       And I have defined the following stories in the product backlog:
         | subject |
         | Story 1 |

@@ -7,7 +7,7 @@ class RbSprintBurndown < ActiveRecord::Base
 
   serialize :stories, Array
   serialize :burndown, Hash
-  after_initialize :calculate
+  after_initialize :init
 
   def direction
     @direction
@@ -65,52 +65,65 @@ class RbSprintBurndown < ActiveRecord::Base
     return self.burndown[@direction]
   end
 
-  def calculate
+  def init
     self.stories ||= []
     self.direction = Backlogs.setting[:points_burn_direction]
+  end
 
-    #return unless self.burndown.nil? || self.burndown.empty? || !self.updated_at || self.updated_at.to_date < Date.today
+  def burndown
+    return @_burndown if defined?(@_burndown)
+
+    @_burndown = read_attribute(:burndown)
+    @_burndown = nil if !@_burndown || @_burndown.size == 0
 
     # if I use self.version.id I get a "stack level too deep?!
     sprint = self.version # RbSprint.find(self.version_id)
 
     if !sprint.has_burndown?
-      self.burndown = nil
-      return
-    end
+      @_burndown = nil
+    else
+      @_burndown = {}
+      days = sprint.days
+      ndays = days.size
+      [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| @_burndown[k] = [nil] * ndays }
+      statuses = RbIssueHistory.statuses
 
-    _burndown = {}
-    days = sprint.days
-    ndays = days.size
-    [:hours_remaining, :points_committed, :points_accepted, :points_resolved].each{|k| _burndown[k] = [nil] * ndays }
-    statuses = RbIssueHistory.statuses
-
-    RbStory.find(:all, :conditions => ['id in (?)', self.stories]).each{|story|
-      bd = story.burndown(sprint, statuses)
-      next unless bd
-      bd.each_pair {|k, data|
-        data.each_with_index{|d, i|
-          next unless d
-          _burndown[k][i] ||= 0
-          _burndown[k][i] += d
+      RbStory.find(:all, :conditions => ['id in (?)', self.stories]).each{|story|
+        bd = story.burndown(sprint, statuses)
+        next unless bd
+        bd.each_pair {|k, data|
+          data.each_with_index{|d, i|
+            next unless d
+            @_burndown[k][i] ||= 0
+            @_burndown[k][i] += d
+          }
         }
       }
-    }
 
-    _burndown[:ideal] = (0..ndays - 1).to_a.reverse
-    [[:points_to_resolve, :points_resolved], [:points_to_accept, :points_accepted]].each{|todo|
-      tgt, src = *todo
-      _burndown[tgt] = (0..ndays - 1).to_a.collect{|i| _burndown[:points_committed][i] && _burndown[src][i] ? _burndown[:points_committed][i] - _burndown[src][i] : nil }
-    }
-    [[:points_required_burn_rate, :points_to_resolve], [:hours_required_burn_rate, :hours_remaining]].each{|todo|
-      tgt, src = *todo
-      _burndown[tgt] = (0..ndays - 1).to_a.collect{|i| _burndown[src][i] ? Float(_burndown[src][i]) / (_burndown[:ideal][i] == 0 ? 1 : _burndown[:ideal][i]) : nil }
-    }
+      @_burndown[:ideal] = (0..ndays - 1).to_a.reverse
+      [[:points_to_resolve, :points_resolved], [:points_to_accept, :points_accepted]].each{|todo|
+        tgt, src = *todo
+        @_burndown[tgt] = (0..ndays - 1).to_a.collect{|i|
+          @_burndown[:points_committed][i] && @_burndown[src][i] ? @_burndown[:points_committed][i] - @_burndown[src][i] : nil
+        }
+      }
 
-    self.burndown = { :up   => _burndown.reject{|k, v| [:points_to_resolve, :points_to_accept].include?(k) },
-                      :down => _burndown.reject{|k, v| [:points_resolved, :points_accepted].include?(k) },
-                      :days => days
-                    }
-    self.save
+      [[:points_required_burn_rate, :points_to_resolve], [:hours_required_burn_rate, :hours_remaining]].each{|todo|
+        tgt, src = *todo
+        @_burndown[tgt] = (0..ndays - 1).to_a.collect{|i|
+          @_burndown[src][i] ? Float(@_burndown[src][i]) / (@_burndown[:ideal][i] == 0 ? 1 : @_burndown[:ideal][i]) : nil
+        }
+      }
+
+      @_burndown = { :up   => @_burndown.reject{|k, v| [:points_to_resolve, :points_to_accept].include?(k) },
+                     :down => @_burndown.reject{|k, v| [:points_resolved, :points_accepted].include?(k) },
+                     :days => days
+                   }
+    end
+
+    cur = read_attribute(:burndown)
+    write_attribute(:burndown, @_burndown)
+    self.save if @_burndown != cur
+    return @_burndown
   end
 end

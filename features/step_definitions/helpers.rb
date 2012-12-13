@@ -93,8 +93,8 @@ def set_now(time, options={})
 
   msg = "#{msg}: " unless msg == ''
 
-  if time =~ /^[0-9]+$/ && sprint
-    day = time.to_s == '' ? 0 : Integer(time)
+  if (time.is_a?(Integer) || time =~ /^[0-9]+$/) && sprint
+    day = Integer(time)
 
     if day < 0
       time = sprint.days[1].to_time.force_utc + (day * 24*60*60)

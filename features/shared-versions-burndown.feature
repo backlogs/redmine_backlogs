@@ -42,12 +42,12 @@ Feature: Burndown
         | Siegerv story 1 | Sprint siegerv | 1      | ecookbook   |
 
       And I have defined the following tasks:
-        | subject      | story            | estimate | status | offset |
-        | A.1          | Story A          | 10       | New    | 1h     |
-        | B.1          | Story B          | 20       | New    | 1h     |
-        | C.1          | Story C          | 40       | New    | 1h     |
+        | subject      | story            | estimate | status |
+        | A.1          | Story A          | 10       | New    |
+        | B.1          | Story B          | 20       | New    |
+        | C.1          | Story C          | 40       | New    |
 
-        | S.1          | Siegerv story 1  | 10       | New    | 1h     |
+        | S.1          | Siegerv story 1  | 10       | New    |
 
   Scenario: Check baseline without sharing
     Given I have selected the ecookbook project
@@ -136,8 +136,8 @@ Feature: Burndown
         | Story D | Sprint 001 | 4      | 3   |
 
       And I have defined the following tasks:
-        | subject      | story     | estimate | status | offset |
-        | D.1          | Story D   | 40       | New    | 1h     |
+        | subject      | story     | estimate | status |
+        | D.1          | Story D   | 40       | New    |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |
