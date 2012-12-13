@@ -13,7 +13,6 @@ begin
 
       namespace :rcov do
         Cucumber::Rake::Task.new(:cucumber) do |t|
-          t.fork = false
           t.cucumber_opts = " --no-color"
           t.rcov = true
           t.rcov_opts = %w{ --rails --text-report --include-file vendor\/plugins\/redmine_backlogs --exclude config\/,features\/.+\/,^app\/,^lib\/,osx\/objc,gems\/ }
