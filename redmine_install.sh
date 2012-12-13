@@ -2,6 +2,8 @@
 
 trap "cleanup" EXIT
 
+export VERBOSE=yes
+
 if [[ -e "$HOME/.backlogs.rc" ]]; then
   source "$HOME/.backlogs.rc"
 fi
