@@ -4,6 +4,14 @@ trap "cleanup" EXIT
 
 export VERBOSE=yes
 
+if [ "$CIRCLECI" = "true" ]; then
+  export WORKSPACE=`pwd`/workspace
+  export PATH_TO_BACKLOGS=`pwd`
+  export PATH_TO_REDMINE=$WORKSPACE/redmine
+  mkdir $WORKSPACE
+  cp config/database.yml.travis $WORKSPACE/database.yml
+fi
+
 if [[ -e "$HOME/.backlogs.rc" ]]; then
   source "$HOME/.backlogs.rc"
 fi
