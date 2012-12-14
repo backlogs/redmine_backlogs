@@ -1,39 +1,36 @@
+---
 language: ruby
-release: 0.9.26
+release: 0.9.28
 rvm:
-  - 1.8.7
-  - 1.9.3
-# - jruby-18mode # build times out, needs chunked runs to pass
-# - jruby-19mode # build times out, needs chunked runs to pass
+- 1.9.3
 env:
-  - REDMINE_VER=1.4.4
-  - REDMINE_VER=2.0.4
-  - REDMINE_VER=2.1.2
-  - REDMINE_VER=master
-#  - REDMINE_VER=v3.3.0 # needs a champion
+- REDMINE_VER=2.0.4
+- REDMINE_VER=2.1.4
+- REDMINE_VER=master
 matrix:
   allow_failures:
-    - env: REDMINE_VER=1.4.4
-    - env: REDMINE_VER=master
-    - env: REDMINE_VER=v3.3.0
-  exclude: # anyone is free to adopt a build, until then, no builds that don't have a maintainer
-    - rvm: 1.9.3
-      env: REDMINE_VER=1.4.4
-    - rvm: 1.8.7
-      env: REDMINE_VER=2.1.2
-    - rvm: 1.8.7
-      env: REDMINE_VER=master
-
-install: "echo skip bundle install"
-
+  - env: REDMINE_VER=1.4.5
+  - env: REDMINE_VER=v3.3.0
+  - env: REDMINE_VER=master
+  exclude:
+  - rvm: 1.9.3
+    env: REDMINE_VER=1.4.5
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.1.4
+  - rvm: 1.8.7
+    env: REDMINE_VER=master
+install: echo skip bundle install
 script:
-  - export WORKSPACE=`pwd`/workspace
-  - export PATH_TO_BACKLOGS=`pwd`
-  - export PATH_TO_REDMINE=$WORKSPACE/redmine
-  - mkdir $WORKSPACE
-  - cp config/database.yml.travis $WORKSPACE/database.yml
-  - bash -x ./redmine_install.sh -r
-  - bash -x ./redmine_install.sh -i
-  - bash -x ./redmine_install.sh -t
-  - bash -x ./redmine_install.sh -u
-
+- export WORKSPACE=`pwd`/workspace
+- export PATH_TO_BACKLOGS=`pwd`
+- export PATH_TO_REDMINE=$WORKSPACE/redmine
+- mkdir $WORKSPACE
+- cp config/database.yml.travis $WORKSPACE/database.yml
+- bash -x ./redmine_install.sh -r
+- bash -x ./redmine_install.sh -i
+- bash -x ./redmine_install.sh -t _base
+- bash -x ./redmine_install.sh -t _burndown
+- bash -x ./redmine_install.sh -t _other
+- bash -x ./redmine_install.sh -t _shared
+- bash -x ./redmine_install.sh -t _ui
+- bash -x ./redmine_install.sh -u

@@ -5,8 +5,9 @@ class RbIssueHistory < ActiveRecord::Base
   belongs_to :issue
 
   serialize :history, Array
-  after_initialize :set_default_history
   after_save :touch_sprint
+  after_initialize :init_history
+  after_create :update_parent
 
   def self.statuses
     Hash.new{|h, k|
@@ -45,11 +46,11 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def expand
-    (0..self.history.size - 2).to_a.collect{|i|
+    ((0..self.history.size - 2).to_a.collect{|i|
       (self.history[i][:date] .. self.history[i+1][:date] - 1).to_a.collect{|d|
         self.history[i].merge(:date => d)
       }
-    }.flatten
+    } + [self.history[-1]]).flatten
   end
 
   def self.rebuild_issue(issue, status=nil)
@@ -60,7 +61,7 @@ class RbIssueHistory < ActiveRecord::Base
     status ||= self.statuses
 
     convert = lambda {|prop, v|
-      if v.nil?
+      if v.to_s == ''
         nil
       elsif [:estimated_hours, :remaining_hours, :story_points].include?(prop)
         Float(v)
@@ -231,41 +232,74 @@ class RbIssueHistory < ActiveRecord::Base
     }
   end
 
-  private
-
-  def set_default_history
+  def init_history
     self.history ||= []
-
-    if !issue.new_record? && Time.now < issue.created_on || (self.history.size > 0 && (Date.today < self.history[-1][:date] || Date.today <= self.history[0][:date]))# timecop artifact
-      raise "Goodbye time traveller"
-      return
-    end
+    _issue = self.issue
 
     _statuses ||= self.class.statuses
     current = {
-      :estimated_hours => self.issue.estimated_hours,
-      :story_points => self.issue.story_points,
-      :remaining_hours => self.issue.remaining_hours,
-      :tracker => RbIssueHistory.issue_type(self.issue.tracker_id),
-      :sprint => self.issue.fixed_version_id,
-      :status_id => self.issue.status_id,
-      :status_open => _statuses[self.issue.status_id][:open],
-      :status_success => _statuses[self.issue.status_id][:success],
+      :estimated_hours => _issue.estimated_hours,
+      :story_points => _issue.story_points,
+      :remaining_hours => _issue.remaining_hours,
+      :tracker => RbIssueHistory.issue_type(_issue.tracker_id),
+      :sprint => _issue.fixed_version_id,
+      :status_id => _issue.status_id,
+      :status_open => _statuses[_issue.status_id][:open],
+      :status_success => _statuses[_issue.status_id][:success],
       :origin => :default
     }
-    [[Date.today - 1, lambda{|this, date| this.history.size == 0}], [Date.today, lambda{|this, date| this.history[-1][:date] != date}]].each{|action|
-      date, test = *action
-      next unless test.call(self, date)
 
-      self.history << {:date => date}.merge(current)
-      self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
-    }
+    todo = []
+    todo << Date.today - 1 if self.history.size == 0
+    todo << Date.today if self.history.size == 0 || self.history[-1][:date] != Date.today
+    if todo.size > 0
+      todo.each{|date|
+        self.history << {:date => date}.merge(current)
+        self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
+      }
+    end
+
     self.history[-1].merge!(current)
     self.history[-1][:hours] = self.history[-1][:remaining_hours] || self.history[-1][:estimated_hours]
     self.history[0][:hours] = self.history[0][:estimated_hours] || self.history[0][:remaining_hours]
+
+    raise "init_history failed: #{todo.inspect} => #{self.history.inspect}" unless self.history.size >= 2
   end
 
   def touch_sprint
-    RbSprintBurndown.find_or_initialize_by_version_id(self.history[-1][:sprint]).touch!(self.issue.id) if self.history[-1][:sprint] && self.history[-1][:tracker] == :story
+    self.history.select{|h| h[:sprint]}.uniq{|h| "#{h[:sprint]}::#{h[:tracker]}"}.each{|h|
+      RbSprintBurndown.find_or_initialize_by_version_id(h[:sprint]).touch!(h[:tracker] == :story ? self.issue.id : nil) 
+    }
+  end
+
+  def update_parent(date=nil)
+    if (p = self.issue.parent)
+      date ||= self.history[0][:date]
+      parent_history_index = p.history.history.index{|d| d[:date] == date}
+      if parent_history_index.nil?
+        parent_data = p.history.expand.detect{|d| d[:date] == date}
+      else
+        parent_data = p.history.history[parent_history_index]
+      end
+
+      raise "Issue #{self.issue_id} has parent #{p.id} that was created after #{self.issue_id}!" unless parent_data
+
+      [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
+      p.children.each{|child|
+        raise "child history broken (#{child.history.history.size})" unless child.history.history.size >= 2
+        child_data = child.history.expand.detect{|d| d[:date] == date }
+        next unless child_data
+        [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = parent_data[h].to_i + child_data[h] if child_data[h] }
+      }
+
+      if parent_history_index.nil?
+        p.history.history = (p.history.history + parent_data).sort{|a, b| a[:date] <=> b[:date]}
+      else
+        p.history.history[parent_history_index] = parent_data
+      end
+      p.history.save
+
+      p.history.update_parent(date)
+    end
   end
 end

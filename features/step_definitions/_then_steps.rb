@@ -1,4 +1,14 @@
 require 'rubygems'
+require 'pp'
+
+Then /^show me the history for (.+)$/ do |subject|
+  issue = RbStory.find_by_subject(subject)
+  puts "== #{subject} =="
+  issue.history.history.each{|h|
+    puts h.inspect
+  }
+  puts "// #{subject} //"
+end
 
 Then /^the history for (.+) should be:$/ do |subject, table|
   story = RbStory.find_by_subject(subject)
@@ -61,10 +71,17 @@ Then /^show me the list of shared sprints$/ do
   show_table("Sprints", header, data)
 end
 
-Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :order => "position ASC").collect {|story|
-    [story.id, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+Then /^show me the list of issues( on )?(all )?(project)?s?(.*)?$/ do |on, all, project, name|
+  options = {:order => "position ASC", :conditions => { :project_id => @project.id }}
+  if all.to_s.strip == 'all'
+    options.delete(:conditions)
+  elsif name.to_s != ''
+    options[:conditions]= { :project_id => Project.find_by_name(name).id }
+  end
+
+  header = [['id', 5], ['tracker', 10], ['created', 20], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20], ['remaining', 10]]
+  data = RbStory.find(:all, options).collect {|story|
+    [story.id, story.tracker.name, story.created_on, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name, story.remaining_hours]
   }
 
   show_table("Stories", header, data)
@@ -213,6 +230,10 @@ Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject,
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
+  dayno = table.hashes[-1]['day']
+  dayno = '0' if dayno == 'start'
+  set_now(dayno.to_i + 1, :sprint => @sprint)
+
   bd = current_sprint(:keep).burndown
   bd.direction = direction
   bd = bd.data
@@ -237,21 +258,28 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
 end
 
 Then /^show me the sprint burn(.*)$/ do |direction|
-  bd = current_sprint(:keep).burndown
-  bd.direction = direction
-  bd = bd.data
+  sprint = current_sprint(:keep)
+  burndown = sprint.burndown
+  burndown.direction = direction
 
-  dates = current_sprint(:keep).days
+  series = burndown.series(false)
+  dates = burndown.days
 
-  header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
+  ticks = dates.collect{|d|
+    t = Time.utc(d.year, d.mon, d.mday)
+    zone = User.current.time_zone
+    zone ? t.in_time_zone(zone) : t
+  }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
 
-  data = []
-  days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
-  0.upto(days - 1) do |day|
-    data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
-  end
+  data = series.collect{|s| burndown.data[s.intern].enum_for(:each_with_index).collect{|d,i| [i*2, d]}}
 
-  show_table("Burndown for #{current_sprint(:keep).name} (#{current_sprint(:keep).sprint_start_date} - #{current_sprint(:keep).effective_date})", header, data)
+  puts "== #{sprint.name} =="
+  puts dates.inspect
+  puts series.inspect
+  puts data.inspect
+  puts burndown.data.inspect
+  puts "// #{sprint.name} //"
+  #show_table("Burndown for #{current_sprint(:keep).name} (#{current_sprint(:keep).sprint_start_date} - #{current_sprint(:keep).effective_date})", header, data)
 end
 
 Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|

@@ -63,7 +63,7 @@ module Backlogs
       }
     }
     matrix.each{|cell|
-      cell[:version] = cell.delete('env').gsub(/^REDMINE_VER=/, '')
+      cell[:version] = cell.delete('env').gsub(/^REDMINE_VER=/, '').gsub(/\s.*/, '')
       cell[:platform] = (cell[:version] =~ /^[0-9]/ ? :redmine : :chiliproject)
     }
 

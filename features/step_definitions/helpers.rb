@@ -1,4 +1,7 @@
 require 'timecop'
+require 'chronic'
+require 'cucumber/ast/background'
+require 'benchmark'
 
 class Time
   def force_utc
@@ -6,9 +9,48 @@ class Time
   end
 end
 
+#module Cucumber
+#  module Ast
+#    class Background #:nodoc:
+#      alias_method :accept_org, :accept
+#
+#      def accept(visitor)
+#        #cache_file = self.feature.file + '.background'
+#        #return backlogs_load(cache_file) if File.exist?(cache_file) && File.mtime(cache_file) > File.mtime(self.feature.file)
+#        total = Benchmark.measure{ accept_org(visitor) }.total
+#        puts "Background #{File.basename(self.feature.file, File.extname(self.feature.file))}: #{total}s"
+#        #backlogs_dump(cache_file) if !File.exist?(cache_file) || File.mtime(cache_file) < File.mtime(self.feature.file)
+#      end
+#
+#      def backlogs_dump(filename)
+#        skip_tables = ["schema_info"]
+#        dump = {}
+#        (ActiveRecord::Base.connection.tables - skip_tables).each{|table_name|
+#          dump[table_name] = ActiveRecord::Base.connection.select_all("select * from #{table_name}")
+#        }
+#        File.open(filename, 'w'){|file| file.write(dump.to_yaml)}
+#      end
+#
+#      def backlogs_load(filename)
+#        dump = YAML::load_file(filename)
+#        dump.each_pair{|table_name, rows|
+#          ActiveRecord::Base.connection.execute("delete from #{table_name}")
+#          next unless rows.size > 0
+#          columns = rows[0].keys
+#          sql = "insert into #{table_name} (#{columns.join(',')}) values (#{columns.collect{|c| '%s'}.join(',')})"
+#          rows.each{|row|
+#            ActiveRecord::Base.connection.execute(sql % columns.collect{|c| ActiveRecord::Base::sanitize(row[c])})
+#          }
+#        }
+#      end
+#    end
+#  end
+#end
+
 def get_project(identifier)
   Project.find(identifier)
 end
+
 
 def current_sprint(name = nil)
   if name.is_a?(Symbol)
@@ -43,34 +85,39 @@ def set_now(time, options={})
   return if time.to_s == ''
   raise "options must be a hash" unless options.is_a?(Hash)
 
-  msg = options[:msg] ? "#{options[:msg]}: " : ''
+  sprint = options.delete(:sprint)
+  reset = options.delete(:reset)
+  msg = options.delete(:msg).to_s
 
-  time = "#{time} 00:00:00" if time.is_a?(String) && time =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
-  time = Time.parse("#{time} UTC") if time.is_a?(String) && time =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-  if (time.is_a?(String) && time =~ /^-?[0-9]+/) || time.is_a?(Integer) || time.nil?
-    raise "No sprint provided for offset #{time}" unless options[:sprint]
-    time = time.to_i
-    return if time == 0
-    time = time < 0 ? options[:sprint].days[1].to_time.force_utc + (time * 24*60*60) : options[:sprint].days[time].to_time.force_utc
+  raise "Unexpected options: #{options.keys.inspect}" unless options.size == 0
 
-    return if time.to_date == Date.today
+  msg = "#{msg}: " unless msg == ''
+
+  if (time.is_a?(Integer) || time =~ /^[0-9]+$/) && sprint
+    day = Integer(time)
+
+    if day < 0
+      time = sprint.days[1].to_time.force_utc + (day * 24*60*60)
+    else
+      time = sprint.days[day].to_time.force_utc
+    end
+    time += 60*60
+
+    # if we're setting the date to today again, don't do anything
+    return if time.force_utc.to_date == Date.today
+  else
+    time = Chronic.parse(time).force_utc
   end
-
-  time = time.to_time.force_utc if time.is_a?(Date)
-
   raise "#{msg}Time #{time} is not UTC" unless time.utc?
 
-  options[:ignore] ||= 5 unless options[:reset]
-
-  if options[:reset]
+  if reset
     # don't test anything, just set the time
-  elsif options[:ignore]
+  else
     # Time zone must be set correctly, or ActiveRecord will store local, but retrieve UTC, which screws to Time.to_date. WTF people.
     Time.zone = "UTC"
     now = Time.now.utc
 
     timediff = now - time
-    return if timediff <= options[:ignore] && timediff >= 0 # ignore this time change into the past
     raise "#{msg}You may not travel back in time (it is now #{now}, and you want it to be #{time}" if timediff > 0
   end
 

@@ -1,5 +1,26 @@
 #/bin/bash
 
+trap "cleanup" EXIT
+
+cleanup()
+{
+  if [[ -e "$WORKSPACE/cuke.log" ]]; then
+    sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
+    sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
+    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
+  fi
+}
+
+export VERBOSE=yes
+
+if [ "$CIRCLECI" = "true" ]; then
+  export WORKSPACE=`pwd`/workspace
+  export PATH_TO_BACKLOGS=`pwd`
+  export PATH_TO_REDMINE=$WORKSPACE/redmine
+  mkdir $WORKSPACE
+  cp config/database.yml.travis $WORKSPACE/database.yml
+fi
+
 if [[ -e "$HOME/.backlogs.rc" ]]; then
   source "$HOME/.backlogs.rc"
 fi
@@ -23,16 +44,28 @@ then
   exit 1;
 fi
 
+export CLUSTER_shared="features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
+export CLUSTER_burndown="features/burndown.feature features/cecilia_burndown.feature"
+export CLUSTER_base="features/common.feature features/routes.feature features/duplicate_story.feature"
+export CLUSTER_ui="features/settings.feature features/sidebar.feature features/ui.feature"
+export CLUSTER_other=`ruby -e "puts (Dir['features/*.feature'] - ENV.keys.select{|k| k=~ /^CLUSTER_/}.collect{|k| ENV[k].split}.flatten).join(' ')"`
+
+clusters()
+{
+  env | grep CLUSTER | awk -F= '{print $1}' | awk -F_ '{print "- bash -x ./redmine_install.sh -t _" $2}' | sort
+}
+
+
 export RAILS_ENV=test
 
 case $REDMINE_VER in
-  1.4.4)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+  1.4.5)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
           export REDMINE_GIT_TAG=$REDMINE_VER
           ;;
-  2.1.2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  2.1.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
@@ -41,10 +74,10 @@ case $REDMINE_VER in
   2.0.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_REPO=https://github.com/edavis10/redmine.git
           export REDMINE_GIT_TAG=$REDMINE_VER
           ;;
-  master) export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  master) export PATH_TO_PLUGINS=./plugins # for redmine 2.2
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
@@ -108,15 +141,29 @@ run_tests()
     fi
   fi
 
-  if [ "$1" = "" ]; then
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features" -f $WORKSPACE/cuke.log
-  else
-    script -e -c "bundle exec cucumber $CUCUMBER_FLAGS features/$1.feature" -f $WORKSPACE/cuke.log
+  cluster="CLUSTER$1"
+  CLUSTER="${!cluster}"
+  FEATURE=$1
+  if [ ! -e "$FEATURE" ]; then
+    FEATURE="features/$FEATURE.feature"
   fi
-  sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
-  sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
-  sed "s/\x1b\[.\{1,5\}m//g"  -i $WORKSPACE/cuke.log # ansi coloring
-  sed -e 's/_^H//g' -e 's/^H.//g' -e 's/^[\[[0-9]*m//g' -i $WORKSPACE/cuke.log # underscore and bold
+  if [ ! -e "$FEATURE" ]; then
+    FEATURE=""
+  fi
+
+  if [ ! "$CLUSTER" = "" ]; then
+    TESTS="$CLUSTER"
+    LOG="$WORKSPACE/cuke$1.log"
+  elif [ -e "$FEATURE" ]; then
+    TESTS="$FEATURE"
+    LOG=`basename $FEATURE`
+    LOG="$WORKSPACE/cuke.$LOG.log"
+  else
+    TEST="features"
+    LOG=$WORKSPACE/cuke.log
+  fi
+
+  script -e -c "bundle exec cucumber $CUCUMBER_FLAGS $TESTS" -f $LOG
 }
 
 uninstall()
@@ -170,6 +217,11 @@ sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
 
+#sed -i -e "s/require 'rake\/gempackagetask'/require 'rubygems\/package_task'/" -e 's/require "rake\/gempackagetask"/require "rubygems\/package_task"/' `find . -type f -exec grep -l 'require.*rake.gempackagetask' {} \;` README.rdoc
+sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GONE"' {} \;` README.rdoc
+
+if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
+
 # copy database.yml
 cp $WORKSPACE/database.yml config/
 RUBYVER=`ruby -v | awk '{print $2}' | awk -F. '{print $1"."$2}'`
@@ -178,30 +230,39 @@ if [ "$RUBYVER" = "1.8" ]; then
 fi
 
 if [ "$VERBOSE" = "yes" ]; then
-  TRACE=--trace
+  export TRACE=--trace
 fi
+
 # run redmine database migrations
+if [ "$VERBOSE" = "yes" ]; then echo 'Migrations'; fi
 bundle exec rake db:migrate $TRACE
 
 # install redmine database
+if [ "$VERBOSE" = "yes" ]; then echo 'Load defaults'; fi
 bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 
+if [ "$VERBOSE" = "yes" ]; then echo 'Tokens'; fi
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET $TRACE
 
 # run backlogs database migrations
+if [ "$VERBOSE" = "yes" ]; then echo 'Plugin migrations'; fi
 bundle exec rake $MIGRATE_PLUGINS $TRACE
 
 # install backlogs
+if [ "$VERBOSE" = "yes" ]; then echo 'Backlogs install'; fi
 bundle exec rake redmine:backlogs:install labels=no $TRACE
+
+if [ "$VERBOSE" = "yes" ]; then echo 'Done!'; fi
 }
 
-while getopts :irtu opt
+while getopts :irtuc opt
 do case "$opt" in
   r)  clone_redmine; exit 0;;
   i)  run_install;  exit 0;;
   t)  run_tests $2;  exit 0;;
   u)  uninstall;  exit 0;;
+  c)  clusters;  exit 0;;
   [?]) echo "i: install; r: clone redmine; t: run tests; u: uninstall";;
   esac
 done

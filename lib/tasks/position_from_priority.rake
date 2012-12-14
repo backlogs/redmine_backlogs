@@ -6,7 +6,7 @@ namespace :redmine do
         puts "Please run plugin migrations first"
       else
         RbStory.transaction do
-          ids = RbStory.connection.select_values('select id
+          ids = RbStory.connection.select_values('select issues.id
                                                   from issues
                                                   join enumerations on issues.priority_id = enumerations.id
                                                   order by enumerations.position desc')

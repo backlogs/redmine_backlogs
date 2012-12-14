@@ -1,5 +1,7 @@
 source :rubygems
 
+gem 'rake', '~>0.9'
+
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
 
@@ -21,6 +23,7 @@ group :development do
 end
 
 group :test do
+  gem 'chronic'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   if RAILS_VERSION_IS_3
