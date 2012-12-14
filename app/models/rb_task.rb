@@ -74,7 +74,7 @@ class RbTask < Issue
   # task-tracker as their tracker, and are top-level issues.
   def self.find_all_updated_since(since, project_id, find_impediments = false)
     find(:all,
-         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
+         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), trackers],
          :order => "updated_on ASC")
   end
 
