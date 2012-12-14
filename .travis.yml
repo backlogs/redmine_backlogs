@@ -28,5 +28,9 @@ script:
 - cp config/database.yml.travis $WORKSPACE/database.yml
 - bash -x ./redmine_install.sh -r
 - bash -x ./redmine_install.sh -i
-- bash -x ./redmine_install.sh -t
-#- bash -x ./redmine_install.sh -u
+- bash -x ./redmine_install.sh -t _base
+- bash -x ./redmine_install.sh -t _burndown
+- bash -x ./redmine_install.sh -t _other
+- bash -x ./redmine_install.sh -t _shared
+- bash -x ./redmine_install.sh -t _ui
+- bash -x ./redmine_install.sh -u
