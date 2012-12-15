@@ -282,8 +282,6 @@ class RbIssueHistory < ActiveRecord::Base
         parent_data = p.history.history[parent_history_index]
       end
 
-      raise "Issue #{self.issue_id} has parent #{p.id} that was created after #{self.issue_id}!" unless parent_data
-
       [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
       p.children.each{|child|
         raise "child history broken (#{child.history.history.size})" unless child.history.history.size >= 2
