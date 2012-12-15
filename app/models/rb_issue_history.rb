@@ -272,33 +272,49 @@ class RbIssueHistory < ActiveRecord::Base
     }
   end
 
+  # normally, the update_parent_attributes of redmine would take care of re-saving parent issues where necessasy and thereby causing a history
+  # regeneration. The exception to this is the creation-record in the history. This function handles that exception.
+  # Upon each save, the history record for date `today' is set to the current value. That way, the history record for any date always holds the
+  # latest value for that day -- essentially, the value it still had at midnight that day. So for the creation date of an issue, the history entry
+  # for the date is was created holds the last value it had on that date. The value that the issue had (for the relevant properties that is) is
+  # stored in the first history entry, dated the day *before* the creation date; it holds the values it had `midnight the day before', which
+  # for our purposes means `the value it had at the start of the creation day'. This is very convenient for burndown calculation purposes, but
+  # during the cascading re-save of parent issues, no save is triggered for the `yesterday' update, so properties that are calculated as the sum
+  # of the children of an issue would be forgotton. To remedy this, this function is called after save of the history and updates the parent
+  # history recursively *for that day only*. It will only be called once, which is when the history is created.
   def update_parent(date=nil)
-    if (p = self.issue.parent)
-      date ||= self.history[0][:date]
-      parent_history_index = p.history.history.index{|d| d[:date] == date}
-      if parent_history_index.nil?
-        parent_data = p.history.expand.detect{|d| d[:date] == date}
-      else
+    if (p = self.issue.parent) # if no parent, nothing to do
+      date ||= self.history[0][:date] # the after_create calls this function without a parameter, so we know it's the creation call. Get the `yesterday' entry.
+      parent_history_index = p.history.history.index{|d| d[:date] == date} # does the parent have an history entry on that date?
+      if parent_history_index.nil? # if not, stretch the history to get the values at that date
+        parent_data = p.history.expand.detect{|d| d[:date] == date} 
+      else # if so, grab that entry
         parent_data = p.history.history[parent_history_index]
       end
 
+      # if no entry is found, that means no history entry exists between that creation date and now, so the parent was created after the task. Nothing to do.
       return unless parent_data
 
+      # we know this parent has children, because a child triggered this. Set the calculated fields to nil.
       [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
       p.children.each{|child|
-        raise "child history broken (#{child.history.history.size})" unless child.history.history.size >= 2
-        child_data = child.history.expand.detect{|d| d[:date] == date }
-        next unless child_data
+        child_data = child.history.expand.detect{|d| d[:date] == date } # get the history record for the child for that date
+        next unless child_data # child didn't exist then, next
+
+        # sum these values, if the child has any value for them. This keeps the value nil if all the children have it at nil.
         [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = parent_data[h].to_i + child_data[h] if child_data[h] }
       }
 
       if parent_history_index.nil?
+        # the record needs to be added, so add and sort (history needs to be sorted)
         p.history.history = (p.history.history + parent_data).sort{|a, b| a[:date] <=> b[:date]}
       else
+        # there was an entry on this date, replace it
         p.history.history[parent_history_index] = parent_data
       end
       p.history.save
 
+      # cascade, but pass on the date initialized by the after_create invocation.
       p.history.update_parent(date)
     end
   end
