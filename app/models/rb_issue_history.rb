@@ -54,7 +54,7 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def self.rebuild_issue(issue, status=nil)
-    rb = RbIssueHistory.new(:issue_id => issue.id)
+    rb = RbIssueHistory.find_or_initialize_by_issue_id(issue.id)
 
     rb.history = [{:date => issue.created_on.to_date - 1, :origin => :rebuild}]
 
@@ -220,7 +220,6 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def self.rebuild
-    self.delete_all
     RbSprintBurndown.delete_all
 
     status = self.statuses
