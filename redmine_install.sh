@@ -99,7 +99,7 @@ clone_redmine()
   #  ls .git
   #fi
   #git checkout $REDMINE_GIT_TAG
-  wget $REDMINE_TARBALL -O- | tar -xvz --transform='s,^[^/]*,redmine,' --show-transformed -f -
+  wget $REDMINE_TARBALL -O- | tar -xvz --transform="s,^[^/]*,$PATH_TO_REDMINE," --show-transformed -f -
 }
 
 run_tests()
