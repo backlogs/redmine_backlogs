@@ -105,6 +105,10 @@ clone_redmine()
   fi
   git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
   cd $PATH_TO_REDMINE
+  if [ "$VERBOSE" = "yes" ]; then
+    echo Available git tags:
+    git tag
+  fi
   git checkout $REDMINE_GIT_TAG
 }
 
