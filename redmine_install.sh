@@ -108,6 +108,7 @@ clone_redmine()
   if [ "$VERBOSE" = "yes" ]; then
     echo Available git tags in `pwd`:
     git tag
+    ls .git
   fi
   git checkout $REDMINE_GIT_TAG
 }
