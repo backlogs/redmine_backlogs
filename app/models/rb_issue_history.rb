@@ -54,7 +54,8 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def self.rebuild_issue(issue, status=nil)
-    rb = RbIssueHistory.new(:issue_id => issue.id)
+    rb = RbIssueHistory.find_by_issue_id(issue.id)
+    rb = RbIssueHistory.new(:issue_id => issue.id) unless rb
 
     rb.history = [{:date => issue.created_on.to_date - 1, :origin => :rebuild}]
 
