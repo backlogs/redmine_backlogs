@@ -667,12 +667,36 @@
 #backlogs_container .stories .editing .edit-actions {
   clear: both;
 }
-#backlogs_container .stories .editing .edit-actions a {
+#backlogs_container .editing .edit-actions a {
   display: inline-block;
-  padding: .5em;
+  padding: 4px;
+  margin: 0.5em;
   margin-left: 1em;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  border: 1px solid #AAAAAA;
+  background-color:#CCC;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#CCC));
+  background: -moz-linear-gradient(top, #EEE, #CCC);
+}
+#backlogs_container .editing .edit-actions a:hover {
+  background-color:#BBB;
+  background: -webkit-gradient(linear, left top, left bottom, from(#DDD), to(#BBB));
+  background: -moz-linear-gradient(top, #DDD, #BBB);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#DDDDDD,EndColorStr=#BBBBBB);
 }
 
+#backlogs_container .sprint.editing .edit-actions { /* make the save/cancel buttons visible for sprint editor */
+  background: white;
+  position: relative;
+  top: 31px;
+  left: 2px;
+  width: 498px;
+  height: 34px;
+  padding: 4px;
+  z-index: 1000;
+}
 
 #helpers{
   display:none;
