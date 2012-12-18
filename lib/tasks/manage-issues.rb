@@ -15,11 +15,25 @@ class Issue
 
     @comments = @repo.client.issue_comments(@repo.repo, issue.number.to_s)
 
-    @labels.delete_if{|l| l =~ /release/ || l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
+    @labels.delete_if{|l| l =~ /data-missing/ || l =~ /release/ || l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
 
     @labels << 'release-blocker' if issue.milestone && issue.milestone == @repo.next_milestone
 
     if (@labels & ['on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
+      body = "\n#{issue.body}\n"
+      context = {}
+      header = ''
+      ['platform', 'backlogs', 'ruby'].each{|part|
+        x = body.match(/\n#{part}:([^\n]+)\n/)
+        body.gsub!(/\n#{part}:([^\n]+)\n/, "\n")
+        x = x ? x[1].strip : ''
+        context[part] = x
+        header << "#{part}: #{x}\n"
+      }
+      @labels << 'data-missing' if context.values.reject{|v| v == ''}.size != 3
+      body = "#{header}\n#{body.strip}"
+      @repo.client.update_issue(@repo.repo, issue.number, issue.title.to_s, body) if body != issue.body.to_s
+
       comment = {
         (@repo.collaborators.include?(issue.user.login) ? :collab : :user) => Time.parse(issue.created_at)
       }
@@ -37,6 +51,8 @@ class Issue
         @labels << 'no-feedback'
         @labels << "#{response}days"
       end
+
+      @labels.delete('attention') if @labels.include?('data-missing')
 
       @labels << 'internal' if comment[:user].nil?
     end
