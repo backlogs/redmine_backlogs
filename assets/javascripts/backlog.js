@@ -31,6 +31,7 @@ RB.Backlog = RB.Object.create({
                    forcePlaceholderSize: true,
                    dropOnEmpty: true,
                    distance: 3,
+                   helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
                    cancel: '.editing',
                    start: this.dragStart,
                    stop: function(e,u){ self.dragStop(e, u); },
