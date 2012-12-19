@@ -65,10 +65,10 @@ class RbStory < Issue
     stories = []
 
     prev = nil
-    RbStory.find(:all, RbStory.find_options(options.merge({
+    RbStory.visible.find(:all, RbStory.find_options(options.merge({
       :project => project_id,
       :sprint => sprint_id,
-      :order => :position,
+      :order => 'issues.position',
     }))).each_with_index {|story, i|
       stories << story
 
