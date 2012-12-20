@@ -6,19 +6,13 @@ rvm:
 env:
 - REDMINE_VER=2.0.4
 - REDMINE_VER=2.1.4
-- REDMINE_VER=master
+- REDMINE_VER=2.2.0
 matrix:
   allow_failures:
-  - env: REDMINE_VER=1.4.5
-  - env: REDMINE_VER=v3.3.0
-  - env: REDMINE_VER=master
+  - env: REDMINE_VER=2.2.0
   exclude:
   - rvm: 1.9.3
     env: REDMINE_VER=1.4.5
-  - rvm: 1.8.7
-    env: REDMINE_VER=2.1.4
-  - rvm: 1.8.7
-    env: REDMINE_VER=master
 install: echo skip bundle install
 script:
 - export WORKSPACE=`pwd`/workspace
