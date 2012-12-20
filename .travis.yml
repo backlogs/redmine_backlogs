@@ -36,6 +36,7 @@ script:
 - export PATH_TO_REDMINE=$WORKSPACE/redmine
 - mkdir $WORKSPACE
 - cp config/database.yml.$DB.travis $WORKSPACE/database.yml
+- sh -c "if [ '$TRAVIS_RUBY_VERSION' = '1.8.7' ]; then sed '/mysql2/mysql/' -i $WORKSPACE/database.yml ; fi"
 - bash -x ./redmine_install.sh -r
 - bash -x ./redmine_install.sh -i
 - bash -x ./redmine_install.sh -t _base
