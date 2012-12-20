@@ -5,7 +5,7 @@ rvm:
 - 1.9.3
 env:
 - REDMINE_VER=2.0.4
-- REDMINE_VER=2.1.4
+- REDMINE_VER=2.1.5
 - REDMINE_VER=2.2.0
 matrix:
   allow_failures:
