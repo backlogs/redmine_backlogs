@@ -1,3 +1,492 @@
+== 2012-12-20 v0.9.29
+
+* hide stories of projects not visible to the user on master_backlogs page
+* fix information leak on shared backlogs: show only visible sprints; show only visible projects in the bl menu
+* Feature: show only selected graphs in burndown print view; use global
+  cookie for burndown settings so print url has the same settings as
+  taskboard/masterbacklog burndown
+* Nicer styling for save/cancel on issue-editor.
+* workaround firefox15 bug 787944 - prevent editor to open on drag-end
+* Migration fixes
+* Burndown test added to test suit (Thank you Cecilia!)
+* Adds a setting to hide the project name from backlogs
+
+== 2012-11-30 v0.9.28
+
+* fixed build
+
+== 2012-11-28 v0.9.27
+
+* fixes "Can't create new stories, issues", "Migration issue"
+* Fixes "failed to initialize story positions based on existing priorities in Redmine"
+* Fixes "close completed Sprints button on master backlogs."
+* Russian translations.
+* Hide projects from scrum statistics if they are not visible for current user + added project setting to show/hide a project from scrum statistics.
+* Show remaining time on Story level
+* Added spent hours vs accepted points to scrum stats
+* 2.1.2 passes tests
+* Use a higher drag distance threshold for tasks on the taskboard to prevent starting a drag when you intended to click.
+* Added "Save" and "Cancel" links when creating or editing a story inline.
+* german translations
+* reorganize settings page, group related settings
+* make sorting of sprints in mbp configurable
+* Reverse the order of the sprints on the Master Backlog page.
+* show nice qtip tooltips for project name and subject on master backlog
+
+== 2012-07-08 v0.9.26
+
+* 2.0 travis build works again
+* Javascript overrided new story placement (fixes "New Stories appear at the top of the Product Backlog" again)
+
+== 2012-07-04 v0.9.23
+
+* Add "support" for 1.9.2
+
+== 2012-07-04 v0.9.20
+
+* Specify ruby versions
+* Merge branch 'master' of github.com:backlogs/redmine_backlogs
+* Clearer message for non-supported versions
+* Try to make the via route work in ruby 1.8
+* Refactor releases routes
+* Fixes "Burndown doesn't take updates of "Remaining time"" -- acts_as_journal acting_randomly.
+* More DB wonkyness
+* empty string means null
+* More DB corruption handlers
+* More DB corruption handling
+* typo
+* Old insert_at call
+* More database brokenness workarounds
+* Configuration oddities
+
+== 2012-06-30 v0.9.19
+
+* Postgresql fixes
+
+== 2012-06-30 v0.9.16
+
+* Fix redmine2 sidebar on apache with relative url root, from patrickatamaniuk/tests/sidebar
+* Fix issues sidebar is not displayed when installed to suburi (Rails 3)
+* give product owner modify_releases permission
+* security enhancements
+* more automated tests
+* Fixes for releases
+* Rails 3 compatibility fixes
+* Select a default label if none was selected (fixes "Printable cards option not showing with Bitanmi Redmine 2.0.2")
+* Postgresql compatibilities
+
+== 2012-06-13 v0.9.15
+
+* Looser support restrictions
+* "Locales are broken for 1.9.3"
+* Fixes for CustomizedField 
+
+== 2012-06-12 v0.9.14
+
+* Online version check
+* Fixes "Install task: can't modify frozen Hash ".
+* Translations updated
+* Give stories the same Start/Due date as the sprint
+* Allow story cards to take on custom colours if assigned to a user
+* fixes "My Pages Exception"
+
+== 2012-06-02 v0.9.13
+
+* Ruby 1.9 supported
+* Chiliproject fixes
+
+== 2012-05-31 v0.9.12
+
+* Down migrations added
+* Fixes "New Stories appear at the top of the Product Backlog"
+
+== 2012-05-31 v0.9.11
+
+* Fixing issue "The users select is empty in the "Edit task" form (Redmine 2 only)"
+* Skip authorize for rb_server_variables#index. Fixes "403 on rb_server_variables#index"
+* Potential solution for "closing task generates 'Version has already been taken' error"
+* RM 1.4.2
+
+== 2012-05-28 v0.9.10
+
+* Small fix to migrations
+
+== 2012-05-28 v0.9.9
+
+* RM2.0 compatibility updates
+* General cleanup
+* acts_as_list replaced by a more performant replacement
+* Removed obsolete migration
+* Tests: Add SimpleCov report generation
+* Tests: Add initial feature test for settings
+* Tests: Improve test failure diagnostics
+* Tests: Print meaningful error message if cucumber test fails
+* Cucumber: Rails 3 compatibility
+
+== 2012-05-20 v0.9.8
+
+* Make sure older migrations don't use the new journals stuff
+* "Show warning on taskboard if tracker workflow is misconfigured" warn user if tasks workflow has no states
+* Fixes "Slowness and unresponsiveness when moving issues"
+* set all ticks so checkbox shows the correct state on load. helps with ""Show empty stories" should be selected by default (bug?)"
+* Update Gemfile for running cucumber tests with Rails 3
+* Better CP support, not complete yet
+* Use https instead of git to install cucumber-rails.
+* Fixes "Subtasks not updated when changing custom fields"
+* Use poltergeist driver for javascript testing.
+
+== 2012-05-13 v0.9.7
+
+* Removes journal rebuild from the migration
+* In-place fixes for test fixtures
+* Merge pull request "Travis on master" from Vanuan/travis_on_master
+
+== 2012-05-11 v0.9.6
+
+* Fixes "sub stories disappearing from task board", "Subtasks not updated when changing custom fields", "Dragging a closed story within a sprint causes it to be set to New"
+* Removed unnecessary '.becomes(Issue)'. Apparenty this messed up the status field of the issue. Fixes "Status reset on changing remaining hours when adding time entry" and possibly affects "Dragging a closed story within a sprint causes it to be set to New".
+* Merge pull request "Fix PBL Story update feedback off-by-one-post" from patrickatamaniuk/issue/493-blpage-sprint-ui-update-off-by-one
+* Fix PBL Story update feedback off-by-one-post
+* Prepping for 1.9
+* shell-based rbl-setup
+* Rollback migration for unique_positions.
+
+== 2012-05-09 v0.9.5
+
+* Duplicates positions after issue copy fixed
+* Merge pull request "DB Query optimisation " from rbaranga/master
+* fixed database query taking a lot of time when using story points
+* Merge pull request "Working gem set for ruby 1.9" from Vanuan/ruby_19_gems (Working gem set for ruby 1.9)
+* Closes "Cleanups and small fixes" -- will consider more of it's option after discussion
+* Refactor rb_journal code
+* Allow pre-calculation of scrum stats
+* Fixes "Error creating new tasks"
+
+== 2012-05-03 v0.9.4
+
+* Burndown charts work again
+* Uninstalling plugin's database contents possible
+* Hardened against DB corruption
+* Merging unified-journals
+
+== 2012-04-30 v0.9.3
+
+* Updates for RM 1.4
+* Faster "Backlog sorting"
+* fix positioning on story creation from backlog page
+* Fixes "ChiliProject migration issue"
+
+== 2012-04-26 v0.9.2
+
+* Soft-fail on RM 1.3 (still unsupported though)
+* Redmine 1.4.1 & Ruby 1.9.3 support
+* Card loading order fixed
+
+== 2012-04-25 v0.9.1
+
+* Prelim support for CP3.1.0
+
+== 2012-04-25 v0.9.0
+
+* RM 1.4.1 support
+* Corrected previous taskboard color fix for groups.
+* Fixed image location for css.
+* Merge pull request "Change to "Show empty stories" behavior on taskboard" from backlogs/bohansen_taskboard_empty_stories
+* Moved jquery css to its own subdir
+* Added category field to tooltips (see "Option to Show Category on Master Backlogs and Taskboard")
+* Changed taskboard user selection option 'Show empty stories' to show *really* empty stories only and not stories where all tasks are hidden.
+* Add redmine group support to user selection on taskboard.
+* Provides a workaround for "Sprint Taskboard - Internal Error", caused by a functional bug in Redmine.
+* Fixes "Cannot export story points via REST API"
+* Fixes "Redmine backlogs install doesn't create a new tracker"
+* Fixes "Create new issue displays trackers not in use for the project"
+* Fixes "Custom fields delete with sprint", with great thanks to Malti for the excellent analysis
+* Merge pull request "Fix group assign on taskboard (#479)" from backlogs/bohansen_group_assign_on_taskboard
+* Taskboard color fix for group assigned tasks
+* Added ability to group assign on taskboard if enabled in Redmine itself
+* Merge pull request "Redmine 1.4.0 compatibility" from Vanuan/master
+* Card layout loading fix
+* Merge pull request "Show burndown charts with User timezone dates" from dpogue/patch-1
+* Merge pull request "Added in ability to hide unused stories" from svolpe/master
+* Merge pull request "Improve localization." from mikoto20000/locale-ja
+* Merge pull request "TaskBoard with by user view using jquery multiselect" from svolpe/master
+* Renaming some tests to prepare for sharing branch tests
+* taskboard: finally fixed the css issue and user multiselect pull down
+* taskboard: fix style sheet to allow selecting of projects.  The user multiselection location is still too low.
+* taskboard: Add changes to support multiselect of users
+* taskboard: Added multiselect jquery widget to allow selecting of viewed tasks by user name.
+* Merge pull request "fixed Japanese translation mistake." from alminium/locale-ja
+* Merge pull request "Edit both issue name and description from TaskBoard #63" from marltu/taskboard-description
+* Merge pull request "Taskboard private view" from alminium/taskboard-private-view
+* Install without user prompt
+
+== 2012-03-10 v0.8.7
+
+* Show error when migrations have not been run
+* Merge pull request "Update remaining hours from time log" from bohansen/update_remaining_hours_from_time_log
+* Added ability to adjust remaining hours when logging time using standard 'Log time'-view in Redmine
+* Taskboard filter from YusukeKokubo (19a4d6307ed978f1469e88f0dc1543e86c37fa93), fixes "taskboard with by user view."
+* Merge pull request "Fixes javascript error when showing burndown chart" from frisco82/master
+* Merge pull request "Update config/locales/fr.yml" from yquenechdu/patch-1
+* Update config/locales/fr.yml
+
+== 2012-03-04 v0.8.6
+
+* Improve debugging (dump pages)
+
+== 2012-03-04 v0.8.5
+
+* Fix for timelog from taskboard
+
+== 2012-02-28 v0.8.4
+
+* Update gem dependencies
+* Improve i18n and add Japanese localization
+
+== 2012-02-01 v0.8.3
+
+* Only include system_timer gem on unix-1.8.7
+* Fix many jslint problems
+
+== 2012-02-01 v0.8.2
+
+* Only require system_timer for unix-1.8.x
+* fix many jslint problems
+
+== 2012-01-30 v0.8.1
+
+* ChiliProject fixes
+* Report Hours per point in statistics page. Be careful how you use this.
+
+== 2012-01-21 v0.8.0
+
+* Fixes for redmine group-assign
+* ChiliProject support
+
+== 2012-01-20 v0.7.9
+
+* Auto-set start date for tasks
+* Prelimenary ChiliProject support
+
+== 2012-01-19 v0.7.8
+
+* ie8/9 fixes
+* Fixed error for non-logged in users
+* Remove 'Not configured' message as soon as problem is corrected
+
+== 2012-01-16 v0.7.7
+
+* Opera fixes
+
+== 2012-01-16 v0.7.6
+
+* Fixed crash
+
+== 2012-01-16 v0.7.5
+
+* Fixed crash
+
+== 2012-01-16 v0.7.4
+
+* More graceful checking against bad installs
+
+== 2012-01-16 v0.7.3
+
+* Better error reporting for incomplete installs
+* Gem requirements updates
+* Support for offline installations
+* Card printing fixes
+
+== 2012-01-06 v0.7.2
+
+* Always show ideal in burndown
+* Fixes crash for stories with points
+* Merge pull request "Allowed burndown chart to include saturday and sunday" from pinglamb/burndown_include_sat_and_sun
+* Few changes to spanish translation from mauriciorivera
+* Auto assign task to current user when he/she changes the task status and the task is not assigned yet, configurable in setting page
+* Fixes for fractional story points
+
+== 2011-12-16 v0.7.1
+
+* Tests run again
+* Starting support for Redmine 1.3.0
+* Conflict with redmine hipchat plugin fixed
+* Trackers sorted by id when adding new story
+* Updated german language file from cgraumann
+* Add permission setting to disable remaining hours
+
+== 2011-12-04 v0.7.0
+
+* Fixing tooltips XSS from bohansen
+
+== 2011-12-02 v0.6.23
+
+* More stringent version checks
+* Fixes syntax error
+* Replaced 028 migration with proper sum ("Stories does not sum remaining hours")
+* Fixed crash on migration to latest version
+* migration to accompany "Stories does not sum remaining hours"
+
+== 2011-11-28 v0.6.22
+
+* Calendar tests finally run again
+
+== 2011-11-28 v0.6.21
+
+* Remaining hours sum again, calendar feed works again
+* Tests run again
+* Fixed "Burndown suddenly drops to zero points, hours"
+* Backlog sorting fixed
+* Hide button and select box on taskboard print-out from siegerv
+* Fixed estimated hours not set when creating task from bohansen
+* Hide the add new task button and project selection box on the print-out of the taskboard.
+* Fixed estimated hours not set when creating task
+* Fixed master backlogs performance when there are too many sprints. from walf443
+* Change story point color in taskboard. from alminium
+* Fixes "Update to v0.6.16 not working"
+* Language updates
+* Fixes "Error while printing burndown"
+* Fix for burndown resizing bug from darklin
+* Important performance fix from sauliusgrigaitis
+* Added missing index on Issues table postition field
+* Fixed sprint points calculation when adding story directly to sprint in backlogs view from bohansen
+* Fixes "Crash on migration to latest version"
+* Fixes "Scrum statistics tab missing despite permission enabled"
+
+== 2011-11-11 v0.6.20
+
+* Fixes "Scrum Statistics page doesn't load"
+* Fixes "Master Backlog positions always take position 1"
+* Javascript errors
+* Added defaults for burndown print size
+* Burndown print size customization from darklin
+* Validation of story description moved back to server from bohansen
+* Tests pass again
+
+== 2011-11-09 v0.6.19
+
+* Fixes "Crash on migration to latest version"
+* Fix for float story points total sum on masterbacklog from bohansen
+* Remove all hook rendering for "Error viewing issues after installing backlogs"
+* Fix for float story points total sum on masterbacklog.
+
+== 2011-11-06 v0.6.18
+
+* Story points with fractions
+* Creating a task caused error, fix from ekohl
+* Better cache management
+* Added storypoints field to product backlog from bohansen
+* Added tracker statistics tooltip on backlog view + fixed recalculation from bohansen
+
+== 2011-11-03 v0.6.17
+
+* Added tracker statistics tooltip on backlog view + fixed recalculation of story points when updating story.
+* Fix 500 error caused by the 'My page' block from dakota
+* Fix issue with internal error caused by my page block typo
+* Caching fixes
+* Fixes "Internal Error when try to open an issue where Story Point is setted"
+* Taskboard layout improvements from alminium,bohansen
+
+== 2011-10-31 v0.6.16
+
+* Fixes "Migrating to estimated hours => remaining hours"
+* Fixed decimal comma problem for remaining hours on taskboard from bohansen
+* Brush up master backlogs.
+
+== 2011-10-31 v0.6.15
+
+* All tests pass
+* fixed story subject is overflow from alminium
+* Improve ie support from alminium
+* update jquery 1.6.2 and jquery-ui 1.8.16 to fix IE dnd problem.
+* In taskboard, don't open task editor when move task.
+* adjust the status in master backlog for IE.
+* fixed dnd event handling.
+* German translation updated from sureal
+* Rebase to remaining_hours branch.
+* Fixed overflow story title on masterbacklogs.
+* fixed task dialog in taskboardd is transparent.
+* Fixed rb_variable_server/how.js.erb that cause http status 500 from floreal
+* special characters disappeared when stories are created via backlog page
+* fixed burndown chart.
+* fixed start end date order.
+* update Japanese translation.
+* Option to Not Show Burndown Chart on Sidebar
+* Points not resolved" regression
+
+== 2011-10-05 v0.6.14
+
+* update Japanese translation.
+* All tests pass again
+* Burndown fixes
+* Auto-tagger
+
+== 2011-09-29 v0.6.13
+* Fixes "auto-refresh rate is too fast" (but my heart goes out to you if your production server can't handle 1 request per second)
+* Fixes "Private issues is always shown in backlog lists"
+* Fixes "Template Error on Master Backlog"
+* Migration for "Display Error for Tasks and Their Sub-Tasks"
+* Force tasks to the task tracker (related to "Display Error for Tasks and Their Sub-Tasks")
+* update Japanese translations.
+== 2011-09-18 v0.6.11
+
+* various bugfixes
+
+== 2011-08-31 v0.6.10
+
+* Allow resetting a sprint
+  This can be useful for when planning is done offline, and you enter stories/tasks after
+  the sprint start date. Use with care.
+
+== 2011-08-30 v0.6.9
+
+* Burndown in sidebar conforms to currently selected sprint/story
+* Time entry from task board (thank you bohansen!)
+* And of course, several bugs fixed
+
+== 2011-08-25 v0.6.8
+
+* Warning on the taskboard if no workflow is available
+* Burndown seems to *finally* be fixed now, major thanks to bohansen for providing the test cases
+* better error reporting for ajax dialogs
+* various bug fixes
+* stories now always get a position
+* journals now reflect all changes (except positions changes, by design)
+
+== 2011-08-02 v0.6.6
+
+* Javascript consolidated (this should fix the burndown. I know I've said so before)
+
+== 2011-08-01 v0.6.5
+
+* jQuery conflicts resolved
+* Migration fixed
+
+== 2011-08-01 v0.6.4
+
+* Burndown finally fixed
+* Facility to change the initial estimate
+* New 021 migration
+
+== 2011-07-23 v0.6.3
+
+* Burndown fixed
+* IME enter-to-submit and escape-to-cancel fixed
+* Copy open tasks fixed
+* Download sprint data to excel
+
+== 2011-07-17 v0.6.2
+
+Statistics page fixed after burndown reimplementation
+
+== 2011-07-16 v0.6.1
+
+Reworked the burndown generation. It had become a tangled, hard-to-fix mess.
+No longer requires the rake task to keep the burndown up-to-date.
+
+Tasks and stories can now be properly rejected (see website for docs)
+
+This version adds a migration -- make sure you run it!
 == 2012-11-30 v0.9.28
 
 * fixed build
