@@ -4,11 +4,11 @@ trap "cleanup" EXIT
 
 cleanup()
 {
-  if [[ -e "$WORKSPACE/cuke.log" ]]; then
-    sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
-    sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
-    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
-  fi
+  for log in $WORKSPACE/cuke*.log; do
+    sed '/^$/d' -i $log # empty lines
+    sed 's/$//' -i $log # ^Ms at end of lines
+    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
+  done
 }
 
 export VERBOSE=yes
@@ -185,6 +185,10 @@ if [ "$CLEARDB" = "yes" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
   fi
+  if [ "$DBTYPE" = "postgresql" ] ; then
+    echo "drop database if exists $DBNAME" | psql postgres root
+    echo "create database $DBNAME" | psql postgres root
+  fi
 fi
 
 if [ "$DB_TO_RESTORE" = "" ]; then
@@ -197,6 +201,11 @@ else
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
     mysql -u root -p$DBROOTPW $DBNAME < $DB_TO_RESTORE
+  fi
+  if [ "$DBTYPE" = "postgresql" ] ; then
+    echo "drop database if exists $DBNAME" | psql postgres root
+    echo "create database $DBNAME" | psql postgres root
+    psql $DBNAME root < $DB_TO_RESTORE
   fi
 fi
 
