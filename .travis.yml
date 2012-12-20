@@ -1,6 +1,6 @@
 ---
 language: ruby
-release: 0.9.28
+release: 0.9.29
 rvm:
 - 1.9.3
 env:
