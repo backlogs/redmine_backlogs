@@ -101,7 +101,7 @@ module BacklogsPrintableCards
         end
       rescue => e
         Rails.logger.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
-        Rails.logger.info(e.backtrace.join("\n"))
+        Rails.logger.error(e.backtrace.join("\n"))
         @valid = false
       end
     end
@@ -233,7 +233,7 @@ module BacklogsPrintableCards
       }
     rescue => e
       Rails.logger.error("Backlogs printable cards: problem loading labels: #{e}")
-      Rails.logger.info(e.backtrace.join("\n"))
+      Rails.logger.error(e.backtrace.join("\n"))
     end
   end
 
