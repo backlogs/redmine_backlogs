@@ -4,11 +4,14 @@ trap "cleanup" EXIT
 
 cleanup()
 {
-  for log in $WORKSPACE/cuke*.log; do
-    sed '/^$/d' -i $log # empty lines
-    sed 's/$//' -i $log # ^Ms at end of lines
-    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
-  done
+  ls -1 $WORKSPACE/cuke*.log > /dev/null 2>&1
+  if [ ! "$?" = "0" ]; then
+    for log in $WORKSPACE/cuke*.log; do
+      sed '/^$/d' -i $log # empty lines
+      sed 's/$//' -i $log # ^Ms at end of lines
+      sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
+    done
+  fi
 }
 
 export VERBOSE=yes
