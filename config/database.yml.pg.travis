@@ -1,9 +1,0 @@
----
-development:
-  adapter: postgresql
-  database: backlogs
-  username: postgres
-test:
-  adapter: postgresql
-  database: backlogs
-  username: postgres
