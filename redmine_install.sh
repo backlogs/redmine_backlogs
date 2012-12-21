@@ -43,6 +43,7 @@ export CLUSTER_burndown="features/burndown.feature features/cecilia_burndown.fea
 export CLUSTER_base="features/common.feature features/routes.feature features/duplicate_story.feature"
 export CLUSTER_ui="features/settings.feature features/sidebar.feature features/ui.feature"
 export CLUSTER_other=`ruby -e "puts (Dir['features/*.feature'] - ENV.keys.select{|k| k=~ /^CLUSTER_/}.collect{|k| ENV[k].split}.flatten).join(' ')"`
+export RUBYVER=`ruby -e 'puts RUBY_VERSION' | awk -F. '{print $1"."$2}'`
 
 clusters()
 {
@@ -180,9 +181,16 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
+# copy database.yml
+cp $WORKSPACE/database.yml config/
+if [ "$RUBYVER" = "1.8" ]; then
+  sed -i -e 's/mysql2/mysql/g' config/database.yml
+fi
+
+export DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('config/database.yml'))['$RAILS_ENV']['database']"`
+export DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('config/database.yml'))['$RAILS_ENV']['adapter']"`
+
 if [ "$CLEARDB" = "yes" ]; then
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
@@ -197,8 +205,6 @@ if [ "$DB_TO_RESTORE" = "" ]; then
   export story_trackers=Story
   export task_tracker=Task
 else
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
@@ -217,17 +223,16 @@ sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
 
+if [ "$DBTYPE" = "mysql" -a "$RUBYVER" = "1.8" ] ; then
+  bundle exec gem install -v=2.8.1 mysql
+  echo y | bundle exec gem uninstall -v=2.9.0 mysql
+  echo 'boing'
+fi
+
 #sed -i -e "s/require 'rake\/gempackagetask'/require 'rubygems\/package_task'/" -e 's/require "rake\/gempackagetask"/require "rubygems\/package_task"/' `find . -type f -exec grep -l 'require.*rake.gempackagetask' {} \;` README.rdoc
 sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GONE"' {} \;` README.rdoc
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
-
-# copy database.yml
-cp $WORKSPACE/database.yml config/
-RUBYVER=`ruby -v | awk '{print $2}' | awk -F. '{print $1"."$2}'`
-if [ "$RUBYVER" = "1.8" ]; then
-  sed -i -e 's/mysql2/mysql/g' config/database.yml
-fi
 
 if [ "$VERBOSE" = "yes" ]; then
   export TRACE=--trace
