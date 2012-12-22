@@ -101,6 +101,32 @@ class RbIssueHistory < ActiveRecord::Base
         end
       }
     }
+    RbIssueHistory.connection.execute("select * from rb_journals where issue_id=#{issue.id}").sort{|a,b| a['timestamp'] <=> b['timestamp']}.each{|j|
+      j['timestamp'] = Time.parse(j['timestamp']) if j['timestamp'].is_a?(String)
+      date = j['timestamp'].to_date
+      full_journal[date] ||= {}
+      case j['property']
+      when 'story_points' then full_journal[date][:story_points] = {:new => j['value'] ? j['value'].to_f : nil}
+      when 'status_success' then full_journal[date][:status_success] = {:new => j['value'] == 'true'}
+      when 'status_open' then full_journal[date][:status_open] = {:new => j['value'] == 'true'}
+      when 'fixed_version_id' then full_journal[date][:sprint] = {:new => j['value'] ? j['value'].to_i : nil}
+      when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j['value'] ? j['value'].to_f : nil}
+      when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j['value'] ? j['value'].to_f : nil}
+
+      else raise "Unexpected property #{j['property']}: #{j['value'].inspect}"
+      end
+
+      #:status_id is not in rb_journals
+
+      full_journal[date][:tracker] ||= {:new =>
+        case
+        when issue.is_story? then :story
+        when issue.is_task? then :task
+        else nil
+        end
+      }
+    }
+
     full_journal[issue.updated_on.to_date] = {
       :story_points => {:new => issue.story_points},
       :sprint => {:new => issue.fixed_version_id },
@@ -181,7 +207,7 @@ class RbIssueHistory < ActiveRecord::Base
     }
     # End of child journal picking
 
-    # process combined journal in order of timestamp
+    # process combined journal in order of timestamp into final history
     full_journal.keys.sort.collect{|date| {:date => date, :update => full_journal[date]} }.each {|entry|
       if entry[:date] != rb.history[-1][:date]
         rb.history << rb.history[-1].dup

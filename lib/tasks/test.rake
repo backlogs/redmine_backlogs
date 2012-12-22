@@ -12,7 +12,11 @@ end
 namespace :redmine do
   namespace :backlogs do
     task :test => :environment do
-      RbIssueHistory.rebuild
+      RbStory.all(:conditions => ['fixed_version_id = 89']).each{|story|
+        next unless story.is_story?
+        puts story.id
+        puts story.history.history.inspect
+      }
     end
   end
 end
