@@ -23,72 +23,22 @@
 
 <%- content_for :view_specific_users do %>
 <span id="userselect">
-<script type="text/javascript">
-  RB.$(function(){
-    RB.$("userlist").multiselect({
-      close: function() {
-        RB.$(".task").each(function() {
-          var asg = this.getElementsByClassName('assigned_to_id')[0].getElementsByClassName('v')[0]
-          if (asg == undefined || asg == null) return;
-          var asg_v = asg.innerHTML;
-          if (asg_v == "") return;
-          if (RB.$("userlist").multiselect("widget").find(":checkbox[value='"+asg_v+"']").is(':checked')) {
-            RB.$(this).show();
-          }else {
-            RB.$(this).hide();
-          }
-        });
-        //Check if all stories should be visible even if not used
-        if (RB.$("userlist").multiselect("widget").find(":checkbox[value='s']").is(':checked')) {
-          var showUnusedStories = 1;
-        } else {
-          var showUnusedStories = 0;
-        }
-
-        //Parse through all the stories and hide the ones not used
-        RB.$('.story').each(function() {
-          var sprintInfo = RB.$(this).children('.id').children('a')[0];
-          var storyID = sprintInfo.innerHTML;
-
-          RB.$(this).closest('tr').show();
-          var hasVisTasks = 0;
-          var hasTasks = 0;  // Keep track if a story has tasks (visible or not)
-
-          //Parse each task in the story and see if any tasks are not hidden
-          RB.$("#tasks [id^="+storyID+"_]").each(function(){
-            RB.$(this).children().each(function(){
-              hasTasks = 1
-              if(RB.$(this).is(':visible'))
-                hasVisTasks = 1;
-            });
-          });
-
-          //Hide or show story row based on if any tasks are visible
-          if (hasVisTasks || (showUnusedStories && !hasTasks))
-            RB.$(this).closest('tr').show();
-          else
-            RB.$(this).closest('tr').hide();
-        });
-      }
-    });
-    RB.$("userlist").multiselect('checkAll');
-  });
-</script>
-
 <ul style="list-style:none; margin:0px">
   <li><label>
-    <userlist size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+    <select class="userfilter" size="5" name="filter-user-selection" multiple="multiple" title="User selection">
       <option value='s'>Show empty Stories</option>
+      <optgroup label="Users">
       <% @project.assignable_users.sort.each do |member| %>
         <option value="<%= member.id %>"> <%= member.name %></option>
       <% end %>
-      </userlist>
+      </optgroup>
+      </select>
   </label></li>
 </ul>
-
 <br style="clear:both" />
 </span>
 <%- end %>
+
 <%- content_for :view_specific_links do %>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
@@ -96,7 +46,6 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
-  <a id="private_mode">Private</a>
 <%- end %>
 
 <%- content_for :main do %>
