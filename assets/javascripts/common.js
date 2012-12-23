@@ -90,11 +90,17 @@ RB.$(document).ajaxSend(function(event, request, settings) {
 // Abstract the user preference from the rest of the RB objects
 // so that we can change the underlying implementation as needed
 RB.UserPreferences = RB.Object.create({
-  get: function(key){
+  get: function(key, global){
+    if (global) return RB.$.cookie(key, {path: '/rb'});
     return RB.$.cookie(key);
   },
   
-  set: function(key, value){
-    RB.$.cookie(key, value, { expires: 365 * 10 });
+  set: function(key, value, global){
+    if (global) {
+      RB.$.cookie(key, value, { expires: 365 * 10, path: '/rb' });
+    }
+    else {
+      RB.$.cookie(key, value, { expires: 365 * 10 });
+    }
   }
 });

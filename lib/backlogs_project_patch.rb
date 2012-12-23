@@ -196,7 +196,7 @@ module Backlogs
         #sharing off: only the product itself is in the product backlog
         #sharing on: subtree is included in the product backlog
         if Backlogs.setting[:sharing_enabled] and self.rb_project_settings.show_stories_from_subprojects
-          self.self_and_descendants.active
+          self.self_and_descendants.visible.active
         else
           [self]
         end
@@ -211,7 +211,7 @@ module Backlogs
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
           order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-          shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+          shared_versions.visible.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end 
@@ -224,7 +224,7 @@ module Backlogs
         else
           if Backlogs.setting[:sharing_enabled]
             order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-            shared_versions.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+            shared_versions.visible.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
           else #no backlog sharing
             RbSprint.closed_sprints(self)
           end

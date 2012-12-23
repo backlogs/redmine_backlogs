@@ -3,7 +3,7 @@ require 'yaml'
 
 class RbAddHistory < ActiveRecord::Migration
   def self.up
-    drop_table :rb_journals if ActiveRecord::Base.connection.table_exists?('rb_journals')
+    #drop_table :rb_journals if ActiveRecord::Base.connection.table_exists?('rb_journals')
 
     unless ActiveRecord::Base.connection.table_exists?('rb_issue_history')
       create_table :rb_issue_history do |t|

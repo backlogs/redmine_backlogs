@@ -4,22 +4,16 @@ trap "cleanup" EXIT
 
 cleanup()
 {
-  if [[ -e "$WORKSPACE/cuke.log" ]]; then
-    sed '/^$/d' -i $WORKSPACE/cuke.log # empty lines
-    sed 's/$//' -i $WORKSPACE/cuke.log # ^Ms at end of lines
-    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $WORKSPACE/cuke.log # ansi coloring
-  fi
+  for log in $WORKSPACE/cuke*.log; do
+    if [ -f "$log" ]; then
+      sed '/^$/d' -i $log # empty lines
+      sed 's/$//' -i $log # ^Ms at end of lines
+      sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
+    fi
+  done
 }
 
 export VERBOSE=yes
-
-if [ "$CIRCLECI" = "true" ]; then
-  export WORKSPACE=`pwd`/workspace
-  export PATH_TO_BACKLOGS=`pwd`
-  export PATH_TO_REDMINE=$WORKSPACE/redmine
-  mkdir $WORKSPACE
-  cp config/database.yml.travis $WORKSPACE/database.yml
-fi
 
 if [[ -e "$HOME/.backlogs.rc" ]]; then
   source "$HOME/.backlogs.rc"
@@ -49,6 +43,7 @@ export CLUSTER_burndown="features/burndown.feature features/cecilia_burndown.fea
 export CLUSTER_base="features/common.feature features/routes.feature features/duplicate_story.feature"
 export CLUSTER_ui="features/settings.feature features/sidebar.feature features/ui.feature"
 export CLUSTER_other=`ruby -e "puts (Dir['features/*.feature'] - ENV.keys.select{|k| k=~ /^CLUSTER_/}.collect{|k| ENV[k].split}.flatten).join(' ')"`
+export RUBYVER=`ruby -e 'puts RUBY_VERSION' | awk -F. '{print $1"."$2}'`
 
 clusters()
 {
@@ -62,32 +57,27 @@ case $REDMINE_VER in
   1.4.5)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate_plugins
-          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=$REDMINE_VER
-          ;;
-  2.1.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
-          export GENERATE_SECRET=generate_secret_token
-          export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=$REDMINE_VER
+          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
   2.0.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_GIT_REPO=https://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=$REDMINE_VER
+          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  master) export PATH_TO_PLUGINS=./plugins # for redmine 2.2
+  2.1.5)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=$REDMINE_VER
+          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
+          ;;
+  2.2.0)  export PATH_TO_PLUGINS=./plugins # for redmine 2.2
+          export GENERATE_SECRET=generate_secret_token
+          export MIGRATE_PLUGINS=redmine:plugins:migrate
+          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
   v3.3.0) export PATH_TO_PLUGINS=./vendor/plugins
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate:plugins
-          export REDMINE_GIT_REPO=http://github.com/chiliproject/chiliproject.git
-          export REDMINE_GIT_TAG=$REDMINE_VER
+          export REDMINE_TARBALL=https://github.com/chiliproject/chiliproject/archive/$REDMINE_VER.tar.gz
           ;;
   *)      echo "Unsupported platform $REDMINE_VER"
           exit 1
@@ -103,9 +93,11 @@ clone_redmine()
   if [ ! "$VERBOSE" = "yes" ]; then
     QUIET=--quiet
   fi
-  git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
-  cd $PATH_TO_REDMINE
-  git checkout $REDMINE_GIT_TAG
+  #git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
+  #cd $PATH_TO_REDMINE
+  #git checkout $REDMINE_GIT_TAG
+  mkdir -p $PATH_TO_REDMINE
+  wget $REDMINE_TARBALL -O- | tar -C $PATH_TO_REDMINE -xz --strip=1 --show-transformed -f -
 }
 
 run_tests()
@@ -189,12 +181,23 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
 
+# copy database.yml
+cp $WORKSPACE/database.yml config/
+if [ "$RUBYVER" = "1.8" ]; then
+  sed -i -e 's/mysql2/mysql/g' config/database.yml
+fi
+
+export DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('config/database.yml'))['$RAILS_ENV']['database']"`
+export DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('config/database.yml'))['$RAILS_ENV']['adapter']"`
+
 if [ "$CLEARDB" = "yes" ]; then
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
+  fi
+  if [ "$DBTYPE" = "postgresql" ] ; then
+    echo "drop database if exists $DBNAME" | psql postgres root
+    echo "create database $DBNAME" | psql postgres root
   fi
 fi
 
@@ -202,12 +205,15 @@ if [ "$DB_TO_RESTORE" = "" ]; then
   export story_trackers=Story
   export task_tracker=Task
 else
-  DBNAME=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['database']"`
-  DBTYPE=`ruby -e "require 'yaml'; puts YAML::load(open('../database.yml'))['$RAILS_ENV']['adapter']"`
   if [ "$DBTYPE" = "mysql2" ] || [ "$DBTYPE" = "mysql" ]; then
     mysqladmin -f -u root -p$DBROOTPW drop $DBNAME
     mysqladmin -u root -p$DBROOTPW create $DBNAME
     mysql -u root -p$DBROOTPW $DBNAME < $DB_TO_RESTORE
+  fi
+  if [ "$DBTYPE" = "postgresql" ] ; then
+    echo "drop database if exists $DBNAME" | psql postgres root
+    echo "create database $DBNAME" | psql postgres root
+    psql $DBNAME root < $DB_TO_RESTORE
   fi
 fi
 
@@ -217,17 +223,16 @@ sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
 
+if [ "$DBTYPE" = "mysql" -a "$RUBYVER" = "1.8" ] ; then
+  bundle exec gem install -v=2.8.1 mysql
+  echo y | bundle exec gem uninstall -v=2.9.0 mysql
+  echo 'boing'
+fi
+
 #sed -i -e "s/require 'rake\/gempackagetask'/require 'rubygems\/package_task'/" -e 's/require "rake\/gempackagetask"/require "rubygems\/package_task"/' `find . -type f -exec grep -l 'require.*rake.gempackagetask' {} \;` README.rdoc
 sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GONE"' {} \;` README.rdoc
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
-
-# copy database.yml
-cp $WORKSPACE/database.yml config/
-RUBYVER=`ruby -v | awk '{print $2}' | awk -F. '{print $1"."$2}'`
-if [ "$RUBYVER" = "1.8" ]; then
-  sed -i -e 's/mysql2/mysql/g' config/database.yml
-fi
 
 if [ "$VERBOSE" = "yes" ]; then
   export TRACE=--trace

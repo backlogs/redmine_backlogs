@@ -101,6 +101,7 @@ module BacklogsPrintableCards
         end
       rescue => e
         Rails.logger.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
+        Rails.logger.error(e.backtrace.join("\n"))
         @valid = false
       end
     end
@@ -223,11 +224,16 @@ module BacklogsPrintableCards
     begin
       layouts = YAML::load_file(File.dirname(__FILE__) + '/labels/labels.yaml')
       layouts.each_pair{|key, spec|
-        layout = CardPageLayout.new(spec.merge({'name' => key}))
+        if spec.instance_of?(CardPageLayout)
+          layout = spec #new yaml stores and restores our class
+        else
+          layout = CardPageLayout.new(spec.merge({'name' => key})) #old layout.yaml might not have class information, so we get a hash
+        end
         @@layouts[key] = layout if layout.valid
       }
     rescue => e
-      Rails.logger.error "Backlogs printable cards: problem loading labels: #{e}"
+      Rails.logger.error("Backlogs printable cards: problem loading labels: #{e}")
+      Rails.logger.error(e.backtrace.join("\n"))
     end
   end
 
