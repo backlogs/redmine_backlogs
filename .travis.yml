@@ -3,7 +3,7 @@ language: ruby
 release: 0.9.29
 services:
 - mysql
-- 
+- postgresql
 rvm:
 - 1.9.3
 - 1.8.7
