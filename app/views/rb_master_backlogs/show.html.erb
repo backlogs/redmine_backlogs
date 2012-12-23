@@ -1,18 +1,40 @@
 <!-- MASTER BACKLOG VIEW -->
 <%- content_for :head_tags do %>
-    <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :section => 'backlogs', :project_id => @project.identifier, :format => :js) %>"></script>
-  <%= javascript_include_tag    'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', 'jquery/jquery.liveFilter.js', 'jquery/jquery.liveFilter.setup.js', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
-  <%= javascript_include_tag 'master_backlog', 'backlog', 'model', 'editable_inplace', 'sprint', 'issue', 'story', 'board_updater', 'master_backlog_updater', 'burndown', :plugin => 'redmine_backlogs' %>
+  <script type="text/javascript"
+          src="<%= url_for(:controller => 'rb_server_variables',
+                           :action => 'project',
+                           :project_id => @project.identifier,
+                           :context => 'backlogs',
+                           :format => 'js') %>">
+  </script>
+
+  <%= javascript_include_tag(
+    'jquery/jquery.qtip.pack.js',
+    'jquery/jquery.qtip.setup.js',
+    'jquery/jquery.liveFilter.js',
+    'jquery/jquery.liveFilter.setup.js',
+    'jquery/rails.js',
+    'master_backlog',
+    'backlog',
+    'model',
+    'editable_inplace',
+    'sprint',
+    'issue',
+    'story',
+    'board_updater',
+    'master_backlog_updater',
+    'burndown',
+    :plugin => 'redmine_backlogs') %>
+  <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'master_backlog.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'master_backlog_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
   <script type="text/javascript">jQuery(document).ready(function() { jQuery("#livefilter_controll").focus(); });</script>
   <!--[if IE]>
   <script type="text/javascript">
-    jQuery(document).ready(function() { 
-      jQuery("#backlogs_container ul").each(function() { 
-        jQuery(this).find('li:odd').css('background-color', '#dddddd'); 
-      }); 
+    jQuery(document).ready(function() {
+      jQuery("#backlogs_container ul").each(function() {
+        jQuery(this).find('li:odd').css('background-color', '#dddddd');
+      });
     });
   </script>
   <![endif]-->
@@ -24,7 +46,7 @@
 
 <%- content_for :view_specific_links do %>
   <input class="filter" name="livefilter" type="text" value="" id="livefilter_controll" />
-  <a id="project_info">Info</a>
+  <!-- disabled in javascript, so useless for now: a id="project_info">Info</a -->
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
 <%- end %>
@@ -38,26 +60,28 @@
       <div id="sprint_backlogs_container">
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
-      <!--script for collapsing closed backlog div-->
-      <script language="javascript">
-		  function toggleDiv(divid){
-		    if(document.getElementById(divid).style.display == 'none'){
-		      document.getElementById(divid).style.display = 'block';
-		      document.getElementById('toggle').innerHTML = <%= l(:label_hide_completed_sprints).to_json %>
-		    }else{
-		      document.getElementById(divid).style.display = 'none';
-		      document.getElementById('toggle').innerHTML = <%= l(:label_show_completed_sprints).to_json %>
-		    }
-		  }
-	  </script>
-	  <br><a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');" id="toggle"><%= l(:label_show_completed_sprints) %></a><br><br>
-      <div id="closed_sprint_backlogs_container" style="display:none">
-      	<%if @c_sprint_backlogs.empty? %>
-      	  <div><%= l(:label_no_data_to_show) %></div>
-      	<%else%>
-          <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
-        <% end %>
-      </div>
+	  <% if ! @settings[:disable_closed_sprints_to_master_backlogs] %>
+		  <!--script for collapsing closed backlog div-->
+		  <script language="javascript">
+			  function toggleDiv(divid){
+				if(document.getElementById(divid).style.display == 'none'){
+				  document.getElementById(divid).style.display = 'block';
+				  document.getElementById('toggle').innerHTML = "<%= l(:label_hide_completed_sprints) %>"
+				}else{
+				  document.getElementById(divid).style.display = 'none';
+				  document.getElementById('toggle').innerHTML = "<%= l(:label_show_completed_sprints) %>"
+				}
+			  }
+		  </script>
+		  <br><a href="javascript:;" onmousedown="toggleDiv('closed_sprint_backlogs_container');" id="toggle"><%= l(:label_show_completed_sprints) %></a><br><br>
+		  <div id="closed_sprint_backlogs_container" style="display:none">
+			<%if @c_sprint_backlogs.empty? %>
+			  <div><%= l(:label_no_data_to_show) %></div>
+			<%else%>
+			  <%= render :partial => 'closedbacklog', :collection => @c_sprint_backlogs %>
+			<% end %>
+		  </div>
+	  <% end %>
       <div id="dummy_backlog_container"></div>
     </div>
   </div>

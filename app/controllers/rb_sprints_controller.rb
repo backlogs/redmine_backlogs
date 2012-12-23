@@ -6,7 +6,7 @@ include RbCommonHelper
 # info about the taskboard, see RbTaskboardsController
 class RbSprintsController < RbApplicationController
   unloadable
-  
+
   def create
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
@@ -15,15 +15,17 @@ class RbSprintsController < RbApplicationController
     begin
       @sprint.save!
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
-    result = @sprint.errors.length
+    result = @sprint.errors.size
     status = (result == 0 ? 200 : 400)
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => status }
+      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint } }
     end
   end
 
@@ -33,12 +35,14 @@ class RbSprintsController < RbApplicationController
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => (result ? 200 : 400) }
+      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint } }
     end
   end
 
@@ -55,8 +59,8 @@ class RbSprintsController < RbApplicationController
     @sprint.stories.each{|s|
       ws << [s.tracker.name, s.id, nil, nil, {:value => s.subject, :style => bold}]
       bd = s.burndown
-      bd.delete(:status)
       bd.keys.sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
+        next if k == :status
         label = l("label_#{k}")
         label = {:value => label, :comment => k.to_s} if [:points, :points_accepted].include?(k)
         ws << [nil, nil, nil, nil, label ] + bd[k]
@@ -66,7 +70,7 @@ class RbSprintsController < RbApplicationController
       }
     }
 
-    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-exce', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
+    send_data(dump.to_xml, :disposition => 'attachment', :type => 'application/vnd.ms-excel', :filename => "#{@project.identifier}-#{@sprint.name.gsub(/[^a-z0-9]/i, '')}.xml")
   end
 
   def reset
@@ -95,5 +99,11 @@ class RbSprintsController < RbApplicationController
     end
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier
+  end
+
+  def close_completed
+    @project.close_completed_versions
+
+    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
 end

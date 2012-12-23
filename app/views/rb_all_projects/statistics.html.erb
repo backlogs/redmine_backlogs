@@ -1,0 +1,78 @@
+<%- content_for :header_tags do %>
+  <%= stylesheet_link_tag 'statistics', :plugin => 'redmine_backlogs' %>
+<%- end %>
+
+<script>
+  RB.$(document).ready(function(){
+    RB.$("#projects").accordion({ collapsible: true, header: 'h3'});
+  });
+</script>
+
+<div id="projects">
+  <% global = {} %>
+  <% @projects.each do |project| %>
+    <%
+      scrum_statistics = project.scrum_statistics
+      succeeded = scrum_statistics.statistics[:succeeded]
+      failed = scrum_statistics.statistics[:failed]
+      stats = scrum_statistics.statistics[:values]
+      score = scrum_statistics.score
+      active_sprint = scrum_statistics.active_sprint
+      past_sprints = scrum_statistics.past_sprints
+
+      failed.each {|k|
+        global[k.to_s.gsub(/_failed$/, '')] ||= 0
+      }
+      succeeded.each {|k|
+        global[k] ||= 0
+        global[k] += 1
+      }
+    %>
+    <h3><a href="#"><span class="score score_<%= score %>"><%= score %></span> <%= h project.name %></a> </h3>
+    <div>
+      <% if stats[:velocity] %>
+        <%= l(:label_sprint_velocity, stats) %><br/>
+      <% end %>
+      <h4><%= l(:backlogs_product_backlog) %></h4>
+      <%= link_to(l(:backlogs_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
+      <% if active_sprint || past_sprints.size > 0 %>
+        <h4><%= l(:backlogs_sprints) %></h4>
+        <% if active_sprint %>
+          <%= link_to(active_sprint.name, {
+            :controller => 'rb_queries',
+            :action => 'show',
+            :project_id => project,
+            :sprint_id => active_sprint.id }) %> (<%= l(:backlogs_active) %>)<br/>
+        <% end %>
+        <% if past_sprints.size > 0 %>
+          <% past_sprints.each do |sprint| %>
+            <%= link_to(sprint.name, { :controller => 'rb_queries', :action => 'show', :project_id => project, :sprint_id => sprint.id }) %><br/>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% failed.each do |e| %>
+        <ul>
+          <li><%= l("backlogs_statistics_#{e}".intern) %></li>
+        </ul>
+      <% end %>
+      <% stats.keys.sort.each do |k| %>
+        <ul>
+          <li><%= l("backlogs_statistics_#{k}".intern, :value => stats[k]) %></li>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<% if @projects.size > 0 %>
+  <h3>Overall</h3>
+  <table>
+  <% global.each_pair do |measure, n| %>
+    <tr>
+    <td><%= l("backlogs_statistics_#{measure}".intern) %></td>
+    <td><b><%= (n * 100) / @projects.size %>%</b></td>
+    <td><span class="score_<%= (n * 10) / @projects.size %>">&nbsp;&nbsp;</td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>

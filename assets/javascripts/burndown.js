@@ -3,20 +3,21 @@ if (RB.burndown == null) { RB.burndown = {options: {}, charts: {}}; }
 
 RB.burndown.options.disabled_series = function(new_value) {
   if (new_value == undefined) {
-    var v = RB.UserPreferences.get('disabled_burndown_series');
-    if (!v || v.indexOf(',') == -1) { v = ''; }
+    var v = RB.UserPreferences.get('disabled_burndown_series', true);
+    if (!v || jQuery.inArray(',', v) == -1) { v = ''; }
     return v.split(',');
   } else {
-    RB.UserPreferences.set('disabled_burndown_series', new_value.join(','));
+    RB.UserPreferences.set('disabled_burndown_series', new_value.join(','), true);
   }
-}
+};
 RB.burndown.options.show_legend = function() {
-  var legend = RB.UserPreferences.get('burndown_show_legend');
+  var legend = RB.UserPreferences.get('burndown_show_legend', true);
   if (!legend) { return 'sw'; }
   return legend;
-}
+};
 
 RB.burndown.initialize = function() {
+  var id, chart;
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
     if (!chart.chart) {
@@ -26,19 +27,19 @@ RB.burndown.initialize = function() {
   }
 
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.redraw = function() {
+  var name, pos, id, chart;
   var disabled = RB.burndown.options.disabled_series();
   var legend = RB.burndown.options.show_legend();
-
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
     if (!chart.chart) { continue; }
 
     for (name in chart.position) {
       pos = chart.position[name];
-      chart.chart.series[pos].show = (disabled.indexOf(name) == -1);
+      chart.chart.series[pos].show = (jQuery.inArray(name, disabled) == -1);
     }
 
     if (legend == 'off') {
@@ -50,32 +51,32 @@ RB.burndown.redraw = function() {
 
     chart.chart.replot();
   }
-}
+};
 
 RB.burndown.change_legend = function(rb) {
-  RB.UserPreferences.set('burndown_show_legend', rb.value);
+  RB.UserPreferences.set('burndown_show_legend', rb.value, true);
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.change_series = function(cb) {
   var disabled = RB.burndown.options.disabled_series();
 
-  i = disabled.indexOf(cb.value);
+  var i = jQuery.inArray(cb.value, disabled);
   if (i != -1) { disabled.splice(i, 1); }
   if (!cb.checked) { disabled.push(cb.value); }
   RB.burndown.options.disabled_series(disabled);
   RB.burndown.redraw();
-}
+};
 
 RB.burndown.configure = function() {
   var disabled = RB.burndown.options.disabled_series();
   var cb;
 
-  for (i in disabled) {
-    cb = RB.$('#burndown_series_' + disabled[i]);
+  RB.$.each(disabled, function(index, value) {
+    var cb = RB.$('#burndown_series_' + value);
     if (cb) { cb.attr('checked', false); }
-  }
+  });
 
   var legend = RB.burndown.options.show_legend();
   RB.$('#burndown_legend_' + legend).attr('checked', true);
-}
+};

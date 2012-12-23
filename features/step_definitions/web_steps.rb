@@ -62,7 +62,7 @@ end
 When /^(?:|I )fill in the following(?: within "([^"]*)")?:$/ do |selector, fields|
   with_scope(selector) do
     fields.rows_hash.each do |name, value|
-      When %{I fill in "#{name}" with "#{value}"}
+      fill_in(name, :with => value)
     end
   end
 end
@@ -98,6 +98,7 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"(?: within "([^"]*)")?$/ do 
 end
 
 Then /^(?:|I )should see JSON:$/ do |expected_json|
+  require 'rubygems'
   require 'json'
   expected = JSON.pretty_generate(JSON.parse(expected_json))
   actual   = JSON.pretty_generate(JSON.parse(response.body))

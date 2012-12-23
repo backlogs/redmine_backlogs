@@ -1,4 +1,5 @@
 include RbCommonHelper
+include RbFormHelper
 include ProjectsHelper
 
 # Responsible for exposing release CRUD.
@@ -64,5 +65,5 @@ class RbReleasesController < RbApplicationController
     @release.stories.each {|s| res += s.story_points if s.story_points}
     res
   end
-  
+
 end

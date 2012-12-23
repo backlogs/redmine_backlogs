@@ -33,25 +33,25 @@ See RB.Taskboard.initialize()
 
 /* status labels */
 #board_header{
-  background-color:#ccffff;
+  background-color:#EEEEEE;
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
+  position: relative;
+  z-index: 1000;
 }
 #board_header td{
-  background-color:#ccffff;
+  background-color:#EEEEEE;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#DDD));
+  background: -moz-linear-gradient(top, #FFF, #DDD);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#FFFFFF,EndColorStr=#DDDDDD);
   border-right:1px dotted #CFCFCF;
-  color:#7E7E7E;
+  color:#4E4E4E;
   font-size:14px;
   font-weight:bold;
   height:30px;
   text-align:center;
   vertical-align:middle;
-}
-#board_header td:first-child{
-  min-width:231px;
-  padding:10px;
-  width:231px;
 }
 #board_header td:last-child{
   border-right:none;
@@ -72,6 +72,8 @@ See RB.Taskboard.initialize()
   border-bottom:1px dotted #CFCFCF;
   vertical-align:top;
 }
+
+#board_header td:first-child,
 .board td:first-child{
   min-width:210px;
   padding:5px;
@@ -84,12 +86,8 @@ See RB.Taskboard.initialize()
   border-bottom:none;
 }
 .board .add_new{
-  margin:0;
-  min-width:30px;
-  padding:0;
-  text-align:center;
+  display: inline-block;
   vertical-align:middle;
-  width:30px;
 }
 .board .add_new:hover{
   cursor:pointer;
@@ -100,6 +98,9 @@ See RB.Taskboard.initialize()
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
   box-shadow: 2px 2px 2px #CCCCCC;;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FEE), to(#FD2));
+  background: -moz-linear-gradient(top, #FEE, #FD2);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#FFEEEE,EndColorStr=#FFDD22);
   background-color:#F8F6A5;
   border:none;
   display:block;
@@ -116,12 +117,19 @@ See RB.Taskboard.initialize()
   -webkit-border-radius:4px 4px 4px 4px;
   border-radius:4px 4px 4px 4px;
   background-color:#FFFFFF;
-  font-size:9px;
+  font-size:.9em;
   opacity:0.8;
   overflow:hidden;
   padding:1px 3px 1px 3px;
-  text-align:right;
-  width:95%;
+  line-height: 14px;
+}
+.story .id a,
+.story .id .remaininghours {
+  float:right;
+  margin-left: 4px;
+}
+.story .id .assignee{
+  font-weight: bold;
 }
 .story .subject{
   height:63px;
@@ -134,6 +142,9 @@ See RB.Taskboard.initialize()
 .story .project {
   text-align:left;
 }
+.story .id .v {
+  display:none;
+}
 .story.closed .subject{
   text-decoration:line-through;
 }
@@ -142,9 +153,8 @@ See RB.Taskboard.initialize()
   -webkit-border-radius:15px 15px 15px 15px;
   border-radius:15px 15px 15px 15px;
   border:2px solid #FFFFFF;
-  background-color:#33A1DE;
+  background-color:#FF8800;
   color:#FFFFFF;
-  font-size:1em;
   position:absolute;
   padding:1em;
   bottom:-5px;
@@ -156,7 +166,10 @@ See RB.Taskboard.initialize()
 
 /* item styles used by .task and .impediment */
 .issue, .placeholder{
-  background-color:#AFAFAF;
+  background-color:#CCCCCC;
+  background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#AAA));
+  background: -moz-linear-gradient(top, #E0E0E0, #AAA);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#E0E0E0,EndColorStr=#AAAAAA);
   border:none;
   cursor:move;
   display:block;
@@ -210,6 +223,7 @@ See RB.Taskboard.initialize()
   padding:2px;
   width:81px;
 }
+
 .issue.closed .subject.editable{
   text-decoration:line-through;
 }
@@ -221,6 +235,7 @@ See RB.Taskboard.initialize()
   padding:2px;
   padding-top:0;
   width:81px;
+  white-space:nowrap;
 }
 .issue .assigned_to_id .v{
   display:none;
@@ -246,7 +261,7 @@ See RB.Taskboard.initialize()
   display:none;
 }
 
-.issue .estimated_hours.editable{
+.issue .remaining_hours.editable{
   -moz-border-radius:15px 15px 15px 15px;
   -webkit-border-radius:15px 15px 15px 15px;
   border-radius:15px 15px 15px 15px;
@@ -264,7 +279,7 @@ See RB.Taskboard.initialize()
 .issue .blocks{
   display:none;
 }
-.issue .estimated_hours.editable:empty{
+.issue .remaining_hours.editable:empty{
   display:none;
 }
 .issue .indicator{
@@ -340,7 +355,12 @@ See RB.Taskboard.initialize()
   height:65px;
   width:272px;
 }
-#task_editor .estimated_hours,
+
+#task_editor .description{
+  height:80px;
+  width:272px;
+}
+#task_editor .remaining_hours,
 #task_editor .time_entry_hours,
 #task_editor .time_entry_user_id,
 #task_editor .time_entry_spent_on,
@@ -389,4 +409,7 @@ See RB.Taskboard.initialize()
 }
 #warning{
   background-image:url('images/warning.png');
+}
+#ui-datepicker-div{
+  display: none;
 }

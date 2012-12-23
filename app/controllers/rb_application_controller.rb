@@ -5,7 +5,7 @@ class RbApplicationController < ApplicationController
   before_filter :load_project, :authorize, :check_if_plugin_is_configured
 
   private
-  
+
   # Loads the project to be used by the authorize filter to
   # determine if User.current has permission to invoke the method in question.
   def load_project
@@ -23,8 +23,8 @@ class RbApplicationController < ApplicationController
   end
 
   def check_if_plugin_is_configured
-    settings = Setting.plugin_redmine_backlogs
-    if settings[:story_trackers].blank? || settings[:task_tracker].blank?
+    @settings = Backlogs.settings
+    if @settings[:story_trackers].blank? || @settings[:task_tracker].blank?
       respond_to do |format|
         format.html { render :file => "shared/not_configured" }
       end
@@ -33,7 +33,7 @@ class RbApplicationController < ApplicationController
 
   def load_sprint
     @sprint = RbSprint.find(params[:sprint_id])
-  end  
+  end
 
   def load_release
     @release = RbRelease.find(params[:release_id])

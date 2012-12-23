@@ -9,35 +9,36 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        after_save  :backlogs_after_save
-        before_destroy :backlogs_before_destroy
+        has_one :sprint_burndown, :class_name => RbSprintBurndown
+
+        after_save :clear_burndown
+
+        include Backlogs::ActiveRecord::Attributes
       end
     end
-  
+
     module ClassMethods
     end
-  
+
     module InstanceMethods
+      def clear_burndown
+        self.burndown.touch!
+      end
+
+      # load on demand
       def burndown
-        return RbSprint.find_by_id(self.id).burndown
+        self.sprint_burndown = self.create_sprint_burndown(:version_id => self.id) unless self.new_record? || self.sprint_burndown
+        return self.sprint_burndown
       end
 
-      def backlogs_before_destroy
-        if project.module_enabled?('backlogs')
-          self.fixed_issues.each{|i|
-            Rails.cache.delete("RbIssue(#{i.id}).burndown")
-          }
-        end
+      def days
+        return nil unless self.sprint_start_date && self.effective_date
+        (self.sprint_start_date - 1 .. self.effective_date).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || ![0,6].include?(d.wday)}
+      end
+      def has_burndown?
+        return (self.days || []).size != 0
       end
 
-      def backlogs_after_save
-        if project.module_enabled?('backlogs') && !self.new_record?
-          self.fixed_issues.each{|i|
-            Rails.cache.delete("RbIssue(#{i.id}).burndown")
-          }
-        end
-      end
-  
     end
   end
 end

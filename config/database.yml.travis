@@ -1,0 +1,30 @@
+sqlite: &sqlite
+  adapter: sqlite3
+  database: db/backlogs.sqlite3
+
+mysql: &mysql
+  adapter: <%= ENV['TRAVIS_RUBY_VERSION'] == '1.8.7' ? 'mysql' : 'mysql2' %>
+  username: root
+  password:
+  database: backlogs
+
+postgresql: &postgresql
+  adapter: postgresql
+  username: postgres
+  password:
+  database: backlogs
+  min_messages: ERROR
+
+defaults: &defaults
+  pool: 5
+  timeout: 5000
+  <<: *<%= ENV['DB'] || "unspecified" %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

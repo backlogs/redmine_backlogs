@@ -1,24 +1,94 @@
 <!-- TASKBOARD VIEW -->
 <% content_for :head_tags do %>
-  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jquery.qtip.css', :plugin => 'redmine_backlogs' %>
+  <%= javascript_include_tag  'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment',  'jquery/jquery.multiselect.js', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
-  <script type="text/javascript" src="<%= url_for(:controller => 'rb_server_variables', :action => 'show', :section => 'taskboard', :project_id => @project.identifier, :sprint_id => @sprint.id, :format => 'js') %>"></script>
-  <script type="text/javascript">
-    if(!RB.constants.workflow) {
-      alert('<%= escape_javascript(l(:error_no_workflow_for_task_tracker)) %>');
-      window.location.replace('/trackers'); // '<% url_for(:controller => 'trackers', :action => 'index') %>';
-    }
+
+  <script type="text/javascript"
+          src="<%= url_for(:controller => 'rb_server_variables',
+                           :action => 'sprint', :sprint_id => @sprint.id,
+                           :format => 'js') %>">
   </script>
 <% end %>
 
 <% content_for :breadcrumbs do %>
+
   <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
   <%= breadcrumb_separator %>
-  <%= @sprint.name %>
+  <%= h @sprint.name %>
+
 <% end %>
 
+<%- content_for :view_specific_users do %>
+<span id="userselect">
+<script type="text/javascript">
+  RB.$(function(){
+    RB.$("userlist").multiselect({
+      close: function() {
+        RB.$(".task").each(function() {
+          var asg = this.getElementsByClassName('assigned_to_id')[0].getElementsByClassName('v')[0]
+          if (asg == undefined || asg == null) return;
+          var asg_v = asg.innerHTML;
+          if (asg_v == "") return;
+          if (RB.$("userlist").multiselect("widget").find(":checkbox[value='"+asg_v+"']").is(':checked')) {
+            RB.$(this).show();
+          }else {
+            RB.$(this).hide();
+          }
+        });
+        //Check if all stories should be visible even if not used
+        if (RB.$("userlist").multiselect("widget").find(":checkbox[value='s']").is(':checked')) {
+          var showUnusedStories = 1;
+        } else {
+          var showUnusedStories = 0;
+        }
+
+        //Parse through all the stories and hide the ones not used
+        RB.$('.story').each(function() {
+          var sprintInfo = RB.$(this).children('.id').children('a')[0];
+          var storyID = sprintInfo.innerHTML;
+
+          RB.$(this).closest('tr').show();
+          var hasVisTasks = 0;
+          var hasTasks = 0;  // Keep track if a story has tasks (visible or not)
+
+          //Parse each task in the story and see if any tasks are not hidden
+          RB.$("#tasks [id^="+storyID+"_]").each(function(){
+            RB.$(this).children().each(function(){
+              hasTasks = 1
+              if(RB.$(this).is(':visible'))
+                hasVisTasks = 1;
+            });
+          });
+
+          //Hide or show story row based on if any tasks are visible
+          if (hasVisTasks || (showUnusedStories && !hasTasks))
+            RB.$(this).closest('tr').show();
+          else
+            RB.$(this).closest('tr').hide();
+        });
+      }
+    });
+    RB.$("userlist").multiselect('checkAll');
+  });
+</script>
+
+<ul style="list-style:none; margin:0px">
+  <li><label>
+    <userlist size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+      <option value='s'>Show empty Stories</option>
+      <% @project.assignable_users.sort.each do |member| %>
+        <option value="<%= member.id %>"> <%= member.name %></option>
+      <% end %>
+      </userlist>
+  </label></li>
+</ul>
+
+<br style="clear:both" />
+</span>
+<%- end %>
 <%- content_for :view_specific_links do %>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
@@ -26,23 +96,31 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>
+  <a id="private_mode">Private</a>
 <%- end %>
 
 <%- content_for :main do %>
+<span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
 <div id="taskboard">
+
+
   <table id="board_header" cellspacing="0">
     <tr>
       <td><%= l(:backlogs_story) %></td>
       <%- @statuses.each do |status| %>
-      <td class="swimlane"><%= status.name %></td>
+      <td class="swimlane"><%= h status.name %></td>
       <%- end %>
     </tr>
   </table>
 
   <table id="impediments" class="board" cellspacing="0">
     <tr>
-      <td><div class="label_sprint_impediments"><%= l(:label_sprint_impediments) %></div></td>
-      <td class="add_new">+</td>
+      <td><div class="label_sprint_impediments">
+            <span class="add_new">
+              <%= image_tag("add.png", :alt => "+") %>
+            </span>
+            <%= l(:label_sprint_impediments) %>
+      </div></td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
         <%= render :partial => "rb_impediments/impediment", :collection => @sprint.impediments.select{|impediment| impediment.status_id==status.id} %>
@@ -52,20 +130,31 @@
   </table>
 
   <table id="tasks" class="board" cellspacing="0">
-    <%- @sprint.stories.each do |story| %>  
-    <tr>
+    <%- @sprint.stories.each do |story| %>
+    <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
-        <div class="story <%= mark_if_closed(story) %>" style="border-top: 3px solid <%= build_inline_style_color(story) %>">
-          <div class="id story_tooltip" title="<%= render :partial => "rb_stories/tooltip", :object => story %>">
-            <div style="float:left; padding-left:3px; font-weight:bold;"><%= assignee_name_or_empty(story) %></div>
+        <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story) %>>
+          <div class="id story_tooltip">
+            <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <span class="add_new">
+              <%= image_tag("add.png", :alt => "+") %>
+            </span>
+            <span class="assignee">
+              <%= assignee_name_or_empty(story) %>
+            </span>
+            <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
           </div>
-          <div class="subject"><%= story.subject %></div>
-          <div class="id project"><%= story.project %></div>
+          <div class="subject"><%= h story.subject %></div>
+          <%- if @project != story.project %>
+            <div class="id project">
+              <span class="t"><%= h story.project %></span>
+              <span class="v"><%= story.project.id %></span>
+            </div>
+          <%- end %>
           <div class="story_points editable" fieldname="story_points" fieldlabel="<%=l(:field_story_points)%>"><%= story.story_points %></div>
         </div>
       </td>
-      <td class="add_new">+</td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>">
         <%= render :partial => "rb_tasks/task", :collection => story.descendants.select{|task| task.status.id==status.id} %>
@@ -86,15 +175,13 @@
 
   <select class="priority_id template" id="priority_id_options">
     <%- IssuePriority.all.each do |p| %>
-    <option value="<%= p.id %>"><%= p.name %></option>
+    <option value="<%= p.id %>"><%= h p.name %></option>
     <%- end %>
   </select>
 
   <select class="assigned_to_id template" id="assigned_to_id_options">
-    <option value=""> </option>
-    <%- @project.members.each do |member| %>
-    <option value="<%= member.user_id %>" color="<%= member.user.backlogs_preference(:task_color) %>"><%= member.name %></option>
-    <%- end %>
+    <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
+    <%= users_assignable_options_for_select(@project.assignable_users) %>
   </select>
   <div id="task_template">
     <%= render :partial => "rb_tasks/task", :object => RbTask.new %>

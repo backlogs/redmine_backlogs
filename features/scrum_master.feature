@@ -7,23 +7,23 @@ Feature: Scrum Master
     Given the ecookbook project has the backlogs plugin enabled
       And I am a scrum master of the project
       And I have deleted all existing issues
-      And the project has the following sprints:
+      And I have defined the following sprints:
         | name       | sprint_start_date | effective_date  |
         | Sprint 001 | 2010-01-01        | 2010-01-31      |
         | Sprint 002 | 2010-02-01        | 2010-02-28      |
         | Sprint 003 | 2010-03-01        | 2010-03-31      |
-        | Sprint 004 | 2.weeks.ago       | 1.week.from_now |
-      And the project has the following stories in the product backlog:
-        | position | subject |
-        | 1        | Story 1 |
-        | 2        | Story 2 |
-        | 3        | Story 3 |
-        | 4        | Story 4 |
-      And the project has the following stories in the following sprints:
-        | position | subject | sprint     |
-        | 5        | Story A | Sprint 001 |
-        | 6        | Story B | Sprint 001 |
-      And the project has the following impediments:
+        | Sprint 004 | 2 weeks ago       | next week       |
+      And I have defined the following stories in the product backlog:
+        | subject |
+        | Story 1 |
+        | Story 2 |
+        | Story 3 |
+        | Story 4 |
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     |
+        | Story A | Sprint 001 |
+        | Story B | Sprint 001 |
+      And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story A | 
 
@@ -46,8 +46,7 @@ Feature: Scrum Master
       And the sprint named Sprint 001 should have 1 impediment named Good Impediment
 
   Scenario: View impediments
-    Given I am viewing the issues list
-      And I follow "Sprint 001"
+    Given I am viewing the issues sidebar for Sprint 001
      Then the request should complete successfully
      When I follow "Impediments"
      Then the request should complete successfully
@@ -97,29 +96,32 @@ Feature: Scrum Master
      Then the request should complete successfully
       And Story A should be in the 2nd position of the sprint named Sprint 001
       And Story B should be the higher item of Story A
-     
-  Scenario: Request the project calendar feed
-    Given I have set my API access key
-      And I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
+
+  Scenario: Authorized request to the project calendar feed
+    Given I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
+      And I have set my API access key
       And I am logged out
-     When I download the calendar feed
+     When I try to download the calendar feed
      Then the request should complete successfully
-    Given I have guessed an API access key
-     When I download the calendar feed
+      And calendar feed download should succeed
+
+  Scenario: Unauthorized request to the project calendar feed
+    Given I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
+      And I have set my API access key
+      And I am logged out
+      And I have guessed an API access key
+     When I try to download the calendar feed
      Then the request should fail
-     
+      And calendar feed download should fail
+
   Scenario: Download printable cards for the product backlog
-    Given I have selected card label stock Avery 7169
-      And I am viewing the issues list
+      And I am viewing the issues sidebar
      When I follow "Product backlog cards"
      Then the request should complete successfully
 
   Scenario: Download printable cards for the task board
-    Given I have selected card label stock Avery 7169
       And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
-      And I am viewing the issues list
-      And I follow "Sprint 001"
-     Then the request should complete successfully
+      And I am viewing the issues sidebar for Sprint 001
      When I follow "Sprint cards"
      Then the request should complete successfully
 
@@ -139,3 +141,11 @@ Feature: Scrum Master
      Then the request should complete successfully
      Then the wiki page Sprint 001 should contain Sprint Template
 
+  Scenario: Update sprint with start date greater than end date
+    Given I am viewing the master backlog
+      And I want to edit the sprint named Sprint 001
+      And I want to set the sprint_start_date of the sprint to 2012-03-01
+      And I want to set the effective_date of the sprint to 2012-02-20
+     When I update the sprint
+     Then the server should return an update error
+      And the error message should say "Sprint cannot end before it starts"

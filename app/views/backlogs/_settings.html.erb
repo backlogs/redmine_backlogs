@@ -1,0 +1,240 @@
+<%- content_for :header_tags do %>
+  <style>
+    table { border-collapse: collapse; }
+    td, th { padding-left: 1em; padding-right: 1em; text-align: left; vertical-align: top; border: 1px solid black; }
+    th { font-weight: bold; }
+    td.unfit { text-decoration: line-through; }
+    td.selected { font-weight: bold; }
+    td.ok { background-color:#00FF00 }
+    td.error { background-color:#FF0000 }
+  </style>
+<%- end %>
+
+<script type="text/javascript">
+  function enable_apply()
+  {
+    tasktracker = RB.$("#settings_task_tracker").val();
+    submit = RB.$('input[type=submit]')
+
+    disable = false;
+    log = tasktracker + '::'
+    RB.$("#settings_story_trackers :selected").each(function(i, selected){
+      disable = disable || (RB.$(selected).attr('value') == tasktracker);
+    });
+    if (disable) {
+      submit.attr('disabled', 'disabled');
+    } else {
+      submit.removeAttr('disabled');
+    }
+  }
+
+  RB.$(document).ready(function() {
+    RB.$("#settings_task_tracker").change(function() { enable_apply(); });
+    RB.$("#settings_story_trackers").change(function() { enable_apply(); });
+
+    enable_apply();
+  });
+</script>
+
+<h2>Backlogs version <%= Backlogs.version %>, Redmine version <%= Backlogs.platform_support %></h2>
+<% if !Backlogs.configured? %>
+  <fieldset>
+    <legend>Backlogs was not properly set up</legend>
+    <%- if !Backlogs.migrated? %>
+      <p>Plugin migrations have not been executed</p>
+    <%- end %>
+    <table>
+      <tr><th>Gem</th><th>Installed</th></tr>
+      <% Backlogs.gems.each_pair do |gem, installed| %>
+        <tr><td><%= h gem %></td><td class="<%= installed ? 'ok' : 'error' %>"><%= installed ? 'yes' : 'no' %></td></tr>
+      <% end %>
+    </table>
+    <table>
+      <tr><th colspan="2">Trackers</th></tr>
+      <% Backlogs.trackers.each_pair do |tracker, ok| %>
+        <tr><td><%= {:story => 'Story trackers', :task => 'Task tracker', :default_priority => 'Default issue priority'}[tracker] %></td><td class="<%= ok ? 'ok' : 'error' %>"><%= ok ? 'ok' : 'not configured' %></td></tr>
+      <% end %>
+    </table>
+  </fieldset>
+<% end %>
+<fieldset>
+  <legend><%= l(:backlogs_general_settings) %></legend>
+<p>
+  <%= content_tag(:label, l(:backlogs_story_tracker)) %>
+  <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, RbStory.trackers), :multiple => true) %>
+  <table>
+    <thead>
+      <tr>
+        <th>Tracker</th>
+        <th>To&nbsp;do</th>
+        <th>In&nbsp;progress</th>
+        <th>Accepted</th>
+        <th>Rejected</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% Tracker.all.each do |tracker| %>
+        <% states = tracker.issue_statuses.group_by {|status| status.backlog} %>
+        <tr>
+          <td class="<%= RbStory.trackers.include?(tracker.id) ? 'selected' : 'not-selected' %> <%= tracker.backlog? ? 'fit' : 'unfit' %>"><%= h tracker.name %></span></td>
+          <td><%= h((states[:new] || []).join(', ')) %></td>
+          <td><%= h((states[:in_progress] || []).join(', ')) %></td>
+          <td><%= h((states[:success] || []).join(', ')) %></td>
+          <td><%= h((states[:failure] || []).join(', ')) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_task_tracker)) %>
+  <%= select_tag("settings[task_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, RbTask.tracker)) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_wiki_template)) %>
+  <%= text_field_tag("settings[wiki_template]", Backlogs.setting[:wiki_template]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
+	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
+</p>
+
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_story_settings) %></legend>
+<p>
+  <%= content_tag(:label, l(:field_story_points)) %>
+  <%= l(:comma_delimited_numbers) %><br>
+  <%= l(:use_free_text_if_empty) %><br>
+  <%= text_field_tag("settings[story_points]",
+      Backlogs.setting[:story_points]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_set_start_and_duedates_from_sprint)) %>
+  <%= check_box_tag("settings[set_start_and_duedates_from_sprint]", 'enabled',
+      Backlogs.setting[:set_start_and_duedates_from_sprint]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_new_story_position)) %>
+  <%= radio_button_tag("settings[new_story_position]", 'top', Backlogs.setting[:new_story_position] == 'top') %><%= l(:backlogs_new_story_position_top) %>
+  <%= radio_button_tag("settings[new_story_position]", 'bottom', Backlogs.setting[:new_story_position].nil? || Backlogs.setting[:new_story_position] == 'bottom') %><%= l(:backlogs_new_story_position_bottom) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_story_close_status)) %>
+  <%= select_tag("settings[story_close_status_id]", 
+            options_for_select([['<'+l(:rb_label_timelog_disable)+'>', 0]] + IssueStatus.all.collect{|e| [e.name, e.id]},
+                              Setting.plugin_redmine_backlogs.has_key?(:story_close_status_id)?(Setting.plugin_redmine_backlogs[:story_close_status_id].to_i):0)
+      )
+%>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
+  <%= check_box_tag("settings[auto_assign_task]", 'enabled',
+      Backlogs.setting[:auto_assign_task]) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_burndown_settings) %></legend>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_points_burn_direction)) %>
+  <%= select_tag("settings[points_burn_direction]",
+            options_for_select([
+                    [l(:label_points_burn_up), 'up'],
+                    [l(:label_points_burn_down), 'down']
+                ], Backlogs.setting[:points_burn_direction])) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_burndown_print_width)) %>
+  <%= text_field_tag("settings[burndown_print_width]", Backlogs.setting[:burndown_print_width]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_burndown_print_height)) %>
+  <%= text_field_tag("settings[burndown_print_height]", Backlogs.setting[:burndown_print_height]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_include_sat_and_sun)) %>
+  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled',
+      Backlogs.setting[:include_sat_and_sun]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_show_burndown_in_sidebar)) %>
+	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',
+            Backlogs.setting[:show_burndown_in_sidebar]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_show_project_name)) %>
+  <%= check_box_tag("settings[show_project_name]",'enabled',
+            Backlogs.setting[:show_project_name]) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_sprint_card_settings) %></legend>
+<p>
+  <%= content_tag(:label, l(:backlogs_card_specification)) %>
+  <% if Backlogs.gems.values.reject{|installed| installed}.size == 0 %>
+    <%= select_tag("settings[card_spec]", options_for_select(BacklogsPrintableCards::CardPageLayout.available.collect{|label| [label, label]}, Backlogs.setting[:card_spec])) %>
+  <% else %>
+    <b>Please install all required gems</b>
+  <% end %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_taskboard_card_order)) %>
+  <%= select_tag("settings[taskboard_card_order]",
+            options_for_select([
+                    [l(:rb_task_cards_story_follows_tasks), 'story_follows_tasks'],
+                    [l(:rb_task_cards_tasks_follow_story), 'tasks_follow_story'],
+                    [l(:rb_task_cards_stories_then_tasks), 'stories_then_tasks']
+                ], Backlogs.setting[:taskboard_card_order])) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_pblpage_settings) %></legend>
+<p>
+  <%= content_tag(:label, l(:rb_auto_refresh)) %>
+  <%= select_tag("settings[autorefresh_wait]",
+            options_for_select([
+                    ['1',  '1000'],
+                    ['10', '10000'],
+                    ['30', '30000'],
+                    ['60', '60000'],
+                ], Backlogs.setting[:autorefresh_wait])) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:label_hide_completed_sprints)) %>
+  <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Backlogs.setting[:disable_closed_sprints_to_master_backlogs]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_sprint_sort_order)) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'asc', Backlogs.setting[:sprint_sort_order].nil?|| Backlogs.setting[:sprint_sort_order] == 'asc') %><%= l(:backlogs_sprint_sort_order_asc) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'desc', Backlogs.setting[:sprint_sort_order] == 'desc') %><%= l(:backlogs_sprint_sort_order_desc) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_sharing_support) %></legend>
+  <p>
+    <%= content_tag(:label, l(:backlogs_sharing_enabled)) %>
+    <%= check_box_tag("settings[sharing_enabled]", 'enabled',
+        Backlogs.setting[:sharing_enabled]) %>
+  </p>
+</fieldset>

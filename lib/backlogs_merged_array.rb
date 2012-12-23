@@ -58,10 +58,11 @@ module Backlogs
     def add(arrays)
       return unless arrays
       arrays.each_pair do |name, data|
+        next if data.nil?
         raise "#{name} is not a symbol" unless name.is_a?(Symbol)
         raise "#{name} is not a array" unless data.is_a?(Array)
         raise "#{name} not initialized" unless @data && @data.size > 0 && @data[0].include?(name)
-        raise "data series '#{name}' is too long (got #{data.size}, expected #{@data.size})" if data.size > @data.size
+        raise "data series '#{name}' is too long (got #{data.size}, maximum accepted #{@data.size})" if data.size > @data.size
 
         data.each_with_index{|d, i|
           @data[i][name] += d if d
@@ -76,6 +77,9 @@ module Backlogs
     def each(&block)
       @data.each {|cell| block.call(cell) }
     end
+    def each_with_index(&block)
+      @data.each_with_index {|cell, index| block.call(cell, index) }
+    end
 
     def collect(&block)
       @data.collect {|cell| block.call(cell) }
@@ -86,7 +90,10 @@ module Backlogs
     end
 
     def to_s
-      return @data.collect{|s| s.to_s}.join("\n")
+      return @data.to_s
+    end
+    def inspect
+      return @data.collect{|d| d.inspect}.join("\n")
     end
   end
 end

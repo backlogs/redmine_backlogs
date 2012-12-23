@@ -1,186 +1,111 @@
 #!/usr/bin/env ruby
 
-require 'yaml'
-require 'net/http'
-require 'uri'
-require 'cgi'
+require 'rubygems'
+require 'octokit'
+require 'inifile'
 require 'time'
 
-class GitHub
-  STATES = {
-    'IMPORTANT-READ'    =>  [:keep, :no_feedback],
-    'on-hold'           =>  [:keep, :no_feedback],
-    'in-progress'       =>  [:keep, :no_feedback],
-    'feedback-required' =>  :keep,
-    'feature-request'   =>  [:keep, :no_feedback],
-    'release-blocker'   =>  :keep,
-    'no-feedback'       =>  :keep
-    }
+class Issue
+  def initialize(repo, issue)
+    puts issue.number if STDOUT.tty?
 
-  class HashClass
-    def initialize(gh, data)
-      @gh = gh
-      @data = {}
-      data.each_pair{|k, v| @data[k.to_sym] = v }
-    end
-
-    def method_missing(method_sym, *arguments, &block)
-      return @data[method_sym] if @data.include?(method_sym)
-      super
-    end
-
-    def respond_to?(method_sym, include_private = false)
-      return true if @data.include?(method_sym)
-      super
-    end
-
-    def to_s
-      return @data.inspect
-    end
-  end
-
-  class Comment < HashClass
-  end
-
-  class Issue < HashClass
-    def comments
-      @comments ||= [YAML::load(@gh.get("issues/comments/:user/:repo/#{number}"))['comments']].compact.flatten.collect { |c| Comment.new(@gh, c) }
-    end
-
-    def state
-      return @data[:state].intern
-    end
-
-    def state=(new)
-      raise "State can only be :open or :closed" unless [:open, :closed].include?(new)
-    end
-
-    def labels(which = :current)
-      return @data[:labels] if which == :current
-
-      l = @data[:labels].reject{|l| l =~ /feedback/i || l.downcase == '1day' || l =~ /^[0-9]+days$/i }
-
-      if comments.size > 0
-        # last comment by a repo committer and not labeled with a
-        # 'no-feedback' label
-        if @gh.committers.include?(comments[-1].user) && (l & GitHub.states(:no_feedback)).size == 0
-          l << "feedback-required"
-
-          req = nil
-          comments.reverse.each{|c|
-            break unless @gh.committers.include?(c.user)
-            req = c
-          }
-
-          date = req.updated_at
-          diff = Integer((Time.now - date)) / (60 * 60 * 24)
-          case diff
-            when 0 then nil
-            when 1 then l << '1day'
-            else
-              l << "#{diff}days"
-              l << 'no-feedback' if diff > 4
-          end
-        end
-      end
-      prio = nil
-      comments.each {|c|
-        next unless @gh.committers.include?(c.user)
-        prio = 
-        m = c.body.match(/\s:([0-9]+):\s/)
-        m = c.body.match(/^:([0-9]+):\s/) unless m
-        m = c.body.match(/\s:([0-9]+):$/) unless m
-        m = c.body.match(/^:([0-9]+):$/) unless m
-        prio = m[1] if m
-      }
-      l << "prio-#{prio}" if prio
-      return l.compact.uniq.collect{|lb| lb.downcase}
-    end
-
-    def labels=(new)
-      old = labels
-      remove = old - new
-      add = new - old
-
-      # post user and api key here
-      remove.each {|l|
-        @gh.post("issues/label/remove/:user/:repo/#{CGI::escape(l)}/#{number}")
-      }
-      add.each {|l|
-        @gh.post("issues/label/add/:user/:repo/#{CGI::escape(l)}/#{number}")
-      }
-    end
-  end
-
-  CONFIGFILE = File.join(File.dirname(__FILE__), File.basename(__FILE__, File.extname(__FILE__))) + '.rc'
-  CONFIG = File.exists?(CONFIGFILE) ? YAML::load(File.open(CONFIGFILE)) : {}
-  ROOT = 'http://github.com/api/v2/yaml/'
-
-  def initialize(user, repo)
-    @user = user
     @repo = repo
-  end
+    @issue = issue
+    @labels = @issue.labels.collect{|l| l.name}
 
-  def get(url)
-    url = url.gsub(/:user/, @user).gsub(/:repo/, @repo)
-    url = "#{GitHub::ROOT}#{url}"
-    return Net::HTTP.get(URI.parse(url))
-  end
+    @comments = @repo.client.issue_comments(@repo.repo, issue.number.to_s)
 
-  def post(url)
-    auth = {'login' => GitHub::CONFIG['username'], 'token' => GitHub::CONFIG['token']}
-    url = url.gsub(/:user/, @user).gsub(/:repo/, @repo)
-    url = "#{GitHub::ROOT}#{url}"
-    r = Net::HTTP.post_form(URI.parse(url), auth)
-    return r.body if r.is_a?(Net::HTTPSuccess)
-    raise "#{url}: #{r.message} (#{auth.inspect})"
-  end
+    @labels.delete_if{|l| l =~ /data-missing/ || l =~ /release/ || l == 'internal' || l=~ /attention/ || l =~ /feedback/i || l =~ /^[0-9]+days?$/i }
 
-  def issues(state = :open)
-    return YAML::load(get("issues/list/:user/:repo/#{state}"))['issues'].collect { |i| Issue.new(self, i) }
-  end
+    @labels << 'release-blocker' if issue.milestone && issue.milestone == @repo.next_milestone
 
-  def issue(id)
-    return Issue.new(self, YAML::load(get("issues/show/:user/:repo/#{id}"))['issue'])
-  end
+    if (@labels & ['on-hold', 'feature-request', 'IMPORTANT-READ']).size == 0 # any of these labels means it doesn't participate in the workflow
+      body = "\n#{issue.body}\n"
+      context = {}
+      header = ''
+      ['platform', 'backlogs', 'ruby'].each{|part|
+        x = body.match(/\n#{part}:([^\n]+)\n/)
+        body.gsub!(/\n#{part}:([^\n]+)\n/, "\n")
+        x = x ? x[1].strip : ''
+        context[part] = x
+        header << "#{part}: #{x}\n"
+      }
+      @labels << 'data-missing' if context.values.reject{|v| v == ''}.size != 3
+      body = "#{header}\n#{body.strip}"
+      @repo.client.update_issue(@repo.repo, issue.number, issue.title.to_s, body) if body != issue.body.to_s
 
-  def labels(which = :all)
-    return YAML::load(get('issues/labels/:user/:repo'))['labels'] if which == :all
-    return issues.collect{|i| i.labels}.flatten.compact.uniq if which == :active
-    return (issues.collect{|i| i.labels(:calculate)}.flatten + GitHub.states(:keep)).compact.uniq if which == :calculate
-    raise "Unexpected selector #{which.inspect}"
-  end
+      comment = {
+        (@repo.collaborators.include?(issue.user.login) ? :collab : :user) => Time.parse(issue.created_at)
+      }
+      @comments.each{|c|
+        comment[(@repo.collaborators.include?(c.user.login) ? :collab : :user)] = Time.parse(c.created_at)
+      }
 
-  def labels=(new)
-    old = labels
-    remove = old - new
-    add = new - old
+      response = comment[:collab] ? Integer((Time.now - comment[:collab])) / (60 * 60 * 24) : nil
 
-    # post user and api key here
-    remove.each {|l|
-      post("issues/label/remove/:user/:repo/#{l}")
-    }
-    add.each {|l|
-      post("issues/label/add/:user/:repo/#{l}")
-    }
-  end
+      if comment[:user] && (comment[:collab].nil? || comment[:user] > comment[:collab])
+        @labels << 'attention'
+      elsif (comment[:user] && comment[:collab] && comment[:collab] >= comment[:user] && response < 5) || comment[:user].nil?
+        @labels << 'feedback-required'
+      elsif (comment[:user] && comment[:collab] && comment[:collab] >= comment[:user]) || comment[:user].nil?
+        @labels << 'no-feedback'
+        @labels << "#{response}days"
+      end
 
-  def committers
-    return ['friflaj']
-  end
+      @labels.delete('attention') if @labels.include?('data-missing')
 
-  def self.states(cond)
-    return GitHub::STATES.keys.select{|k| GitHub::STATES[k] == cond || (GitHub::STATES[k].is_a?(Array) && GitHub::STATES[k].include?(cond))}
+      @labels << 'internal' if comment[:user].nil?
+    end
+
+    if @labels.size == 0
+      @repo.client.remove_all_labels(@repo.repo, issue.number)
+    else
+      @repo.client.replace_all_labels(@repo.repo, issue.number, @labels)
+    end
+
+    @labels.each{|l| @repo.labels[l] = :keep}
   end
 end
 
-#begin
-  gh = GitHub.new 'relaxdiego', 'redmine_backlogs'
+class Repository
+  def initialize(repo, config)
+    @repo = repo
+    @client = Octokit::Client.new(config)
+    @collaborators = @client.collaborators(@repo).collect{|u| u.login}
+    @labels = {}
+    @client.labels(@repo).each{|label|
+      label = label.name unless label.is_a?(String)
+      @labels[label] = :delete
+    }
 
-  gh.labels = gh.labels(:calculate)
-  gh.issues.each{|i|
-    i.labels = i.labels(:calculate)
-  }
-#rescue
-  #
-#end
+    @milestones = @client.milestones(@repo, :state => 'open')
+    @milestones.sort!{|a, b| a.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') <=> b.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') }
+    @next_milestone = @milestones.size == 0 ? nil : @milestones[0]
+
+    begin
+      page ||= 0
+      page += 1
+      issues = @client.list_issues(@repo, :page => page, :state => 'open')
+      issues.each{|i| Issue.new(self, i) }
+    end while issues.size != 0
+
+    @labels.each_pair{|l, status|
+      next if status == :keep
+      @client.delete_label!(@repo, l)
+    }
+  end
+
+  attr_accessor :client, :repo, :collaborators, :labels, :milestones, :next_milestone
+end
+
+config = IniFile.load(File.expand_path('~/.gitconfig'))['github-issues']
+config.keys.each{|k|
+  sk = k.gsub(/[A-Z]/){|c| "_#{c.downcase}"}.intern
+  config[sk] = config.delete(k)
+}
+
+begin
+  Repository.new('backlogs/redmine_backlogs', config)
+rescue => e
+  raise e if STDOUT.tty?
+end

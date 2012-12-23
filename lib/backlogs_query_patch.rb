@@ -16,83 +16,52 @@ module Backlogs
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
-  
-      # Same as typing in the class 
+
+      # Same as typing in the class
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
         base.add_available_column(QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points"))
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
+        base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
+        base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
 
-        # couldn't get HAVING to work, so a subselect will have to
-        # do
-        story_sql = "from issues story
-                         where
-                          story.root_id = issues.root_id
-                          and story.lft in (
-                            select max(story_lft.lft)
-                            from issues story_lft
-                            where story_lft.root_id = issues.root_id
-                            and story_lft.tracker_id in (<%= RbStory.trackers(:string) %>)
-                            and issues.lft >= story_lft.lft and issues.rgt <= story_lft.rgt
-                          )"
-
-        base.add_available_column(QueryColumn.new(:position,
-                                      :sortable => [
-                                        # sprint startdate
-                                        "coalesce((select sprint_start_date from versions where versions.id = issues.fixed_version_id), '1900-01-01')",
-
-                                        # sprint id, in case start dates are the same
-                                        "(select id from versions where versions.id = issues.fixed_version_id)",
-
-                                        # make sure stories with NULL position sort-last
-                                        RbERB.new("(select case when story.position is null then 1 else 0 end #{story_sql})"),
-
-                                        # story position
-                                        RbERB.new("(select story.position #{story_sql})"),
-
-                                        # story ID, in case story positions are the same (SHOULD NOT HAPPEN!).
-                                        RbERB.new("(select story.id #{story_sql})"),
-
-                                        # order in task tree
-                                        "issues.lft"
-                                      ],
-                                      :default_order => 'asc'))
-
-        base.add_available_column(QueryColumn.new(:initial_estimate))
-  
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
       end
     end
-  
+
     module InstanceMethods
       def available_filters_with_backlogs_issue_type
         @available_filters = available_filters_without_backlogs_issue_type
-  
+
         if RbStory.trackers.length == 0 or RbTask.tracker.blank?
           backlogs_filters = { }
         else
           backlogs_filters = {
             "backlogs_issue_type" => {  :type => :list,
+                                        :name => l(:field_backlogs_issue_type),
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 20 } 
+                                        :order => 20 },
+            "story_points" => { :type => :float,
+                                :name => l(:field_story_points),
+                                :order => 21 }
                              }
         end
-  
-        return @available_filters.merge(backlogs_filters)
+
+        @available_filters = @available_filters.merge(backlogs_filters)
       end
-  
+
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)
         return sql_for_field_without_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter) unless field == "backlogs_issue_type"
 
         db_table = Issue.table_name
-  
+
         sql = []
-  
+
         selected_values = values_for(field)
         selected_values = ['story', 'task'] if selected_values.include?('any')
 
-        story_trackers = RbStory.trackers.collect{|val| "#{val}"}.join(",")
+        story_trackers = RbStory.trackers(:type=>:string)
         all_trackers = (RbStory.trackers + [RbTask.tracker]).collect{|val| "#{val}"}.join(",")
 
         selected_values.each { |val|
@@ -114,7 +83,7 @@ module Backlogs
                               ))"
           end
         }
-  
+
         case operator
           when "="
             sql = sql.join(" or ")
@@ -126,17 +95,17 @@ module Backlogs
         return sql
       end
     end
-    
+
     module ClassMethods
-        # Setter for +available_columns+ that isn't provided by the core.
-        def available_columns=(v)
-            self.available_columns = (v)
-        end
-  
-        # Method to add a column to the +available_columns+ that isn't provided by the core.
-        def add_available_column(column)
-            self.available_columns << (column)
-        end
+      # Setter for +available_columns+ that isn't provided by the core.
+      def available_columns=(v)
+        self.available_columns = (v)
+      end
+
+      # Method to add a column to the +available_columns+ that isn't provided by the core.
+      def add_available_column(column)
+        self.available_columns << (column)
+      end
     end
   end
 end

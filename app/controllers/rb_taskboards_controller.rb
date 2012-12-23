@@ -2,12 +2,12 @@ include RbCommonHelper
 
 class RbTaskboardsController < RbApplicationController
   unloadable
-  
+
   def show
     stories = @sprint.stories
     @story_ids    = stories.map{|s| s.id}
 
-    @settings = Setting.plugin_redmine_backlogs
+    @settings = Backlogs.settings
 
     ## determine status columns to show
     tracker = Tracker.find_by_id(RbTask.tracker)
@@ -50,5 +50,5 @@ class RbTaskboardsController < RbApplicationController
       format.html { render :layout => "rb" }
     end
   end
-  
+
 end

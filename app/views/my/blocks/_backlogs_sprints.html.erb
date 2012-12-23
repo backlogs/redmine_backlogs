@@ -1,0 +1,84 @@
+<h3><%= l(:backlogs_sprints) %></h3>
+<%
+  require 'set'
+  projs = Set.new()
+  roles_projs = User.current.projects_by_role
+  roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
+  Rails.logger.info "in my project"
+  tracker = Tracker.find_by_id(RbTask.tracker)
+  statuses = tracker.issue_statuses
+ -%>
+<div class="mypage-box">
+ <table class="list issues">
+  <%
+     projs.each do |project|
+     sprints = RbSprint.open_sprints(project)
+     next if sprints.length ==0
+     next unless Backlogs.configured?(project)
+  %>
+    <thead>
+     <tr>
+      <th colspan="3"><%= l(:label_project) %>:<%= h project %></th>
+     </tr>
+    </thead>
+    <tbody>
+     <% cnt = 0
+        total = 0
+        sprints.each do |sprint|
+          stat = {}
+          todo = 0
+          progress = 0
+          done = 0
+          sprint.stories.each do |story|
+            story.tasks.each do |task|
+              next if statuses[task.status_id] == nil # Avoid bug?
+	      if statuses[task.status_id].is_closed?
+                done+=1
+              elsif task.status_id == IssueStatus.default.id
+                todo+=1
+              else
+                progress+=1
+              end
+              status = task.status_id
+              if stat.has_key?(status)
+                stat[status] += 1
+              else
+                stat[status] = 1
+              end
+            end
+          end
+          total = done+todo+progress
+     %>
+      <tr class="<%= cnt%2==0?'even':'odd' %>">
+       <td><a href='../rb/taskboards/<%= sprint.id %>'><%= h sprint %></a></td>
+       <td><!-- /
+
+       <%
+       statuses.each do |status|
+       -%>
+        <nobr><%= h status.name %>:<%= stat.has_key?(status.id)?stat[status.id]:0 %></nobr>/
+      <% end -%>
+ -->
+      <table class="progress" style="width: 100%;">
+       <tbody>
+         <% if done!=0 %>
+         <td class="closed" style="width:<%= 100*done/total %>%"></td>
+         <%end -%>
+         <% if progress!=0 %>
+         <td class="done" style="width:<%= 100*progress/total %>%"></td>
+         <% end -%>
+         <% if todo!=0 %>
+         <td class="open" style="width:<%= 100*todo/total %>%"></td>
+         <% end -%>
+       </tbody>
+      </table>
+      </td>
+       <td style="width:15em;text-align:right;"><%= h sprint.sprint_start_date %> - <%= h sprint.effective_date %></td>
+      </tr>
+     <% cnt+=1
+        end
+     -%>
+    </tbody>
+  <% end -%>
+ </table>
+</div>

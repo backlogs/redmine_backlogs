@@ -2,7 +2,7 @@ if(RB==null){
   var RB = {};
 }
 
-if (typeof(jQuery) != 'undefined') { RB.$ = jQuery.noConflict(); }
+if (RB.$ == null) { RB.$ = jQuery.noConflict(); }
 
 RB.Object = {
   // Douglas Crockford's technique for object extension
@@ -22,7 +22,7 @@ RB.Object = {
     }
     return obj;
   }  
-}
+};
 
 
 // Object factory for redmine_backlogs
@@ -52,22 +52,22 @@ RB.Dialog = RB.Object.create({
   }
 });
 
-RB.ajaxQueue = new Array()
+RB.ajaxQueue = new Array();
 RB.ajaxOngoing = false;
 
 RB.ajax = function(options){
   RB.ajaxQueue.push(options);
   if(!RB.ajaxOngoing){ RB.processAjaxQueue(); }
-}
+};
 
 RB.processAjaxQueue = function(){
   var options = RB.ajaxQueue.shift();
 
-  if(options!=null){
+  if(options){
     RB.ajaxOngoing = true;
     RB.$.ajax(options);
   }
-}
+};
 
 RB.$(document).ajaxComplete(function(event, xhr, settings){
   RB.ajaxOngoing = false;
@@ -76,24 +76,31 @@ RB.$(document).ajaxComplete(function(event, xhr, settings){
 
 // Modify the ajax request before being sent to the server
 RB.$(document).ajaxSend(function(event, request, settings) {
-  var c = RB.constants;
-
   settings.data = settings.data || "";
-  settings.data += (settings.data ? "&" : "") + "project_id=" + c.project_id;
 
-  if(c.protect_against_forgery){
-      settings.data += "&" + c.request_forgery_protection_token + "=" + encodeURIComponent(c.form_authenticity_token);
+  if (settings.data.indexOf("project_id=") == -1) {
+    settings.data += (settings.data ? "&" : "") + "project_id=" + RB.constants.project_id;
+  }
+
+  if(RB.constants.protect_against_forgery){
+      settings.data += "&" + RB.constants.request_forgery_protection_token + "=" + encodeURIComponent(RB.constants.form_authenticity_token);
   }
 });
 
 // Abstract the user preference from the rest of the RB objects
 // so that we can change the underlying implementation as needed
 RB.UserPreferences = RB.Object.create({
-  get: function(key){
+  get: function(key, global){
+    if (global) return RB.$.cookie(key, {path: '/rb'});
     return RB.$.cookie(key);
   },
   
-  set: function(key, value){
-    RB.$.cookie(key, value, { expires: 365 * 10 });
+  set: function(key, value, global){
+    if (global) {
+      RB.$.cookie(key, value, { expires: 365 * 10, path: '/rb' });
+    }
+    else {
+      RB.$.cookie(key, value, { expires: 365 * 10 });
+    }
   }
 });

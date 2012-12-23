@@ -58,6 +58,7 @@
   text-align:right;
   top:1px;
   width:150px;
+  white-space: nowrap;
 }
 
 #backlogs_container .closedbacklog,
@@ -98,6 +99,7 @@
 
 
 #backlogs_container .backlog .header{
+  white-space: nowrap;
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
   border-radius:5px 5px 0px 0px;
@@ -175,9 +177,10 @@
   width:160px;
 }
 .backlog .header .menu .item:hover{
-  background-color:#CC0000;
+  background-color:#DDDDDD;
 }
 .backlog .header .menu .item a{
+  color:#000000;
   display:block;
   font-size:12px;
   height:100%;
@@ -185,8 +188,56 @@
   width:100%;
 }
 .backlog .header .menu .item:hover a{
-  color:#FFFFFF;
   text-decoration:none;
+  font-weight:bold;
+}
+.backlog .header .menu .item ul{
+  -moz-box-shadow: 2px 2px 3px #999999;
+  -webkit-box-shadow: 2px 2px 3px #999999;
+  box-shadow: 2px 2px 3px #999999;
+  background-color:#EFEFEF;
+  display:none;
+  list-style:none;
+  margin:0;
+  padding:0;
+  position:absolute;
+  left:160px;
+  top:0;
+}
+.backlog .header .menu .item .icon {
+  left:140px;
+  top:5px;
+}
+.backlog .header .menu .item ul li{
+  display: block;
+  height:24px;
+  overflow:hidden;
+  text-align: left;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width:160px;
+}
+.backlog .header .menu .item:hover ul{
+  display:block;
+}
+.backlog .header .menu .item ul li:hover{
+  background-color:#DDDDDD;
+}
+.backlog .header .menu .item:hover ul li a {
+  font-weight:normal; /* Work-around for when .item is hovered */
+}
+.backlog .header .menu .item ul li a{
+  color:#000000;
+  display:block;
+  font-size:12px;
+  height:100%;
+  padding:6px;
+  width:100%;
+}
+.backlog .header .menu .item ul li:hover a{
+  text-decoration:none;
+  font-weight:bold;
 }
 
 #product_backlog_container .closedbacklog .header .label,
@@ -258,10 +309,11 @@
   height:28px;
   left:5px;
   line-height:28px;
-  overflow:hidden;
+  overflow: hidden;
   position:absolute;
   top:1px;
-  width:330px;
+  margin-right:2em;
+  width:19em;
 }
 
 #backlogs_container .closedbacklog .sprint .sprint_start_date,
@@ -350,7 +402,7 @@
   height:14px;
 /*  left:0px; */
   line-height:14px;
-/*  overflow:hidden;*/
+  overflow:hidden;
   padding-right:3px;
   margin-left:3px;
 /*  position:absolute;*/
@@ -362,6 +414,7 @@
   width:4em;
   -moz-border-radius:4px;
   -webkit-border-radius:4px;
+  border-radius:4px;
   border: 1px solid #AAAAAA
 }
 
@@ -375,17 +428,40 @@
 #backlogs_container .stories .story .id .v {
   display:none;
 }
+#backlogs_container .stories .story .project {
+  display:block;
+  position:relative;
+  float:left;
+  width:55px;
+  margin:1px 0 0 1px;
+  padding-left:2px;
+  padding-top:2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#backlogs_container .stories .story .project .t {
+  overflow:hidden;
+}
+#backlogs_container .stories .story .project .v {
+  display:none;
+}
+#backlogs_container .stories .story.editing .project,
+#backlogs_container .stories .story.editing select.project_id.editor {
+  display:none;
+}
 #backlogs_container .stories .story .subject {
   display:block;
 /*  height:15px;
-  left:70px;
-  overflow:hidden;*/
+  left:70px; */
+  overflow:hidden;
+  margin-right:2em;
   padding:5px 2px 4px 10px;
 /*  position:absolute;
   top:1px;*/
   float:left;
-  width:375px;
-/*  white-space:nowrap;*/
+  width:30em;
+  margin-right:2em;
+  white-space:nowrap;
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
@@ -425,18 +501,19 @@
 /*  height:15px;
   right:10px;
   overflow:hidden;*/
-  padding:5px 15px 4px 9px;
+  padding:5px 5px 4px 5px;
 /*  position:absolute;*/
   text-align:right;
 /*  top:1px;*/
   float: right;
-  width:28px;
+  width:3em;
 }
 #backlogs_container .stories .story .story_points .v {
   display:none;
 }
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
+#backlogs_container .stories .story .story_project,
 #backlogs_container .stories .story .user_status {
   display:none;
 }
@@ -502,7 +579,8 @@
   line-height:15px;
   margin:0;
   top:2px;
-  width:320px;
+  width:19em;
+  overflow:hidden;
   float: left;
 }
 #backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
@@ -549,7 +627,7 @@
 #backlogs_container .stories .story.editing .tracker_id.editor{
   display:block;
   margin:0;
-  width:55px;
+  max-width:80px;
   float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
@@ -586,6 +664,39 @@
     display: none;
 } 
 
+#backlogs_container .stories .editing .edit-actions {
+  clear: both;
+}
+#backlogs_container .editing .edit-actions a {
+  display: inline-block;
+  padding: 4px;
+  margin: 0.5em;
+  margin-left: 1em;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  border: 1px solid #AAAAAA;
+  background-color:#CCC;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#CCC));
+  background: -moz-linear-gradient(top, #EEE, #CCC);
+}
+#backlogs_container .editing .edit-actions a:hover {
+  background-color:#BBB;
+  background: -webkit-gradient(linear, left top, left bottom, from(#DDD), to(#BBB));
+  background: -moz-linear-gradient(top, #DDD, #BBB);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#DDDDDD,EndColorStr=#BBBBBB);
+}
+
+#backlogs_container .sprint.editing .edit-actions { /* make the save/cancel buttons visible for sprint editor */
+  background: white;
+  position: relative;
+  top: 31px;
+  left: 2px;
+  width: 498px;
+  height: 34px;
+  padding: 4px;
+  z-index: 1000;
+}
 
 #helpers{
   display:none;
@@ -652,9 +763,9 @@
   background-color:#E7FAE0;
 }
 #backlogs_container .stories .tracker5{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFF#DAFEF8));
-  background: -moz-linear-gradient(top, #EEE, #FFF#DAFEF8);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FFFFFF#DAFEF8);
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#DAFEF8));
+  background: -moz-linear-gradient(top, #EEE, #DAFEF8);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#DAFEF8);
   background-color:#DAFEF8;
 }
 #backlogs_container .stories .tracker6{

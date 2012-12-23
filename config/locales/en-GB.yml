@@ -2,8 +2,12 @@
 en-GB: 
   backlogs_active: active
   backlogs_any: any
+  backlogs_auto_assign_task: Auto assign task to current user
+  backlogs_burndown_print_height: Burndown print height
+  backlogs_burndown_print_width: Burndown print width
   backlogs_card_specification: Label types for card printing
   backlogs_impediment: Impediment
+  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
   backlogs_points_burn_direction: Points burn up/down
   backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Product backlog
@@ -12,6 +16,7 @@ en-GB:
   backlogs_statistics_active_failed: Project shows no activity
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_committed_velocity_stable_failed: Committed velocity is not stable across sprints
+  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
   backlogs_statistics_product_backlog_filled: Product backlog has stories
   backlogs_statistics_product_backlog_filled_failed: Product backlog is empty
   backlogs_statistics_product_backlog_sized: The stories at the top of the product backlog have sizes
@@ -47,13 +52,13 @@ en-GB:
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
+  field_base: ""
   field_blocks: Blocks
-  field_estimated_hours: Estimated Hours
-  field_initial_estimate: Initial estimate
   field_initial_story_points: Initial story points
   field_name: Name
   field_number_of_snapshots: Saved point snapshots
@@ -61,6 +66,7 @@ en-GB:
   field_priority: Priority
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_remaining_hours: Remaining (hours)
   field_story_points: Story points
   field_subject: Subject
   field_time_entry_comments: Time Entry Comments
@@ -76,12 +82,12 @@ en-GB:
   label_chart_options: Chart Options
   label_close_completed_sprints: Close completed Sprints
   label_column_width: Column width
-  label_download: Download
+  label_download_sprint: Download
   label_hide_completed_sprints: Hide Completed Sprints
-  label_hours_ideal: ideal
   label_hours_remaining: remaining hours
   label_hours_required_burn_rate: required burn rate (hours)
   label_hours: hours
+  label_ideal: ideal
   label_impediments: Impediments
   label_master_backlog: Master Backlog
   label_new_sprint: New Sprint

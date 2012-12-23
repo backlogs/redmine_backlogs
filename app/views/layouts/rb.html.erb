@@ -5,9 +5,12 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="description" content="Redmine Backlogs" />
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
+<%= csrf_meta_tag %>
+<%= favicon %>
 
-<%= render :partial => 'shared/head' %>
-<%= stylesheet_link_tag 'global.css', 'jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+<%= call_hook :view_layouts_base_html_head %>
+
+<%= stylesheet_link_tag 'global.css', 'jquery/jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
 <%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
 <%= yield :head_tags -%>
@@ -19,6 +22,9 @@
       <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
       <%= breadcrumb_separator %>
       <%= yield :breadcrumbs -%>
+    </div>
+    <div class="userselect">
+      <%= yield :view_specific_users -%>
     </div>
     <div class="links">
       <%= yield :view_specific_links -%>

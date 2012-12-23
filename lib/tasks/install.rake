@@ -2,70 +2,23 @@ require 'fileutils'
 require 'benchmark'
 
 namespace :redmine do
-  namespace :backlogs do 
+  namespace :backlogs do
 
     desc "Install and configure Redmine Backlogs"
     task :install => :environment do |t|
-      ENV["RAILS_ENV"] ||= "development"
+      raise "You must specify the RAILS_ENV ('rake redmine:backlogs:install RAILS_ENV=production' or 'rake redmine:backlogs:install RAILS_ENV=development')" unless ENV["RAILS_ENV"]
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
-      ['nokogiri', 'open-uri/cached', 'holidays', 'icalendar', 'prawn'].each{|gem|
-        begin
-          require gem
-        rescue LoadError
-          raise "You are missing the '#{gem}' gem"
-        end
+      Backlogs.gems.each_pair {|gem, installed|
+        raise "You are missing the '#{gem}' gem" unless installed
       }
 
-      corruption_test = (ENV['corruptiontest'] != 'false')
-
-#      raise "You have Redmine version #{Redmine::VERSION}, only version 1.2.1 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.[0-9]/
-      puts "WARNING: You have Redmine version #{Redmine::VERSION}, only version 1.2.1 is supported at this time" unless Redmine::VERSION.to_s =~ /^1\.2\.1/
-
-      begin
-        RbStory.trackers
-      rescue NoMethodError
-        raise "Looks like there's a conflicting plugin that redefines the Story class"
-      end
-
-      if !corruption_test
-        puts "Assuming no database corruption"
-      else
-        issues = Issue.all + []
-        problems = []
-        tested = 0
-        if issues.size != 0
-          puts "Testing #{issues.size} issues for database corruption..."
-          issues.in_groups_of(100, false) do |chunk|
-            b = Benchmark.measure {
-              chunk.each {|issue|
-                begin
-                  issue.save!
-                rescue => e
-                  problems << [issue.id, "#{e}"]
-                end
-              }
-            }
-            tested += chunk.size
-            speed = chunk.size.to_f / b.real
-            puts "#{tested}, #{problems.size} problems found, (#{Integer(speed)} issues/second), estimated time remaining: #{Integer(issues.size / speed)}s"
-          end
-        end
-        if problems.size == 0
-          puts "Database OK!"
-        else
-          puts "The following issues have problems (how ironic is that?):"
-          problems.each do |issue|
-            puts "* #{issue[0]}: #{issue[1]}"
-          end
-        end
-      end
+      puts Backlogs.platform_support(true)
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
-      settings = Setting.plugin_redmine_backlogs
-      settings[:points_burn_direction] ||= 'down'
-      settings[:wiki_template]         ||= ''
+      Backlogs.setting[:points_burn_direction] ||= 'down'
+      Backlogs.setting[:wiki_template] ||= ''
 
       puts "\n"
       puts "====================================================="
@@ -77,23 +30,34 @@ namespace :redmine do
         print "Fetching card labels from http://git.gnome.org..."
         STDOUT.flush
         begin
-          BacklogsCards::LabelStock.fetch_labels
+          BacklogsPrintableCards::CardPageLayout.update
           print "done!\n"
         rescue Exception => fetch_error
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
         end
       else
-        if ! File.exist?(File.dirname(__FILE__) + '/../labels.yaml')
+        if ! File.exist?(File.dirname(__FILE__) + '/../labels/labels.yaml')
           print "Default labels installed\n"
-          FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
+          FileUtils.cp(File.dirname(__FILE__) + '/../labels/labels.yaml.default', File.dirname(__FILE__) + '/../labels/labels.yaml')
         end
       end
-      settings[:card_spec] ||= BacklogsCards::LabelStock::LAYOUTS.keys[0] unless BacklogsCards::LabelStock::LAYOUTS.size == 0
+
+      if BacklogsPrintableCards::CardPageLayout.selected.blank? && BacklogsPrintableCards::CardPageLayout.available.size > 0 
+        Backlogs.setting[:card_spec] = BacklogsPrintableCards::CardPageLayout.available[0]
+      end
 
       trackers = Tracker.find(:all)
 
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
-        settings[:story_trackers] = ENV['story_trackers'].split(',').collect{|n| Tracker.find_by_name(n).id }
+        trackers =  ENV['story_trackers'].split(',')
+        trackers.each{|name|
+          if ! Tracker.find(:first, :conditions => ["name=?", name])
+            puts "Creating story tracker '#{name}'"
+            tracker = Tracker.new(:name => name)
+            tracker.save!
+          end
+        }
+        Backlogs.setting[:story_trackers] = trackers.collect{|n| Tracker.find_by_name(n).id }
       else
         if RbStory.trackers.length == 0
           puts "Configuring story and task trackers..."
@@ -105,7 +69,7 @@ namespace :redmine do
             print "Separate values with a space (e.g. 1 3): "
             STDOUT.flush
             selection = (STDIN.gets.chomp!).split(/\D+/)
-            
+
             # Check that all values correspond to an items in the list
             invalid = false
             invalid_value = nil
@@ -119,7 +83,7 @@ namespace :redmine do
                 tracker_names << trackers[s.to_i-1].name
               end
             end
-          
+
             if invalid
               puts "Oooops! You entered an invalid value (#{invalid_value}). Please try again."
             else
@@ -129,65 +93,72 @@ namespace :redmine do
             end
           end
 
-          settings[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
+          Backlogs.setting[:story_trackers] = selection.map{ |s| trackers[s.to_i-1].id }
         end
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
-        settings[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
+        if ! Tracker.find(:first, :conditions => ["name=?", ENV['task_tracker']])
+          puts "Creating task tracker '#{ENV['task_tracker']}'"
+          tracker = Tracker.new(:name => ENV['task_tracker'])
+          tracker.save!
+        end
+        Backlogs.setting[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
       else
         if !RbTask.tracker
           # Check if there is at least one tracker available
           puts "-----------------------------------------------------"
-          if settings[:story_trackers].length < trackers.length
+          if Backlogs.setting[:story_trackers].length < trackers.length
             invalid = true
             while invalid
               # If there's at least one, ask the user to pick one
               puts "Which tracker do you want to use for your tasks?"
-              available_trackers = trackers.select{|t| !settings[:story_trackers].include? t.id}
+              available_trackers = trackers.select{|t| !Backlogs.setting[:story_trackers].include? t.id}
               j = 0
               available_trackers.each_with_index { |t, i| puts "  #{ j = i + 1 }. #{ t.name }" }
               # puts "  #{ j + 1 }. <<new>>"
               print "Choose one from above (or choose none to create a new tracker): "
               STDOUT.flush
               selection = (STDIN.gets.chomp!).split(/\D+/)
-                    
+
               if selection.length > 0 and selection.first.to_i <= available_trackers.length
                 # If the user picked one, use that
                 print "You selected #{available_trackers[selection.first.to_i-1].name}. Is this correct? (y/n) "
                 STDOUT.flush
                 if (STDIN.gets.chomp!).match("y")
-                  settings[:task_tracker] = available_trackers[selection.first.to_i-1].id
+                  Backlogs.setting[:task_tracker] = available_trackers[selection.first.to_i-1].id
                   invalid = false
                 end
-              # elsif selection.length == 0 or selection.first.to_i == j + 1
-              #   # If the user chose to create a new one, then ask for the name
-              #   settings[:task_tracker] = create_new_tracker
-              #   invalid = false
+              elsif selection.length == 0 or selection.first.to_i == j + 1
+                # If the user chose to create a new one, then ask for the name
+                Backlogs.setting[:task_tracker] = create_new_tracker
+                invalid = false
               else
                 puts "Oooops! That's not a valid selection. Please try again."
               end
             end
           else
-            # If there's none, ask to create one
-            # settings[:task_tracker] = create_new_tracker
-            puts "You don't have any trackers available for use with tasks."
-            puts "Please create a new tracker via the Redmine admin interface,"
-            puts "then re-run this installer. Press any key to continue."
-            STDOUT.flush
-            STDIN.gets
+            Backlogs.setting[:task_tracker] = create_new_tracker
+            #puts "You don't have any trackers available for use with tasks."
+            #puts "Please create a new tracker via the Redmine admin interface,"
+            #puts "then re-run this installer. Press any key to continue."
+            #STDOUT.flush
+            #STDIN.gets
           end
         end
       end
 
-      # Necessary because adding key-value pairs one by one doesn't seem to work
-      Setting.plugin_redmine_backlogs = settings
-      
       puts "Story and task trackers are now set."
-      
+
       print "Migrating the database..."
       STDOUT.flush
-      system('rake db:migrate_plugins --trace > redmine_backlogs_install.log')
+      if Backlogs.platform == :redmine && Redmine::VERSION::MAJOR > 1
+        db_migrate_task = "redmine:plugins:migrate"
+      else
+        db_migrate_task = "db:migrate:plugins"
+      end
+      system("rake #{db_migrate_task} --trace > redmine_backlogs_install.log")
+      system('rake redmine:backlogs:fix_positions --trace >> redmine_backlogs_install.log')
       if $?==0
         puts "done!"
         puts "Installation complete. Please restart Redmine."
@@ -200,7 +171,7 @@ namespace :redmine do
         puts "*******************************************************"
       end
     end
-    
+
     def create_new_tracker
       repeat = true
       puts "Creating a new task tracker."
@@ -214,7 +185,7 @@ namespace :redmine do
         end
         print "You typed '#{name}'. Is this correct? (y/n) "
         STDOUT.flush
-        
+
         if (STDIN.gets.chomp!).match("y")
           tracker = Tracker.new(:name => name)
           tracker.save!

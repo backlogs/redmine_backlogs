@@ -1,0 +1,5 @@
+<div class="errors">
+  <%- model_errors.each do |a, err| %>
+  <div><%= "#{l('field_' + a.to_s)} #{l('error_' + err.to_s)}" %></div>
+  <%- end %>
+</div>

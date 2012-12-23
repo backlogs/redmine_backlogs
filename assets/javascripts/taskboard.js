@@ -19,15 +19,30 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.defaultColWidth = 2;
     self.loadColWidthPreference();
     self.updateColWidths();
-    RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths() });
+    RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
-    // Initialize task lists
-    j.find("#tasks .list").sortable({ 
-      connectWith: '#tasks .list', 
+    // Initialize task lists, restricting drop to the story
+    var tasks_lists =j.find('.story-swimlane');
+    if (!tasks_lists || !tasks_lists.length) {
+      alert("There are no task states. Please check the workflow of your tasks tracker in the administration section.");
+      return;
+    }
+
+    var sortableOpts = {
       placeholder: 'placeholder',
+      distance: 3,
+      helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
       stop: self.dragStop,
       update: self.dragComplete
+    };
+
+    tasks_lists.each(function(index){
+      var id = '#' + RB.$(this).attr('id') + ' .list';
+
+      j.find(id).sortable(RB.$.extend({
+        connectWith: id
+        }, sortableOpts));
     });
 
     // Initialize each task in the board
@@ -36,17 +51,13 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     });
 
     // Add handler for .add_new click
-    j.find('#tasks .add_new').bind('mouseup', self.handleAddNewTaskClick);
+    j.find('#tasks .add_new').bind('click', self.handleAddNewTaskClick);
 
 
     // Initialize impediment lists
-    j.find("#impediments .list").sortable({ 
-      connectWith: '#impediments .list', 
-      placeholder: 'placeholder',
-      start: self.dragStart,
-      stop: self.dragStop,
-      update: self.dragComplete
-    });
+    j.find("#impediments .list").sortable(RB.$.extend({
+      connectWith: '#impediments .list'
+    }, sortableOpts));
 
     // Initialize each task in the board
     j.find('.impediment').each(function(index){
@@ -54,7 +65,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     });
 
     // Add handler for .add_new click
-    j.find('#impediments .add_new').bind('mouseup', self.handleAddNewImpedimentClick);
+    j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
   },
   
   dragComplete: function(event, ui) {
@@ -66,19 +77,33 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStart: function(event, ui){ 
-    ui.item.addClass("dragging");
+    if (jQuery.support.noCloneEvent){
+      ui.item.addClass("dragging");
+    } else {
+      // for IE
+      ui.item.addClass("dragging");      
+      ui.item.draggable('enabled');
+    }
   },
   
   dragStop: function(event, ui){ 
-    ui.item.removeClass("dragging");  
+    if (jQuery.support.noCloneEvent){
+      ui.item.removeClass("dragging");
+    } else {
+      // for IE
+      ui.item.draggable('disable');
+      ui.item.removeClass("dragging");      
+    }
   },
 
   handleAddNewImpedimentClick: function(event){
+    if (event.button > 1) return;
     var row = RB.$(this).parents("tr").first();
     RB.$('#taskboard').data('this').newImpediment(row);
   },
   
   handleAddNewTaskClick: function(event){
+    if (event.button > 1) return;
     var row = RB.$(this).parents("tr").first();
     RB.$('#taskboard').data('this').newTask(row);
   },
@@ -107,12 +132,19 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   updateColWidths: function(){
-    var w = parseInt(RB.$("#col_width input").val());
+    var w = parseInt(RB.$("#col_width input").val(), 10);
     if(w==null || isNaN(w)){
       w = this.defaultColWidth;
     }
-    RB.$("#col_width input").val(w)
+    RB.$("#col_width input").val(w);
     RB.UserPreferences.set('taskboardColWidth', w);
     RB.$(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
   }
+});
+
+jQuery(document).ready(function(){
+  jQuery("#board_header").scrollFollow({
+    speed: 100,
+    offset: 0
+  });
 });

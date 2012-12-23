@@ -2,7 +2,7 @@
 body{
   background-color:#FFFFFF;
   font-family:Verdana, Arial, sans-serif;
-  font-size:1em;
+  font-size:12px;
   height:100%;
   margin:0;
   width:100%;
@@ -23,28 +23,29 @@ a:hover{
   position:relative;
   width:100%;
   box-shadow: 0 3px 4px #A0A0A0;
+  z-index:1000;
 }
 #toolbar .breadcrumbs{
-  bottom:5px;
-  display:block;
-  font-size:0.8em;
-  left:10px;
-  position:absolute;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 #toolbar .breadcrumbs .home{
   font-size:1.2em;
 }
 #toolbar .breadcrumbs .separator{
-  bottom:2px;
   color: #999999;
-  font-size:0.7em;
+  font-size:0.9em;
   font-weight:bold;
+  padding: 0 .2em;
+}
+#toolbar .userselect{
+  float: left;
   position:relative;
 }
 #toolbar .links{
   bottom:5px;
   display:block;
-  font-size:0.7em;
   right:10px;
   position:absolute;
 }
@@ -84,4 +85,7 @@ body.loading #refresh{
 
 ul.ui-sortable {
     min-height: 20px!important;
+}
+.tooltip_text{
+  display:none;
 }

@@ -1,0 +1,50 @@
+---
+language: ruby
+release: 0.9.29
+services:
+- mysql
+- 
+rvm:
+- 1.9.3
+- 1.8.7
+env:
+- REDMINE_VER=2.0.4 DB=mysql
+- REDMINE_VER=2.1.5 DB=mysql
+#- REDMINE_VER=2.2.0 DB=mysql
+- REDMINE_VER=2.0.4 DB=sqlite
+- REDMINE_VER=2.1.5 DB=sqlite
+#- REDMINE_VER=2.2.0 DB=sqlite
+- REDMINE_VER=2.0.4 DB=postgresql
+- REDMINE_VER=2.1.5 DB=postgresql
+#- REDMINE_VER=2.2.0 DB=postgresql
+matrix:
+  allow_failures:
+  - env: REDMINE_VER=2.2.0 DB=mysql
+  - env: REDMINE_VER=2.2.0 DB=sqlite
+  - env: REDMINE_VER=2.2.0 DB=postgresql
+  exclude:
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.0.4 DB=mysql
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.1.5 DB=mysql
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.2.0 DB=mysql
+install: echo skip bundle install
+before_script:
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;' -U postgres; fi"
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U postgres; fi"
+- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;'; fi"
+script:
+- export WORKSPACE=`pwd`/workspace
+- export PATH_TO_BACKLOGS=`pwd`
+- export PATH_TO_REDMINE=$WORKSPACE/redmine
+- mkdir $WORKSPACE
+- cp config/database.yml.travis $WORKSPACE/database.yml
+- bash -x ./redmine_install.sh -r
+- bash -x ./redmine_install.sh -i
+- bash -x ./redmine_install.sh -t _base
+- bash -x ./redmine_install.sh -t _burndown
+- bash -x ./redmine_install.sh -t _other
+- bash -x ./redmine_install.sh -t _shared
+- bash -x ./redmine_install.sh -t _ui
+- bash -x ./redmine_install.sh -u
