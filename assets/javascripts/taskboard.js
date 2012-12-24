@@ -142,9 +142,86 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   }
 });
 
-jQuery(document).ready(function(){
-  jQuery("#board_header").scrollFollow({
+RB.UserFilter = RB.Object.create({
+  initialize: function() {
+    var me = this,
+      _ = RB.constants.locale._;
+    me.el = RB.$(".userfilter");
+    me.el.multiselect({
+      selectedText: _("Filter tasks"),
+      noneSelectedText: _("Filter tasks: my tasks"),
+      checkAllText: _("All tasks"),
+      uncheckAllText: _("My tasks"),
+      checkAll: function() { me.updateUI(); },
+      uncheckAll: function() { me.onUnCheckAll(); },
+      click: function() { me.updateUI(); }
+    });
+    me.el.multiselect('checkAll');
+  },
+
+  /* uncheck all users but check the current user, so we get a private mode button */
+  onUnCheckAll: function() {
+    var uid = RB.$("#userid").text();
+    this.el.multiselect("widget").find(":checkbox[value='"+uid+"']").each(function() {this.checked = true;} );
+    this.updateUI();
+  },
+
+  updateUI: function() {
+    this.updateTasks();
+    this.updateStories();
+  },
+
+  updateTasks: function() {
+    var me = this;
+    RB.$(".task").each(function() {
+      var task_ownerid = null;
+      try{
+        task_ownerid = RB.$(".assigned_to_id .v", this).text();
+      } catch(e){ return; }
+      if (!task_ownerid || me.el.multiselect("widget").find(":checkbox[value='"+task_ownerid+"']").is(':checked')) {
+        RB.$(this).show();
+      }else {
+        RB.$(this).hide();
+      }
+    });
+  },
+
+  updateStories: function() {
+    //Check if all stories should be visible even if not used
+    var showUnusedStories = this.el.multiselect("widget").find(":checkbox[value='s']").is(':checked');
+
+    //Parse through all the stories and hide the ones not used
+    RB.$('.story').each(function() {
+      var sprintInfo = RB.$(this).children('.id').children('a')[0];
+      var storyID = sprintInfo.innerHTML;
+
+      RB.$(this).closest('tr').show();
+      var hasVisTasks = 0;
+      var hasTasks = 0;  // Keep track if a story has tasks (visible or not)
+
+      //Parse each task in the story and see if any tasks are not hidden
+      RB.$("#tasks [id^="+storyID+"_]").each(function(){
+        RB.$(this).children().each(function(){
+          hasTasks = 1;
+          if (RB.$(this).is(':visible'))
+            hasVisTasks = 1;
+        });
+      });
+
+      //Hide or show story row based on if any tasks are visible
+      if (hasVisTasks || (showUnusedStories && !hasTasks))
+        RB.$(this).closest('tr').show();
+      else
+        RB.$(this).closest('tr').hide();
+    });
+   }
+});
+
+RB.$(function(){ /*document ready*/
+  RB.$("#board_header").scrollFollow({
     speed: 100,
     offset: 0
   });
+  RB.UserFilter.initialize();
 });
+
