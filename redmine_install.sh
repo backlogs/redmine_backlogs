@@ -93,9 +93,6 @@ clone_redmine()
   if [ ! "$VERBOSE" = "yes" ]; then
     QUIET=--quiet
   fi
-  #git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
-  #cd $PATH_TO_REDMINE
-  #git checkout $REDMINE_GIT_TAG
   mkdir -p $PATH_TO_REDMINE
   wget $REDMINE_TARBALL -O- | tar -C $PATH_TO_REDMINE -xz --strip=1 --show-transformed -f -
 }
