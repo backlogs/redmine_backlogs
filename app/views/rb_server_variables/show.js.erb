@@ -20,6 +20,14 @@ if (RB.constants == null) {
     new_story_position: <%= Backlogs.setting[:new_story_position].to_s.to_json.html_safe %>
   };
 
+  RB.constants.locale = {
+    _: function(s) { return RB.constants.locale[s]; },
+    'Filter tasks': "<%= l(:label_filter_tasks)%>",
+    'Filter tasks: my tasks': "<%= l(:label_filter_tasks_my_tasks)%>",
+    'All tasks': "<%= l(:label_all_tasks) %>",
+    'My tasks': "<%= l(:label_my_tasks) %>"
+  };
+
   RB.routes = {
     create_sprint: <%= url_for(:controller => 'rb_sprints', :action => 'create').to_json.html_safe %>,
     update_sprint: <%= url_for(:controller => 'rb_sprints', :action => 'update', :sprint_id => ':id').to_json.html_safe %>,
