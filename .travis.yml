@@ -1,6 +1,6 @@
 ---
 language: ruby
-release: 0.9.29
+release: 0.9.30
 services:
 - mysql
 - postgresql
@@ -31,9 +31,12 @@ matrix:
     env: REDMINE_VER=2.2.0 DB=mysql
 install: echo skip bundle install
 before_script:
-- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;' -U postgres; fi"
-- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U postgres; fi"
-- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;'; fi"
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;'
+  -U postgres; fi"
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U
+  postgres; fi"
+- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;';
+  fi"
 script:
 - export WORKSPACE=`pwd`/workspace
 - export PATH_TO_BACKLOGS=`pwd`
