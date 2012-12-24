@@ -10,13 +10,13 @@ rvm:
 env:
 - REDMINE_VER=2.0.4 DB=mysql
 - REDMINE_VER=2.1.5 DB=mysql
-#- REDMINE_VER=2.2.0 DB=mysql
+- REDMINE_VER=2.2.0 DB=mysql
 - REDMINE_VER=2.0.4 DB=sqlite
 - REDMINE_VER=2.1.5 DB=sqlite
-#- REDMINE_VER=2.2.0 DB=sqlite
+- REDMINE_VER=2.2.0 DB=sqlite
 - REDMINE_VER=2.0.4 DB=postgresql
 - REDMINE_VER=2.1.5 DB=postgresql
-#- REDMINE_VER=2.2.0 DB=postgresql
+- REDMINE_VER=2.2.0 DB=postgresql
 matrix:
   allow_failures:
   - env: REDMINE_VER=2.2.0 DB=mysql
