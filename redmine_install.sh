@@ -39,7 +39,8 @@ then
 fi
 
 export CLUSTER_shared="features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
-export CLUSTER_burndown="features/burndown.feature features/cecilia_burndown.feature"
+export CLUSTER_burndown1="features/burndown.feature"
+export CLUSTER_burndown2="features/cecilia_burndown.feature"
 export CLUSTER_base="features/common.feature features/routes.feature features/duplicate_story.feature"
 export CLUSTER_ui="features/settings.feature features/sidebar.feature features/ui.feature"
 export CLUSTER_other=`ruby -e "puts (Dir['features/*.feature'] - ENV.keys.select{|k| k=~ /^CLUSTER_/}.collect{|k| ENV[k].split}.flatten).join(' ')"`

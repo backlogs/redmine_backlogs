@@ -43,7 +43,8 @@ script:
 - bash -x ./redmine_install.sh -r
 - bash -x ./redmine_install.sh -i
 - bash -x ./redmine_install.sh -t _base
-- bash -x ./redmine_install.sh -t _burndown
+- bash -x ./redmine_install.sh -t _burndown1
+- bash -x ./redmine_install.sh -t _burndown2
 - bash -x ./redmine_install.sh -t _other
 - bash -x ./redmine_install.sh -t _shared
 - bash -x ./redmine_install.sh -t _ui
