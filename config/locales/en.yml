@@ -208,3 +208,7 @@ en:
   backlogs_burndown_settings: Burndown settings
   backlogs_pblpage_settings: Product backlog page settings
   backlogs_story_settings: Story and Task settings
+  label_filter_tasks: Filter by user
+  label_filter_tasks_my_tasks: Filter by user - my tasks
+  label_all_tasks: All tasks
+  label_my_tasks: My tasks
