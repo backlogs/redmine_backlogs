@@ -38,20 +38,6 @@ then
   exit 1;
 fi
 
-export CLUSTER_shared="features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
-export CLUSTER_burndown1="features/burndown.feature"
-export CLUSTER_burndown2="features/cecilia_burndown.feature"
-export CLUSTER_base="features/common.feature features/routes.feature features/duplicate_story.feature"
-export CLUSTER_ui="features/settings.feature features/sidebar.feature features/ui.feature"
-export CLUSTER_other=`ruby -e "puts (Dir['features/*.feature'] - ENV.keys.select{|k| k=~ /^CLUSTER_/}.collect{|k| ENV[k].split}.flatten).join(' ')"`
-export RUBYVER=`ruby -e 'puts RUBY_VERSION' | awk -F. '{print $1"."$2}'`
-
-clusters()
-{
-  env | grep CLUSTER | awk -F= '{print $1}' | awk -F_ '{print "- bash -x ./redmine_install.sh -t _" $2}' | sort
-}
-
-
 export RAILS_ENV=test
 
 case $REDMINE_VER in
@@ -131,8 +117,6 @@ run_tests()
     fi
   fi
 
-  cluster="CLUSTER$1"
-  CLUSTER="${!cluster}"
   FEATURE=$1
   if [ ! -e "$FEATURE" ]; then
     FEATURE="features/$FEATURE.feature"
@@ -141,10 +125,7 @@ run_tests()
     FEATURE=""
   fi
 
-  if [ ! "$CLUSTER" = "" ]; then
-    TESTS="$CLUSTER"
-    LOG="$WORKSPACE/cuke$1.log"
-  elif [ -e "$FEATURE" ]; then
+  if [ -e "$FEATURE" ]; then
     TESTS="$FEATURE"
     LOG=`basename $FEATURE`
     LOG="$WORKSPACE/cuke.$LOG.log"
@@ -259,13 +240,12 @@ bundle exec rake redmine:backlogs:install labels=no $TRACE
 if [ "$VERBOSE" = "yes" ]; then echo 'Done!'; fi
 }
 
-while getopts :irtuc opt
+while getopts :irtu opt
 do case "$opt" in
   r)  clone_redmine; exit 0;;
   i)  run_install;  exit 0;;
   t)  run_tests $2;  exit 0;;
   u)  uninstall;  exit 0;;
-  c)  clusters;  exit 0;;
   [?]) echo "i: install; r: clone redmine; t: run tests; u: uninstall";;
   esac
 done

@@ -44,10 +44,25 @@ script:
 - cp config/database.yml.travis $WORKSPACE/database.yml
 - bash -x ./redmine_install.sh -r
 - bash -x ./redmine_install.sh -i
-- bash -x ./redmine_install.sh -t _base
-- bash -x ./redmine_install.sh -t _burndown1
-- bash -x ./redmine_install.sh -t _burndown2
-- bash -x ./redmine_install.sh -t _other
-- bash -x ./redmine_install.sh -t _shared
-- bash -x ./redmine_install.sh -t _ui
+- bash -x ./redmine_install.sh -t features/burndown.feature
+- bash -x ./redmine_install.sh -t features/cecilia_burndown.feature
+- bash -x ./redmine_install.sh -t features/common.feature
+- bash -x ./redmine_install.sh -t features/duplicate_story.feature
+- bash -x ./redmine_install.sh -t features/extended_timelog.feature
+- bash -x ./redmine_install.sh -t features/product_owner.feature
+- bash -x ./redmine_install.sh -t features/release.feature
+- bash -x ./redmine_install.sh -t features/routes.feature
+- bash -x ./redmine_install.sh -t features/scrum_master.feature
+- bash -x ./redmine_install.sh -t features/settings.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-burndown.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-chief_product_owner2.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-chief_product_owner.feature
+- bash -x ./redmine_install.sh -t features/shared-versions.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-pblpage.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-positioning.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-scrum_master-dnd.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-team_member-dnd.feature
+- bash -x ./redmine_install.sh -t features/sidebar.feature
+- bash -x ./redmine_install.sh -t features/team_member.feature
+- bash -x ./redmine_install.sh -t features/ui.feature
 - bash -x ./redmine_install.sh -u
