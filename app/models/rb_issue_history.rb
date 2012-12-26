@@ -335,7 +335,7 @@ class RbIssueHistory < ActiveRecord::Base
 
       if parent_history_index.nil?
         # the record needs to be added, so add and sort (history needs to be sorted)
-        p.history.history = (p.history.history + parent_data).sort{|a, b| a[:date] <=> b[:date]}
+        p.history.history = (p.history.history + [parent_data]).sort{|a, b| a[:date] <=> b[:date]}
       else
         # there was an entry on this date, replace it
         p.history.history[parent_history_index] = parent_data
