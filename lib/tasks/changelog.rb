@@ -14,7 +14,7 @@ changelog = File.open('CHANGELOG.rdoc').each{|line|
 }
 
 puts "== #{Date.today.strftime('%Y-%m-%d')} v???\n\n"
-gitlog = `git --no-pager log --date=short --format="%ad %s"`
+gitlog = `git --no-pager log -50 --date=short --format="%ad %s"`
 gitlog.split("\n").each{|line|
   line = line.strip
 
