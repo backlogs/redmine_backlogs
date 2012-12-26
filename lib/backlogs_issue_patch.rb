@@ -11,7 +11,7 @@ module Backlogs
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :backlogs_history, :class_name => RbIssueHistory
+        has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
