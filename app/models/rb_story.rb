@@ -234,4 +234,18 @@ class RbStory < Issue
     return super(RbStory.find_options(:project => self.project_id, :sprint => self.fixed_version_id))
   end
 
+  def story_follow_task_state
+    status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
+    unless status_id.nil? || status_id.to_i == 0
+      # bail out if something is other than closed.
+      tasks.each{|task| 
+        unless task.status.is_closed?
+          return
+        end
+      }
+      self.reload #we might be stale at this point
+      self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
+    end
+  end
+
 end
