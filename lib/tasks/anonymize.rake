@@ -2,6 +2,7 @@ desc "Anonymize your database -- DON'T USE THIS UNLESS YOU REALLY, REALLY KNOW W
 
 $count = {}
 def random_string(model_attr, v)
+  return '' if v.nil? &&  model_attr.match(/\.mail/)
   return nil if v.nil?
 
   $count[model_attr] ||= 0
@@ -26,6 +27,7 @@ namespace :redmine do
       clear = ['AuthSource', 'AuthSourceLdap', 'Message', 'News', 'Comment', 'Changeset', 'Document', 'Attachment', 'Board', 'Change']
       ignore = [
         'AnonymousUser#language',
+        'Group#language',
         'AnonymousUser#login',
         'CustomField#field_format',
         'CustomField#regexp',
