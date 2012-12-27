@@ -235,17 +235,41 @@ class RbStory < Issue
   end
 
   def story_follow_task_state
-    status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
-    unless status_id.nil? || status_id.to_i == 0
-      # bail out if something is other than closed.
-      tasks.each{|task| 
-        unless task.status.is_closed?
-          return
-        end
-      }
-      self.reload #we might be stale at this point
-      self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
+    return if Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'close' && Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'loose'
+    return if self.status.is_closed? #bail out if we are closed
+
+    self.reload #we might be stale at this point
+    case Setting.plugin_redmine_backlogs[:story_follow_task_status]
+      when 'close'
+        set_closed_status_if_following_to_close
+      when 'loose'
+        avg_ratio = tasks.map{|task| task.status.default_done_ratio }.sum / tasks.length
+        #find status near avg_ratio
+        #find the status allowed, order by position, with nearest default_done_ratio not higher then avg_ratio
+        new_st = nil
+        self.new_statuses_allowed_to.each{|status|
+          new_st = status if status.default_done_ratio <= avg_ratio
+          break if status.default_done_ratio > avg_ratio
+        }
+        #set status and good.
+        self.journalized_update_attributes :status_id => new_st.id if new_st
+        set_closed_status_if_following_to_close
+
+        #calculate done_ratio weighted from tasks
+        recalculate_attributes_for(self.id) unless Issue.use_status_for_done_ratio?
+      else
+
     end
   end
 
+  def set_closed_status_if_following_to_close
+        status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
+        unless status_id.nil? || status_id.to_i == 0
+          # bail out if something is other than closed.
+          tasks.each{|task| 
+            return unless task.status.is_closed?
+          }
+          self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
+        end
+  end
 end

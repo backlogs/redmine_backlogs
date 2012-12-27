@@ -475,3 +475,8 @@ Then /^the issue should display (\d+) remaining hours$/ do |hours|
   field.text.should == "#{"%.2f" % hours.to_f} hours"
 end
 
+Then /^the done ratio for story (.+?) should be (\d+)$/ do |story, ratio|
+  story = RbStory.find_by_subject(story)
+  story.should_not be_nil
+  story.done_ratio.should == ratio.to_i
+end

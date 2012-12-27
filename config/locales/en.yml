@@ -29,7 +29,11 @@ en:
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
   backlogs_points_burn_direction: Points burn up/down
-  backlogs_story_close_status: "Status to close story automatically"
+  backlogs_story_follows_task_status: Story follows Task status
+  backlogs_story_follow_task_status_nil: Disabled
+  backlogs_story_follow_task_status_close: Close when all Tasks are closed
+  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_close_status: "When all Tasks are closed, update Story to:"
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
   backlogs_story: Story

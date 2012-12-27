@@ -605,7 +605,18 @@ Given /^I view the release page$/ do
   click_link("Releases")
 end
 
-Given /^Story states loosely follow Task states$/ do
+Given /^Story closes when all Tasks are closed$/ do
+  Backlogs.setting[:story_follow_task_status] = 'close'
   status = IssueStatus.find_by_name('Closed')
   Backlogs.setting[:story_close_status_id] = status.id
+end
+
+Given /^Story states loosely follow Task states$/ do
+  Backlogs.setting[:story_follow_task_status] = 'loose'
+  Backlogs.setting[:story_close_status_id] = '0'
+  Setting.issue_done_ratio = 'issue_status' #auto done_ratio for issues. issue_field is not supported (yet)
+end
+
+Given /^Issue done_ratio is determined by the issue field$/ do
+  Setting.issue_done_ratio = 'issue_field'
 end

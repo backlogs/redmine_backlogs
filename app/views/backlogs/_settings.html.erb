@@ -127,12 +127,21 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_story_follows_task_status)) %>
+  <%= radio_button_tag("settings[story_follow_task_status]", 'nil',
+      Backlogs.setting[:story_follow_task_status].nil? || Backlogs.setting[:story_follow_task_status] == 'nil') %><%= l(:backlogs_story_follow_task_status_nil) %>
+  <br />
+  <%= radio_button_tag("settings[story_follow_task_status]", 'close',
+      Backlogs.setting[:story_follow_task_status] == 'close' ) %><%= l(:backlogs_story_follow_task_status_close) %>
+  <br />
+  <%= radio_button_tag("settings[story_follow_task_status]", 'loose',
+      Backlogs.setting[:story_follow_task_status] == 'loose' ) %><%= l(:backlogs_story_follow_task_status_loose) %>
+  <br />
   <%= content_tag(:label, l(:backlogs_story_close_status)) %>
   <%= select_tag("settings[story_close_status_id]", 
             options_for_select([['<'+l(:rb_label_timelog_disable)+'>', 0]] + IssueStatus.all.collect{|e| [e.name, e.id]},
                               Setting.plugin_redmine_backlogs.has_key?(:story_close_status_id)?(Setting.plugin_redmine_backlogs[:story_close_status_id].to_i):0)
-      )
-%>
+  ) %>
 </p>
 
 <p>
