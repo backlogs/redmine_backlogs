@@ -117,13 +117,15 @@ class RbStory < Issue
   def self.create_and_position(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
     params['next'] = params.delete('next_id') if params.include?('next_id')
+    params['prev'] = nil if (['next', 'prev'] - params.keys).size == 2
 
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
     s.position!(params)
+
     return s
   end
 
