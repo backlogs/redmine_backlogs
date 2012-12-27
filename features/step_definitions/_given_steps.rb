@@ -605,3 +605,7 @@ Given /^I view the release page$/ do
   click_link("Releases")
 end
 
+Given /^Story states loosely follow Task states$/ do
+  status = IssueStatus.find_by_name('Closed')
+  Backlogs.setting[:story_close_status_id] = status.id
+end

@@ -398,10 +398,16 @@ Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |t
   page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
 end
 
-Then /^task (.+) should have the status (.+)$/ do |task, state|
+Then /^task (.+?) should have the status (.+)$/ do |task, state|
   state = IssueStatus.find_by_name(state)
   task = RbTask.find_by_subject(task)
   task.status_id.should == state.id
+end
+
+Then /^story (.+?) should have the status (.+)$/ do |story, state|
+  state = IssueStatus.find_by_name(state)
+  story = RbStory.find_by_subject(story)
+  story.status_id.should == state.id
 end
 
 Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|

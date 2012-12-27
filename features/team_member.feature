@@ -110,3 +110,30 @@ Feature: Team Member
      Then task A Whole New Task should have estimated_hours set to 8
       And story Story 1 should have estimated_hours set to 10
       And story Story 1 should have estimated_hours set to 10
+
+  Scenario: Story loosely follows Task states
+    Given I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                  0 |
+        | Assigned    |         0 |          0 |                 10 |
+        | In Progress |         0 |          0 |                 20 |
+        | Resolved    |         0 |          0 |                 90 |
+        | Feedback    |         0 |          0 |                 50 |
+        | Closed      |         1 |          0 |                100 |
+        | Accepted    |         1 |          0 |                100 |
+        | Rejected    |         1 |          0 |                100 |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story 2          | 10       | New    |
+        | A.2          | Story 2          | 10       | New    |
+      And Story states loosely follow Task states
+      And I am viewing the taskboard for Sprint 001
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to In Progress
+     Then story Story 2 should have the status New
+     When I update the status of task A.2 to In Progress
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to Closed
+     Then story Story 2 should have the status New
+     When I update the status of task A.2 to Closed
+     Then story Story 2 should have the status Closed
