@@ -242,6 +242,7 @@ class RbIssueHistory < ActiveRecord::Base
 
     if rb.history.detect{|h| h[:tracker] == :story }
       rb.history.collect{|h| h[:sprint] }.compact.uniq.each{|sprint_id|
+        next unless RbSprint.find_by_id(sprint_id) # the sprint could have been deleted
         RbSprintBurndown.find_or_initialize_by_version_id(sprint_id).touch!(issue.id)
       }
     end
@@ -295,6 +296,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   def touch_sprint
     self.history.select{|h| h[:sprint]}.uniq{|h| "#{h[:sprint]}::#{h[:tracker]}"}.each{|h|
+      next unless RbSprint.find_by_id(h[:sprint]) # the sprint could have been deleted
       RbSprintBurndown.find_or_initialize_by_version_id(h[:sprint]).touch!(h[:tracker] == :story ? self.issue.id : nil) 
     }
   end
