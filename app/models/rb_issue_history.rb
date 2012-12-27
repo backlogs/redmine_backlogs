@@ -103,19 +103,18 @@ class RbIssueHistory < ActiveRecord::Base
     }
 
     if ActiveRecord::Base.connection.tables.include?('rb_journals')
-      RbIssueHistory.connection.execute("select * from rb_journals where issue_id=#{issue.id}").sort{|a,b| a['timestamp'] <=> b['timestamp']}.each{|j|
-        j['timestamp'] = Time.parse(j['timestamp']) if j['timestamp'].is_a?(String)
-        date = j['timestamp'].to_date
+      RbJournal.all(:conditions => ['issue_id=?', issue.id], :order => 'timestamp asc').each{|j|
+        date = j.timestamp.to_date
         full_journal[date] ||= {}
-        case j['property']
-        when 'story_points' then full_journal[date][:story_points] = {:new => j['value'] ? j['value'].to_f : nil}
-        when 'status_success' then full_journal[date][:status_success] = {:new => j['value'] == 'true'}
-        when 'status_open' then full_journal[date][:status_open] = {:new => j['value'] == 'true'}
-        when 'fixed_version_id' then full_journal[date][:sprint] = {:new => j['value'] ? j['value'].to_i : nil}
-        when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j['value'] ? j['value'].to_f : nil}
-        when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j['value'] ? j['value'].to_f : nil}
+        case j.property
+        when 'story_points' then full_journal[date][:story_points] = {:new => j.value ? j.value.to_f : nil}
+        when 'status_success' then full_journal[date][:status_success] = {:new => j.value == 'true'}
+        when 'status_open' then full_journal[date][:status_open] = {:new => j.value == 'true'}
+        when 'fixed_version_id' then full_journal[date][:sprint] = {:new => j.value ? j.value.to_i : nil}
+        when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j.value ? j.value.to_f : nil}
+        when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j.value ? j.value.to_f : nil}
   
-        else raise "Unexpected property #{j['property']}: #{j['value'].inspect}"
+        else raise "Unexpected property #{j.property}: #{j.value.inspect}"
         end
   
         #:status_id is not in rb_journals
