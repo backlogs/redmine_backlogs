@@ -1,3 +1,15 @@
+/**
+ * reserved classes are
+ * .backlog (used in master_backlog.js to initialize all backlogs)
+ * .model (used in backlog.js editable_inplace.js model.js)
+ * .sprint (used in backlog.js 
+ * .stories (used in backlog.js for sortable)
+ * .editor
+ * .editable (bind click on)
+ * .close_sprint (bind click on)
+ */
+ul li { vertical-align: bottom; } /* close IE7 gap between list items */
+
 #backlogs_container{
   display:block;
   margin:10px auto;
@@ -6,63 +18,31 @@
 }
 #dummy_backlog_container{
   height:150px;
+}
+.backlogs-panel {
   width:590px;
 }
-#top_sprint_backlogs_container{
-  left:0;
-  position:absolute;
-  top:0;
-  width:590px;
+.left {
+  float: left;
 }
-#product_backlog_container{
-  position:absolute;
-  right:0;
-  top:0;
-  width:590px;
+.right {
+  float: right;
 }
-#sprint_backlogs_container{
-  width:590px;
-}
-#product_backlog_container .closedbacklog .header > .add_new_story,
-#product_backlog_container .backlog .header > .add_new_story {
+
+/*the close completed sprint button in pbl header */
+#product_backlog_container .header .close_sprint {
   font-size:11px;
   height:28px;
-  line-height:31px;
+  line-height:30px;
   padding:0;
-  position:absolute;
-  right:10px;
+  float: left;
   text-align:right;
-  top:1px;
-  width:100px;
-}
-#product_backlog_container .closedbacklog .header > .add_new_sprint, 
-#product_backlog_container .backlog .header > .add_new_sprint {
-  font-size:11px;
-  height:28px;
-  line-height:31px;
-  padding:0;
-  position:absolute;
-  right:90px;
-  text-align:right;
-  top:1px;
-  width:100px;
-}
-#product_backlog_container .closedbacklog .header > .close_sprint,
-#product_backlog_container .backlog .header > .close_sprint {
-  font-size:11px;
-  height:28px;
-  line-height:31px;
-  padding:0;
-  position:absolute;
-  right:170px;
-  text-align:right;
-  top:1px;
   width:150px;
   white-space: nowrap;
 }
 
 #backlogs_container .closedbacklog,
-#backlogs_container .backlog{
+#backlogs_container .backlog {
   -moz-box-shadow: 3px 3px 4px #A0A0A0;
   -webkit-box-shadow: 3px 3px 4px #A0A0A0;
   box-shadow: 3px 3px 4px #A0A0A0;
@@ -72,7 +52,6 @@
   display:block;
   margin:0 0 10px 0;
   position:relative;
-  width:100%;
   /* IE only*/
   border: 1px solid #CCCCCC;
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#CCC));
@@ -80,25 +59,7 @@
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#CCCCCC);
 }
 
-#product_backlog_container .closedbacklog,
-#product_backlog_container .backlog{ /* Overrides style above */
-  position:absolute;
-  top:0;
-}
-
-#backlogs_container .closedbacklog .header{
-  -moz-border-radius:5px 5px 0px 0px;
-  -webkit-border-radius:5px 5px 0px 0px;
-  border-radius:5px 5px 0px 0px;
-  background-color: #CCCCCC;
-  height:30px;
-  position:relative;
-  width:100%;
-  border-bottom: 1px solid #AAAAAA
-}
-
-
-#backlogs_container .backlog .header{
+#backlogs_container .header{
   white-space: nowrap;
   -moz-border-radius:5px 5px 0px 0px;
   -webkit-border-radius:5px 5px 0px 0px;
@@ -107,13 +68,16 @@
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#CCC));
   background: -moz-linear-gradient(top, #EEE, #CCC);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#CCCCCC);
-  height:30px;
   position:relative;
+  white-space: nowrap;
+  height:30px;
   width:100%;
   border-bottom: 1px solid #AAAAAA
 }
-.closedbacklog .header .menu,
-.backlog .header .menu{
+/*.backlog .closedbacklog .header{
+  background: #CCCCCC;
+}*/
+#backlogs_container .header .menu{
   -moz-box-shadow: 1px 0px 0px #DEDEDE;
   -webkit-box-shadow: 1px 0px 0px #DEDEDE;
   box-shadow: 1px 0px 0px #DEDEDE;
@@ -122,16 +86,14 @@
   border-radius:5px 0px 0px 0px;
   border-right:1px solid #999999;
   cursor:pointer;
-  height:30px;
-  left:0;
+  position: relative;
   overflow:visible;
-  position:absolute;
-  top:0;
+  float: left;
   width:29px;
+  height:30px;
 }
 
-.closedbacklog .header .menu:hover,
-.backlog .header .menu:hover {
+#backlogs_container .header .menu:hover {
   -moz-box-shadow: 2px 2px 3px #999999;
   -webkit-box-shadow: 2px 2px 3px #999999;
   box-shadow: 2px 2px 3px #999999;
@@ -141,19 +103,17 @@
   z-index:1000;
 }
 
-.closedbacklog .header .menu .icon,
-.backlog .header .menu .icon{
+#backlogs_container .header .menu .icon{
+  position:relative;
   left:7px;
-  position:absolute;
   top:7px;
 }
 
-.closedbacklog .header .menu .items,
-.backlog .header .menu .items{
+#backlogs_container .header .menu .items{
   display:none;
 }
 
-.backlog .header .menu:hover .items{
+#backlogs_container .header .menu:hover .items{
   -moz-box-shadow: 2px 2px 3px #999999;
   -webkit-box-shadow: 2px 2px 3px #999999;
   box-shadow: 2px 2px 3px #999999;
@@ -166,7 +126,7 @@
   position:absolute;
   top:30px;
 }
-.backlog .header .menu .item{
+#backlogs_container .header .menu .item{
   display: block;
   height:24px;
   overflow:hidden;
@@ -176,22 +136,21 @@
   white-space: nowrap;
   width:160px;
 }
-.backlog .header .menu .item:hover{
+#backlogs_container .header .menu .item:hover{
   background-color:#DDDDDD;
 }
-.backlog .header .menu .item a{
+#backlogs_container .header .menu .item a{
   color:#000000;
   display:block;
   font-size:12px;
-  height:100%;
   padding:6px;
-  width:100%;
+  white-space: nowrap;
 }
-.backlog .header .menu .item:hover a{
+#backlogs_container .header .menu .item:hover > a{
   text-decoration:none;
   font-weight:bold;
 }
-.backlog .header .menu .item ul{
+#backlogs_container .header .menu .item ul{
   -moz-box-shadow: 2px 2px 3px #999999;
   -webkit-box-shadow: 2px 2px 3px #999999;
   box-shadow: 2px 2px 3px #999999;
@@ -204,11 +163,12 @@
   left:160px;
   top:0;
 }
-.backlog .header .menu .item .icon {
+#backlogs_container .header .menu .item .icon {
+  position: absolute;
   left:140px;
   top:5px;
 }
-.backlog .header .menu .item ul li{
+#backlogs_container .header .menu .item ul li{
   display: block;
   height:24px;
   overflow:hidden;
@@ -218,16 +178,16 @@
   white-space: nowrap;
   width:160px;
 }
-.backlog .header .menu .item:hover ul{
+#backlogs_container .header .menu .item:hover ul{
   display:block;
 }
-.backlog .header .menu .item ul li:hover{
+#backlogs_container .header .menu .item ul li:hover{
   background-color:#DDDDDD;
 }
-.backlog .header .menu .item:hover ul li a {
+#backlogs_container .header .menu .item:hover ul li a {
   font-weight:normal; /* Work-around for when .item is hovered */
 }
-.backlog .header .menu .item ul li a{
+#backlogs_container .header .menu .item ul li a{
   color:#000000;
   display:block;
   font-size:12px;
@@ -235,130 +195,100 @@
   padding:6px;
   width:100%;
 }
-.backlog .header .menu .item ul li:hover a{
+#backlogs_container .header .menu .item ul li:hover a{
   text-decoration:none;
   font-weight:bold;
 }
 
-#product_backlog_container .closedbacklog .header .label,
-#product_backlog_container .backlog .header .label{
-  font-size:15px;
-  font-weight:bold;
-  height:28px;
-  left:35px;
-  line-height:28px;
-  overflow:hidden;
-  position:absolute;
-  top:1px;
-  width:450px;
-}
-
-#backlogs_container .closedbacklog .header .velocity,
-#backlogs_container .backlog .header .velocity {
+#backlogs_container .header .velocity {
   font-size:12px;
   height:28px;
-  line-height:31px;
-  padding:0 3px 0 9px;
-  position:absolute;
-  right:9px;
+  line-height:28px;
+  padding-right: 15px;
+  float: right;
+  position: relative;
   text-align:right;
-  top:1px;
   width:28px;
 }
 
-#backlogs_container .closedbacklog .sprint,
-#backlogs_container .backlog .sprint{
+  /* container for sprint header (read) */
+#backlogs_container .header .headertext{
   background-color:transparent;
-  cursor:pointer;
   display:block;
+  position: relative;
   height:30px;
-  left:30px;
-  position:absolute;
-  top:0;
-  width:560px;
+  float: left;
+}
+#backlogs_container .header .model.headertext{
+  cursor:pointer;
 }
 
-#backlogs_container .backlog .sprint.saving,
-#backlogs_container .closedbacklog .sprint.saving{
+#backlogs_container .closedbacklog .headertext{
+  margin-left: 30px; /*compensate for menu*/
+  cursor: default; /*we have model class here, but are not editable*/
+}
+
+#backlogs_container .sprint.saving{
   background-image:url('images/ajax.gif');
   background-repeat:no-repeat;
   background-position:center;
 }
 
-#backlogs_container .closedbacklog .sprint.error,
-#backlogs_container .backlog .sprint.error{
+#backlogs_container .sprint.error{
   background-image:url('images/error.png');
   background-repeat:no-repeat;
   background-position:center;
 }
 
+/* backlog header name,dates etc.*/
+#backlogs_container .header .headertext > div {
+  float: left;
+  height:28px;
+  line-height:28px;
+  white-space: nowrap;
+}
 
-#backlogs_container .closedbacklog .sprint .id,
-#backlogs_container .closedbacklog .sprint .description,
-#backlogs_container .closedbacklog .sprint .status,
-#backlogs_container .backlog .sprint .id,
-#backlogs_container .backlog .sprint .description,
-#backlogs_container .backlog .sprint .status{
+/* backlog header*/
+#backlogs_container .header .name {
+  font-size: 15px;
+  font-weight: bold;
+  width: 264px;
+  overflow: hidden;
+  margin-left: 8px;
+}
+
+/* backlog header*/
+.header .date {
+  font-size:12px;
+  width: 8em;
+  margin-left: 6px;
+}
+
+/* backlog header invisibles */
+#backlogs_container .header .id,
+#backlogs_container .header .description,
+#backlogs_container .header .status{
   display:none;
 }
 
-#backlogs_container .closedbacklog .sprint .name,
-#backlogs_container .backlog .sprint .name{
-  font-size:15px;
-  font-weight:bold;
-  height:28px;
-  left:5px;
-  line-height:28px;
-  overflow: hidden;
-  position:absolute;
-  top:1px;
-  margin-right:2em;
-  width:19em;
-}
-
-#backlogs_container .closedbacklog .sprint .sprint_start_date,
-#backlogs_container .closedbacklog .sprint .effective_date,
-#backlogs_container .backlog .sprint .sprint_start_date,
-#backlogs_container .backlog .sprint .effective_date{
-  font-size:12px;
-  height:28px;
-  line-height:31px;
-  position:absolute;
-  top:2px;
-}
-
-#backlogs_container .closedbacklog .sprint .sprint_start_date,
-#backlogs_container .backlog .sprint .sprint_start_date{
-  left:340px;
-}
-
-#backlogs_container .closedbacklog .sprint .effective_date,
-#backlogs_container .backlog .sprint .effective_date{
-  left:430px;
-}
-
-#backlogs_container .closedbacklog .stories,
-#backlogs_container .backlog .stories{
+#backlogs_container .stories{
   list-style:none;
-/*  min-height:26px;*/
   margin:0;
   padding:0;
   position:relative;
-/*  z-index:500;*/
 }
 
 
 #backlogs_container .stories .story{
   background-color:#FFFFF6;
   cursor:move;
-/*  display:block;*/
   font-size:11px;
-/*  height:26px;*/
   margin:0;
-/*  overflow:hidden;*/
-/*  position:relative;*/
   width:100%;
   border-bottom: #AAAAAA 1px solid;
+}
+#backlogs_container .stories .story.closed{
+  cursor:default;
 }
 #backlogs_container .stories .story.saving{
   background-image:url('images/ajax.gif');
@@ -370,10 +300,6 @@
   background-repeat:no-repeat;
   background-position:center;
 }
-/*
-#backlogs_container .stories .story:nth-child(even){
-  background-color:#DEDED5;
-}*/
 #backlogs_container .stories .story:hover {
   background-color:rgb(254,248,168);
 }
@@ -381,16 +307,8 @@
   display:none;
 }
 #backlogs_container .stories .story .id{
-  display:block;
-/*  height:24px;*/
-/*  left:10px;
-  position:absolute;
-  top:1px;*/
   position:relative;
-  float:left;
   width:55px;
-  margin-top:3px;
-/*  white-space:nowrap;*/
 }
 #backlogs_container .stories .story .id .t * {
   background-color:#CCC;
@@ -400,16 +318,13 @@
   display:block;
   font-size:10px;
   height:14px;
-/*  left:0px; */
   line-height:14px;
   overflow:hidden;
   padding-right:3px;
   margin-left:3px;
-/*  position:absolute;*/
   text-align:right;
   text-decoration:none;
   position: relative;
-/*  top:5px;*/
   vertical-align:middle;
   width:4em;
   -moz-border-radius:4px;
@@ -433,9 +348,9 @@
   position:relative;
   float:left;
   width:55px;
-  margin:1px 0 0 1px;
+/*  margin:1px 0 0 1px; */
   padding-left:2px;
-  padding-top:2px;
+/*  padding-top:2px; */
   white-space: nowrap;
   overflow: hidden;
 }
@@ -449,68 +364,30 @@
 #backlogs_container .stories .story.editing select.project_id.editor {
   display:none;
 }
+
 #backlogs_container .stories .story .subject {
-  display:block;
-/*  height:15px;
-  left:70px; */
   overflow:hidden;
-  margin-right:2em;
-  padding:5px 2px 4px 10px;
-/*  position:absolute;
-  top:1px;*/
   float:left;
-  width:30em;
+  padding-left: 10px;
+  padding-right: 2px;
   margin-right:2em;
   white-space:nowrap;
+  width: 356px;
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
 }
-#backlogs_container .stories .story.too_long .subject{
-  width:333px;
-}
-#backlogs_container .stories .story .elipses{
-  display:none;
-}
-#backlogs_container .stories .story.too_long .elipses{
-/*  display:block;*/
-/*  left:409px;
-  position:absolute;
-  top:4px;*/
-}
-#backlogs_container .stories .story .status_id.editable {
-/*  display:block;*/
-/*  height:15px;
-  left:455px;*/
-/*  padding:5px 2px 4px 9px;*/
-/*  position:absolute;
-  top:1px;*/
-  float:left;
-  width:68px;
-}
-#backlogs_container .stories .story .status_id .v {
-  display:none;
-}
-
-#backlogs_container .stories .story .status_id .t {
-  padding-top:5px;
+#backlogs_container .stories .story .status_id {
+  width:40px;
 }
 
 #backlogs_container .stories .story .story_points {
-/*  display:block;*/
-/*  height:15px;
-  right:10px;
-  overflow:hidden;*/
   padding:5px 5px 4px 5px;
-/*  position:absolute;*/
   text-align:right;
-/*  top:1px;*/
   float: right;
   width:3em;
 }
-#backlogs_container .stories .story .story_points .v {
-  display:none;
-}
+/*meta in story*/
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
 #backlogs_container .stories .story .story_project,
@@ -521,6 +398,8 @@
 #backlogs_container .stories .story .clearfix {
     zoom:1;
     clear:both;
+    height: 0; /*IE7*/
+    font-size: 0; /*IE7*/
 }
 
 /* dialog */
@@ -559,62 +438,45 @@
 /* In-place Sprint Editor */
 #backlogs_container .sprint.editing .editors{
   display:block;
-  position:absolute;
-  top:0;
+  position: absolute;
+  height: 30px;
+  width: 518px;
+  top: 0;
+  left: 0;
 }
 
 #backlogs_container .sprint.editing .editor{
-  display:block;
   font-family:Verdana, Arial, sans-serif;
-  position:absolute;
 }
 #backlogs_container .sprint.editing label,
 #backlogs_container .sprint.editing .id.editor{
   display:none;
 }
-#backlogs_container .backlog .sprint.editing .name.editor{
-  display:block;
+#backlogs_container .sprint.editing .name.editor{
   height:21px;
-  left:1px;
   line-height:15px;
   margin:0;
-  top:2px;
   width:19em;
   overflow:hidden;
-  float: left;
 }
-#backlogs_container .backlog .sprint.editing .sprint_start_date.editor{
-  display:block;
+#backlogs_container .sprint.editing .sprint_start_date.editor{
   height:23px;
-  left:338px;
   line-height:27px;
   margin:0;
   padding:0;
-  top:2px;
   width:75px;
 }
-#backlogs_container .backlog .sprint.editing .effective_date.editor{
-  display:block;
+#backlogs_container .sprint.editing .effective_date.editor{
   height:23px;
-  left:428px;
   line-height:27px;
   margin:0;
   padding:0;
-  top:2px;
   width:75px;
 }
-#backlogs_container .backlog .sprint.editing .description.editor{
+#backlogs_container .sprint.editing .description.editor{
   display:none;
 }
 /* In-place Story Editor */
-#backlogs_container .stories .story.editing .id{
-  display:none;
-}
-
-#backlogs_container .stories .story.editing .story_field {
-    display: none;
-}
-
 #backlogs_container .stories .story.editing .editors{
   display:block;
 }
@@ -622,6 +484,7 @@
   display:none;
 }
 #backlogs_container .stories .story.editing .editor{
+  display: block;
   font-family:Verdana, Arial, sans-serif;
 }
 #backlogs_container .stories .story.editing .tracker_id.editor{
@@ -631,25 +494,18 @@
   float: left;
 }
 #backlogs_container .stories .story.editing .subject.editor{
-  display:block;
   font-size: 11px;
   margin:0;
-  float: left;
+  padding: 4px 4px 4px 4px;
 }
-#backlogs_container .stories .story.editing .status_id.editor{
-  display:block;
+#backlogs_container .stories .story.editing .status_id{
   margin:0;
   width:84px;
-  float: left;
-
 }
 #backlogs_container .stories .story.editing select.story_points.editor {
-  display:block;
-  left:540px;
   margin:0;
   padding: 0px;
   height: inherit;
-  top: 4px;
   width: 40px;
   overflow: visible;
 }
@@ -660,16 +516,23 @@
   float: right;
 }
 
-#backlogs_container .stories .editing .story_points {
-    display: none;
-} 
+#backlogs_container .editors .editor { /* last: display editor fields. */
+  float: left;
+  display: block;
+}
+#backlogs_container #backlogs_container .editing .editable {
+  display: none;
+}
+
 
 #backlogs_container .stories .editing .edit-actions {
   clear: both;
+  height: 28px;
 }
 #backlogs_container .editing .edit-actions a {
-  display: inline-block;
-  padding: 4px;
+  display: block;
+  float: left;
+  padding: 1px 4px 1px 4px;
   margin: 0.5em;
   margin-left: 1em;
   -moz-border-radius:4px;
@@ -688,14 +551,13 @@
 }
 
 #backlogs_container .sprint.editing .edit-actions { /* make the save/cancel buttons visible for sprint editor */
+  clear: both;
   background: white;
   position: relative;
-  top: 31px;
-  left: 2px;
   width: 498px;
-  height: 34px;
-  padding: 4px;
+  height: 30px;
   z-index: 1000;
+  line-height: 16px;
 }
 
 #helpers{
@@ -705,22 +567,17 @@
 .debug .story .subject,
 .debug .story .status_id,
 .debug .story .story_points,
-.debug .sprint .name,
-.debug .sprint .sprint_start_date,
-.debug .sprint .effective_date,
-.debug .backlog .header .actions,
-.debug .backlog .menu,
-.debug .backlog .velocity,
-.debug #product_backlog_container .backlog .header .label,
+.debug .header .name,
+.debug .header .sprint_start_date,
+.debug .header .effective_date,
+.debug .header .actions,
+.debug .menu,
+.debug .velocity,
 .debug #new_story{
   background-color:red;
 }
 
-#closed_sprint_backlogs_container{
-  width:590px;
-}
-
-#backlogs_container .stories .story .category_id .v {
+#backlogs_container .stories .v {
   display:none;
 }
 #backlogs_container .stories .story.editing .category_id.editor{
@@ -728,7 +585,7 @@
   left:456px;
   margin:0;
   top:4px;
-  width:68px;
+  width:60px;
 }
 /* Naive but light handling of colors by user stories tracker */
 
@@ -780,4 +637,23 @@
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FED0D0);
   background-color:#FED0D0;
 }
+#backlogs_container .stories .story_field {
+  float: left;
+  height: 14px;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+#backlogs_container .stories .story.editing .story_field {
+  display: none;
+}
+#backlogs_container .sprint.editing .effective_date.editor,
+#backlogs_container .sprint.editing .sprint_start_date.editor,
+#backlogs_container .sprint.editing .name.editor{
+  float: left;
+  position: relative;
 
+}
+
+/* datepicker bugfix: hide until it opens itself */
+.ui-datepicker {display:none;}

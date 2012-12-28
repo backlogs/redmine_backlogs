@@ -25,7 +25,7 @@ class RbSprintsController < RbApplicationController
     status = (result == 0 ? 200 : 400)
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint } }
+      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint, :cls => 'model sprint' } }
     end
   end
 
@@ -42,7 +42,7 @@ class RbSprintsController < RbApplicationController
     end
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint } }
+      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint, :cls => 'model sprint' } }
     end
   end
 
