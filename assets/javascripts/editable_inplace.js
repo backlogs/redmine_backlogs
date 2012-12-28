@@ -4,6 +4,7 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     var self = this;
 
     editor.find('textarea').attr('cols', '5');
+    editor.find('textarea').attr('rows', '3');
     this.$.addClass("editing");
     editor.find(".editor").bind('keydown', this.handleKeydown).bind('keypress', this.handleKeypress);
 
@@ -34,7 +35,13 @@ RB.EditableInplace = RB.Object.create(RB.Model, {
     // Create the model editor if it does not yet exist
     var editor = this.$.children(".editors").first();
     if (!editor.length){
-      editor = RB.$(document.createElement("div")).addClass("editors").appendTo(this.$);
+      var clearfix = this.$.find('div.clearfix');
+      if (clearfix.length) { //put editor before story clearfix
+        editor = RB.$(document.createElement("div")).addClass("editors").insertBefore(clearfix);
+      }
+      else { // sprint title has no clearfix
+        editor = RB.$(document.createElement("div")).addClass("editors").appendTo(this.$);
+      }
     }
     return editor;
   },

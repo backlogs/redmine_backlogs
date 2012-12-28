@@ -5,9 +5,8 @@
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
 
-
   <% if Backlogs.setting[:show_project_name] == 'enabled' %>
-  <div class="project editable story_tooltip" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
+  <div class="project editable story_tooltip story_field" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
     <div class="tooltip_text"><%= story.project %></div>
     <div class="t"><%= story.project %></div>
     <div class="v"><%= story.project_id %></div>
@@ -26,18 +25,18 @@
     <div class="v"><%= status_id_or_default(story) %></div>
   </div>
   <% if Backlogs.setting[:story_points].blank? %>
-  <div class="story_points editable story_points_text" fieldname="story_points" fieldlabel="<%=l(:story_points)%>" fieldtype="input"><%= story_points_or_empty(story) %></div>
+  <div class="story_points editable story_points_text story_field" fieldname="story_points" fieldlabel="<%=l(:story_points)%>" fieldtype="input"><%= story_points_or_empty(story) %></div>
   <% else %>
-  <div class="story_points editable story_points_select" fieldtype="select" fieldname="story_points" fieldlabel="<%=l(:story_points)%>">
+  <div class="story_points editable story_points_select story_field" fieldtype="select" fieldname="story_points" fieldlabel="<%=l(:story_points)%>">
     <% %w(t v).each do |c| %>
       <div class="<%=h c %>"><%= story_points_or_empty(story) %></div>
     <% end %>
   </div>
   <% end %>
-  <div class="fixed_version_id"><%= story.fixed_version_id %></div>
-  <div class="user_status"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
-  <div class="story_project"><%= story.project_id %></div>
-  <div class="higher_item_id"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
+  <div class="fixed_version_id meta"><%= story.fixed_version_id %></div>
+  <div class="user_status meta"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
+  <div class="story_project meta"><%= story.project_id %></div>
+  <div class="higher_item_id meta"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors %>
   </div>
