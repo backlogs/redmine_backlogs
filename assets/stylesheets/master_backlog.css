@@ -642,6 +642,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   height: 14px;
   padding-top: 4px;
   padding-bottom: 5px;
+  overflow: hidden;
 }
 #backlogs_container .stories .story.editing .story_field {
   display: none;
