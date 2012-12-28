@@ -12,6 +12,14 @@ class RbSprintsController < RbApplicationController
     attribs = Hash[*attribs.flatten]
     @sprint = RbSprint.new(attribs)
 
+    #share the sprint according to the global setting
+    default_sharing = Backlogs.setting[:sharing_new_sprint_sharingmode]
+    if default_sharing 
+      if @sprint.allowed_sharings.include? default_sharing
+        @sprint.sharing = default_sharing
+      end
+    end
+
     begin
       @sprint.save!
     rescue => e

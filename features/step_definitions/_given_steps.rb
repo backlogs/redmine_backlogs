@@ -582,6 +582,10 @@ Given /^sharing is (.*)enabled$/ do |neg|
   Backlogs.setting[:sharing_enabled] = !!(neg=='')
 end
 
+Given /^default sharing for new sprints is (.+)$/ do |sharing|
+  Backlogs.setting[:sharing_new_sprint_sharingmode] = sharing
+end
+
 Given /^the project selected not to include subprojects in the product backlog$/ do
   settings = @project.rb_project_settings
   settings.show_stories_from_subprojects = false

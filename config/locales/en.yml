@@ -195,6 +195,8 @@ en:
   backlogs_new_story_position_bottom: bottom (requires restart)
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
+  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_sharing_new_sprint_explanation: Although all possible options are available here, new sprints are shared only according to the users and projects permissions. System shared sprints can only be created by admins, hierarchy and tree shared sprints need permissions on the topmost project.
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
   backlogs_show_in_scrum_stats: Show project in Scrum statistics
   rb_project_settings_updated: Settings updated

@@ -71,6 +71,16 @@ Then /^show me the list of shared sprints$/ do
   show_table("Sprints", header, data)
 end
 
+Then /^the sprint "([^"]*)" should not be shared$/ do |sprint|
+  sprint = RbSprint.find_by_name(sprint)
+  sprint.sharing.should == "none"
+end
+
+Then /^the sprint "([^"]*)" should be shared by (.+)$/ do |sprint, sharing|
+  sprint = RbSprint.find_by_name(sprint)
+  sprint.sharing.should == sharing
+end
+
 Then /^show me the list of issues( on )?(all )?(project)?s?(.*)?$/ do |on, all, project, name|
   options = {:order => "position ASC", :conditions => { :project_id => @project.id }}
   if all.to_s.strip == 'all'
