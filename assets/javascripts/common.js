@@ -92,7 +92,6 @@ RB.$(document).ajaxSend(function(event, request, settings) {
 RB.UserPreferences = RB.Object.create({
   get: function(key, global){
     var path = RB.urlFor('home')+'rb';
-    console.log('get',path);
     if (global) return RB.$.cookie(key, {path: path});
     return RB.$.cookie(key);
   },
@@ -100,7 +99,6 @@ RB.UserPreferences = RB.Object.create({
   set: function(key, value, global){
     if (global) {
       var path = RB.urlFor('home')+'rb';
-      console.log('set',path);
       RB.$.cookie(key, value, { expires: 365 * 10, path: path });
     }
     else {
