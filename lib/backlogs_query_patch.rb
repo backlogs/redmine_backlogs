@@ -53,6 +53,7 @@ module Backlogs
         if project
           backlogs_filters["release_id"] = {
             :type => :list_optional,
+            :name => l(:field_release),
             :values => RbRelease.find(:all, :conditions => ["project_id IN (?)", project], :order => 'name ASC').collect { |d| [d.name, d.id.to_s]},
             :order => 21
           }
