@@ -141,4 +141,25 @@ class RbRelease < ActiveRecord::Base
     burndown_days.each { |bdd| foo += "['#{bdd.day}', #{bdd.remaining_story_points}]," }
     foo += "]"
   end
+
+  def allowed_sharings(user = User.current)
+    Version::VERSION_SHARINGS.select do |s|
+      if sharing == s
+        true
+      else
+        case s
+        when 'system'
+          # Only admin users can set a systemwide sharing
+          user.admin?
+        when 'hierarchy', 'tree'
+          # Only users allowed to manage versions of the root project can
+          # set sharing to hierarchy or tree
+          project.nil? || user.allowed_to?(:manage_versions, project.root)
+        else
+          true
+        end
+      end
+    end
+  end
+
 end

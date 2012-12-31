@@ -18,5 +18,11 @@
       (<%= l(:current_open_story_points) %> <%= backlog_points %>)
     <% end %>
   </p>
+  <p>
+    <%= f.select :sharing,
+        @release.allowed_sharings.collect {|v| [
+          format_sharing(v),
+          v]} %>
+  </p>
 <% end %>
 </div>

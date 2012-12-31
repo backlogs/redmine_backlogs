@@ -245,4 +245,9 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       options_for_select((grouped.values.first || []), selected && selected.id)
     end
   end
+
+  def format_sharing(v)
+    Version::VERSION_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
+  end
+
 end
