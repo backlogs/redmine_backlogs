@@ -162,4 +162,7 @@ class RbRelease < ActiveRecord::Base
     end
   end
 
+  scope :visible, lambda {|*args| { :include => :project,
+                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
+
 end

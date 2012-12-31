@@ -235,9 +235,32 @@ module Backlogs
         end #disable_closed
       end
 
-      def releases_by_date
+      def open_releases_by_date
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-        RbRelease.find(:all, :conditions => { :project_id => id }, :order => "release_start_date #{order}, release_end_date #{order}")
+        if Backlogs.setting[:sharing_enabled]
+          shared_releases.visible.scoped(:order => "release_start_date #{order}, release_end_date #{order}")
+        else
+          RbRelease.find(:all, :conditions => { :project_id => id }, :order => "release_start_date #{order}, release_end_date #{order}")
+        end
+      end
+
+      def shared_releases
+        if new_record?
+        Version.scoped(:include => :project,
+                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{Version.table_name}.sharing = 'system'")
+        else
+          @shared_releases ||= begin
+            r = root? ? self : root
+            RbRelease.scoped(:include => :project,
+                         :conditions => "#{Project.table_name}.id = #{id}" +
+              " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
+                    " #{RbRelease.table_name}.sharing = 'system'" +
+              " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND #{RbRelease.table_name}.sharing = 'tree')" +
+              " OR (#{Project.table_name}.lft < #{lft} AND #{Project.table_name}.rgt > #{rgt} AND #{RbRelease.table_name}.sharing IN ('hierarchy', 'descendants'))" +
+              " OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt} AND #{RbRelease.table_name}.sharing = 'hierarchy')" +
+              "))")
+          end
+        end
       end
 
     end
