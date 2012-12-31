@@ -232,7 +232,10 @@
     <%= content_tag(:label, l(:backlogs_sharing_new_sprint)) %>
     <%= select_tag("settings[sharing_new_sprint_sharingmode]",
         options_for_select(
-          Version::VERSION_SHARINGS.collect {|v| [format_version_sharing(v), v]},
+          Version::VERSION_SHARINGS.collect {|v| [ # avoid that stupid helper method
+              Version::VERSION_SHARINGS.include?(v)?l("label_version_sharing_#{v}"):"none",
+              v
+            ]},
           Backlogs.setting[:sharing_new_sprint_sharingmode]))
     %><span style="margin-left: 12px;"><%= l(:backlogs_sharing_new_sprint_explanation) %></span>
   </p>
