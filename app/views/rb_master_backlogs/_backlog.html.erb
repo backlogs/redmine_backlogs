@@ -2,6 +2,7 @@
   <div class="header">
     <div class="menu">
       <div class="icon ui-icon ui-icon-carat-1-s"></div>
+      <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
       <ul class="items">
       </ul>
     </div>
@@ -15,8 +16,8 @@
         <div class="name"><%=l(:label_product_backlog).titleize %></div>
         <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
         </div>
-      <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
     <%- end %>
+    <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
   </div>
   <ul id="stories-for-<%= backlog[:release] ? "release-#{backlog[:release].id}" : (backlog[:sprint] ? backlog[:sprint].id : 'product-backlog') %>" class="stories">
     <%= render :partial => "rb_stories/story", :collection => backlog[:stories] %>
