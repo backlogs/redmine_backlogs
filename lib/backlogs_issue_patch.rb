@@ -13,7 +13,7 @@ module Backlogs
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :backlogs_history, :class_name => RbIssueHistory
+        has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
 
         safe_attributes 'release_id' #FIXME merge conflict. is this required?
 

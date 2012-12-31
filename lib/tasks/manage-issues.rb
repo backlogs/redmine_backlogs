@@ -4,6 +4,17 @@ require 'rubygems'
 require 'octokit'
 require 'inifile'
 require 'time'
+require 'yaml'
+
+travis = YAML::load(open(File.join(File.dirname(__FILE__), '..', '..', '.travis.yml')))
+SUPPORTED = {
+  'backlogs' => travis['release'],
+  'ruby' => travis['rvm'].join(', '),
+  'platform' => (travis['env'] - travis['matrix']['allow_failures'].collect{|f| f['env']}).collect{|v|
+    v = v.split.collect{|k| k.split(/=/)}.detect{|k| k[0]=='REDMINE_VER'}
+    v.nil? ? nil : v[1]
+  }.uniq.sort.join(', ')
+}
 
 class Issue
   def initialize(repo, issue)
@@ -26,9 +37,9 @@ class Issue
       ['platform', 'backlogs', 'ruby'].each{|part|
         x = body.match(/\n#{part}:([^\n]+)\n/)
         body.gsub!(/\n#{part}:([^\n]+)\n/, "\n")
-        x = x ? x[1].strip : ''
+        x = x ? x[1].gsub(/#.*/, '').strip : ''
         context[part] = x
-        header << "#{part}: #{x}\n"
+        header << "#{part}: #{x} # supported: #{SUPPORTED[part]}\n"
       }
       @labels << 'data-missing' if context.values.reject{|v| v == ''}.size != 3
       body = "#{header}\n#{body.strip}"

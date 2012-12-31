@@ -43,7 +43,8 @@ if (RB.constants == null) {
 
     show_updated_items: <%= url_for(:controller => 'rb_updated_items', :action => 'show', :project_id => ':id').to_json.html_safe %>,
     show_burndown_chart: <%= url_for(:controller => 'rb_burndown_charts', :action => 'show', :sprint_id => ':id').to_json.html_safe %>,
-    show_burndown_embedded: <%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ':id').to_json.html_safe %>
+    show_burndown_embedded: <%= url_for(:controller => 'rb_burndown_charts', :action => 'embedded', :sprint_id => ':id').to_json.html_safe %>,
+    home: <%= url_for(:home).to_json.html_safe %>
   };
 
   RB.urlFor = function(route_name, options) {
