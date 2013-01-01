@@ -2,6 +2,7 @@
 /*
  * jQuery MultiSelect UI Widget 1.13
  * Copyright (c) 2012 Eric Hynds
+ * Patched for redmine_backlogs: use selected attribute instead of this.selected for initialization
  *
  * http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
  *
@@ -132,7 +133,7 @@ $.widget("ech.multiselect", {
 				value = this.value,
 				inputID = 'ui-multiselect-' + (this.id || id + '-option-' + i),
 				isDisabled = this.disabled,
-				isSelected = this.selected,
+				isSelected = this.getAttribute('selected')=='selected', // dynamic dom injected nodes do not work with: this.selected,
 				labelClasses = [ 'ui-corner-all' ],
 				liClasses = (isDisabled ? 'ui-multiselect-disabled ' : ' ') + this.className,
 				optLabel;
