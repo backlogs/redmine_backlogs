@@ -88,7 +88,7 @@ class RbRelease < ActiveRecord::Base
 
   belongs_to :project, :inverse_of => :releases
   has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
-  has_many :issues, :class_name => 'Issue', :foreign_key => 'release_id', :dependent => :nullify
+  has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
 
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
   validates_length_of :name, :maximum => 64
@@ -103,7 +103,14 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories
-    return RbStory.stories_open(project)
+    #return RbStory.stories_open(project)
+    issues
+  end
+
+  def stories_by_sprint
+#return issues sorted into sprints. Obviously does not return issues which are not in a sprint
+#unfortunately, group_by returns unsorted results.
+    issues.joins(:fixed_version).includes(:fixed_version).order('versions.effective_date').group_by(&:fixed_version_id)
   end
 
   def burndown_days
