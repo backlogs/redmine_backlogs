@@ -1,3 +1,4 @@
+<style type="text/css">tr.closed {text-decoration: line-through;}</style>
 <div class="contextual">
 <%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases', :action => 'edit',    :release_id => @release}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
 <%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del', :method => :delete %>
@@ -48,8 +49,9 @@
       <th>Subject</th>
       <th>Story Points</th>
     </tr>
-<%  list.each do |story| %>
-    <tr>
+<%  list.each do |story|
+    klass=story.closed? ? 'closed':'open' %>
+    <tr class="<%= klass %>">
       <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
       <td><%= h tracker_name_or_empty(story) %></td>
       <td><%= story.subject %></td>
@@ -63,20 +65,21 @@
 <div id="releasebacklog">
 <h3>Release Backlog</h3>
 <table class="list issues">
-<tr>
-  <th>#</th>
-  <th>Tracker</th>
-  <th>Subject</th>
-  <th>Story Points</th>
-</tr>
-<% RbStory.release_backlog(@release).each{|story| %>
-<tr>
-<td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
-<td><%= h tracker_name_or_empty(story) %></td>
-<td><%= story.subject %></td>
-<td><%= story_points_or_empty(story) %></td>
-</tr>
-<% } %>
+  <tr>
+    <th>#</th>
+    <th>Tracker</th>
+    <th>Subject</th>
+    <th>Story Points</th>
+  </tr>
+  <% RbStory.release_backlog(@release).each{|story|
+  klass=story.closed? ? 'closed':'open' %>
+  <tr class="<%= klass %>">
+    <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
+    <td><%= h tracker_name_or_empty(story) %></td>
+    <td><%= story.subject %></td>
+    <td><%= story_points_or_empty(story) %></td>
+  </tr>
+  <% } %>
 </table>
 </div>
 
