@@ -129,19 +129,6 @@ class RbStory < Issue
     return release_of
   end
 
-  def self.stories_open(project)
-    stories = []
-
-    RbStory.find(:all,
-                  :order => :position,
-                  :conditions => ["project_id = ? AND tracker_id in (?) and is_closed = ?",project.id,RbStory.trackers,false],
-                  :joins => :status).each_with_index {|story, i|
-      story.rank = i + 1
-      stories << story
-    }
-    return stories
-  end
-
   def self.create_and_position(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
     params['next'] = params.delete('next_id') if params.include?('next_id')

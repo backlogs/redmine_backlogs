@@ -103,7 +103,6 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories
-    #return RbStory.stories_open(project)
     issues
   end
 
