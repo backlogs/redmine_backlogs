@@ -21,11 +21,16 @@ if (RB.constants == null) {
   };
 
   RB.constants.locale = {
-    _: function(s) { return RB.constants.locale[s]; },
+    _: function(s) {
+      if (RB.constants.locale[s])
+        return RB.constants.locale[s]; 
+      return s;
+    },
     'Filter tasks': "<%= l(:label_filter_tasks)%>",
     'Filter tasks: my tasks': "<%= l(:label_filter_tasks_my_tasks)%>",
     'All tasks': "<%= l(:label_all_tasks) %>",
-    'My tasks': "<%= l(:label_my_tasks) %>"
+    'My tasks': "<%= l(:label_my_tasks) %>",
+    'View options': "<%= l(:label_my_tasks) %>"
   };
 
   RB.routes = {
