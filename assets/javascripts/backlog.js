@@ -68,8 +68,14 @@ RB.Backlog = RB.Object.create({
     var menu = this.$.find('ul.items');
     var id = null;
     var self = this;
+    var ajaxdata = {};
     if (this.isSprintBacklog()) {
       id = this.getSprint().data('this').getID();
+      ajaxdata = { sprint_id: id };
+    }
+    else if (this.isReleaseBacklog()) {
+      id = this.getRelease().data('this').getID();
+      ajaxdata = { release_id: id };
     }
     if (id == '') { return; } // template sprint
 
@@ -94,9 +100,10 @@ RB.Backlog = RB.Object.create({
       }
     };
 
+    
     RB.ajax({
       url: RB.routes.backlog_menu,
-      data: (id ? { sprint_id: id } : {}),
+      data: ajaxdata,
       dataType: 'json',
       success   : function(data,t,x) {
         createMenu(data, menu);
@@ -206,7 +213,6 @@ RB.Backlog = RB.Object.create({
   },
     
   getRelease: function(){
-    var x= RB.$(this.el).find(".model.release").first();
     return RB.$(this.el).find(".model.release").first();
   },
     

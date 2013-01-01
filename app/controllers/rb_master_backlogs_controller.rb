@@ -71,13 +71,13 @@ class RbMasterBacklogsController < RbApplicationController
              } if @sprint && @sprint.stories.size > 0
     links << {:label => l(:label_stories),
               :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project, :only_path => true)
-             } unless @sprint
+             } unless @sprint || @release
     links << {:label => l(:label_sprint_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :sprint_id => @sprint, :format => 'pdf', :only_path => true)
              } if @sprint && BacklogsPrintableCards::CardPageLayout.selected && @sprint.stories.size > 0
     links << {:label => l(:label_product_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :format => 'pdf', :only_path => true)
-             } unless @sprint
+             } unless @sprint || @release
     links << {:label => l(:label_wiki),
               :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint, :only_path => true)
              } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
@@ -88,6 +88,12 @@ class RbMasterBacklogsController < RbApplicationController
               :url => url_for(:controller => 'rb_sprints', :action => 'reset', :sprint_id => @sprint, :only_path => true),
               :warning => view_context().escape_javascript(l(:warning_reset_sprint)).gsub(/\/n/, "\n")
              } if @sprint && @sprint.sprint_start_date && User.current.allowed_to?(:reset_sprint, @project)
+    links << {:label => l(:label_version),
+              :url => url_for(:controller => 'versions', :action => 'show', :id => @sprint, :target => '_blank', :only_path => true)
+             } if @sprint
+    links << {:label => l(:label_release),
+              :url => url_for(:controller => 'rb_releases', :action => 'show', :release_id => @release, :target => '_blank', :only_path => true)
+             } if @release
 
 
     respond_to do |format|
