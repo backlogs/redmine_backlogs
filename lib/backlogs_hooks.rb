@@ -85,7 +85,11 @@ module BacklogsPlugin
             snippet += "</tr>"
             vbe = issue.velocity_based_estimate
             snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
-            snippet += "<tr><th>#{l(:field_release)}</th><td>#{RbRelease.find(issue.release_id).name}</td></tr>" unless issue.release_id.nil?
+
+            unless issue.release_id.nil?
+              release = RbRelease.find(issue.release_id)
+              snippet += "<tr><th>#{l(:field_release)}</th><td>#{link_to release.name, :controller=>'rb_releases', :action=>'show', :release_id=>release}</td></tr>"
+            end
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
