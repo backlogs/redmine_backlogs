@@ -31,8 +31,8 @@ RB.BacklogOptions = RB.Object.create({
     });
     console.log("XXX", this.containers);
     me.el.multiselect({
-      //selectedText: _("View options"),
       noneSelectedText: _("View options"),
+      selectedText: _("View options")+ " (#)",
       checkAll: function() { me.onCheckAll(); },
       uncheckAll: function() { me.onUnCheckAll(); },
       click: function(e, o) { me.onClick(e, o); }
