@@ -50,10 +50,11 @@ end
 
 Then /^I should see the product backlog$/ do
   page.should have_css('#product_backlog_container')
+  page.should have_css('#stories-for-product-backlog')
 end
 
 Then /^I should see (\d+) stories in the product backlog$/ do |count|
-  page.all(:css, "#product_backlog_container .backlog .story").length.should == count.to_i
+  page.all(:css, "#stories-for-product-backlog .story").length.should == count.to_i
 end
 
 Then /^show me the list of sprints$/ do

@@ -20,8 +20,9 @@ Then /^show me the release backlog of (.+)$/ do |release_name|
 end
 
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
+  story = RbStory.find_by_subject(story_name)
   @story_params = {
-    :id => RbStory.find_by_subject(story_name).id,
+    :id => story.id,
     :release_id => RbRelease.find_by_name(release_name).id
   }
   page.driver.post(
@@ -49,4 +50,20 @@ Then /^story (.+) should not belong to any release$/ do |story_name|
   story.release_id.should be_nil
 end
 
+Then /^I should see the release backlog of (.+)$/ do |release|
+  release = RbRelease.find_by_name(release)
+  release.should_not be_nil
+  page.should have_css("#stories-for-release-#{release.id}")
+end
 
+Then /^I should see (\d+) stories in the release backlog of (.+)$/ do |count, release|
+  release = RbRelease.find_by_name(release)
+  release.should_not be_nil
+  page.all(:css, "#stories-for-release-#{release.id} .story").length.should == count.to_i
+end
+
+Then /^release "([^"]*)" should have (\d+) story points$/ do |release, points|
+  release = RbRelease.find_by_name(release)
+  release.should_not be_nil
+  release.remaining_story_points.should == points.to_f
+end

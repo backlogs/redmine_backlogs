@@ -1,4 +1,4 @@
-Feature: Product Owner
+Feature: Release management
   As a product owner
   I want to manage releases
   So that i can break down a large product backlog
@@ -17,17 +17,17 @@ Feature: Product Owner
         | Rel 1   | ecookbook  | 2010-01-01         | 2010-02-28       | 0 |
         | Rel 2   | ecookbook  | 2010-03-01         | 2010-06-01       | 0 |
       And I have defined the following stories in the product backlog:
-        | subject | release |
-        | Story 1 | Rel 1   |
-        | Story 2 | Rel 1   |
-        | Story 3 | Rel 2   |
-        | Story 4 | Rel 2   |
-        | Story 5 |         |
+        | subject | release | points |
+        | Story 1 | Rel 1   | 2 |
+        | Story 2 | Rel 1   | 7 |
+        | Story 3 | Rel 2   | 13 |
+        | Story 4 | Rel 2   | 20 |
+        | Story 5 |         | 40 |
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | release |
-        | Story A | Sprint 001 | Rel 1   |
-        | Story B | Sprint 002 | Rel 1   |
-        | Story C | Sprint 003 | Rel 2   |
+        | subject | sprint     | release | points |
+        | Story A | Sprint 001 | Rel 1   | 2 |
+        | Story B | Sprint 002 | Rel 1   | 3 |
+        | Story C | Sprint 003 | Rel 2   | 5 |
 
   Scenario: View the release page
     Given I view the release page
@@ -42,6 +42,8 @@ Feature: Product Owner
       And story Story B should belong to release Rel 1
       And story Story C should belong to release Rel 2
       And story Story 5 should not belong to any release
+      And release "Rel 1" should have 14 story points
+      And release "Rel 2" should have 38 story points
     When I follow "Rel 1"
     Then I should see "Sprints" within "#content"
      And I should see "Sprint 001" within "#sprints"
@@ -87,3 +89,14 @@ Feature: Product Owner
     Given I am viewing the master backlog
      When I add story Story 5 to release Rel 1
      Then story Story 5 should belong to release Rel 1
+      And release "Rel 1" should have 54 story points
+
+   Scenario: view master backlog page with releases
+    Given I am viewing the master backlog
+     Then I should see the product backlog
+      And I should see 1 stories in the product backlog
+      And I should see the release backlog of Rel 1
+      And I should see the release backlog of Rel 2
+      And I should see 2 stories in the release backlog of Rel 1
+      And I should see 2 stories in the release backlog of Rel 2
+      And I should see 3 sprint backlogs
