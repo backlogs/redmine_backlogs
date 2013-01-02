@@ -12,28 +12,39 @@ Feature: Product Owner
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
-      And I have defined the following stories in the product backlog:
-        | subject |
-        | Story 1 |
-        | Story 2 |
-        | Story 3 |
-        | Story 4 |
-      And I have defined the following stories in the following sprints:
-        | subject | sprint     |
-        | Story A | Sprint 001 |
-        | Story B | Sprint 002 |
       And I have defined the following releases:
         | name    | project    | release_start_date | release_end_date | initial_story_points |
         | Rel 1   | ecookbook  | 2010-01-01         | 2010-02-28       | 0 |
         | Rel 2   | ecookbook  | 2010-03-01         | 2010-06-01       | 0 |
+      And I have defined the following stories in the product backlog:
+        | subject | release |
+        | Story 1 | Rel 1   |
+        | Story 2 | Rel 1   |
+        | Story 3 | Rel 2   |
+        | Story 4 | Rel 2   |
+        | Story 5 |         |
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | release |
+        | Story A | Sprint 001 | Rel 1   |
+        | Story B | Sprint 002 | Rel 1   |
+        | Story C | Sprint 003 | Rel 2   |
+
   Scenario: View the release page
     Given I view the release page
      Then I should see "Release Planning" within "h2"
       And I should see "Rel 1" within "#content"
       And I should see "Rel 2" within "#content"
+      And story Story 1 should belong to release Rel 1
+      And story Story 2 should belong to release Rel 1
+      And story Story 3 should belong to release Rel 2
+      And story Story 4 should belong to release Rel 2
+      And story Story A should belong to release Rel 1
+      And story Story B should belong to release Rel 1
+      And story Story C should belong to release Rel 2
+      And story Story 5 should not belong to any release
     When I follow "Rel 1"
-     Then I should see "Sprints" within "#content"
-     Then I should see "Sprint 001" within "#sprints"
+    Then I should see "Sprints" within "#content"
+     And I should see "Sprint 001" within "#sprints"
      And I should see "Sprint 002" within "#sprints"
      And I should see "Release Burndown" within "#content"
      And I should see "Saved point snapshots:" within "#sidebar"
@@ -51,7 +62,6 @@ Feature: Product Owner
      When I press "Create"
      Then I should see "Successful creation"
 
-  @javascript
   Scenario: Delete a release
     Given I view the release page
      Then I should see "Release Planning"
@@ -61,7 +71,6 @@ Feature: Product Owner
      Then I should see "Release Planning"
      Then I should not see "Rel 1"
 
-  @javascript
   Scenario: Edit a release
     Given I view the release page
      Then I should see "Release Planning"
@@ -74,15 +83,7 @@ Feature: Product Owner
      Then I should see "Successful update"
       And I should see "A changed release" within "#content"
 
-  @javascript
   Scenario: Add a story to a release
-    Given I view the release page
-     Then show me the releases
-     Then show me release Rel 1
-     When I add story Story 1 to release Rel 1
-     Then story Story 1 should belong to release Rel 1
-     Then show me release Rel 1
-#     Then I should see the product backlog
-#      And I should see 4 stories in the product backlog
-#      And I should see 1 sprint backlogs
-     Then show me the release backlog of Rel 1
+    Given I am viewing the master backlog
+     When I add story Story 5 to release Rel 1
+     Then story Story 5 should belong to release Rel 1

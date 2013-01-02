@@ -332,6 +332,8 @@ Given /^I have defined the following stories in the product backlog:$/ do |table
     end
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
+    params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
+    story.delete('release') unless story['release'].nil?
 
     story.should == {}
 
@@ -355,6 +357,8 @@ Given /^I have defined the following stories in the following sprints?:$/ do |ta
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
+    params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
+    story.delete('release') unless story['release'].nil?
 
     set_now(story.delete('day'), :msg => params['subject'], :sprint => sprint)
 
