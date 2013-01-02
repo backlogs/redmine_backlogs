@@ -137,6 +137,23 @@ class RbRelease < ActiveRecord::Base
     ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
   end
 
+  def snapshot!
+    rbdd = today
+    unless rbdd
+      rbdd = ReleaseBurndownDay.new
+      rbdd.release_id = id
+      rbdd.day = Date.today
+    end
+    rbdd.remaining_story_points = remaining_story_points
+    rbdd.save!
+  end
+
+  def remaining_story_points
+    res = 0
+    stories.open.each {|s| res += s.story_points if s.story_points}
+    res
+  end
+
   def js_ideal
     "[['#{release_start_date}', #{initial_story_points}], ['#{release_end_date}', 0]]"
   end
