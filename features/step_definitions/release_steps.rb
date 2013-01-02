@@ -67,3 +67,21 @@ Then /^release "([^"]*)" should have (\d+) story points$/ do |release, points|
   release.should_not be_nil
   release.remaining_story_points.should == points.to_f
 end
+
+Then /^release "([^"]*)" should have (\d+) initial story points$/ do |release, points|
+  release = RbRelease.find_by_name(release)
+  release.should_not be_nil
+  release.initial_story_points.should == points.to_f
+end
+
+Given /^I have made the following story mutations:$/ do |table|
+  # table is a Cucumber::Ast::Table
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^the release burndown should be:$/ do |table|
+  # table is a Cucumber::Ast::Table
+  pending # express the regexp above with the code you wish you had
+end
+
+
