@@ -28,12 +28,12 @@ class ReleaseBurndown
     sprints.each{ |sprint|
       sprint.stories.each{ |story|
 #BUG Stories closed after sprint end date will show up as closed in the next sprint...
-        series.add(story.release(sprints))
+        series.add(story.release_burndown_data(sprints))
       }
     }
     # Go through each open story in the backlog
     release.stories.each{ |story|
-      series.add(story.release(sprints))
+      series.add(story.release_burndown_data(sprints))
     }
 
     # Series collected, now format data for jqplot

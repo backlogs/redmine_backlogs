@@ -229,7 +229,7 @@ class RbStory < Issue
   # Produces relevant information for release graphs
   # @param sprints is array of sprints of interest
   # @return hash collection of 
-  def release(sprints)
+  def release_burndown_data(sprints)
     days = Array.new
     # Find interesting days of each sprint for the release graph
     sprints.each { |sprint| days << sprint.sprint_start_date.to_date }
