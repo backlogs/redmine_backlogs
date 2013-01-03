@@ -60,7 +60,6 @@ en-GB:
   field_blocks: Blocks
   field_initial_story_points: Initial story points
   field_name: Name
-  field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_priority: Priority
   field_release_end_date: Release end date
@@ -140,8 +139,6 @@ en-GB:
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
   story_description: Description
   story_estimation_hours: Estimation (hours)
@@ -149,7 +146,6 @@ en-GB:
   story_remaining_hours: Remaining (hours)
   story_spent_time: Spent Time
   story_status: Status
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty

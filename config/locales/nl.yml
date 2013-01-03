@@ -76,7 +76,6 @@ nl:
   field_blocks: Blokkeert
   field_initial_story_points: Initiële story points
   field_name: Naam
-  field_number_of_snapshots: Opgeslagen point snapshots
   field_position: Positie
   field_priority: Prioriteit
   field_release_end_date: Eind datum van de release
@@ -159,8 +158,6 @@ nl:
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
   rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
   rb_timelog_from_taskboard: Tijd-schrijven via taakbord
-  release_create_snapshot_today: Story point snapshot voor vandaag opslaan
-  release_update_snapshot_today: Story point snapshot voor vandaag bijwerken
   remaining_story_points: resterende story points
   story_description: Omschrijving
   story_estimation_hours: Schatting (uren)
@@ -168,8 +165,6 @@ nl:
   story_remaining_hours: Resterend (uren)
   story_spent_time: Tijd besteed
   story_status: Status
-  today_not_in_release_msg: Huidige datum valt niet binnen de release.  Wilt u echt
-    opslaan?
   today_not_in_release_warning: ! 'Waarschuwing: huidige datum ligt niet binnen de
     release.'
   todo_issue_summary: ! '%{type}: %{summary}'

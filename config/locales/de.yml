@@ -77,7 +77,6 @@ de:
   field_blocks: blockiert
   field_initial_story_points: Storypunkte zu Beginn
   field_name: Name
-  field_number_of_snapshots: Gespeicherte Punkte-Snapshots
   field_position: Position
   field_priority: Priorität
   field_release_end_date: Release Enddatum
@@ -160,8 +159,6 @@ de:
   rb_task_cards_tasks_follow_story: Story gefolgt von deren Tasks
   rb_taskboard_card_order: Reihenfolge des Kartendrucks
   rb_timelog_from_taskboard: Zeiterfassung im Taskboard
-  release_create_snapshot_today: Heutigen Punkte-Snapshot speichern
-  release_update_snapshot_today: Heutigen Punkte-Snapshot aktualisieren
   remaining_story_points: Verbleibende Storypunkte
   story_description: Beschreibung
   story_estimation_hours: Schätzung (Stunden)
@@ -169,8 +166,6 @@ de:
   story_remaining_hours: Restzeit (Stunden)
   story_spent_time: Investierte Zeit
   story_status: Status
-  today_not_in_release_msg: Heutiges Datum liegt nicht im Release-Zeitraum. Snapshot
-    wirklich speichern?
   today_not_in_release_warning: ! 'Achtung: heutiges Datum liegt nicht im Release-Zeitraum.'
   todo_issue_summary: ! '%{type}: {summary}'
   use_free_text_if_empty: Textfeld falls Dropdown Box is leer

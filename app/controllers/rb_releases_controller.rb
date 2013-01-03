@@ -46,9 +46,4 @@ class RbReleasesController < RbApplicationController
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
   end
 
-  def snapshot
-    @release.snapshot!
-    redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
-  end
-
 end

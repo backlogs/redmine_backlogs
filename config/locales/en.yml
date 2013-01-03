@@ -60,7 +60,6 @@ en:
   field_blocks: Blocks
   field_initial_story_points: Initial story points
   field_name: Name
-  field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
@@ -122,11 +121,7 @@ en:
   label_column_width: Column width
   field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  field_number_of_snapshots: Saved point snapshots
-  release_update_snapshot_today: Update story point snapshot for today
-  release_create_snapshot_today: Save story point snapshot for today
   current_open_story_points: "Current open story points:"
 
   # Version fields
@@ -174,10 +169,7 @@ en:
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_show_project_name: Show project name in backlogs
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
   remaining_story_points: remaining story points
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
