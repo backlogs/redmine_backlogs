@@ -42,13 +42,13 @@ Feature: Release burndown
         | 3   | B     | Feedback    |
         | 4   | B     | Rejected    |
      Then the release burndown should be:
-        | day   | remaining | completed | added | predicted end date
-        | start | 14        | 0         | 0     | NaN
-        | 1     | 14        | 0         | 0     | NaN
-        | 2     | 12        | 2         | 0     | 2011-03-01
-        | 3     | 12        | 2         | 0     | 2011-03-01
-        | 4     | 9         | 5         | 0     | 2011-03-01
-        | 5     | 9         | 5         | 0     | 2011-03-01
+        | sprint| remaining | completed | added | predicted_end_date |
+        | start | 14        | 0         | 0     | NaN |
+        | 1     | 14        | 0         | 0     | NaN |
+        | 2     | 12        | 2         | 0     | 2011-03-01 |
+        | 3     | 12        | 2         | 0     | 2011-03-01 |
+        | 4     | 9         | 5         | 0     | 2011-03-01 |
+        | 5     | 9         | 5         | 0     | 2011-03-01 |
 
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00
