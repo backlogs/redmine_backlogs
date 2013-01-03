@@ -6,7 +6,14 @@ class ReleaseBurndown
     @release_id = release.id
     @project = release.project
 
+    #initialize empty release
     @data = {}
+    @data[:added_points] = []
+    @data[:added_points_pos] = []
+    @data[:backlog_points] = []
+    @data[:closed_points] = []
+    @data[:trend_added] = []
+    @data[:trend_closed] = []
 
     # Select closed sprints within release period
     sprints = release.closed_sprints
