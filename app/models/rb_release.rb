@@ -6,9 +6,11 @@ class ReleaseBurndown
     @release_id = release.id
     @project = release.project
 
+    @data = {}
+
     # Select closed sprints within release period
     sprints = release.closed_sprints
-    return if sprints.nil?
+    return if sprints.nil? || sprints.size == 0
 
     baseline = [0] * sprints.size
 
@@ -39,7 +41,6 @@ class ReleaseBurndown
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
 #TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data = {}
     @data[:added_points] = series.collect{ |s| -1 * s.added_points }
     @data[:added_points_pos] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
     @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
@@ -79,7 +80,8 @@ class ReleaseBurndown
 
   def [](i)
     i = i.intern if i.is_a?(String)
-    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
+    return nil unless @data[i] # be graceful
+    #raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
