@@ -173,53 +173,6 @@ module Backlogs
         self.release = nil
         write_attribute(:release_id, rid)
       end
-
-      # Extract history of a property of a story for a range of days.
-      # \param property to extract
-      # \param days of interest as an Array
-      # \param sprint_burndown bool for selecting extra processing for sprint burndown
-      # \return array of property values 
-      def history(property, days, sprint_burndown=true)
-        property = property.to_s unless property.is_a?(String)
-        raise "Unsupported property #{property.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(property)
-
-        days = days.to_a
-        created_day = created_on.to_date
-        active_days = days.select{|d| d >= created_day}
-
-        # if not active, don't do anything
-        return [nil] * (days.size + 1) if active_days.size == 0
-
-        # anything before the creation date is nil
-        prefix = [nil] * (days.size - active_days.size)
-
-        # add one extra day as start-of-first-day
-        active_days.unshift(active_days[0] - 1)
-
-        journal = RbJournal.find(:all, :conditions => ['issue_id = ? and property = ?', self.id, property], :order => :timestamp).to_a
-        if journal.size == 0
-          RbJournal.rebuild(self)
-          journal = RbJournal.find(:all, :conditions => ['issue_id = ? and property = ?', self.id, property], :order => :timestamp).to_a
-          raise "Journal cannot have 0 entries" if journal.size == 0
-        end
-
-        values = [journal[0].value] * active_days.size
-
-        journal.each{|change|
-          stamp = change.timestamp.to_date
-          day = active_days.index{|d| d >= stamp}
-          break if day.nil?
-          values.fill(change.value, day)
-        }
-
-        if sprint_burndown == true
-          # ignore the start-of-day value for issues created mid-sprint
-          values[0] = nil if created_day > days[0]
-        end
-
-        return prefix + values
-      end
-
 #      def self.by_version(project)
 #        count_and_group_by(:project => project,
 #                           :field => 'release_id',
