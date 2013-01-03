@@ -155,7 +155,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
 
       bd = release.burndown
-      lines = bd[:added_points].size
+      lines = 0
+      lines = bd[:added_points].size unless bd[:added_points].nil?
       for i in (0..(lines-1))
         fields = [ bd[:added_points][i].to_s.gsub('.', ','),
                    bd[:backlog_points][i].to_s.gsub('.', ','),
