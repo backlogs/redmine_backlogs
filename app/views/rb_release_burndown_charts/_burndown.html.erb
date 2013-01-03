@@ -58,7 +58,7 @@
 #TODO labels for each series
 # e.g. series => {:label => 'sprint #'}
   %>
-RB.burndown.charts[<%= release.id %>] = <%= chart.to_json %>
+RB.burndown.charts[<%= release.id %>] = <%= chart.to_json.html_safe %>
 RB.burndown.charts[<%= release.id %>].options.seriesDefaults.renderer = RB.$.jqplot.BarRenderer;
 RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.CategoryAxisRenderer;
 RB.burndown.charts[<%= release.id %>].options.series[4].renderer = RB.$.jqplot.LineRenderer;
