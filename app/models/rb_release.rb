@@ -163,25 +163,30 @@ class RbRelease < ActiveRecord::Base
     ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
   end
 
-  def snapshot!
-    rbdd = today
-    unless rbdd
-      rbdd = ReleaseBurndownDay.new
-      rbdd.release_id = id
-      rbdd.day = Date.today
-    end
-    rbdd.remaining_story_points = remaining_story_points
-    rbdd.save!
-  end
-
-  def remaining_story_points
+  def remaining_story_points #FIXME merge bohansen_release_chart removed this
     res = 0
     stories.open.each {|s| res += s.story_points if s.story_points}
     res
   end
 
-  def js_ideal
-    "[['#{release_start_date}', #{initial_story_points}], ['#{release_end_date}', 0]]"
+  def allowed_sharings(user = User.current)
+    Version::VERSION_SHARINGS.select do |s|
+      if sharing == s
+        true
+      else
+        case s
+        when 'system'
+          # Only admin users can set a systemwide sharing
+          user.admin?
+        when 'hierarchy', 'tree'
+          # Only users allowed to manage versions of the root project can
+          # set sharing to hierarchy or tree
+          project.nil? || user.allowed_to?(:manage_versions, project.root)
+        else
+          true
+        end
+      end
+    end
   end
 
   scope :visible, lambda {|*args| { :include => :project,
