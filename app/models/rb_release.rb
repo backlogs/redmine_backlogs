@@ -119,18 +119,18 @@ class RbRelease < ActiveRecord::Base
     errors.add(:base, l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
   end
 
-  # Return sprints closed within this release
-  def closed_sprints
-    sprints = RbSprint.closed_sprints(self.project).reject{ |s|
-      s.effective_date.nil? ||
-      s.sprint_start_date < self.release_start_date ||
-      s.effective_date > self.release_end_date
-    }
-    return sprints
+  def stories #compat
+    issues
   end
 
-  def stories
-    issues
+  #Return sprints that contain issues within this release
+  def sprints
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id)
+  end
+
+  # Return sprints closed within this release
+  def closed_sprints
+    sprints.where("versions.status = ?", "closed")
   end
 
   def stories_by_sprint

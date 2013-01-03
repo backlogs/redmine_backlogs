@@ -44,12 +44,13 @@ Feature: Release management
       And story Story 5 should not belong to any release
       And release "Rel 1" should have 14 story points
       And release "Rel 2" should have 38 story points
-    When I follow "Rel 1"
-    Then I should see "Sprints" within "#content"
-     And I should see "Sprint 001" within "#sprints"
-     And I should see "Sprint 002" within "#sprints"
-     And I should see "Release Burndown" within "#content"
-     And I should see "Saved point snapshots:" within "#sidebar"
+     When I follow "Rel 1"
+     Then release "Rel 1" should have 2 sprints
+     Then I should see "Sprints" within "#content"
+      And I should see "Sprint 001" within "#sprints"
+      And I should see "Sprint 002" within "#sprints"
+      And I should see "Release Burndown" within "#content"
+      And I should see "Saved point snapshots:" within "#sidebar"
 
   Scenario: Create a new release
     Given I view the release page

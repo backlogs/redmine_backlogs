@@ -85,3 +85,8 @@ Then /^the release burndown should be:$/ do |table|
 end
 
 
+Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|
+  release = RbRelease.find_by_name(release)
+  release.should_not be_nil
+  release.sprints.size.should == num.to_i
+end
