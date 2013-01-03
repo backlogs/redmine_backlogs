@@ -1,102 +1,59 @@
-Feature: Release management
-  As a product owner
-  I want to manage releases
-  So that i can break down a large product backlog
+Feature: Release functionality
+  As a scrum master
+  I want to manage what goes into a release and how it's progressing
+  So that I can update everyone on the status of the project
 
   Background:
     Given the ecookbook project has the backlogs plugin enabled
-      And no versions or issues exist
-      And I am a product owner of the project
+      And I am a scrum master of the project
+      And I have deleted all existing issues
+      And I have defined the following releases:
+        | name        | sprints                            | 
+        | Version 1.0 | Sprint 001, Sprint 002, Sprint 003 |
+        | Version 2.0 | Sprint 004, Sprint 005, Sprint 006 |
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
-      And I have defined the following releases:
-        | name    | project    | release_start_date | release_end_date | initial_story_points |
-        | Rel 1   | ecookbook  | 2010-01-01         | 2010-02-28       | 0 |
-        | Rel 2   | ecookbook  | 2010-03-01         | 2010-06-01       | 0 |
-      And I have defined the following stories in the product backlog:
-        | subject | release | points |
-        | Story 1 | Rel 1   | 2 |
-        | Story 2 | Rel 1   | 7 |
-        | Story 3 | Rel 2   | 13 |
-        | Story 4 | Rel 2   | 20 |
-        | Story 5 |         | 40 |
+        | Sprint 004 | 2010-04-01        | 2010-04-30     |
+        | Sprint 005 | 2010-05-01        | 2010-05-31     |
+        | Sprint 006 | 2010-06-01        | 2010-06-31     |
       And I have defined the following stories in the following sprints:
-        | subject | sprint     | release | points |
-        | Story A | Sprint 001 | Rel 1   | 2 |
-        | Story B | Sprint 002 | Rel 1   | 3 |
-        | Story C | Sprint 003 | Rel 2   | 5 |
+        | position | subject | sprint     | story_points |
+        | 1        | Story A | Sprint 001 | 2            |
+        | 2        | Story B | Sprint 001 | 4            |
+        | 1        | Story C | Sprint 002 | 2            |
+        | 2        | Story D | Sprint 002 | 4            |
+        | 1        | Story E | Sprint 003 | 2            |
+        | 2        | Story F | Sprint 003 | 4            |
+        | 1        | Story G | Sprint 004 | 2            |
+        | 2        | Story H | Sprint 004 | 4            |
+        | 1        | Story I | Sprint 005 | 2            |
+        | 2        | Story J | Sprint 005 | 4            |
+        | 1        | Story K | Sprint 006 | 2            |
+        | 2        | Story L | Sprint 006 | 4            |
 
-  Scenario: View the release page
-    Given I view the release page
-     Then I should see "Release Planning" within "h2"
-      And I should see "Rel 1" within "#content"
-      And I should see "Rel 2" within "#content"
-      And story Story 1 should belong to release Rel 1
-      And story Story 2 should belong to release Rel 1
-      And story Story 3 should belong to release Rel 2
-      And story Story 4 should belong to release Rel 2
-      And story Story A should belong to release Rel 1
-      And story Story B should belong to release Rel 1
-      And story Story C should belong to release Rel 2
-      And story Story 5 should not belong to any release
-      And release "Rel 1" should have 14 story points
-      And release "Rel 2" should have 38 story points
-    When I follow "Rel 1"
-    Then I should see "Sprints" within "#content"
-     And I should see "Sprint 001" within "#sprints"
-     And I should see "Sprint 002" within "#sprints"
-     And I should see "Release Burndown" within "#content"
-     And I should see "Saved point snapshots:" within "#sidebar"
-
-  Scenario: Create a new release
-    Given I view the release page
-     Then I should see "Release Planning"
-     When I follow "New release"
-     Then I should see "New release" within "h2"
-     When I fill in the following:
-       | release_name | A totally new release |
-       | release_release_start_date | 2010-04-01 |
-       | release_release_end_date | 2010-04-30 |
-       | release_initial_story_points | 20 |
-     When I press "Create"
-     Then I should see "Successful creation"
-
-  Scenario: Delete a release
-    Given I view the release page
-     Then I should see "Release Planning"
-     When I follow "Rel 1"
-     Then I should see "Delete" within ".contextual"
-     When I follow "Delete" within ".contextual"
-     Then I should see "Release Planning"
-     Then I should not see "Rel 1"
-
-  Scenario: Edit a release
-    Given I view the release page
-     Then I should see "Release Planning"
-     When I follow "Rel 1"
-     Then I should see "Edit" within ".contextual"
-     When I follow "Edit" within ".contextual"
-     Then I should see "Release" within "#content"
-     When I fill in "release_name" with "A changed release"
-      And I press "Save"
-     Then I should see "Successful update"
-      And I should see "A changed release" within "#content"
-
-  Scenario: Add a story to a release
+  Scenario: Show release backlogs along with general product backlog on the backlog view
     Given I am viewing the master backlog
-     When I add story Story 5 to release Rel 1
-     Then story Story 5 should belong to release Rel 1
-      And release "Rel 1" should have 54 story points
+     Then I should see "Version 1.0"
+      And I should see "Version 2.0"
+      And I should see "Product backlog"
 
-   Scenario: view master backlog page with releases
-    Given I am viewing the master backlog
-     Then I should see the product backlog
-      And I should see 1 stories in the product backlog
-      And I should see the release backlog of Rel 1
-      And I should see the release backlog of Rel 2
-      And I should see 2 stories in the release backlog of Rel 1
-      And I should see 2 stories in the release backlog of Rel 2
-      And I should see 3 sprint backlogs
+  Scenario: View release graph for Version 1.0 after 1 sprint
+    Given I complete Sprint 001
+     When I fetch CSV output of the release graph for Version 1.0
+      Then the Sprint 1 column should show 6 points completed and 12 points remaining
+     
+  Scenario: Add story to release backlog
+    Given I complete Sprint 001
+      And I add story Story C1 of 3 points to release Version 1.0
+      And I complete Sprint 002
+     When I fetch CSV output of the release graph for Version 1.0
+     Then the Sprint 001 column should show 6 points completed and 12 points remaining
+      And the Sprint 002 column should show 6 points completed and 6 points remaining and 3 points added
+      And the gradient for added points at Sprint 002 should be -3 points
+      And the gradient for remaining points at Sprint 002 should be -6 points
+
+  Scenario: Remove story from release backlog
+

@@ -10,8 +10,7 @@
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
-  <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
-  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
+  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
 
   <br />
   <div class="box">

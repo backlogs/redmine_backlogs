@@ -113,6 +113,8 @@ zh:
   label_points_accepted: points accepted
   label_points_burn_down: 燃尽
   label_points_burn_up: 燃起
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_committed: points committed
   label_points_required_burn_rate: required burn rate (points)
   label_points_resolved: points resolved

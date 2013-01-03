@@ -117,6 +117,8 @@ de:
   label_not_prioritized: nicht priorisiert
   label_points: Punkte
   label_points_accepted: Punkte akzeptiert
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Runter
   label_points_burn_up: Hoch
   label_points_committed: Punkte vereinbart

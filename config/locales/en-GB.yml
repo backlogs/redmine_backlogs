@@ -96,6 +96,8 @@ en-GB:
   label_no_start: no start
   label_not_prioritized: not prioritized
   label_points_accepted: points accepted
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Down
   label_points_burn_up: Up
   label_points_committed: points committed
