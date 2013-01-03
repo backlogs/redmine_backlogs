@@ -15,8 +15,8 @@ class ReleaseBurndown
     @data[:trend_added] = []
     @data[:trend_closed] = []
 
-    # Select closed sprints within release period
-    sprints = release.closed_sprints
+    # Select sprints within release period. They need not to be closed.
+    sprints = release.sprints
     return if sprints.nil? || sprints.size == 0
 
     baseline = [0] * sprints.size
@@ -31,14 +31,7 @@ class ReleaseBurndown
 #TODO Stories continued over several sprints (by duplicating) should not show up as added
 #TODO Likewise stories split from inital epics should not show up as added
 
-    # Go through each story of each sprint
-    sprints.each{ |sprint|
-      sprint.stories.each{ |story|
-#BUG Stories closed after sprint end date will show up as closed in the next sprint...
-        series.add(story.release_burndown_data(sprints))
-      }
-    }
-    # Go through each open story in the backlog
+    # Go through each story in the backlog
     release.stories.each{ |story|
       series.add(story.release_burndown_data(sprints))
     }
@@ -59,7 +52,7 @@ class ReleaseBurndown
     @data[:trend_closed] = Array.new
     @data[:trend_added] = Array.new
     avg_count = 3
-    if sprints.size >= avg_count
+    if release.closed_sprints.size >= avg_count
       avg_added = (@data[:added_points][-1] - @data[:added_points][-avg_count]) / avg_count
       avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
       current_backlog = @data[:added_points][-1] + @data[:added_points_pos][-1] + @data[:backlog_points][-1]

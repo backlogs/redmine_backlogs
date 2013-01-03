@@ -229,11 +229,13 @@ class RbStory < Issue
   # Produces relevant information for release graphs
   # @param sprints is array of sprints of interest
   # @return hash collection of 
+  #  :backlog_points :added_points :closed_points
   def release_burndown_data(sprints)
+    return nil unless self.is_story?
     days = Array.new
     # Find interesting days of each sprint for the release graph
     sprints.each { |sprint| days << sprint.sprint_start_date.to_date }
-#TODO Maybe only effective_date??
+#TODO Maybe only effective_date?? #FIXME start_date of first and then effective dates?
     days_end = days.dup
     days_end.shift
     days_end << sprints.last.effective_date.to_date
@@ -246,9 +248,21 @@ class RbStory < Issue
     series.merge(:closed_points => baseline.dup)
 
     # Collect data
-    series.merge(:accepted => history(:status_success, days,false)[0...-1])
-    series.merge(:points => history(:story_points,days,false)[0...-1])
-    series.merge(:open => history(:status_open, days,false)[0...-1])
+    bd = {:points => [], :open => [], :accepted => [] }
+    statuses = RbIssueHistory.statuses
+    self.history.filter(nil, statuses, days).each{|d|
+      if d.nil? || d[:tracker] != :story
+        [:points, :open, :accepted].each{|k| bd[k] << nil }
+      else
+        bd[:points] << d[:story_points]
+        bd[:open] << d[:status_open]
+        bd[:accepted] << d[:status_success]
+      end
+    }
+
+    series.merge(:accepted => bd[:accepted])
+    series.merge(:points => bd[:points])
+    series.merge(:open => bd[:open])
     first = true;
     series.merge(:accepted_first => series.series(:accepted).collect{ |a|
                    if a

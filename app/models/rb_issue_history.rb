@@ -21,12 +21,13 @@ class RbIssueHistory < ActiveRecord::Base
     }
   end
 
-  def filter(sprint, status=nil)
+  def filter(sprint, status=nil, days=nil)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
-    filtered = sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
+    days = sprint.days unless sprint.nil?
+    filtered = days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
     
     # see if this issue was closed after sprint end
-    if filtered[-1][:status_open]
+    if filtered[-1][:status_open] && !sprint.nil?
       self.history.select{|h| h[:date] > sprint.effective_date}.each{|h|
         if h[:sprint] == sprint.id && !h[:status_open]
           filtered[-1] = h

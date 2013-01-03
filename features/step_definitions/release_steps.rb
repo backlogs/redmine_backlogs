@@ -75,8 +75,28 @@ Then /^release "([^"]*)" should have (\d+) initial story points$/ do |release, p
 end
 
 Given /^I have made the following story mutations:$/ do |table|
-  # table is a Cucumber::Ast::Table
-  pending # express the regexp above with the code you wish you had
+  table.hashes.each do |mutation|
+    mutation.delete_if{|k, v| v.to_s.strip == '' }
+    story = RbStory.find_by_subject(mutation.delete('story'))
+    story.should_not be_nil
+    current_sprint(story.fixed_version.name)
+    set_now(mutation.delete('day'), :msg => story.subject, :sprint => current_sprint)
+    Time.now.should be >= story.created_on
+
+    status_name = mutation.delete('status').to_s
+    if status_name.blank?
+      status = nil
+    else
+      status = IssueStatus.find(:first, :conditions => ['name = ?', status_name])
+      raise "No such status '#{status_name}'" unless status
+      status = status.id
+    end
+
+    story.status_id = status if status
+    story.save!.should be_true
+
+    mutation.should == {}
+  end
 end
 
 Then /^the release burndown should be:$/ do |table|
@@ -89,4 +109,9 @@ Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|
   release = RbRelease.find_by_name(release)
   release.should_not be_nil
   release.sprints.size.should == num.to_i
+end
+
+Then /^show me the burndown data for release "([^"]*)"$/ do |release|
+  release = RbRelease.find_by_name(release)
+  puts "burndown data: #{release.burndown}"
 end
