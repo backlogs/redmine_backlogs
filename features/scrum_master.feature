@@ -61,6 +61,20 @@ Feature: Scrum Master
      When I create the sprint
      Then the request should complete successfully
       And I should see "sprint 005"
+      And the sprint "sprint 005" should not be shared
+
+  Scenario: Create a new sprint with auto-sharing
+    Given I am viewing the master backlog
+      And sharing is enabled
+      And default sharing for new sprints is hierarchy
+      And I want to create a sprint
+      And I want to set the name of the sprint to sprint 006
+      And I want to set the sprint_start_date of the sprint to 2010-03-01
+      And I want to set the effective_date of the sprint to 2010-03-20
+     When I create the sprint
+     Then the request should complete successfully
+      And I should see "sprint 006"
+      And the sprint "sprint 006" should be shared by hierarchy
 
   Scenario: Update sprint details
     Given I am viewing the master backlog
