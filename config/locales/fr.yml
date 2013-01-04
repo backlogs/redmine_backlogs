@@ -10,6 +10,7 @@ fr:
   backlogs_include_sat_and_sun: Inclure Le samedi et dimanche dans le Burndown
   backlogs_points_burn_direction: Point du burn Haut/bas
   backlogs_product_backlog: Backlog de produit
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_sprints: Sprints
   backlogs_statistics_active: Le projet affiche son activité
   backlogs_statistics_active_failed: Le projet n'affiche aucune activité

@@ -230,3 +230,19 @@ When /^I create an impediment named (.+) which blocks (.+?)(?: and (.+))?$/ do |
   page.should have_xpath("//div", :text => impediment_name) #this did not work as documented. so wait explicitely for ajax above.
 end
 
+When /^I update the status of task (.+?) to (.+?)$/ do |task, state|
+  task = RbTask.find_by_subject(task)
+  task.should_not be_nil
+  @task_params = HashWithIndifferentAccess.new(task.attributes)
+  state = IssueStatus.find_by_name(state)
+  @task_params[:status_id] = state.id
+  page.driver.post(
+                      url_for(:controller => :rb_tasks,
+                              :action => :update,
+                              :id => @task_params[:id],
+                              :only_path => true),
+                      @task_params.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200)
+end
+
