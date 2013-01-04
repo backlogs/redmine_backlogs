@@ -230,15 +230,15 @@ class RbStory < Issue
   # @param sprints is array of sprints of interest
   # @return hash collection of 
   #  :backlog_points :added_points :closed_points
+# The dates are:
+#  start: first day of first sprint
+#  1..n: a day after the nth sprint
   def release_burndown_data(sprints)
     return nil unless self.is_story?
     days = Array.new
     # Find interesting days of each sprint for the release graph
-    sprints.each { |sprint| days << sprint.sprint_start_date.to_date }
-#TODO Maybe only effective_date?? #FIXME start_date of first and then effective dates?
-    days_end = days.dup
-    days_end.shift
-    days_end << sprints.last.effective_date.to_date
+    days << sprints.first.sprint_start_date.to_date
+    sprints.each { |sprint| days << sprint.effective_date.tomorrow.to_date }
 
     baseline = [0] * days.size
 
@@ -256,7 +256,7 @@ class RbStory < Issue
       else
         bd[:points] << d[:story_points]
         bd[:open] << d[:status_open]
-        bd[:accepted] << d[:status_success]
+        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
       end
     }
 
@@ -277,7 +277,6 @@ class RbStory < Issue
                    end
                  })
     series.merge(:day => days)
-    series.merge(:day_end => days_end)
 
     # Extract added_points, backlog_points and closed points from the data collected
     series.each { |p|
@@ -289,7 +288,7 @@ class RbStory < Issue
       end
       # Is the story created within this sprint?
       if (created_on.to_date >= sprints.first.sprint_start_date.to_date) &&
-          (created_on.to_date < p.day_end)
+          (created_on.to_date < p.day) #day is the end-date+1 of a sprint
         p.added_points = p.points
         if p.accepted
           p.backlog_points = -p.points

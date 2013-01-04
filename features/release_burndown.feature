@@ -17,11 +17,11 @@ Feature: Release burndown
       And the current time is 2011-01-01 08:00:00
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
-        | Sprint 001 | 2011-01-02        | 2011-01-31     |
-        | Sprint 002 | 2011-02-01        | 2011-02-28     |
+        | Sprint 001 | 2011-01-02        | 2011-01-08     |
+        | Sprint 002 | 2011-01-09        | 2011-01-15     |
       And I have defined the following releases:
         | name    | project    | release_start_date | release_end_date | initial_story_points |
-        | Rel 1   | ecookbook  | 2011-01-02         | 2011-02-28       | 0 |
+        | Rel 1   | ecookbook  | 2011-01-02         | 2011-01-31       | 0 |
       And I have defined the following stories in the product backlog:
         | subject | release | points |
         | Story 1 | Rel 1   | 2 |
@@ -34,21 +34,21 @@ Feature: Release burndown
 
    Scenario: Simple release burndown
     Given I view the release page
-     Then release "Rel 1" should have 14 initial story points
     Given I have made the following story mutations:
-        | day | story | status      |
-        | 1   | A     | In Progress |
-        | 2   | A     | Accepted    |
-        | 3   | B     | Feedback    |
-        | 4   | B     | Rejected    |
-     Then the release burndown should be:
-        | sprint| remaining | completed | added | predicted_end_date |
-        | start | 14        | 0         | 0     | NaN |
-        | 1     | 14        | 0         | 0     | NaN |
-        | 2     | 12        | 2         | 0     | 2011-03-01 |
-        | 3     | 12        | 2         | 0     | 2011-03-01 |
-        | 4     | 9         | 5         | 0     | 2011-03-01 |
-        | 5     | 9         | 5         | 0     | 2011-03-01 |
+        | day | story   | status      |
+        | 1   | Story A | In Progress |
+        | 2   | Story A | Accepted    |
+        | 3   | Story B | Feedback    |
+        | 4   | Story B | Rejected    |
+      And the current time is 2011-01-31 23:00:00
+     Then release "Rel 1" should have 2 sprints
+      And show me the burndown data for release "Rel 1"
+      #points at the end of the corresponding sprint
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 14        | 0         | 0     |
+        | 1     | 12        | 2         | 0     |
+        | 2     |  9        | 0         | 0     |
 
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00
@@ -58,9 +58,10 @@ Feature: Release burndown
 #    Given the current time is 2011-01-15 08:00:00
 #     When I add a story to release "Rel 1"
 #
-#   Scenario: Copy a story
+#   Scenario: Split a story
 #    Given the current time is 2011-01-31 08:00:00
 #     When I copy story "Story A" into "Story A.cont"
 #     When I reject story "Story A"
 #     When update story "Story A.cont" to 5 story points
 #
+#   Scenario: reject and re-open a story

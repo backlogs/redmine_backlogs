@@ -75,6 +75,7 @@ Then /^release "([^"]*)" should have (\d+) initial story points$/ do |release, p
 end
 
 Given /^I have made the following story mutations:$/ do |table|
+  #Mutations happen at 'day' relative to the story's sprint
   table.hashes.each do |mutation|
     mutation.delete_if{|k, v| v.to_s.strip == '' }
     story = RbStory.find_by_subject(mutation.delete('story'))
@@ -99,12 +100,6 @@ Given /^I have made the following story mutations:$/ do |table|
   end
 end
 
-Then /^the release burndown should be:$/ do |table|
-  # table is a Cucumber::Ast::Table
-  pending # express the regexp above with the code you wish you had
-end
-
-
 Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|
   release = RbRelease.find_by_name(release)
   release.should_not be_nil
@@ -113,5 +108,29 @@ end
 
 Then /^show me the burndown data for release "([^"]*)"$/ do |release|
   release = RbRelease.find_by_name(release)
-  puts "burndown data: #{release.burndown}"
+  burndown = release.burndown
+  puts "added     #{burndown[:added_points]}"
+  puts "added_pos #{burndown[:added_points_pos]}"
+  puts "bl points #{burndown[:backlog_points]}"
+  puts "closed    #{burndown[:closed_points]}"
+  puts "trend add #{burndown[:trend_added]}"
+  puts "trend cls #{burndown[:trend_closed]}"
 end
+
+Then /^the release burndown for release "([^"]*)" should be:$/ do |release, table|
+  release = RbRelease.find_by_name(release)
+  burndown = release.burndown
+  table.hashes.each do |metrics|
+    sprint = metrics.delete('sprint')
+    sprint = (sprint == 'start' ? 0 : sprint.to_i)
+    metrics.keys.sort{|a, b| a.to_s <=> b.to_s}.each do |k|
+      expect = metrics[k]
+      got = burndown[k.intern][sprint]
+      got = "%d, %s: %.1f" % [sprint, k, got]
+      expect = "%d, %s: %.1f" % [sprint, k, expect]
+      #puts "test: #{expect} == #{got}"
+      got.should == expect
+    end
+  end
+end
+

@@ -19,7 +19,7 @@ class ReleaseBurndown
     sprints = release.sprints
     return if sprints.nil? || sprints.size == 0
 
-    baseline = [0] * sprints.size
+    baseline = [0] * (sprints.size + 1)
 
     series = Backlogs::MergedArray.new
     series.merge(:backlog_points => baseline.dup)
