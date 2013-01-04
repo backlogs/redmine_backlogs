@@ -50,7 +50,6 @@ Feature: Release management
       And I should see "Sprint 001" within "#sprints"
       And I should see "Sprint 002" within "#sprints"
       And I should see "Release Burndown" within "#content"
-      And I should see "Saved point snapshots:" within "#sidebar"
 
   Scenario: Create a new release
     Given I view the release page
