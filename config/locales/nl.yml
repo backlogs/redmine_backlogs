@@ -75,7 +75,6 @@ nl:
   field_base: ""
   field_backlogs_issue_type: Backlog type
   field_blocks: Blokkeert
-  field_initial_story_points: Initiële story points
   field_name: Naam
   field_position: Positie
   field_priority: Prioriteit

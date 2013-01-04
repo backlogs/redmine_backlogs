@@ -59,7 +59,6 @@ en-GB:
   field_backlogs_issue_type: Backlog type
   field_base: ""
   field_blocks: Blocks
-  field_initial_story_points: Initial story points
   field_name: Name
   field_position: Position
   field_priority: Priority

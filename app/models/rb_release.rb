@@ -107,7 +107,7 @@ class RbRelease < ActiveRecord::Base
   has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
 
-  validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
+  validates_presence_of :project_id, :name, :release_start_date, :release_end_date
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
@@ -152,7 +152,7 @@ class RbRelease < ActiveRecord::Base
 
   def has_burndown?
 #merge: is it neccessary to have closed sprints for burndown? I'd like to see it immediately
-    return !!(self.release_start_date and self.release_end_date and self.initial_story_points && !self.closed_sprints.nil?)
+    return !!(self.release_start_date and self.release_end_date && !self.closed_sprints.nil?)
   end
 
   def burndown

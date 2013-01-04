@@ -13,9 +13,9 @@ Feature: Release management
         | Sprint 002 | 2010-02-01        | 2010-02-28     |
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
       And I have defined the following releases:
-        | name    | project    | release_start_date | release_end_date | initial_story_points |
-        | Rel 1   | ecookbook  | 2010-01-01         | 2010-02-28       | 0 |
-        | Rel 2   | ecookbook  | 2010-03-01         | 2010-06-01       | 0 |
+        | name    | project    | release_start_date | release_end_date |
+        | Rel 1   | ecookbook  | 2010-01-01         | 2010-02-28       |
+        | Rel 2   | ecookbook  | 2010-03-01         | 2010-06-01       |
       And I have defined the following stories in the product backlog:
         | subject | release | points |
         | Story 1 | Rel 1   | 2 |
@@ -60,7 +60,6 @@ Feature: Release management
        | release_name | A totally new release |
        | release_release_start_date | 2010-04-01 |
        | release_release_end_date | 2010-04-30 |
-       | release_initial_story_points | 20 |
      When I press "Create"
      Then I should see "Successful creation"
 

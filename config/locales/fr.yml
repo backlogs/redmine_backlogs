@@ -79,7 +79,6 @@ fr:
   field_base: ""
   field_backlogs_issue_type: Type de backlog
   field_blocks: Blocks
-  field_initial_story_points: Point de story initiale
   field_name: Nom
   field_position: Position
   field_priority: Priorité

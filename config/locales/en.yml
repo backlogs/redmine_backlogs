@@ -63,7 +63,6 @@ en:
   field_backlogs_issue_type: Backlog type
   field_base: ""
   field_blocks: Blocks
-  field_initial_story_points: Initial story points
   field_name: Name
   field_position: Position
   field_release_end_date: Release end date
@@ -124,7 +123,6 @@ en:
   label_show_completed_sprints: Show Completed Sprints
   label_no_data_to_show: No data to show
   label_column_width: Column width
-  field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
   today_not_in_release_warning: "Warning: current date is not within release date range."
   current_open_story_points: "Current open story points:"

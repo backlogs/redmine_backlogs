@@ -20,8 +20,8 @@ Feature: Release burndown
         | Sprint 001 | 2011-01-02        | 2011-01-08     |
         | Sprint 002 | 2011-01-09        | 2011-01-15     |
       And I have defined the following releases:
-        | name    | project    | release_start_date | release_end_date | initial_story_points |
-        | Rel 1   | ecookbook  | 2011-01-02         | 2011-01-31       | 0 |
+        | name    | project    | release_start_date | release_end_date |
+        | Rel 1   | ecookbook  | 2011-01-02         | 2011-01-31       |
       And I have defined the following stories in the product backlog:
         | subject | release | points |
         | Story 1 | Rel 1   | 2 |

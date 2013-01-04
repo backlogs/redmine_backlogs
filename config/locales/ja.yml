@@ -58,7 +58,6 @@ ja:
   field_backlogs_issue_type: バックログタイプ
   field_base: ""
   field_blocks: ブロック
-  field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
   field_position: Position
   field_release_end_date: リリース終了日
@@ -106,7 +105,6 @@ ja:
   label_release_plural: リリース
   label_release_start_date: リリース開始日
   label_release_end_date: リリース日
-  field_initial_story_points: 初期ストーリーポイント
   error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
 
   # Version fields

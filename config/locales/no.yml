@@ -72,7 +72,6 @@
   field_backlogs_issue_type: Backlog type
   field_base: ""
   field_blocks: Blokker
-  field_initial_story_points: Initielle storypoenger
   field_name: Navn
   field_position: Posisjon
   field_priority: Priority

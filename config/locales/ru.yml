@@ -63,7 +63,6 @@ ru:
   field_backlogs_issue_type: Тип бэклога
   field_base: ""
   field_blocks: Блокировки
-  field_initial_story_points: Начальная оценка истории
   field_name: Название
   field_position: Положение
   field_priority: Приоритет

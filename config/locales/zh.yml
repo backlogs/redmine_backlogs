@@ -73,7 +73,6 @@ zh:
   field_base: ""
   field_backlogs_issue_type: Backlog类型
   field_blocks: ! '[[Blocks]]'
-  field_initial_story_points: Initial story points
   field_name: ! '[[Name]]'
   field_position: 位置
   field_priority: Priority
