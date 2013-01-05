@@ -8,28 +8,9 @@ RB.BoardUpdater = RB.Object.create({
   
   initialize: function(){
     var self = this;
-    var private_mode = false;
-    
+ 
     RB.$('#refresh').bind('click', function(e,u){ self.handleRefreshClick(e,u); });
     RB.$('#disable_autorefresh').bind('click', function(e,u){ self.handleDisableAutorefreshClick(e,u); });
-    RB.$('#private_mode').live('click', function(e,u){ 
-      private_mode = ! private_mode;
-      var uid = RB.$("#userid").text();
-      RB.$(".task").each(function() {
-        if(private_mode){
-          RB.$('#private_mode').text("All");
-          task_ownerid = RB.$(".assigned_to_id .v",this).text();
-          if((task_ownerid=='')||(task_ownerid==uid)){
-            RB.$(this).show();
-          } else {
-            RB.$(this).hide();
-          }
-        } else {
-          RB.$('#private_mode').text("Private");
-          RB.$(this).show();         
-        }
-      });         
-    });
 
     this.loadPreferences();
     this.pollWait = RB.constants.autorefresh_wait;

@@ -10,12 +10,6 @@ namespace :redmine do
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
 
-      begin
-        Rails.cache.clear
-      rescue NoMethodError
-        puts "** WARNING: Automatic cache delete not supported by #{Rails.cache.class}, please clear manually **"
-      end
-
       Backlogs.gems.each_pair {|gem, installed|
         raise "You are missing the '#{gem}' gem" unless installed
       }
@@ -42,10 +36,14 @@ namespace :redmine do
           print "\nCard labels could not be fetched (#{fetch_error}). Please try again later. Proceeding anyway...\n"
         end
       else
-        if ! File.exist?(File.dirname(__FILE__) + '/../labels.yaml')
+        if ! File.exist?(File.dirname(__FILE__) + '/../labels/labels.yaml')
           print "Default labels installed\n"
-          FileUtils.cp(File.dirname(__FILE__) + '/../labels.yaml.default', File.dirname(__FILE__) + '/../labels.yaml')
+          FileUtils.cp(File.dirname(__FILE__) + '/../labels/labels.yaml.default', File.dirname(__FILE__) + '/../labels/labels.yaml')
         end
+      end
+
+      if BacklogsPrintableCards::CardPageLayout.selected.blank? && BacklogsPrintableCards::CardPageLayout.available.size > 0 
+        Backlogs.setting[:card_spec] = BacklogsPrintableCards::CardPageLayout.available[0]
       end
 
       trackers = Tracker.find(:all)
@@ -133,7 +131,7 @@ namespace :redmine do
                 end
               elsif selection.length == 0 or selection.first.to_i == j + 1
                 # If the user chose to create a new one, then ask for the name
-                Backlogs.settings[:task_tracker] = create_new_tracker
+                Backlogs.setting[:task_tracker] = create_new_tracker
                 invalid = false
               else
                 puts "Oooops! That's not a valid selection. Please try again."
@@ -154,7 +152,12 @@ namespace :redmine do
 
       print "Migrating the database..."
       STDOUT.flush
-      system('rake db:migrate:plugins --trace > redmine_backlogs_install.log')
+      if Backlogs.platform == :redmine && Redmine::VERSION::MAJOR > 1
+        db_migrate_task = "redmine:plugins:migrate"
+      else
+        db_migrate_task = "db:migrate:plugins"
+      end
+      system("rake #{db_migrate_task} --trace > redmine_backlogs_install.log")
       system('rake redmine:backlogs:fix_positions --trace >> redmine_backlogs_install.log')
       if $?==0
         puts "done!"

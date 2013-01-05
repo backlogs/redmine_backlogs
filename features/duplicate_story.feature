@@ -14,8 +14,8 @@ Feature: Duplicate story
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
         | Sprint 004 | 2010-04-01        | 2010-04-30     |
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     |
-        | 1        | Story 1 | Sprint 001 |
+        | subject | sprint     |
+        | Story 1 | Sprint 001 |
       And I have defined the following tasks:
         | subject | story   |
         | Task 1  | Story 1 |
@@ -28,6 +28,8 @@ Feature: Duplicate story
       Then the request should complete successfully
       And sprint Sprint 002 should contain Story 1A
 
+  #using javascript to disable redmine2.1 copy_subtasks button
+  @javascript
   Scenario: Duplicate story with tasks
     Given I am duplicating Story 1 to Story 1B for Sprint 003
       And I choose to copy open tasks

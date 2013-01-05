@@ -1,21 +1,68 @@
+---
 language: ruby
+release: 0.9.32
+#services:
+#- mysql
+#- postgresql
 rvm:
-  - 1.8.7
-  - 1.9.3
+- 1.9.3
+#- 1.8.7
 env:
-  - REDMINE_VER=1
-  - REDMINE_VER=2
-
-install: "echo skip bundle install"
-
+#- REDMINE_VER=2.0.4 DB=mysql
+#- REDMINE_VER=2.1.5 DB=mysql
+#- REDMINE_VER=2.2.0 DB=mysql
+- REDMINE_VER=2.0.4 DB=sqlite
+- REDMINE_VER=2.1.5 DB=sqlite
+- REDMINE_VER=2.2.0 DB=sqlite
+#- REDMINE_VER=2.0.4 DB=postgresql
+#- REDMINE_VER=2.1.5 DB=postgresql
+#- REDMINE_VER=2.2.0 DB=postgresql
+matrix:
+  allow_failures:
+  - rvm: jruby-18mode
+  - rvm: jruby-19mode
+  exclude:
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.0.4 DB=mysql
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.1.5 DB=mysql
+  - rvm: 1.8.7
+    env: REDMINE_VER=2.2.0 DB=mysql
+install: echo skip bundle install
+#before_script:
+#- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;'
+#  -U postgres; fi"
+#- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U
+#  postgres; fi"
+#- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;';
+#  fi"
 script:
-  - export WORKSPACE=`pwd`/workspace
-  - export PATH_TO_BACKLOGS=`pwd`
-  - export PATH_TO_REDMINE=$WORKSPACE/redmine
-  - mkdir $WORKSPACE
-  - cp config/database.yml.travis $WORKSPACE/database.yml
-  - bash -x ./redmine20_install.sh -r
-  - bash -x ./redmine20_install.sh -i
-  - bash -x ./redmine20_install.sh -t
-  - bash -x ./redmine20_install.sh -u
-
+- export WORKSPACE=`pwd`/workspace
+- export PATH_TO_BACKLOGS=`pwd`
+- export PATH_TO_REDMINE=$WORKSPACE/redmine
+- mkdir $WORKSPACE
+- cp config/database.yml.travis $WORKSPACE/database.yml
+- bash -x ./redmine_install.sh -r
+- bash -x ./redmine_install.sh -i
+- bash -x ./redmine_install.sh -t features/burndown.feature
+- bash -x ./redmine_install.sh -t features/cecilia_burndown.feature
+- bash -x ./redmine_install.sh -t features/common.feature
+- bash -x ./redmine_install.sh -t features/duplicate_story.feature
+- bash -x ./redmine_install.sh -t features/extended_timelog.feature
+- bash -x ./redmine_install.sh -t features/product_owner.feature
+- bash -x ./redmine_install.sh -t features/release.feature
+- bash -x ./redmine_install.sh -t features/routes.feature
+- bash -x ./redmine_install.sh -t features/scrum_master.feature
+- bash -x ./redmine_install.sh -t features/settings.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-burndown.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-chief_product_owner2.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-chief_product_owner.feature
+- bash -x ./redmine_install.sh -t features/shared-versions.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-pblpage.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-positioning.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-scrum_master-dnd.feature
+- bash -x ./redmine_install.sh -t features/shared-versions-team_member-dnd.feature
+- bash -x ./redmine_install.sh -t features/sidebar.feature
+- bash -x ./redmine_install.sh -t features/team_member.feature
+- bash -x ./redmine_install.sh -t features/ui.feature
+- bash -x ./redmine_install.sh -u

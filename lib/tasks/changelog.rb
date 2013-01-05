@@ -13,7 +13,8 @@ changelog = File.open('CHANGELOG.rdoc').each{|line|
   end
 }
 
-gitlog = `git --no-pager log --date=short --format="%ad %s"`
+puts "== #{Date.today.strftime('%Y-%m-%d')} v???\n\n"
+gitlog = `git --no-pager log -50 --date=short --format="%ad %s"`
 gitlog.split("\n").each{|line|
   line = line.strip
 
@@ -21,7 +22,7 @@ gitlog.split("\n").each{|line|
   break if m && m[1] == last_version
 
   if m
-    puts "== #{line}\n"
+    puts "\n== #{line}\n\n"
   else
     issues = line.scan(/#[0-9]+/)
     issues.each{|issueno|
@@ -33,3 +34,6 @@ gitlog.split("\n").each{|line|
   end
 }
 
+puts "\n"
+
+puts File.open('CHANGELOG.rdoc').read

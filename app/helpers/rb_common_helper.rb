@@ -31,12 +31,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     end
   end
 
-  def build_inline_style_color(task)
-    task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User) ? '' : "#{task.assigned_to.backlogs_preference[:task_color]}"
-  end
-
   def breadcrumb_separator
-    "<span class='separator'>&gt;</span>"
+    "<span class='separator'>&gt;</span>".html_safe
   end
 
   def description_or_empty(story)
@@ -84,11 +80,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def status_id_or_default(story)
-    story.new_record? ? IssueStatus.find(:first, :order => "position ASC").id : story.status.id
+    story.new_record? ? IssueStatus.default.id : story.status.id
   end
 
   def status_label_or_default(story)
-    story.new_record? ? IssueStatus.find(:first, :order => "position ASC").name : story.status.name
+    story.new_record? ? IssueStatus.default.name : story.status.name
   end
 
   def sprint_html_id_or_empty(sprint)
@@ -125,7 +121,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def date_string_with_milliseconds(d, add=0)
     return '' if d.blank?
-    d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1]
+    d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1] + d.strftime(" %z")
   end
 
   def remaining_hours(item)
@@ -159,7 +155,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
 
       bd = release.burndown
-      lines = bd[:added_points].size
+      lines = 0
+      lines = bd[:added_points].size unless bd[:added_points].nil?
       for i in (0..(lines-1))
         fields = [ bd[:added_points][i].to_s.gsub('.', ','),
                    bd[:backlog_points][i].to_s.gsub('.', ','),
@@ -171,13 +168,16 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     export
   end
 
-  # Renders the project quick-jump box
-  def render_backlog_project_jump_box
+  def self.find_backlogs_enabled_active_projects
     projects = EnabledModule.find(:all,
                              :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
                              :include => :project,
                              :joins => :project).collect { |mod| mod.project}
+  end
 
+  # Renders the project quick-jump box
+  def render_backlog_project_jump_box
+    projects = RbCommonHelper.find_backlogs_enabled_active_projects
     projects = Member.find(:all, :conditions => ["user_id = ? and project_id IN (?)", User.current.id, projects.collect(&:id)]).collect{ |m| m.project}
 
     if projects.any?
@@ -188,7 +188,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
         { :value => url_for(:controller => 'rb_master_backlogs', :action => 'show', :project_id => p, :jump => current_menu_item) }
       end
       s << '</select>'
-      s
+      s.html_safe
     end
   end
 
@@ -218,7 +218,28 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     unless groups.empty?
       s << %(<optgroup label="#{h(l(:label_group_plural))}">#{groups}</optgroup>)
     end
-    s
+    s.html_safe
+  end
+
+  def release_options_for_select(releases, selected=nil)
+    grouped = Hash.new {|h,k| h[k] = []}
+    releases.each do |release|
+      grouped[release.project.name] << [release.name, release.id]
+    end
+    # Add in the selected
+    if selected && !releases.include?(selected)
+      grouped[selected.project.name] << [selected.name, selected.id]
+    end
+
+    if grouped.keys.size > 1
+      grouped_options_for_select(grouped, selected && selected.id)
+    else
+      options_for_select((grouped.values.first || []), selected && selected.id)
+    end
+  end
+
+  def format_sharing(v)
+    Version::VERSION_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
   end
 
 end

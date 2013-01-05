@@ -1,5 +1,7 @@
 source :rubygems
 
+gem 'rake', '~>0.9'
+
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
 
@@ -16,10 +18,12 @@ gem "prawn"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 
-#puts "RBL dev mode: " + File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')
-#if File.exist?(File.join(File.expand_path(File.dirname(__FILE__)), 'backlogs.dev')) # this is actually the main Gemfile
-# development gems, sorted alphabetically
 group :development do
+  gem "inifile"
+end
+
+group :test do
+  gem 'chronic'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   if RAILS_VERSION_IS_3
@@ -31,7 +35,7 @@ group :development do
       gem "capybara", "~>1.1.0"
     end
     gem "cucumber", "=1.1.0"
-    gem 'cucumber-rails', :git => 'https://github.com/Vanuan/cucumber-rails.git', :branch => 'cucumber-rails2_v0.3.3'
+    gem 'cucumber-rails2', "~> 0.3.5"
     gem "culerity", "=0.2.15"
   end
   gem "database_cleaner"
@@ -41,11 +45,11 @@ group :development do
   else
     gem "gherkin", "~> 2.5.0"
   end
-  gem "poltergeist"
+  gem "poltergeist", "~>0.6.0"
   gem "redgreen" if RUBY_VERSION < "1.9"
   if RAILS_VERSION_IS_3
-    gem "rspec", "=2.5.0"
-    gem "rspec-rails", "=2.5.0"
+    gem "rspec", '~>2.11.0'
+    gem "rspec-rails", '~> 2.11.0'
   else
     gem "rspec", "=1.3.1"
     gem "rspec-rails", "=1.3.3"
@@ -53,10 +57,14 @@ group :development do
   if RUBY_VERSION >= "1.9"
     gem "simplecov", "~>0.6"
   else
-    gem "rcov"
+    gem "rcov",  "=0.9.11"
   end
+  gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
   gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
-  gem "timecop"
-  gem "thin"
+  gem "timecop", '~> 0.3.5'
 end
+
+# moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
+# thin doesn't work for jruby
+gem "thin", :platforms => [:ruby]

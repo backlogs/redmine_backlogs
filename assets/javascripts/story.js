@@ -12,7 +12,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.find(".editable").live('mouseup', this.handleClick);
+    j.delegate('.editable', 'click', this.handleClick);
   },
 
   afterUpdate: function(data, textStatus, xhr){
@@ -37,13 +37,13 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var self = this;
 
     this.setAllowedStatuses(tracker, status);
-    tracker.change(function() { self.setAllowedStatuses(tracker, status) });
+    tracker.change(function() { self.setAllowedStatuses(tracker, status); });
   },
 
   setAllowedStatuses: function(tracker, status) {
     var tracker_id = tracker.val();
     var user_status = this.$.find(".user_status").text();
-    var status_id = status.val()
+    var status_id = status.val();
 
     // right after creation, no menu exists to pick from
     if (!status_id || status_id == '') { status_id = RB.constants.story_states['default']; }
@@ -95,13 +95,18 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   },
 
   saveDirectives: function(){
+    var url;
     var j = this.$;
-    var prev = this.$.prev();
+    var nxt = this.$.next();
     var sprint_id = this.$.parents('.backlog').data('this').isSprintBacklog() ? 
                     this.$.parents('.backlog').data('this').getSprint().data('this').getID() : '';
-        
-    var data = "prev=" + (prev.length==1 ? this.$.prev().data('this').getID() : '') +
+    var release_id = this.$.parents('.backlog').data('this').isReleaseBacklog() ? 
+                    this.$.parents('.backlog').data('this').getRelease().data('this').getID() : '';
+    var data = "next=" + (nxt.length==1 ? this.$.next().data('this').getID() : '') +
                "&fixed_version_id=" + sprint_id;
+    if (release_id || !sprint_id) { /* when not sprint_id, issue goes to backlog, so remove release */
+      data += "&release_id=" + release_id;
+    }
     
     j.find('.editor').each(function() {
         var value = jQuery(this).val();  
@@ -109,16 +114,16 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     });    
     
     if( this.isNew() ){
-      var url = RB.urlFor( 'create_story' );
+      url = RB.urlFor( 'create_story' );
     } else {
-      var url = RB.urlFor( 'update_story', { id: this.getID() } );
-      data += "&_method=put"
+      url = RB.urlFor( 'update_story', { id: this.getID() } );
+      data += "&_method=put";
     }
     
     return {
       url: url,
       data: data
-    }
+    };
   },
 
   beforeSaveDragResult: function(){

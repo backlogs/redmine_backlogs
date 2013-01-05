@@ -6,11 +6,20 @@ class ReleaseBurndown
     @release_id = release.id
     @project = release.project
 
-    # Select closed sprints within release period
-    sprints = release.closed_sprints
-    return if sprints.nil?
+    #initialize empty release
+    @data = {}
+    @data[:added_points] = []
+    @data[:added_points_pos] = []
+    @data[:backlog_points] = []
+    @data[:closed_points] = []
+    @data[:trend_added] = []
+    @data[:trend_closed] = []
 
-    baseline = [0] * sprints.size
+    # Select sprints within release period. They need not to be closed.
+    sprints = release.sprints
+    return if sprints.nil? || sprints.size == 0
+
+    baseline = [0] * (sprints.size + 1)
 
     series = Backlogs::MergedArray.new
     series.merge(:backlog_points => baseline.dup)
@@ -22,16 +31,9 @@ class ReleaseBurndown
 #TODO Stories continued over several sprints (by duplicating) should not show up as added
 #TODO Likewise stories split from inital epics should not show up as added
 
-    # Go through each story of each sprint
-    sprints.each{ |sprint|
-      sprint.stories.each{ |story|
-#BUG Stories closed after sprint end date will show up as closed in the next sprint...
-        series.add(story.release(sprints))
-      }
-    }
-    # Go through each open story in the backlog
+    # Go through each story in the backlog
     release.stories.each{ |story|
-      series.add(story.release(sprints))
+      series.add(story.release_burndown_data(sprints))
     }
 
     # Series collected, now format data for jqplot
@@ -39,7 +41,6 @@ class ReleaseBurndown
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
 #TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data = {}
     @data[:added_points] = series.collect{ |s| -1 * s.added_points }
     @data[:added_points_pos] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
     @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
@@ -51,7 +52,7 @@ class ReleaseBurndown
     @data[:trend_closed] = Array.new
     @data[:trend_added] = Array.new
     avg_count = 3
-    if sprints.size >= avg_count
+    if release.closed_sprints.size >= avg_count
       avg_added = (@data[:added_points][-1] - @data[:added_points][-avg_count]) / avg_count
       avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
       current_backlog = @data[:added_points][-1] + @data[:added_points_pos][-1] + @data[:backlog_points][-1]
@@ -79,7 +80,8 @@ class ReleaseBurndown
 
   def [](i)
     i = i.intern if i.is_a?(String)
-    raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
+    return nil unless @data[i] # be graceful
+    #raise "No burn#{@direction} data series '#{i}', available: #{@data.keys.inspect}" unless @data[i]
     return @data[i]
   end
 
@@ -97,35 +99,44 @@ class ReleaseBurndown
 end
 
 class RbRelease < ActiveRecord::Base
-  set_table_name 'releases'
+  self.table_name = 'releases'
 
   unloadable
 
-  belongs_to :project
+  belongs_to :project, :inverse_of => :releases
   has_many :release_burndown_days, :dependent => :delete_all, :foreign_key => :release_id
+  has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
 
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date, :initial_story_points
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
-  include Backlogs::ActiveRecord
+  include Backlogs::ActiveRecord::Attributes
+
+  def to_s; name end
 
   def dates_valid?
-    errors.add_to_base(l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
+    errors.add(:base, l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
+  end
+
+  def stories #compat
+    issues
+  end
+
+  #Return sprints that contain issues within this release
+  def sprints
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id)
   end
 
   # Return sprints closed within this release
   def closed_sprints
-    sprints = RbSprint.closed_sprints(self.project).reject{ |s|
-      s.effective_date.nil? ||
-      s.sprint_start_date < self.release_start_date ||
-      s.effective_date > self.release_end_date
-    }
-    return sprints
+    sprints.where("versions.status = ?", "closed")
   end
 
-  def stories
-    return RbStory.stories_open(@project)
+  def stories_by_sprint
+#return issues sorted into sprints. Obviously does not return issues which are not in a sprint
+#unfortunately, group_by returns unsorted results.
+    issues.joins(:fixed_version).includes(:fixed_version).order('versions.effective_date').group_by(&:fixed_version_id)
   end
 
   def burndown_days
@@ -140,6 +151,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def has_burndown?
+#merge: is it neccessary to have closed sprints for burndown? I'd like to see it immediately
     return !!(self.release_start_date and self.release_end_date and self.initial_story_points && !self.closed_sprints.nil?)
   end
 
@@ -152,5 +164,34 @@ class RbRelease < ActiveRecord::Base
   def today
     ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
   end
+
+  def remaining_story_points #FIXME merge bohansen_release_chart removed this
+    res = 0
+    stories.open.each {|s| res += s.story_points if s.story_points}
+    res
+  end
+
+  def allowed_sharings(user = User.current)
+    Version::VERSION_SHARINGS.select do |s|
+      if sharing == s
+        true
+      else
+        case s
+        when 'system'
+          # Only admin users can set a systemwide sharing
+          user.admin?
+        when 'hierarchy', 'tree'
+          # Only users allowed to manage versions of the root project can
+          # set sharing to hierarchy or tree
+          project.nil? || user.allowed_to?(:manage_versions, project.root)
+        else
+          true
+        end
+      end
+    end
+  end
+
+  scope :visible, lambda {|*args| { :include => :project,
+                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
 
 end

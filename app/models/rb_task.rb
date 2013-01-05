@@ -18,6 +18,8 @@ class RbTask < Issue
       ).safe_attribute_names
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
+    # lft and rgt fields are handled by acts_as_nested_set
+    attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt' }
     attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
     return attribs
   end
@@ -31,6 +33,16 @@ class RbTask < Issue
 
     blocks = params.delete('blocks')
 
+#if we are an impediment and have blocks, set our project_id.
+#if we have multiple blocked tasks, cross-project relations must be enabled, otherwise save-validation will fail. TODO: make this more user friendly by pre-validating here and suggesting to enable cross-project relation support in redmine base setup.
+    if is_impediment and blocks and blocks.strip != ''
+      begin
+        first_blocked_id = blocks.split(/\D+/)[0].to_i
+        attribs['project_id'] = Issue.find_by_id(first_blocked_id).project_id if first_blocked_id
+      rescue
+      end
+    end
+
     task = new(attribs)
     if params['parent_issue_id']
       parent = Issue.find(params['parent_issue_id'])
@@ -38,7 +50,7 @@ class RbTask < Issue
     end
     task.save!
 
-    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks)
+    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks) # could we do that before save and integrate cross-project checks?
 
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
     task.update_blocked_list blocks.split(/\D+/) if is_impediment
@@ -53,19 +65,6 @@ class RbTask < Issue
     find(:all,
          :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
          :order => "updated_on ASC")
-  end
-
-  def self.tasks_for(story_id)
-    tasks = []
-    story = RbStory.find_by_id(story_id)
-    if RbStory.trackers.include?(story.tracker_id)
-      story.descendants.each_with_index {|task, i|
-        task = task.becomes(RbTask)
-        task.rank = i + 1
-        tasks << task
-      }
-    end
-    return tasks
   end
 
   def update_with_relationships(params, is_impediment = false)
@@ -87,7 +86,7 @@ class RbTask < Issue
                             true
                           end
 
-    if valid_relationships && result = self.journalized_batch_update_attributes!(attribs)
+    if valid_relationships && result = self.journalized_update_attributes!(attribs)
       move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
       update_blocked_list params[:blocks].split(/\D+/) if params[:blocks]
 
@@ -95,7 +94,7 @@ class RbTask < Issue
         begin
           self.remaining_hours = Float(params[:remaining_hours].to_s.gsub(',', '.'))
         rescue ArgumentError, TypeError
-          RAILS_DEFAULT_LOGGER.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
+          Rails.logger.warn "#{params[:remaining_hours]} is wrong format for remaining hours."
         end
         sprint_start = self.story.fixed_version.becomes(RbSprint).sprint_start_date if self.story
         self.estimated_hours = self.remaining_hours if (sprint_start == nil) || (Date.today < sprint_start)
@@ -157,28 +156,18 @@ class RbTask < Issue
     return @rank
   end
 
-  def burndown(sprint = nil)
-    return nil unless self.is_task?
+  def burndown(sprint = nil, status=nil)
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
-    return Rails.cache.fetch("RbIssue(#{self.id}@#{self.updated_on}).burndown(#{sprint.id}@#{sprint.updated_on}-#{[Date.today, sprint.effective_date].min})") {
-      days = sprint.days(:active)
-
-      earliest_estimate = history(:estimated_hours, days).compact[0]
-
-      series = Backlogs::MergedArray.new
-      series.merge(:hours => history(:remaining_hours, days))
-      series.merge(:sprint => history(:fixed_version_id, days))
-      series.each_with_index{|d, i|
-        if d.sprint != sprint.id
-          d.hours = nil
-        elsif i == 0 && d.hours.to_f == 0 && earliest_estimate.to_f != 0.0
-          # set hours to earliest estimate *within sprint* if first day is not filled out
-          d.hours = earliest_estimate
-        end
-      }
-      series.series(:hours)
+    self.history.filter(sprint, status).collect{|d|
+      if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :task
+        nil
+      elsif ! d[:status_open]
+        0
+      else
+        d[:hours]
+      end
     }
   end
 

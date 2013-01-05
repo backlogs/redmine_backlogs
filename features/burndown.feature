@@ -17,32 +17,38 @@ Feature: Burndown
         | Closed      |         1 |          0 |                    |
         | Accepted    |         1 |          0 |                    |
         | Rejected    |         1 |          0 |                  1 |
-      And I have defined the following sprints:
-        | name           | sprint_start_date | effective_date  |
-        | Sprint 001     | today             | 1.week.from_now |
-        | Sprint siegerv | 2011-08-19        | 2011-09-02      |
+      And the current time is 2011-01-01 08:00:00
 
       And I have defined the following stories in the product backlog:
-        | position | subject |
-        | 1        | Story 1 |
-        | 2        | Story 2 |
-        | 3        | Story 3 |
-        | 4        | Story 4 |
+        | subject |
+        | Story 1 |
+        | Story 2 |
+        | Story 3 |
+        | Story 4 |
+
+      And I have defined the following sprints:
+        | name           | sprint_start_date | effective_date  |
+        | Sprint siegerv | 2011-08-19        | 2011-09-02      |
       And I have defined the following stories in the following sprints:
-        | position | subject         | sprint         | points | day |
-        | 1        | Story A         | Sprint 001     | 1      |     |
-        | 2        | Story B         | Sprint 001     | 2      |     |
-        | 3        | Story C         | Sprint 001     | 4      |     |
-
-        | 4        | Siegerv story 1 | Sprint siegerv | 1      |     |
-
+        | subject         | sprint         | points |
+        | Siegerv story 1 | Sprint siegerv | 1      |
       And I have defined the following tasks:
-        | subject      | story            | estimate | status | offset |
-        | A.1          | Story A          | 10       | New    | 1h     |
-        | B.1          | Story B          | 20       | New    | 1h     |
-        | C.1          | Story C          | 40       | New    | 1h     |
+        | subject      | story            | estimate | status |
+        | S.1          | Siegerv story 1  | 10       | New    |
 
-        | S.1          | Siegerv story 1  | 10       | New    | 1h     |
+      And I have defined the following sprints:
+        | name           | sprint_start_date | effective_date  |
+        | Sprint 001     | 2012-02-02        | 2012-02-09      |
+      And I have defined the following stories in the following sprints:
+        | subject         | sprint         | points |
+        | Story A         | Sprint 001     | 1      |
+        | Story B         | Sprint 001     | 2      |
+        | Story C         | Sprint 001     | 4      |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story A          | 10       | New    |
+        | B.1          | Story B          | 20       | New    |
+        | C.1          | Story C          | 40       | New    |
 
   Scenario: Tasks closed AFTER remaining hours is set to 0
     Given I am viewing the taskboard for Sprint 001
@@ -116,8 +122,8 @@ Feature: Burndown
         | Story D | Sprint 001 | 4      | 3   |
 
       And I have defined the following tasks:
-        | subject      | story     | estimate | status | offset |
-        | D.1          | Story D   | 40       | New    | 1h     |
+        | subject      | story     | estimate | status | when |
+        | D.1          | Story D   | 40       | New    | 3    |
 
       And I have made the following task mutations:
         | day     | task | remaining | status      |
@@ -142,11 +148,11 @@ Feature: Burndown
 
   Scenario: Change sprint start date
     Given I am viewing the taskboard for Sprint 001
-      And I have changed the sprint start date to tomorrow
+      And I have changed the sprint start date to 2012-02-03
       And I have defined the following stories in the following sprints:
-        | position | subject | sprint     | points |
-        | 4        | Story D | Sprint 001 | 1      |
-      And I have changed the sprint start date to today
+        | subject | sprint     | points | day                 |
+        | Story E | Sprint 001 | 1      | 2012-02-02 01:00:00 |
+      And I have changed the sprint start date to 2012-02-02
      Then the sprint burnup should be:
         | day     | points_resolved |
         | start   | 1               |
@@ -196,3 +202,7 @@ Feature: Burndown
         | 5       | 7                | 3               | 5               |
         | 6       | 7                | 3               | 1               |
         | 7       | 7                | 7               | 0               |
+
+  Scenario: View remaining hours in story view
+    Given I am viewing the issue named "Story A"
+     Then the issue should display 10 remaining hours

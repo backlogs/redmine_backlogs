@@ -51,13 +51,14 @@ ja:
   error_no_workflow_for_task_tracker: "タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください"
   error_outro: 送信する前に、上記のエラーを訂正してください
   error_release_end_after_start: リリース終了日は開始日の後に設定してください
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: バックログタイプ
+  field_base: ""
   field_blocks: ブロック
   field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
-  field_number_of_snapshots: ポイントをスナップショットとして保存
   field_position: Position
   field_release_end_date: リリース終了日
   field_release_start_date: リリース開始日
@@ -106,7 +107,6 @@ ja:
   label_release_end_date: リリース日
   field_initial_story_points: 初期ストーリーポイント
   error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
-  field_number_of_snapshots: ポイントのスナップショットを保存
 
   # Version fields
   field_name: "名前"
@@ -182,10 +182,7 @@ ja:
   rb_timelog_from_taskboard: かんばんのタイムログ
   rb_show_burndown_in_sidebar: バーンダウンチャートをチケットのサイドバーに表示
   rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
-  release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
-  release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新
   remaining_story_points: 残りのストーリーポイント
-  today_not_in_release_msg: "今日はリリース日の範囲に入っています。本当にスナップショットを保存しますか?"
   today_not_in_release_warning: "警告: 今日はリリース日の範囲に入っています"
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"
@@ -199,4 +196,12 @@ ja:
     * コメントを除いた全てのストーリーとタスクの変更は削除されます
     * 現在の値は、全てのストーリーとタスクの初期値になります
     * ステータスはチケットのデフォルトのステータスになります
+  backlogs_new_story_position: "新しく作成されたストーリーが追加される位置"
+  backlogs_new_story_position_top: "上に"
+  backlogs_new_story_position_bottom: "下に (再起動が必要)"
+  backlogs_sharing_support: "バックログの共有"
+  backlogs_sharing_enabled: "有効化"
+  backlogs_show_stories_from_subprojects_in_backlog: "バックログでサブプロジェクトのストーリーを表示する"
+  rb_project_settings_updated: "更新しました。"
+  rb_project_settings_update_error: "失敗しました。"
 

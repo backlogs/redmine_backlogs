@@ -1,19 +1,43 @@
 require 'rubygems'
-require 'timecop'
+require 'pp'
+
+Then /^show me the history for (.+)$/ do |subject|
+  issue = RbStory.find_by_subject(subject)
+  puts "== #{subject} =="
+  issue.history.history.each{|h|
+    puts h.inspect
+  }
+  puts "// #{subject} //"
+end
+
+Then /^the history for (.+) should be:$/ do |subject, table|
+  story = RbStory.find_by_subject(subject)
+  history = story.history.filter(current_sprint)
+  table.hashes.each_with_index do |metrics, i|
+    metrics.each_pair{|k, v|
+      "#{i}, #{k}: #{history[i][k.intern]}".should == "#{i}, #{k}: #{v}"
+    }
+  end
+end
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
-  story_position(story).should == position.to_i
+  story.rank.should == position.to_i
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint")
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint", :visible => true)
   sprint_backlogs.length.should == count.to_i
 end
 
 Then /^I should see the burndown chart$/ do
-  page.should have_css("#burndown_#{@sprint.id.to_s}")
+  page.should have_css("#burndown_#{current_sprint.id.to_s}")
+end
+
+Then /^I should see the burndown chart of sprint (.+)$/ do |sprint_name|
+  sprint = RbSprint.find_by_name(sprint_name)
+  page.should have_css("#burndown_#{sprint.id.to_s}")
 end
 
 Then /^I should see the Issues page$/ do
@@ -26,30 +50,54 @@ end
 
 Then /^I should see the product backlog$/ do
   page.should have_css('#product_backlog_container')
+  page.should have_css('#stories-for-product-backlog')
 end
 
 Then /^I should see (\d+) stories in the product backlog$/ do |count|
-  page.all(:css, "#product_backlog_container .backlog .story").length.should == count.to_i
+  page.all(:css, "#stories-for-product-backlog .story").length.should == count.to_i
 end
 
 Then /^show me the list of sprints$/ do
   header = [['id', 3], ['name', 18], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  data = RbSprint.open_sprints(@project.id).collect{|s| [sprint.id, sprint.name, sprint.start_date, sprint_effective_date, sprint.updated_on] }
+  data = RbSprint.open_sprints(@project).collect{|sprint| [sprint.id, sprint.name, sprint.start_date, sprint.effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
 end
 
-Then /^show me the list of stories$/ do
-  header = [['id', 5], ['position', 8], ['status', 12], ['subject', 30], ['sprint', 20]]
-  data = RbStory.find(:all, :conditions => "project_id=#{@project.id}", :order => "position ASC").collect {|story|
-    [story.id, story.position, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name]
+Then /^show me the list of shared sprints$/ do
+  header = [['id', 3], ['name', 18], ['project id', 5], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
+  sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
+  data = sprints.collect{|sprint| [sprint.id, sprint.name, sprint.project_id, sprint.start_date, sprint.effective_date, sprint.updated_on] }
+
+  show_table("Sprints", header, data)
+end
+
+Then /^show me the list of issues( on )?(all )?(project)?s?(.*)?$/ do |on, all, project, name|
+  options = {:order => "position ASC", :conditions => { :project_id => @project.id }}
+  if all.to_s.strip == 'all'
+    options.delete(:conditions)
+  elsif name.to_s != ''
+    options[:conditions]= { :project_id => Project.find_by_name(name).id }
+  end
+
+  header = [['id', 5], ['tracker', 10], ['created', 20], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20], ['remaining', 10]]
+  data = RbStory.find(:all, options).collect {|story|
+    [story.id, story.tracker.name, story.created_on, story.position, story.rank, story.status.name, story.subject, story.fixed_version_id.nil? ? 'Product Backlog' : story.fixed_version.name, story.remaining_hours]
   }
 
   show_table("Stories", header, data)
 end
 
 Then /^show me the sprint impediments$/ do
-  puts "Impediments for #{@sprint.name}: #{@sprint.impediments.collect{|i| i.subject}.inspect}"
+  puts "Impediments for #{current_sprint.name}: #{current_sprint(:keep).impediments.collect{|i| i.subject}.inspect}"
+end
+
+Then /^show me the projects$/ do
+  show_projects
+end
+
+Then /^show me the response body$/ do
+  puts page.driver.body
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
@@ -63,11 +111,11 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^the request should complete successfully$/ do
-  page.driver.response.status.should == 200
+  verify_request_status(200)
 end
 
 Then /^the request should fail$/ do
-  page.driver.response.status.should == 401
+  verify_request_status(401)
 end
 
 Then /^calendar feed download should (succeed|fail)$/ do |status|
@@ -75,23 +123,22 @@ Then /^calendar feed download should (succeed|fail)$/ do |status|
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
-  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog).id)
-  story = RbStory.at_rank(@project.id, sprint, position.to_i)
+  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+
   story.should_not be_nil
   story.subject.should == subject
 end
 
-Then /^all positions should be unique$/ do
-  RbStory.find_by_sql("select project_id, position, count(*) as dups from issues where not position is NULL group by project_id, position having count(*) > 1").length.should == 0
-end
-
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story.should_not be_nil
+  story.children.length.should be >= position.to_i
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
 Then /^the server should return an update error$/ do
-  page.driver.response.status.should == 400
+  verify_request_status(400)
 end
 
 Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
@@ -180,17 +227,19 @@ end
 
 Then /^(issue|task|story) (.+) should have (.+) set to (.+)$/ do |type, subject, attribute, value|
   issue = Issue.find_by_subject(subject)
-  issue[attribute].should == value.to_i
+  issue.send(attribute.intern).should == value.to_i
 end
 
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
-  bd = nil
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown(direction)
-  end
+  dayno = table.hashes[-1]['day']
+  dayno = '0' if dayno == 'start'
+  set_now(dayno.to_i + 1, :sprint => @sprint)
 
-  days = @sprint.days(:all)
-  days = [:first] + days
+  bd = current_sprint(:keep).burndown
+  bd.direction = direction
+  bd = bd.data
+
+  days = current_sprint(:keep).days
 
   table.hashes.each do |metrics|
     day = metrics.delete('day')
@@ -210,57 +259,72 @@ Then /^the sprint burn(down|up) should be:$/ do |direction, table|
 end
 
 Then /^show me the sprint burn(.*)$/ do |direction|
-  bd = nil
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
-    bd = @sprint.burndown(direction)
-  end
+  sprint = current_sprint(:keep)
+  burndown = sprint.burndown
+  burndown.direction = direction
 
-  dates = @sprint.days(:all)
-  dates = [:start] + dates
+  series = burndown.series(false)
+  dates = burndown.days
 
-  header = ['day'] + bd.series(false).sort{|a, b| a.to_s <=> b.to_s}
+  ticks = dates.collect{|d|
+    t = Time.utc(d.year, d.mon, d.mday)
+    zone = User.current.time_zone
+    zone ? t.in_time_zone(zone) : t
+  }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
 
-  data = []
-  days = bd.series(false).collect{|k| bd[k]}.collect{|s| s.size}.max
-  0.upto(days - 1) do |day|
-    data << ["#{dates[day]} (#{day})"] + header.reject{|h| h == 'day'}.collect{|k| bd[k][day]}
-  end
+  data = series.collect{|s| burndown.data[s.intern].enum_for(:each_with_index).collect{|d,i| [i*2, d]}}
 
-  show_table("Burndown for #{@sprint.name} (#{@sprint.sprint_start_date} - #{@sprint.effective_date})", header, data)
+  puts "== #{sprint.name} =="
+  puts dates.inspect
+  puts series.inspect
+  puts data.inspect
+  puts burndown.data.inspect
+  puts "// #{sprint.name} //"
+  #show_table("Burndown for #{current_sprint(:keep).name} (#{current_sprint(:keep).sprint_start_date} - #{current_sprint(:keep).effective_date})", header, data)
 end
 
+Then /^show me the (.+) burndown for story (.+)$/ do |series, subject|
+  story = RbStory.find_by_subject(subject)
+  show_table("Burndown for story #{subject}, created on #{story.created_on}", ['date', 'hours'], current_sprint.days.zip(story.burndown[series.intern]))
+end
 Then /^show me the burndown for task (.+)$/ do |subject|
-  task = RbTask.find_by_subject(subject)
   sprint = task.fixed_version.becomes(RbSprint)
-  Timecop.travel((sprint.effective_date + 1).to_time) do
-    show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], (['start'] + sprint.days(:active)).zip(task.burndown))
-  end
+
+  task = RbTask.find_by_subject(subject)
+  show_table("Burndown for #{subject}, created on #{task.created_on}", ['date', 'hours'], sprint.days.zip(task.burndown))
 end
 
-Then /^show me the (.+) journal for (.+)$/ do |property, subject|
-  issue = Issue.find(:first, :conditions => ['subject = ?', subject.strip])
-  raise "No issue with subject '#{subject}'" unless issue
-  puts "\n"
-  puts "#{issue.subject}(#{issue.id})##{property}, created: #{issue.created_on}"
+Then /^show me the journal for (.+)$/ do |subject|
+  columns = []
+  data = []
+  subject.split(',').each{|s|
+    issue = RbStory.find_by_subject(s.strip)
+    raise "No issue with subject '#{subject}'" unless issue
 
-  days = (issue.created_on.to_date .. Date.today).to_a
-  previous = nil
-  issue.history(property.intern, days).each_with_index {|value, i|
-    next if i != 0 && value == previous
-    previous = value
-    puts "  #{days[i]}: #{value}"
+    columns = (columns + issue.history.history.collect{|d| d.keys}.flatten).uniq
+    data << issue.history.history.collect{|d| d.reject{|k, v| [:origin, :status_id].include?(k)}.merge(:issue => issue.subject)}
+    #puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
   }
+  columns = [:issue, :date] + columns.reject{|c| [:issue, :date].include?(c)}.sort{|a, b| a.to_s <=> b.to_s}
+  data.flatten!
+  data.sort!{|a, b| "#{a[:date]}:#{a[:issue]}" <=> "#{b[:date]}:#{b[:issue]}"}
+
+  puts "\n"
+  puts columns.collect{|c| c.to_s}.join("\t")
+
+  data.each{|mutation|
+    puts columns.collect{|c| mutation[c].to_s}.join("\t")
+  }
+  puts "\n"
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|
-  Timecop.travel((@sprint.effective_date + 1).to_time) do
-    story = RbStory.find(:first, :conditions => ['subject = ?', story])
-    bd = story.burndown
-    header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
-    bd['day'] = ['start'] + @sprint.days(:active)
-    data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
-    show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
-  end
+  story = RbStory.find(:first, :conditions => ['subject = ?', story])
+  bd = story.burndown
+  header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
+  bd['day'] = current_sprint(:keep).days
+  data = bd.transpose.collect{|row| header.collect{|k| row[k]}}
+  show_table("Burndown for story #{story.subject}", header.collect{|h| h.to_s}, data)
 end
 
 Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,value|
@@ -280,3 +344,129 @@ Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, t
   tasks = RbTask.find(:all, :conditions => { :subject => task_subject, :parent_id => stories.first.id })
   tasks.length.should == 1
 end
+
+Then /^I should see (\d+) stories in the sprint backlog of (.+)$/ do |arg1, arg2|
+  sprint_id = sprint_id_from_name(arg2.strip)
+  stories = page.all(:css, "#stories-for-#{sprint_id} .story")
+  stories.length.should == arg1.to_i
+end
+
+Then /^The menu of the sprint backlog of (.*) should (.*)allow to create a new Story in project (.*)$/ do |arg1, neg, arg3|
+  sprint_id = sprint_id_from_name(arg1.strip)
+  project = get_project(arg3)
+  links = page.all(:xpath, "//div[@id='sprint_#{sprint_id}']/..//a[contains(@class,'add_new_story')]")
+  found = check_backlog_menu_new_story(links, project)
+  found.should == !!(neg=='')
+end
+
+Then /^The menu of the product backlog should (.*)allow to create a new Story in project (.+)$/ do |neg, arg3|
+  project = get_project(arg3)
+  links = page.all(:css, "#product_backlog_container a.add_new_story")
+  found = check_backlog_menu_new_story(links, project)
+  found.should == !!(neg=='')
+end
+
+Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
+  sprint_id = sprint_id_from_name(arg1.strip)
+#  page.should_not have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg != ''
+#  page.should have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg == ''
+  begin
+    page.find(:css, "#sprint_#{sprint_id}", :visible => true)
+    found = true
+  rescue
+    found = false
+  end
+  found.should == !!(neg=='')
+end
+
+Then /^story (.+?) is unchanged$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  @last_drag_and_drop.should_not be_nil
+  @last_drag_and_drop[:position_before].should == story.position
+  @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
+end
+
+Then /^story (.+?) is in the product backlog$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.fixed_version_id.should be_nil
+end
+
+#taskboard visual checks:
+Then /^I should see task (.+) in the row of story (.+) in the state (.+)$/ do |task, story, state|
+  task_id = RbTask.find_by_subject(task).id
+  story_id = RbStory.find_by_subject(story).id
+  n = get_taskboard_state_index[state]
+  page.should have_css("#taskboard #swimlane-#{story_id} td:nth-child(#{n}) div#issue_#{task_id}")
+end
+
+Then /^task (.+) should have the status (.+)$/ do |task, state|
+  state = IssueStatus.find_by_name(state)
+  task = RbTask.find_by_subject(task)
+  task.status_id.should == state.id
+end
+
+Then /^I should see impediment (.+) in the state (.+)$/ do |impediment, state|
+  task = Issue.find_by_subject(impediment)
+  n = get_taskboard_state_index[state]
+  page.should have_css("#impediments td:nth-child(#{n}) div#issue_#{task.id}")
+end
+
+Then /^impediment (.+) should be created without error$/ do |impediment_name|
+  impediment = Issue.find_by_subject(impediment_name)
+  impediment.should_not be_nil
+  begin
+    msg = page.find(:css, "div#msgBox")
+    #puts "Got msg box: #{msg.text}" if msg
+  rescue
+  end
+  msg.should be_nil
+  page.should have_css("#issue_#{impediment.id}")
+end
+
+Then /^I should see a msgbox with "([^"]*)"$/ do |arg1|
+  msg = page.find(:css, "div#msgBox")
+  msg.text.strip.should == arg1.strip
+end
+
+Then /^I should see the mini-burndown-chart in the sidebar$/ do
+  page.should have_css("#sidebar .burndown_chart canvas.jqplot-base-canvas")
+end
+
+Then /^show me the html content$/ do
+  puts page.html
+end
+
+Then /^(.+) for (.+) should be (true|false)$/ do |key, project, value|
+  project = Project.find(project)
+  project.should_not be nil
+  setting = project.rb_project_settings.send(key)
+  if value=="true"
+    setting.should be_true
+  else
+    setting.should_not be_true
+  end
+end
+
+#only with phantomjs driver:
+Then /^show me a screenshot at (.+)$/ do |arg1|
+  page.driver.render(arg1, :full=>true)
+end
+
+Then /^dump the database to (.+)$/ do |arg1|
+  system("pg_dump redmine_test > #{arg1}")
+end
+
+Then /^open the remote inspector$/ do
+  page.driver.debug
+end
+
+Then /^the error message should say "([^"]*)"$/ do |msg|
+  response_msg = page.find(:xpath,"//div[@class='errors']/div")
+  response_msg.text.strip.should == msg
+end
+
+Then /^the issue should display (\d+) remaining hours$/ do |hours|
+  field = page.find(:xpath, "//th[contains(normalize-space(text()),'Remaining')]/following-sibling::td")
+  field.text.should == "#{"%.2f" % hours.to_f} hours"
+end
+

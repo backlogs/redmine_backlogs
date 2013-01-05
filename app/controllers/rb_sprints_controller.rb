@@ -15,15 +15,17 @@ class RbSprintsController < RbApplicationController
     begin
       @sprint.save!
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
-    result = @sprint.errors.length
+    result = @sprint.errors.size
     status = (result == 0 ? 200 : 400)
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint } }
+      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint, :cls => 'model sprint' } }
     end
   end
 
@@ -31,14 +33,16 @@ class RbSprintsController < RbApplicationController
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
     begin
-      result  = @sprint.batch_update_attributes attribs
+      result  = @sprint.update_attributes attribs
     rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint } }
+      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint, :cls => 'model sprint' } }
     end
   end
 
@@ -79,7 +83,7 @@ class RbSprintsController < RbApplicationController
     status = IssueStatus.default.id
     Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
       ids << issue.id.to_s
-      issue.batch_update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
+      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
     }
     if ids.size != 0
       ids = ids.join(',')
@@ -98,7 +102,7 @@ class RbSprintsController < RbApplicationController
   end
 
   def close_completed
-    @project.close_completed_versions if request.put?
+    @project.close_completed_versions
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end

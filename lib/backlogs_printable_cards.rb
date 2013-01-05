@@ -78,7 +78,7 @@ module BacklogsPrintableCards
 
         geom = Prawn::Document::PageGeometry::SIZES[@papersize]
         if geom.nil?
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
+          Rails.logger.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
           @valid = false
           return
         end
@@ -89,18 +89,19 @@ module BacklogsPrintableCards
 
         @valid = false
         if @down < 1
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no rows"
+          Rails.logger.error "Backlogs printable cards: #{@name} has no rows"
         elsif @across < 1
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} has no columns"
+          Rails.logger.error "Backlogs printable cards: #{@name} has no columns"
         elsif @height > @vertical_pitch
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card height exceeds vertical pitch"
+          Rails.logger.error "Backlogs printable cards: #{@name} card height exceeds vertical pitch"
         elsif @width > @horizontal_pitch
-          RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: #{@name} card width exceeds horizontal pitch"
+          Rails.logger.error "Backlogs printable cards: #{@name} card width exceeds horizontal pitch"
         else
           @valid = true
         end
       rescue => e
-        RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
+        Rails.logger.error "Backlogs printable cards: error loading #{layout['name']}: #{e}"
+        Rails.logger.error(e.backtrace.join("\n"))
         @valid = false
       end
     end
@@ -162,7 +163,6 @@ module BacklogsPrintableCards
         end
 
         doc = Nokogiri::XML(labels)
-        doc.remove_namespaces!
 
         doc.xpath('Glabels-templates/Template').each { |specs|
           label = nil
@@ -212,29 +212,39 @@ module BacklogsPrintableCards
         }
       }
 
-      File.open(File.dirname(__FILE__) + '/labels.yaml', 'w') do |dump|
+      File.open(File.dirname(__FILE__) + '/labels/labels.yaml', 'w') do |dump|
         YAML.dump(@@layouts, dump)
       end
-      File.open(File.dirname(__FILE__) + '/labels-malformed.yaml', 'w') do |dump|
+      File.open(File.dirname(__FILE__) + '/labels/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
       end
     end
 
     @@layouts ||= {}
     begin
-      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels.yaml')
+      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels/labels.yaml')
       layouts.each_pair{|key, spec|
-        layout = CardPageLayout.new(spec.merge({'name' => key}))
+        if spec.instance_of?(CardPageLayout)
+          layout = spec #new yaml stores and restores our class
+        else
+          layout = CardPageLayout.new(spec.merge({'name' => key})) #old layout.yaml might not have class information, so we get a hash
+        end
         @@layouts[key] = layout if layout.valid
       }
     rescue => e
-      RAILS_DEFAULT_LOGGER.error "Backlogs printable cards: problem loading labels: #{e}"
+      Rails.logger.error("Backlogs printable cards: problem loading labels: #{e}")
+      Rails.logger.error(e.backtrace.join("\n"))
     end
   end
 
   # put the mixins in a separate class, seems to interfere with prawn otherwise
   class Gravatar
-    include GravatarHelper::PublicMethods
+    case Backlogs.platform
+      when :redmine
+        include GravatarHelper::PublicMethods
+      when :chiliproject
+        include Gravatarify::Helper
+    end
     include ERB::Util
 
     def initialize(email, size)
@@ -261,17 +271,16 @@ module BacklogsPrintableCards
 
       f = nil
       ['-default', ''].each {|postfix|
-        t = File.dirname(__FILE__) + "/#{template}#{postfix}.glabels"
+        t = File.dirname(__FILE__) + "/labels/#{template}#{postfix}.glabels"
         f = t if File.exists?(t)
       }
       raise "No template for #{template}" unless f
       label = Nokogiri::XML(Zlib::GzipReader.open(f))
-      label.remove_namespaces!
 
-      bounds = label.xpath('//Template/Label-rectangle')[0]
+      bounds = label.xpath('//ns:Template/ns:Label-rectangle', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points}
 
-      @card = label.xpath('//Objects')[0]
+      @card = label.xpath('//ns:Objects', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       @width = width
       @height = height
     end
@@ -286,7 +295,7 @@ module BacklogsPrintableCards
     end
 
     def style(b)
-      s = b.xpath('Span')[0]
+      s = b.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
       style = 'normal' if style == ''
       return {
@@ -351,10 +360,10 @@ module BacklogsPrintableCards
             when 'Object-text'
               dim = box(obj)
 
-              pdf.fill_color = color(obj.xpath('Span')[0], 'color') || default_fill_color
+              pdf.fill_color = color(obj.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0], 'color') || default_fill_color
 
               content = ''
-              obj.xpath('Span')[0].children.each {|t|
+              obj.xpath('ns:Span', 'ns' => 'http://snaught.com/glabels/2.2/')[0].children.each {|t|
                 if t.text?
                   content << t.text
                 elsif t.name == 'Field'

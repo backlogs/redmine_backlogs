@@ -1,6 +1,7 @@
 // Initialize the backlogs after DOM is loaded
 RB.$(function() {
   // Initialize each backlog
+  RB.Factory.initialize(RB.BacklogOptions, this);
   RB.$('.backlog').each(function(index){
     RB.Factory.initialize(RB.Backlog, this);
   });
@@ -15,4 +16,12 @@ RB.$(function() {
       z--;
     });
   }
+
+  // hold down alt when clicking an issue id to open it in the current tab
+  RB.$('#backlogs_container').delegate('li.story > .id a', 'click', function(e) {
+    if (e.shiftKey) {
+      location.href = this.href;
+      return false;
+    }
+  });
 });

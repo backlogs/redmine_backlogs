@@ -12,7 +12,7 @@ class RbImpedimentsController < RbApplicationController
       return
     end
 
-    result = @impediment.errors.length
+    result = @impediment.errors.size
     status = (result == 0 ? 200 : 400)
     @include_meta = true
 

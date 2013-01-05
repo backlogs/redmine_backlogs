@@ -3,10 +3,12 @@
 _site
 _posts
 assets/styles
-lib/labels.yaml
-lib/labels-malformed.yaml
+lib/labels/labels.yaml
+lib/labels/labels-malformed.yaml
 graph.dot
 nbproject
 *.rc
 Gemfile.lock
 backlogs.dev
+.ruby-version
+redmine_backlogs
