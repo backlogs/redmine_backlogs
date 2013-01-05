@@ -249,8 +249,7 @@ class RbStory < Issue
 
     # Collect data
     bd = {:points => [], :open => [], :accepted => [] }
-    statuses = RbIssueHistory.statuses
-    self.history.filter(nil, statuses, days).each{|d|
+    self.history.filter_release(days).each{|d|
       if d.nil? || d[:tracker] != :story
         [:points, :open, :accepted].each{|k| bd[k] << nil }
       else
