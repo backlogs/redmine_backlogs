@@ -90,12 +90,24 @@ Feature: Release management
      Then story Story 5 should belong to release Rel 1
       And release "Rel 1" should have 54 story points
 
-   Scenario: view master backlog page with releases
+  Scenario: Close a release
+    Given I view the release page
+     Then I should see "Release Planning"
+     When I follow "Rel 1"
+     Then I should see "Edit" within ".contextual"
+     When I follow "Edit" within ".contextual"
+     Then I should see "Release" within "#content"
+     When I select "closed" from "release_status"
+      And I press "Save"
+     Then I should see "Successful update"
+      And The release "Rel 1" should be closed
+
+  Scenario: view master backlog page with releases
     Given I am viewing the master backlog
      Then I should see the product backlog
       And I should see 1 stories in the product backlog
-      And I should see the release backlog of Rel 1
-      And I should see the release backlog of Rel 2
-      And I should see 2 stories in the release backlog of Rel 1
-      And I should see 2 stories in the release backlog of Rel 2
       And I should see 3 sprint backlogs
+     Then I should see the release backlog of Rel 1
+      And I should see 2 stories in the release backlog of Rel 1
+     Then I should see the release backlog of Rel 2
+      And I should see 2 stories in the release backlog of Rel 2

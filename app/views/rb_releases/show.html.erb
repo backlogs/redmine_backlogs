@@ -5,6 +5,9 @@
 </div>
 
 <h2><%= h @release.name %></h2>
+
+<p><%= @release.description %></p>
+
 <h3>Release Burndown</h3>
 <!--Release Burndown Visualization-->
 <% unless @release.has_burndown? %>
@@ -78,6 +81,7 @@
 
 <% content_for :sidebar do %>
   <h3><%= l(:label_release) %></h3>
+  <p><b><%= l(:field_status) %>:</b>   <%= l("version_status_#{@release.status}")    %></p>
   <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>

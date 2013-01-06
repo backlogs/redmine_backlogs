@@ -238,8 +238,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     end
   end
 
-  def format_sharing(v)
-    Version::VERSION_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
+  def format_release_sharing(v)
+    RbRelease::RELEASE_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
   end
 
 end

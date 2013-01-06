@@ -237,17 +237,15 @@ module Backlogs
 
       def open_releases_by_date
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-        if Backlogs.setting[:sharing_enabled]
-          shared_releases.visible.scoped(:order => "release_start_date #{order}, release_end_date #{order}")
-        else
-          RbRelease.find(:all, :conditions => { :project_id => id }, :order => "release_start_date #{order}, release_end_date #{order}")
-        end
+        (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
+          visible.open.
+          order("#{RbRelease.table_name}.release_start_date #{order}, #{RbRelease.table_name}.release_end_date #{order}")
       end
 
       def shared_releases
         if new_record?
-        Version.scoped(:include => :project,
-                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{Version.table_name}.sharing = 'system'")
+          RbRelease.scoped(:include => :project,
+                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
         else
           @shared_releases ||= begin
             r = root? ? self : root

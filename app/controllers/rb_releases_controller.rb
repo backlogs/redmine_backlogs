@@ -7,7 +7,7 @@ class RbReleasesController < RbApplicationController
   unloadable
 
   def index
-    @releases = RbRelease.find(:all, :conditions => { :project_id => @project })
+    @releases = @project.releases
   end
 
   def show

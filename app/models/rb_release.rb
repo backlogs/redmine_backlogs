@@ -101,18 +101,33 @@ end
 class RbRelease < ActiveRecord::Base
   self.table_name = 'releases'
 
+  RELEASE_STATUSES = %w(open closed)
+  RELEASE_SHARINGS = %w(none descendants hierarchy tree system)
+
   unloadable
 
   belongs_to :project, :inverse_of => :releases
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
 
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date
+  validates_inclusion_of :status, :in => RELEASE_STATUSES
+  validates_inclusion_of :sharing, :in => RELEASE_SHARINGS
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
+
+  scope :open, :conditions => {:status => 'open'}
+  scope :closed, :conditions => {:status => 'closed'}
+  scope :visible, lambda {|*args| { :include => :project,
+                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
+
 
   include Backlogs::ActiveRecord::Attributes
 
   def to_s; name end
+
+  def closed?
+    status == 'closed'
+  end
 
   def dates_valid?
     errors.add(:base, l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
@@ -167,7 +182,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def allowed_sharings(user = User.current)
-    Version::VERSION_SHARINGS.select do |s|
+    RELEASE_SHARINGS.select do |s|
       if sharing == s
         true
       else
@@ -185,9 +200,6 @@ class RbRelease < ActiveRecord::Base
       end
     end
   end
-
-  scope :visible, lambda {|*args| { :include => :project,
-                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
 
   #migrate old date-based releases to relation-based
   def self.integrate_implicit_stories
