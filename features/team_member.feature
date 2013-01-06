@@ -110,3 +110,118 @@ Feature: Team Member
      Then task A Whole New Task should have estimated_hours set to 8
       And story Story 1 should have estimated_hours set to 10
       And story Story 1 should have estimated_hours set to 10
+
+#mikotos original implementation: Story autocloses (Setting default off)
+  Scenario: Story closes when all Tasks are closed
+    Given I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                  0 |
+        | Assigned    |         0 |          0 |                 10 |
+        | In Progress |         0 |          0 |                 20 |
+        | Resolved    |         0 |          0 |                 90 |
+        | Feedback    |         0 |          0 |                 50 |
+        | Closed      |         1 |          0 |                100 |
+        | Accepted    |         1 |          0 |                100 |
+        | Rejected    |         1 |          0 |                100 |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story 2          | 10       | New    |
+        | A.2          | Story 2          | 10       | New    |
+        | B.1          | Story 3          | 10       | New    |
+      And I am viewing the taskboard for Sprint 001
+    #negative test
+     Then story Story 3 should have the status New
+     When I update the status of task B.1 to In Progress
+     Then story Story 3 should have the status New
+     When I update the status of task B.1 to Closed
+     Then story Story 3 should have the status New
+    #positive test
+    Given Story closes when all Tasks are closed
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to In Progress
+     Then story Story 2 should have the status New
+     When I update the status of task A.2 to In Progress
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to Closed
+     Then story Story 2 should have the status New
+     When I update the status of task A.2 to Closed
+     Then story Story 2 should have the status Closed
+
+# now the loosely part
+
+#    Prerequisite ** Set default_done_ratio for all statuses involved (user action)
+# Beware: to get the right behavior, one has to fiddle with story workflow and good ratios.
+# In this case, not all states below are allowed for stories (e.g. not In Progress)    
+  Scenario: Story loosely follows Task states while done_ratio is determined by story_state default ratio
+    Given I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                  0 |
+        | Assigned    |         0 |          0 |                 10 |
+        | In Progress |         0 |          0 |                 20 |
+        | Resolved    |         0 |          0 |                 90 |
+        | Feedback    |         0 |          0 |                 50 |
+        | Closed      |         1 |          0 |                100 |
+        | Accepted    |         1 |          0 |                100 |
+        | Rejected    |         1 |          0 |                100 |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story 2          | 10       | New    |
+        | A.2          | Story 2          | 10       | New    |
+        | B.1          | Story 3          | 10       | New    |
+      And Story states loosely follow Task states
+      And I am viewing the taskboard for Sprint 001
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to Assigned
+     Then story Story 2 should have the status New
+     When I update the status of task A.2 to Assigned
+     Then story Story 2 should have the status Assigned
+
+     When I update the status of task A.1 to Resolved
+     When I update the status of task A.2 to Resolved
+     Then story Story 2 should have the status Feedback
+
+     When I update the status of task A.1 to Closed
+     Then story Story 2 should have the status Feedback
+     When I update the status of task A.2 to Closed
+     Then story Story 2 should have the status Feedback
+
+# Beware: to get the right behavior, one has to fiddle with story workflow and good ratios.
+# In this case, not all states below are allowed for stories (e.g. not In Progress)    
+  Scenario: Story loosely follows Task states when issue done_ratio is maintained by issue_field
+    Given I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                  0 |
+        | Assigned    |         0 |          0 |                 10 |
+        | In Progress |         0 |          0 |                 20 |
+        | Resolved    |         0 |          0 |                 90 |
+        | Feedback    |         0 |          0 |                 50 |
+        | Closed      |         1 |          0 |                100 |
+        | Accepted    |         1 |          0 |                100 |
+        | Rejected    |         1 |          0 |                100 |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story 2          | 10       | New    |
+        | A.2          | Story 2          | 10       | New    |
+        | B.1          | Story 3          | 10       | New    |
+      And Story states loosely follow Task states
+      And Issue done_ratio is determined by the issue field
+      And I am viewing the taskboard for Sprint 001
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to Assigned
+     Then story Story 2 should have the status New
+      And the done ratio for story Story 2 should be 0
+
+     When I update the status of task A.2 to Assigned
+     Then story Story 2 should have the status Assigned
+      And the done ratio for story Story 2 should be 0
+
+     When I update the status of task A.1 to Resolved
+     When I update the status of task A.2 to Resolved
+     Then story Story 2 should have the status Feedback
+      And the done ratio for story Story 2 should be 0
+
+     When I update the status of task A.1 to Closed
+     Then story Story 2 should have the status Feedback
+     When I update the status of task A.2 to Closed
+     Then story Story 2 should have the status Feedback
+      And the done ratio for story Story 2 should be 100

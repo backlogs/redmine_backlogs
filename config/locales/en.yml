@@ -29,6 +29,11 @@ en:
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
   backlogs_points_burn_direction: Points burn up/down
+  backlogs_story_follows_task_status: Story follows Task status
+  backlogs_story_follow_task_status_nil: Disabled
+  backlogs_story_follow_task_status_close: Close when all Tasks are closed
+  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_close_status: "When all Tasks are closed, update Story to:"
   backlogs_product_backlog: Product backlog
   backlogs_sprints: Sprints
   backlogs_story: Story
@@ -190,6 +195,8 @@ en:
   backlogs_new_story_position_bottom: bottom (requires restart)
   backlogs_sharing_support: Backlogs sharing
   backlogs_sharing_enabled: Enable sharing
+  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_sharing_new_sprint_explanation: Although all possible options are available here, new sprints are shared only according to the users and projects permissions. System shared sprints can only be created by admins, hierarchy and tree shared sprints need permissions on the topmost project.
   backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
   backlogs_show_in_scrum_stats: Show project in Scrum statistics
   rb_project_settings_updated: Settings updated

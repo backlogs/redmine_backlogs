@@ -13,6 +13,7 @@ zh:
   backlogs_new_story_position_top: top
   backlogs_points_burn_direction: 点数消耗 燃起/燃尽
   backlogs_product_backlog: 产品backlog
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_sprints: 冲刺
   backlogs_statistics_active: Project show activity
   backlogs_statistics_active_failed: Project shows no activity

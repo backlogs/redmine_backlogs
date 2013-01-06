@@ -9,6 +9,7 @@ de:
   backlogs_impediment: Hindernis
   backlogs_include_sat_and_sun: Samstag und Sonntag im Burndown anzeigen
   backlogs_points_burn_direction: Burnup/-down Punkte
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Produkt Backlog
   backlogs_sprints: Sprints
   backlogs_statistics_active: Projektaktivität anzeigen

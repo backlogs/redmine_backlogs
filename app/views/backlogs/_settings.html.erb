@@ -127,6 +127,24 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_story_follows_task_status)) %>
+  <%= radio_button_tag("settings[story_follow_task_status]", 'nil',
+      Backlogs.setting[:story_follow_task_status].nil? || Backlogs.setting[:story_follow_task_status] == 'nil') %><%= l(:backlogs_story_follow_task_status_nil) %>
+  <br />
+  <%= radio_button_tag("settings[story_follow_task_status]", 'close',
+      Backlogs.setting[:story_follow_task_status] == 'close' ) %><%= l(:backlogs_story_follow_task_status_close) %>
+  <br />
+  <%= radio_button_tag("settings[story_follow_task_status]", 'loose',
+      Backlogs.setting[:story_follow_task_status] == 'loose' ) %><%= l(:backlogs_story_follow_task_status_loose) %>
+  <br />
+  <%= content_tag(:label, l(:backlogs_story_close_status)) %>
+  <%= select_tag("settings[story_close_status_id]", 
+            options_for_select([['<'+l(:rb_label_timelog_disable)+'>', 0]] + IssueStatus.all.collect{|e| [e.name, e.id]},
+                              Setting.plugin_redmine_backlogs.has_key?(:story_close_status_id)?(Setting.plugin_redmine_backlogs[:story_close_status_id].to_i):0)
+  ) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
   <%= check_box_tag("settings[auto_assign_task]", 'enabled',
       Backlogs.setting[:auto_assign_task]) %>
@@ -227,5 +245,16 @@
     <%= content_tag(:label, l(:backlogs_sharing_enabled)) %>
     <%= check_box_tag("settings[sharing_enabled]", 'enabled',
         Backlogs.setting[:sharing_enabled]) %>
+  </p>
+  <p>
+    <%= content_tag(:label, l(:backlogs_sharing_new_sprint)) %>
+    <%= select_tag("settings[sharing_new_sprint_sharingmode]",
+        options_for_select(
+          Version::VERSION_SHARINGS.collect {|v| [ # avoid that stupid helper method
+              Version::VERSION_SHARINGS.include?(v)?l("label_version_sharing_#{v}"):"none",
+              v
+            ]},
+          Backlogs.setting[:sharing_new_sprint_sharingmode]))
+    %><span style="margin-left: 12px;"><%= l(:backlogs_sharing_new_sprint_explanation) %></span>
   </p>
 </fieldset>

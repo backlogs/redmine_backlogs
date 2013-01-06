@@ -13,6 +13,7 @@ ru:
   backlogs_new_story_position_top: верх
   backlogs_points_burn_direction: Очки с указанием, сколько уже выполнено задания и сколько ещё остаётся сделать
   backlogs_product_backlog: Бэклог продукта
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_sprints: Спринты
   backlogs_statistics_active: По проекту видна активность
   backlogs_statistics_active_failed: По проекту не видно активности
