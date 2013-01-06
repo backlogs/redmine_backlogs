@@ -1,5 +1,5 @@
---- 
-en: 
+---
+en:
   backlogs_active: active
   backlogs_any: any
   backlogs_card_specification: Label types for card printing
@@ -24,6 +24,7 @@ en:
   backlogs_statistics_committed_velocity_stable: Committed velocity is stable across sprints
   backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
   backlogs_statistics_hours_per_point: "%{value} hours per point on average"
+  backlogs_statistics_spent_hours_per_point: "%{value} hours spent per accepted point on average"
   backlogs_statistics_sprints: Measured over %{value} sprints
   backlogs_statistics_velocity: "Velocity: %{value}"
   backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
@@ -51,16 +52,18 @@ en:
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: "%{project}: %{summary}"
   field_backlogs_issue_type: Backlog type
+  field_base: ""
   field_blocks: Blocks
   field_initial_story_points: Initial story points
   field_name: Name
-  field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_release: Release
   field_story_points: Story points
   field_subject: Subject
   field_tracker_id: Tracker ID
@@ -72,6 +75,7 @@ en:
   field_time_entry_user_id: Time Entry User Id
   field_time_entry_spend_on: Time Entry Spend on
   field_time_entry_comments: Time Entry Comments
+  field_project_id: Project Id
   label_back_to_project: Back to project page
   label_backlogs: Backlogs
   label_backlogs_unconfigured: You have not configured Backlogs yet. Please go to %{administration} > %{plugins}, then click on the %{configure} link for this plugin. Once you have set the fields, come back to this page to start using the tool.
@@ -117,16 +121,12 @@ en:
   label_column_width: Column width
   field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  field_number_of_snapshots: Saved point snapshots
-  release_update_snapshot_today: Update story point snapshot for today
-  release_create_snapshot_today: Save story point snapshot for today
   current_open_story_points: "Current open story points:"
 
   # Version fields
   field_name: "Name"
-  
+
   # Error messages
   error_blank: "cannot be blank"
   error_greater_than_start_date: "cannot be earlier than Start Date"
@@ -167,24 +167,44 @@ en:
   rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
+  rb_show_project_name: Show project name in backlogs
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  remaining_story_points: Remaining story points
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
   warning_reset_sprint: |
     YOU ARE ABOUT TO RESET THIS SPRINT!
-    
+
     Are you sure you want to do this? Resetting the sprint
     will have the following effects on stories and tasks:
-    
+
     * Creation date will be set to the sprint start date
     * ALL modifications to the stories and tasks except notes
        will be DELETED
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
-
+  backlogs_new_story_position: Newly created stories go to the
+  backlogs_new_story_position_top: top
+  backlogs_new_story_position_bottom: bottom (requires restart)
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_sharing_enabled: Enable sharing
+  backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects in backlog
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics
+  rb_project_settings_updated: Settings updated
+  rb_project_settings_update_error: Error while updating settings
+  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
+  backlogs_sprint_sort_order: Sort Sprints by start date
+  backlogs_sprint_sort_order_asc: ascending
+  backlogs_sprint_sort_order_desc: descending
+  backlogs_general_settings: General settings
+  backlogs_sprint_card_settings: Card printing
+  backlogs_burndown_settings: Burndown settings
+  backlogs_pblpage_settings: Product backlog page settings
+  backlogs_story_settings: Story and Task settings
+  label_filter_tasks: Filter by user
+  label_filter_tasks_my_tasks: Filter by user - my tasks
+  label_all_tasks: All tasks
+  label_my_tasks: My tasks
+  label_view_options: View options

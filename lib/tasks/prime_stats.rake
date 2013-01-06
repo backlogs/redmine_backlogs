@@ -2,9 +2,10 @@ namespace :redmine do
   namespace :backlogs do
     desc "Prime the statistics cache"
     task :prime_stats => :environment do
-      EnabledModule.find(:all, :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE], :include => :project, :joins => :project).each{|mod|
-        puts mod.project.name
-        mod.project.scrum_statistics(:force)
+      projects = RbCommonHelper.find_backlogs_enabled_active_projects
+      projects.each{|project|
+        puts project.name
+        project.scrum_statistics(:force)
       }
     end
   end

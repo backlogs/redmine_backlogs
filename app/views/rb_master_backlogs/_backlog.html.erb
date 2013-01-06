@@ -6,15 +6,18 @@
       </ul>
     </div>
     <%- if backlog[:sprint] %>
-      <%= render :partial => "rb_sprints/sprint", :object => backlog[:sprint] %>
-      <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
+      <%= render :partial => "rb_sprints/sprint", :object => backlog[:sprint], :locals => {:cls => 'model sprint'} %>
+    <%- elsif backlog[:release] %>
+      <%= render :partial => "rb_releases/release_mbp", :object => backlog[:release], :as => :release %>
     <%- elsif User.current.allowed_to?(:manage_versions, @project) %>
-      <div class="label"><%=l(:label_product_backlog).titleize %></div>
-      <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
-      <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
+      <div class="headertext">
+        <div class="name"><%=l(:label_product_backlog).titleize %></div>
+        <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
+        </div>
     <%- end %>
+    <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
   </div>
-  <ul id="stories-for-<%= backlog[:sprint] ? backlog[:sprint].id : 'product-backlog' %>" class="stories">
+  <ul id="stories-for-<%= backlog[:release] ? "release-#{backlog[:release].id}" : (backlog[:sprint] ? backlog[:sprint].id : 'product-backlog') %>" class="stories">
     <%= render :partial => "rb_stories/story", :collection => backlog[:stories] %>
   </ul>
 </div>

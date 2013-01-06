@@ -51,14 +51,15 @@ en-GB:
   error_no_workflow_for_task_tracker: You do not have access to the task tracker. If you believe this is an error, please have your administrator update the workflow.
   error_outro: Please correct the above errors before submitting again.
   error_release_end_after_start: Release end date has to be after start date
+  error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: is already in use
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
+  field_base: ""
   field_blocks: Blocks
   field_initial_story_points: Initial story points
   field_name: Name
-  field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_priority: Priority
   field_release_end_date: Release end date
@@ -138,16 +139,13 @@ en-GB:
   rb_task_cards_tasks_follow_story: Story followed by their tasks
   rb_taskboard_card_order: Card print order
   rb_timelog_from_taskboard: Timelog from taskboard
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
+  remaining_story_points: Remaining story points
   story_description: Description
   story_estimation_hours: Estimation (hours)
   story_points: Points
   story_remaining_hours: Remaining (hours)
   story_spent_time: Spent Time
   story_status: Status
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty

@@ -9,11 +9,18 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        safe_attributes 'position'
+        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
+
+        acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
+
+        has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
+
+        safe_attributes 'release_id' #FIXME merge conflict. is this required?
+
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
 
-        include Backlogs::ActiveRecord
+        include Backlogs::ActiveRecord::Attributes
       end
     end
 
@@ -21,6 +28,10 @@ module Backlogs
     end
 
     module InstanceMethods
+      def history
+        @history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
+      end
+
       def is_story?
         return RbStory.trackers.include?(tracker_id)
       end
@@ -59,7 +70,7 @@ module Backlogs
           return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
         rescue
           # stupid rails and their ignorance of proper relational databases
-          RAILS_DEFAULT_LOGGER.error "Cannot return the blocks list for #{self.id}: #{e}"
+          Rails.logger.error "Cannot return the blocks list for #{self.id}: #{e}"
           return []
         end
       end
@@ -80,25 +91,34 @@ module Backlogs
       end
 
       def backlogs_before_save
-        if Backlogs.configured?(project) && (self.is_task? || self.story)
-          self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
-          self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
+        if Backlogs.configured?(project)
+          if (self.is_task? || self.story)
+            self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
+            self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
 
-          self.remaining_hours = 0 if self.status.backlog_is?(:success)
+            self.remaining_hours = 0 if self.status.backlog_is?(:success)
 
-          self.fixed_version = self.story.fixed_version if self.story
-          self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
+            self.fixed_version = self.story.fixed_version if self.story
+            self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
 
-          self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
-        elsif self.is_story?
-          self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f
+            self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+          elsif self.is_story? && Backlogs.setting[:set_start_and_duedates_from_sprint]
+            if self.fixed_version
+              self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
+              self.due_date ||= self.fixed_version.effective_date
+              self.due_date = self.start_date if self.due_date && self.due_date < self.start_date
+            else
+              self.start_date = nil
+              self.due_date = nil
+            end
+          end
         end
+        self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f unless self.leaves.empty?
 
-        if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
-          self.position = (Issue.minimum(:position) || 1) - 1
-          # scrub position from the journal by copying the new value to the old
-          @attributes_before_change['position'] = self.position if @attributes_before_position
-        end
+        self.move_to_top if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
+
+        # scrub position from the journal by copying the new value to the old
+        @attributes_before_change['position'] = self.position if @attributes_before_change
 
         @backlogs_new_record = self.new_record?
 
@@ -106,13 +126,15 @@ module Backlogs
       end
 
       def backlogs_after_save
-        ## automatically sets the tracker to the task tracker for
-        ## any descendant of story, and follow the version_id
-        ## Normally one of the _before_save hooks ought to take
-        ## care of this, but appearantly neither root_id nor
-        ## parent_id are set at that point
-
-        RbJournal.rebuild(self) if @backlogs_new_record
+        self.history.save!
+        [self.parent_id, self.parent_id_was].compact.uniq.each{|pid|
+          p = Issue.find(pid)
+          r = p.leaves.sum("COALESCE(remaining_hours, 0)").to_f
+          if r != p.remaining_hours
+            p.update_attribute(:remaining_hours, r)
+            p.history.save
+          end
+        }
 
         return unless Backlogs.configured?(self.project)
 
@@ -120,102 +142,43 @@ module Backlogs
           # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
           # update_parent :<
-          tasks_updated = []
-          Issue.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
+          tasklist = RbTask.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
                                           (
                                             (? is NULL and not fixed_version_id is NULL)
                                             or
                                             (not ? is NULL and fixed_version_id is NULL)
                                             or
                                             (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
+                                            or
+                                            (tracker_id <> ?)
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
-                                              self.fixed_version_id, self.fixed_version_id]).each{|task|
-            j = Journal.new
-            j.journalized = task
-            case Backlogs.platform
-              when :redmine
-                j.created_on = self.updated_on
-                j.details << JournalDetail.new(:property => 'attr', :prop_key => 'fixed_version_id', :old_value => task.fixed_version_id, :value => fixed_version_id)
-              when :chiliproject
-                j.created_at = self.updated_on
-                j.details['fixed_version_id'] = [task.fixed_version_id, self.fixed_version_id]
-                j.type = 'IssueJournal'
-                j.activity_type = 'issues'
-                #j.version = (Journal.maximum('version', :conditions => ['journaled_id = ? and type = ?', task.id, 'IssueJournal']) || 0) + 1
-            end
-            j.user = User.current
-            j.save!
-
-            tasks_updated << task
-          }
-
-          if tasks_updated.size > 0
-            tasklist = '(' + tasks_updated.collect{|task| connection.quote(task.id)}.join(',') + ')'
+                                              self.fixed_version_id, self.fixed_version_id,
+                                              RbTask.tracker]).to_a
+          tasklist.each{|task| task.history.save! }
+          if tasklist.size > 0
+            task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
             connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}
-                                where id in #{tasklist}")
+                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
+                                where id in #{task_ids}")
           end
-
-          connection.execute("update issues
-                              set tracker_id = #{RbTask.tracker}
-                              where root_id = #{self.root_id} and lft > #{self.lft} and rgt < #{self.rgt}")
-        end
-
-        if self.story || self.is_task?
-          connection.execute("update issues set tracker_id = #{RbTask.tracker} where root_id = #{self.root_id} and lft >= #{self.lft} and rgt <= #{self.rgt}")
         end
       end
 
-      def value_at(property, time)
-        return history(property, [time.to_date])[0]
+      def assignable_releases
+        RbRelease.find(:all, :conditions => {:project_id => project.id} )
       end
 
-      # Extract history of a property of a story for a range of days.
-      # \param property to extract
-      # \param days of interest as an Array
-      # \param sprint_burndown bool for selecting extra processing for sprint burndown
-      # \return array of property values 
-      def history(property, days, sprint_burndown=true)
-        property = property.to_s unless property.is_a?(String)
-        raise "Unsupported property #{property.inspect}" unless RbJournal::JOURNALED_PROPERTIES.include?(property)
-
-        days = days.to_a
-        created_day = created_on.to_date
-        active_days = days.select{|d| d >= created_day}
-
-        # if not active, don't do anything
-        return [nil] * (days.size + 1) if active_days.size == 0
-
-        # anything before the creation date is nil
-        prefix = [nil] * (days.size - active_days.size)
-
-        # add one extra day as start-of-first-day
-        active_days.unshift(active_days[0] - 1)
-
-        journal = RbJournal.find(:all, :conditions => ['issue_id = ? and property = ?', self.id, property], :order => :timestamp).to_a
-        if journal.size == 0
-          RbJournal.rebuild(self)
-          journal = RbJournal.find(:all, :conditions => ['issue_id = ? and property = ?', self.id, property], :order => :timestamp).to_a
-          raise "Journal cannot have 0 entries" if journal.size == 0
-        end
-
-        values = [journal[0].value] * active_days.size
-
-        journal.each{|change|
-          stamp = change.timestamp.to_date
-          day = active_days.index{|d| d >= stamp}
-          break if day.nil?
-          values.fill(change.value, day)
-        }
-
-        if sprint_burndown == true
-          # ignore the start-of-day value for issues created mid-sprint
-          values[0] = nil if created_day > days[0]
-        end
-
-        return prefix + values
+      def release_id=(rid)
+        self.release = nil
+        write_attribute(:release_id, rid)
       end
+#      def self.by_version(project)
+#        count_and_group_by(:project => project,
+#                           :field => 'release_id',
+#                           :joins => RbRelease.table_name)
+#      end
+
 
     end
   end

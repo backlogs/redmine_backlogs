@@ -2,6 +2,16 @@ require 'rubygems'
 require 'yaml'
 require 'singleton'
 
+unless defined?('ReliableTimout') || defined?(:ReliableTimout)
+  if Backlogs.gems.include?('system_timer')
+    require 'system_timer'
+    ReliableTimout = SystemTimer
+  else
+    require 'timeout'
+    ReliableTimout = Timeout
+  end
+end
+
 module Backlogs
   def version
     root = File.expand_path('..', File.dirname(__FILE__))
@@ -23,39 +33,61 @@ module Backlogs
   module_function :version
 
   def development?
-    return File.exist?(File.join(
-      case Rails::VERSION::MAJOR
-        when 2 then RAILS_ROOT.to_s
-        when 3 then Rails.root.to_s
-        else return false  end,
-      'backlogs.dev'))
+    return !Rails.env.production?
   end
   module_function :"development?"
 
   def platform_support(raise_error = false)
-    case platform
-      when :redmine
-        supported = [1,4]
-        unsupported = [1,3]
-      when :chiliproject
-        supported = [3,1,0]
-        unsupported = nil
-      else
-        raise "Unsupported platform #{platform}"
+    travis = nil # needed so versions isn't block-scoped in the timeout
+    begin
+      ReliableTimout.timeout(10) { travis = YAML::load(open('https://raw.github.com/backlogs/redmine_backlogs/master/.travis.yml').read) }
+    rescue
+      travis = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', '.travis.yml')).read)
     end
 
-    unless RUBY_VERSION =~ /^1\.8\./ || development?
-      msg = "#{Redmine::VERSION} (UNSUPPORTED ruby version #{RUBY_VERSION})"
-      raise msg if raise_error
-      return msg
-    end
+    matrix = []
+    travis['rvm'].each{|rvm|
+      travis['env'].each{|env|
+        matrix << {'ruby' => rvm, 'env' => env}
+      }
+    }
 
-    return "#{Redmine::VERSION}" if Redmine::VERSION.to_a[0,supported.length] == supported
-    return "#{Redmine::VERSION} (unsupported but might work, please upgrade to #{supported.collect{|d| d.to_s}.join('.')}" if unsupported && Redmine::VERSION.to_a[0,unsupported.length] == unsupported
+    travis['matrix']['exclude'].each{|exc|
+      # if all values of the exclusion match, remove the cell
+      matrix.delete_if{|cell| exc.keys.collect{|k| cell[k] == exc[k] ? '' : 'x'}.join('') == '' }
+    }
+    travis['matrix']['allow_failures'].each{|af|
+      # if all values of the allowed failure match, the cell is unsupported
+      matrix.each{|cell|
+        cell[:unsupported] = true if af.keys.collect{|k| cell[k] == af[k] ? '' : 'x'}.join('') == ''
+      }
+    }
+    matrix.each{|cell|
+      cell[:version] = cell.delete('env').gsub(/^REDMINE_VER=/, '').gsub(/\s.*/, '')
+      cell[:platform] = (cell[:version] =~ /^[0-9]/ ? :redmine : :chiliproject)
+    }
+
+    plugin_version = Redmine::Plugin.find(:redmine_backlogs).version
+    return "You are running backlogs #{plugin_version}, latest version is #{travis['release']}" if plugin_version != travis['release']
+
+    supported = matrix.select{|cell| cell[:platform] == platform}
+    raise "Unsupported platform #{platform}" unless supported.size > 0
+
+    platform_version = Redmine::VERSION.to_a.collect{|d| d.to_s}
+    ruby_version = RUBY_VERSION.split('.')
+    supported.each{|cell|
+      v = cell[:version].split('.')
+      next unless platform_version[0,v.length] == v
+
+      v = cell[:ruby].split('.')
+      next unless ruby_version[0,v.length] == v
+
+      return "#{Redmine::VERSION}#{cell[:unsupported] ? '(unsupported but might work)' : ''}"
+    }
 
     return "#{Redmine::VERSION} (DEVELOPMENT MODE)" if development?
 
-    msg = "#{Redmine::VERSION} (NOT SUPPORTED; please install #{platform} #{supported.collect{|d| d.to_s}.join('.')})"
+    msg = "#{Redmine::VERSION} on #{RUBY_VERSION} (NOT SUPPORTED; please install #{platform} #{supported.reject{|v| v[:unsupported]}.collect{|v| "#{v[:version]} on #{v[:ruby]}"}.uniq.sort.join(' / ')}"
     raise msg if raise_error
     return msg
   end
@@ -154,10 +186,14 @@ module Backlogs
     include Singleton
 
     def [](key)
-      return safe_load[key]
+      key = key.intern if key.is_a?(String)
+      settings = safe_load
+      # add alternate loading because settings loading on ruby 1.9.3 seems to sometimes convert keys to strings on save.
+      return settings[key] || settings[key.to_s]
     end
 
     def []=(key, value)
+      key = key.intern if key.is_a?(String)
       settings = safe_load
       settings[key] = value
       Setting.plugin_redmine_backlogs = settings
@@ -172,9 +208,12 @@ module Backlogs
     private
 
     def safe_load
+      # At the first migration, the settings table will not exist
+      return {} unless Setting.table_exists?
+
       settings = Setting.plugin_redmine_backlogs.dup
       if settings.is_a?(String)
-        RAILS_DEFAULT_LOGGER.error "Unable to load settings"
+        Rails.logger.error "Unable to load settings"
         return {}
       end
       settings

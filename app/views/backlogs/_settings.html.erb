@@ -57,6 +57,8 @@
     </table>
   </fieldset>
 <% end %>
+<fieldset>
+  <legend><%= l(:backlogs_general_settings) %></legend>
 <p>
   <%= content_tag(:label, l(:backlogs_story_tracker)) %>
   <%= select_tag("settings[story_trackers]", options_from_collection_for_select(Tracker.all, :id, :name, RbStory.trackers), :multiple => true) %>
@@ -91,6 +93,50 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_wiki_template)) %>
+  <%= text_field_tag("settings[wiki_template]", Backlogs.setting[:wiki_template]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
+	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
+</p>
+
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_story_settings) %></legend>
+<p>
+  <%= content_tag(:label, l(:field_story_points)) %>
+  <%= l(:comma_delimited_numbers) %><br>
+  <%= l(:use_free_text_if_empty) %><br>
+  <%= text_field_tag("settings[story_points]",
+      Backlogs.setting[:story_points]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_set_start_and_duedates_from_sprint)) %>
+  <%= check_box_tag("settings[set_start_and_duedates_from_sprint]", 'enabled',
+      Backlogs.setting[:set_start_and_duedates_from_sprint]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_new_story_position)) %>
+  <%= radio_button_tag("settings[new_story_position]", 'top', Backlogs.setting[:new_story_position] == 'top') %><%= l(:backlogs_new_story_position_top) %>
+  <%= radio_button_tag("settings[new_story_position]", 'bottom', Backlogs.setting[:new_story_position].nil? || Backlogs.setting[:new_story_position] == 'bottom') %><%= l(:backlogs_new_story_position_bottom) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
+  <%= check_box_tag("settings[auto_assign_task]", 'enabled',
+      Backlogs.setting[:auto_assign_task]) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_burndown_settings) %></legend>
+
+<p>
   <%= content_tag(:label, l(:backlogs_points_burn_direction)) %>
   <%= select_tag("settings[points_burn_direction]",
             options_for_select([
@@ -99,6 +145,37 @@
                 ], Backlogs.setting[:points_burn_direction])) %>
 </p>
 
+<p>
+  <%= content_tag(:label, l(:backlogs_burndown_print_width)) %>
+  <%= text_field_tag("settings[burndown_print_width]", Backlogs.setting[:burndown_print_width]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_burndown_print_height)) %>
+  <%= text_field_tag("settings[burndown_print_height]", Backlogs.setting[:burndown_print_height]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_include_sat_and_sun)) %>
+  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled',
+      Backlogs.setting[:include_sat_and_sun]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_show_burndown_in_sidebar)) %>
+	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',
+            Backlogs.setting[:show_burndown_in_sidebar]) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_show_project_name)) %>
+  <%= check_box_tag("settings[show_project_name]",'enabled',
+            Backlogs.setting[:show_project_name]) %>
+</p>
+</fieldset>
+
+<fieldset>
+  <legend><%= l(:backlogs_sprint_card_settings) %></legend>
 <p>
   <%= content_tag(:label, l(:backlogs_card_specification)) %>
   <% if Backlogs.gems.values.reject{|installed| installed}.size == 0 %>
@@ -117,41 +194,10 @@
                     [l(:rb_task_cards_stories_then_tasks), 'stories_then_tasks']
                 ], Backlogs.setting[:taskboard_card_order])) %>
 </p>
+</fieldset>
 
-<p>
-  <%= content_tag(:label, l(:backlogs_wiki_template)) %>
-  <%= text_field_tag("settings[wiki_template]", Backlogs.setting[:wiki_template]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:backlogs_burndown_print_width)) %>
-  <%= text_field_tag("settings[burndown_print_width]", Backlogs.setting[:burndown_print_width]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:backlogs_burndown_print_height)) %>
-  <%= text_field_tag("settings[burndown_print_height]", Backlogs.setting[:burndown_print_height]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
-	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:rb_show_burndown_in_sidebar)) %>
-	<%= check_box_tag("settings[show_burndown_in_sidebar]",'enabled',
-            Backlogs.setting[:show_burndown_in_sidebar]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:field_story_points)) %>
-  <%= l(:comma_delimited_numbers) %><br>
-  <%= l(:use_free_text_if_empty) %><br>
-  <%= text_field_tag("settings[story_points]",
-      Backlogs.setting[:story_points]) %>
-</p>
-
+<fieldset>
+  <legend><%= l(:backlogs_pblpage_settings) %></legend>
 <p>
   <%= content_tag(:label, l(:rb_auto_refresh)) %>
   <%= select_tag("settings[autorefresh_wait]",
@@ -169,13 +215,17 @@
 </p>
 
 <p>
-  <%= content_tag(:label, l(:backlogs_auto_assign_task)) %>
-  <%= check_box_tag("settings[auto_assign_task]", 'enabled',
-      Backlogs.setting[:auto_assign_task]) %>
+  <%= content_tag(:label, l(:backlogs_sprint_sort_order)) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'asc', Backlogs.setting[:sprint_sort_order].nil?|| Backlogs.setting[:sprint_sort_order] == 'asc') %><%= l(:backlogs_sprint_sort_order_asc) %>
+  <%= radio_button_tag("settings[sprint_sort_order]", 'desc', Backlogs.setting[:sprint_sort_order] == 'desc') %><%= l(:backlogs_sprint_sort_order_desc) %>
 </p>
+</fieldset>
 
-<p>
-  <%= content_tag(:label, l(:backlogs_include_sat_and_sun)) %>
-  <%= check_box_tag("settings[include_sat_and_sun]", 'enabled',
-      Backlogs.setting[:include_sat_and_sun]) %>
-</p>
+<fieldset>
+  <legend><%= l(:backlogs_sharing_support) %></legend>
+  <p>
+    <%= content_tag(:label, l(:backlogs_sharing_enabled)) %>
+    <%= check_box_tag("settings[sharing_enabled]", 'enabled',
+        Backlogs.setting[:sharing_enabled]) %>
+  </p>
+</fieldset>

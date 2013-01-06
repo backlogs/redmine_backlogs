@@ -6,32 +6,34 @@ module Backlogs
       @project = project
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
-      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and ? between sprint_start_date and effective_date", @project.id, Date.today])
+      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? between sprint_start_date and effective_date", @project.id, Date.today])
       @past_sprints = RbSprint.find(:all,
         :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
         :order => "effective_date desc",
         :limit => 5).select(&:has_burndown?)
-
-      @points_per_day = @past_sprints.collect{|s| s.burndown('up')[:points_committed][0]}.compact.sum / @past_sprints.collect{|s| s.days(:all).size}.compact.sum if @past_sprints.size > 0
-
       @all_sprints = (@past_sprints + [@active_sprint]).compact
 
+      @all_sprints.each{|sprint| sprint.burndown.direction = :up }
+      days = @past_sprints.collect{|s| s.days.size}.sum
+      if days != 0
+        @points_per_day = @past_sprints.collect{|s| s.burndown.data[:points_committed][0]}.compact.sum / days
+      end
+
       if @all_sprints.size != 0
-        @velocity = @past_sprints.collect{|sprint| sprint.burndown('up')[:points_accepted][-1]}
+        @velocity = @past_sprints.collect{|sprint| sprint.burndown.data[:points_accepted][-1].to_f}
         @velocity_stddev = stddev(@velocity)
       end
+
+      spent_hours = @past_sprints.collect{|sprint| sprint.spent_hours}
+      @spent_hours_per_point = spent_hours.sum / @velocity.sum unless spent_hours.nil? || @velocity.nil? || @velocity.sum == 0
 
       @product_backlog = RbStory.product_backlog(@project, 10)
 
       hours_per_point = []
       @all_sprints.each {|sprint|
-        sprint.stories.each {|story|
-          bd = story.burndown
-          h = bd[:hours][0]
-          p = bd[:points][0]
-          next unless h && p && p != 0
-          hours_per_point << (h / p.to_f)
-        }
+        hours = sprint.burndown.data[:hours_remaining][0].to_f
+        next if hours == 0.0
+        hours_per_point << sprint.burndown.data[:points_committed][0].to_f / hours
       }
       @hours_per_point_stddev = stddev(hours_per_point)
       @hours_per_point = hours_per_point.sum.to_f / hours_per_point.size unless hours_per_point.size == 0
@@ -44,11 +46,7 @@ module Backlogs
       }
       Statistics.stats.sort.each{|m|
         v = send(m.intern)
-        @statistics[:values][m.to_s.gsub(/^stat_/, '')] =
-          v unless
-                   v.nil? ||
-                   (v.respond_to?(:"nan?") && v.nan?) ||
-                   (v.respond_to?(:"infinite?") && v.infinite?)
+        @statistics[:values][m.to_s.gsub(/^stat_/, '')] = v unless v.nil? || (v.respond_to?(:"nan?") && v.nan?) || (v.respond_to?(:"infinite?") && v.infinite?)
       }
 
       if @statistics[:succeeded].size == 0 && @statistics[:failed].size == 0
@@ -61,6 +59,7 @@ module Backlogs
     attr_reader :statistics, :score
     attr_reader :active_sprint, :past_sprints
     attr_reader :hours_per_point
+    attr_reader :spent_hours_per_point
 
     def stddev(values)
       median = values.sum / values.size.to_f
@@ -116,9 +115,10 @@ module Backlogs
     def test_yield
       accepted = []
       @past_sprints.each {|sprint|
-        bd = sprint.burndown('up')
-        c = bd[:points_committed][-1]
-        a = bd[:points_accepted][-1]
+        bd = sprint.burndown
+        bd.direction = :up
+        c = bd.data[:points_committed][-1]
+        a = bd.data[:points_accepted][-1]
         next unless c && a && c != 0
 
         accepted << [(a * 100.0) / c, 100.0].min
@@ -145,15 +145,23 @@ module Backlogs
     end
 
     def stat_velocity_stddev
-      return @velocity_stddev
+      return @velocity_stddev unless @velocity_stddev.is_a? Float
+      return '%.2f' % @velocity_stddev      
     end
 
     def stat_sizing_stddev
-      return @hours_per_point_stddev
+      return @hours_per_point_stddev unless @hours_per_point_stddev.is_a? Float
+      return '%.2f' % @hours_per_point_stddev
     end
 
     def stat_hours_per_point
-      return @hours_per_point
+      return @hours_per_point unless @hours_per_point.is_a? Float
+      return '%.2f' % @hours_per_point
+    end
+
+    def stat_spent_hours_per_point
+      return nil unless @spent_hours_per_point
+      return '%.2f' % @spent_hours_per_point
     end
   end
 
@@ -162,7 +170,11 @@ module Backlogs
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
 
-      include Backlogs::ActiveRecord
+      base.class_eval do
+        unloadable
+        has_many :releases, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy, :order => "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC"
+        include Backlogs::ActiveRecord::Attributes
+      end
     end
 
     module ClassMethods
@@ -170,17 +182,85 @@ module Backlogs
 
     module InstanceMethods
 
-      def scrum_statistics(force = false)
-        if force
-          # done this way to the potentially very expensive cache rebuild is done while the old cache may still be served to others
-          stats = Backlogs::Statistics.new(self)
-          Rails.cache.delete("Project(#{self.id}).scrum_statistics")
-          return Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { stats }
-        end
+      def scrum_statistics
         ## pretty expensive to compute, so if we're calling this multiple times, return the cached results
-        @scrum_statistics ||= Rails.cache.fetch("Project(#{self.id}).scrum_statistics", {:expires_in => 4.hours}) { Backlogs::Statistics.new(self) }
+        @scrum_statistics ||= Backlogs::Statistics.new(self)
+      end
 
-        return @scrum_statistics
+      def rb_project_settings
+        project_settings = RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
+        unless project_settings
+          project_settings = RbProjectSettings.new( :project_id => self.id)
+          project_settings.save
+        end
+        project_settings
+      end
+
+      def projects_in_shared_product_backlog
+        #sharing off: only the product itself is in the product backlog
+        #sharing on: subtree is included in the product backlog
+        if Backlogs.setting[:sharing_enabled] and self.rb_project_settings.show_stories_from_subprojects
+          self.self_and_descendants.visible.active
+        else
+          [self]
+        end
+        #TODO have an explicit association map which project shares its issues into other product backlogs
+      end
+
+      #return sprints which are 
+      # 1. open in project,
+      # 2. share to project, 
+      # 3. share to project but are scoped to project and subprojects
+      #depending on sharing mode
+      def open_shared_sprints
+        if Backlogs.setting[:sharing_enabled]
+          order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+          shared_versions.visible.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+        else #no backlog sharing
+          RbSprint.open_sprints(self)
+        end 
+      end
+
+      #depending on sharing mode
+      def closed_shared_sprints
+        if Backlogs.setting[:disable_closed_sprints_to_master_backlogs]
+          return []
+        else
+          if Backlogs.setting[:sharing_enabled]
+            order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+            shared_versions.visible.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+          else #no backlog sharing
+            RbSprint.closed_sprints(self)
+          end
+        end #disable_closed
+      end
+
+      def open_releases_by_date
+        order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+        if Backlogs.setting[:sharing_enabled]
+          shared_releases.visible.scoped(:order => "release_start_date #{order}, release_end_date #{order}")
+        else
+          RbRelease.find(:all, :conditions => { :project_id => id }, :order => "release_start_date #{order}, release_end_date #{order}")
+        end
+      end
+
+      def shared_releases
+        if new_record?
+        Version.scoped(:include => :project,
+                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{Version.table_name}.sharing = 'system'")
+        else
+          @shared_releases ||= begin
+            r = root? ? self : root
+            RbRelease.scoped(:include => :project,
+                         :conditions => "#{Project.table_name}.id = #{id}" +
+              " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
+                    " #{RbRelease.table_name}.sharing = 'system'" +
+              " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND #{RbRelease.table_name}.sharing = 'tree')" +
+              " OR (#{Project.table_name}.lft < #{lft} AND #{Project.table_name}.rgt > #{rgt} AND #{RbRelease.table_name}.sharing IN ('hierarchy', 'descendants'))" +
+              " OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt} AND #{RbRelease.table_name}.sharing = 'hierarchy')" +
+              "))")
+          end
+        end
       end
 
     end

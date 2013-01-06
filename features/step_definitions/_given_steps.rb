@@ -1,5 +1,22 @@
 require 'rubygems'
 require 'timecop'
+require 'chronic'
+
+Before do
+  Timecop.return
+  @projects = nil
+  @sprint = nil
+  @story = nil
+  Backlogs.setting[:include_sat_and_sun] = false
+end
+
+After do |scenario|
+  Timecop.return
+end
+
+Given /^I am admin$/ do
+  login_as_admin
+end
 
 Given /^I am a product owner of the project$/ do
   role = Role.find(:first, :conditions => "name='Manager'")
@@ -7,12 +24,15 @@ Given /^I am a product owner of the project$/ do
   role.permissions << :create_stories
   role.permissions << :update_stories
   role.permissions << :view_releases
-  role.permissions << :create_releases
-  role.permissions << :update_releases
-  role.permissions << :destroy_releases
+  role.permissions << :modify_releases
   role.permissions << :view_scrum_statistics
+  role.permissions << :configure_backlogs
   role.save!
   login_as_product_owner
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am a scrum master of the project$/ do
@@ -30,6 +50,10 @@ Given /^I am a scrum master of the project$/ do
   role.permissions << :create_sprints
   role.save!
   login_as_scrum_master
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am a team member of the project$/ do
@@ -41,6 +65,10 @@ Given /^I am a team member of the project$/ do
   role.permissions << :update_tasks
   role.save!
   login_as_team_member
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
 end
 
 Given /^I am logged out$/ do
@@ -49,22 +77,46 @@ end
 
 Given /^I am viewing the master backlog$/ do
   visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
   click_link("Backlogs")
   page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, :project_id => @project.identifier, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
+end
+
+Then /^at ([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})$/ do |time|
+  set_now(time, :msg => "at #{time}")
+end
+Then /^on ([0-9]{4}-[0-9]{2}-[0-9]{2})$/ do |date|
+  set_now(time, :msg => "on #{date}")
+end
+Then /^after (the current )?sprint(.*)$/ do |current, name|
+  raise "Improperly phrased" if (current == '' && name == '') || (current != '' && name != '')
+  sprint = current == '' ? RbSprint.find_by_name(name) : current_sprint
+  set_now(sprint.effective_date + 1, :msg => "after sprint #{sprint.name}")
+end
+
+Given /^the current (time|date) (is|forwards to) (.+)$/ do |what, action, time|
+  reset = case action
+          when 'is' then true
+          when 'forwards to' then false
+          else raise "I don't know how to #{action} time"
+          end
+  set_now(time, :msg => "#{what} #{action} #{time}", :reset => reset)
 end
 
 Given /^I am viewing the burndown for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
-  assert_page_loaded(page)
+  visit url_for(:controller => :rb_burndown_charts, :action => :show, :sprint_id => current_sprint(sprint_name).id, :only_path=>true)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
-  @sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
-  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => @sprint.id, :only_path=>true)
-  assert_page_loaded(page)
+  visit url_for(:controller => :rb_taskboards, :action => :show, :sprint_id => current_sprint(sprint_name).id, :only_path=>true)
+  verify_request_status(200)
+end
+
+Given /^I am viewing the backlog settings page for project (.*)$/ do |project_name|
+  visit url_for(:controller => :projects, :action => :settings, :id => Project.find(project_name).id, :tab => 'backlogs', :only_path=>true)
+  verify_request_status(200)
 end
 
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
@@ -94,7 +146,7 @@ end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
   sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
-  @impediment_params = initialize_impediment_params(sprint.id)
+  @impediment_params = initialize_impediment_params(:project_id => sprint.project_id, :fixed_version_id => sprint.id)
 end
 
 Given /^I want to create a sprint$/ do
@@ -140,18 +192,42 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
 
+Given /^backlogs is configured$/ do
+  Backlogs.configured?.should be_true
+end
+
+
 Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
-  Rails.cache.clear
   @project = get_project(project_id)
+  @projects = [] if @projects.nil?
+  @projects.push(@project)
   @project.should_not be_nil
 
   # Enable the backlogs plugin
-  @project.enabled_modules << EnabledModule.new(:name => 'backlogs')
+  @project.enable_module!('backlogs')
 
   # Configure the story and task trackers
-  story_trackers = Tracker.find(:all).map{|s| "#{s.id}"}
-  task_tracker = "#{Tracker.create!(:name => 'Task').id}"
-  plugin = Redmine::Plugin.find('redmine_backlogs')
+  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
+  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
+
+  copy_from = Tracker.find(:first, :conditions=>{:name => 'Feature request'})
+  story_trackers.each{|tracker|
+    if copy_from.respond_to? :workflow_rules #redmine 2 master
+      tracker.workflow_rules.copy(copy_from)
+    else
+      tracker.workflows.copy(copy_from)
+    end
+  }
+  copy_from = Tracker.find(:first, :conditions=>{:name => 'Bug'})
+  if copy_from.respond_to? :workflow_rules
+    task_tracker.save!
+    task_tracker.workflow_rules.copy(copy_from)
+  else
+    task_tracker.workflows.copy(copy_from)
+  end
+
+  story_trackers = story_trackers.map{|tracker| tracker.id }
+  task_tracker = task_tracker.id
   Backlogs.setting[:story_trackers] = story_trackers
   Backlogs.setting[:task_tracker] = task_tracker
 
@@ -160,26 +236,40 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
 
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
+
+  Backlogs.setting[:card_spec] = 'Zweckform 3474'
+  BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil
 end
 
-Given /^I have defined the following sprints:$/ do |table|
+Given /^no versions or issues exist$/ do
+  Issue.destroy_all
+  Version.destroy_all
+end
+
+Given /^I have selected the (.*) project$/ do |project_id|
+  @project = get_project(project_id)
+end
+
+Given /^backlogs setting show_burndown_in_sidebar is enabled$/ do
+    Backlogs.setting[:show_burndown_in_sidebar] = 'enabled' #app/views/backlogs/view_issues_sidebar.html.erb
+end
+
+Given /^I have defined the following sprints?:$/ do |table|
   @project.versions.delete_all
   table.hashes.each do |version|
-    version['project_id'] = @project.id
+
+    #need to get current project defined in the table FIXME: (pa sharing) check this
+    version['project_id'] = get_project((version['project_id']||'ecookbook')).id
+
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      if version[date_attr] == 'today'
-        version[date_attr] = Date.today.strftime("%Y-%m-%d")
-      elsif version[date_attr].blank?
-        version[date_attr] = nil
-      elsif version[date_attr].match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)
-        # we're OK as-is
-      elsif version[date_attr].match(/^(\d+)\.(year|month|week|day|hour|minute|second)(s?)\.(ago|from_now)$/)
-        version[date_attr] = eval(version[date_attr]).strftime("%Y-%m-%d")
-      else
-        raise "Unexpected date value '#{version[date_attr]}'"
-      end
+      version[date_attr] = Chronic.parse(version[date_attr]).strftime("%Y-%m-%d")
     end
-    RbSprint.create! version
+
+    version['sharing'] = 'none' if version['sharing'].nil?
+    status = version.delete('status')
+
+    sprint = RbSprint.create! version
+    sprint.update_attribute(:status, 'closed') if status == 'closed'
   end
 end
 
@@ -200,11 +290,14 @@ Given /^I have the following issue statuses available:$/ do |table|
 end
 
 Given /^I have made the following task mutations:$/ do |table|
-  days = @sprint.days(:all).collect{|d| Time.utc(d.year, d.month, d.day)}
-
-  table.hashes.each_with_index do |mutation, no|
-    task = RbTask.find(:first, :conditions => ['subject = ?', mutation.delete('task')])
+  table.hashes.each do |mutation|
+    mutation.delete_if{|k, v| v.to_s.strip == '' }
+    task = RbTask.find_by_subject(mutation.delete('task'))
     task.should_not be_nil
+
+    set_now(mutation.delete('day'), :msg => task.subject, :sprint => current_sprint)
+    Time.now.should be >= task.created_on
+
     task.init_journal(User.current)
 
     status_name = mutation.delete('status').to_s
@@ -218,18 +311,9 @@ Given /^I have made the following task mutations:$/ do |table|
 
     remaining = mutation.delete('remaining')
 
-    mutated = days[mutation.delete('day').to_i - 1]
-    mutated.utc?.should be_true
-
-    mutated.to_date.should be >= task.created_on.to_date
-
-    mutated = task.created_on if (mutated.to_date == task.created_on.to_date)
-    mutated += time_offset("#{(no + 1)*10}m")
-    Timecop.travel(mutated) do
-      task.remaining_hours = remaining.to_f unless remaining.blank?
-      task.status_id = status if status
-      task.save!
-    end
+    task.remaining_hours = remaining.to_f unless remaining.blank?
+    task.status_id = status if status
+    task.save!.should be_true
 
     mutation.should == {}
   end
@@ -241,59 +325,50 @@ end
 
 Given /^I have defined the following stories in the product backlog:$/ do |table|
   table.hashes.each do |story|
-    params = initialize_story_params
+    if story['project_id']
+      project = get_project(story.delete('project_id'))
+    else
+      project = @project
+    end
+    params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
-    params['prev_id'] = story_before(story.delete('position'))
+    params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
+    params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
+    story.delete('release') unless story['release'].nil?
 
     story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbStory.create_and_position params
+    RbStory.create_and_position(params).move_to_bottom
   end
 end
 
-Given /^I have defined the following stories in the following sprints:$/ do |table|
+Given /^I have defined the following stories in the following sprints?:$/ do |table|
   table.hashes.each do |story|
-    params = initialize_story_params
+    if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
+      project = get_project(story.delete('project_id'))
+    else
+      project = @project
+    end
+    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
+    sprint.should_not be_nil
+    params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
-    sprint = RbSprint.find(:first, :conditions => [ "name=?", story.delete('sprint') ])
     params['fixed_version_id'] = sprint.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
-    params['prev_id'] = story_before(story.delete('position'))
+    params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
+    story.delete('release') unless story['release'].nil?
 
-    day_added = story.delete('day')
-    offset = story.delete('offset')
-    created_on = nil
-
-    if day_added
-      if day_added == ''
-        # one day before sprint start
-        before_sprint_start = sprint.sprint_start_date - 1
-        created_on = before_sprint_start.to_time(:utc)
-        created_on.hour.should == 0
-      else
-        created_on = sprint.days(:all)[Integer(day_added)-1].to_time(:utc) + time_offset('1h')
-        created_on.hour.should == 1
-      end
-    elsif offset
-      created_on = sprint.sprint_start_date.to_time(:utc) + time_offset(offset)
-      created_on.hour.should == offset_to_hours(time_offset(offset))
-    end
+    set_now(story.delete('day'), :msg => params['subject'], :sprint => sprint)
 
     story.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    if created_on
-      Timecop.travel(created_on) do
-        RbStory.create_and_position params
-      end
-    else
-      RbStory.create_and_position params
-    end
+    RbStory.create_and_position(params).move_to_bottom
   end
 end
 
@@ -305,8 +380,6 @@ Given /^I have defined the following tasks:$/ do |table|
     params = initialize_task_params(story.id)
     params['subject'] = task.delete('subject')
 
-    offset = time_offset(task.delete('offset'))
-
     status = task.delete('status')
     params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
 
@@ -314,55 +387,68 @@ Given /^I have defined the following tasks:$/ do |table|
     params['estimated_hours'] = hours.to_f unless hours.blank?
     params['remaining_hours'] = hours.to_f unless hours.blank?
 
+    at = task.delete('when').to_s
+    if at =~ /^0-9+/
+      set_now(at, :sprint => story.fixed_version, :msg => params['subject'])
+    else
+      set_now(at, :msg => params['subject'])
+    end
+    Time.now.should be >= story.created_on
+
     task.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    if offset
-      Timecop.travel(story.created_on + offset) do
-        RbTask.create_with_relationships(params, @user.id, @project.id)
-      end
-    else
-      RbTask.create_with_relationships(params, @user.id, @project.id)
-    end
+    task = RbTask.create_with_relationships(params, @user.id, story.project.id)
+    task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
+    task.save! # workaround racktest driver weirdness
+    task
   end
 end
 
 Given /^I have defined the following impediments:$/ do |table|
+  # sharing: an impediment can block more than on issues, each from different projects, when
+  # cross_project_issue_relations is enabled. This is tested not here but using javascript tests.
   table.hashes.each do |impediment|
     sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
-    params = initialize_impediment_params(sprint.id)
-
+    blocks = RbStory.find(:first, :conditions => ['subject in (?)', impediment['blocks'].split(', ')])
+    params = initialize_impediment_params(:project_id => blocks.project_id, :fixed_version_id => sprint.id)
     params['subject'] = impediment.delete('subject')
     params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
-
     impediment.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
-    RbTask.create_with_relationships(params, @user.id, @project.id, true).should_not be_nil
+    RbTask.create_with_relationships(params, @user.id, blocks.project_id, true).should_not be_nil
   end
 
 end
 
 Given /^I am viewing the issues list$/ do
   visit url_for(:controller => 'issues', :action=>'index', :project_id => @project, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar$/ do
   visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project, :only_path=>true)
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
   visit url_for(:controller => 'rb_hooks_render',
                 :action=>'view_issues_sidebar',
+                :project_id => @project,
                 :sprint_id => RbSprint.find_by_name(name).id,
                 :only_path => true)
-  assert_page_loaded(page)
+  verify_request_status(200)
+end
+
+Given /^I am viewing the issue named "([^"]*)"$/ do |name|
+  issue = Issue.find_by_subject(name)
+  visit url_for(:controller => 'issues', :action=>'show', :id => issue.id, :project_id => @project, :only_path=>true)
+  verify_request_status(200)
 end
 
 Given /^I have selected card label stock (.+)$/ do |stock|
@@ -405,7 +491,7 @@ end
 
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
-  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
+  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
   show_table("Task hours", header, data)
 end
 
@@ -416,14 +502,13 @@ Given /^I have changed the sprint start date to (.*)$/ do |date|
     when 'tomorrow'
       date = (Date.today + 1).to_time
     else
-      raise "Unsupported date '#{date}'"
+      date = Date.parse(date)
   end
-  @sprint.created_on = date
-  @sprint.save!
+  current_sprint.sprint_start_date = date
+  current_sprint(:keep).save!
 end
 
 Given /^I have configured backlogs plugin to include Saturday and Sunday in burndown$/ do
-  Rails.cache.clear
   Backlogs.setting[:include_sat_and_sun] = true
 end
 
@@ -447,13 +532,13 @@ Given /^I am logging time for task (.+)$/ do |subject|
   issue = Issue.find_by_subject(subject)
   visit "/issues/#{issue.id}/time_entries"
   click_link('Log time')
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I am viewing log time for the (.*) project$/ do |project_id|
   visit "/projects/#{project_id}/time_entries"
   click_link('Log time')
-  assert_page_loaded(page)
+  verify_request_status(200)
 end
 
 Given /^I set the hours spent to (\d+)$/ do |arg1|
@@ -467,7 +552,7 @@ end
 Given /^I am duplicating (.+) to (.+) for (.+)$/ do |story_old, story_new, sprint_name|
   issue = Issue.find_by_subject(story_old)
   visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
-  assert_page_loaded(page)
+  verify_request_status(200)
   fill_in 'issue_subject', :with => story_new
   page.select(sprint_name, :from => "issue_fixed_version_id")
 end
@@ -482,5 +567,46 @@ Given /^I choose to copy (none|open|all) tasks$/ do |copy_option|
     field_id = page.find(:xpath, '//input[starts-with(@id,"copy_tasks_all")]')['id']
     choose(field_id)
   end
+end
+
+Given /^I have defined the following projects:$/ do |table|
+  table.hashes.each do |project|
+    name = project.delete('name')
+    project.should == {}
+    pr = Project.create! :identifier => name, :name => name
+  end
+end
+
+Given /^the (.*) project is subproject of the (.*) project$/ do |arg1, arg2|
+  sub = Project.find(arg1)
+  parent = Project.find(arg2)
+  sub.set_parent! parent
+end
+
+Given /^sharing is (.*)enabled$/ do |neg|
+  Backlogs.setting[:sharing_enabled] = !!(neg=='')
+end
+
+Given /^the project selected not to include subprojects in the product backlog$/ do
+  settings = @project.rb_project_settings
+  settings.show_stories_from_subprojects = false
+  settings.save
+end
+
+Given /cross_project_issue_relations is (enabled|disabled)/ do | enabled |
+  Setting[:cross_project_issue_relations] = enabled=='enabled'?1:0
+end
+
+Given /^I have defined the following releases:$/ do |table|
+  RbRelease.delete_all
+  table.hashes.each do |release|
+    release['project_id'] = get_project((release.delete('project')||'ecookbook')).id
+    RbRelease.create! release
+  end
+end
+
+Given /^I view the release page$/ do
+  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
+  click_link("Releases")
 end
 

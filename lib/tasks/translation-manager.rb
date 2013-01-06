@@ -5,6 +5,20 @@ require 'yaml'
 require 'raspell'
 require 'iconv'
 
+platform = `rvm-prompt`
+if platform == ''
+  puts 'Could not detect platform'
+  exit
+end
+
+m = platform.match(/ruby-([0-9]\.[0-9]).*@(.*)/)
+if m.nil?
+  puts "Unexpected platform: #{platform}"
+  exit
+end
+
+HOSTAPP = "#{m[2]}-#{m[1]}"
+
 $jargon = %w{
   backlog
   backlogs
@@ -70,6 +84,11 @@ class Hash
 end
 
 webdir = dir('www')
+Dir.chdir(webdir)
+puts "Updating website"
+puts `git pull`
+
+Dir.chdir(dir('redmine_backlogs'))
 webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
 translations = dir('redmine_backlogs/config/locales')
 
@@ -138,7 +157,7 @@ def translated(l, s)
 end
 
 def name(t)
-  return YAML::load_file("#{dir('redmine/config/locales')}/#{t}.yml")[t]['general_lang_name']
+  return YAML::load_file("#{dir("#{HOSTAPP}/config/locales")}/#{t}.yml")[t]['general_lang_name']
 end
 
 translation.keys.sort.each {|t|
@@ -185,10 +204,15 @@ translation.keys.sort.each {|t|
       webpage.write("|" + row.join("|") + "|\n")
     end
 
-    webpage.write("\n")
+    locale_hash = {t => nt}.each_pair{|key,value| [key, value.each_pair {|key,value| [key, value.force_encoding("UTF-8")] }]}
+    File.open("#{translations}/#{t}.yml", 'w') { |out| out.write(locale_hash.to_yaml) }
 
-    File.open("#{translations}/#{t}.yml", 'w') do |out|
-      out.write({t => nt}.to_yaml)
-    end
+    webpage.write("\n")
   }
 }
+
+Dir.chdir(webdir)
+puts "Updating website"
+puts `git add .`
+puts `git commit -m 'Translations updated'`
+puts `git push`

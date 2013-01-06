@@ -1,4 +1,6 @@
 <div class="box tabular">
+
+<% rb_labelled_fields_for :release, @release do |f| %>
   <p>
     <%= f.text_field :name, :required => true %>
   </p>
@@ -16,4 +18,11 @@
       (<%= l(:current_open_story_points) %> <%= backlog_points %>)
     <% end %>
   </p>
+  <p>
+    <%= f.select :sharing,
+        @release.allowed_sharings.collect {|v| [
+          format_sharing(v),
+          v]} %>
+  </p>
+<% end %>
 </div>

@@ -4,7 +4,7 @@
   projs = Set.new()
   roles_projs = User.current.projects_by_role
   roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
-  RAILS_DEFAULT_LOGGER.info "in my project"
+  Rails.logger.info "in my project"
   tracker = Tracker.find_by_id(RbTask.tracker)
   statuses = tracker.issue_statuses
  -%>

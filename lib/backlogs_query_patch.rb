@@ -24,6 +24,7 @@ module Backlogs
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
         base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
         base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
+        base.add_available_column(QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true))
 
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
@@ -38,13 +39,26 @@ module Backlogs
           backlogs_filters = { }
         else
           backlogs_filters = {
+            # mother of *&@&^*@^*#.... order "20" is a magical constant in RM2.2 which means "I'm a custom field". What. The. Fuck.
             "backlogs_issue_type" => {  :type => :list,
+                                        :name => l(:field_backlogs_issue_type),
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 20 }
+                                        :order => 21 },
+            "story_points" => { :type => :float,
+                                :name => l(:field_story_points),
+                                :order => 22 }
                              }
         end
 
-        return @available_filters.merge(backlogs_filters)
+        if project
+          backlogs_filters["release_id"] = {
+            :type => :list_optional,
+            :name => l(:field_release),
+            :values => RbRelease.find(:all, :conditions => ["project_id IN (?)", project], :order => 'name ASC').collect { |d| [d.name, d.id.to_s]},
+            :order => 21
+          }
+        end
+        @available_filters = @available_filters.merge(backlogs_filters)
       end
 
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)

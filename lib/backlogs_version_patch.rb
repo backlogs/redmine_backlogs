@@ -9,7 +9,11 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        include Backlogs::ActiveRecord
+        has_one :sprint_burndown, :class_name => RbSprintBurndown, :dependent => :destroy
+
+        after_save :clear_burndown
+
+        include Backlogs::ActiveRecord::Attributes
       end
     end
 
@@ -17,8 +21,22 @@ module Backlogs
     end
 
     module InstanceMethods
+      def clear_burndown
+        self.burndown.touch!
+      end
+
+      # load on demand
       def burndown
-        return RbSprint.find_by_id(self.id).burndown
+        self.sprint_burndown = self.create_sprint_burndown(:version_id => self.id) unless self.new_record? || self.sprint_burndown
+        return self.sprint_burndown
+      end
+
+      def days
+        return nil unless self.sprint_start_date && self.effective_date
+        (self.sprint_start_date - 1 .. self.effective_date).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || ![0,6].include?(d.wday)}
+      end
+      def has_burndown?
+        return (self.days || []).size != 0
       end
 
     end
