@@ -28,6 +28,7 @@ Feature: Release management
         | Story A | Sprint 001 | Rel 1   | 2 |
         | Story B | Sprint 002 | Rel 1   | 3 |
         | Story C | Sprint 003 | Rel 2   | 5 |
+        | Story D | Sprint 003 |         | 5 |
 
   Scenario: View the release page
     Given I view the release page
@@ -106,8 +107,11 @@ Feature: Release management
     Given I am viewing the master backlog
      Then I should see the product backlog
       And I should see 1 stories in the product backlog
-      And I should see 3 sprint backlogs
-     Then I should see the release backlog of Rel 1
+      And I should see the release backlog of Rel 1
       And I should see 2 stories in the release backlog of Rel 1
-     Then I should see the release backlog of Rel 2
+      And I should see the release backlog of Rel 2
       And I should see 2 stories in the release backlog of Rel 2
+      And I should see 3 sprint backlogs
+      And I should see 1 stories in the sprint backlog of Sprint 001
+      And I should see 1 stories in the sprint backlog of Sprint 002
+      And I should see 2 stories in the sprint backlog of Sprint 003

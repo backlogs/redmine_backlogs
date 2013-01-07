@@ -45,13 +45,11 @@ class RbStory < Issue
     if Backlogs.settings[:sharing_enabled]
       sprint_condition = ["
         tracker_id in (?)
-        and release_id is NULL
         and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
     else
       sprint_condition = ["
         project_id = ?
         and tracker_id in (?)
-        and release_id is NULL
         and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
     end
     release_condition = ["
