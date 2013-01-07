@@ -166,7 +166,7 @@ module Backlogs
       end
 
       def assignable_releases
-        RbRelease.find(:all, :conditions => {:project_id => project.id} )
+        RbRelease.find(:all, :conditions => {:project_id => project.id} ) #FIXME: shared releases
       end
 
       def release_id=(rid)

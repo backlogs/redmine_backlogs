@@ -179,6 +179,9 @@ module BacklogsPlugin
 
       def view_issues_bulk_edit_details_bottom(context={ })
         project = context[:project]
+        return if project.nil? #hmm, this might happen when issues of different projects are bulk-edited
+#what we could do is to intersect issues.each{ issue.assignable_releases }
+        return unless project.releases && project.releases.size > 0 #no releases in this project. #FIXME: sharing releases
         snippet = ''
         snippet += "<p>
           <label for='issue_release_id'>#{ l(:field_release)}</label>
