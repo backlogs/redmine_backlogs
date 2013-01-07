@@ -1,22 +1,14 @@
 ---
 language: ruby
 release: 0.9.32
-#services:
-#- mysql
-#- postgresql
+services:
+- postgresql
 rvm:
 - 1.9.3
-#- 1.8.7
 env:
-#- REDMINE_VER=2.0.4 DB=mysql
-#- REDMINE_VER=2.1.5 DB=mysql
-#- REDMINE_VER=2.2.0 DB=mysql
-- REDMINE_VER=2.0.4 DB=sqlite
-- REDMINE_VER=2.1.5 DB=sqlite
-- REDMINE_VER=2.2.0 DB=sqlite
-#- REDMINE_VER=2.0.4 DB=postgresql
-#- REDMINE_VER=2.1.5 DB=postgresql
-#- REDMINE_VER=2.2.0 DB=postgresql
+- REDMINE_VER=2.0.4 DB=postgresql
+- REDMINE_VER=2.1.5 DB=postgresql
+- REDMINE_VER=2.2.0 DB=postgresql
 matrix:
   allow_failures:
   - rvm: jruby-18mode
@@ -29,13 +21,13 @@ matrix:
   - rvm: 1.8.7
     env: REDMINE_VER=2.2.0 DB=mysql
 install: echo skip bundle install
-#before_script:
-#- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;'
-#  -U postgres; fi"
-#- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U
-#  postgres; fi"
-#- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;';
-#  fi"
+before_script:
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;'
+  -U postgres; fi"
+- sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'create database backlogs;' -U
+  postgres; fi"
+- sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS backlogs;';
+  fi"
 script:
 - export WORKSPACE=`pwd`/workspace
 - export PATH_TO_BACKLOGS=`pwd`
@@ -50,7 +42,8 @@ script:
 - bash -x ./redmine_install.sh -t features/duplicate_story.feature
 - bash -x ./redmine_install.sh -t features/extended_timelog.feature
 - bash -x ./redmine_install.sh -t features/product_owner.feature
-- bash -x ./redmine_install.sh -t features/release.feature
+- bash -x ./redmine_install.sh -t features/release3.feature
+- bash -x ./redmine_install.sh -t features/release_burndown.feature
 - bash -x ./redmine_install.sh -t features/routes.feature
 - bash -x ./redmine_install.sh -t features/scrum_master.feature
 - bash -x ./redmine_install.sh -t features/settings.feature

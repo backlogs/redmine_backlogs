@@ -12,5 +12,6 @@ class MigrateReleases < ActiveRecord::Migration
   end
 
   def self.down
+    puts "Reverting irreversible migration"
   end
 end
