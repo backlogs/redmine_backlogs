@@ -19,6 +19,8 @@ class AddReleaseTables < ActiveRecord::Migration
 
   def self.down
     drop_table :releases
-    drop_table :release_burndown_days
+    if ActiveRecord::Base.connection.table_exists?('release_burndown_days')
+      drop_table :release_burndown_days
+    end
   end
 end

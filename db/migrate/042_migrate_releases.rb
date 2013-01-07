@@ -7,7 +7,9 @@ class MigrateReleases < ActiveRecord::Migration
     RbRelease.integrate_implicit_stories
     puts "Migration of implicit releases done."
 
-    drop_table :release_burndown_days
+    if ActiveRecord::Base.connection.table_exists?('release_burndown_days')
+      drop_table :release_burndown_days
+    end
     remove_column :releases, :initial_story_points
   end
 
