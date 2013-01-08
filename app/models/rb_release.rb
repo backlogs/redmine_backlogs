@@ -201,6 +201,14 @@ class RbRelease < ActiveRecord::Base
     end
   end
 
+  def shared_to_projects(scope_project)
+    projects = []
+    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
+      projects << _project unless (_project.shared_releases.collect{|v| v.id} & [id]).empty?
+    }
+    projects
+  end
+
   #migrate old date-based releases to relation-based
   def self.integrate_implicit_stories
     unless RbStory.trackers

@@ -39,10 +39,12 @@ class RbMasterBacklogsController < RbApplicationController
 
     if @settings[:sharing_enabled]
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
-      unless @sprint #menu for product backlog
-        projects = @project.projects_in_shared_product_backlog
-      else #menu for sprint
+      if @sprint #menu for sprint
         projects = @sprint.shared_to_projects(@project)
+      elsif @release #menu for release
+        projects = @release.shared_to_projects(@project)
+      else #menu for product backlog
+        projects = @project.projects_in_shared_product_backlog
       end
       #make the submenu or single link
       if !projects.empty?
