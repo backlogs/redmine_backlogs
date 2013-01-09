@@ -1,12 +1,17 @@
 <h3><%= l(:backlogs_sprints) %></h3>
 <%
   require 'set'
-  projs = Set.new()
-  roles_projs = User.current.projects_by_role
-  roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
-  Rails.logger.info "in my project"
-  tracker = Tracker.find_by_id(RbTask.tracker)
-  statuses = tracker.issue_statuses
+  if Backlogs.configured?
+    projs = Set.new()
+    roles_projs = User.current.projects_by_role
+    roles_projs.each_pair{|k,v| v.each{|p| projs.add(p)}}
+    Rails.logger.info "in my project"
+    tracker = Tracker.find_by_id(RbTask.tracker)
+    statuses = tracker.issue_statuses
+  else
+    tracker = nil
+    statuses = []
+  end
  -%>
 <div class="mypage-box">
  <table class="list issues">
@@ -31,8 +36,8 @@
           done = 0
           sprint.stories.each do |story|
             story.tasks.each do |task|
-              next if statuses[task.status_id] == nil # Avoid bug?
-	      if statuses[task.status_id].is_closed?
+              next if statuses[task.status_id].nil? # Avoid bug?
+              if statuses[task.status_id].is_closed?
                 done+=1
               elsif task.status_id == IssueStatus.default.id
                 todo+=1
