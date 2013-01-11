@@ -31,7 +31,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     var sortableOpts = {
       placeholder: 'placeholder',
       distance: 3,
-    //  helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
+      helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
       stop: self.dragStop,
       update: self.dragComplete,
