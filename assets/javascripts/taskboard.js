@@ -81,11 +81,22 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     var status_id = ui.item.find('.meta .status_id').text();
     var user_status = ui.item.find('.meta .user_status').text();
     var tracker_id = ui.item.find('.meta .tracker_id').text();
+    var old_project_id = ui.item.find('.meta .project_id').text();
     RB.$('.ui-sortable').each(function() {
+      var new_project_id = this.getAttribute('-rb-project-id');
       /*
       can drop when:
         RB.constants.task_states.transitions['+c+a ???'][from_state_id][to_state_id] is acceptable
+
+        and target story can accept this task:
+          story and task are same project
+          or task is in a subproject of story? and redmine cross-project relationships are ok
       */
+      // check for project
+      if (new_project_id != old_project_id) {
+        RB.$(this).sortable('disable'); //sharing, restrictive case: only allow same-project story-task relationship
+        return;
+      }
 
       // check for status
       var new_status_id = this.getAttribute('-rb-status-id');
