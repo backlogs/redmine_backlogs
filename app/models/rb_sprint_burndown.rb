@@ -79,7 +79,7 @@ class RbSprintBurndown < ActiveRecord::Base
     # if I use self.version.id I get a "stack level too deep?!
     sprint = self.version # RbSprint.find(self.version_id)
 
-    if !sprint.has_burndown?
+    if sprint.nil? || !sprint.has_burndown?
       @_burndown = nil
     else
       @_burndown = {}

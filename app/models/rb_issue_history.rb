@@ -103,7 +103,7 @@ class RbIssueHistory < ActiveRecord::Base
     }
 
     if ActiveRecord::Base.connection.tables.include?('rb_journals')
-      RbIssueHistory.connection.execute("select * from rb_journals where issue_id=#{issue.id}").sort{|a,b| a['timestamp'] <=> b['timestamp']}.each{|j|
+      RbIssueHistory.connection.select_all("select id, issue_id, property, timestamp, value from rb_journals where issue_id=#{issue.id}").sort{|a,b| a['timestamp'] <=> b['timestamp']}.each{|j|
         j['timestamp'] = Time.parse(j['timestamp']) if j['timestamp'].is_a?(String)
         date = j['timestamp'].to_date
         full_journal[date] ||= {}
