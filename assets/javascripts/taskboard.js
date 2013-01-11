@@ -31,19 +31,19 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     var sortableOpts = {
       placeholder: 'placeholder',
       distance: 3,
-      helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
+    //  helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
       stop: self.dragStop,
-      update: self.dragComplete
+      update: self.dragComplete,
+      revert: true,
+      scroll: true,
+      tolerance: 'intersect'
     };
 
-    tasks_lists.each(function(index){
-      var id = '#' + RB.$(this).attr('id') + ' .list';
-
-      j.find(id).sortable(RB.$.extend({
-        connectWith: id
-        }, sortableOpts));
-    });
+    //initialize the cells (td) as sortable
+    j.find('.story-swimlane .list').sortable(RB.$.extend({
+      connectWith: '.story-swimlane .list'
+      }, sortableOpts));
 
     // Initialize each task in the board
     j.find('.task').each(function(index){
@@ -77,7 +77,31 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStart: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
+    //disable non-droppable cells
+    var status_id = ui.item.find('.meta .status_id').text();
+    var user_status = ui.item.find('.meta .user_status').text();
+    var tracker_id = ui.item.find('.meta .tracker_id').text();
+    RB.$('.ui-sortable').each(function() {
+      /*
+      can drop when:
+        RB.constants.task_states.transitions['+c+a ???'][from_state_id][to_state_id] is acceptable
+      */
+
+      // check for status
+      var new_status_id = this.getAttribute('-rb-status-id');
+      if (new_status_id == status_id) { return; } //allow this to prevent weird behavior if one tries drag into another story but same status.
+
+      var states = RB.constants.task_states['transitions'][tracker_id][user_status][status_id];
+      if (!states) { states = RB.constants.task_states['transitions'][tracker_id][user_status][RB.constants.task_states['transitions'][tracker_id][user_status]['default']]; }
+      if (RB.$.inArray(String(new_status_id), states) < 0) {
+        RB.$(this).sortable('disable'); //workflow does not allow this user to put the issue into this new state.
+        return;
+      }
+
+    });
+    RB.$(this).sortable('refresh'); //let drag-from sortable recalculate its connected containers. Saves us binding to mouseDown.
+
+    if (RB.$.support.noCloneEvent){
       ui.item.addClass("dragging");
     } else {
       // for IE
@@ -87,13 +111,15 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStop: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.removeClass("dragging");
     } else {
       // for IE
       ui.item.draggable('disable');
       ui.item.removeClass("dragging");      
     }
+    //re-enable all cells
+    RB.$(':ui-sortable').sortable('enable');
   },
 
   handleAddNewImpedimentClick: function(event){

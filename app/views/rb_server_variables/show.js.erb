@@ -63,49 +63,11 @@ if (RB.constants == null) {
 <% if @sprint %>
   RB.constants.sprint_id = <%= @sprint.id %>;
   RB.constants.project_id = <%= @sprint.project_id %>;
+  RB.constants.task_states = <%= workflow_transitions(RbTask).to_json.html_safe %>;
 <% end %>
 
 <%
   if @context == 'backlogs'
-    default_status = IssueStatus.default
-    default_status = default_status.id.to_s if default_status
-
-    roles = User.current.roles_for_project(@project)
-    transitions = {:states => {}, :transitions => {} , :default => default_status }
-
-    RbStory.trackers.each {|tracker_id|
-      tracker = Tracker.find(tracker_id)
-      tracker_id = tracker_id.to_s
-
-      transitions[:transitions][tracker_id] = {}
-
-      tracker.issue_statuses.each {|status|
-        status_id = status.id.to_s
-
-        transitions[:states][status_id] = {:name => status.name, :closed => (status.is_closed? ? l(:label_closed_issues) + ' ' : '')}
-
-        [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
-          key = "#{creator ? '+' : '-'}c#{assignee ? '+' : '-'}a"
-
-          transitions[:transitions][tracker_id][key] ||= {}
-
-          begin
-            allowed_statues = status.new_statuses_allowed_to(roles, tracker, creator, assignee)
-          rescue #Workaround in order to support redmine 1.1.3
-            allowed_statues = status.new_statuses_allowed_to(roles, tracker)
-          end
-
-          allowed = allowed_statues.collect{|s| s.id.to_s}
-
-          transitions[:transitions][tracker_id][key][:default] ||= allowed[0]
-
-          allowed.unshift(status_id)
-
-          transitions[:transitions][tracker_id][key][status_id] = allowed.compact.uniq
-        }
-      }
-    }
-
 =begin
  project_versions maps all projects to those versions which can receive the projects issues.
  project_versions are used by the js user interface to determine to which backlogs a dragged story can be dropped to.
@@ -126,6 +88,6 @@ if (RB.constants == null) {
   %>
   RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
-  RB.constants.story_states = <%= transitions.to_json.html_safe %>;
+  RB.constants.story_states = <%= workflow_transitions(RbStory).to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
 <% end %>
