@@ -1,6 +1,6 @@
 ---
 language: ruby
-release: 0.9.32
+release: 0.9.33
 services:
 - mysql
 - postgresql
