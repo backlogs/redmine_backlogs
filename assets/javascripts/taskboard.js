@@ -35,7 +35,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       start: self.dragStart,
       stop: self.dragStop,
       update: self.dragComplete,
-      revert: true,
+      revert: true, //this interferes with capybara test timings. This braindead stupid jquery-ui issues dragStop after all animations are finished, no way to save the drag result while animation is in progress.
       scroll: true,
       tolerance: 'intersect'
     };
@@ -129,8 +129,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       ui.item.draggable('disable');
       ui.item.removeClass("dragging");      
     }
-    //re-enable all cells
-    RB.$(':ui-sortable').sortable('enable');
+    //re-enable all cells deferred so that we can save our drop as early as possible
+    setTimeout(function(){
+      RB.$(':ui-sortable').sortable('enable');
+    }, 10);
   },
 
   handleAddNewImpedimentClick: function(event){
