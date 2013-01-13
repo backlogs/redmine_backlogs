@@ -64,4 +64,7 @@ Feature: Team Member
      When I drag task Task 1 to the state Assigned in the row of Story 2
      Then I should see task Task 1 in the row of story Story 2 in the state Assigned
       And task Task 1 should have the status Assigned
-
+     #negative test: drag into a disabled area (other project)
+     When I drag task Task 1 to the state New in the row of Story 3
+     Then I should see task Task 1 in the row of story Story 2 in the state Assigned
+      And task Task 1 should have the status Assigned
