@@ -121,15 +121,12 @@ RB.Taskboard = RB.Object.create(RB.Model, {
 
     }); //each
 
-    var el = RB.$(e.target).parents('.list'); // .task or .impediment
-    if (!el.length) return; //click elsewhere
-    el.sortable('refresh');
+    el = RB.$(e.target).parents('.list'); // .task or .impediment
+    if (el && el.length) el.sortable('refresh');
   },
   
   dragComplete: function(event, ui) {
-    var isDropTarget = (ui.sender==null); // Handler is triggered for source and target. Thus the need to check.
-
-    if(isDropTarget){
+    if (!ui.sender) { // Handler is triggered for source and target. Thus the need to check.
       ui.item.data('this').saveDragResult();
     }    
   },
@@ -169,7 +166,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
 
   loadColWidthPreference: function(){
     var w = RB.UserPreferences.get('taskboardColWidth');
-    if(w==null){
+    if (!w) { // 0, null, undefined.
       w = this.defaultColWidth;
       RB.UserPreferences.set('taskboardColWidth', w);
     }
@@ -192,7 +189,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   
   updateColWidths: function(){
     var w = parseInt(RB.$("#col_width input").val(), 10);
-    if(w==null || isNaN(w)){
+    if (!w || isNaN(w)) { // 0,null,undefined,NaN.
       w = this.defaultColWidth;
     }
     RB.$("#col_width input").val(w);
