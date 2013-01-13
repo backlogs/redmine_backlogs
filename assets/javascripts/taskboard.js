@@ -21,6 +21,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
+    //initialize mouse handling for drop handling
+    j.bind('mousedown.taskboard', function(e) { return self.onMouseDown(e); });
+    j.bind('mouseup.taskboard', function(e) { return self.onMouseUp(e); });
+
     // Initialize task lists, restricting drop to the story
     var tasks_lists =j.find('.story-swimlane');
     if (!tasks_lists || !tasks_lists.length) {
@@ -34,10 +38,9 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
       stop: self.dragStop,
-      update: self.dragComplete,
-      revert: true, //this interferes with capybara test timings. This braindead stupid jquery-ui issues dragStop after all animations are finished, no way to save the drag result while animation is in progress.
-      scroll: true,
-      tolerance: 'intersect'
+      update: self.dragComplete
+      //revert: true, //this interferes with capybara test timings. This braindead stupid jquery-ui issues dragStop after all animations are finished, no way to save the drag result while animation is in progress.
+      //scroll: true
     };
 
     //initialize the cells (td) as sortable
@@ -68,6 +71,57 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
   },
   
+  onMouseUp: function(e) {
+      //re-enable all cells deferred
+      setTimeout(function(){
+        RB.$(':ui-sortable').sortable('enable');
+      }, 10);
+  },
+  /**
+   * can drop when:
+   *  RB.constants.task_states.transitions['+c+a ???'][from_state_id][to_state_id] is acceptable
+   *
+   *  and target story can accept this task:
+   *    story and task are same project
+   *    or task is in a subproject of story? and redmine cross-project relationships are ok
+   */
+  onMouseDown: function(e) {
+    // find the dragged target
+    var el = RB.$(e.target).parents('.model.issue'); // .task or .impediment
+    if (!el.length) return; //click elsewhere
+
+    var status_id = el.find('.meta .status_id').text();
+    var user_status = el.find('.meta .user_status').text();
+    var tracker_id = el.find('.meta .tracker_id').text();
+    var old_project_id = el.find('.meta .project_id').text();
+
+    //disable non-droppable cells
+    RB.$('.ui-sortable').each(function() {
+      var new_project_id = this.getAttribute('-rb-project-id');
+      // check for project
+      //sharing, restrictive case: only allow same-project story-task relationship
+      if (new_project_id != old_project_id) {
+        RB.$(this).sortable('disable');
+        return;
+      }
+
+      // check for status
+      var new_status_id = this.getAttribute('-rb-status-id');
+      // allow dragging to same status to prevent weird behavior
+      // if one tries drag into another story but same status.
+      if (new_status_id == status_id) { return; }
+
+      var states = RB.constants.task_states['transitions'][tracker_id][user_status][status_id];
+      if (!states) { states = RB.constants.task_states['transitions'][tracker_id][user_status][RB.constants.task_states['transitions'][tracker_id][user_status]['default']]; }
+      if (RB.$.inArray(String(new_status_id), states) < 0) {
+        //workflow does not allow this user to put the issue into this new state.
+        RB.$(this).sortable('disable');
+        return;
+      }
+
+    }); //each
+  },
+  
   dragComplete: function(event, ui) {
     var isDropTarget = (ui.sender==null); // Handler is triggered for source and target. Thus the need to check.
 
@@ -75,43 +129,8 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       ui.item.data('this').saveDragResult();
     }    
   },
-  
+
   dragStart: function(event, ui){ 
-    //disable non-droppable cells
-    var status_id = ui.item.find('.meta .status_id').text();
-    var user_status = ui.item.find('.meta .user_status').text();
-    var tracker_id = ui.item.find('.meta .tracker_id').text();
-    var old_project_id = ui.item.find('.meta .project_id').text();
-    RB.$('.ui-sortable').each(function() {
-      var new_project_id = this.getAttribute('-rb-project-id');
-      /*
-      can drop when:
-        RB.constants.task_states.transitions['+c+a ???'][from_state_id][to_state_id] is acceptable
-
-        and target story can accept this task:
-          story and task are same project
-          or task is in a subproject of story? and redmine cross-project relationships are ok
-      */
-      // check for project
-      if (new_project_id != old_project_id) {
-        RB.$(this).sortable('disable'); //sharing, restrictive case: only allow same-project story-task relationship
-        return;
-      }
-
-      // check for status
-      var new_status_id = this.getAttribute('-rb-status-id');
-      if (new_status_id == status_id) { return; } //allow this to prevent weird behavior if one tries drag into another story but same status.
-
-      var states = RB.constants.task_states['transitions'][tracker_id][user_status][status_id];
-      if (!states) { states = RB.constants.task_states['transitions'][tracker_id][user_status][RB.constants.task_states['transitions'][tracker_id][user_status]['default']]; }
-      if (RB.$.inArray(String(new_status_id), states) < 0) {
-        RB.$(this).sortable('disable'); //workflow does not allow this user to put the issue into this new state.
-        return;
-      }
-
-    });
-    RB.$(this).sortable('refresh'); //let drag-from sortable recalculate its connected containers. Saves us binding to mouseDown.
-
     if (RB.$.support.noCloneEvent){
       ui.item.addClass("dragging");
     } else {
@@ -129,10 +148,6 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       ui.item.draggable('disable');
       ui.item.removeClass("dragging");      
     }
-    //re-enable all cells deferred so that we can save our drop as early as possible
-    setTimeout(function(){
-      RB.$(':ui-sortable').sortable('enable');
-    }, 10);
   },
 
   handleAddNewImpedimentClick: function(event){
