@@ -37,7 +37,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       distance: 3,
       helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
-      stop: self.dragStop,
+      stop: function(e, ui) {return self.dragStop(e, ui);},
       update: self.dragComplete
       //revert: true, //this interferes with capybara test timings. This braindead stupid jquery-ui issues dragStop after all animations are finished, no way to save the drag result while animation is in progress.
       //scroll: true
@@ -120,6 +120,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       }
 
     }); //each
+
+    var el = RB.$(e.target).parents('.list'); // .task or .impediment
+    if (!el.length) return; //click elsewhere
+    el.sortable('refresh');
   },
   
   dragComplete: function(event, ui) {
@@ -141,6 +145,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStop: function(event, ui){ 
+    this.onMouseUp(event);
     if (RB.$.support.noCloneEvent){
       ui.item.removeClass("dragging");
     } else {
