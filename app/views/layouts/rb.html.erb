@@ -26,7 +26,7 @@
 .w-rb-header-collapsed { height:18px; overflow:hidden; }
 </style>
 <script type="text/javascript">
-RB.$(document).ready(function(){
+RB.$(function(){
   RB.$('#usability-compat-wrapper').bind('dblclick', function(e,u){
     RB.$('#usability-compat-wrapper').toggleClass('w-rb-header-collapsed');
   });
@@ -58,11 +58,11 @@ RB.$(document).ready(function(){
         </label>
         <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
         <% end %>
-        <%= render_project_jump_box %>
+        <%= render_backlog_project_jump_box %>
     </div>
     <% end %>
 
-    <h1><%= page_header_title %></h1>
+    <h1><%= page_header_title %>&nbsp;<%= breadcrumb_separator %><%= yield :breadcrumbs -%></h1>
 
     <% if display_main_menu?(@project) %>
     <div id="main-menu">
@@ -73,13 +73,15 @@ RB.$(document).ready(function(){
 </div>
 <% end %>
 
-  <div id="toolbar">
+  <div id="toolbar" class="rb-toolbar">
+    <% unless Backlogs.setting[:show_redmine_std_header] %>
     <div class="breadcrumbs">
       <%= render_backlog_project_jump_box %>
       <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
       <%= breadcrumb_separator %>
       <%= yield :breadcrumbs -%>
     </div>
+    <% end %>
     <div class="userselect">
       <%= yield :view_specific_users -%>
     </div>
@@ -87,7 +89,7 @@ RB.$(document).ready(function(){
       <%= yield :view_specific_links -%>
     </div>
   </div>
-  <div id="main">
+  <div id="main" class="rb-main">
     <%= yield :main %>
   </div>
   <div id="helpers">
