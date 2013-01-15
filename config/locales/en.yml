@@ -45,6 +45,7 @@ en:
   backlogs_burndown_print_height: Burndown print height
   backlogs_auto_assign_task: Auto assign task to current user
   backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
+  backlogs_show_redmine_std_header: Show redmine header in backlogs
   button_edit_wiki: Edit wiki page
   comma_delimited_numbers: Comma delimited numbers
   current_open_story_points: "Current open story points:"

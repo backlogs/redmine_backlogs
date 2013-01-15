@@ -1,8 +1,21 @@
-body
+/*body
 {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: right bottom;
+}*/
+#main {
+  margin: 0;
+}
+#taskboard, #taskboard table {
+  background-color: white;
+  color: black;
+}
+#taskboard .task {
+  color: black; 
+}
+#taskboard .issue .subject {
+  white-space: normal;
 }
 
 #assigned_to_id_options{
@@ -165,7 +178,7 @@ See RB.Taskboard.initialize()
 }
 
 /* item styles used by .task and .impediment */
-.issue, .placeholder{
+#taskboard .issue, #taskboard .placeholder{
   background-color:#CCCCCC;
   background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#AAA));
   background: -moz-linear-gradient(top, #E0E0E0, #AAA);
@@ -180,13 +193,14 @@ See RB.Taskboard.initialize()
   padding:5px;
   position:relative;
   width:85px;
+  line-height: 12px;
 }
-.issue{
+#taskboard .issue{
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
   -webkit-box-shadow: 2px 2px 2px #CCCCCC;
   box-shadow: 2px 2px 2px #CCCCCC;
 }
-.placeholder{
+#taskboard .placeholder{
   background-color:#FFFF00;
   border:1px dashed #333300;
   height:78px;

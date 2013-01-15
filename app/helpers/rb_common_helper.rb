@@ -32,7 +32,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def breadcrumb_separator
-    "<span class='separator'>&gt;</span>".html_safe
+    "<span class='separator'>&raquo;</span>".html_safe
   end
 
   def description_or_empty(story)
