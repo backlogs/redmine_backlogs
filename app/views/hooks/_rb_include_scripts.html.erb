@@ -1,10 +1,14 @@
 <%= stylesheet_link_tag 'jquery/jquery.jqplot.min.css', :plugin => 'redmine_backlogs' %>
 
-<%= if ! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || (Redmine::VERSION::MAJOR > 2)
+<%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || 
+          (Redmine::VERSION::MAJOR > 2)
+       ) || (controller.is_a? RbApplicationController)
       javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs' 
     end
 %>
-<%= if ! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || (Redmine::VERSION::MAJOR > 2)
+<%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || 
+          (Redmine::VERSION::MAJOR > 2)
+       ) || (controller.is_a? RbApplicationController)
       javascript_include_tag 'jquery/jquery-ui-1.8.16.custom.min.js', :plugin => 'redmine_backlogs'
     end
 %>
