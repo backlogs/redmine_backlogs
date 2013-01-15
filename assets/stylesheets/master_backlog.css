@@ -107,6 +107,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   position:relative;
   left:7px;
   top:7px;
+  padding: 0;
 }
 
 #backlogs_container .header .menu .items{

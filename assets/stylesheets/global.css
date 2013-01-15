@@ -1,13 +1,16 @@
 /* GLOBAL */
 body{
+  background: none;
   background-color:#FFFFFF;
-  font-family:Verdana, Arial, sans-serif;
-  font-size:12px;
   height:100%;
   margin:0;
   width:100%;
 }
-a{
+.rb-toolbar, .rb-main {
+  font-family:Verdana, Arial, sans-serif;
+  font-size:12px;
+}
+a, a:link, a:visited {
   color:#CC0000;
   text-decoration:none;
 }
