@@ -8,21 +8,80 @@
 <%= csrf_meta_tag %>
 <%= favicon %>
 
+<% if Backlogs.setting[:show_redmine_std_header] %>
+<%= stylesheet_link_tag 'application', :media => 'all' %>
+<%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
+<% end %>
+
 <%= call_hook :view_layouts_base_html_head %>
 
 <%= stylesheet_link_tag 'global.css', 'jquery/jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
 <%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
 <%= yield :head_tags -%>
+
+<% if Backlogs.setting[:show_redmine_std_header] %>
+<style type="text/css">
+#usability-compat-wrapper {font-size:12px}
+.w-rb-header-collapsed { height:18px; overflow:hidden; }
+</style>
+<script type="text/javascript">
+RB.$(function(){
+  RB.$('#usability-compat-wrapper').bind('dblclick', function(e,u){
+    RB.$('#usability-compat-wrapper').toggleClass('w-rb-header-collapsed');
+  });
+});
+</script>
+<% end %>
 </head>
 <body>
-  <div id="toolbar">
+<% if Backlogs.setting[:show_redmine_std_header] %>
+<div id="usability-compat-wrapper">
+<div id="top-menu" title="Doubleclick to collapse">
+    <div id="account">
+        <%= render_menu :account_menu -%>
+    </div>
+    <%= content_tag(
+           'div',
+           "#{l(:label_logged_as)} #{link_to_user(User.current, :format => :username)}".html_safe,
+           :id => 'loggedas') if User.current.logged? %>
+    <%= render_menu :top_menu if User.current.logged? || !Setting.login_required? -%>
+</div>
+
+<div id="header">
+    <% if User.current.logged? || !Setting.login_required? %>
+    <div id="quick-search">
+        <% form_tag({:controller => 'search', :action => 'index', :id => @project}, :method => :get ) do %>
+        <%= hidden_field_tag(controller.default_search_scope, 1, :id => nil) if controller.default_search_scope %>
+        <label for='q'>
+          <%= link_to l(:label_search), {:controller => 'search', :action => 'index', :id => @project}, :accesskey => accesskey(:search) %>:
+        </label>
+        <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
+        <% end %>
+        <%= render_backlog_project_jump_box %>
+    </div>
+    <% end %>
+
+    <h1><%= page_header_title %>&nbsp;<%= breadcrumb_separator %><%= yield :breadcrumbs -%></h1>
+
+    <% if display_main_menu?(@project) %>
+    <div id="main-menu">
+        <%= render_main_menu(@project) %>
+    </div>
+    <% end %>
+</div>
+</div>
+<% end %>
+
+  <div id="toolbar" class="rb-toolbar">
+    <% unless Backlogs.setting[:show_redmine_std_header] %>
     <div class="breadcrumbs">
       <%= render_backlog_project_jump_box %>
       <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
       <%= breadcrumb_separator %>
       <%= yield :breadcrumbs -%>
     </div>
+    <% end %>
     <div class="userselect">
       <%= yield :view_specific_users -%>
     </div>
@@ -30,7 +89,7 @@
       <%= yield :view_specific_links -%>
     </div>
   </div>
-  <div id="main">
+  <div id="main" class="rb-main">
     <%= yield :main %>
   </div>
   <div id="helpers">

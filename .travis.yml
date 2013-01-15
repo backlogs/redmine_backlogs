@@ -1,14 +1,22 @@
 ---
 language: ruby
-release: 0.9.32
+release: 0.9.33
 services:
+- mysql
 - postgresql
 rvm:
 - 1.9.3
+- 1.8.7
 env:
+- REDMINE_VER=2.0.4 DB=mysql
+- REDMINE_VER=2.1.6 DB=mysql
+- REDMINE_VER=2.2.1 DB=mysql
+- REDMINE_VER=2.0.4 DB=sqlite
+- REDMINE_VER=2.1.6 DB=sqlite
+- REDMINE_VER=2.2.1 DB=sqlite
 - REDMINE_VER=2.0.4 DB=postgresql
-- REDMINE_VER=2.1.5 DB=postgresql
-- REDMINE_VER=2.2.0 DB=postgresql
+- REDMINE_VER=2.1.6 DB=postgresql
+- REDMINE_VER=2.2.1 DB=postgresql
 matrix:
   allow_failures:
   - rvm: jruby-18mode
@@ -17,9 +25,9 @@ matrix:
   - rvm: 1.8.7
     env: REDMINE_VER=2.0.4 DB=mysql
   - rvm: 1.8.7
-    env: REDMINE_VER=2.1.5 DB=mysql
+    env: REDMINE_VER=2.1.6 DB=mysql
   - rvm: 1.8.7
-    env: REDMINE_VER=2.2.0 DB=mysql
+    env: REDMINE_VER=2.2.1 DB=mysql
 install: echo skip bundle install
 before_script:
 - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS backlogs;'

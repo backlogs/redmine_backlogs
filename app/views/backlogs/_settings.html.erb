@@ -102,6 +102,12 @@
 	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
 </p>
 
+<p>
+  <%= content_tag(:label, l(:backlogs_show_redmine_std_header)) %>
+  <%= check_box_tag("settings[show_redmine_std_header]", 'enabled',
+      Backlogs.setting[:show_redmine_std_header]) %>
+</p>
+
 </fieldset>
 
 <fieldset>

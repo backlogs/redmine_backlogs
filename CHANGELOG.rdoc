@@ -1,3 +1,20 @@
+== 2013-01-12 v0.9.33
+
+* allow skipping rebuilding history -- do this at your own risk
+* "My page crash", needs testing
+* Merge pull request "Sharing/auto share sprints" from patrickatamaniuk/sharing/auto-share-sprints
+* Merge pull request "story status loosely follows tasks" from patrickatamaniuk/feature/story-status-loosely-follows-tasks
+* avoid using a projects_helper function in settings for redmine 2.2
+* Share new sprints according to setting
+* Merge pull request "Fix burndown settings for redmine in subdirectory" from patrickatamaniuk/bug/cookiepath
+* remove debug code
+* Merge pull request "fix datepicker visibility on editing sprint" from patrickatamaniuk/ui/datepicker
+* Merge pull request "master backlog page relative positioning and css cleanups" from patrickatamaniuk/feature/relativepositioning3
+* clip overlong issue fields in master backlog
+* Ignore deleted sprints ("Upgrade fails on burndown")
+* Merge pull request "fix null constraint on email, ignore group.language" from patrickatamaniuk/anonymizer
+* css: fixes
+
 == 2012-12-26 v0.9.32
 
 * fix "can't convert Hash into Array" can't convert Hash into Array
