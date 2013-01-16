@@ -53,7 +53,8 @@ class RbStory < Issue
         and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
     end
     release_condition = ["
-      tracker_id in (?)
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      and tracker_id in (?)
       and fixed_version_id is NULL
       and release_id in (?)", RbStory.trackers, release_ids]
 
