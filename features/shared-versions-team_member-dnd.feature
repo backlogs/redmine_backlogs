@@ -62,7 +62,9 @@ Feature: Team Member
     Given I am viewing the taskboard for Sprint 001
      Then I should see the taskboard
      When I drag task Task 1 to the state Assigned in the row of Story 2
-     #must fail:
-     Then I should see task Task 1 in the row of story Story 1 in the state New
-      And task Task 1 should have the status New
-
+     Then I should see task Task 1 in the row of story Story 2 in the state Assigned
+      And task Task 1 should have the status Assigned
+     #negative test: drag into a disabled area (other project)
+     When I drag task Task 1 to the state New in the row of Story 3
+     Then I should see task Task 1 in the row of story Story 2 in the state Assigned
+      And task Task 1 should have the status Assigned

@@ -9,6 +9,12 @@ class RbTask < Issue
     return Integer(task_tracker)
   end
 
+  # unify api between story and task. FIXME: remove this when merging to tracker-free-tasks
+  # required for RbServerVariablesHelper.workflow_transitions
+  def self.trackers
+    [self.tracker]
+  end
+
   def self.rb_safe_attributes(params)
     if Issue.const_defined? "SAFE_ATTRIBUTES"
       safe_attributes_names = RbTask::SAFE_ATTRIBUTES
