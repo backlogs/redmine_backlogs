@@ -1,0 +1,13 @@
+Poor mans backlogs integration tester for ubuntu precise 64bit
+
+Basic host preparation:
+1. execute install-pre.sh to install environmental basics and the test environment template on the host system
+
+Setup:
+2. run generate.sh to generate tests from travis matrix.
+
+Testing:
+3. edit generated-tests.sh to suite the needs and run it with 'sudo bash generated-tests.sh'. It will fork of all tests in parallel, so better have ram and cpus. To stop the tests, wait an hour or reboot the host.
+When the test session is running, type <ctrl>-a " to get a list of session windows to choose from.
+
+Watch the logfiles and put the system load on youtube :-)
