@@ -156,7 +156,7 @@ RB.Backlog = RB.Object.create({
 
     //disable product backlog if the dragged story is not in self or descendants
     if (!RB.constants.projects_in_product_backlog[storyProject]) {
-      RB.$('#product_backlog_container .stories').sortable('disable');
+      RB.$('#product_backlog_container.product_backlog .stories').sortable('disable');
     }
   },
 
