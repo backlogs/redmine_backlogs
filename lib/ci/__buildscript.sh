@@ -48,7 +48,7 @@ export PATH=/usr/local/bin:${PATH}
 
 echo "Installing phantomjs"
 cd ${HOME}
-tar -xjf $BINDMOUNTDIR/lib/tasks/ci/phantomjs-1.8.1-linux-x86_64.tar.bz2
+tar -xjf $BINDMOUNTDIR/lib/ci/phantomjs-1.8.1-linux-x86_64.tar.bz2
 ln -s `pwd`/phantomjs-*/bin/phantomjs /usr/bin/phantomjs
 
 export WORKSPACE=${HOME}/workspace
