@@ -9,6 +9,7 @@
   <script type="text/javascript"
           src="<%= url_for(:controller => 'rb_server_variables',
                            :action => 'sprint', :sprint_id => @sprint.id,
+                           :context => 'taskboard',
                            :format => 'js') %>">
   </script>
 <% end %>
@@ -71,7 +72,7 @@
             <%= l(:label_sprint_impediments) %>
       </div></td>
       <%- @statuses.each do |status| %>
-      <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>">
+      <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="impcell_<%= status.id %>" -rb-status-id="<%= status.id %>" -rb-project-id="impediments">
         <%= render :partial => "rb_impediments/impediment", :collection => @sprint.impediments.select{|impediment| impediment.status_id==status.id} %>
       </td>
       <%- end %>
@@ -105,7 +106,7 @@
         </div>
       </td>
       <%- @statuses.each do |status| %>
-      <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>">
+      <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>" -rb-status-id="<%= status.id %>" -rb-project-id="<%= story.project.id %>">
         <%= render :partial => "rb_tasks/task", :collection => story.descendants.select{|task| task.status.id==status.id} %>
       </td>
       <%- end %>

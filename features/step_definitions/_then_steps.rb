@@ -411,6 +411,7 @@ end
 Then /^task (.+?) should have the status (.+)$/ do |task, state|
   state = IssueStatus.find_by_name(state)
   task = RbTask.find_by_subject(task)
+  task.should_not be_nil
   task.status_id.should == state.id
 end
 
