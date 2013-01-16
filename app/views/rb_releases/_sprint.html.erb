@@ -4,7 +4,7 @@
 	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
   <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
 <%
-    issues.sort_by!{|i|i.position} %>
+    issues.sort!{|a,b|a.position <=> b.position} %>
   <table class="list issues">
     <tr>
       <th>#</th>
