@@ -16,6 +16,7 @@ apt-get -y install \
 case $DB in
 	mysql)
 		apt-get -y install mysql-server
+		sed -i -e 's=bind-address.*=skip-networking=' /etc/mysql/my.cnf
 		service mysql start
 		mysql -e 'create database IF NOT EXISTS backlogs;'
 		;;
@@ -37,7 +38,7 @@ case $RVM in
 		apt-get -y install ruby1.9.3 ruby1.9.1-dev
 		;;
 	1.8.7)
-		apt-get -y install ruby1.8 ruby1.8-dev
+		apt-get -y install ruby1.8 ruby1.8-dev rubygems
 		;;
 	*)
 		echo "unknown RVM";exit 1;;

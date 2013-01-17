@@ -15,7 +15,6 @@ data['rvm'].each{|rvm|
     exclude.each{|x|
       do_exclude = true if x['rvm'] == rvm && x['env'] == env
     }
-    do_exclude = true if env.include? "mysql" #not by this environment supported yet
     unless do_exclude
       session="#{rvm}.#{env.sub(' ','_').sub('=','_')}"
       puts "echo '(env BINDMOUNTDIR=${BINDMOUNTDIR} RVM=#{rvm} #{env} ${BUILDER} && echo '\\\\''OK'\\\\'' || echo '\\\\''FAILED'\\\\'') 2>&1 | tee \"log.\$\$.#{session}\"; read a' > \"run.#{session}\""
