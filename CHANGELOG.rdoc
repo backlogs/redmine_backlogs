@@ -1,3 +1,15 @@
+== 2013-01-18 v0.9.34
+
+* Redmine 2.2.1, 2.1.6, 1.4.6 (security releases)
+* Fixed Hudson Conflict, avoid unneccessary loading of js libraries
+* Add <<me>> to task assignee dropdown
+* Backlogs page: fix duplication of story subject when editing
+* Obey workflow on taskboard
+* Re-enable taskboard drag-drop between stories
+* Integrate with redmine menus (optional)
+* Put backlogs main menu before issues so new issue is near issues tab
+* Integration test scripts for home testing
+
 == 2013-01-12 v0.9.33
 
 * allow skipping rebuilding history -- do this at your own risk
