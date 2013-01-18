@@ -113,6 +113,8 @@ en:
   label_release_plural: Releases
   label_release_start_date: Release start date
   label_release_end_date: Release end date
+  label_release_sharing_none: Not shared
+  label_release_sharing_parents: Parents
   label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint

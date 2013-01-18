@@ -125,12 +125,19 @@ if (RB.constants == null) {
         project.open_shared_sprints.collect{|v| v.id.to_s }
       ] if project
     }]
+    project_releases = Hash[Project.visible.find(:all).map{|project|
+      [
+        project.id.to_s,
+        project.releases.open.collect{|v| v.id.to_s } #a release can contain only stories of its own project
+      ] if project
+    }]
 
 #project_self_and_descendants is used by the js ui to determine if a dragged story can be dropped onto the product backlog.
     projects_in_product_backlog = Hash[@project.projects_in_shared_product_backlog.map{|p| [p.id.to_s, true]}]
   %>
   RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
+  RB.constants.project_releases = <%= project_releases.to_json.html_safe %>;
   RB.constants.story_states = <%= transitions.to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
 <% end %>

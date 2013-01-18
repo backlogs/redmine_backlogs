@@ -42,7 +42,7 @@ class RbMasterBacklogsController < RbApplicationController
       if @sprint #menu for sprint
         projects = @sprint.shared_to_projects(@project)
       elsif @release #menu for release
-        projects = @release.shared_to_projects(@project)
+        projects = [@release.project] # a release can be made visible to parent projects, but can contain only stories from its own project
       else #menu for product backlog
         projects = @project.projects_in_shared_product_backlog
       end
