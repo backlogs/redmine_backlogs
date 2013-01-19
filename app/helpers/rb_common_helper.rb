@@ -239,7 +239,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def format_release_sharing(v)
-    RbRelease::RELEASE_SHARINGS.include?(v) ? l("label_release_sharing_#{v}") : "none"
+    RbRelease::RELEASE_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
   end
 
 end

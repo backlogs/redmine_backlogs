@@ -102,7 +102,7 @@ class RbRelease < ActiveRecord::Base
   self.table_name = 'releases'
 
   RELEASE_STATUSES = %w(open closed)
-  RELEASE_SHARINGS = %w(none parents)
+  RELEASE_SHARINGS = %w(none descendants hierarchy tree system)
 
   unloadable
 
@@ -187,7 +187,10 @@ class RbRelease < ActiveRecord::Base
         true
       else
         case s
-        when 'parents'
+        when 'system'
+          # Only admin users can set a systemwide sharing
+          user.admin?
+        when 'hierarchy', 'tree'
           # Only users allowed to manage versions of the root project can
           # set sharing to hierarchy or tree
           project.nil? || user.allowed_to?(:manage_versions, project.root)
@@ -196,6 +199,14 @@ class RbRelease < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def shared_to_projects(scope_project)
+    projects = []
+    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
+      projects << _project unless (_project.shared_releases.collect{|v| v.id} & [id]).empty?
+    }
+    projects
   end
 
   #migrate old date-based releases to relation-based
