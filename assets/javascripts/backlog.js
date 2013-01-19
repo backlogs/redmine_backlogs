@@ -148,6 +148,9 @@ RB.Backlog = RB.Object.create({
     if (!RB.constants.projects_in_product_backlog[storyProject]) {
       RB.$('#product_backlog_container .stories').sortable('disable');
     }
+
+    //get the ui hint up to the header
+    RB.$('.ui-sortable-disabled').parent('.backlog').addClass('rb-sortable-disabled');
   },
 
   mouseUp: function(event) {
@@ -196,6 +199,7 @@ RB.Backlog = RB.Object.create({
   enableAllSortables: function() {
     // enable all backlogs as drop targets
     RB.$('.stories').sortable('enable');
+    RB.$('.rb-sortable-disabled').removeClass('rb-sortable-disabled');
   },
 
   getSprint: function(){
