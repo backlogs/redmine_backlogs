@@ -27,6 +27,9 @@
     -->
     <div class="story_id"><%= impediment.parent_id %></div>
     <div class="status_id"><%= impediment.status_id %></div>
+    <div class="project_id">impediments</div><!-- for drag-drop handling -->
+    <div class="user_status"><%= impediment.author == User.current ? '+' : '-' %>c<%= impediment.assigned_to == User.current ? '+' : '-' %>a</div>
+    <div class="tracker_id"><%= tracker_id_or_empty(impediment) %></div>
     <%= render :partial => "backlogs/model_errors", :object => impediment.errors %>
   </div>
 </div>

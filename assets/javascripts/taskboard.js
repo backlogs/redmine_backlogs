@@ -21,6 +21,10 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
+    //initialize mouse handling for drop handling
+    j.bind('mousedown.taskboard', function(e) { return self.onMouseDown(e); });
+    j.bind('mouseup.taskboard', function(e) { return self.onMouseUp(e); });
+
     // Initialize task lists, restricting drop to the story
     var tasks_lists =j.find('.story-swimlane');
     if (!tasks_lists || !tasks_lists.length) {
@@ -33,17 +37,16 @@ RB.Taskboard = RB.Object.create(RB.Model, {
       distance: 3,
       helper: 'clone', //workaround firefox15+ bug where drag-stop triggers click
       start: self.dragStart,
-      stop: self.dragStop,
+      stop: function(e, ui) {return self.dragStop(e, ui);},
       update: self.dragComplete
+      //revert: true, //this interferes with capybara test timings. This braindead stupid jquery-ui issues dragStop after all animations are finished, no way to save the drag result while animation is in progress.
+      //scroll: true
     };
 
-    tasks_lists.each(function(index){
-      var id = '#' + RB.$(this).attr('id') + ' .list';
-
-      j.find(id).sortable(RB.$.extend({
-        connectWith: id
-        }, sortableOpts));
-    });
+    //initialize the cells (td) as sortable
+    j.find('.story-swimlane .list').sortable(RB.$.extend({
+      connectWith: '.story-swimlane .list'
+      }, sortableOpts));
 
     // Initialize each task in the board
     j.find('.task').each(function(index){
@@ -68,16 +71,68 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
   },
   
-  dragComplete: function(event, ui) {
-    var isDropTarget = (ui.sender==null); // Handler is triggered for source and target. Thus the need to check.
+  onMouseUp: function(e) {
+      //re-enable all cells deferred
+      setTimeout(function(){
+        RB.$(':ui-sortable').sortable('enable');
+      }, 10);
+  },
+  /**
+   * can drop when:
+   *  RB.constants.task_states.transitions['+c+a ???'][from_state_id][to_state_id] is acceptable
+   *
+   *  and target story can accept this task:
+   *    story and task are same project
+   *    or task is in a subproject of story? and redmine cross-project relationships are ok
+   */
+  onMouseDown: function(e) {
+    // find the dragged target
+    var el = RB.$(e.target).parents('.model.issue'); // .task or .impediment
+    if (!el.length) return; //click elsewhere
 
-    if(isDropTarget){
+    var status_id = el.find('.meta .status_id').text();
+    var user_status = el.find('.meta .user_status').text();
+    var tracker_id = el.find('.meta .tracker_id').text();
+    var old_project_id = el.find('.meta .project_id').text();
+
+    //disable non-droppable cells
+    RB.$('.ui-sortable').each(function() {
+      var new_project_id = this.getAttribute('-rb-project-id');
+      // check for project
+      //sharing, restrictive case: only allow same-project story-task relationship
+      if (new_project_id != old_project_id) {
+        RB.$(this).sortable('disable');
+        return;
+      }
+
+      // check for status
+      var new_status_id = this.getAttribute('-rb-status-id');
+      // allow dragging to same status to prevent weird behavior
+      // if one tries drag into another story but same status.
+      if (new_status_id == status_id) { return; }
+
+      var states = RB.constants.task_states['transitions'][tracker_id][user_status][status_id];
+      if (!states) { states = RB.constants.task_states['transitions'][tracker_id][user_status][RB.constants.task_states['transitions'][tracker_id][user_status]['default']]; }
+      if (RB.$.inArray(String(new_status_id), states) < 0) {
+        //workflow does not allow this user to put the issue into this new state.
+        RB.$(this).sortable('disable');
+        return;
+      }
+
+    }); //each
+
+    el = RB.$(e.target).parents('.list'); // .task or .impediment
+    if (el && el.length) el.sortable('refresh');
+  },
+  
+  dragComplete: function(event, ui) {
+    if (!ui.sender) { // Handler is triggered for source and target. Thus the need to check.
       ui.item.data('this').saveDragResult();
     }    
   },
-  
+
   dragStart: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.addClass("dragging");
     } else {
       // for IE
@@ -87,7 +142,8 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   },
   
   dragStop: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
+    this.onMouseUp(event);
+    if (RB.$.support.noCloneEvent){
       ui.item.removeClass("dragging");
     } else {
       // for IE
@@ -110,7 +166,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
 
   loadColWidthPreference: function(){
     var w = RB.UserPreferences.get('taskboardColWidth');
-    if(w==null){
+    if (!w) { // 0, null, undefined.
       w = this.defaultColWidth;
       RB.UserPreferences.set('taskboardColWidth', w);
     }
@@ -133,7 +189,7 @@ RB.Taskboard = RB.Object.create(RB.Model, {
   
   updateColWidths: function(){
     var w = parseInt(RB.$("#col_width input").val(), 10);
-    if(w==null || isNaN(w)){
+    if (!w || isNaN(w)) { // 0,null,undefined,NaN.
       w = this.defaultColWidth;
     }
     RB.$("#col_width input").val(w);

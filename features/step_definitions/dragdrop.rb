@@ -1,17 +1,12 @@
 
 #  sleep is a BAD THING(tm)
-# have_css does not work?
-#  page.should have_css("#story_#{story.id}.saving") #wait for throbber to appear
-#  page.should_not have_css("#story_#{story.id}.saving") #wait for throbber to disappear
-#wait until does not work?
-#  wait_until { page.find(:css, "#story_#{story.id}.saving") }
-#  wait_until { !page.find(:css, "#story_#{story.id}.saving") }
 #
 #check on the ajax request count of jQuery
 #raise Capybara::TimeoutError after some time (default 5s, here 15s, set in support/setup.rb).
 def wait_for_ajax
   wait_until { 
-    page.evaluate_script('RB.$.active') == 0 #jQuery.ajax.active in the next release
+    #wait until all animations are finished AND all ajax requests are finished.
+    page.evaluate_script('RB.$(":animated").length') == 0 && page.evaluate_script('RB.$.active') == 0 #jQuery.ajax.active in the next release
   }
 end
 
