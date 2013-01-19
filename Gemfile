@@ -61,7 +61,15 @@ group :test do
   end
   gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
-  gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
+#do not specify test-unit version to fix conflicts with redmine Gemfile. redmine_install will patch in using Gemfile.local mechanism
+# gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
+#I know we've been there, done that, but it is easier than to track down why bundle install --without test does not work for some people.
+#this way, users can install bl on existing systems, and do not have to deal with bundler behavior
+  testenv_gemfile = File.join(File.dirname(__FILE__), "Gemfile.rb_testenv")
+  if File.exists?(testenv_gemfile) #this is in redmine root dir
+    puts "Loading Gemfile.rb_testenv ..." if $DEBUG # `ruby -d` or `bundle -v`
+    instance_eval File.read(testenv_gemfile)
+  end
   gem "timecop", '~> 0.3.5'
 end
 
