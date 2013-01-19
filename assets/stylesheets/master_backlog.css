@@ -288,7 +288,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   width:100%;
   border-bottom: #AAAAAA 1px solid;
 }
-#backlogs_container .stories .story.closed{
+#backlogs_container .closedbacklog .stories .story{
   cursor:default;
 }
 #backlogs_container .stories .story.saving{
