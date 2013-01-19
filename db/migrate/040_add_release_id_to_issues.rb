@@ -1,6 +1,8 @@
 class AddReleaseIdToIssues < ActiveRecord::Migration
   def self.up
-    add_column :issues, :release_id, :integer
+    unless ActiveRecord::Base.connection.column_exists?(:issues, :release_id)
+      add_column :issues, :release_id, :integer
+    end
   end
   
   def self.down

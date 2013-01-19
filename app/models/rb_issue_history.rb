@@ -298,6 +298,7 @@ class RbIssueHistory < ActiveRecord::Base
       :remaining_hours => _issue.remaining_hours,
       :tracker => RbIssueHistory.issue_type(_issue.tracker_id),
       :sprint => _issue.fixed_version_id,
+      :release => _issue.release_id,
       :status_id => _issue.status_id,
       :status_open => _statuses[_issue.status_id][:open],
       :status_success => _statuses[_issue.status_id][:success],
