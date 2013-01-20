@@ -134,3 +134,21 @@ Then /^the release burndown for release "([^"]*)" should be:$/ do |release, tabl
   end
 end
 
+Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story_name,release_name|
+  release = RbRelease.find_by_name(release_name)
+  story = RbStory.find_by_subject(story_name)
+  found_change = false
+  # Find journal entry containing change to release
+  story.journals.each{|journal|
+    journal.details.each{|jd|
+      next unless jd.property == 'attr' && ['release_id'].include?(jd.prop_key)
+      found_change = true if jd.value.to_i == release.id
+    }
+  }
+  found_change.should be_true
+
+  # Verify Backlogs issue history
+  h = story.history.filter_release([Date.today])
+  h[0][:release].should == release.id
+end
+

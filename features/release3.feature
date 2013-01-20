@@ -90,6 +90,7 @@ Feature: Release management
      When I add story Story 5 to release Rel 1
      Then story Story 5 should belong to release Rel 1
       And release "Rel 1" should have 54 story points
+      And journal for "Story 5" should show change to release "Rel 1"
 
   Scenario: Close a release
     Given I view the release page
