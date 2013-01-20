@@ -5,6 +5,7 @@ please visit http://www.redminebacklogs.net
 
 Travis: [![Build Status](https://secure.travis-ci.org/backlogs/redmine_backlogs.png?branch=master)](http://travis-ci.org/backlogs/redmine_backlogs)
 
+[Code climate](https://codeclimate.com/github/backlogs/redmine_backlogs) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/backlogs/redmine_backlogs)
 
 LICENSE
 -------

@@ -1,3 +1,11 @@
+== 2013-01-20 v0.9.35
+
+* reworked fix for #669 (the infamous test-unit bundle conflict) from inger/master
+* rake task to touch all stories in order to recalculate remaining story points after migration
+* code climate
+* fix mouse pointer for closed stories (draggable) and stories in closed sprints (not draggable)
+* visually hint valid/invalid drops on shared backlog
+
 == 2013-01-18 v0.9.34
 
 * Redmine 2.2.1, 2.1.6, 1.4.6 (security releases)

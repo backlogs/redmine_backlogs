@@ -61,7 +61,7 @@ group :test do
   end
   gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
-  gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9"
+  gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9" and ENV['IN_RBL_TESTENV'] == 'true'
   gem "timecop", '~> 0.3.5'
 end
 

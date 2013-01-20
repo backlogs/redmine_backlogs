@@ -37,6 +37,7 @@ then
 fi
 
 export RAILS_ENV=test
+export IN_RBL_TESTENV=true
 
 case $REDMINE_VER in
   1.4.6)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
@@ -194,8 +195,13 @@ else
   fi
 fi
 
-#ignore redmine-master's test-unit dependency, we need 1.2.3
+# Workarounds for test-unit versions, for Rails 2 - e.g in case we still support Chiliproject.
+# TODO: review if this is only for CP, if so remove this and adjust condition in our Gemfile
+# 20130120 patrick: using test-unit > 1.2.3 has the complete dependency hell going to cucumber.
+# 1) ignore redmine-master's test-unit dependency, we need 1.2.3..
 sed -i -e 's=.*gem ["'\'']test-unit["'\''].*==g' ${PATH_TO_REDMINE}/Gemfile
+# 2) tell out Gemfile that we're testing: so force test-unit 1.2.3 #done globally above by setting IN_RBL_TESTENV=true
+
 # install gems
 mkdir -p vendor/bundle
 bundle install --path vendor/bundle
