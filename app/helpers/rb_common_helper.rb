@@ -71,6 +71,10 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     story.new_record? ? "" : story.id
   end
 
+  def release_or_empty(story)
+    story.release_id.nil? ? "" : RbRelease.find(story.release_id).name
+  end
+
   def sprint_status_id_or_default(sprint)
     sprint.new_record? ? Version::VERSION_STATUSES.first : sprint.status
   end
