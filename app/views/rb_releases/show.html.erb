@@ -18,8 +18,9 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
-  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
-
+  <% if false %><!-- FIXME Disabled for now -->
+    <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
+  <% end %>
   <br />
 
 <!--Visualization of related sprints -->
