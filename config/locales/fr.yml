@@ -79,9 +79,7 @@ fr:
   field_base: ""
   field_backlogs_issue_type: Type de backlog
   field_blocks: Blocks
-  field_initial_story_points: Point de story initiale
   field_name: Nom
-  field_number_of_snapshots: Sauvegarder l'instantané des points
   field_position: Position
   field_priority: Priorité
   field_release_end_date: Date de fin de la release
@@ -121,6 +119,8 @@ fr:
   label_no_start: pas de début
   label_not_prioritized: non priorisés
   label_points_accepted: points acceptés
+  label_points_added: "points added"
+  label_points_backlog: "points backlog"
   label_points_burn_down: Bas
   label_points_burn_up: Haut
   label_points_committed: points engagés
@@ -163,17 +163,13 @@ fr:
   rb_task_cards_tasks_follow_story: Stories suivis par leur tâche
   rb_taskboard_card_order: Ordre d'impression des cartes
   rb_timelog_from_taskboard: Journal depuis le tableau des tâches
-  release_create_snapshot_today: Enregistrer un instantané des points de stories d'aujourd'hui
-  release_update_snapshot_today: Mettre àjour l'instantané des points de stories d'aujourd'hui
-  remaining_story_points: remaining story points
+  remaining_story_points: Remaining story points
   story_description: Description
   story_estimation_hours: Estimation (heures)
   story_points: Points
   story_remaining_hours: Restant à faire (heures)
   story_spent_time: Temps passé
   story_status: Statut
-  today_not_in_release_msg: La date actuelle n'est pas dans l'intervalle des dates
-    de la release. Voulez-vous vraiment sauvegarder un snapshot ?
   today_not_in_release_warning: ! 'Avertissement : la date actuelle n''est dans l''intervalle
     des dates de la release.'
   todo_issue_summary: ! '%{type}: %{summary}'

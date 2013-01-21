@@ -24,6 +24,7 @@ module Backlogs
         base.add_available_column(QueryColumn.new(:velocity_based_estimate))
         base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
         base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
+        base.add_available_column(QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true))
 
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
@@ -49,6 +50,14 @@ module Backlogs
                              }
         end
 
+        if project
+          backlogs_filters["release_id"] = {
+            :type => :list_optional,
+            :name => l(:field_release),
+            :values => RbRelease.find(:all, :conditions => ["project_id IN (?)", project], :order => 'name ASC').collect { |d| [d.name, d.id.to_s]},
+            :order => 21
+          }
+        end
         @available_filters = @available_filters.merge(backlogs_filters)
       end
 

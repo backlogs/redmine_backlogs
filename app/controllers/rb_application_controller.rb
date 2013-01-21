@@ -12,7 +12,7 @@ class RbApplicationController < ApplicationController
     @project = if params[:sprint_id]
                  load_sprint
                  @sprint.project
-               elsif params[:release_id]
+               elsif params[:release_id] && !params[:release_id].empty?
                  load_release
                  @release.project
                elsif params[:project_id]

@@ -1,3 +1,5 @@
+include RbCommonHelper
+
 module BacklogsPlugin
   module Hooks
     class LayoutHook < Redmine::Hook::ViewListener
@@ -84,6 +86,10 @@ module BacklogsPlugin
             vbe = issue.velocity_based_estimate
             snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
 
+            unless issue.release_id.nil?
+              release = RbRelease.find(issue.release_id)
+              snippet += "<tr><th>#{l(:field_release)}</th><td>#{link_to release.name, :controller=>'rb_releases', :action=>'show', :release_id=>release}</td></tr>"
+            end
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
@@ -115,6 +121,12 @@ module BacklogsPlugin
             #snippet += context[:form].label(:story_points)
             snippet += context[:form].text_field(:story_points, :size => 3)
             snippet += '</p>'
+
+            if issue.safe_attribute?('release_id') && issue.assignable_releases.any?
+              snippet += '<p>'
+              snippet += context[:form].select :release_id, release_options_for_select(issue.assignable_releases, issue.release), :include_blank => true 
+              snippet += '</p>'
+            end
 
             if issue.descendants.length != 0 && !issue.new_record?
               snippet += javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'
@@ -163,6 +175,20 @@ module BacklogsPlugin
         project = context[:project]
         return '' unless project.module_enabled?('backlogs')
         return '<script type="text/javascript">$(function(){try{$("#copy_subtasks")[0].checked=false;$($("#copy_subtasks")[0].parentNode).hide();}catch(e){}});</script>' if (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 1) || Redmine::VERSION::MAJOR > 2
+      end
+
+      def view_issues_bulk_edit_details_bottom(context={ })
+        project = context[:project]
+        return if project.nil? #hmm, this might happen when issues of different projects are bulk-edited
+#what we could do is to intersect issues.each{ issue.assignable_releases }
+        return unless project.releases && project.releases.size > 0 #no releases in this project. #FIXME: sharing releases
+        snippet = ''
+        snippet += "<p>
+          <label for='issue_release_id'>#{ l(:field_release)}</label>
+          #{ select_tag('issue[release_id]', content_tag('option', l(:label_no_change_option), :value => '') +
+                                   content_tag('option', l(:label_none), :value => 'none') +
+                                   release_options_for_select(project.releases)) }
+          </p>"
       end
 
       def view_versions_show_bottom(context={ })

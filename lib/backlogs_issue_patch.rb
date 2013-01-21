@@ -9,9 +9,13 @@ module Backlogs
       base.class_eval do
         unloadable
 
+        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
+
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
         has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
+
+        safe_attributes 'release_id' #FIXME merge conflict. is this required?
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
@@ -160,6 +164,21 @@ module Backlogs
           end
         end
       end
+
+      def assignable_releases
+        project.shared_releases
+      end
+
+      def release_id=(rid)
+        self.release = nil
+        write_attribute(:release_id, rid)
+      end
+#      def self.by_version(project)
+#        count_and_group_by(:project => project,
+#                           :field => 'release_id',
+#                           :joins => RbRelease.table_name)
+#      end
+
 
     end
   end

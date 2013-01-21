@@ -1,54 +1,71 @@
+<style type="text/css">
+tr.closed {text-decoration: line-through;}
+.sprint {margin-bottom: 2em;}
+h3.version {font-size: 14px; background: none; padding-left:0;}
+#sprints, #releasebacklog, #closed-sprints {margin-bottom: 3em;}
+</style>
 <div class="contextual">
 <%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases', :action => 'edit',    :release_id => @release}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
 <%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del', :method => :delete %>
 </div>
 
 <h2><%= h @release.name %></h2>
+
+<p><%= @release.description %></p>
+
 <h3>Release Burndown</h3>
 <!--Release Burndown Visualization-->
 <% unless @release.has_burndown? %>
   <p class="nodata">No burndown available</p>
 <% else %>
-  <div id="release_burndown_<%= @release.id %>" style="margin-left:0px; margin-top:20px;"></div>
-  <%= render :partial => "rb_release_burndown_charts/burndown", :locals => {:div => 'release_burndown_', :burndown => @release.burndown } %>
-
-  <br />
-  <div class="box">
-  <% if @release.today %>
-    <%= link_to l(:release_update_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-save' %>
-    (current: <%= @release.today.remaining_story_points %> / new: <b><%= @remaining_story_points  %></b>)
-  <% else %>
-    <% if Date.today >= @release.release_start_date and Date.today <= @release.release_end_date %>
-      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :class => 'icon icon-add' %>
-    <% else %>
-      <%= link_to l(:release_create_snapshot_today), {:controller => 'rb_releases', :action => 'snapshot', :release_id => @release}, :confirm => l(:today_not_in_release_msg), :class => 'icon icon-add' %>
-      <br />
-      <b><%= l(:today_not_in_release_warning) %></b>
-    <% end %>
+  <% if false %><!-- FIXME Disabled for now -->
+    <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
   <% end %>
-  </div>
+  <br />
 
 <!--Visualization of related sprints -->
 <!--TODO: i18n-->
 <br><h3>Sprints</h3>
 
-<% if @project.versions.empty? %>
-<p class="nodata"><%= l(:label_no_data) %></p>
-<% else %>
 <div id="sprints">
-<!--Show only sprints included in release duration & sort them by due date (sooner first)-->
-<% if @project.shared_versions.select{|version|  version.due_date && (version.due_date>=@release.release_start_date && version.due_date<=@release.release_end_date)}.sort{|vx,vy| vx.due_date <=>vy.due_date}.each do |version| %>
-	<h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
-	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
-	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
-    <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
-<% end.empty? %>
-	<p class="nodata"><%= l(:label_no_data) %></p>
-<% end %>
-
+  <% @release.stories_by_sprint.each do |v,list|
+    version = Version.find(v)
+    if version.open? %>
+    <%= render :partial => 'sprint', :locals => { :version=>version, :issues=>list} %>
+  <%end
+  end %>
 </div>
-<% end %>
 
+<div id="releasebacklog">
+<h3>Release Backlog</h3>
+<table class="list issues">
+  <tr>
+    <th>#</th>
+    <th>Tracker</th>
+    <th>Subject</th>
+    <th>Story Points</th>
+  </tr>
+  <% RbStory.release_backlog(@release).each{|story|
+  klass=story.closed? ? 'closed':'open' %>
+  <tr class="<%= klass %>">
+    <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
+    <td><%= h tracker_name_or_empty(story) %></td>
+    <td><%= story.subject %></td>
+    <td><%= story_points_or_empty(story) %></td>
+  </tr>
+  <% } %>
+</table>
+</div>
+
+<br><h3>Closed Sprints</h3>
+<div id="closed_sprints">
+  <% @release.stories_by_sprint.each do |v,list|
+    version = Version.find(v)
+    unless version.open? %>
+    <%= render :partial => 'sprint', :locals => { :version=>version, :issues=>list} %>
+  <%end
+  end %>
+</div>
 
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>
@@ -58,11 +75,10 @@
 
 <% content_for :sidebar do %>
   <h3><%= l(:label_release) %></h3>
+  <p><b><%= l(:field_status) %>:</b>   <%= l("version_status_#{@release.status}")    %></p>
   <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
-  <p><b><%= l(:field_initial_story_points) %>:</b> <%= @release.initial_story_points %></p>
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
-  <p><b><%= l(:field_number_of_snapshots) %>:</b>  <%= @release.burndown_days.size   %></p>
 <% end %>
 
 <% html_title(@release.name) -%>

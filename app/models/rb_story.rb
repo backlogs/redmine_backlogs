@@ -18,6 +18,10 @@ class RbStory < Issue
     sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
     sprint_ids = sprint_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if sprint_ids
 
+    release_ids = options.delete(:release)
+    release_ids = [release_ids] if release_ids && !release_ids.is_a?(Array)
+    release_ids = release_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if release_ids
+
     permission = options.delete(:permission)
     permission = false if permission.nil?
 
@@ -35,6 +39,7 @@ class RbStory < Issue
     pbl_condition = ["
       project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
+      and release_id is NULL
       and fixed_version_id is NULL
       and is_closed = ?", RbStory.trackers, false]
     if Backlogs.settings[:sharing_enabled]
@@ -47,8 +52,15 @@ class RbStory < Issue
         and tracker_id in (?)
         and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
     end
+    release_condition = ["
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      and tracker_id in (?)
+      and fixed_version_id is NULL
+      and release_id in (?)", RbStory.trackers, release_ids]
 
-    if sprint_ids.nil?
+    if release_ids
+      Backlogs::ActiveRecord.add_condition(options, release_condition)
+    elsif sprint_ids.nil?
       Backlogs::ActiveRecord.add_condition(options, pbl_condition)
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
@@ -61,14 +73,15 @@ class RbStory < Issue
     return options
   end
 
-  def self.backlog(project_id, sprint_id, options={})
+  def self.backlog(project_id, sprint_id, release_id, options={})
     stories = []
 
     prev = nil
     RbStory.visible.find(:all, RbStory.find_options(options.merge({
       :project => project_id,
       :sprint => sprint_id,
-      :order => 'issues.position',
+      :release => release_id,
+      :order => 'issues.position'
     }))).each_with_index {|story, i|
       stories << story
 
@@ -84,15 +97,19 @@ class RbStory < Issue
   end
 
   def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(project.id, nil, :limit => limit)
+    return RbStory.backlog(project.id, nil, nil, :limit => limit)
   end
 
   def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(sprint.project.id, sprint.id, options)
+    return RbStory.backlog(sprint.project.id, sprint.id, nil, options)
+  end
+
+  def self.release_backlog(release, options={})
+    return RbStory.backlog(release.project.id, nil, release.id, options)
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
-    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, options)
+    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, nil, options)
     sprint_of = {}
     ret.each do |backlog|
       sprint_of[backlog.fixed_version_id] ||= []
@@ -101,17 +118,14 @@ class RbStory < Issue
     return sprint_of
   end
 
-  def self.stories_open(project)
-    stories = []
-
-    RbStory.find(:all,
-                  :order => :position,
-                  :conditions => ["project_id = ? AND tracker_id in (?) and is_closed = ?",project.id,RbStory.trackers,false],
-                  :joins => :status).each_with_index {|story, i|
-      story.rank = i + 1
-      stories << story
-    }
-    return stories
+  def self.backlogs_by_release(project, releases, options={})
+    ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
+    release_of = {}
+    ret.each do |backlog|
+      release_of[backlog.release_id] ||= []
+      release_of[backlog.release_id].push(backlog)
+    end
+    return release_of
   end
 
   def self.create_and_position(params)
@@ -211,7 +225,84 @@ class RbStory < Issue
     end
   end
 
+  # Produces relevant information for release graphs
+  # @param sprints is array of sprints of interest
+  # @return hash collection of 
+  #  :backlog_points :added_points :closed_points
+# The dates are:
+#  start: first day of first sprint
+#  1..n: a day after the nth sprint
+  def release_burndown_data(sprints)
+    return nil unless self.is_story?
+    days = Array.new
+    # Find interesting days of each sprint for the release graph
+    days << sprints.first.sprint_start_date.to_date
+    sprints.each { |sprint| days << sprint.effective_date.tomorrow.to_date }
+
+    baseline = [0] * days.size
+
+    series = Backlogs::MergedArray.new
+    series.merge(:backlog_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
+    series.merge(:closed_points => baseline.dup)
+
+    # Collect data
+    bd = {:points => [], :open => [], :accepted => [] }
+    self.history.filter_release(days).each{|d|
+      if d.nil? || d[:tracker] != :story
+        [:points, :open, :accepted].each{|k| bd[k] << nil }
+      else
+        bd[:points] << d[:story_points]
+        bd[:open] << d[:status_open]
+        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+      end
+    }
+
+    series.merge(:accepted => bd[:accepted])
+    series.merge(:points => bd[:points])
+    series.merge(:open => bd[:open])
+    first = true;
+    series.merge(:accepted_first => series.series(:accepted).collect{ |a|
+                   if a
+                     if a == true && first == true
+                       first = false
+                       true
+                     else
+                       false
+                     end
+                   else
+                     false
+                   end
+                 })
+    series.merge(:day => days)
+
+    # Extract added_points, backlog_points and closed points from the data collected
+    series.each { |p|
+      if (created_on.to_date < sprints.first.sprint_start_date.to_date) && p.open
+        p.backlog_points = p.points
+      end
+      if p.accepted_first
+        p.closed_points = p.points
+      end
+      # Is the story created within this sprint?
+      if (created_on.to_date >= sprints.first.sprint_start_date.to_date) &&
+          (created_on.to_date < p.day) #day is the end-date+1 of a sprint
+        p.added_points = p.points
+        if p.accepted
+          p.backlog_points = -p.points
+        end
+      end
+    }
+
+    rl = {}
+    rl[:backlog_points] = series.series(:backlog_points)
+    rl[:added_points] = series.series(:added_points)
+    rl[:closed_points] = series.series(:closed_points)
+    return rl
+  end
+
   def burndown(sprint = nil, status=nil)
+    return nil unless self.is_story?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 

@@ -63,9 +63,7 @@ ru:
   field_backlogs_issue_type: Тип бэклога
   field_base: ""
   field_blocks: Блокировки
-  field_initial_story_points: Начальная оценка истории
   field_name: Название
-  field_number_of_snapshots: Сохранённые снимки оценки
   field_position: Положение
   field_priority: Приоритет
   field_release_end_date: Дата окончания версии
@@ -147,8 +145,6 @@ ru:
   rb_task_cards_tasks_follow_story: Задачи следуют за своей историей
   rb_taskboard_card_order: Порядок печати карт
   rb_timelog_from_taskboard: Записывать время с доски заданий
-  release_create_snapshot_today: Сохранить снимок оценки истории  на сегодняшнюю дату
-  release_update_snapshot_today: Обновить снимок оценки истории  на сегодняшнюю дату
   remaining_story_points: Оставшиеся оценки истории
   story_description: Описание
   story_estimation_hours: Оценка (часов)
@@ -156,8 +152,6 @@ ru:
   story_remaining_hours: Осталось (часов)
   story_spent_time: Потрачено времени
   story_status: Статус
-  today_not_in_release_msg: Текущая дата не находится в пределах дат версии. Вы действительно
-    хотите сохранить снимок?
   today_not_in_release_warning: "Предупреждение: текущая дата не находится в пределах
     дат версии. Вы действительно желаете сохранить снимок?"
   todo_issue_summary: "%{type}: %{summary}"

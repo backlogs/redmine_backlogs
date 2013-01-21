@@ -50,7 +50,8 @@ script:
 - bash -x ./redmine_install.sh -t features/duplicate_story.feature
 - bash -x ./redmine_install.sh -t features/extended_timelog.feature
 - bash -x ./redmine_install.sh -t features/product_owner.feature
-- bash -x ./redmine_install.sh -t features/release.feature
+- bash -x ./redmine_install.sh -t features/release3.feature
+- bash -x ./redmine_install.sh -t features/release_burndown.feature
 - bash -x ./redmine_install.sh -t features/routes.feature
 - bash -x ./redmine_install.sh -t features/scrum_master.feature
 - bash -x ./redmine_install.sh -t features/settings.feature

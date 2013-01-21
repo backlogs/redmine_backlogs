@@ -14,8 +14,10 @@
     'jquery/jquery.liveFilter.js',
     'jquery/jquery.liveFilter.setup.js',
     'jquery/rails.js',
+    'jquery/jquery.multiselect.js',
     'master_backlog',
     'backlog',
+    'backlog_options',
     'model',
     'editable_inplace',
     'sprint',
@@ -26,6 +28,7 @@
     'burndown',
     :plugin => 'redmine_backlogs') %>
   <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'master_backlog.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'master_backlog_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
   <script type="text/javascript">jQuery(document).ready(function() { jQuery("#livefilter_controll").focus(); });</script>
@@ -83,7 +86,8 @@
     </div>
     <div class="backlogs-panel right">
       <div id="product_backlog_container">
-        <%= render :partial => 'backlog', :object => @product_backlog %>
+        <%= render :partial => 'backlog', :collection => @release_backlogs, :locals => {:cls => ' release_backlog'} %>
+        <%= render :partial => 'backlog', :object => @product_backlog, :locals => {:cls => ' product_backlog'} %>
       </div>
     </div>
   </div>

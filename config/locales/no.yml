@@ -72,9 +72,7 @@
   field_backlogs_issue_type: Backlog type
   field_base: ""
   field_blocks: Blokker
-  field_initial_story_points: Initielle storypoenger
   field_name: Navn
-  field_number_of_snapshots: Antall lagrede poengsnapshots
   field_position: Posisjon
   field_priority: Priority
   field_release_end_date: Utgivelse sluttdato
@@ -155,8 +153,6 @@
   rb_task_cards_tasks_follow_story: Story etterfulgt av tilhørende tasks
   rb_taskboard_card_order: Kort utskriftsrekkefølge
   rb_timelog_from_taskboard: Tidslog fra taskboard
-  release_create_snapshot_today: Lagre story poengsnapshot for i dag
-  release_update_snapshot_today: Oppdater story poengsnapshot for i dag
   remaining_story_points: gjenværende storypoeng
   story_description: Beskrivelse
   story_estimation_hours: Estimert (timer)
@@ -164,8 +160,6 @@
   story_remaining_hours: Gjenværene (timer)
   story_spent_time: Brukt tid
   story_status: Status
-  today_not_in_release_msg: Gjeldende dato er ikke innenfor tidsperioden for utgivelsen.
-    Skal snapshot likevel lagres?
   today_not_in_release_warning: ! 'Advarsel: Gjeldende dato er ikke innenfor tidsperioden
     for utgivelsen.'
   todo_issue_summary: ! '%{type}: %{summary}'

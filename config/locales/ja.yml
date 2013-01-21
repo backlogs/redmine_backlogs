@@ -58,9 +58,7 @@ ja:
   field_backlogs_issue_type: バックログタイプ
   field_base: ""
   field_blocks: ブロック
-  field_initial_story_points: 初期ストーリーポイント
   field_name: 名前
-  field_number_of_snapshots: ポイントをスナップショットとして保存
   field_position: Position
   field_release_end_date: リリース終了日
   field_release_start_date: リリース開始日
@@ -89,6 +87,8 @@ ja:
   label_not_prioritized: 優先度が未設定
   label_points: ポイント
   label_points_accepted: 進行中のポイント
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: ダウン
   label_points_burn_up: アップ
   label_points_committed: 承認されたポイント
@@ -105,9 +105,7 @@ ja:
   label_release_plural: リリース
   label_release_start_date: リリース開始日
   label_release_end_date: リリース日
-  field_initial_story_points: 初期ストーリーポイント
   error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
-  field_number_of_snapshots: ポイントのスナップショットを保存
 
   # Version fields
   field_name: "名前"
@@ -183,10 +181,7 @@ ja:
   rb_timelog_from_taskboard: かんばんのタイムログ
   rb_show_burndown_in_sidebar: バーンダウンチャートをチケットのサイドバーに表示
   rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
-  release_create_snapshot_today: 今日のストリーポイントのスナップショットを保存
-  release_update_snapshot_today: 今日のストーリーポイントのスナップショットを更新
   remaining_story_points: 残りのストーリーポイント
-  today_not_in_release_msg: "今日はリリース日の範囲に入っています。本当にスナップショットを保存しますか?"
   today_not_in_release_warning: "警告: 今日はリリース日の範囲に入っています"
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"

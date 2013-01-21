@@ -46,7 +46,7 @@ end
 
 Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
-  author "friflaj,Mark Maglana,John Yani,mikoto20000,Frank Blendinger,Bo Hansen,stevel"
+  author "friflaj,Mark Maglana,John Yani,mikoto20000,Frank Blendinger,Bo Hansen,stevel,Patrick Atamaniuk"
   description 'A plugin for agile teams'
   version 'v0.9.35'
 
