@@ -23,6 +23,11 @@ class RbAddHistory < ActiveRecord::Migration
       add_index :rb_sprint_burndown, :version_id, :unique => true
     end
 
+    #migration 40 wants to add release-issue relation. issue_history tracks this, so the relation needs to be there before a history migration is performed
+    unless ActiveRecord::Base.connection.column_exists?(:issues, :release_id)
+      add_column :issues, :release_id, :integer
+    end
+
     if ENV['rbl_migration_ignore_historic_history'] =~ /^yes$/i
       puts "You have chosen to ignore the existing history and to start anew. Fine by me, but it will take a while for the charts to become meaningful. DO NOT POST ISSUES ABOUT THE CHARTS BEING WRONG until you have at least 5 sprints of data since this installation."
     else

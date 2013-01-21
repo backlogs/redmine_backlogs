@@ -71,6 +71,10 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     story.new_record? ? "" : story.id
   end
 
+  def release_or_empty(story)
+    story.release_id.nil? ? "" : RbRelease.find(story.release_id).name
+  end
+
   def sprint_status_id_or_default(sprint)
     sprint.new_record? ? Version::VERSION_STATUSES.first : sprint.status
   end
@@ -148,29 +152,21 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
     export = FCSV.generate(:col_sep => ';') do |csv|
       # csv header fields
-      headers = [ l(:label_date),
-                  l(:remaining_story_points),
-                  l(:ideal)
+      headers = [ l(:label_points_backlog),
+                  l(:label_points_added),
+                  l(:label_points_accepted)
                 ]
       csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
 
-      # csv lines
-      if (release.release_start_date != release.burndown_days[0])
-        fields = [release.release_start_date,
-                  release.initial_story_points.to_f.to_s.gsub('.', ','),
-                  release.initial_story_points.to_f.to_s.gsub('.', ',')]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
-      end
-      release.burndown_days.each do |rbd|
-        fields = [rbd.day,
-                  rbd.remaining_story_points.to_s.gsub('.', ','),
-                  release_burndown_interpolate(release, rbd.day).to_s.gsub('.', ',')
+      bd = release.burndown
+      lines = 0
+      lines = bd[:added_points].size unless bd[:added_points].nil?
+      for i in (0..(lines-1))
+        fields = [ bd[:added_points][i].to_s.gsub('.', ','),
+                   bd[:backlog_points][i].to_s.gsub('.', ','),
+                   bd[:closed_points][i].to_s.gsub('.', ',')
                  ]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
-      end
-      if (release.release_end_date != release.burndown_days[-1])
-        fields = [release.release_end_date, "", "0,0"]
-        csv << fields.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+        csv << fields.collect{ |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
       end
     end
     export
@@ -233,6 +229,27 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       s << %(<optgroup label="#{h(l(:label_group_plural))}">#{groups}</optgroup>)
     end
     s.html_safe
+  end
+
+  def release_options_for_select(releases, selected=nil)
+    grouped = Hash.new {|h,k| h[k] = []}
+    releases.each do |release|
+      grouped[release.project.name] << [release.name, release.id]
+    end
+    # Add in the selected
+    if selected && !releases.include?(selected)
+      grouped[selected.project.name] << [selected.name, selected.id]
+    end
+
+    if grouped.keys.size > 1
+      grouped_options_for_select(grouped, selected && selected.id)
+    else
+      options_for_select((grouped.values.first || []), selected && selected.id)
+    end
+  end
+
+  def format_release_sharing(v)
+    RbRelease::RELEASE_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
   end
 
 end

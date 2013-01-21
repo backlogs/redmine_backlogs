@@ -170,7 +170,11 @@ module Backlogs
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
 
-      include Backlogs::ActiveRecord::Attributes
+      base.class_eval do
+        unloadable
+        has_many :releases, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy, :order => "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC"
+        include Backlogs::ActiveRecord::Attributes
+      end
     end
 
     module ClassMethods
@@ -229,6 +233,32 @@ module Backlogs
             RbSprint.closed_sprints(self)
           end
         end #disable_closed
+      end
+
+      def open_releases_by_date
+        order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+        (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
+          visible.open.
+          order("#{RbRelease.table_name}.release_start_date #{order}, #{RbRelease.table_name}.release_end_date #{order}")
+      end
+
+      def shared_releases
+        if new_record?
+          RbRelease.scoped(:include => :project,
+                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
+        else
+          @shared_releases ||= begin
+            r = root? ? self : root
+            RbRelease.scoped(:include => :project,
+                         :conditions => "#{Project.table_name}.id = #{id}" +
+              " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
+                    " #{RbRelease.table_name}.sharing = 'system'" +
+              " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND #{RbRelease.table_name}.sharing = 'tree')" +
+              " OR (#{Project.table_name}.lft < #{lft} AND #{Project.table_name}.rgt > #{rgt} AND #{RbRelease.table_name}.sharing IN ('hierarchy', 'descendants'))" +
+              " OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt} AND #{RbRelease.table_name}.sharing = 'hierarchy')" +
+              "))")
+          end
+        end
       end
 
     end

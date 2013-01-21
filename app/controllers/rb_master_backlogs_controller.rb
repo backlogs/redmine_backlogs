@@ -23,35 +23,50 @@ class RbMasterBacklogsController < RbApplicationController
     @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
     @c_sprint_backlogs = c_sprints.map{|s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
 
+    releases = @project.open_releases_by_date
+    releases_backlog_storie_of = RbStory.backlogs_by_release(@project, releases)
+    @release_backlogs = releases.map{ |r| { :release => r, :stories => releases_backlog_storie_of[r.id] } }
+
     respond_to do |format|
       format.html { render :layout => "rb"}
     end
   end
 
-  def menu
+  def _menu_new
     links = []
+    label_new = :label_new_story
+    add_class = 'add_new_story'
 
     if @settings[:sharing_enabled]
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
-      unless @sprint #menu for product backlog
-        projects = @project.projects_in_shared_product_backlog
-      else #menu for sprint
+      if @sprint #menu for sprint
         projects = @sprint.shared_to_projects(@project)
+      elsif @release #menu for release
+        projects = @release.shared_to_projects(@project)
+      else #menu for product backlog
+        projects = @project.projects_in_shared_product_backlog
       end
       #make the submenu or single link
       if !projects.empty?
         if projects.length > 1
-          links << {:label => l(:label_new_story), :url => '#', :sub => []}
+          links << {:label => l(label_new), :url => '#', :sub => []}
           projects.each{|project|
-            links.first[:sub] << {:label => project.name, :url => '#', :classname => "add_new_story project_id_#{project.id}"}
+            links.first[:sub] << {:label => project.name, :url => '#', :classname => "#{add_class} project_id_#{project.id}"}
           }
         else
-          links << {:label => l(:label_new_story), :url => '#', :classname => "add_new_story project_id_#{projects[0].id}"}
+          links << {:label => l(label_new), :url => '#', :classname => "#{add_class} project_id_#{projects[0].id}"}
         end
       end
     else #no sharing, only own project in the menu
-      links << {:label => l(:label_new_story), :url => '#', :classname => 'add_new_story'}
+      links << {:label => l(label_new), :url => '#', :classname => add_class}
     end
+    return links
+  end
+
+  def menu
+    links = []
+
+    links += _menu_new
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
              } unless @sprint
@@ -67,13 +82,13 @@ class RbMasterBacklogsController < RbApplicationController
              } if @sprint && @sprint.stories.size > 0
     links << {:label => l(:label_stories),
               :url => url_for(:controller => 'rb_queries', :action => 'show', :project_id => @project, :only_path => true)
-             } unless @sprint
+             } unless @sprint || @release
     links << {:label => l(:label_sprint_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :sprint_id => @sprint, :format => 'pdf', :only_path => true)
              } if @sprint && BacklogsPrintableCards::CardPageLayout.selected && @sprint.stories.size > 0
     links << {:label => l(:label_product_cards),
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :format => 'pdf', :only_path => true)
-             } unless @sprint
+             } unless @sprint || @release
     links << {:label => l(:label_wiki),
               :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint, :only_path => true)
              } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
@@ -84,6 +99,12 @@ class RbMasterBacklogsController < RbApplicationController
               :url => url_for(:controller => 'rb_sprints', :action => 'reset', :sprint_id => @sprint, :only_path => true),
               :warning => view_context().escape_javascript(l(:warning_reset_sprint)).gsub(/\/n/, "\n")
              } if @sprint && @sprint.sprint_start_date && User.current.allowed_to?(:reset_sprint, @project)
+    links << {:label => l(:label_version),
+              :url => url_for(:controller => 'versions', :action => 'show', :id => @sprint, :target => '_blank', :only_path => true)
+             } if @sprint
+    links << {:label => l(:label_release),
+              :url => url_for(:controller => 'rb_releases', :action => 'show', :release_id => @release, :target => '_blank', :only_path => true)
+             } if @release
 
 
     respond_to do |format|

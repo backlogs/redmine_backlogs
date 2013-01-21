@@ -8,7 +8,12 @@
 
 <% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
 
-<% @releases.each do |release| %>
+<% @releases.open.each do |release| %>
+    <%= render :partial => 'rb_releases/release', :object => release %>
+<% end %>
+
+<h2><%=l(:label_closed_releases)%></h2>
+<% @releases.closed.each do |release| %>
     <%= render :partial => 'rb_releases/release', :object => release %>
 <% end %>
 

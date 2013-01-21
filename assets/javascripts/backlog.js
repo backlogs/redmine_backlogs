@@ -39,7 +39,10 @@ RB.Backlog = RB.Object.create({
                   });
 
     if(this.isSprintBacklog()){
-      sprint = RB.Factory.initialize(RB.Sprint, this.getSprint());
+      RB.Factory.initialize(RB.Sprint, this.getSprint());
+    }
+    else if (this.isReleaseBacklog()) {
+      RB.Factory.initialize(RB.Sprint, this.getRelease());
     }
 
     this.drawMenu();
@@ -65,8 +68,14 @@ RB.Backlog = RB.Object.create({
     var menu = this.$.find('ul.items');
     var id = null;
     var self = this;
+    var ajaxdata = {};
     if (this.isSprintBacklog()) {
       id = this.getSprint().data('this').getID();
+      ajaxdata = { sprint_id: id };
+    }
+    else if (this.isReleaseBacklog()) {
+      id = this.getRelease().data('this').getID();
+      ajaxdata = { release_id: id };
     }
     if (id == '') { return; } // template sprint
 
@@ -91,9 +100,10 @@ RB.Backlog = RB.Object.create({
       }
     };
 
+    
     RB.ajax({
       url: RB.routes.backlog_menu,
-      data: (id ? { sprint_id: id } : {}),
+      data: ajaxdata,
       dataType: 'json',
       success   : function(data,t,x) {
         createMenu(data, menu);
@@ -144,9 +154,17 @@ RB.Backlog = RB.Object.create({
       }
     }
 
+    //disable release backlogs
+    RB.$('#product_backlog_container .release_backlog .stories').sortable('disable');
+    if (RB.constants.project_releases[storyProject]) {
+      for (var i = 0; i < RB.constants.project_releases[storyProject].length; i++) {
+        RB.$('#stories-for-release-' + RB.constants.project_releases[storyProject][i]).sortable('enable');
+      }
+    }
+
     //disable product backlog if the dragged story is not in self or descendants
     if (!RB.constants.projects_in_product_backlog[storyProject]) {
-      RB.$('#product_backlog_container .stories').sortable('disable');
+      RB.$('#product_backlog_container .product_backlog .stories').sortable('disable');
     }
 
     //get the ui hint up to the header
@@ -206,6 +224,10 @@ RB.Backlog = RB.Object.create({
     return RB.$(this.el).find(".model.sprint").first();
   },
     
+  getRelease: function(){
+    return RB.$(this.el).find(".model.release").first();
+  },
+    
   getStories: function(){
     return this.getList().children(".story");
   },
@@ -235,6 +257,10 @@ RB.Backlog = RB.Object.create({
 
   isSprintBacklog: function(){
     return RB.$(this.el).find('.sprint').length == 1; // return true if backlog has an element with class="sprint"
+  },
+    
+  isReleaseBacklog: function(){
+    return RB.$(this.el).find('.release').length == 1; // return true if backlog has an element with class="release"
   },
     
   newStory: function(project_id) {

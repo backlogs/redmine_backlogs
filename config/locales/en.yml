@@ -64,12 +64,11 @@ en:
   field_backlogs_issue_type: Backlog type
   field_base: ""
   field_blocks: Blocks
-  field_initial_story_points: Initial story points
   field_name: Name
-  field_number_of_snapshots: Saved point snapshots
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
+  field_release: Release
   field_story_points: Story points
   field_subject: Subject
   field_tracker_id: Tracker ID
@@ -96,6 +95,8 @@ en:
   label_not_prioritized: not prioritized
   label_points: points
   label_points_accepted: points accepted
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Down
   label_points_burn_up: Up
   label_points_committed: points committed
@@ -112,6 +113,7 @@ en:
   label_release_plural: Releases
   label_release_start_date: Release start date
   label_release_end_date: Release end date
+  label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint
   label_download_sprint: Download
@@ -123,13 +125,8 @@ en:
   label_show_completed_sprints: Show Completed Sprints
   label_no_data_to_show: No data to show
   label_column_width: Column width
-  field_initial_story_points: Initial story points
   error_release_end_after_start: Release end date has to be after start date
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
   today_not_in_release_warning: "Warning: current date is not within release date range."
-  field_number_of_snapshots: Saved point snapshots
-  release_update_snapshot_today: Update story point snapshot for today
-  release_create_snapshot_today: Save story point snapshot for today
   current_open_story_points: "Current open story points:"
 
   # Version fields
@@ -177,10 +174,7 @@ en:
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_show_project_name: Show project name in backlogs
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
-  release_create_snapshot_today: Save story point snapshot for today
-  release_update_snapshot_today: Update story point snapshot for today
-  remaining_story_points: remaining story points
-  today_not_in_release_msg: Current date is not within release date range. Really save snapshot?
+  remaining_story_points: Remaining story points
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: Use text field instead of dropdown if empty
@@ -220,3 +214,4 @@ en:
   label_filter_tasks_my_tasks: Filter by user - my tasks
   label_all_tasks: All tasks
   label_my_tasks: My tasks
+  label_view_options: View options

@@ -73,9 +73,7 @@ es:
   field_backlogs_issue_type: Tipo de backlog
   field_base: ""
   field_blocks: Bloques
-  field_initial_story_points: Puntos iniciales de la historia
   field_name: Nombre
-  field_number_of_snapshots: Puntos ahorrados en la instantanea
   field_position: Posición
   field_priority: Prioridad
   field_release_end_date: Fecha final del release
@@ -114,6 +112,8 @@ es:
   label_no_start: no start
   label_not_prioritized: no priorizado
   label_points_accepted: puntos aceptados
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Abajo
   label_points_burn_up: Arriba
   label_points_committed: puntos realizados
@@ -156,10 +156,6 @@ es:
   rb_task_cards_tasks_follow_story: Historia seguida por sus tareas
   rb_taskboard_card_order: Orden de la impresión de tarjetas
   rb_timelog_from_taskboard: Timelog para el tablero de tareas
-  release_create_snapshot_today: Guardar los puntos de historia de la instantánea
-    de hoy
-  release_update_snapshot_today: Actualizar los puntos de historia de la instantánea
-    de hoy
   remaining_story_points: Puntos de historia pendientes
   story_description: Descripción
   story_estimation_hours: Estimación (horas)
@@ -167,8 +163,6 @@ es:
   story_remaining_hours: Faltante (horas)
   story_spent_time: Tiempo gastado
   story_status: Estado
-  today_not_in_release_msg: Fecha actual no está dentro del rango del release. Realmente
-    desea salvar la instantánea?
   today_not_in_release_warning: ! 'Advertencia: la fecha actual no se encuentra dentro
     del rango de fecha del release.'
   todo_issue_summary: ! '%{type}: %{summary}'

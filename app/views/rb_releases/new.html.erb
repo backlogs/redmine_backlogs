@@ -2,7 +2,7 @@
 
 <% rb_labelled_form_for @release, :url => url_for(:controller=> 'rb_releases', :action => 'new', :project_id => @project) do |f| %>
   <%= error_messages_for 'release' %>
-  <%= render :partial => 'rb_releases/form', :locals => { :f => f, :backlog_points => @backlog_points } %>
+  <%= render :partial => 'rb_releases/form', :locals => { :f => f } %>
   <%= submit_tag l(:button_create) %>
 <% end %>
 

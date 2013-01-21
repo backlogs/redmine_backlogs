@@ -1,0 +1,25 @@
+  <div class="sprint">
+	<h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
+	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
+	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
+  <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
+<%
+    issues.sort!{|a,b|a.position <=> b.position} %>
+  <table class="list issues">
+    <tr>
+      <th>#</th>
+      <th>Tracker</th>
+      <th>Subject</th>
+      <th>Story Points</th>
+    </tr>
+<%  issues.each do |story|
+    klass=story.closed? ? 'closed':'open' %>
+    <tr class="<%= klass %>">
+      <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
+      <td><%= h tracker_name_or_empty(story) %></td>
+      <td><%= story.subject %></td>
+      <td><%= story_points_or_empty(story) %></td>
+    </tr>
+<%  end %>
+  </table>
+  </div>
