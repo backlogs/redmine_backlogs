@@ -15,13 +15,13 @@ Many more examples of dynamically rendered plots can be seen on the test and exa
 
 Include the Files:
 
-jqPlot requires jQuery (1.4+ required for certain features). jQuery 1.4.4 is included in the distribution.  
+jqPlot requires jQuery (1.4+ required for certain features). jQuery is included in the distribution.  
 To use jqPlot include jquery, the jqPlot jQuery plugin, jqPlot css file and optionally the excanvas 
 script for IE support in your web page.  Note, excanvas is required only for IE versions below 9.  IE 9 includes
 native support for the canvas element and does not require excanvas:
 
 > <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-> <script language="javascript" type="text/javascript" src="jquery-1.4.4.min.js"></script>
+> <script language="javascript" type="text/javascript" src="jquery.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jquery.jqplot.min.js"></script>
 > <link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
 
@@ -67,7 +67,7 @@ after you include the jqPlot plugin.  Here is how to include the log axis plugin
 
 > <link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
 > <!--[if IE]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-> <script language="javascript" type="text/javascript" src="jquery-1.4.4.min.js"></script>
+> <script language="javascript" type="text/javascript" src="jquery.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jquery.jqplot.min.js"></script>
 > <script language="javascript" type="text/javascript" src="jqplot.logAxisRenderer.js"></script>
 

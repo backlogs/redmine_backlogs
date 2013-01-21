@@ -1,31 +1,59 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Plots in Hidden Containers</title>
+	
+	<title>Resizable Plots</title>
+
+    <link class="include" rel="stylesheet" type="text/css" href="../jquery.jqplot.min.css" />
+    <link rel="stylesheet" type="text/css" href="examples.min.css" />
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.min.css" />
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemejqPlot.min.css" />
+  
   <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../excanvas.js"></script><![endif]-->
-  
-  <link rel="stylesheet" type="text/css" href="../jquery.jqplot.css" />
-  <link rel="stylesheet" type="text/css" href="examples.css" />
-  
+    <script class="include" type="text/javascript" src="../jquery.min.js"></script>
+    
+   
+</head>
+<body>
+    <div class="logo">
+   <div class="nav">
+   <a class="nav" href="../../../index.php"><span>&gt;</span>Home</a>
+   <a class="nav"  href="../../../docs/"><span>&gt;</span>Docs</a>
+   <a class="nav"  href="../../download/"><span>&gt;</span>Download</a>
+   <a class="nav" href="../../../info.php"><span>&gt;</span>Info</a>
+   <a class="nav"  href="../../../donate.php"><span>&gt;</span>Donate</a>
+   </div>
+</div>
+    <div class="example-content">
+
+    <div class="example-nav">
+  <a href="point-labels.html">Previous</a> <a href="./">Examples</a> <a href="rotated-tick-labels.html">Next</a></div>
+
+      
+<!-- Example scripts go here -->
+
   <style type="text/css">
   body {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    margin: 2em;
   }
   
   p, pre {
     margin: 1.5em;
   }
+
+  body table {
+    margin: 2em;
+  }
   
-  	#resizable1, #resizable2 { 
-      width: 400px; 
-      height: 300px;
+    #resizable1, #resizable2 { 
+      width: 440px; 
+      height: 330px;
       margin-top: 2em;
       margin-bottom: 2em;
-  	}
-	
+      padding: 1.2em;
+    }
+    
     
     .jqplot-target {
       font-size: 16px;
@@ -35,62 +63,7 @@
       border: 2px solid gray;
     }
   </style>
-  
-  <!-- BEGIN: load jquery -->
-  <script language="javascript" type="text/javascript" src="../jquery.js"></script>
-  <!-- END: load jquery -->
-  
-  <!-- BEGIN: load jqplot -->
-  <script language="javascript" type="text/javascript" src="../jquery.jqplot.js"></script>
-  <script language="javascript" type="text/javascript" src="../plugins/jqplot.logAxisRenderer.js"></script>
-  <script language="javascript" type="text/javascript" src="../plugins/jqplot.trendline.js"></script>
-  
-  <link type="text/css" href="jquery-ui/css/ui-lightness/jquery-ui-1.8.6.custom.css" rel="Stylesheet" />	
-  <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.6.custom.min.js"></script>
 
-  <!-- END: load jqplot -->
-  <script type="text/javascript" language="javascript">
-  
-  $(document).ready(function(){
-    
-    $.jqplot.config.enablePlugins = false;
-
-    l1 = [18, 36, 41, 93, 100, 115, 133, 129, 119, 107, 91, 146, 169];
-    l2 = [[8, 66], [13, 46], [22,14]];
-    l3 = [[3.3, 7], [9.5, 22], [12.1, 37], [18.6, 95], [24, 102]];
-
-    var options = {
-      title: "Lines",
-      legend:{show:true, location:'se'},
-      seriesDefaults:{trendline:{show:true, type:"exp"}},
-      axes:{yaxis:{renderer:$.jqplot.LogAxisRenderer}}
-    }
-    
-    
-    $("#resizable1").resizable({delay:20});
-    $("#resizable2").resizable({delay:20, helper:'ui-resizable-helper'});
-    
-
-    $('#resizable1').bind('resize', function(event, ui) {
-        plot1.replot();
-    });
-    
-    $('#resizable2').bind('resizestop', function(event, ui) {
-        $('#chart2').height($('#resizable2').height()*0.96);
-        $('#chart2').width($('#resizable2').width()*0.96);
-        plot2.replot({resetAxes:true});
-    });
-	
-    plot1 = $.jqplot('chart1', [l1, l3],  options);
-    plot2 = $.jqplot('chart2', [l1, l3],  options);
-
-  });
-  
-  </script>
-  </head>
-  <body>
-<?php include "nav.inc"; ?>
-    
 <p>Plot targets can be placed inside of resizable containers for dynamic plot sizing.  The examples here use the jQuery UI package for resizing functionality.</p>
 
     <table><tr>
@@ -108,7 +81,7 @@
 <p>The event handler looks like:</p>
 <pre>
     $('#resizable1').bind('resize', function(event, ui) {
-        plot1.replot();
+        plot1.replot( { resetAxes: true } );
     });
 </pre>
 </td>
@@ -117,7 +90,7 @@
   <td>
 
 <div id="resizable2" class="ui-widget-content">
-    <div id="chart2" style="height:288px; width:384px;"></div>
+    <div id="chart2" style="height:96%; width:96%;"></div>
 </div>
 </td>
 <td>
@@ -143,6 +116,81 @@
 </pre>
 
 </td></tr></table>
-       
-  </body>
+
+<pre class="code brush:js"></pre>
+
+
+  <script type="text/javascript" class="code">
+  
+  $(document).ready(function(){
+
+    $.jqplot._noToImageButton = true;
+
+    var l1 = [18, 36, 41, 93, 100, 115, 133, 129, 119, 107, 91, 146, 169];
+    var l2 = [[8, 66], [13, 46], [22,14]];
+    var l3 = [[3.3, 7], [9.5, 22], [12.1, 37], [18.6, 95], [24, 102]];
+
+    var options = {
+      title: "Lines",
+      legend:{show:true, location:'se'},
+      seriesDefaults:{trendline:{show:true, type:"exp"}},
+      axes:{
+        yaxis:{
+          renderer:$.jqplot.LogAxisRenderer
+        }
+      }
+    };
+    
+    $("#resizable1").resizable({delay:20});
+    $("#resizable2").resizable({delay:20, helper:'ui-resizable-helper'});
+
+    $('#resizable1').bind('resize', function(event, ui) {
+        // pass in resetAxes: true option to get rid of old ticks and axis properties
+        // which should be recomputed based on new plot size.
+        plot1.replot( { resetAxes: true } );
+    });
+    
+    $('#resizable2').bind('resizestop', function(event, ui) {
+        $('#chart2').height($('#resizable2').height()*0.96);
+        $('#chart2').width($('#resizable2').width()*0.96);
+        // pass in resetAxes: true option to get rid of old ticks and axis properties
+        // which should be recomputed based on new plot size.
+        plot2.replot( { resetAxes:true } );
+    });
+    
+    var plot1 = $.jqplot('chart1', [l1, l3],  options);
+    var plot2 = $.jqplot('chart2', [l1, l3],  options);
+
+  });
+  
+  </script>
+
+<!-- End example scripts -->
+
+<!-- Don't touch this! -->
+
+
+    <script class="include" type="text/javascript" src="../jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.min.js"></script>
+<!-- End Don't touch this! -->
+
+<!-- Additional plugins go here -->
+
+  <script class="include" type="text/javascript" src="../jquery.jqplot.min.js"></script>
+  <script class="include" type="text/javascript" src="../plugins/jqplot.logAxisRenderer.min.js"></script>
+  <script class="include" type="text/javascript" src="../plugins/jqplot.trendline.min.js"></script>
+  
+  <link class="include" type="text/css" href="jquery-ui/css/smoothness/jquery-ui.min.css" rel="Stylesheet" /> 
+  <script class="include" type="text/javascript" src="jquery-ui/js/jquery-ui.min.js"></script>
+<!-- End additional plugins -->
+
+
+	</div>	
+	<script type="text/javascript" src="example.min.js"></script>
+
+</body>
+
+
 </html>

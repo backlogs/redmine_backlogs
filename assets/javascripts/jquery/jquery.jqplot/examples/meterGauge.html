@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Simple Test</title>
+	
+	<title>Meter Gauge</title>
+
+    <link class="include" rel="stylesheet" type="text/css" href="../jquery.jqplot.min.css" />
+    <link rel="stylesheet" type="text/css" href="examples.min.css" />
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.min.css" />
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemejqPlot.min.css" />
+  
   <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../excanvas.js"></script><![endif]-->
-  
-  <link rel="stylesheet" type="text/css" href="../jquery.jqplot.css" />
-  <link rel="stylesheet" type="text/css" href="examples.css" />
-  
-  <!-- BEGIN: load jquery -->
-  <script language="javascript" type="text/javascript" src="../jquery.js"></script>
-  <!-- END: load jquery -->
-  
-  <!-- BEGIN: load jqplot -->
-  <script language="javascript" type="text/javascript" src="../jquery.jqplot.js"></script>
-  <script language="javascript" type="text/javascript" src="../plugins/jqplot.meterGaugeRenderer.js"></script>
-  <!-- END: load jqplot -->
+    <script class="include" type="text/javascript" src="../jquery.min.js"></script>
+    
+   
+</head>
+<body>
+    <div class="logo">
+   <div class="nav">
+   <a class="nav" href="../../../index.php"><span>&gt;</span>Home</a>
+   <a class="nav"  href="../../../docs/"><span>&gt;</span>Docs</a>
+   <a class="nav"  href="../../download/"><span>&gt;</span>Download</a>
+   <a class="nav" href="../../../info.php"><span>&gt;</span>Info</a>
+   <a class="nav"  href="../../../donate.php"><span>&gt;</span>Donate</a>
+   </div>
+</div>
+    <div class="example-content">
+
+    <div class="example-nav">
+  <a href="mekkoCharts.html">Previous</a> <a href="./">Examples</a> <a href="multipleBarColors.html">Next</a></div>
+
+      
+<!-- Example scripts go here -->
+
 
 <style type="text/css">
 
@@ -47,18 +63,30 @@
 }
 </style>
 
-<script type="text/javascript">
-$(document).ready(function(){
-      $.jqplot.config.enablePlugins = true;
 
+<p>A meter gauge plot shows a data value in a speedometer style gauge.  The "series" in consists of a single data value that positions the needle on the gauge.  The span of the gauge will be automatically determined, or can be set with the "min" and "max" values in the "rendererOptions" of the series.  The plot below also specifies a chart title and a "label" for the gauge.</p>
+
+<div id="chart0" class="plot" style="width:250px;height:170px;"></div>
+
+<p>For small gauges, it can be desirable to turn off the tick labels by setting the "showTickLabels" option in the rendererOptions to false.  Also, colored interval bands can be specified.  The interval ranges are specified as an array of values the "intervals" option and custom colors for each interval can be specified with the "intervalColors" option.</p>
+
+<div id="chart1" class="plot" style="width:120px;height:80px;"></div>
+
+<p>The inner and outer radii of the interval band will automatically adjust when tick Labels are turned on.  Also, the gauge minimum and maximum can be specified with the "min" and "max" options in the rendererOptions.</p>
+
+<div id="chart3" class="plot" style="width:300px;height:180px;"></div>
+
+<p>The inner and outer radii of the interval band can also be specified with the "intervalInnerRadius" and "intervalOuterRadius" options.  In the plot below, the "labelPosition" option was set to "bottom" to put the gauge label below the plot.  The "labelHeightAdjust" option was set to -5 to raise the label slightly (5 pixels) to place it closer to the gauge.</p>
+<p>The gauge automatically resizes to best fit the container.  The font size of the tick labels and gauge labels do not size to the container, however.  The font size of the tick labels can be controlled by styling the css ".jqplot-meterGauge-ticks" class and the gauge label by the "jqplot-meterGauge-label" class.</p>
+<div id="chart4" class="plot" style="width:500px;height:300px;"></div>
+
+
+<script type="text/javascript" class="code">
+$(document).ready(function(){
    s1 = [1];
 
    plot0 = $.jqplot('chart0',[s1],{
        title: 'Network Speed',
-       // title: {
-       //     text: 'Network Speed',
-       //     location: 'n'
-       // },
        seriesDefaults: {
            renderer: $.jqplot.MeterGaugeRenderer,
            rendererOptions: {
@@ -66,6 +94,12 @@ $(document).ready(function(){
            }
        }
    });
+});
+</script>
+
+<script type="text/javascript" class="code">
+$(document).ready(function(){
+   s1 = [1];
 
    plot1 = $.jqplot('chart1',[s1],{
        seriesDefaults: {
@@ -77,8 +111,13 @@ $(document).ready(function(){
            }
        }
    });
+});
+</script>
 
+<script type="text/javascript" class="code">
+$(document).ready(function(){
    s1 = [322];
+
    plot3 = $.jqplot('chart3',[s1],{
        seriesDefaults: {
            renderer: $.jqplot.MeterGaugeRenderer,
@@ -90,8 +129,13 @@ $(document).ready(function(){
            }
        }
    });
+});
+</script>
 
+<script type="text/javascript" class="code">
+$(document).ready(function(){
    s1 = [52200];
+
    plot4 = $.jqplot('chart4',[s1],{
        seriesDefaults: {
            renderer: $.jqplot.MeterGaugeRenderer,
@@ -106,27 +150,30 @@ $(document).ready(function(){
            }
        }
    });
-   
- });
+});
 </script>
-  </head>
-  <body>
-<?php include "nav.inc"; ?>
+<!-- End example scripts -->
 
-<p>A meter gauge plot shows a data value in a speedometer style gauge.  The "series" in consists of a single data value that positions the needle on the gauge.  The span of the gauge will be automatically determined, or can be set with the "min" and "max" values in the "rendererOptions" of the series.  The plot below also specifies a chart title and a "label" for the gauge.</p>
+<!-- Don't touch this! -->
 
-<div id="chart0" class="plot" style="width:250px;height:170px;"></div>
 
-<p>For small gauges, it can be desirable to turn off the tick labels by setting the "showTickLabels" option in the rendererOptions to false.  Also, colored interval bands can be specified.  The interval ranges are specified as an array of values the "intervals" option and custom colors for each interval can be specified with the "intervalColors" option.</p>
+    <script class="include" type="text/javascript" src="../jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.min.js"></script>
+<!-- End Don't touch this! -->
 
-<div id="chart1" class="plot" style="width:120px;height:70px;"></div>
+<!-- Additional plugins go here -->
 
-<p>The inner and outer radii of the interval band will automatically adjust when tick Labels are turned on.  Also, the gauge minimum and maximum can be specified with the "min" and "max" options in the rendererOptions.</p>
+  <script class="include" type="text/javascript" src="../plugins/jqplot.meterGaugeRenderer.min.js"></script>
 
-<div id="chart3" class="plot" style="width:300px;height:180px;"></div>
+<!-- End additional plugins -->
 
-<p>The inner and outer radii of the interval band can also be specified with the "intervalInnerRadius" and "intervalOuterRadius" options.  In the plot below, the "labelPosition" option was set to "bottom" to put the gauge label below the plot.  The "labelHeightAdjust" option was set to -5 to raise the label slightly (5 pixels) to place it closer to the gauge.</p>
-<p>The gauge automatically resizes to best fit the container.  The font size of the tick labels and gauge labels do not size to the container, however.  The font size of the tick labels can be controlled by styling the css ".jqplot-meterGauge-ticks" class and the gauge label by the "jqplot-meterGauge-label" class.</p>
-<div id="chart4" class="plot" style="width:500px;height:300px;"></div>
-  </body>
+
+	</div>	
+	<script type="text/javascript" src="example.min.js"></script>
+
+</body>
+
+
 </html>

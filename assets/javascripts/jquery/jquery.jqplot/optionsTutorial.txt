@@ -37,6 +37,7 @@ something like (only some attributes shown):
 >        |-series(Array)-|
 >        |               |-Series1-|
 >        |               |         |-lineWidth
+>        |               |         |-linePattern
 >        |               |         |-shadow
 >        |               |         |-showLine
 >        |               |         |-showMarker
