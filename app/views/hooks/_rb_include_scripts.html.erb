@@ -7,10 +7,7 @@
 <%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || 
           (Redmine::VERSION::MAJOR > 2)
        ) || (controller.is_a? RbApplicationController)
-      javascript_include_tag(
-        'jquery/jquery-1.6.2.min.js',
-        'jquery/jquery-ui-1.8.16.custom.min.js',
-        :plugin => 'redmine_backlogs')
+      javascript_include_tag 'jquery/jquery-1.7.2-ui-1.8.21-ujs-2.0.3.js', :plugin => 'redmine_backlogs'
     end
 %>
 <%= javascript_include_tag 'jquery/jquery.jeditable.mini.js', :plugin => 'redmine_backlogs' %>
