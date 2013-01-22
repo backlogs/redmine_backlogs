@@ -211,13 +211,14 @@ class RbStory < Issue
     end
   end
 
-  def burndown(sprint = nil, status=nil)
+  def burndown(sprint = nil, status=nil, issue2history = nil)
+    issue2history = lambda{|i| i.history } if issue2history.nil?
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
     bd = {:points_committed => [], :points_accepted => [], :points_resolved => [], :hours_remaining => []}
 
-    self.history.filter(sprint, status).each{|d|
+    issue2history.call(self).filter(sprint, status).each{|d|
       if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :story
         [:points_committed, :points_accepted, :points_resolved, :hours_remaining].each{|k| bd[k] << nil}
       else

@@ -17,6 +17,7 @@ gem "open-uri-cached"
 gem "prawn"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
+gem "activerecord-import", ">= 0.2.0"
 
 group :development do
   gem "inifile"

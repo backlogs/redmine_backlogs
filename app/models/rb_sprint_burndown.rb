@@ -29,6 +29,12 @@ class RbSprintBurndown < ActiveRecord::Base
     self.save!
   end
 
+  def add_story(story_id)
+    story_id = Integer(story_id)
+    return if self.stories.include?(story_id)
+    self.stories << story_id
+  end
+
 #  This causes a recursive call to recalculate. I don't know why yet
 #  def [](key)
 #    self.recalculate!
@@ -70,7 +76,7 @@ class RbSprintBurndown < ActiveRecord::Base
     self.direction = Backlogs.setting[:points_burn_direction]
   end
 
-  def burndown
+  def burndown(do_save = true, issue2history = nil)
     return @_burndown if defined?(@_burndown)
 
     @_burndown = read_attribute(:burndown)
@@ -89,7 +95,7 @@ class RbSprintBurndown < ActiveRecord::Base
       statuses = RbIssueHistory.statuses
 
       RbStory.find(:all, :conditions => ['id in (?)', self.stories]).each{|story|
-        bd = story.burndown(sprint, statuses)
+        bd = story.burndown(sprint, statuses, issue2history)
         next unless bd
         bd.each_pair {|k, data|
           data.each_with_index{|d, i|
@@ -123,7 +129,7 @@ class RbSprintBurndown < ActiveRecord::Base
 
     cur = read_attribute(:burndown)
     write_attribute(:burndown, @_burndown)
-    self.save if @_burndown != cur
+    self.save if @_burndown != cur && do_save
     return @_burndown
   end
 end
