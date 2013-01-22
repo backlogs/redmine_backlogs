@@ -40,22 +40,22 @@ export RAILS_ENV=test
 export IN_RBL_TESTENV=true
 
 case $REDMINE_VER in
-  1.4.6)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
+  1.4.*)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.0.4)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  2.0.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.1.6)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
+  2.1.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.2.2)  export PATH_TO_PLUGINS=./plugins # for redmine 2.2
+  2.2.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.2
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
