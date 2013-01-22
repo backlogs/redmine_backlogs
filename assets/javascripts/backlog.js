@@ -176,7 +176,7 @@ RB.Backlog = RB.Object.create({
   },
 
   dragStart: function(event, ui) {
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.addClass("dragging");
     } else {
       // for IE    
@@ -205,7 +205,7 @@ RB.Backlog = RB.Object.create({
   },
 
   dragStop: function(event, ui) { 
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.removeClass("dragging");
     } else {
       // for IE

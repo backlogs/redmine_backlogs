@@ -1,30 +1,30 @@
+<!-- rb_include_scripts -->
 <%= stylesheet_link_tag 'jquery/jquery.jqplot.min.css', :plugin => 'redmine_backlogs' %>
-
 <%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || 
           (Redmine::VERSION::MAJOR > 2)
        ) || (controller.is_a? RbApplicationController)
-      javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs' 
-    end
-%>
-<%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) || 
-          (Redmine::VERSION::MAJOR > 2)
-       ) || (controller.is_a? RbApplicationController)
-      javascript_include_tag 'jquery/jquery-ui-1.8.16.custom.min.js', :plugin => 'redmine_backlogs'
+      javascript_include_tag(
+        'jquery/jquery-1.6.2.min.js',
+        'jquery/jquery-ui-1.8.16.custom.min.js',
+        :plugin => 'redmine_backlogs')
     end
 %>
 <%= javascript_include_tag 'jquery/jquery.jeditable.mini.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery.scrollfollow.js', :plugin => 'redmine_backlogs' %>
-
 <!--[if IE]>
 <%= javascript_include_tag 'jquery/jquery.jqplot/excanvas.js', :plugin => 'redmine_backlogs' %>
 <![endif]-->
-<%= javascript_include_tag 'jquery/jquery.jqplot/jquery.jqplot.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.highlighter.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'jquery/jquery.cookie.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag('jquery/jquery.jqplot/jquery.jqplot.js',
+      'jquery/jquery.jqplot/plugins/jqplot.highlighter.js',
+      'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js',
+      'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js',
+      'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js',
+      'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js',
+      'jquery/jquery.cookie.js',
+      :plugin => 'redmine_backlogs') %>
 
+<%# render the javascript_include_tags which must come before common.js %>
+<%= controller.rb_jquery_plugins if controller.respond_to?('rb_jquery_plugins') %>
 <script type="text/javascript"
         src="<%= url_for(:controller => 'rb_server_variables',
                          :action => 'index', :format => 'js') %>">

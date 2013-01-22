@@ -2,11 +2,12 @@ if(RB==null){
   var RB = {};
 }
 
-if (RB.$ == null) { 
-  RB.$ = jQuery.noConflict(); 
-  if ($ === undefined) {
-    $ = RB.$;
-  }
+/* It is utterly important that this script comes AFTER any 2nd party jquery plugins */
+if (!RB.$) { 
+  RB.$ = jQuery.noConflict(true);//completely restore redmines jquery
+  //provide compat for library callbacks. jquery.cookie does not work properly otherwise.
+  if ($ === undefined) $ = RB.$;
+  if (jQuery === undefined) jQuery = $;
 }
 
 RB.Object = {

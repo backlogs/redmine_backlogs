@@ -310,15 +310,15 @@ RB.Model = RB.Object.create({
   },
 
   refreshTooltip: function(model) {
-    if (typeof jQuery.qtipMakeOptions != 'function') {
+    if (typeof RB.$.qtipMakeOptions != 'function') {
         return;
     }
     if (typeof model == 'undefined') {
         model = this;
     }
     model.$.find('div.story_tooltip').each(function(el) {
-        var _ = jQuery(this);
-        _.qtip(jQuery.qtipMakeOptions(_));
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_));
     });
   },
   

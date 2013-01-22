@@ -4,7 +4,7 @@ if (RB.burndown == null) { RB.burndown = {options: {}, charts: {}}; }
 RB.burndown.options.disabled_series = function(new_value) {
   if (new_value == undefined) {
     var v = RB.UserPreferences.get('disabled_burndown_series', true);
-    if (!v || jQuery.inArray(',', v) == -1) { v = ''; }
+    if (!v || RB.$.inArray(',', v) == -1) { v = ''; }
     return v.split(',');
   } else {
     RB.UserPreferences.set('disabled_burndown_series', new_value.join(','), true);
@@ -39,7 +39,7 @@ RB.burndown.redraw = function() {
 
     for (name in chart.position) {
       pos = chart.position[name];
-      chart.chart.series[pos].show = (jQuery.inArray(name, disabled) == -1);
+      chart.chart.series[pos].show = (RB.$.inArray(name, disabled) == -1);
     }
 
     if (legend == 'off') {
@@ -61,7 +61,7 @@ RB.burndown.change_legend = function(rb) {
 RB.burndown.change_series = function(cb) {
   var disabled = RB.burndown.options.disabled_series();
 
-  var i = jQuery.inArray(cb.value, disabled);
+  var i = RB.$.inArray(cb.value, disabled);
   if (i != -1) { disabled.splice(i, 1); }
   if (!cb.checked) { disabled.push(cb.value); }
   RB.burndown.options.disabled_series(disabled);
