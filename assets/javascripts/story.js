@@ -46,7 +46,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var status_id = status.val();
 
     // right after creation, no menu exists to pick from
-    if (!status_id || status_id == '') { status_id = RB.constants.story_states['default']; }
+    if (!status_id) { status_id = RB.constants.story_states['default']; }
 
     var states = RB.constants.story_states['transitions'][tracker_id][user_status][status_id];
     if (!states) { states = RB.constants.story_states['transitions'][tracker_id][user_status][RB.constants.story_states['transitions'][tracker_id][user_status]['default']]; }
@@ -57,7 +57,7 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
       if (this.$.find('.tracker_id .v').text() == tracker_id) { // if we're switching back to the original tracker, select the original state
         status_id = this.$.find('.status_id .v').text();
       } else { // pick first available
-        if (states.length != 0) {
+        if (states.length > 0) {
           status_id = states[0];
         }
       }
