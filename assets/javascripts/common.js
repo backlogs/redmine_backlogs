@@ -61,6 +61,21 @@ RB.ajaxQueue = new Array();
 RB.ajaxOngoing = false;
 
 RB.ajax = function(options){
+  //normalize passed option data: converts from object or array in $.serializeArray format
+  options.data = options.data || "";
+  if (typeof options.data != "string") {
+    options.data = RB.$.param(options.data);
+  }
+
+  // add auto-parameter: project_id and csrf
+  if (options.data.indexOf("project_id=") == -1) {
+    options.data += (options.data ? "&" : "") + "project_id=" + RB.constants.project_id;
+  }
+  if(RB.constants.protect_against_forgery){
+    options.data += "&" + RB.constants.request_forgery_protection_token +
+                    "=" + encodeURIComponent(RB.constants.form_authenticity_token); 
+  }
+
   RB.ajaxQueue.push(options);
   if(!RB.ajaxOngoing){ RB.processAjaxQueue(); }
 };
@@ -70,27 +85,20 @@ RB.processAjaxQueue = function(){
 
   if(options){
     RB.ajaxOngoing = true;
-    RB.$.ajax(options);
+    RB.$.ajax(options).
+      always(function() {
+      /**
+       * callback: after success or fail.
+       * maintain queue state and requeue next request.
+       * Beware: we do not use arguments here, 
+       * the signature depends on success/fail of the request. That is just braindead.
+       */
+        RB.ajaxOngoing = false;
+        RB.processAjaxQueue();
+      });
   }
 };
 
-RB.$(document).ajaxComplete(function(event, xhr, settings){
-  RB.ajaxOngoing = false;
-  RB.processAjaxQueue();
-});
-
-// Modify the ajax request before being sent to the server
-RB.$(document).ajaxSend(function(event, request, settings) {
-  settings.data = settings.data || "";
-
-  if (settings.data.indexOf("project_id=") == -1) {
-    settings.data += (settings.data ? "&" : "") + "project_id=" + RB.constants.project_id;
-  }
-
-  if(RB.constants.protect_against_forgery){
-      settings.data += "&" + RB.constants.request_forgery_protection_token + "=" + encodeURIComponent(RB.constants.form_authenticity_token);
-  }
-});
 
 // Abstract the user preference from the rest of the RB objects
 // so that we can change the underlying implementation as needed
