@@ -2,7 +2,8 @@
  * jqPlot
  * Pure JavaScript plotting plugin using jQuery
  *
- * Version: 1.0.0b2_r792
+ * Version: 1.0.0
+ * Revision: 1095
  *
  * Copyright (c) 2009-2011 Chris Leonello
  * jqPlot is currently available for use in all personal or commercial projects 
@@ -83,7 +84,7 @@
     };
     
     // called with scope of axis
-    $.jqplot.MekkoAxisRenderer.prototype.draw = function(ctx) {
+    $.jqplot.MekkoAxisRenderer.prototype.draw = function(ctx, plot) {
         if (this.show) {
             // populate the axis label and value properties.
             // createTicks is a method on the renderer, but
@@ -136,7 +137,7 @@
                     this._barLabels[i].show = false;
                 }
                 if (this._barLabels[i].show) {
-                    var elem = this._barLabels[i].draw(ctx);
+                    var elem = this._barLabels[i].draw(ctx, plot);
                     elem.removeClass('jqplot-'+this.name+'-label');
                     elem.addClass('jqplot-'+this.name+'-tick');
                     elem.addClass('jqplot-mekko-barLabel');

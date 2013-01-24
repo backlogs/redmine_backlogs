@@ -106,3 +106,8 @@ ul.ui-sortable {
   opacity: 0.5;
   background-color: #dddddd;
 }
+
+/* redmine header in backlogs page */
+#usability-compat-wrapper {font-size:12px }
+.w-rb-header-collapsed { height:18px; overflow:hidden; }
+

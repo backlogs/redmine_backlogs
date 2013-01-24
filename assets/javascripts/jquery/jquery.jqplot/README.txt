@@ -2,7 +2,7 @@ Title: jqPlot Readme
 
 Pure JavaScript plotting plugin for jQuery.
 
-To learn how to use jqPlot, start with the Basic Unsage Instructions below.  Then read the
+To learn how to use jqPlot, start with the Basic Usage Instructions below.  Then read the
 usage.txt and jqPlotOptions.txt files included with the distribution.
 
 The jqPlot home page is at <http://www.jqplot.com/>.

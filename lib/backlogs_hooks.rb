@@ -56,8 +56,9 @@ module BacklogsPlugin
           return %{
             <div id="backlogs_view_issues_sidebar"></div>
             <script type="text/javascript">
-              jQuery(document).ready(function() {
-                jQuery('#backlogs_view_issues_sidebar').load('#{url}');
+              var $j = RB.$ || $;
+              $j(function($) {
+                $('#backlogs_view_issues_sidebar').load('#{url}');
               });
             </script>
           }
@@ -129,17 +130,15 @@ module BacklogsPlugin
             end
 
             if issue.descendants.length != 0 && !issue.new_record?
-              snippet += javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'
               snippet += <<-generatedscript
 
                 <script type="text/javascript">
-                  var $j = jQuery.noConflict();
-
-                  $j(document).ready(function() {
-                    $j('#issue_estimated_hours').attr('disabled', 'disabled');
-                    $j('#issue_done_ratio').attr('disabled', 'disabled');
-                    $j('#issue_start_date').parent().hide();
-                    $j('#issue_due_date').parent().hide();
+                  var $j = RB.$ || $;
+                  $j(function($) {
+                    $('#issue_estimated_hours').attr('disabled', 'disabled');
+                    $('#issue_done_ratio').attr('disabled', 'disabled');
+                    $('#issue_start_date').parent().hide();
+                    $('#issue_due_date').parent().hide();
                   });
                 </script>
               generatedscript
@@ -207,13 +206,12 @@ module BacklogsPlugin
 
             # this wouldn't be necesary if the schedules plugin
             # didn't disable the contextual hook
-            snippet += javascript_include_tag 'jquery/jquery-1.6.2.min.js', :plugin => 'redmine_backlogs'
             snippet += <<-generatedscript
 
               <script type="text/javascript">
-                  var $j = jQuery.noConflict();
-                $j(document).ready(function() {
-                  $j('#edit_wiki_page_action').detach().appendTo("div.contextual");
+                var $j = RB.$ || $;
+                $j(function($) {
+                  $('#edit_wiki_page_action').detach().appendTo("div.contextual");
                 });
               </script>
             generatedscript
@@ -310,7 +308,9 @@ module BacklogsPlugin
           end
         end
 
-        return context[:controller].send(:render_to_string, {:locals => context}.merge(:partial=> 'hooks/rb_include_scripts'))
+        return context[:controller].send(:render_to_string, {
+          :locals => context,
+          :partial=> 'hooks/rb_include_scripts'})
       end
 
       def view_timelog_edit_form_bottom(context={ })

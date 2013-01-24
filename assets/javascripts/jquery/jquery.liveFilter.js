@@ -54,8 +54,8 @@
 		});		
 		
 		// Custom expression for case insensitive contains()
-		jQuery.expr[':'].Contains = function(a,i,m){
-		    return jQuery(a).text().toLowerCase().indexOf(m[3].toLowerCase())>=0;
+		$.expr[':'].Contains = function(a,i,m){
+		    return $(a).text().toLowerCase().indexOf(m[3].toLowerCase())>=0;
 		}; 
 
 	}

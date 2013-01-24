@@ -1,4 +1,14 @@
 <!-- MASTER BACKLOG VIEW -->
+<%# early javascript before common.hs %>
+<%- controller.rb_jquery_plugins = capture do %>
+  <%= javascript_include_tag(
+    'jquery/jquery.qtip.pack.js',
+    'jquery/jquery.qtip.setup.js',
+    'jquery/jquery.liveFilter.js',
+    'jquery/jquery.liveFilter.setup.js',
+    'jquery/jquery.multiselect.js',
+    :plugin => 'redmine_backlogs') %>
+<%- end %>
 <%- content_for :head_tags do %>
   <script type="text/javascript"
           src="<%= url_for(:controller => 'rb_server_variables',
@@ -9,12 +19,6 @@
   </script>
 
   <%= javascript_include_tag(
-    'jquery/jquery.qtip.pack.js',
-    'jquery/jquery.qtip.setup.js',
-    'jquery/jquery.liveFilter.js',
-    'jquery/jquery.liveFilter.setup.js',
-    'jquery/rails.js',
-    'jquery/jquery.multiselect.js',
     'master_backlog',
     'backlog',
     'backlog_options',
@@ -25,18 +29,17 @@
     'story',
     'board_updater',
     'master_backlog_updater',
-    'burndown',
     :plugin => 'redmine_backlogs') %>
   <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'master_backlog.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'master_backlog_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
-  <script type="text/javascript">jQuery(document).ready(function() { jQuery("#livefilter_controll").focus(); });</script>
+  <script type="text/javascript">RB.$(document).ready(function() { RB.$("#livefilter_controll").focus(); });</script>
   <!--[if IE]>
   <script type="text/javascript">
-    jQuery(document).ready(function() {
-      jQuery("#backlogs_container ul").each(function() {
-        jQuery(this).find('li:odd').css('background-color', '#dddddd');
+    RB.$(document).ready(function() {
+      RB.$("#backlogs_container ul").each(function() {
+        RB.$(this).find('li:odd').css('background-color', '#dddddd');
       });
     });
   </script>

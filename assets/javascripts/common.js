@@ -1,11 +1,14 @@
-if(RB==null){
-  var RB = {};
-}
+var RB = RB || {}; // declare namespace
 
-if (RB.$ == null) { 
-  RB.$ = jQuery.noConflict(); 
-  if ($ === undefined) {
+/* It is utterly important that this script comes AFTER any 3rd party jquery plugins */
+if (!RB.$) {
+  RB.$ = jQuery.noConflict(true);//completely restore redmines jquery
+  if (!window.$) { // restore $ to redmine original (jquery 2.1+ or prototype 2.0) or make it jquery if not a redmine view.
     $ = RB.$;
+  }
+  //global jQuery is not available anymore.
+  if (!window.jQuery) { // restore jQuery to redmine if it was jQuery in the first place (2.1+) or use backlogs (2.0)
+    jQuery = $ || RB.$; // this can mask errors of uncleanly written plugins (jqplot) but will allow redmine to function for such cases.
   }
 }
 
@@ -44,7 +47,7 @@ RB.Factory = RB.Object.create({
 // Utilities
 RB.Dialog = RB.Object.create({
   msg: function(msg){
-    dialog = RB.$('#msgBox').size()==0 ? RB.$(document.createElement('div')).attr('id', 'msgBox').appendTo('body') : RB.$('#msgBox');
+    dialog = RB.$('#msgBox').length ? RB.$(document.createElement('div')).attr('id', 'msgBox').appendTo('body') : RB.$('#msgBox');
     dialog.html(msg);
     dialog.dialog({ title: 'Backlogs Plugin',
                     buttons: { "OK": function() { RB.$(this).dialog("close"); } },
@@ -53,7 +56,7 @@ RB.Dialog = RB.Object.create({
   },
   
   notice: function(msg){
-    if(typeof console != "undefined" && console != null) console.log(msg);
+    if(window.console && typeof console.log == "function") console.log(msg);
   }
 });
 
@@ -99,14 +102,15 @@ RB.processAjaxQueue = function(){
   }
 };
 
-
 // Abstract the user preference from the rest of the RB objects
 // so that we can change the underlying implementation as needed
 RB.UserPreferences = RB.Object.create({
   get: function(key, global){
     var path = RB.urlFor('home')+'rb';
-    if (global) return RB.$.cookie(key, {path: path});
-    return RB.$.cookie(key);
+    try {
+      if (global) return RB.$.cookie(key, undefined, {path: path});
+      return RB.$.cookie(key);
+    } catch(e) { return null; }
   },
   
   set: function(key, value, global){

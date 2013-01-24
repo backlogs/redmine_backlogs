@@ -55,7 +55,7 @@ RB.Model = RB.Object.create({
   },
 
   copyFromDialog: function(){
-    var editors = this.$.find(".editors").length==0 ? RB.$(document.createElement("div")).addClass("editors").appendTo(this.$) : this.$.find(".editors").first();
+    var editors = (!this.$.find(".editors").length) ? RB.$(document.createElement("div")).addClass("editors").appendTo(this.$) : this.$.find(".editors").first();
     editors.html("");
     editors.append(RB.$("#" + this.getType().toLowerCase() + "_editor").children(".editor"));
     this.saveEdits();
@@ -88,7 +88,7 @@ RB.Model = RB.Object.create({
     
     this.$.find('.editable').each(function(index){
       var field = RB.$(this);
-      var fieldType = field.attr('fieldtype')!=null ? field.attr('fieldtype') : 'input';
+      var fieldType = field.attr('fieldtype') ? field.attr('fieldtype') : 'input';
       var fieldName = field.attr('fieldname');
       var fieldLabel = field.attr('fieldlabel');
       var input;
@@ -158,7 +158,7 @@ RB.Model = RB.Object.create({
     if (!msg) { msg = xhr.responseText.match(/<h1>[\s\S]*?<\/h1>/i); }
     if (!msg) { msg = xhr.responseText; }
     if (msg instanceof Array) { msg = msg[0]; }
-    if (!msg || msg.length == 0) {
+    if (!msg || !msg.length) {
       msg = 'an error occured, please check the server logs (' + xhr.statusText + ')';
       RB.Dialog.notice(xhr.statusText + ': ' + xhr.responseText);
     }
@@ -171,7 +171,7 @@ RB.Model = RB.Object.create({
     // Create the model editor if it does not yet exist
     var editor_id = this.getType().toLowerCase() + "_editor";
     var editor = RB.$("#" + editor_id).html("");
-    if(editor.length==0){
+    if(!editor.length){
       editor = RB.$( document.createElement("div") ).
                  attr('id', editor_id).
                  appendTo("body");
@@ -188,7 +188,7 @@ RB.Model = RB.Object.create({
   },
     
   handleClick: function(event){
-    if(event.button != 0) return; // only respond to left click
+    if(event.button !== 0) return; // only respond to left click
     var field = RB.$(this);
     var model = field.parents('.model').first().data('this');
     var j = model.$;
@@ -216,7 +216,7 @@ RB.Model = RB.Object.create({
   },
   
   isNew: function(){
-    return this.getID()=="";
+    return !(this.getID());
   },
 
   markError: function(){
@@ -310,15 +310,15 @@ RB.Model = RB.Object.create({
   },
 
   refreshTooltip: function(model) {
-    if (typeof jQuery.qtipMakeOptions != 'function') {
+    if (typeof RB.$.qtipMakeOptions != 'function') {
         return;
     }
     if (typeof model == 'undefined') {
         model = this;
     }
     model.$.find('div.story_tooltip').each(function(el) {
-        var _ = jQuery(this);
-        _.qtip(jQuery.qtipMakeOptions(_));
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_));
     });
   },
   

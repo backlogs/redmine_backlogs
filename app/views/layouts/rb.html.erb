@@ -21,12 +21,21 @@
 <%= yield :head_tags -%>
 
 <% if Backlogs.setting[:show_redmine_std_header] %>
-<style type="text/css">
-#usability-compat-wrapper {font-size:12px}
-.w-rb-header-collapsed { height:18px; overflow:hidden; }
-</style>
 <script type="text/javascript">
 RB.$(function(){
+
+  /* jquery sortable behaves erradically on firefox when
+   * the page is scrolled down AND position:relative elements are containing the sortable AND overflow-y:scroll is used.
+   * As that overflow-y comes from redmine (its an IE fix) and i decided against using css @-moz-document to fix this up,
+   * here the mini browser detection in active code.
+   * wth.
+   */
+  try{ if (navigator.userAgent.toLowerCase().match(/mozilla/)) {
+    //fix around jquery sortable offset problems when page is scrolled down.
+    document.getElementsByTagName('html')[0].style.overflowY = 'inherit';
+  }} catch(e){}
+
+  /* provide the possibility to collapse the redmine header */
   RB.$('#usability-compat-wrapper').bind('dblclick', function(e,u){
     RB.$('#usability-compat-wrapper').toggleClass('w-rb-header-collapsed');
   });

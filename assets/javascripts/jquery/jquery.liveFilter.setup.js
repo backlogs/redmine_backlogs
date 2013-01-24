@@ -1,3 +1,3 @@
-jQuery(function() {
-    jQuery('ul.stories').liveFilter('basic');
+$(function($) {
+    $('ul.stories').liveFilter('basic');
 });

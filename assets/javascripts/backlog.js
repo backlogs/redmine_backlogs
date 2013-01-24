@@ -77,7 +77,8 @@ RB.Backlog = RB.Object.create({
       id = this.getRelease().data('this').getID();
       ajaxdata = { release_id: id };
     }
-    if (id == '') { return; } // template sprint
+    // else id = null // product backlog
+    if (id === "") { return; } // template sprint
 
     var createMenu = function(data, list)
     {
@@ -129,12 +130,10 @@ RB.Backlog = RB.Object.create({
   },
   
   dragComplete: function(event, ui) {
-    var isDropTarget = (ui.sender==null);
-
     // jQuery triggers dragComplete of source and target. 
     // Thus we have to check here. Otherwise, the story
     // would be saved twice.
-    if(isDropTarget && ui.item.data('dragging')){
+    if(!ui.sender && ui.item.data('dragging')){
       ui.item.data('this').saveDragResult();
     }
 
@@ -143,13 +142,14 @@ RB.Backlog = RB.Object.create({
   },
   
   mouseDown: function(event) {
+    var i;
     var item = RB.$(event.target).parents('.model');
     var storyProject = item.find(".story_project").text();
 
     // disable invalid drag targets
     RB.$('#sprint_backlogs_container .stories').sortable('disable');
     if (RB.constants.project_versions[storyProject]) {
-      for (var i = 0; i < RB.constants.project_versions[storyProject].length; i++) {
+      for (i = 0; i < RB.constants.project_versions[storyProject].length; i++) {
         RB.$('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
       }
     }
@@ -157,7 +157,7 @@ RB.Backlog = RB.Object.create({
     //disable release backlogs
     RB.$('#product_backlog_container .release_backlog .stories').sortable('disable');
     if (RB.constants.project_releases[storyProject]) {
-      for (var i = 0; i < RB.constants.project_releases[storyProject].length; i++) {
+      for (i = 0; i < RB.constants.project_releases[storyProject].length; i++) {
         RB.$('#stories-for-release-' + RB.constants.project_releases[storyProject][i]).sortable('enable');
       }
     }
@@ -176,7 +176,7 @@ RB.Backlog = RB.Object.create({
   },
 
   dragStart: function(event, ui) {
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.addClass("dragging");
     } else {
       // for IE    
@@ -205,7 +205,7 @@ RB.Backlog = RB.Object.create({
   },
 
   dragStop: function(event, ui) { 
-    if (jQuery.support.noCloneEvent){
+    if (RB.$.support.noCloneEvent){
       ui.item.removeClass("dragging");
     } else {
       // for IE
@@ -242,7 +242,7 @@ RB.Backlog = RB.Object.create({
 
     var project_id = null;
     var project_id_class = RB.$(this).attr('class').match(/project_id_([0-9]+)/);
-    if(project_id_class != null && project_id_class.length == 2) {
+    if(project_id_class && project_id_class.length == 2) {
       project_id = project_id_class[1];
     }
 
@@ -265,7 +265,7 @@ RB.Backlog = RB.Object.create({
     
   newStory: function(project_id) {
     var story = RB.$('#story_template').children().first().clone();
-    if(project_id != null) {
+    if(project_id) {
       RB.$('#project_id_options').empty();
       RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
     }
@@ -318,7 +318,7 @@ RB.Backlog = RB.Object.create({
 
   showBurndownChart: function(event){
     event.preventDefault();
-    if(RB.$("#charts").length==0){
+    if (RB.$("#charts").length === 0){
       RB.$( document.createElement("div") ).attr('id', "charts").appendTo("body");
     }
     RB.$('#charts').html( "<div class='loading'>Loading data...</div>");
