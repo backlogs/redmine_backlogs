@@ -77,7 +77,8 @@ RB.Backlog = RB.Object.create({
       id = this.getRelease().data('this').getID();
       ajaxdata = { release_id: id };
     }
-    if (!id) { return; } // template sprint
+    // else id = null // product backlog
+    if (id === "") { return; } // template sprint
 
     var createMenu = function(data, list)
     {
