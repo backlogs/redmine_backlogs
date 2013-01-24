@@ -189,6 +189,13 @@ When /^I edit the sprint notes$/ do
   visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => current_sprint.id, :only_path => true)
 end
 
+#FIXME this does not work well.
+#When /^I follow "Wiki" from the menu of a Sprint$/ do
+#  #capybara will not follow our menu. so here a hack.
+#  page.find(:xpath, "//div[@id='main']//div[@class='menu']").click
+#  node = page.find(:xpath, "//div[@id='main']//a[contains(normalize-space(text()),'Wiki')]").click
+#end
+
 When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type, how_many, period, direction|
   date = eval("#{ how_many }.#{ period }.#{ direction=='from now' ? 'from_now' : 'ago' }")
   date = date.strftime("%B %d, %Y %H:%M:%S") + '.' + (date.to_f % 1 + 0.001).to_s.split('.')[1]

@@ -201,7 +201,7 @@ module BacklogsPlugin
 
           if User.current.allowed_to?(:edit_wiki_pages, project)
             snippet += '<span id="edit_wiki_page_action">'
-            snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
+            snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :sprint_id => version.id }, :class => 'icon icon-edit'
             snippet += '</span>'
 
             # this wouldn't be necesary if the schedules plugin
@@ -212,6 +212,8 @@ module BacklogsPlugin
                 var $j = RB.$ || $;
                 $j(function($) {
                   $('#edit_wiki_page_action').detach().appendTo("div.contextual");
+                  //hide the redmine 'edit associated wiki page' if it exists, so we only have our button consistently.
+                  if ('#{version.wiki_page_title}' !== '') $(".contextual a.icon-edit:contains('#{version.wiki_page_title}')").hide()
                 });
               </script>
             generatedscript

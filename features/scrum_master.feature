@@ -155,6 +155,26 @@ Feature: Scrum Master
      Then the request should complete successfully
      Then the wiki page Sprint 001 should contain Sprint Template
 
+  @javascript
+  Scenario: click the various links to the sprint wiki page and inspect the frontend visually
+    Given I have set the content for wiki page Sprint Template to Sprint Template
+      And I have made Sprint Template the template page for sprint notes
+      And I am viewing the issues list
+     #check wiki link from sidebar
+     When I follow "Sprint 001" within "#sidebar"
+     When I follow "Wiki" within "#sidebar"
+     Then I should see "Sprint Template" within ".wiki-page"
+     # now check edit wiki page on version page
+     When I follow "Settings" within "#main-menu"
+      And I follow "Versions" within ".tabs"
+      And I follow "Sprint 001" within "#tab-content-versions .versions td.name"
+      And I follow "Edit wiki page" within ".contextual"
+     Then I should see "Sprint Template" within "#content_text"
+     # check from backlogs sprint menu does not test reliably. 2bd.
+     #When I follow "Backlogs" within "#main-menu"
+     # And I follow "Wiki" from the menu of a Sprint
+     #Then I should see "Sprint Template" within ".wiki-page"
+
   Scenario: Update sprint with start date greater than end date
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001
