@@ -1,3 +1,16 @@
+var RB = RB || {}; // declare namespace
+
+/* It is utterly important that this script comes AFTER any 3rd party jquery plugins */
+if (!RB.$) {
+  RB.$ = jQuery.noConflict(true);//completely restore redmines jquery
+  if (!window.$) { // restore $ to redmine original (jquery 2.1+ or prototype 2.0) or make it jquery if not a redmine view.
+    $ = RB.$;
+  }
+  //global jQuery is not available anymore.
+  if (!window.jQuery) { // restore jQuery to redmine if it was jQuery in the first place (2.1+) or use backlogs (2.0)
+    jQuery = $ || RB.$; // this can mask errors of uncleanly written plugins (jqplot) but will allow redmine to function for such cases.
+  }
+}
 
 RB.Object = {
   // Douglas Crockford's technique for object extension

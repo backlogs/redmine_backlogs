@@ -1,6 +1,4 @@
-if(RB==null){ var RB = {}; }
-
-if (RB.constants == null) {
+if (!RB.constants) {
   RB.buildImageTag = function(name) {
     return "<img src='<%= image_path('') %>"+ name + "'/>";
   };

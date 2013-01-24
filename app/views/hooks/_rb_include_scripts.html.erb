@@ -22,21 +22,10 @@
 
 <%# render the javascript_include_tags which must come before noConflict %>
 <%= controller.rb_jquery_plugins if controller.respond_to?('rb_jquery_plugins') %>
-<script type="text/javascript">
-if (!window.RB) var RB={}; //declare namespace early
-/* It is utterly important that this script comes AFTER any 2nd party jquery plugins */
-if (!RB.$) { 
-  RB.$ = jQuery.noConflict(true);//completely restore redmines jquery
-  if (!window.$) { // restore $ to redmine original (jquery 2.1+ or prototype 2.0) or make it jquery if not a redmine view.
-    $ = RB.$;
-  }
-//  if (!window.jQuery) { // restore jQuery to redmine if it was jQuery in the first place (2.1+) or use backlogs (2.0)
-//    jQuery = ((RB.old$ && RB.old$.fn && typeof(RB.old$.fn.jquery) == "string") ? RB.old$ : RB.$);
-//  }
-}
-</script>
+<%# load our framework, it initializes the namespace and jquery.noConflict %>
+<%= javascript_include_tag 'common.js', :plugin => 'redmine_backlogs' %>
 <script type="text/javascript"
         src="<%= url_for(:controller => 'rb_server_variables',
                          :action => 'index', :format => 'js') %>">
 </script>
-<%= javascript_include_tag 'common.js', 'burndown.js', :plugin => 'redmine_backlogs' %>
+<%= javascript_include_tag 'burndown.js', :plugin => 'redmine_backlogs' %>
