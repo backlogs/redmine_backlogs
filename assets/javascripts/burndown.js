@@ -1,5 +1,5 @@
-if (RB == null) { var RB = {}; }
-if (RB.burndown == null) { RB.burndown = {options: {}, charts: {}}; }
+if (!window.RB) { var RB = {}; }
+if (typeof RB.burndown == "undefined") { RB.burndown = {options: {}, charts: {}}; }
 
 RB.burndown.options.disabled_series = function(new_value) {
   if (new_value == undefined) {
@@ -8,6 +8,7 @@ RB.burndown.options.disabled_series = function(new_value) {
     return v.split(',');
   } else {
     RB.UserPreferences.set('disabled_burndown_series', new_value.join(','), true);
+    return new_value;
   }
 };
 RB.burndown.options.show_legend = function() {
