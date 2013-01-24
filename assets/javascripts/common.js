@@ -89,14 +89,15 @@ RB.processAjaxQueue = function(){
   }
 };
 
-
 // Abstract the user preference from the rest of the RB objects
 // so that we can change the underlying implementation as needed
 RB.UserPreferences = RB.Object.create({
   get: function(key, global){
     var path = RB.urlFor('home')+'rb';
-    if (global) return RB.$.cookie(key, {path: path});
-    return RB.$.cookie(key);
+    try {
+      if (global) return RB.$.cookie(key, undefined, {path: path});
+      return RB.$.cookie(key);
+    } catch(e) { return null; }
   },
   
   set: function(key, value, global){
