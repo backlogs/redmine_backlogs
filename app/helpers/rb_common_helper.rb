@@ -252,4 +252,12 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     RbRelease::RELEASE_SHARINGS.include?(v) ? l("label_version_sharing_#{v}") : "none"
   end
 
+  #fixup rails base uri which is not obeyed IF url_for is used in a redmine layout hook
+  def url_for_prefix_in_hooks
+    if Rails::VERSION::MAJOR < 3
+      '' #actionpack-2.3.14/lib/action_controller/url_rewriter.rb is injecting relative_url_root
+    else
+      Redmine::Utils.relative_url_root #actionpack-3* is not???
+    end
+  end
 end
