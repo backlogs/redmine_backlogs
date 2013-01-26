@@ -101,6 +101,7 @@ RB.Model = RB.Object.create({
       input.addClass('editor');
       input.removeClass('template');
       input.removeClass('helper');
+      input.attr('_rb_width', field.width());
       // Add a date picker if field is a date field
       if (field.hasClass("date")){
         input.datepicker({ changeMonth: true,
@@ -180,7 +181,7 @@ RB.Model = RB.Object.create({
   },
   
   getID: function(){
-    return this.$.children('.id').children('.v').text();
+    return this.$.find('.id .v').text();
   },
   
   getType: function(){

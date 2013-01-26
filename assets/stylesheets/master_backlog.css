@@ -8,25 +8,77 @@
  * .editable (bind click on)
  * .close_sprint (bind click on)
  */
+
+
+/* fluid 2 colum layout */
+#main { margin:0; }
+#backlogs_container{
+  padding: 8px;
+}
+#backlogs_container .wrapper{
+   position: relative;
+   float: left;
+   left: 0.00%;
+   width: 100.00%;
+}
+#backlogs_container .left-col{
+   position: relative;
+   float: left;
+   left: 0.00%;
+   width: 50.00%;
+}
+#backlogs_container .right-col{
+   position: relative;
+   float: right;
+   right: 0.00%;
+   width: 50.00%;
+}
+#backlogs_container .backlogs-panel-inner {
+  padding: 4px;
+}
+/* end fluid 2 colum layout */
+
+/* fixed-fluid-fixed layout */
+.fff-wrapper{
+  width: 100%;
+  margin: 0 auto;
+}
+.fff-wrapmiddle{
+  float: left;
+  width: 100%;
+}
+.fff-middle{
+  margin-right:76px;
+  margin-left:110px;
+}
+.fff-left{
+  float: left;
+  width: 110px;
+  margin-left: -100%;
+}
+.fff-right{
+  float: left;
+  width: 76px;
+  margin-left: -76px;
+}
+
+.header .fff-middle{
+  margin-right:210px;
+  margin-left: 29px;
+}
+.header .fff-left{
+  width: 29px;
+}
+.header .fff-right{
+  width: 210px;
+  margin-left: -210px;
+}
+/* end fixed-fluid-fixed layout */
+
 ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
-#backlogs_container{
-  display:block;
-  margin:10px auto;
-  position:relative;
-  width:1190px;
-}
 #dummy_backlog_container{
   height:150px;
-}
-.backlogs-panel {
-  width:590px;
-}
-.left {
-  float: left;
-}
-.right {
-  float: right;
 }
 
 /*the close completed sprint button in pbl header */
@@ -36,7 +88,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   line-height:30px;
   padding:0;
   float: left;
-  text-align:right;
   width:150px;
   white-space: nowrap;
 }
@@ -71,7 +122,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   position:relative;
   white-space: nowrap;
   height:30px;
-  width:100%;
   border-bottom: 1px solid #AAAAAA
 }
 /*.backlog .closedbacklog .header{
@@ -88,8 +138,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   cursor:pointer;
   position: relative;
   overflow:visible;
-  float: left;
-  width:29px;
   height:30px;
 }
 
@@ -201,31 +249,22 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   font-weight:bold;
 }
 
-#backlogs_container .header .velocity {
-  font-size:12px;
-  height:28px;
-  line-height:28px;
-  padding-right: 15px;
-  float: right;
-  position: relative;
-  text-align:right;
-  width:28px;
-}
-
   /* container for sprint header (read) */
 #backlogs_container .header .headertext{
   background-color:transparent;
   display:block;
   position: relative;
   height:30px;
-  float: left;
 }
 #backlogs_container .header .model.headertext{
   cursor:pointer;
 }
 
+#backlogs_container .closedbacklog .menu{
+  display:none;
+}
+
 #backlogs_container .closedbacklog .headertext{
-  margin-left: 30px; /*compensate for menu*/
   cursor: default; /*we have model class here, but are not editable*/
 }
 
@@ -242,27 +281,33 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
 /* backlog header name,dates etc.*/
-#backlogs_container .header .headertext > div {
-  float: left;
+/*#backlogs_container .header .headertext > div */
+.header .name,
+.header .velocity,
+.header .date{
   height:28px;
   line-height:28px;
-  white-space: nowrap;
+  white-space: nowrap; 
+  font-size:12px;
 }
 
 /* backlog header*/
 #backlogs_container .header .name {
+  padding-left: 8px;
   font-size: 15px;
   font-weight: bold;
-  width: 264px;
   overflow: hidden;
-  margin-left: 8px;
 }
 
 /* backlog header*/
-.header .date {
-  font-size:12px;
-  width: 8em;
+#backlogs_container .header .date {
+  width: 80px;
   margin-left: 6px;
+  float: left;
+}
+
+#backlogs_container .header .velocity {
+  text-align: right;
 }
 
 /* backlog header invisibles */
@@ -310,6 +355,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .stories .story .id{
   position:relative;
   width:55px;
+  float: left;
 }
 #backlogs_container .stories .story .id .t * {
   background-color:#CCC;
@@ -348,10 +394,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   display:block;
   position:relative;
   float:left;
-  width:55px;
-/*  margin:1px 0 0 1px; */
+  width:50px;
   padding-left:2px;
-/*  padding-top:2px; */
   white-space: nowrap;
   overflow: hidden;
 }
@@ -368,25 +412,22 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 #backlogs_container .stories .story .subject {
   overflow:hidden;
-  float:left;
-  padding-left: 10px;
-  padding-right: 2px;
-  margin-right:2em;
   white-space:nowrap;
-  width: 356px;
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
 }
 #backlogs_container .stories .story .status_id {
   width:40px;
+  float: left;
+  padding-left:4px;
+  white-space: nowrap;
 }
 
 #backlogs_container .stories .story .story_points {
-  padding:5px 5px 4px 5px;
   text-align:right;
-  float: right;
-  width:3em;
+  float: left;
+  width:30px;
 }
 /*meta in story*/
 #backlogs_container .stories .story .fixed_version_id,
@@ -440,10 +481,12 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .sprint.editing .editors{
   display:block;
   position: absolute;
-  height: 30px;
-  width: 518px;
+  height: 60px;
+  width: 100%;
   top: 0;
   left: 0;
+  background-color: white;
+  z-index: 1;
 }
 
 #backlogs_container .sprint.editing .editor{
@@ -453,30 +496,34 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .sprint.editing .id.editor{
   display:none;
 }
+
+#backlogs_container .sprint.editing .effective_date.editor,
+#backlogs_container .sprint.editing .sprint_start_date.editor,
+#backlogs_container .sprint.editing .name.editor{
+  float: left;
+  position: relative;
+  margin: 0;
+  padding:0;
+  margin-right: 4px;
+}
 #backlogs_container .sprint.editing .name.editor{
   height:21px;
   line-height:15px;
-  margin:0;
-  width:19em;
-  overflow:hidden;
 }
 #backlogs_container .sprint.editing .sprint_start_date.editor{
   height:23px;
   line-height:27px;
-  margin:0;
-  padding:0;
   width:75px;
 }
 #backlogs_container .sprint.editing .effective_date.editor{
   height:23px;
   line-height:27px;
-  margin:0;
-  padding:0;
   width:75px;
 }
 #backlogs_container .sprint.editing .description.editor{
   display:none;
 }
+
 /* In-place Story Editor */
 #backlogs_container .stories .story.editing .editors{
   display:block;
@@ -515,6 +562,9 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   height:10px;
   margin:0;
   float: right;
+}
+#backlogs_container .stories .story.editing .subject.editor {
+  white-space: inherit;
 }
 
 #backlogs_container .editors .editor { /* last: display editor fields. */
@@ -555,7 +605,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   clear: both;
   background: white;
   position: relative;
-  width: 498px;
+  width: 100%;
   height: 30px;
   z-index: 1;
   line-height: 16px;
@@ -639,21 +689,13 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#FED0D0;
 }
 #backlogs_container .stories .story_field {
-  float: left;
-  height: 14px;
+  overflow: hidden;
   padding-top: 4px;
   padding-bottom: 5px;
-  overflow: hidden;
+  height: 14px;
 }
 #backlogs_container .stories .story.editing .story_field {
   display: none;
-}
-#backlogs_container .sprint.editing .effective_date.editor,
-#backlogs_container .sprint.editing .sprint_start_date.editor,
-#backlogs_container .sprint.editing .name.editor{
-  float: left;
-  position: relative;
-
 }
 
 /* datepicker bugfix: hide until it opens itself */

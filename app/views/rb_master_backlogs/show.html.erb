@@ -59,8 +59,9 @@
 
 <%- content_for :main do %>
   <div id="backlogs_container">
-    <div class="backlogs-panel left">
-      <div id="sprint_backlogs_container">
+  <div class="backlogs-panel-wrapper">
+    <div class="backlogs-panel left-col">
+      <div id="sprint_backlogs_container" class="backlogs-panel-inner">
         <%= render :partial => 'backlog', :collection => @sprint_backlogs %>
       </div>
 	  <% if ! @settings[:disable_closed_sprints_to_master_backlogs] %>
@@ -87,12 +88,13 @@
 	  <% end %>
       <div id="dummy_backlog_container"></div>
     </div>
-    <div class="backlogs-panel right">
-      <div id="product_backlog_container">
+    <div class="backlogs-panel right-col">
+      <div id="product_backlog_container" class="backlogs-panel-inner">
         <%= render :partial => 'backlog', :collection => @release_backlogs, :locals => {:cls => ' release_backlog'} %>
         <%= render :partial => 'backlog', :object => @product_backlog, :locals => {:cls => ' product_backlog'} %>
       </div>
     </div>
+  </div>
   </div>
 
 <%- end %>
