@@ -48,7 +48,7 @@
   %>
   RB.burndown.charts[<%= sprint.id %>] = <%= chart.to_json.html_safe %>;
   // RB.burndown.charts[<%= sprint.id %>].options.axesDefaults.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
-  // RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.tickRenderer: RB.$.jqplot.CanvasAxisTickRenderer;
+  RB.burndown.charts[<%= sprint.id %>].options.axes.xaxis.tickRenderer = RB.$.jqplot.CanvasAxisTickRenderer;
   RB.burndown.charts[<%= sprint.id %>].options.axes.yaxis.labelRenderer = RB.$.jqplot.CanvasAxisLabelRenderer;
   RB.burndown.charts[<%= sprint.id %>].options.axes.y2axis.labelRenderer = RB.$.jqplot.CanvasAxisLabelRenderer;
   RB.burndown.initialize();
