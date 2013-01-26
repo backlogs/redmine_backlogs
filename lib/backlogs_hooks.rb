@@ -45,11 +45,7 @@ module BacklogsPlugin
             :project_id => project.identifier
           }
           url_options[:sprint_id] = sprint_id if sprint_id
-          if Rails::VERSION::MAJOR < 3
-            url = '' #actionpack-2.3.14/lib/action_controller/url_rewriter.rb is injecting relative_url_root
-          else
-            url = Redmine::Utils.relative_url_root #actionpack-3* is not???
-          end
+          url = url_for_prefix_in_hooks
           url += url_for(url_options)
 
           # Why can't I access protect_against_forgery?
@@ -201,7 +197,9 @@ module BacklogsPlugin
 
           if User.current.allowed_to?(:edit_wiki_pages, project)
             snippet += '<span id="edit_wiki_page_action">'
-            snippet += link_to l(:button_edit_wiki), {:controller => 'rb_wikis', :action => 'edit', :project_id => project.id, :sprint_id => version.id }, :class => 'icon icon-edit'
+            snippet += link_to l(:button_edit_wiki), 
+                      url_for_prefix_in_hooks + url_for({:controller => 'rb_wikis', :action => 'edit', :sprint_id => version.id }),
+                      :class => 'icon icon-edit'
             snippet += '</span>'
 
             # this wouldn't be necesary if the schedules plugin
@@ -212,6 +210,8 @@ module BacklogsPlugin
                 var $j = RB.$ || $;
                 $j(function($) {
                   $('#edit_wiki_page_action').detach().appendTo("div.contextual");
+                  //hide the redmine 'edit associated wiki page' if it exists, so we only have our button consistently.
+                  if ('#{version.wiki_page_title}' !== '') $(".contextual a.icon-edit:contains('#{version.wiki_page_title}')").hide()
                 });
               </script>
             generatedscript

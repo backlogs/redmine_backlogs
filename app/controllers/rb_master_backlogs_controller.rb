@@ -90,7 +90,7 @@ class RbMasterBacklogsController < RbApplicationController
               :url => url_for(:controller => 'rb_stories', :action => 'index', :project_id => @project.identifier, :format => 'pdf', :only_path => true)
              } unless @sprint || @release
     links << {:label => l(:label_wiki),
-              :url => url_for(:controller => 'rb_wikis', :action => 'edit', :project_id => @project.id, :sprint_id => @sprint, :only_path => true)
+              :url => url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => @sprint, :only_path => true)
              } if @sprint && @project.enabled_modules.any? {|m| m.name=="wiki" }
     links << {:label =>  l(:label_download_sprint),
               :url => url_for(:controller => 'rb_sprints', :action => 'download', :sprint_id => @sprint, :format => 'xml', :only_path => true)
