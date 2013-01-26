@@ -36,7 +36,8 @@
   });
 </script>
 
-<h2>Backlogs version <%= Backlogs.version %>, Redmine version <%= Backlogs.platform_support %></h2>
+<h2>Backlogs version <%= Backlogs.version %></h2>
+<div>Redmine version <%= Backlogs.platform_support %></div>
 <% if !Backlogs.configured? %>
   <fieldset>
     <legend>Backlogs was not properly set up</legend>

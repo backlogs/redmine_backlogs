@@ -21,7 +21,7 @@ module Backlogs
     g = nil
     if File.directory?(git)
       Dir.chdir(root)
-      g = `git log | head -1 | awk '{print $2}'`
+      g = `git describe --tags --abbrev=10`
       g.strip!
       g = "(#{g})"
     end
@@ -68,7 +68,7 @@ module Backlogs
     }
 
     plugin_version = Redmine::Plugin.find(:redmine_backlogs).version
-    return "You are running backlogs #{plugin_version}, latest version is #{travis['release']}" if plugin_version != travis['release']
+    return "#{Redmine::VERSION}. You are running backlogs #{plugin_version}, latest version is #{travis['release']}" if plugin_version != travis['release']
 
     supported = matrix.select{|cell| cell[:platform] == platform}
     raise "Unsupported platform #{platform}" unless supported.size > 0
