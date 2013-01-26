@@ -20,6 +20,14 @@ RB.burndown.initialize = function() {
   var id, chart;
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
+    if (chart.mode != 'full') {
+      chart.options.axes.xaxis.show=false;
+      chart.options.axes.xaxis.showTicks=false;
+      chart.options.axes.y2axis.show=false;
+      chart.options.axes.y3axis.show=false;
+      chart.options.axes.yaxis.showLabel=false;
+      chart.options.axes.y2axis.showLabel=false;
+    }
     if (!chart.chart) {
       RB.$('#burndown_' + id).empty();
       chart.chart = RB.$.jqplot('burndown_' + id, chart.series, chart.options);
