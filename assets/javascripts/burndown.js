@@ -20,6 +20,14 @@ RB.burndown.initialize = function() {
   var id, chart;
   for (id in RB.burndown.charts) {
     chart = RB.burndown.charts[id];
+    if (chart.mode != 'full') {
+      chart.options.axes.xaxis.show=false;
+      chart.options.axes.xaxis.showTicks=false;
+      chart.options.axes.y2axis.show=false;
+      chart.options.axes.y3axis.show=false;
+      chart.options.axes.yaxis.showLabel=false;
+      chart.options.axes.y2axis.showLabel=false;
+    }
     if (!chart.chart) {
       RB.$('#burndown_' + id).empty();
       chart.chart = RB.$.jqplot('burndown_' + id, chart.series, chart.options);
@@ -73,8 +81,11 @@ RB.burndown.configure = function() {
   var cb;
 
   RB.$.each(disabled, function(index, value) {
+    //here we get some weird expression error in jquery 1.6 as well as in 1.7
+    try {
     var cb = RB.$('#burndown_series_' + value);
     if (cb) { cb.attr('checked', false); }
+    } catch(e) {/*FIXME jquery Uncaught Syntax error, unrecognized expression: "*/}
   });
 
   var legend = RB.burndown.options.show_legend();
