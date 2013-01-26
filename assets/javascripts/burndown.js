@@ -81,8 +81,11 @@ RB.burndown.configure = function() {
   var cb;
 
   RB.$.each(disabled, function(index, value) {
+    //here we get some weird expression error in jquery 1.6 as well as in 1.7
+    try {
     var cb = RB.$('#burndown_series_' + value);
     if (cb) { cb.attr('checked', false); }
+    } catch(e) {/*FIXME jquery Uncaught Syntax error, unrecognized expression: "*/}
   });
 
   var legend = RB.burndown.options.show_legend();
