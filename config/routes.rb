@@ -29,7 +29,7 @@ def rb_common_routes(rb)
 
   rb_match rb, 'updated_items/:project_id', :to => 'rb_updated_items#show'
   rb_match rb, 'wikis/:sprint_id', :to => 'rb_wikis#show'
-  rb_match rb, 'wikis/:sprint_id', :to => 'rb_wikis#edit'
+  rb_match rb, 'wikis/:sprint_id/edit', :to => 'rb_wikis#edit'
   rb_match rb, 'issues/backlog/product/:project_id',
                :to => 'rb_queries#show'
   rb_match rb, 'issues/backlog/sprint/:sprint_id',
