@@ -1,10 +1,13 @@
 <b><%= I18n.t :field_subject %></b>: <%=h tooltip.subject %><br />
-<b><%= I18n.t :field_release %></b>: <%=h release_or_empty(tooltip) %><br />
 <b><%= I18n.t :field_tracker_id %></b>: <%=h tooltip.tracker %><br />
 <b><%= I18n.t :story_status %></b>: <%=h status_label_or_default(tooltip) %><br />
 <b><%= I18n.t :field_category %></b>: <%=h tooltip.category %><br />
 <b><%= I18n.t :story_points %></b>: <%=h story_points_or_empty(tooltip) %><br />
 <b><%= I18n.t :story_estimation_hours %></b>: <%=h tooltip.estimated_hours %><br />
 <b><%= I18n.t :story_spent_time %></b>: <%= tooltip.total_spent_hours.round(2) %><br />
-<b><%= I18n.t :story_remaining_hours %></b>: <%=h tooltip.remaining_hours %>
+<b><%= I18n.t :story_remaining_hours %></b>: <%=h tooltip.remaining_hours %><br />
+<b><%= I18n.t :field_assigned_to %></b>: <%=h assignee_name_or_empty(tooltip) %><br />
+<b><%= I18n.t :field_project %></b>: <%=h project_name_or_empty(tooltip) %><br />
+<b><%= I18n.t :field_release %></b>: <%=h release_or_empty(tooltip) %><br />
 <p><b><%= I18n.t :story_description %></b><br /><%=raw tidy(textile_to_html(tooltip.description)) %></p>
+<%=h custom_fields_or_empty(tooltip) %>

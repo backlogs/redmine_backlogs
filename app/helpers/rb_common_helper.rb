@@ -4,6 +4,8 @@ require 'nokogiri'
 module RbCommonHelper
   unloadable
 
+  include CustomFieldsHelper
+
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
   end
@@ -117,6 +119,19 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def tracker_name_or_empty(story)
     story.new_record? ? "" : story.tracker.name
+  end
+
+  def project_name_or_empty(story)
+    story.new_record? ? "" : story.project.name
+  end
+
+  def custom_fields_or_empty(story)
+    return '' if story.new_record?
+    res = ''
+    story.custom_field_values.each{|value|
+      res += "<p><b>#{h(value.custom_field.name)}</b>: #{simple_format_without_paragraph(h(show_value(value)))}</p>"
+    }
+    res.html_safe
   end
 
   def updated_on_with_milliseconds(story)
