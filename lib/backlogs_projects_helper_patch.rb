@@ -1,5 +1,4 @@
 require_dependency 'projects_helper'
-require_dependency 'rb_form_helper'
 
 module Backlogs
   module ProjectsHelperPatch
@@ -22,10 +21,6 @@ module Backlogs
         call_hook(:helper_projects_settings_tabs, { :tabs => tabs })
         return tabs
       end
-
-      # Streamline the difference between <%=  %> and <%  %>
-      include RbFormHelper
-
     end
   end
 end
