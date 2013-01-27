@@ -2,8 +2,7 @@ if (typeof RB.burndown == "undefined") { RB.burndown = {options: {}, charts: {}}
 
 RB.burndown.options.disabled_series = function(new_value) {
   if (new_value === undefined) {
-    var v = RB.UserPreferences.get('disabled_burndown_series', true);
-    if (!v || RB.$.inArray(',', v) == -1) { v = ''; }
+    var v = RB.UserPreferences.get('disabled_burndown_series', true) || '';
     return v.split(',');
   } else {
     RB.UserPreferences.set('disabled_burndown_series', new_value.join(','), true);
