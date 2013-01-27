@@ -2,10 +2,9 @@ require 'date'
 
 class ReleaseBurndown
   def initialize(release)
-#    @days = release.days
+    days = release.days
     @release_id = release.id
     @project = release.project
-
     #initialize empty release
     @data = {}
     @data[:added_points] = []
@@ -15,11 +14,7 @@ class ReleaseBurndown
     @data[:trend_added] = []
     @data[:trend_closed] = []
 
-    # Select sprints within release period. They need not to be closed.
-    sprints = release.sprints
-    return if sprints.nil? || sprints.size == 0
-
-    baseline = [0] * (sprints.size + 1)
+    baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
     series.merge(:backlog_points => baseline.dup)
@@ -31,9 +26,9 @@ class ReleaseBurndown
 #TODO Stories continued over several sprints (by duplicating) should not show up as added
 #TODO Likewise stories split from inital epics should not show up as added
 
-    # Go through each story in the backlog
+    # Go through each story in the release
     release.stories.each{ |story|
-      series.add(story.release_burndown_data(sprints))
+      series.add(story.release_burndown_data(days))
     }
 
     # Series collected, now format data for jqplot
@@ -153,16 +148,21 @@ class RbRelease < ActiveRecord::Base
     issues.joins(:fixed_version).includes(:fixed_version).order('versions.effective_date').group_by(&:fixed_version_id)
   end
 
-  def days(cutoff = nil)
-    # assumes mon-fri are working days, sat-sun are not. this
-    # assumption is not globally right, we need to make this configurable.
-    cutoff = self.release_end_date if cutoff.nil?
-    workdays(self.release_start_date, cutoff)
+  # The dates are:
+  # start: first day of release
+  # 1..n: a day after the nth sprint
+#FIXME duplicates if sprints are run in parallel with same end date?
+  def days
+    days_of_interest = Array.new
+    days_of_interest << self.release_start_date.to_date
+    self.sprints.each{|sprint|
+      # FIXME - is it really tomorrow?
+      days_of_interest << sprint.effective_date.tomorrow.to_date }
+    return days_of_interest
   end
 
   def has_burndown?
-#merge: is it neccessary to have closed sprints for burndown? I'd like to see it immediately
-    return !!(self.release_start_date and self.release_end_date && !self.closed_sprints.nil?)
+    return self.stories.size > 0
   end
 
   def burndown

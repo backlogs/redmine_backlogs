@@ -27,13 +27,21 @@ Feature: Release burndown
         | Story 1 | Rel 1   | 2 |
         | Story 2 | Rel 1   | 7 |
         | Story 5 |         | 40 |
+
+   Scenario: View initial release burndown before release start date
+    Given I view the release page
+     Then release "Rel 1" should have 0 sprints
+      And show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 9              | 0             | 0            |
+
+   Scenario: Simple release burndown
+    Given I view the release page
       And I have defined the following stories in the following sprints:
         | subject | sprint     | release | points |
         | Story A | Sprint 001 | Rel 1   | 2 |
         | Story B | Sprint 002 | Rel 1   | 3 |
-
-   Scenario: Simple release burndown
-    Given I view the release page
     Given I have made the following story mutations:
         | day | story   | status      |
         | 1   | Story A | In Progress |

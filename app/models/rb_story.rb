@@ -226,18 +226,12 @@ class RbStory < Issue
   end
 
   # Produces relevant information for release graphs
-  # @param sprints is array of sprints of interest
+  # @param days of interest in the release
   # @return hash collection of 
   #  :backlog_points :added_points :closed_points
-# The dates are:
-#  start: first day of first sprint
-#  1..n: a day after the nth sprint
-  def release_burndown_data(sprints)
+#FIXME is it better to let the story fetch days directly from RbRelease?
+  def release_burndown_data(days)
     return nil unless self.is_story?
-    days = Array.new
-    # Find interesting days of each sprint for the release graph
-    days << sprints.first.sprint_start_date.to_date
-    sprints.each { |sprint| days << sprint.effective_date.tomorrow.to_date }
 
     baseline = [0] * days.size
 
@@ -277,15 +271,15 @@ class RbStory < Issue
     series.merge(:day => days)
 
     # Extract added_points, backlog_points and closed points from the data collected
-    series.each { |p|
-      if (created_on.to_date < sprints.first.sprint_start_date.to_date) && p.open
+    series.each{|p|
+      if (created_on.to_date <= days.first.to_date) && p.open
         p.backlog_points = p.points
       end
       if p.accepted_first
         p.closed_points = p.points
       end
-      # Is the story created within this sprint?
-      if (created_on.to_date >= sprints.first.sprint_start_date.to_date) &&
+      # Is the story created after the release was started?
+      if (created_on.to_date > days.first.to_date) &&
           (created_on.to_date < p.day) #day is the end-date+1 of a sprint
         p.added_points = p.points
         if p.accepted

@@ -40,8 +40,11 @@ class RbIssueHistory < ActiveRecord::Base
   def filter_release(days)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
     #if we have no day matching, find one earlier to get the latest status
-    filtered = days.collect{|d| 
-      while !h[d] && d > days[0]
+    #first day allowed to find status before first day. Others only allowed
+    # to find status until the day listed before in the days array.
+    limits = [nil,days[0..-2]].flatten
+    filtered = days.collect.with_index{|d,i|
+      while !h[d] && (limits[i].nil? || d > limits[i])
         if d > days[-1]
           d = days[-1]
         else
@@ -50,6 +53,8 @@ class RbIssueHistory < ActiveRecord::Base
       end
       h[d] ? h[d] : {:date => d, :origin => :filter}
     }
+    # FIXME What if story was closed a few days after the sprint end date?
+    # Should this show up at the end date of that sprint or the next?
     
     # see if this issue was closed after last day
     if filtered[-1][:status_open]
