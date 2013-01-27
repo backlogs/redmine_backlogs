@@ -100,6 +100,15 @@ Given /^I have made the following story mutations:$/ do |table|
   end
 end
 
+Given /^I duplicate ([^"]*) to ([^"]*) as ([^"]*)$/ do |story_old, sprint_name, story_new|
+  issue = Issue.find_by_subject(story_old)
+  visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
+  verify_request_status(200)
+  fill_in 'issue_subject', :with => story_new
+  page.select(sprint_name, :from => "issue_fixed_version_id")
+  page.find(:xpath, '//input[@name="commit"]').click
+end
+
 Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|
   release = RbRelease.find_by_name(release)
   release.should_not be_nil

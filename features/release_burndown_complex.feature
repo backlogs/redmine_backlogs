@@ -1,0 +1,100 @@
+Feature: Release burndown complex
+  As a product owner
+  I want to analyze the progress of my releases
+  So that i can get a feeling for the projects progress
+
+  Background:
+    Given the ecookbook project has the backlogs plugin enabled
+      And no versions or issues exist
+      And I am a product owner of the project
+      And I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                    |
+        | In Progress |         0 |          0 |                    |
+        | Feedback    |         0 |          0 |                    |
+        | Accepted    |         1 |          0 |                    |
+        | Rejected    |         1 |          0 |                  1 |
+      And the current time is 2011-01-01 08:00:00
+      And I have defined the following sprints:
+        | name       | sprint_start_date | effective_date |
+        | Sprint 001 | 2011-01-01        | 2011-01-31     |
+        | Sprint 002 | 2011-02-01        | 2011-02-28     |
+        | Sprint 003 | 2011-03-01        | 2011-03-31     |
+        | Sprint 004 | 2011-04-01        | 2011-04-30     |
+        | Sprint 005 | 2011-05-01        | 2011-05-31     |
+        | Sprint 006 | 2011-06-01        | 2011-06-30     |
+        | Sprint 007 | 2011-07-01        | 2011-07-31     |
+      And I have defined the following releases:
+        | name    | project    | release_start_date | release_end_date |
+        | Rel 1   | ecookbook  | 2011-01-01         | 2011-07-31       |
+      And I have defined the following stories in the product backlog:
+        | subject | release | points |
+        | Story A | Rel 1   | 3 |
+        | Story B | Rel 1   | 2 |
+        | Story C | Rel 1   | 5 |
+        | Story D | Rel 1   | 4 |
+        | Story E | Rel 1   | 8 |
+# Sprint 1
+      And I move the story named Story A down to the 1st position of the sprint named Sprint 001
+      And I move the story named Story B down to the 1st position of the sprint named Sprint 001
+      And I have made the following story mutations:
+        | day | story   | status   |
+        | 1   | Story A | Closed   |
+        | 2   | Story B | Closed   |
+      And the current time is 2011-01-15 23:00:00
+      And I have defined the following stories in the product backlog:
+        | subject | release | points |
+        | Story F | Rel 1   | 4 |
+        | Story G | Rel 1   | 2 |
+# Sprint 2
+      And I move the story named Story C down to the 1st position of the sprint named Sprint 002
+      And the current time is 2011-02-01 08:00:00
+      And I have made the following story mutations:
+        | day | story   | status    |
+        | 1   | Story C | Closed    |
+# Sprint 3
+      And I move the story named Story E down to the 1st position of the sprint named Sprint 003
+      And the current time is 2011-03-01 08:00:00
+#FIXME duplicate to release backlog?
+      And I duplicate Story E to Sprint 004 as Story E 2nd
+      And I have made the following story mutations:
+        | day | story   | status      |
+        | 5   | Story E | Rejected    |
+# Sprint 4
+      And I move the story named Story G down to the 1st position of the sprint named Sprint 004
+      And the current time is 2011-04-01 08:00:00
+      And I have made the following story mutations:
+        | day | story   | status      |
+        | 5   | Story G | Rejected    |
+# Sprint 5
+      And the current time is 2011-05-01 08:00:00
+#FIXME Move Story E 2nd away from release
+# Sprint 6
+      And I move the story named Story D down to the 1st position of the sprint named Sprint 006
+      And the current time is 2011-06-01 08:00:00
+      And I have made the following story mutations:
+        | day | story   | status      |
+        | 5   | Story D | Closed      |
+# Sprint 7
+      And I move the story named Story F down to the 1st position of the sprint named Sprint 007
+      And the current time is 2011-07-01 08:00:00
+      And I have made the following story mutations:
+        | day | story   | status      |
+        | 20   | Story F | Closed      |
+
+#FIXME Closing sprints?
+
+   Scenario: View complete release burndown
+    Given I view the release page
+     Then show me the burndown data for release "Rel 1"
+   #   Then dump the database to pg_new.dump
+   #    And the release burndown for release "Rel 1" should be:
+   #      | sprint| backlog_points | closed_points | added_points |
+   #      | start | 22             | 0         | 0     |
+   #      | 1     | 17             | 5         | 6     |
+   #      | 2     | 12             | 5         | 6     |
+   #      | 3     | 12             | 0         | 6     |
+   #      | 4     | 12             | 0         | 4     |
+   #      | 5     |  4             | 0         | 4     |
+   #      | 6     |  0             | 4         | 4     |
+   #      | 7     |  0             | 4         | 0     |
