@@ -146,3 +146,21 @@ RB.BacklogOptions = RB.Object.create({
     return hidden;
   }
 });
+
+RB.BacklogMultilineBtn = {
+  main_class: 'rb-multilinesubject',
+
+  initialize: function(el) {
+    var me = this;
+    me.main = RB.$('#main');
+    if (RB.UserPreferences.get('rb_bl_multiline', true) == 'multiline') {
+      me.main.addClass(me.main_class);
+    }
+    el.bind('click', function(e,u) {
+      me.main.toggleClass(me.main_class);
+      RB.UserPreferences.set('rb_bl_multiline',
+        me.main.hasClass(me.main_class) ? 'multiline':'',
+        true);
+    });
+  }
+};

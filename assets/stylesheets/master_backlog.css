@@ -700,3 +700,10 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 /* datepicker bugfix: hide until it opens itself */
 .ui-datepicker {display:none;}
+
+/* override: display story subject in multiple lines */
+.rb-multilinesubject #backlogs_container .stories .story .subject {
+  white-space: normal;
+  height: auto;
+  overflow: show;
+}
