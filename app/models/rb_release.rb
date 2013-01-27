@@ -134,7 +134,7 @@ class RbRelease < ActiveRecord::Base
 
   #Return sprints that contain issues within this release
   def sprints
-    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id)
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id).order('versions.effective_date')
   end
 
   # Return sprints closed within this release
@@ -156,8 +156,7 @@ class RbRelease < ActiveRecord::Base
     days_of_interest = Array.new
     days_of_interest << self.release_start_date.to_date
     self.sprints.each{|sprint|
-      # FIXME - is it really tomorrow?
-      days_of_interest << sprint.effective_date.tomorrow.to_date }
+      days_of_interest << sprint.effective_date.to_date }
     return days_of_interest
   end
 

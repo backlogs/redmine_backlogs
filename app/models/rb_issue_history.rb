@@ -43,8 +43,10 @@ class RbIssueHistory < ActiveRecord::Base
     #first day allowed to find status before first day. Others only allowed
     # to find status until the day listed before in the days array.
     limits = [nil,days[0..-2]].flatten
+    # Limit search to history of story
+    hist_limit = h.keys[0]
     filtered = days.collect.with_index{|d,i|
-      while !h[d] && (limits[i].nil? || d > limits[i])
+      while !h[d] && (limits[i].nil? || d > limits[i]) && d > hist_limit
         if d > days[-1]
           d = days[-1]
         else
