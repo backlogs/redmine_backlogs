@@ -14,6 +14,7 @@ RB.BacklogOptions = RB.Object.create({
     var hidden = this.loadState();
 
     // iterate through visible backlogs
+    this.groupnames = ['#sprint_backlogs_container', '#product_backlog_container'];
     this._init_backlogs('#sprint_backlogs_container', _('Sprints'), hidden);
     this._init_backlogs('#product_backlog_container', _('Backlogs'), hidden);
 
@@ -57,7 +58,8 @@ RB.BacklogOptions = RB.Object.create({
       me.containers[id] = {
         el:container,
         checked: checked,
-        optEl: optEl
+        optEl: optEl,
+        optGrpselector: selector
       };
     });
   },
@@ -71,6 +73,32 @@ RB.BacklogOptions = RB.Object.create({
       }
     }
     this.saveState();
+    this.updatePageLayout();
+  },
+
+  /**
+   * check if either left or right pane is empty and then
+   * expand the other pane to full width
+   */
+  updatePageLayout: function() {
+    var i, groups={}, ct, grpname1, grpname2;
+    grpname1 = this.groupnames[0];
+    panel1 = RB.$(grpname1).parent();
+    grpname2 = this.groupnames[1];
+    panel2 = RB.$(grpname2).parent();
+    panel1.show(); panel2.show();
+
+    for (i in this.containers) {
+      ct = this.containers[i];
+      if (ct.el.is(':visible')) {
+        groups[ct.optGrpselector] = true;
+      }
+    }
+
+    if (!groups[grpname1]) { panel1.hide(); }
+    if (!groups[grpname2]) { panel2.hide(); }
+    panel1.width( groups[grpname2] ? "50%" : "100%");
+    panel2.width( groups[grpname1] ? "50%" : "100%");
   },
 
   onCheckAll: function() {
@@ -118,3 +146,21 @@ RB.BacklogOptions = RB.Object.create({
     return hidden;
   }
 });
+
+RB.BacklogMultilineBtn = {
+  main_class: 'rb-multilinesubject',
+
+  initialize: function(el) {
+    var me = this;
+    me.main = RB.$('#main');
+    if (RB.UserPreferences.get('rb_bl_multiline', true) == 'multiline') {
+      me.main.addClass(me.main_class);
+    }
+    el.bind('click', function(e,u) {
+      me.main.toggleClass(me.main_class);
+      RB.UserPreferences.set('rb_bl_multiline',
+        me.main.hasClass(me.main_class) ? 'multiline':'',
+        true);
+    });
+  }
+};
