@@ -19,6 +19,14 @@ Then /^show me the release backlog of (.+)$/ do |release_name|
   }
 end
 
+When /^I move story (.+) to the product backlog$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.init_journal(User.current)
+  story.release = nil
+  story.save
+end
+
+
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
   story = RbStory.find_by_subject(story_name)
   @story_params = {
@@ -100,13 +108,15 @@ Given /^I have made the following story mutations:$/ do |table|
   end
 end
 
-Given /^I duplicate ([^"]*) to ([^"]*) as ([^"]*)$/ do |story_old, sprint_name, story_new|
+Given /^I duplicate ([^"]*) to release ([^"]*) as ([^"]*)$/ do |story_old, release_name, story_new|
   issue = Issue.find_by_subject(story_old)
-  visit "/projects/#{@project.id}/issues/#{issue.id}/copy"
-  verify_request_status(200)
-  fill_in 'issue_subject', :with => story_new
-  page.select(sprint_name, :from => "issue_fixed_version_id")
-  page.find(:xpath, '//input[@name="commit"]').click
+  release = RbRelease.find_by_name(release_name)
+  issue.should_not be_nil
+  release.should_not be_nil
+  issue_copy = issue.copy({:release_id => release.id,
+                           :fixed_version_id => nil,
+                           :subject => story_new})
+  issue_copy.save
 end
 
 Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|

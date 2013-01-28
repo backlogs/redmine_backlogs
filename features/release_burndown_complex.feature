@@ -34,6 +34,7 @@ Feature: Release burndown complex
         | Story C | Rel 1   | 5 |
         | Story D | Rel 1   | 4 |
         | Story E | Rel 1   | 8 |
+        | Story X | Rel 1   | 2 |
 # Sprint 1
       And I move the story named Story A down to the 1st position of the sprint named Sprint 001
       And I move the story named Story B down to the 1st position of the sprint named Sprint 001
@@ -55,8 +56,7 @@ Feature: Release burndown complex
 # Sprint 3
       And I move the story named Story E down to the 1st position of the sprint named Sprint 003
       And the current time is 2011-03-01 08:00:00
-#FIXME duplicate to release backlog?
-      And I duplicate Story E to Sprint 004 as Story E 2nd
+      And I duplicate Story E to release Rel 1 as Story E 2nd
       And I have made the following story mutations:
         | day | story   | status      |
         | 5   | Story E | Rejected    |
@@ -67,8 +67,13 @@ Feature: Release burndown complex
         | day | story   | status      |
         | 5   | Story G | Rejected    |
 # Sprint 5
+      And I move the story named Story X down to the 1st position of the sprint named Sprint 005
       And the current time is 2011-05-01 08:00:00
-#FIXME Move Story E 2nd away from release
+    Given I am viewing the master backlog
+     When I move story Story E 2nd to the product backlog
+      And I have made the following story mutations:
+        | day | story   | status      |
+        | 5   | Story X | Closed      |
 # Sprint 6
       And I move the story named Story D down to the 1st position of the sprint named Sprint 006
       And the current time is 2011-06-01 08:00:00
