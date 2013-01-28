@@ -1,7 +1,7 @@
 // Initialize the backlogs after DOM is loaded
 RB.$(function() {
   // Initialize each backlog
-  RB.Factory.initialize(RB.BacklogOptions, this);
+  RB.BacklogOptionsInstance = RB.Factory.initialize(RB.BacklogOptions, this);
   RB.Factory.initialize(RB.BacklogMultilineBtn, RB.$('#multiline'));
   RB.$('.backlog').each(function(index){
     RB.Factory.initialize(RB.Backlog, this);
