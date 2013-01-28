@@ -1,4 +1,9 @@
-<li class="model story <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>">
+<li class="model story fff-wrapper <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>">
+ <div class="fff-wrapmiddle">
+  <div class="subject editable story_field fff-middle" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %>
+  </div>
+ </div>
+ <div class="fff-left">
   <div class="id story_tooltip story_field">
     <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
     <div class="t"><%= issue_link_or_empty(story) %></div>
@@ -17,8 +22,8 @@
     <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
-  <div class="subject editable story_field" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %>
-  </div>
+ </div>
+ <div class="fff-right">
   <div class="status_id editable story_field" fieldtype="select" fieldname="status_id" fieldlabel="<%=l(:field_status_id)%>">
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
@@ -39,5 +44,6 @@
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors %>
   </div>
+ </div>
   <div class="clearfix"></div>
 </li>

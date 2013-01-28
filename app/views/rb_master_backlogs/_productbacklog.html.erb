@@ -1,0 +1,21 @@
+<div class="headertext fff-wrapper">
+  <div class="fff-wrapmiddle">
+    <div class="fff-middle">
+      <div class="name"><%=l(:label_product_backlog).titleize %></div>
+    </div>
+  </div>
+
+  <div class="fff-left">
+    <div class="menu">
+      <div class="icon ui-icon ui-icon-carat-1-s"></div>
+      <ul class="items">
+      </ul>
+    </div>
+  </div>
+
+  <div class="fff-right">
+    <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
+    <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
+  </div>
+
+</div>

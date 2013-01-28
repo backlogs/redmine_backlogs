@@ -1,12 +1,29 @@
-<div class="model release headertext" id="<%= release_html_id_or_empty(release) %>">
+<div class="model release headertext fff-wrapper" id="<%= release_html_id_or_empty(release) %>">
   <div class="id">
     <div class="t"><%= release_link_or_empty(release) %></div>
     <div class="v"><%= id_or_empty(release) %></div>
   </div>
-  <div class="name" fieldname="name" fieldlabel="<%=l(:field_name)%>"><%= h release.name %></div>
-  <div class="sprint_start_date editable date" fieldname="release_start_date" fieldlabel="<%=l(:field_release_start_date)%>"><%= release.release_start_date || l(:label_no_start) %></div>
-  <div class="effective_date editable date" fieldname="end_date" fieldlabel="<%=l(:field_effective_date)%>"><%= release.release_end_date || l(:label_no_end) %></div>
-  <div class="meta">
-    <%= render :partial => "backlogs/model_errors", :object => release.errors %>
+
+  <div class="fff-wrapmiddle">
+    <div class="fff-middle">
+      <div class="name" fieldname="name" fieldlabel="<%=l(:field_name)%>"><%= h release.name %></div>
+    </div>
+  </div>
+
+  <div class="fff-left">
+    <div class="menu">
+      <div class="icon ui-icon ui-icon-carat-1-s"></div>
+      <ul class="items">
+      </ul>
+    </div>
+  </div>
+
+  <div class="fff-right">
+    <div class="sprint_start_date editable date" fieldname="release_start_date" fieldlabel="<%=l(:field_release_start_date)%>"><%= release.release_start_date || l(:label_no_start) %></div>
+    <div class="effective_date editable date" fieldname="end_date" fieldlabel="<%=l(:field_effective_date)%>"><%= release.release_end_date || l(:label_no_end) %></div>
+    <div class="meta">
+      <%= render :partial => "backlogs/model_errors", :object => release.errors %>
+    </div>
+    <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
   </div>
 </div>
