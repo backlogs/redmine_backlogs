@@ -31,7 +31,7 @@ class RbStory < Issue
       if Issue.respond_to? :visible_condition
         visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
       else
-    	  visible = Project.allowed_to_condition(User.current, :view_issues)
+        visible = Project.allowed_to_condition(User.current, :view_issues)
       end
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
@@ -227,7 +227,7 @@ class RbStory < Issue
 
   # Produces relevant information for release graphs
   # @param days of interest in the release
-  # @return hash collection of 
+  # @return hash collection of
   #  :backlog_points :added_points :closed_points
 #FIXME is it better to let the story fetch days directly from RbRelease?
   def release_burndown_data(days,release_burndown_id)
@@ -378,7 +378,7 @@ class RbStory < Issue
         status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
         unless status_id.nil? || status_id.to_i == 0
           # bail out if something is other than closed.
-          tasks.each{|task| 
+          tasks.each{|task|
             return unless task.status.is_closed?
           }
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
