@@ -307,7 +307,7 @@ RB.Backlog = RB.Object.create({
       }
       tracker_total[story_tracker] += story.getPoints();
     });
-    var sprint_points = this.$.children('.header').children('.velocity');
+    var sprint_points = this.$.children('.header').find('.velocity');
     sprint_points.text(total);
     var tracker_summary = "<b>Tracker statistics</b><br />";
     for (var t in tracker_total) {

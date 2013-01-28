@@ -1,4 +1,16 @@
-<% rb_form_for @project,
+<%
+# We cannot rely on rb_form_helper being present here
+#  - in case there is another plugin hooking into ProjectsHelpers - e.g. RemindCRM
+# so we duplicate the rb_form_for code here and do not monkeypatch RbFormHelper into ProjectsHelper.
+  def rb_pr_form_for(*args, &proc)
+    form_string = form_for(*args, &proc)
+    if Rails::VERSION::MAJOR < 3
+      form_string
+    else
+      concat(form_string)
+    end
+  end
+  rb_pr_form_for @project,
                    :as => :rb_project_settings,
                    :url => { :controller => 'rb_project_settings',
                              :action => 'project_settings', :project_id => @project },
@@ -21,5 +33,3 @@
 </div>
 <%= submit_tag(l(:button_save)) %>
 <% end %>
-
-
