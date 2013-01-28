@@ -27,8 +27,8 @@ class ReleaseBurndown
 #TODO Likewise stories split from inital epics should not show up as added
 
     # Go through each story in the release
-    release.stories.each{ |story|
-      series.add(story.release_burndown_data(days))
+    release.stories_all_time.each{|story|
+      series.add(story.release_burndown_data(days,release.id))
     }
 
     # Series collected, now format data for jqplot
@@ -130,6 +130,17 @@ class RbRelease < ActiveRecord::Base
 
   def stories #compat
     issues
+  end
+
+  # Returns current stories + stories previously scheduled for this release
+  def stories_all_time
+    missing_stories = RbStory.joins(:journals => :details).where(
+            "(release_id != ? or release_id IS NULL) and
+            journal_details.property ='attr' and
+            journal_details.prop_key = 'release_id' and
+            (journal_details.old_value = ? or journal_details.value = ?)",
+            self.id,self.id.to_s,self.id.to_s)
+    issues + missing_stories
   end
 
   #Return sprints that contain issues within this release

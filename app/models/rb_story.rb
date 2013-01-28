@@ -230,7 +230,7 @@ class RbStory < Issue
   # @return hash collection of 
   #  :backlog_points :added_points :closed_points
 #FIXME is it better to let the story fetch days directly from RbRelease?
-  def release_burndown_data(days)
+  def release_burndown_data(days,release_burndown_id)
     return nil unless self.is_story?
 
     baseline = [0] * days.size
@@ -246,9 +246,13 @@ class RbStory < Issue
       if d.nil? || d[:tracker] != :story
         [:points, :open, :accepted].each{|k| bd[k] << nil }
       else
-        bd[:points] << d[:story_points]
-        bd[:open] << d[:status_open]
-        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+        if d[:release] == release_burndown_id
+          bd[:points] << d[:story_points]
+          bd[:open] << d[:status_open]
+          bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+        else
+          [:points, :open, :accepted].each{|k| bd[k] << nil }
+        end
       end
     }
 
@@ -269,7 +273,6 @@ class RbStory < Issue
                    end
                  })
     series.merge(:day => days)
-
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
       if (created_on.to_date <= days.first.to_date) && p.open
@@ -280,10 +283,16 @@ class RbStory < Issue
       end
       # Is the story created after the release was started?
       if (created_on.to_date > days.first.to_date) &&
-          (created_on.to_date < p.day) #day is the end-date+1 of a sprint
-        p.added_points = p.points
-        if p.accepted
-          p.backlog_points = -p.points
+          (created_on.to_date <= p.day) #day is the end-date of a sprint
+        # Candidate for being an added story - is it a duplicate of a
+        # previously rejected story in the same release? (aka continued story)
+        if self.continued_story?
+          #FIXME what if story was continued from an added story?
+          p.backlog_points = p.points
+        else
+          if p.open
+            p.added_points = p.points
+          end
         end
       end
     }
@@ -293,6 +302,24 @@ class RbStory < Issue
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
     return rl
+  end
+
+  # Definition of a continued story:
+  # * "Copied to" relation with another story
+  # * The other story is in same release
+  # * The other story is rejected
+  def continued_story?
+    self.relations.each{|r|
+      if r.relation_type == IssueRelation::TYPE_COPIED_TO
+        from_story = RbStory.find(r.issue_from_id)
+        if from_story.status.backlog_is?(:failure)
+#FIXME check from_story is in the same release as this story at the
+# point in time being examined.
+          return true
+        end
+      end
+    }
+    return false
   end
 
   def burndown(sprint = nil, status=nil)
