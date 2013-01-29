@@ -1,4 +1,3 @@
-<% editable = (User.current.allowed_to?(:create_sprints, @project) || User.current.allowed_to?(:update_sprints, @project)) ? 'editable':'' %>
 <div class="<%= cls %> headertext fff-wrapper" id="<%= sprint_html_id_or_empty(sprint) %>">
   <div class="id">
     <div class="t"><%= sprint_link_or_empty(sprint) %></div>
@@ -7,7 +6,7 @@
 
   <div class="fff-wrapmiddle">
     <div class="fff-middle">
-      <div class="name <%= editable %> story_tooltip" fieldname="name" fieldlabel="<%=l(:field_name)%>" title="<%= h sprint.project%>"><%= h sprint.name %></div>
+      <div class="name editable story_tooltip" fieldname="name" fieldlabel="<%=l(:field_name)%>" title="<%= h sprint.project%>"><%= h sprint.name %></div>
     </div>
   </div>
 
@@ -20,9 +19,9 @@
   </div>
 
   <div class="fff-right">
-    <div class="sprint_start_date <%= editable %> date" fieldname="sprint_start_date" fieldlabel="<%=l(:field_sprint_start_date)%>"><%= sprint.sprint_start_date || l(:label_no_start) %></div>
-    <div class="effective_date <%= editable %> date" fieldname="effective_date" fieldlabel="<%=l(:field_effective_date)%>"><%= sprint.effective_date || l(:label_no_end) %></div>
-    <div class="description <%= editable %>" fieldname="description" fieldlabel="<%=l(:field_description)%>" fieldtype="textarea"><%= h sprint.description %></div>
+    <div class="sprint_start_date editable date" fieldname="sprint_start_date" fieldlabel="<%=l(:field_sprint_start_date)%>"><%= sprint.sprint_start_date || l(:label_no_start) %></div>
+    <div class="effective_date editable date" fieldname="effective_date" fieldlabel="<%=l(:field_effective_date)%>"><%= sprint.effective_date || l(:label_no_end) %></div>
+    <div class="description editable" fieldname="description" fieldlabel="<%=l(:field_description)%>" fieldtype="textarea"><%= h sprint.description %></div>
     <div class="meta">
       <%= render :partial => "backlogs/model_errors", :object => sprint.errors %>
     </div>
