@@ -253,6 +253,7 @@ RB.Backlog = RB.Object.create({
     if(event.button > 1) return;
     event.preventDefault();
     RB.$(this).parents('.backlog').data('this').newSprint();
+    if (RB.BacklogOptionsInstance) RB.BacklogOptionsInstance.showSprintPanel();
   },
 
   isSprintBacklog: function(){

@@ -80,13 +80,18 @@ RB.BacklogOptions = RB.Object.create({
    * check if either left or right pane is empty and then
    * expand the other pane to full width
    */
-  updatePageLayout: function() {
+  updatePageLayout: function(showAll) {
     var i, groups={}, ct, grpname1, grpname2;
     grpname1 = this.groupnames[0];
     panel1 = RB.$(grpname1).parent();
     grpname2 = this.groupnames[1];
     panel2 = RB.$(grpname2).parent();
     panel1.show(); panel2.show();
+    if (showAll) {
+      panel1.width("50%");
+      panel2.width("50%");
+      return;
+    }
 
     for (i in this.containers) {
       ct = this.containers[i];
@@ -144,6 +149,10 @@ RB.BacklogOptions = RB.Object.create({
       return [];
     }
     return hidden;
+  },
+
+  showSprintPanel: function() {
+    this.updatePageLayout(true);
   }
 });
 

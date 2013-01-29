@@ -69,6 +69,20 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
 
   editorDisplayed: function(editor){
     var name = editor.find('.name.editor');
-    name.width(name.attr('_rb_width'));
+    name.width(Math.max(300, parseInt(name.attr('_rb_width'), 10)));
+    var d = new Date();
+    var now, start, end;
+    start = editor.find('.sprint_start_date.editor');
+    if (start.val()=='no start') {
+      now = RB.$.datepicker.formatDate('yy-mm-dd', new Date());
+      start.val(now);
+    }
+    end = editor.find('.effective_date.editor');
+    if (end.val()=='no end') {
+      now = new Date();
+      now.setDate(now.getDate() + 14);
+      now = RB.$.datepicker.formatDate('yy-mm-dd', now);
+      end.val(now);
+    }
   }
 });
