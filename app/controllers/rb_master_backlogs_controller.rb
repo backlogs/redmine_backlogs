@@ -66,13 +66,13 @@ class RbMasterBacklogsController < RbApplicationController
   def menu
     links = []
 
-    links += _menu_new
+    links += _menu_new if User.current.allowed_to?(:create_stories, @project)
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
-             } unless @sprint
+             } unless @sprint || !User.current.allowed_to?(:create_sprints, @project)
     links << {:label => l(:label_task_board),
               :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint, :only_path => true)
-             } if @sprint && @sprint.stories.size > 0 && Backlogs.task_workflow(@project)
+             } if @sprint && @sprint.stories.size > 0 && Backlogs.task_workflow(@project) && User.current.allowed_to?(:view_taskboards, @project)
     links << {:label =>  l(:label_burndown),
               :url => '#',
               :classname => 'show_burndown_chart'
