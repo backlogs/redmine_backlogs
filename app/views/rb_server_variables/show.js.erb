@@ -61,6 +61,10 @@ if (!RB.constants) {
 
 <% if @project %>
   RB.constants.project_id = <%= @project.id %>;
+  RB.permissions = {
+      update_stories: <%= User.current.allowed_to?(:update_stories, @project) ? 'true' : 'false' %>,
+      update_sprints: <%= User.current.allowed_to?(:update_sprints, @project) ? 'true' : 'false' %>
+  };
 <% end %>
 
 <% if @sprint %>

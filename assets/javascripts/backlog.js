@@ -23,6 +23,7 @@ RB.Backlog = RB.Object.create({
     j.data('this', this);
 
     // Make the list sortable
+    if (RB.permissions.update_stories) {
     list = this.getList();
     list.bind('mousedown', function(e){self.mouseDown(e);});
     list.bind('mouseup', function(e){self.mouseUp(e);});
@@ -37,6 +38,7 @@ RB.Backlog = RB.Object.create({
                    stop: function(e,u){ self.dragStop(e, u); },
                    update: function(e,u){ self.dragComplete(e, u); }
                   });
+    } //permissions
 
     if(this.isSprintBacklog()){
       RB.Factory.initialize(RB.Sprint, this.getSprint());
