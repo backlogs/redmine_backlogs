@@ -123,8 +123,12 @@ RB.Backlog = RB.Object.create({
           }
         });
 
-        menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
-        menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
+        if (RB.permissions.create_stories) {
+          menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
+        }
+        if (RB.permissions.create_sprints) {
+          menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
+        }
         // capture 'click' instead of 'mouseup' so we can preventDefault();
         menu.find('.show_burndown_chart').bind('click', function(ev){ self.showBurndownChart(ev); });
       }

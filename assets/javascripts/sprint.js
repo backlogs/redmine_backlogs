@@ -14,7 +14,9 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.delegate('.editable', 'click', this.handleClick);
+    if (RB.permissions.update_sprints) {
+      j.delegate('.editable', 'click', this.handleClick);
+    }
   },
 
   beforeSave: function(){

@@ -1,33 +1,34 @@
+<% editable = (User.current.allowed_to?(:create_tasks, @project) || User.current.allowed_to?(:update_tasks, @project)) ? 'editable' : '' %>
 <div class="model issue task <%= mark_if_closed(task) %>" id="issue_<%= task.id %>" <%= build_inline_style(task).html_safe %>>
   <div class="id story_tooltip">
     <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => task %></div>
     <div class="t"><%= issue_link_or_empty(task) %></div>
     <div class="v"><%= id_or_empty(task) %></div>
   </div>
-  <div class="subject editable" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= h task.subject %></div>
-  <div class="description editable" style="display: none" fieldtype="textarea" fieldname="description" fieldlabel="<%=l(:field_description)%>"><%= h task.description %></div>
-  <div class="assigned_to_id editable" fieldtype="select" fieldname="assigned_to_id" fieldlabel="<%=l(:field_assigned_to)%>">
+  <div class="subject <%= editable %>" fieldtype="textarea" fieldname="subject" fieldlabel="<%=l(:field_subject)%>"><%= h task.subject %></div>
+  <div class="description <%= editable %>" style="display: none" fieldtype="textarea" fieldname="description" fieldlabel="<%=l(:field_description)%>"><%= h task.description %></div>
+  <div class="assigned_to_id <%= editable %>" fieldtype="select" fieldname="assigned_to_id" fieldlabel="<%=l(:field_assigned_to)%>">
     <div class="t"><%= assignee_name_or_empty(task) %></div>
     <div class="v"><%= assignee_id_or_empty(task) %></div>
   </div>
   <% if task.priority_id != IssuePriority.default.id %>
-    <div class="priority_id editable"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>">
+    <div class="priority_id <%= editable %>"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>">
       <div class="t"><%= h task.priority.name %></div>
       <div class="v"><%= task.priority_id %></div>
     </div>
   <% end %>
   <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
-    <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours(task) %></div>
+    <div class="remaining_hours <%= editable %>" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours(task) %></div>
   <% end %>
   <% if User.current.allowed_to?(:log_time, @project) && @settings[:timelog_from_taskboard]=='enabled'  %>
-    <div class="time_entry_hours editable" style="display: none" fieldname="time_entry_hours" fieldlabel="<%=l(:field_time_entry_hours)%>"></div>
+    <div class="time_entry_hours <%= editable %>" style="display: none" fieldname="time_entry_hours" fieldlabel="<%=l(:field_time_entry_hours)%>"></div>
     <% if User.current.allowed_to?(:edit_time_entries, @project) %>
-      <div class="time_entry_user_id editable" fieldtype="select" fieldname="time_entry_user_id" fieldlabel="<%=l(:field_time_entry_user_id)%>">
+      <div class="time_entry_user_id <%= editable %>" fieldtype="select" fieldname="time_entry_user_id" fieldlabel="<%=l(:field_time_entry_user_id)%>">
         <div class="v" style="display: none" ><%= assignee_id_or_empty(task) %></div>
       </div>
     <% end %>
-    <div class="Time_entry_spent_on editable date" fieldname="time_entry_spent_on" fieldlabel="<%=l(:field_time_entry_spend_on)%>" style="display:none"><%= Date.today %></div>
-    <div class="Time_entry_comments editable" fieldtype=textarea fieldname="time_entry_comments" fieldlabel="<%=l(:field_time_entry_comments)%>"></div>
+    <div class="Time_entry_spent_on <%= editable %> date" fieldname="time_entry_spent_on" fieldlabel="<%=l(:field_time_entry_spend_on)%>" style="display:none"><%= Date.today %></div>
+    <div class="Time_entry_comments <%= editable %>" fieldtype=textarea fieldname="time_entry_comments" fieldlabel="<%=l(:field_time_entry_comments)%>"></div>
   <% end %>
   <div class="indicator"> </div>
   <div class="meta">

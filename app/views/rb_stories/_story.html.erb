@@ -1,4 +1,4 @@
-<% editable = User.current.allowed_to?(:update_stories, @project) ? 'editable':'' %>
+<% editable = (User.current.allowed_to?(:create_stories, @project) || User.current.allowed_to?(:update_stories, @project)) ? 'editable' : '' %>
 <li class="model story fff-wrapper <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>">
  <div class="fff-wrapmiddle">
   <div class="subject <%= editable %> story_field fff-middle" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %>
