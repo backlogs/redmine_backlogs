@@ -22,6 +22,12 @@
                            :context => 'taskboard',
                            :format => 'js') %>">
   </script>
+  <%# Usability: display default cursor if tasks cannot be dragged %>
+  <% unless User.current.allowed_to?(:update_tasks, @project) %> 
+    <style type="text/css">
+    #taskboard .issue{cursor:default;}
+    </style>
+  <% end %>
 <% end %>
 
 <% content_for :breadcrumbs do %>
