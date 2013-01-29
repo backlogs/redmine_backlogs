@@ -1,4 +1,4 @@
-<% editable = User.current.allowed_to?(:update_sprints, @project) ? 'editable':'' %>
+<% editable = (User.current.allowed_to?(:create_sprints, @project) || User.current.allowed_to?(:update_sprints, @project)) ? 'editable':'' %>
 <div class="<%= cls %> headertext fff-wrapper" id="<%= sprint_html_id_or_empty(sprint) %>">
   <div class="id">
     <div class="t"><%= sprint_link_or_empty(sprint) %></div>
