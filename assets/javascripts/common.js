@@ -47,7 +47,7 @@ RB.Factory = RB.Object.create({
 // Utilities
 RB.Dialog = RB.Object.create({
   msg: function(msg){
-    dialog = RB.$('#msgBox').length ? RB.$(document.createElement('div')).attr('id', 'msgBox').appendTo('body') : RB.$('#msgBox');
+    var dialog = !RB.$('#msgBox').length ? RB.$('<div id="msgBox" />').appendTo('body') : RB.$('#msgBox');
     dialog.html(msg);
     dialog.dialog({ title: 'Backlogs Plugin',
                     buttons: { "OK": function() { RB.$(this).dialog("close"); } },

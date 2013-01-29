@@ -48,7 +48,7 @@
   width: 100%;
 }
 .fff-middle{
-  margin-right:76px;
+  margin-right:100px;
   margin-left:110px;
 }
 .fff-left{
@@ -58,20 +58,20 @@
 }
 .fff-right{
   float: left;
-  width: 76px;
-  margin-left: -76px;
+  width: 100px;
+  margin-left: -100px;
 }
 
 .header .fff-middle{
-  margin-right:210px;
+  margin-right:212px;
   margin-left: 29px;
 }
 .header .fff-left{
   width: 29px;
 }
 .header .fff-right{
-  width: 210px;
-  margin-left: -210px;
+  width: 212px;
+  margin-left: -212px;
 }
 /* end fixed-fluid-fixed layout */
 
@@ -308,6 +308,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 #backlogs_container .header .velocity {
   text-align: right;
+  padding-right: 2px;
 }
 
 /* backlog header invisibles */
@@ -418,16 +419,16 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   text-decoration:line-through;
 }
 #backlogs_container .stories .story .status_id {
-  width:40px;
+  width:56px;
   float: left;
-  padding-left:4px;
+  padding-left:8px;
   white-space: nowrap;
 }
 
 #backlogs_container .stories .story .story_points {
   text-align:right;
   float: left;
-  width:30px;
+  width:34px;
 }
 /*meta in story*/
 #backlogs_container .stories .story .fixed_version_id,

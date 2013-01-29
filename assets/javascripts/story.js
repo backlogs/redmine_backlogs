@@ -38,8 +38,8 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
 
     this.setAllowedStatuses(tracker, status);
     tracker.change(function() { self.setAllowedStatuses(tracker, status); });
-    editor.children(':first').insertAfter(editor.find(':nth-child(6)'));
-    editor.children(':first').insertAfter(editor.find(':nth-child(6)'));
+    var l = editor.children(':first').insertAfter(editor.find('.tracker_id.editor'));
+    editor.children(':first').insertAfter(l);
     editor.find('.subject.editor').width(this.$.find('.fff-wrapmiddle').width()-200);
     var name = editor.find('.name.editor');
     name.width(parseInt(name.attr('_rb_width'),10) - 10);
