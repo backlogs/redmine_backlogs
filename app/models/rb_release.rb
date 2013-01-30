@@ -148,9 +148,10 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories_by_sprint
+    order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
 #return issues sorted into sprints. Obviously does not return issues which are not in a sprint
 #unfortunately, group_by returns unsorted results.
-    issues.joins(:fixed_version).includes(:fixed_version).order('versions.effective_date').group_by(&:fixed_version_id)
+    issues.joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
   end
 
   def days(cutoff = nil)
