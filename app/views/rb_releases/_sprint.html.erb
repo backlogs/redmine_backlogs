@@ -1,9 +1,22 @@
 <div class="sprint">
 <% if version %>
-	<h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
-	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
-	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
-  <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
+    <h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
+  <% if version.completed? || version.closed? %>
+    <p><%= format_date(version.effective_date) %></p>
+  <% elsif version.effective_date %>
+    <p><strong><%= due_date_distance_in_words(version.effective_date) %></strong> (<%= format_date(version.effective_date) %>)</p>
+  <% end %>
+
+  <p><%=h version.description %></p>
+  <% if version.custom_field_values.any? %>
+  <ul>
+    <% version.custom_field_values.each do |custom_value| %>
+      <% if custom_value.value.present? %>
+         <li><%=h custom_value.custom_field.name %>: <%=h show_value(custom_value) %></li>
+      <% end %>
+    <% end %>
+  </ul>
+  <% end %>
 <% end %>
 <%= form_tag({}) do -%>
 <% issues.sort!{|a,b|a.position <=> b.position}
