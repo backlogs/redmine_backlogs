@@ -47,24 +47,8 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 </div>
 
 <div id="releasebacklog">
-<h3>Release Backlog</h3>
-<table class="list issues">
-  <tr>
-    <th>#</th>
-    <th>Tracker</th>
-    <th>Subject</th>
-    <th>Story Points</th>
-  </tr>
-  <% RbStory.release_backlog(@release).each{|story|
-  klass=story.closed? ? 'closed':'open' %>
-  <tr class="<%= klass %>">
-    <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
-    <td><%= h tracker_name_or_empty(story) %></td>
-    <td><%= story.subject %></td>
-    <td><%= story_points_or_empty(story) %></td>
-  </tr>
-  <% } %>
-</table>
+  <h3>Release Backlog</h3>
+  <%= render :partial => 'sprint', :locals => { :version=>nil, :issues=>RbStory.release_backlog(@release)} %>
 </div>
 
 <br><h3>Closed Sprints</h3>
