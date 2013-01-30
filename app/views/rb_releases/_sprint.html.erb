@@ -3,23 +3,27 @@
 	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
 	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
   <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
-<%
-    issues.sort!{|a,b|a.position <=> b.position} %>
+<%= form_tag({}) do -%>
+<% issues.sort!{|a,b|a.position <=> b.position} %>
   <table class="list issues">
     <tr>
+      <th></th>
       <th>#</th>
       <th>Tracker</th>
       <th>Subject</th>
       <th>Story Points</th>
     </tr>
-<%  issues.each do |story|
-    klass=story.closed? ? 'closed':'open' %>
-    <tr class="<%= klass %>">
-      <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
-      <td><%= h tracker_name_or_empty(story) %></td>
-      <td><%= story.subject %></td>
-      <td><%= story_points_or_empty(story) %></td>
+    <% issues.each do |issue|
+    klass=issue.closed? ? 'closed':'open' %>
+    <tr class="hascontextmenu <%= klass %>">
+      <td class="checkbox"><%= check_box_tag 'ids[]', issue.id, false, :id => nil %></td>
+      <td><%= link_to issue.id, {:controller => 'issues', :action => 'show', :id => issue.id} %></td>
+      <td><%= h tracker_name_or_empty(issue) %></td>
+      <td><%= issue.subject %></td>
+      <td><%= story_points_or_empty(issue) %></td>
     </tr>
-<%  end %>
+    <% end %>
   </table>
   </div>
+<% end %>
+<%= context_menu issues_context_menu_path %>
