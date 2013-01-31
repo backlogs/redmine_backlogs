@@ -202,7 +202,4 @@ de:
   backlogs_sharing_new_sprint_explanation: Obwohl hier alle Einstellungen verfügbar sind, werden die Rechte für neue Sprints entsprechend der Rollen der Benutzer im Projekt berücksichtigt. Übergreifend geteilte Sprints können nur durch Administratoren erstellt werden. In einer Hierarchie- oder Baumstruktur geteilte Sprints benötigen die notwendigen Rechte des Wurzelprojekts.
   backlogs_show_in_scrum_stats: Zeige das Projekt in der Scrumstatistik an
   label_view_options: Darstellungsoptionen  
-  backlogs_statistics_active: Projektaktivität anzeigen
   backlogs_statistics_active_failed: Projekt zeigt keine Aktivität
-  backlogs_story_close_status: "Status to close story automatically"
-  backlogs_product_backlog: Produkt Backlog
