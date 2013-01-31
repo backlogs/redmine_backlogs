@@ -63,10 +63,11 @@ class RbIssueHistory < ActiveRecord::Base
     return filtered
   end
 
-  def self.issue_type(tracker_id)
+  def self.issue_type(tracker_id, trackers = nil)
     return nil if tracker_id.nil? || tracker_id == ''
     tracker_id = tracker_id.to_i
-    return :story if RbStory.trackers && RbStory.trackers.include?(tracker_id)
+    trackers = RbStory.trackers if trackers.nil?
+    return :story if trackers && trackers.include?(tracker_id)
     return :task if tracker_id == RbTask.tracker
     return nil
   end
@@ -79,8 +80,8 @@ class RbIssueHistory < ActiveRecord::Base
     } + [self.history[-1]]).flatten
   end
 
-  def self.rebuild_issue(issue, status=nil)
-    rb = RbIssueHistory.find_or_initialize_by_issue_id(issue.id)
+  def self.rebuild_issue(issue, trackers, has_rb_journals_table, issues2hists, status=nil)
+    rb = issues2hists[issue.id]
 
     rb.history = [{:date => issue.created_on.to_date - 1, :origin => :rebuild}]
 
@@ -121,14 +122,14 @@ class RbIssueHistory < ActiveRecord::Base
             full_journal[date]["status_#{status_prop}".intern] = {:old => status[update[:old]][status_prop], :new => status[update[:new]][status_prop]}
           }
         when :tracker_id
-          full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old]), :new => RbIssueHistory.issue_type(update[:new])}
+          full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old], trackers), :new => RbIssueHistory.issue_type(update[:new], trackers)}
         else
           raise "Unhandled property #{jd.prop}"
         end
       }
     }
 
-    if ActiveRecord::Base.connection.tables.include?('rb_journals')
+    if has_rb_journals_table
       RbJournal.all(:conditions => ['issue_id=?', issue.id], :order => 'timestamp asc').each{|j|
         date = j.timestamp.to_date
         full_journal[date] ||= {}
@@ -161,7 +162,7 @@ class RbIssueHistory < ActiveRecord::Base
       :status_id => {:new => issue.status_id },
       :status_open => {:new => status[issue.status_id][:open] },
       :status_success => {:new => status[issue.status_id][:success] },
-      :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id) },
+      :tracker => {:new => RbIssueHistory.issue_type(issue.tracker_id, trackers) },
       :estimated_hours => {:new => issue.estimated_hours},
       :remaining_hours => {:new => issue.remaining_hours},
     }
@@ -171,8 +172,9 @@ class RbIssueHistory < ActiveRecord::Base
     subhists = []
     subdates = []
     subissues.each{|i|
-      subdates.concat(i.history.history.collect{|h| h[:date]})
-      subhists << Hash[*(i.history.expand.collect{|d| [d[:date], d]}.flatten)]
+      hist = issues2hists[i.id]
+      subdates.concat(hist.history.collect{|h| h[:date]})
+      subhists << Hash[*(hist.expand.collect{|d| [d[:date], d]}.flatten)]
     }
     subdates.uniq!
     subdates.sort!
@@ -254,7 +256,7 @@ class RbIssueHistory < ActiveRecord::Base
       h[:estimated_hours] = issue.estimated_hours             unless h.include?(:estimated_hours)
       h[:story_points] = issue.story_points                   unless h.include?(:story_points)
       h[:remaining_hours] = issue.remaining_hours             unless h.include?(:remaining_hours)
-      h[:tracker] = RbIssueHistory.issue_type(issue.tracker_id)              unless h.include?(:tracker)
+      h[:tracker] = RbIssueHistory.issue_type(issue.tracker_id, trackers)              unless h.include?(:tracker)
       h[:sprint] = issue.fixed_version_id                     unless h.include?(:sprint)
       h[:status_open] = status[issue.status_id][:open]        unless h.include?(:status_open)
       h[:status_success] = status[issue.status_id][:success]  unless h.include?(:status_success)
@@ -264,26 +266,71 @@ class RbIssueHistory < ActiveRecord::Base
     rb.history[-1][:hours] = rb.history[-1][:remaining_hours] || rb.history[-1][:estimated_hours]
     rb.history[0][:hours] = rb.history[0][:estimated_hours] || rb.history[0][:remaining_hours]
 
-    rb.save
-
+    sprint_ids = []
     if rb.history.detect{|h| h[:tracker] == :story }
       rb.history.collect{|h| h[:sprint] }.compact.uniq.each{|sprint_id|
-        sprint = RbSprint.find_by_id(sprint_id)
-        next unless sprint
-        sprint.burndown.touch!(issue.id)
+        sprint_ids << sprint_id
       }
     end
+
+    return sprint_ids
   end
 
   def self.rebuild
     RbSprintBurndown.delete_all
+    # anyway, before this migration rb_issue_history table does not even exist
+    RbIssueHistory.delete_all
 
     status = self.statuses
 
-    issues = Issue.count
-    Issue.find(:all, :order => 'root_id asc, lft desc').each_with_index{|issue, n|
-      puts "#{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{issues})..."
-      RbIssueHistory.rebuild_issue(issue, status)
+    nissues = Issue.count
+    trackers = RbStory.trackers
+    has_rb_journals_table = ActiveRecord::Base.connection.tables.include?('rb_journals')
+    # a registry of all RbSprintBurndown instances to be created
+    sprints = Hash.new{|h, sprint_id|
+      h[sprint_id] = RbSprintBurndown.find_or_initialize_by_version_id(sprint_id)
+      h[sprint_id]
+    }
+
+    issues = Issue.includes(:journals => :details).find(:all, :order => 'root_id asc, lft desc')
+    issue_ids2issues = {}
+    issues.each{|issue| issue_ids2issues[issue.id] = issue }
+    # here, all histories to be created are tracked
+    issues2hists = Hash.new{|h, issue_id|
+      rb = RbIssueHistory.new({:issue => issue_ids2issues[issue_id]})
+      h[issue_id] = rb
+      h[issue_id]
+    }
+
+    issues.each_with_index{|issue, n|
+      puts "Step 1: #{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{nissues})..."
+      sprint_ids = RbIssueHistory.rebuild_issue(issue, trackers, has_rb_journals_table, issues2hists, status)
+      sprint_ids.each{|sprint_id| sprints[sprint_id].add_story(issue.id) }
+    }
+
+    history_mapper = lambda{|i| issues2hists[i.id]}
+    puts "Step 2: updating parents"
+    issues.each_with_index{|issue, n|
+      puts "Step 2: #{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{nissues})..."
+      if (p = issue.parent)
+        issues2hists[issue.id].custom_update_parent(p, history_mapper)
+        # no need to explicitly call custom_update_parent(issue.parent) because we're going (roughly speaking) from leafs to roots
+      end
+    }
+
+    puts "Step 3: calculating burndowns"
+    nsprints = sprints.size
+    sprints.values.each_with_index{|sprint, n|
+      puts "Step 3: #{sprint.version.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{nsprints})..."
+      sprint.burndown(false, history_mapper)
+    }
+
+    RbIssueHistory.transaction{
+      # importing issue histories in a bulk
+      puts "Going to save #{issues2hists.size} issue histories"
+      RbIssueHistory.import issues2hists.values
+      puts "Going to save #{sprints.size} sprint burndowns"
+      RbSprintBurndown.import sprints.values
     }
   end
 
@@ -342,12 +389,21 @@ class RbIssueHistory < ActiveRecord::Base
   # history recursively *for that day only*. It will only be called once, which is when the history is created.
   def update_parent(date=nil)
     if (p = self.issue.parent) # if no parent, nothing to do
+      custom_update_parent(p, lambda{|issue| issue.history}, date)
+      p.history.save
+
+      # cascade, but pass on the date initialized by the after_create invocation.
+      p.history.update_parent(date)
+    end
+  end
+
+  def custom_update_parent(p, issue2history, date=nil)
       date ||= self.history[0][:date] # the after_create calls this function without a parameter, so we know it's the creation call. Get the `yesterday' entry.
-      parent_history_index = p.history.history.index{|d| d[:date] == date} # does the parent have an history entry on that date?
+      parent_history_index = issue2history.call(p).history.index{|d| d[:date] == date} # does the parent have an history entry on that date?
       if parent_history_index.nil? # if not, stretch the history to get the values at that date
-        parent_data = p.history.expand.detect{|d| d[:date] == date} 
+        parent_data = issue2history.call(p).expand.detect{|d| d[:date] == date} 
       else # if so, grab that entry
-        parent_data = p.history.history[parent_history_index]
+        parent_data = issue2history.call(p).history[parent_history_index]
       end
 
       # if no entry is found, that means no history entry exists between that creation date and now, so the parent was created after the task. Nothing to do.
@@ -356,7 +412,7 @@ class RbIssueHistory < ActiveRecord::Base
       # we know this parent has children, because a child triggered this. Set the calculated fields to nil.
       [:estimated_hours, :remaining_hours, :hours].each{|h| parent_data[h] = nil }
       p.children.each{|child|
-        child_data = child.history.expand.detect{|d| d[:date] == date } # get the history record for the child for that date
+        child_data = issue2history.call(child).expand.detect{|d| d[:date] == date } # get the history record for the child for that date
         next unless child_data # child didn't exist then, next
 
         # sum these values, if the child has any value for them. This keeps the value nil if all the children have it at nil.
@@ -365,15 +421,10 @@ class RbIssueHistory < ActiveRecord::Base
 
       if parent_history_index.nil?
         # the record needs to be added, so add and sort (history needs to be sorted)
-        p.history.history = (p.history.history + [parent_data]).sort{|a, b| a[:date] <=> b[:date]}
+        issue2history.call(p).history = (issue2history.call(p).history + [parent_data]).sort{|a, b| a[:date] <=> b[:date]}
       else
         # there was an entry on this date, replace it
-        p.history.history[parent_history_index] = parent_data
+        issue2history.call(p).history[parent_history_index] = parent_data
       end
-      p.history.save
-
-      # cascade, but pass on the date initialized by the after_create invocation.
-      p.history.update_parent(date)
-    end
   end
 end
