@@ -39,7 +39,6 @@ group :test do
   gem "database_cleaner"
   if RAILS_VERSION_IS_3
     gem "gherkin", "~> 2.6"
-    gem 'hoe', "~> 3.5.0"
   else
     gem "gherkin", "~> 2.5.0"
   end
