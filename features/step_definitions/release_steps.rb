@@ -128,8 +128,8 @@ end
 Then /^show me the burndown data for release "([^"]*)"$/ do |release|
   release = RbRelease.find_by_name(release)
   burndown = release.burndown
+  puts "offset    #{burndown[:offset_points]}"
   puts "added     #{burndown[:added_points]}"
-  puts "added_pos #{burndown[:added_points_pos]}"
   puts "bl points #{burndown[:backlog_points]}"
   puts "closed    #{burndown[:closed_points]}"
   puts "trend add #{burndown[:trend_added]}"

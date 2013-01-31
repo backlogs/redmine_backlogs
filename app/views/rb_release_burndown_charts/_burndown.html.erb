@@ -17,8 +17,8 @@
 
     # Put together series in the correct order for bar/line rendering
     jqplot_series = Array.new
+    jqplot_series << burndown[:offset_points]
     jqplot_series << burndown[:added_points]
-    jqplot_series << burndown[:added_points_pos]
     jqplot_series << burndown[:backlog_points]
     jqplot_series << burndown[:closed_points]
     jqplot_series << burndown[:trend_added]
@@ -34,6 +34,7 @@
           :rendererOptions => {
             :barMargin => 30,
             :fillToZero => true,
+            :useNegativeColors => false
           }
         },
         :axes => {

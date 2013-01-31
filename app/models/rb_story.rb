@@ -236,8 +236,9 @@ class RbStory < Issue
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
-    series.merge(:backlog_points => baseline.dup)
+    series.merge(:offset_points => baseline.dup)
     series.merge(:added_points => baseline.dup)
+    series.merge(:backlog_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
 
     # Collect data
@@ -273,6 +274,7 @@ class RbStory < Issue
                    end
                  })
     series.merge(:day => days)
+
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
       if (created_on.to_date <= days.first.to_date) && p.open
@@ -293,11 +295,13 @@ class RbStory < Issue
           if p.open
             p.added_points = p.points
           end
+          p.offset_points = p.points
         end
       end
     }
 
     rl = {}
+    rl[:offset_points] = series.series(:offset_points)
     rl[:backlog_points] = series.series(:backlog_points)
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)

@@ -94,12 +94,12 @@ Feature: Release burndown complex
      Then show me the burndown data for release "Rel 1"
 #     Then dump the database to pg_new.dump
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points_pos |
-        | start | 24             | 0         | 0     |
-        | 1     | 19             | 5         | 6     |
-        | 2     | 14             | 5         | 6     |
-        | 3     | 14             | 0         | 6     |
-        | 4     | 14             | 0         | 4     |
-        | 5     |  4             | 2         | 4     |
-        | 6     |  0             | 4         | 4     |
-        | 7     |  0             | 4         | 0     |
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 24             | 0         | 0     | 0  |
+        | 1     | 19             | 5         | 6     | -6 |
+        | 2     | 14             | 5         | 6     | -6 |
+        | 3     | 14             | 0         | 6     | -6 |
+        | 4     | 14             | 0         | 4     | -6 |
+        | 5     |  4             | 2         | 4     | -6 |
+        | 6     |  0             | 4         | 4     | -6 |
+        | 7     |  0             | 4         | 0     | -6 |

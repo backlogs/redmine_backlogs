@@ -7,8 +7,8 @@ class ReleaseBurndown
     @project = release.project
     #initialize empty release
     @data = {}
+    @data[:offset_points] = []
     @data[:added_points] = []
-    @data[:added_points_pos] = []
     @data[:backlog_points] = []
     @data[:closed_points] = []
     @data[:trend_added] = []
@@ -17,8 +17,9 @@ class ReleaseBurndown
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
-    series.merge(:backlog_points => baseline.dup)
+    series.merge(:offset_points => baseline.dup)
     series.merge(:added_points => baseline.dup)
+    series.merge(:backlog_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
 
 #TODO Caching
@@ -36,8 +37,8 @@ class ReleaseBurndown
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
 #TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data[:added_points] = series.collect{ |s| -1 * s.added_points }
-    @data[:added_points_pos] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
+    @data[:offset_points] = series.collect{ |s| -1 * s.offset_points }
+    @data[:added_points] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
     @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
     @data[:closed_points] = series.series(:closed_points)
 
@@ -47,11 +48,13 @@ class ReleaseBurndown
     @data[:trend_closed] = Array.new
     @data[:trend_added] = Array.new
     avg_count = 3
+#FIXME only add trendlines if backlog/added points is greater than zero
+#FIXME does the sprints need to be closed? 
     if release.closed_sprints.size >= avg_count
-      avg_added = (@data[:added_points][-1] - @data[:added_points][-avg_count]) / avg_count
+      avg_added = (@data[:offset_points][-1] - @data[:offset_points][-avg_count]) / avg_count
       avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
-      current_backlog = @data[:added_points][-1] + @data[:added_points_pos][-1] + @data[:backlog_points][-1]
-      current_added = @data[:added_points][-1]
+      current_backlog = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
+      current_added = @data[:offset_points][-1]
       current_sprints = @data[:closed_points].size
 
       # Add beginning and end dataset [sprint,points] for trendlines
@@ -67,8 +70,8 @@ class ReleaseBurndown
 
     # Extend other series with empty datapoints up to the estimated number of sprints
     # to format plot correctly
+    @data[:offset_points].concat sprints_left.dup
     @data[:added_points].concat sprints_left.dup
-    @data[:added_points_pos].concat sprints_left.dup
     @data[:backlog_points].concat sprints_left.dup
     @data[:closed_points].concat sprints_left.dup
   end
@@ -163,6 +166,7 @@ class RbRelease < ActiveRecord::Base
   # start: first day of release
   # 1..n: a day after the nth sprint
 #FIXME duplicates if sprints are run in parallel with same end date?
+#FIXME last date of latest sprint does not necessarily reflect what's left in the release backlog. Add current day to days of interest?
   def days
     days_of_interest = Array.new
     days_of_interest << self.release_start_date.to_date
