@@ -1,7 +1,5 @@
 source :rubygems
 
-gem 'rake', '~>0.9'
-
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
 
@@ -10,7 +8,7 @@ deps = Hash.new
 rails3 = Gem::Dependency.new('rails', '~>3.0')
 RAILS_VERSION_IS_3 = rails3 =~ deps['rails']
 
-gem "holidays", "=1.0.3"
+gem "holidays", "~>1.0.3"
 gem "icalendar"
 gem "nokogiri"
 gem "open-uri-cached"
@@ -40,8 +38,7 @@ group :test do
   end
   gem "database_cleaner"
   if RAILS_VERSION_IS_3
-    gem "gherkin", "=2.6.8"
-    gem 'hoe', '1.5.1'
+    gem "gherkin", "~> 2.6"
   else
     gem "gherkin", "~> 2.5.0"
   end

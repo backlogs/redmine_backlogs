@@ -112,7 +112,6 @@ en:
   label_release_planning: Release Planning
   label_release_plural: Releases
   label_release_start_date: Release start date
-  label_release_end_date: Release end date
   label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint

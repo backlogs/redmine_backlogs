@@ -218,7 +218,6 @@ if [ "$DBTYPE" = "mysql" -a "$RUBYVER" = "1.8" ] ; then
   echo 'boing'
 fi
 
-#sed -i -e "s/require 'rake\/gempackagetask'/require 'rubygems\/package_task'/" -e 's/require "rake\/gempackagetask"/require "rubygems\/package_task"/' `find . -type f -exec grep -l 'require.*rake.gempackagetask' {} \;` README.rdoc
 sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GONE"' {} \;` README.rdoc
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi

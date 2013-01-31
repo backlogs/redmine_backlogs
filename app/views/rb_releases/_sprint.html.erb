@@ -1,25 +1,49 @@
-  <div class="sprint">
-	<h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
-	<%= render :partial => 'versions/overview', :locals => {:version => version} %>
-	<%= render(:partial => "wiki/content", :locals => {:content => version.wiki_page.content}) if version.wiki_page %>
-  <%= call_hook :view_projects_roadmap_version_bottom, :version => version %>
-<%
-    issues.sort!{|a,b|a.position <=> b.position} %>
+<div class="sprint">
+<% if version %>
+    <h3 class="version"><%= tag 'a', :name => version.name %><%= link_to_version version %></h3>
+  <% if version.completed? || version.closed? %>
+    <p><%= format_date(version.effective_date) %></p>
+  <% elsif version.effective_date %>
+    <p><strong><%= due_date_distance_in_words(version.effective_date) %></strong> (<%= format_date(version.effective_date) %>)</p>
+  <% end %>
+
+  <p><%=h version.description %></p>
+  <% if version.custom_field_values.any? %>
+  <ul>
+    <% version.custom_field_values.each do |custom_value| %>
+      <% if custom_value.value.present? %>
+         <li><%=h custom_value.custom_field.name %>: <%=h show_value(custom_value) %></li>
+      <% end %>
+    <% end %>
+  </ul>
+  <% end %>
+<% end %>
+<%= form_tag({}) do -%>
+<% issues.sort!{|a,b|a.position <=> b.position}
+   sum_points = 0.0
+%>
   <table class="list issues">
     <tr>
+      <th></th>
       <th>#</th>
       <th>Tracker</th>
       <th>Subject</th>
       <th>Story Points</th>
     </tr>
-<%  issues.each do |story|
-    klass=story.closed? ? 'closed':'open' %>
-    <tr class="<%= klass %>">
-      <td><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id} %></td>
-      <td><%= h tracker_name_or_empty(story) %></td>
-      <td><%= story.subject %></td>
-      <td><%= story_points_or_empty(story) %></td>
+    <% issues.each do |issue|
+    klass=issue.closed? ? 'closed':'open' %>
+    <tr class="hascontextmenu <%= klass %>">
+      <td class="checkbox"><%= check_box_tag 'ids[]', issue.id, false, :id => nil %></td>
+      <td><%= link_to issue.id, {:controller => 'issues', :action => 'show', :id => issue.id} %></td>
+      <td><%= h tracker_name_or_empty(issue) %></td>
+      <td><%= issue.subject %></td>
+      <td><%= story_points_or_empty(issue) %></td>
     </tr>
-<%  end %>
+    <%
+      sum_points = sum_points + issue.story_points.to_f if issue.story_points 
+      end %>
+    <tr><td colspan="4"></td><td><%= sum_points %></td></tr>
   </table>
-  </div>
+<% end %>
+</div>
+<%= context_menu issues_context_menu_path %>

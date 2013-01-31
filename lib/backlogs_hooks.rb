@@ -1,4 +1,5 @@
 include RbCommonHelper
+include ContextMenusHelper
 
 module BacklogsPlugin
   module Hooks
@@ -184,6 +185,44 @@ module BacklogsPlugin
                                    content_tag('option', l(:label_none), :value => 'none') +
                                    release_options_for_select(project.releases)) }
           </p>"
+      end
+
+      def view_issues_context_menu_end(context={ })
+        begin
+          issues = context[:issues]
+          issue = nil
+          issue = issues.first if issues.size == 1
+          projects = issues.collect(&:project).compact.uniq
+          return if projects.size == 0
+          releases = projects.map {|p| p.shared_releases.open}.reduce(:&)
+          return if releases.size == 0
+          snippet='
+            <li class="folder">
+              <a href="#" class="submenu">'+ l(:field_release) + '</a>
+              <ul>'
+          releases.each do |s|
+              snippet += '<li>' +
+                context_menu_link(s.name,
+                                  {:controller => 'issues', :action => 'bulk_update', :ids => issues, :issue => {:release_id => s}, :back_url => context[:back]},
+                                  :method => :post,
+                                  :selected => (issue && s == issue.release),
+                                  :disabled => !context[:can][:update])+
+              '</li>'
+          end
+          snippet += '<li>' +
+                context_menu_link(l(:label_none),
+                                  {:controller => 'issues', :action => 'bulk_update', :ids => issues, :issue => {:release_id => 'none'}, :back_url => context[:back]},
+                                  :method => :post,
+                                  :selected => (issue && issue.release.nil?),
+                                  :disabled => !context[:can][:update])+
+            '</li>'
+          snippet += '
+              </ul>
+            </li>'
+        rescue => e
+          Rails.logger.error("Exception in Backlogs view_issues_context_menu_end #{e}")#exception(context, e)
+          return ''
+        end
       end
 
       def view_versions_show_bottom(context={ })
