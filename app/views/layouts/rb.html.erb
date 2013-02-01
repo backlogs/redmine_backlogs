@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title><%=h html_title %></title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title><%=h html_title %></title>
 <meta name="description" content="Redmine Backlogs" />
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
 <%= csrf_meta_tag %>
@@ -43,7 +43,10 @@ RB.$(function(){
 </script>
 <% end %>
 </head>
-<body>
+<body class="<%=h body_css_classes if Backlogs.setting[:show_redmine_std_header] %>">
+<div id="wrapper">
+<div id="wrapper2">
+<div id="wrapper3">
 <% if Backlogs.setting[:show_redmine_std_header] %>
 <div id="usability-compat-wrapper">
 <div id="top-menu" title="Doubleclick to collapse">
@@ -82,27 +85,42 @@ RB.$(function(){
 </div>
 <% end %>
 
-  <div id="toolbar" class="rb-toolbar">
-    <% unless Backlogs.setting[:show_redmine_std_header] %>
-    <div class="breadcrumbs">
-      <%= render_backlog_project_jump_box %>
-      <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
-      <%= breadcrumb_separator %>
-      <%= yield :breadcrumbs -%>
+  <div id="main" class="rb-main rb-theme-default <%= sidebar_content? ? '' : 'nosidebar' %>">
+    <div id="sidebar">
+        <%= yield :sidebar %>
+        <%= view_layouts_base_sidebar_hook_response %>
     </div>
-    <% end %>
-    <div class="userselect">
-      <%= yield :view_specific_users -%>
+
+    <div id="content">
+      <%= render_flash_messages %>
+      <div id="rbcontentwrapper">
+      <div id="toolbar" class="rb-toolbar">
+        <% unless Backlogs.setting[:show_redmine_std_header] %>
+        <div class="breadcrumbs">
+          <%= render_backlog_project_jump_box %>
+          <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
+          <%= breadcrumb_separator %>
+          <%= yield :breadcrumbs -%>
+        </div>
+        <% end %>
+        <div class="userselect">
+          <%= yield :view_specific_users -%>
+        </div>
+        <div class="links">
+          <%= yield :view_specific_links -%>
+        </div>
+      </div>
+
+      <%= yield :main %>
+      </div>
+      <div style="clear:both;"></div>
     </div>
-    <div class="links">
-      <%= yield :view_specific_links -%>
-    </div>
-  </div>
-  <div id="main" class="rb-main rb-theme-default">
-    <%= yield :main %>
   </div>
   <div id="helpers">
     <%= yield :helpers %>
   </div>
+</div>
+</div>
+</div>
 </body>
 </html>

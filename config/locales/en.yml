@@ -214,3 +214,4 @@ en:
   label_all_tasks: All tasks
   label_my_tasks: My tasks
   label_view_options: View options
+  backlogs_not_all_themes_are_supported: Not all themes are supported.
