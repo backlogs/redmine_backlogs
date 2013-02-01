@@ -162,8 +162,9 @@ set -e
 cd $PATH_TO_REDMINE
 echo current directory is `pwd`
 
-# create a link to the backlogs plugin
-ln -sf $PATH_TO_BACKLOGS $PATH_TO_PLUGINS/redmine_backlogs
+# create a link to the backlogs plugin, but avoid recursive link.
+if [ -L "$PATH_TO_PLUGINS/redmine_backlogs" ]; then rm "$PATH_TO_PLUGINS/redmine_backlogs"; fi
+ln -s "$PATH_TO_BACKLOGS" "$PATH_TO_PLUGINS/redmine_backlogs"
 
 # copy database.yml
 cp $WORKSPACE/database.yml config/
