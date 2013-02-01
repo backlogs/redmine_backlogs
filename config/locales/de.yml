@@ -175,12 +175,12 @@ de:
   backlogs_statistics_active: Projekaktivität anzeigen
   backlogs_statistics_velocity: "Velocity/Entwicklungsgeschwindigkeit: %{value}" 
   backlogs_story_follows_task_status: Status der Story wird von der Aufgabe abgeleitet
-  backlogs_story_follow_task_status_nil: Desktiviert
+  backlogs_story_follow_task_status_nil: Deaktiviert
   backlogs_story_follow_task_status_close: Schließen wenn alle Tickets geschlossen werden
   backlogs_story_follow_task_status_loose: das Feld % erledigt wird verzögert von der Aufgabe übernommen
   backlogs_story_close_status: "Wenn alle Aufgaben abeschlossen sind, wird die Story wie folgt aktualisiert:"
   backlogs_product_backlog: Produkt Backlog  
-  backlogs_show_redmine_std_header: zeige den regulären Header an
+  backlogs_show_redmine_std_header: Zeige den regulären Header an
   field_release: Release
   field_project_id: Projekt Id
   label_release_end_date: Release Abgabedatum
@@ -203,3 +203,4 @@ de:
   backlogs_show_in_scrum_stats: Zeige das Projekt in der Scrumstatistik an
   label_view_options: Darstellungsoptionen  
   backlogs_statistics_active_failed: Projekt zeigt keine Aktivität
+  backlogs_not_all_themes_are_supported: Nicht alle Stile (themes) sind unterstützt.

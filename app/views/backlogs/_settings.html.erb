@@ -106,7 +106,7 @@
 <p>
   <%= content_tag(:label, l(:backlogs_show_redmine_std_header)) %>
   <%= check_box_tag("settings[show_redmine_std_header]", 'enabled',
-      Backlogs.setting[:show_redmine_std_header]) %>
+      Backlogs.setting[:show_redmine_std_header]) %><span><%= l(:backlogs_not_all_themes_are_supported) %></span>
 </p>
 
 </fieldset>
