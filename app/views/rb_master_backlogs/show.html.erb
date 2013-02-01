@@ -44,12 +44,18 @@
     });
   </script>
   <![endif]-->
-  <% if Backlogs.setting[:show_project_name] != 'enabled' %>
-    <style type="text/css">
-.fff-middle{ margin-left:56px; } /*this should be dynamic*/
-.fff-left{ width: 56px;
-    </style>
-  <% end %>
+  <style type="text/css">
+    <% unless User.current.allowed_to?(:update_stories, @project) %>
+      #backlogs_container .stories .story{cursor:default;}
+    <% end %>
+    <% unless User.current.allowed_to?(:update_sprints, @project) %>
+      #backlogs_container .header .model.headertext{cursor:default;}
+    <% end %>
+    <% if Backlogs.setting[:show_project_name] != 'enabled' %>
+      .fff-middle{ margin-left:56px; } /*this should be dynamic*/
+      .fff-left{ width: 56px; }
+    <% end %>
+  </style>
 <%- end %>
 
 <%- content_for :breadcrumbs do %>

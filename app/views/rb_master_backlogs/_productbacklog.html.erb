@@ -14,7 +14,9 @@
   </div>
 
   <div class="fff-right">
-    <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
+    <%- if User.current.allowed_to?(:manage_versions, @project) %>
+      <%= link_to l(:label_close_completed_sprints), {:controller => 'rb_sprints', :action => 'close_completed', :project_id => @project}, :class => 'close_sprint', :method => :put %>
+    <%- end %>
     <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
   </div>
 

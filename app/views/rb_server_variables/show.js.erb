@@ -61,6 +61,16 @@ if (!RB.constants) {
 
 <% if @project %>
   RB.constants.project_id = <%= @project.id %>;
+  RB.permissions = {
+      create_stories: <%= User.current.allowed_to?(:create_stories, @project) ? 'true' : 'false' %>,
+      update_stories: <%= User.current.allowed_to?(:update_stories, @project) ? 'true' : 'false' %>,
+      create_sprints: <%= User.current.allowed_to?(:create_sprints, @project) ? 'true' : 'false' %>,
+      update_sprints: <%= User.current.allowed_to?(:update_sprints, @project) ? 'true' : 'false' %>,
+      create_tasks: <%= User.current.allowed_to?(:create_tasks, @project) ? 'true' : 'false' %>,
+      update_tasks: <%= User.current.allowed_to?(:update_tasks, @project) ? 'true' : 'false' %>,
+      create_impediments: <%= User.current.allowed_to?(:create_impediments, @project) ? 'true' : 'false' %>,
+      update_impediments: <%= User.current.allowed_to?(:update_impediments, @project) ? 'true' : 'false' %>
+  };
 <% end %>
 
 <% if @sprint %>
