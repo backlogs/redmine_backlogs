@@ -93,7 +93,7 @@
     <%- @sprint.stories.each do |story| %>
     <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
-        <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story) %>>
+        <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
