@@ -148,7 +148,7 @@ Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story
   found_change.should be_true
 
   # Verify Backlogs issue history
-  h = story.history.filter_release([Date.today])
+  h = story.history.filter_release([RbIssueHistory.burndown_timezone.now.to_date])
   h[0][:release].should == release.id
 end
 

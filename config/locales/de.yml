@@ -204,3 +204,11 @@ de:
   label_view_options: Darstellungsoptionen  
   backlogs_statistics_active_failed: Projekt zeigt keine Aktivität
   backlogs_not_all_themes_are_supported: Nicht alle Stile (themes) sind unterstützt.
+  rb_burndown_timezone: Zeitzone für Burndown Tagesgrenze
+  rb_burndown_timezone_explanation: "Um verteilte Teams zu unterstütyen, berechnet
+    Backlogs die burndown Graphen in einer gemeinsam vereinbarten Zeitzone.
+
+    Deine Benutzer-Zeitzone ist %{user_timezone}, die des Servers ist %{server_timezone}
+    und Burndown Graphen nutzen %{burndown_timezone} zur berechnung der Tagesgrenze.
+
+    Achtung: Vergangene Daten werden nicht beeinflusst, wenn man diese Einstellung ändert."
