@@ -53,7 +53,7 @@ script:
 - export PATH_TO_REDMINE=$WORKSPACE/redmine
 - mkdir $WORKSPACE
 - cp config/database.yml.travis $WORKSPACE/database.yml
-- bash -x ./redmine_install.sh -r
-- bash -x ./redmine_install.sh -i
-- bash -x ./redmine_install.sh -t
-- bash -x ./redmine_install.sh -u
+- bash -x ./redmine_install.sh -r || exit 1
+- bash -x ./redmine_install.sh -i || exit 1
+- bash -x ./redmine_install.sh -t || exit 1
+- bash -x ./redmine_install.sh -u || exit 1
