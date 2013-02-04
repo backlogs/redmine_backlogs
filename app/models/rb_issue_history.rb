@@ -45,7 +45,7 @@ class RbIssueHistory < ActiveRecord::Base
     limits = [nil,days[0..-2]].flatten
     # Limit search to history of story
     hist_limit = h.keys[0]
-    filtered = days.collect.with_index{|d,i|
+    filtered = days.each_with_index.collect{|d,i|
       while !h[d] && (limits[i].nil? || d > limits[i]) && d > hist_limit
         if d > days[-1]
           d = days[-1]
