@@ -8,6 +8,7 @@ Before do
   @sprint = nil
   @story = nil
   Backlogs.setting[:include_sat_and_sun] = false
+  Time.zone = 'UTC'
 end
 
 After do |scenario|
@@ -296,7 +297,8 @@ Given /^I have made the following task mutations:$/ do |table|
     task.should_not be_nil
 
     set_now(mutation.delete('day'), :msg => task.subject, :sprint => current_sprint)
-    Time.now.should be >= task.created_on
+    puts "Time.now #{Time.zone.now} task created #{task.created_on}"
+    Time.zone.now.should be >= task.created_on
 
     task.init_journal(User.current)
 
@@ -393,7 +395,8 @@ Given /^I have defined the following tasks:$/ do |table|
     else
       set_now(at, :msg => params['subject'])
     end
-    Time.now.should be >= story.created_on
+    puts "Time.now #{Time.zone.now} story created #{story.created_on}"
+    Time.zone.now.should be >= story.created_on
 
     task.should == {}
 
@@ -498,11 +501,11 @@ end
 Given /^I have changed the sprint start date to (.*)$/ do |date|
   case date
     when 'today'
-      date = Date.today.to_time
+      date = Time.zone.today
     when 'tomorrow'
-      date = (Date.today + 1).to_time
+      date = (Time.zone.today + 1)
     else
-      date = Date.parse(date)
+      date = Time.zone.parse(date).to_date
   end
   current_sprint.sprint_start_date = date
   current_sprint(:keep).save!
