@@ -282,9 +282,8 @@ RB.UserFilter = RB.Object.create({
 });
 
 RB.$(function(){ /*document ready*/
-  RB.$("#board_header").scrollFollow({
-    speed: 100,
-    offset: 0
+  RB.$("#board_header").verticalFix({
+    delay: 50,
   });
   RB.UserFilter.initialize();
 });
