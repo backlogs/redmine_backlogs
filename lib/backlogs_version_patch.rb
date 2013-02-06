@@ -32,6 +32,7 @@ module Backlogs
       end
 
       def days
+        #return Day objects. Version stores start and effective date without timezone. These are used to filter history entries and thus the zone of these days are those of the history dates
         return nil unless self.sprint_start_date && self.effective_date
         (self.sprint_start_date - 1 .. self.effective_date).to_a.select{|d| Backlogs.setting[:include_sat_and_sun] || ![0,6].include?(d.wday)}
       end

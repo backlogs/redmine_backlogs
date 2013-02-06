@@ -197,6 +197,18 @@
   <%= check_box_tag("settings[show_project_name]",'enabled',
             Backlogs.setting[:show_project_name]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:rb_burndown_timezone)) %>
+  <%= select_tag("settings[burndown_timezone]",
+        time_zone_options_for_select(RbIssueHistory.burndown_timezone(true).name, nil)
+      ) %>
+  <span style="display:block;margin-left:12px"><%= l(:rb_burndown_timezone_explanation, {
+    :user_timezone => User.current.time_zone,
+    :server_timezone => ActiveSupport::TimeZone["Etc/GMT-#{Time.now.utc_offset/3600}"],
+    :burndown_timezone => RbIssueHistory.burndown_timezone }).gsub("\n","<br/>").html_safe %></span>
+</p>
+
 </fieldset>
 
 <fieldset>

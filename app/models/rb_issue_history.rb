@@ -9,6 +9,23 @@ class RbIssueHistory < ActiveRecord::Base
   after_initialize :init_history
   after_create :update_parent
 
+  def self.burndown_timezone(recalc=nil)
+    #provide a ActiveSupport::TimeZone to calculate burndown day boundaries. Configured in global settings.
+    #guarantees to return z timezone object, falling back gracefully.
+    #To be backward compatible, fallback to ENV['TZ'] (server_tz) is provided first - that was the old behavior
+    #Not considering ActiveSupport Time.zone (configured in config.time_zone for rails apps) - we provide our own configuration option
+    @burndown_timezone = nil unless recalc.nil?
+    @burndown_timezone ||= begin
+      server_tz = ActiveSupport::TimeZone["Etc/GMT-#{Time.now.utc_offset/3600}"] rescue server_tz = nil
+      fallback_tz = server_tz || ActiveSupport::TimeZone["UTC"]
+      if Backlogs.settings[:burndown_timezone] #backlogs configuration for burndown day boundaries
+        ActiveSupport::TimeZone[Backlogs.settings[:burndown_timezone]] || fallback_tz
+      else
+        fallback_tz
+      end
+    end
+  end
+
   def self.statuses
     Hash.new{|h, k|
       s = IssueStatus.find_by_id(k.to_i)
@@ -41,7 +58,7 @@ class RbIssueHistory < ActiveRecord::Base
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
     #if we have no day matching, find one earlier to get the latest status
     filtered = days.collect{|d| 
-      while !h[d] && d > days[0]
+      while !h[d] && d > days[0] #FIXME why did self.expand not give us all days in h?
         if d > days[-1]
           d = days[-1]
         else
@@ -72,6 +89,7 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def expand
+    # return a history array without gaps. If history has gaps, fill them with consecutive copies of each gap start day
     ((0..self.history.size - 2).to_a.collect{|i|
       (self.history[i][:date] .. self.history[i+1][:date] - 1).to_a.collect{|d|
         self.history[i].merge(:date => d)
@@ -305,9 +323,12 @@ class RbIssueHistory < ActiveRecord::Base
       :origin => :default
     }
 
+    #a sprint day lasts from 00:00:00 to 23:59:59 in configured timezone
+    #Get the burndown_timezone || server-tz || utc as ActiveSupport::TimeZone object
     todo = []
-    todo << Date.today - 1 if self.history.size == 0
-    todo << Date.today if self.history.size == 0 || self.history[-1][:date] != Date.today
+    _today = self.class.burndown_timezone.now.to_date # current date in terms of burndown day boundary
+    todo << _today.yesterday if self.history.size == 0
+    todo << _today if self.history.size == 0 || self.history[-1][:date] != _today
     if todo.size > 0
       todo.each{|date|
         self.history << {:date => date}.merge(current)

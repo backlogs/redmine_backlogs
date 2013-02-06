@@ -82,7 +82,7 @@ Given /^I have made the following story mutations:$/ do |table|
     story.should_not be_nil
     current_sprint(story.fixed_version.name)
     set_now(mutation.delete('day'), :msg => story.subject, :sprint => current_sprint)
-    Time.now.should be >= story.created_on
+    Time.zone.now.should be >= story.created_on
 
     status_name = mutation.delete('status').to_s
     if status_name.blank?
@@ -148,7 +148,7 @@ Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story
   found_change.should be_true
 
   # Verify Backlogs issue history
-  h = story.history.filter_release([Date.today])
+  h = story.history.filter_release([RbIssueHistory.burndown_timezone.now.to_date])
   h[0][:release].should == release.id
 end
 

@@ -4,8 +4,9 @@ require 'cucumber/ast/background'
 require 'benchmark'
 
 class Time
-  def force_utc
-    Time.utc(self.year, self.month, self.day, self.hour, self.min, self.sec)
+  def force_tz(tz=nil)
+    tz = ActiveSupport::TimeZone['UTC'] if tz.nil?
+    tz.local(self.year, self.month, self.day, self.hour, self.min, self.sec)
   end
 end
 
@@ -92,33 +93,34 @@ def set_now(time, options={})
   raise "Unexpected options: #{options.keys.inspect}" unless options.size == 0
 
   msg = "#{msg}: " unless msg == ''
+  tz = RbIssueHistory.burndown_timezone
 
   if (time.is_a?(Integer) || time =~ /^[0-9]+$/) && sprint
     day = Integer(time)
 
     if day < 0
-      time = sprint.days[1].to_time.force_utc + (day * 24*60*60)
+      time = sprint.days[1].to_time.force_tz(tz) + (day * 24*60*60)
     else
-      time = sprint.days[day].to_time.force_utc
+      time = sprint.days[day].to_time.force_tz(tz)
     end
     time += 60*60
 
     # if we're setting the date to today again, don't do anything
-    return if time.force_utc.to_date == Date.today
+    return if time.to_date == tz.today #Date.today is not utc. its local. Date.current might be.
   else
-    time = Chronic.parse(time).force_utc
+    Chronic.time_class = tz #convince chronic to use time zone
+    time = Chronic.parse(time)
   end
-  raise "#{msg}Time #{time} is not UTC" unless time.utc?
+  raise "#{msg}Time #{time} is not in timezone #{tz}" unless time.utc_offset == tz.utc_offset
 
   if reset
     # don't test anything, just set the time
   else
     # Time zone must be set correctly, or ActiveRecord will store local, but retrieve UTC, which screws to Time.to_date. WTF people.
-    Time.zone = "UTC"
-    now = Time.now.utc
+    now = tz.now
 
     timediff = now - time
-    raise "#{msg}You may not travel back in time (it is now #{now}, and you want it to be #{time}" if timediff > 0
+    raise "#{msg}You may not travel back in time (it is now #{now}, and you want it to be #{time}" if timediff > 0 #WHY? i am testing, ain't i?
   end
 
   Timecop.travel(time)
