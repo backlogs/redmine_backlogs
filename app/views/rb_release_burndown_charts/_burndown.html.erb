@@ -14,32 +14,28 @@
 <script type="text/javascript" language="javascript">
   <%-
     burndown = release.burndown
-
-    # Put together series in the correct order for bar/line rendering
-    jqplot_series = Array.new
-    jqplot_series << burndown[:offset_points]
-    jqplot_series << burndown[:added_points]
-    jqplot_series << burndown[:backlog_points]
-    jqplot_series << burndown[:closed_points]
-    jqplot_series << burndown[:trend_added]
-    jqplot_series << burndown[:trend_closed]
+    series = burndown.series
+    days = release.days
 
     chart = {
-      :series => jqplot_series,
+      # Add date to each value. Except trendlines which already carry date info.
+      :series => series.collect{|s|
+		     burndown[s.intern].each_with_index.collect{|d,i|
+		       d.is_a?(Array) ? d : [days[i],d]
+		     }},
       :mode => 'full',
       :options => {
         :stackSeries => true,
         :seriesDefaults => {
-          # renderer: RB.$.jqplot.BarRenderer,
+          # renderer set during javascript initialization. See below
           :rendererOptions => {
-            :barMargin => 30,
             :fillToZero => true,
             :useNegativeColors => false
           }
         },
         :axes => {
           :xaxis => {
-            # renderer: RB.$.jqplot.CategoryAxisRenderer
+            # renderer set during javascript initilization. See below
           },
           :yaxis => {
             :padMin => 0,
@@ -47,23 +43,30 @@
         },
         :legend => { :show => true, :location => 'ne'},
         :series => [
-          {:rendererOptions => {:barWidth => 0}},
-          {}, {}, {},
-          {:disableStack => true},
-          {:disableStack => true}
+          { :label => "",
+            :rendererOptions => {:barWidth => 0}},
+          { :label => "Added" },
+          { :label => "Backlog" },
+          { :label => "Closed" },
+          { :disableStack => true,
+            :label => "Trend added"},
+          { :disableStack => true,
+            :label => "Trend closed"}
         ],
         :noDataIndicator => { :show => true, :indicator => 'No data' }
       }
     }
-#TODO labels for each series
-# e.g. series => {:label => 'sprint #'}
   %>
 RB.$(function() { // render when dom is ready
-  RB.burndown.charts[<%= release.id %>] = <%= chart.to_json.html_safe %>
+  RB.burndown.charts[<%= release.id %>] = <%= chart.to_json.html_safe %>;
   RB.burndown.charts[<%= release.id %>].options.seriesDefaults.renderer = RB.$.jqplot.BarRenderer;
-  RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.CategoryAxisRenderer;
+  RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.DateAxisRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[4].renderer = RB.$.jqplot.LineRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[5].renderer = RB.$.jqplot.LineRenderer;
+  var graph_width = $("#burndown_<%= release.id %>").innerWidth();
+  //FIXME calculate bar width according to longest sprint vs. total period
+  // covered by the graph including trend lines.
+  RB.burndown.charts[<%= release.id %>].options.seriesDefaults.rendererOptions.barWidth = Math.round(graph_width / 60);
   RB.burndown.initialize();
 });
 </script>

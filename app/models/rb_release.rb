@@ -37,43 +37,34 @@ class ReleaseBurndown
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
 #TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data[:offset_points] = series.collect{ |s| -1 * s.offset_points }
-    @data[:added_points] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
-    @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
+    @data[:offset_points] = series.collect{|s| -1 * s.offset_points }
+    @data[:added_points] = series.collect{|s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
+    @data[:backlog_points] = series.collect{|s| s.backlog_points >= 0 ? s.backlog_points : 0 }
     @data[:closed_points] = series.series(:closed_points)
 
 
     # Forecast (probably just as good as the weather forecast...)
 #TODO Move forecast to RbRelease?
-    @data[:trend_closed] = Array.new
-    @data[:trend_added] = Array.new
     avg_count = 3
 #FIXME only add trendlines if backlog/added points is greater than zero
 #FIXME does the sprints need to be closed? 
     if release.closed_sprints.size >= avg_count
-      avg_added = (@data[:offset_points][-1] - @data[:offset_points][-avg_count]) / avg_count
-      avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
-      current_backlog = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
-      current_added = @data[:offset_points][-1]
-      current_sprints = @data[:closed_points].size
+      avg_added = (@data[:offset_points][-1] - @data[:offset_points][-avg_count])
+      avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p}
+      trend_days = (release.days[-1] - release.days[-avg_count - 1]).to_i
+
+      last_backlog = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
+      last_added = @data[:offset_points][-1]
+      last_date = release.days[-1]
 
       # Add beginning and end dataset [sprint,points] for trendlines
-      @data[:trend_closed] << [current_sprints, current_backlog]
-      @data[:trend_closed] << [current_sprints + 10, current_backlog - avg_closed * 10]
-      @data[:trend_added] << [current_sprints, current_added]
-      @data[:trend_added] << [current_sprints + 10, current_added + avg_added * 10]
-
+      @data[:trend_closed] << [last_date, last_backlog]
+      @data[:trend_closed] << [last_date + trend_days.days, last_backlog - avg_closed]
+      @data[:trend_added] << [last_date, last_added]
+      @data[:trend_added] << [last_date + trend_days.days, last_added + avg_added]
     end
 
-#TODO Estimate sprints left
-    sprints_left = [0] * 10
 
-    # Extend other series with empty datapoints up to the estimated number of sprints
-    # to format plot correctly
-    @data[:offset_points].concat sprints_left.dup
-    @data[:added_points].concat sprints_left.dup
-    @data[:backlog_points].concat sprints_left.dup
-    @data[:closed_points].concat sprints_left.dup
   end
 
   def [](i)
