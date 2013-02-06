@@ -35,14 +35,16 @@ See RB.Taskboard.initialize()
   width:105px; /* Must be the same as min-width */
 }
 
+#taskboard { position: relative; } /*for fixed header*/
+#impediments { padding-top: 40px; }
 /* status labels */
 #board_header{
   background-color:#EEEEEE;
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
-  position: relative;
-  z-index: 1000;
+  position: absolute;
+  z-index: 200;
 }
 #board_header td{
   background-color:#EEEEEE;
