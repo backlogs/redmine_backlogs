@@ -323,7 +323,7 @@ module BacklogsPlugin
         end
       end
 
-      def controller_issues_edit_after_save(context={ })
+      def controller_issues_edit_before_save(context={ })
         params = context[:params]
         issue = context[:issue]
 
@@ -333,7 +333,6 @@ module BacklogsPlugin
           rescue ArgumentError, TypeError
             issue.remaining_hours = nil
           end
-          issue.save
         end
       end
 
