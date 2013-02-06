@@ -17,7 +17,7 @@
     </div>
   <% end %>
   <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
-    <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours(task) %></div>
+    <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours_or_empty(task) %></div>
   <% end %>
   <% if User.current.allowed_to?(:log_time, @project) && @settings[:timelog_from_taskboard]=='enabled'  %>
     <div class="time_entry_hours editable" style="display: none" fieldname="time_entry_hours" fieldlabel="<%=l(:field_time_entry_hours)%>"></div>
