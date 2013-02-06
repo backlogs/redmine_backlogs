@@ -214,3 +214,12 @@ en:
   label_all_tasks: All tasks
   label_my_tasks: My tasks
   label_view_options: View options
+  backlogs_not_all_themes_are_supported: Not all themes are supported.
+  rb_burndown_timezone: Time zone for burndown day boundary
+  rb_burndown_timezone_explanation: "To support distributed teams, calculations
+    for burndown graphs use a common concept of when a day begins.
+
+    Your user timezone is %{user_timezone}, the server timezone is %{server_timezone}
+    and Burndowns use %{burndown_timezone} to calculate the graphs.
+
+    Note: Historic data is not affected when changing this option."

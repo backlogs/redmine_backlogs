@@ -5,7 +5,7 @@
       <%= render :partial => "rb_sprints/sprint", :object => backlog[:sprint], :locals => {:cls => 'model sprint'} %>
     <%- elsif backlog[:release] %>
       <%= render :partial => "rb_releases/release_mbp", :object => backlog[:release], :as => :release %>
-    <%- elsif User.current.allowed_to?(:manage_versions, @project) %>
+    <%- else %>
       <%= render :partial => "productbacklog" %>
     <%- end %>
   </div>

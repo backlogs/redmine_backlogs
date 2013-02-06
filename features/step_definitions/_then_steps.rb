@@ -276,10 +276,9 @@ Then /^show me the sprint burn(.*)$/ do |direction|
   series = burndown.series(false)
   dates = burndown.days
 
-  ticks = dates.collect{|d|
-    t = Time.utc(d.year, d.mon, d.mday)
-    zone = User.current.time_zone
-    zone ? t.in_time_zone(zone) : t
+  tz = RbIssueHistory.burndown_timezone
+  ticks = dates.collect{|d| #Copypasta of tick renderer in _burndown.
+    tz.local(d.year, d.mon, d.mday)
   }.collect{|t| t.strftime('%a')[0, 1].downcase + ' ' + t.strftime(::I18n.t('date.formats.short')) }
 
   data = series.collect{|s| burndown.data[s.intern].enum_for(:each_with_index).collect{|d,i| [i*2, d]}}

@@ -12,7 +12,9 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    j.delegate('.editable', 'click', this.handleClick);
+    if (RB.permissions.update_stories) {
+      j.delegate('.editable', 'click', this.handleClick);
+    }
   },
 
   afterUpdate: function(data, textStatus, xhr){

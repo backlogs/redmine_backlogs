@@ -44,9 +44,11 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     };
 
     //initialize the cells (td) as sortable
-    j.find('.story-swimlane .list').sortable(RB.$.extend({
-      connectWith: '.story-swimlane .list'
-      }, sortableOpts));
+    if (RB.permissions.update_tasks) {
+      j.find('.story-swimlane .list').sortable(RB.$.extend({
+        connectWith: '.story-swimlane .list'
+        }, sortableOpts));
+    }
 
     // Initialize each task in the board
     j.find('.task').each(function(index){
@@ -54,21 +56,27 @@ RB.Taskboard = RB.Object.create(RB.Model, {
     });
 
     // Add handler for .add_new click
-    j.find('#tasks .add_new').bind('click', self.handleAddNewTaskClick);
+    if (RB.permissions.create_tasks) {
+      j.find('#tasks .add_new').bind('click', self.handleAddNewTaskClick);
+    }
 
 
     // Initialize impediment lists
-    j.find("#impediments .list").sortable(RB.$.extend({
-      connectWith: '#impediments .list'
-    }, sortableOpts));
+    if (RB.permissions.update_impediments) {
+      j.find("#impediments .list").sortable(RB.$.extend({
+        connectWith: '#impediments .list'
+      }, sortableOpts));
+    }
 
-    // Initialize each task in the board
+    // Initialize each impediment in the board
     j.find('.impediment').each(function(index){
       var task = RB.Factory.initialize(RB.Impediment, this); // 'this' refers to an element with class="impediment"
     });
 
     // Add handler for .add_new click
-    j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
+    if (RB.permissions.create_impediments) {
+      j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
+    }
   },
   
   onMouseUp: function(e) {
@@ -274,9 +282,8 @@ RB.UserFilter = RB.Object.create({
 });
 
 RB.$(function(){ /*document ready*/
-  RB.$("#board_header").scrollFollow({
-    speed: 100,
-    offset: 0
+  RB.$("#board_header").verticalFix({
+    delay: 50,
   });
   RB.UserFilter.initialize();
 });
