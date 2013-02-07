@@ -24,6 +24,8 @@ def rb_common_routes(rb)
                :to => 'rb_releases#destroy', :via => [:delete]
   rb_match rb, 'release/:release_id/edit',
                :to => 'rb_releases#edit', :via => [:get, :post]
+  rb_match rb, 'release/:release_id/update',
+               :to => 'rb_releases#update', :via => [:put]
   rb_match rb, 'release/:release_id/shapshot',
                :to => 'rb_releases#snapshot', :via => [:get]
 

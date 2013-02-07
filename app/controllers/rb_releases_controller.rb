@@ -39,6 +39,23 @@ class RbReleasesController < RbApplicationController
     end
   end
 
+  def update
+    attribs = params.select{|k,v| k != 'id' and RbRelease.column_names.include? k }
+    attribs = Hash[*attribs.flatten]
+    begin
+      result  = @release.update_attributes attribs
+    rescue => e
+      Rails.logger.debug e
+      Rails.logger.debug e.backtrace.join("\n")
+      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      return
+    end
+
+    respond_to do |format|
+      format.html { render :partial => "release_mbp", :status => (result ? 200 : 400), :locals => { :release => @release, :cls => 'model release' } }
+    end
+  end
+
   def destroy
     @release.destroy
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
