@@ -2,7 +2,7 @@
   TASKBOARD
 ***************************************/
 
-RB.Taskboard = RB.Object.create(RB.Model, {
+RB.Taskboard = RB.Object.create({
     
   initialize: function(el){
     var j = RB.$(el);

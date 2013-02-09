@@ -7,10 +7,7 @@
 RB.Model = RB.Object.create({
 
   initialize: function(el){
-    var j;  // This ensures that we use a local 'j' variable, not a global one.
-    var self = this;
-    
-    this.$ = j = RB.$(el);
+    this.$ = RB.$(el);
     this.el = el;
   },
 
