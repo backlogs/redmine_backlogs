@@ -3,6 +3,9 @@
 ***************************************/
 
 RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
+  update_permission: 'update_sprints',
+  create_url: 'create_sprint',
+  update_url: 'update_sprint',
 
   initialize: function(el){
     var j;  // This ensures that we use a local 'j' variable, not a global one.
@@ -14,7 +17,7 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     // Associate this object with the element for later retrieval
     j.data('this', this);
 
-    if (RB.permissions.update_sprints) {
+    if (RB.permissions[this.update_permission]) {
       j.delegate('.editable', 'click', this.handleClick);
     }
   },
@@ -41,9 +44,9 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     var data = j.find('.editor').serialize();
 
     if( this.isNew() ){
-      url = RB.urlFor( 'create_sprint' );
+      url = RB.urlFor( this.create_url );
     } else {
-      url = RB.urlFor( 'update_sprint', { id: this.getID() } );
+      url = RB.urlFor( this.update_url, { id: this.getID() } );
       data += "&_method=put";
     }
 

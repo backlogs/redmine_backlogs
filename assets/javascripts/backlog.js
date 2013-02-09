@@ -44,7 +44,7 @@ RB.Backlog = RB.Object.create({
       RB.Factory.initialize(RB.Sprint, this.getSprint());
     }
     else if (this.isReleaseBacklog()) {
-      RB.Factory.initialize(RB.Sprint, this.getRelease());
+      RB.Factory.initialize(RB.Release, this.getRelease());
     }
 
     this.drawMenu();

@@ -267,13 +267,13 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   cursor: default; /*we have model class here, but are not editable*/
 }
 
-#backlogs_container .sprint.saving{
+#backlogs_container .header .saving{
   background-image:url('images/ajax.gif');
   background-repeat:no-repeat;
   background-position:center;
 }
 
-#backlogs_container .sprint.error{
+#backlogs_container .header .error{
   background-image:url('images/error.png');
   background-repeat:no-repeat;
   background-position:center;
@@ -478,7 +478,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   height:65px;
 }
 /* In-place Sprint Editor */
-#backlogs_container .sprint.editing .editors{
+#backlogs_container .header .editing .editors{
   display:block;
   position: absolute;
   height: 60px;
@@ -489,38 +489,38 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   z-index: 1;
 }
 
-#backlogs_container .sprint.editing .editor{
+#backlogs_container .header .editing .editor{
   font-family:Verdana, Arial, sans-serif;
 }
-#backlogs_container .sprint.editing label,
-#backlogs_container .sprint.editing .id.editor{
+#backlogs_container .header .editing label,
+#backlogs_container .header .editing .id.editor{
   display:none;
 }
 
-#backlogs_container .sprint.editing .effective_date.editor,
-#backlogs_container .sprint.editing .sprint_start_date.editor,
-#backlogs_container .sprint.editing .name.editor{
+#backlogs_container .header .editing .end_date.editor,
+#backlogs_container .header .editing .release_start_date.editor,
+#backlogs_container .header .editing .effective_date.editor,
+#backlogs_container .header .editing .sprint_start_date.editor,
+#backlogs_container .header .editing .name.editor{
   float: left;
   position: relative;
   margin: 0;
   padding:0;
   margin-right: 4px;
 }
-#backlogs_container .sprint.editing .name.editor{
-  height:21px;
+#backlogs_container .header .editing .name.editor{
+  height:23px;
   line-height:15px;
 }
-#backlogs_container .sprint.editing .sprint_start_date.editor{
+#backlogs_container .header .editing .release_start_date.editor,
+#backlogs_container .header .editing .sprint_start_date.editor,
+#backlogs_container .header .editing .end_date.editor,
+#backlogs_container .header .editing .effective_date.editor{
   height:23px;
   line-height:27px;
   width:75px;
 }
-#backlogs_container .sprint.editing .effective_date.editor{
-  height:23px;
-  line-height:27px;
-  width:75px;
-}
-#backlogs_container .sprint.editing .description.editor{
+#backlogs_container .header .editing .description.editor{
   display:none;
 }
 
@@ -601,7 +601,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#DDDDDD,EndColorStr=#BBBBBB);
 }
 
-#backlogs_container .sprint.editing .edit-actions { /* make the save/cancel buttons visible for sprint editor */
+#backlogs_container .header .editing .edit-actions { /* make the save/cancel buttons visible for sprint editor */
   clear: both;
   background: white;
   position: relative;
