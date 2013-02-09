@@ -71,7 +71,7 @@ RB.Model = RB.Object.create({
         "OK" : function(){ self.copyFromDialog(); RB.$(this).dialog("close"); }
       },
       close: function(event, ui){ if(event.which==27) self.cancelEdit(); },
-      dialogClass: self.getType().toLowerCase() + '_editor_dialog',
+      dialogClass: self.getType().toLowerCase() + '_editor_dialog rb_editor_dialog',
       modal: true,
       position: [pos.left - RB.$(document).scrollLeft(), pos.top - RB.$(document).scrollTop()],
       resizable: false,
@@ -175,6 +175,7 @@ RB.Model = RB.Object.create({
     if(!editor.length){
       editor = RB.$( document.createElement("div") ).
                  attr('id', editor_id).
+                 addClass('rb_editor').
                  appendTo("body");
     }
     return editor;

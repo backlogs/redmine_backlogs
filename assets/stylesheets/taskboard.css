@@ -320,61 +320,60 @@ See RB.Taskboard.initialize()
 }
 
 /* dialog */
-
-.task_editor_dialog.ui-dialog .ui-dialog-titlebar-close{
+.rb_editor_dialog.ui-dialog .ui-dialog-titlebar-close{
   display:none;
 }
-.task_editor_dialog.ui-dialog .ui-widget-header{
+.rb_editor_dialog.ui-dialog .ui-widget-header{
   background:none;
   background-color:#FFFFFF;
   opacity:0.5;
 }
-.task_editor_dialog.ui-dialog .ui-dialog-title{
+.rb_editor_dialog.ui-dialog .ui-dialog-title{
   float:right;
   margin-right:0;
 }
-.task_editor_dialog.ui-dialog.ui-widget-content{
+.rb_editor_dialog.ui-dialog.ui-widget-content{
   -moz-box-shadow: 2px 2px 5px #777777;
   -webkit-box-shadow: 2px 2px 5px #777777;
   box-shadow: 2px 2px 5px #777777;
   background:none;
   border:none;
 }
-.task_editor_dialog.ui-dialog .ui-dialog-buttonpane.ui-widget-content{
+.rb_editor_dialog.ui-dialog .ui-dialog-buttonpane.ui-widget-content{
   background:none;
   background-color:none;
   border:none;
 }
 
 /* item editor */
-#task_editor label{
+.rb_editor label{
   display:block;
   font-size:11px;
   text-transform:capitalize;
   width:100%;
 }
-#task_editor .editor{
+.rb_editor .editor{
   font-size:11px;
   margin-bottom:10px;
   width:100%;
 }
-#task_editor .subject{
+.rb_editor .subject{
   height:65px;
   width:272px;
 }
 
-#task_editor .description{
+.rb_editor .description{
   height:80px;
   width:272px;
 }
-#task_editor .remaining_hours,
-#task_editor .time_entry_hours,
-#task_editor .time_entry_user_id,
-#task_editor .time_entry_spent_on,
-#task_editor .blocks{
+.rb_editor .remaining_hours,
+.rb_editor .time_entry_hours,
+.rb_editor .time_entry_user_id,
+.rb_editor .time_entry_spent_on,
+.rb_editor .blocks{
   width:268px;
 }
-#task_editor .time_entry_comments{
+.rb_editor .time_entry_comments{
   height:30px;
   width:268px;
 }
