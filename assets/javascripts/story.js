@@ -134,4 +134,4 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
   },
 
 });
-  
+
