@@ -378,29 +378,6 @@ See RB.Taskboard.initialize()
   width:268px;
 }
 
-/* compact view */
-.compact .story,
-.compact .label_sprint_impediments{
-  height:15px;
-}
-.compact .story .subject{
-  display:none;
-}
-.compact .issue{
-  height:21px;
-  padding:0;
-  width:21px;
-}
-.compact .issue *{
-  display:none;
-}
-.compact .placeholder{
-  background-color:#FFFF00;
-  border:1px dashed #333300;
-  height:19px;
-  width:19px;
-}
-
 /* others */
 #impediment_template,
 #task_template{
