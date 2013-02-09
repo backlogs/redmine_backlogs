@@ -281,10 +281,3 @@ RB.UserFilter = RB.Object.create({
    }
 });
 
-RB.$(function(){ /*document ready*/
-  RB.$("#board_header").verticalFix({
-    delay: 50,
-  });
-  RB.UserFilter.initialize();
-});
-
