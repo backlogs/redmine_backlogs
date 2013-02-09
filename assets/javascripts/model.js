@@ -1,7 +1,8 @@
 /***************************************
-  MODEL
+  MODEL FIXME: rename this to EDITABLE
   Common methods for sprint, issue,
   story, task, and impediment
+  mostly about editing these.
 ***************************************/
 
 RB.Model = RB.Object.create({
