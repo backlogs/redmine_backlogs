@@ -308,13 +308,21 @@ class RbStory < Issue
     return rl
   end
 
+
+  # Relation type when story is continued.
+  # Prefer relation type "Copied to" which exist from RM 2.2. Otherwise
+  # fallback to "relates".
+  #FIXME move related/copied to logic to rake task during migration in stead.
+  CONTINUED_RELATION_TYPE = defined?(IssueRelation::TYPE_COPIED_TO) ?
+    IssueRelation::TYPE_COPIED_TO : IssueRelation::TYPE_RELATES
+
   # Definition of a continued story:
-  # * "Copied to" relation with another story
+  # * Has specific relation with another story (see above)
   # * The other story is in same release
   # * The other story is rejected
   def continued_story?
     self.relations.each{|r|
-      if r.relation_type == IssueRelation::TYPE_COPIED_TO
+      if r.relation_type == CONTINUED_RELATION_TYPE
         from_story = RbStory.find(r.issue_from_id)
         if from_story.status.backlog_is?(:failure)
 #FIXME check from_story is in the same release as this story at the
