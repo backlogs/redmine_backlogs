@@ -1,4 +1,5 @@
 <div style="<%= style %>" class="burndown_chart" id="burndown_<%= sprint.id %>"><div class="loading">Generating chart...</div></div>
+<% if mode == :full %>
 <div class="burndown_information" style="border: 1px solid #ccc; padding: 4px; margin-top: 16px; width: 600px;">
 <%
   zone = User.current.time_zone || Time.zone
@@ -8,6 +9,7 @@
 Sprints days are captured using server time zone: <%= RbIssueHistory.burndown_timezone %>.<br>
 A Sprint day in your time zone <%= zone %> is from <%= t1.strftime("%T") %> to <%= t2.strftime("%T") %><br>
 </div>
+<% end %>
 <script type="text/javascript" language="javascript">
   <%-
       burndown = sprint.burndown
