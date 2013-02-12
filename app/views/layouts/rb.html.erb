@@ -70,7 +70,7 @@ RB.$(function(){
         </label>
         <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
         <% end %>
-        <%= render_backlog_project_jump_box %>
+        <%= render_project_jump_box %>
     </div>
     <% end %>
 
@@ -97,7 +97,7 @@ RB.$(function(){
       <div id="toolbar" class="rb-toolbar">
         <% unless Backlogs.setting[:show_redmine_std_header] %>
         <div class="breadcrumbs">
-          <%= render_backlog_project_jump_box %>
+          <%= render_project_jump_box %>
           <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
           <%= breadcrumb_separator %>
           <%= yield :breadcrumbs -%>
