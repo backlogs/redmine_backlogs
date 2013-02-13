@@ -26,8 +26,8 @@ group :test do
   gem 'autotest-rails'
   if RAILS_VERSION_IS_3
     unless chiliproject
-      gem 'capybara', "~> 2.0.0"
-      gem "poltergeist", "~>1.0.2", :git => "https://github.com/jonleighton/poltergeist.git"
+      gem 'capybara', "~> 1.1" if ENV['IN_RBL_TESTENV'] == 'true' # redmine 2.3 conflicts
+      gem "poltergeist", "~>1.0"
     end
     gem 'cucumber-rails'
     gem "culerity"
