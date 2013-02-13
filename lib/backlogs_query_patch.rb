@@ -26,7 +26,7 @@ module Backlogs
         base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
         base.add_available_column(QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true))
 
-#        alias_method_chain :available_filters, :backlogs_issue_type only redmine < 2.3.0
+        alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
       end
     end
@@ -120,4 +120,8 @@ module Backlogs
   end
 end
 
-Query.send(:include, Backlogs::QueryPatch) unless Query.included_modules.include? Backlogs::QueryPatch
+if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3) || Redmine::VERSION::BRANCH == 'devel' #FIXME: remove 'devel' expression when rm 2.3.0 is tagged
+  IssueQuery.send(:include, Backlogs::QueryPatch) unless IssueQuery.included_modules.include? Backlogs::QueryPatch
+else
+  Query.send(:include, Backlogs::QueryPatch) unless Query.included_modules.include? Backlogs::QueryPatch
+end
