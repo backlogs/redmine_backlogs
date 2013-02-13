@@ -22,19 +22,11 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
     }
   },
 
-  beforeSave: function(){
-    // Do nothing
-  },
-
   getType: function(){
     return "Sprint";
   },
 
   markIfClosed: function(){
-    // Do nothing
-  },
-
-  refreshed: function(){
     // Do nothing
   },
 
@@ -54,10 +46,6 @@ RB.Sprint = RB.Object.create(RB.Model, RB.EditableInplace, {
       url : url,
       data: data
     };
-  },
-
-  beforeSaveDragResult: function(){
-    // Do nothing
   },
 
   getBacklog: function(){
