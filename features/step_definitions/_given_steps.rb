@@ -297,7 +297,6 @@ Given /^I have made the following task mutations:$/ do |table|
     task.should_not be_nil
 
     set_now(mutation.delete('day'), :msg => task.subject, :sprint => current_sprint)
-    puts "Time.now #{Time.zone.now} task created #{task.created_on}"
     Time.zone.now.should be >= task.created_on
 
     task.init_journal(User.current)
@@ -395,7 +394,6 @@ Given /^I have defined the following tasks:$/ do |table|
     else
       set_now(at, :msg => params['subject'])
     end
-    puts "Time.now #{Time.zone.now} story created #{story.created_on}"
     Time.zone.now.should be >= story.created_on
 
     task.should == {}
