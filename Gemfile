@@ -25,12 +25,16 @@ group :test do
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   if RAILS_VERSION_IS_3
-    gem 'capybara' unless chiliproject
+    unless chiliproject
+      gem 'capybara', "~> 2.0.0"
+      gem "poltergeist", "~>1.0.2", :git => "https://github.com/jonleighton/poltergeist.git"
+    end
     gem 'cucumber-rails'
     gem "culerity"
   else
     unless chiliproject
       gem "capybara", "~>1.1.0"
+      gem "poltergeist", "~>0.6.0"
     end
     gem "cucumber", "=1.1.0"
     gem 'cucumber-rails2', "~> 0.3.5"
@@ -42,7 +46,6 @@ group :test do
   else
     gem "gherkin", "~> 2.5.0"
   end
-  gem "poltergeist", "~>0.6.0"
   gem "redgreen" if RUBY_VERSION < "1.9"
   if RAILS_VERSION_IS_3
     gem "rspec", '~>2.11.0'
