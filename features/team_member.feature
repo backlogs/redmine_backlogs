@@ -225,3 +225,29 @@ Feature: Team Member
      When I update the status of task A.2 to Closed
      Then story Story 2 should have the status Feedback
       And the done ratio for story Story 2 should be 100
+
+  Scenario: Story loosely follows Task states while done_ratio is determined by story_state default ratio
+    Given I have the following issue statuses available:
+        | name        | is_closed | is_default | default_done_ratio |
+        | New         |         0 |          1 |                  0 |
+        | Assigned    |         0 |          0 |                    |
+        | In Progress |         0 |          0 |                 20 |
+        | Resolved    |         0 |          0 |                 90 |
+        | Feedback    |         0 |          0 |                 50 |
+        | Closed      |         1 |          0 |                100 |
+        | Accepted    |         1 |          0 |                100 |
+        | Rejected    |         1 |          0 |                100 |
+      And I have defined the following tasks:
+        | subject      | story            | estimate | status |
+        | A.1          | Story 2          | 10       | New    |
+        | A.2          | Story 2          | 10       | New    |
+        | B.1          | Story 3          | 10       | New    |
+      And Story states loosely follow Task states
+      And I am viewing the taskboard for Sprint 001
+     Then story Story 2 should have the status New
+     When I update the status of task A.1 to Assigned
+     When I update the status of task A.2 to Assigned
+     Then story Story 2 should have the status Assigned
+     When I update the status of task A.1 to Closed
+     When I update the status of task A.2 to Closed
+     Then story Story 2 should have the status Feedback
