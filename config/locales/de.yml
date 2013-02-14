@@ -177,7 +177,7 @@ de:
   backlogs_story_follows_task_status: Status der Story wird von der Aufgabe abgeleitet
   backlogs_story_follow_task_status_nil: Deaktiviert
   backlogs_story_follow_task_status_close: Schließen wenn alle Tickets geschlossen werden
-  backlogs_story_follow_task_status_loose: das Feld % erledigt wird verzögert von der Aufgabe übernommen
+  backlogs_story_follow_task_status_loose: Der Status einer Story folgt dem seiner Aufgaben
   backlogs_story_close_status: "Wenn alle Aufgaben abeschlossen sind, wird die Story wie folgt aktualisiert:"
   backlogs_product_backlog: Produkt Backlog  
   backlogs_show_redmine_std_header: Zeige den regulären Header an
@@ -212,3 +212,4 @@ de:
     und Burndown Graphen nutzen %{burndown_timezone} zur berechnung der Tagesgrenze.
 
     Achtung: Vergangene Daten werden nicht beeinflusst, wenn man diese Einstellung ändert."
+  backlogs_story_follows_task_loose_explanation: "Achtung: alle Ticket Stati müssen ein %erledigt zwischen 0 und 100 haben."

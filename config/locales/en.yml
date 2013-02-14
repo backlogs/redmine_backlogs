@@ -223,3 +223,4 @@ en:
     and Burndowns use %{burndown_timezone} to calculate the graphs.
 
     Note: Historic data is not affected when changing this option."
+  backlogs_story_follows_task_loose_explanation: "Achtung: alle Ticket Stati müssen ein %erledigt zwischen 0 und 100 haben."
