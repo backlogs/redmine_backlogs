@@ -340,7 +340,7 @@ class RbStory < Issue
         new_st = nil
         self.new_statuses_allowed_to.each{|status|
           new_st = status if status.default_done_ratio.to_f <= avg_ratio # #837 use to_f for comparison of number OR nil
-          break if status.default_done_ratio > avg_ratio
+          break if status.default_done_ratio.to_f > avg_ratio
         }
         #set status and good.
         self.journalized_update_attributes :status_id => new_st.id if new_st
