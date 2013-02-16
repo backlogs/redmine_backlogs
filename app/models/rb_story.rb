@@ -164,9 +164,9 @@ class RbStory < Issue
     return s
   end
 
-  def self.find_all_updated_since(since, project_id)
+  def self.find_all_updated_since(since, project_ids)
     find(:all,
-          :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?)", project_id, Time.parse(since), trackers],
+          :conditions => ["project_id in (?) AND updated_on > ? AND tracker_id in (?)", project_ids, Time.parse(since), trackers],
           :order => "updated_on ASC")
   end
 
