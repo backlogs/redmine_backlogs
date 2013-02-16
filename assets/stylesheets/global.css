@@ -6,6 +6,7 @@ body{
   margin:0;
   width:100%;
 }
+.ui-tooltip,
 .rb-toolbar, .rb-main {
   font-family:Verdana, Arial, sans-serif;
   font-size:12px;
