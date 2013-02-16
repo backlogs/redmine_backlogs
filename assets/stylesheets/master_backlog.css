@@ -82,7 +82,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 /*the close completed sprint button in pbl header */
 #product_backlog_container .header .close_sprint {
-  font-size:11px;
   height:28px;
   line-height:30px;
   padding:0;
