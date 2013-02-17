@@ -94,6 +94,7 @@ module Backlogs
           return self.class.find_by_position(self.class.maximum(:position, options))
         end
 
+        #higher item is the one with lower position. self is visually displayed below its higher item.
         def higher_item(options = {})
           @higher_item ||= list_prev_next(:prev, options)
         end
