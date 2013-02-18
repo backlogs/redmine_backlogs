@@ -65,8 +65,8 @@ Feature: Scrum Master
 #     Then Story C should be the higher item of Story E
 #     Then Story D should be the higher item of Story F
 #
-#     When I move the story named Story 2 down to the 1st position of the sprint named Sprint 002
-#     When I move the story named Story 4 down to the 1st position of the sprint named Sprint 002
+#     When I move the story named Story 2 to the 1st position of the sprint named Sprint 002
+#     When I move the story named Story 4 to the 1st position of the sprint named Sprint 002
 #      Then show me the higher_item attributes
 #      And Story 4 should be the higher item of Story 2
 #      And Story 1 should be the higher item of Story 3
@@ -80,5 +80,5 @@ Feature: Scrum Master
         | Story C | Sprint 003 |
         | Story D | Sprint 004 |
      Then show me the higher_item attributes
-     When I move the story named Story 1 down to the 2nd position of the sprint named Sprint 003
+     When I move the story named Story 1 to the 2nd position of the sprint named Sprint 003
      Then show me the higher_item attributes

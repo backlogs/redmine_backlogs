@@ -60,7 +60,7 @@ When /^I (try to )?move the story named (.+) above (.+)$/ do |attempt, story_sub
   verify_request_status(200) if attempt == ''
 end
 
-When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
+When /^I (try to )?move the story named (.+) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find_by_subject(story_subject)
   sprint = RbSprint.find_by_name(sprint_name)
@@ -68,8 +68,6 @@ When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|t
   
   attributes = story.attributes
   attributes[:next] = story_after(position, sprint.project, sprint).to_s
-
-  # TODO: why do we need 'direction'?
 
   page.driver.post(
                       url_for(:controller => 'rb_stories',
