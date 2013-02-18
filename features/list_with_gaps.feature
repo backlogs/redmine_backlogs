@@ -28,6 +28,7 @@ Feature: Scrum Master
 #        | Story 4 | ecookbook   |
 #        | Story 8 | subproject1 |
 #        | Story 9 | subproject1 |
+#     Then show me the higher_item attributes
 #     Then Story 1 should be the higher item of Story 2
 #     Then Story 2 should be the higher item of Story 3
 #     Then Story 3 should be the higher item of Story 4
@@ -35,41 +36,38 @@ Feature: Scrum Master
 #     Then Story 7 should be the higher item of Story 8
 #     Then Story 8 should be the higher item of Story 9
 
-#  Scenario: Interlieve story creation in sprints between projects
-#    Given I have defined the following stories in the following sprints:
-#        | subject | sprint     |
-#        | Story C | Sprint 003 |
-#        | Story D | Sprint S05 |
-#        | Story E | Sprint 003 |
-#        | Story F | Sprint S05 |
-#    Given I am viewing the master backlog
-#     Then show me the higher_item attributes
-#     Then Story C should be the higher item of Story E
-#     Then Story D should be the higher item of Story F
+  Scenario: Interlieve story creation in sprints between projects
+    Given I have defined the following stories in the following sprints:
+        | subject | sprint     |
+        | Story C | Sprint 003 |
+        | Story D | Sprint S05 |
+        | Story E | Sprint 003 |
+        | Story F | Sprint S05 |
+    Given I am viewing the master backlog
+     Then Story C should be the higher item of Story E
+     Then Story D should be the higher item of Story F
 
-#  Scenario: Interlieve story creation between sprints
-#    Given I have defined the following stories in the product backlog:
-#        | subject | project_id  |
-#        | Story 1 | ecookbook   |
-#        | Story 2 | ecookbook   |
-#        | Story 3 | ecookbook   |
-#        | Story 4 | ecookbook   |
-#    Given I have defined the following stories in the following sprints:
-#        | subject | sprint     |
-#        | Story C | Sprint 003 |
-#        | Story D | Sprint 004 |
-#        | Story E | Sprint 003 |
-#        | Story F | Sprint 004 |
-#    Given I am viewing the master backlog
-#     Then show me the higher_item attributes
-#     Then Story C should be the higher item of Story E
-#     Then Story D should be the higher item of Story F
-#
-#     When I move the story named Story 2 to the 1st position of the sprint named Sprint 002
-#     When I move the story named Story 4 to the 1st position of the sprint named Sprint 002
-#      Then show me the higher_item attributes
-#      And Story 4 should be the higher item of Story 2
-#      And Story 1 should be the higher item of Story 3
+  Scenario: Interlieve story creation between sprints
+    Given I have defined the following stories in the product backlog:
+        | subject | project_id  |
+        | Story 1 | ecookbook   |
+        | Story 2 | ecookbook   |
+        | Story 3 | ecookbook   |
+        | Story 4 | ecookbook   |
+    Given I have defined the following stories in the following sprints:
+        | subject | sprint     |
+        | Story C | Sprint 003 |
+        | Story D | Sprint 004 |
+        | Story E | Sprint 003 |
+        | Story F | Sprint 004 |
+    Given I am viewing the master backlog
+     Then Story C should be the higher item of Story E
+     Then Story D should be the higher item of Story F
+
+     When I move the story named Story 2 to the 1st position of the sprint named Sprint 002
+     When I move the story named Story 4 to the 1st position of the sprint named Sprint 002
+      And Story 4 should be the higher item of Story 2
+      And Story 1 should be the higher item of Story 3
 
   Scenario: Move a story so that scoped next item in position is from another scope
     Given I have defined the following stories in the product backlog:
@@ -79,6 +77,5 @@ Feature: Scrum Master
         | subject | sprint     |
         | Story C | Sprint 003 |
         | Story D | Sprint 004 |
-     Then show me the higher_item attributes
      When I move the story named Story 1 to the 2nd position of the sprint named Sprint 003
-     Then show me the higher_item attributes
+     Then Story C should be the higher item of Story 1
