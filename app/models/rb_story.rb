@@ -73,6 +73,21 @@ class RbStory < Issue
     return options
   end
 
+  def higher_lower_scope_conditions(options={})
+    options = options.dup
+    Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.tracker_id = (?)", self.class.trackers])
+    if self.fixed_version_id #same sprint. any release
+      Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.fixed_version_id = ?", self.fixed_version_id])
+    elsif self.release_id #same release, no sprint
+      Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.release_id = ?", self.release_id])
+      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.fixed_version_id is NULL")
+    else #backlog, no sprint, no release
+      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.release_id is NULL")
+      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.fixed_version_id is NULL")
+    end
+    options
+  end
+
   def self.backlog(project_id, sprint_id, release_id, options={})
     stories = []
 
@@ -109,6 +124,7 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
+    #FIXME #842 this pollutes the higher_item/lower_item scope
     ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, nil, options)
     sprint_of = {}
     ret.each do |backlog|
@@ -119,6 +135,7 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_release(project, releases, options={})
+    #FIXME #842 this pollutes the higher_item/lower_item scope
     ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
     release_of = {}
     ret.each do |backlog|

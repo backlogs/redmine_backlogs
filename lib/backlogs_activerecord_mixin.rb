@@ -105,6 +105,18 @@ module Backlogs
         end
         attr_writer :lower_item
 
+        def higher_item_scoped(options={})
+          @higher_item_scoped ||= list_prev_next(:prev, self.higher_lower_scope_conditions(options))
+        end
+
+        def lower_item_scoped(options={})
+          @lower_item_scoped ||= list_prev_next(:next, self.higher_lower_scope_conditions(options))
+        end
+
+        def higher_lower_scope_conditions(options={}) #to be overloaded
+          options
+        end
+
         def rank(options={})
           options = options.dup
           Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.position <= ?", self.position])
