@@ -111,13 +111,31 @@ Then /^show me the response body$/ do
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
-  higher = RbStory.find(:all, :conditions => { :subject => higher_subject })
-  higher.length.should == 1
-  
-  lower = RbStory.find(:all, :conditions => { :subject => lower_subject })
-  lower.length.should == 1
-  
-  lower.first.higher_item.id.should == higher.first.id
+  higher = RbStory.find_by_subject(higher_subject)
+  lower = RbStory.find_by_subject(lower_subject)
+  higher.should_not be_nil 
+  lower.should_not be_nil 
+  lower.higher_item_scoped.should_not be_nil
+  higher.lower_item_scoped.should_not be_nil
+
+  higher.position.should < lower.position
+  lower.higher_item_scoped.id.should == higher.id
+  higher.lower_item_scoped.id.should == lower.id
+end
+
+Then /^show me the higher_item attributes$/ do
+  RbStory.where(['tracker_id in (?)',RbStory.trackers]).order('position').each{|s|
+    pos = s.position
+    hid = '  '
+    lsid = '  '
+    hsid = '  '
+    lid = '  '
+    hid = s.higher_item.id if s.higher_item
+    hsid = s.higher_item_scoped.id if s.higher_item_scoped
+    lid = s.lower_item.id if s.lower_item
+    lsid = s.lower_item_scoped.id if s.lower_item_scoped
+    puts "#{s} #{pos} #{s.id} higher-scoped:#{hsid} lower-scoped:#{lsid} higher:#{hid} lower:#{lid} sprint:#{s.fixed_version_id} release:#{s.release_id} project:#{s.project_id}"
+  }
 end
 
 Then /^the request should complete successfully$/ do
