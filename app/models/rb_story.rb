@@ -100,8 +100,8 @@ class RbStory < Issue
     }))).each_with_index {|story, i|
       stories << story
 
-      prev.higher_item = story if prev
-      story.lower_item = prev
+      prev.higher_item = story if prev #FIXME must use scoped api of higher_item to ensure unique constraint on position
+      story.lower_item = prev #FIXME use scoped api
 
       story.rank = i + 1
 
@@ -124,7 +124,7 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
-    #FIXME #842 this pollutes the higher_item/lower_item scope
+    #FIXME #842 this pollutes the higher_item/lower_item scope when rendering more than one sprint
     ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, nil, options)
     sprint_of = {}
     ret.each do |backlog|
@@ -135,7 +135,7 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_release(project, releases, options={})
-    #FIXME #842 this pollutes the higher_item/lower_item scope
+    #FIXME #842 this pollutes the higher_item/lower_item scope when rendering more than one release
     ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
     release_of = {}
     ret.each do |backlog|

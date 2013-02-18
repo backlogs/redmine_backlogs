@@ -98,12 +98,12 @@ module Backlogs
         def higher_item(options = {})
           @higher_item ||= list_prev_next(:prev, options)
         end
-        attr_writer :higher_item
+        attr_writer :higher_item #FIXME writing here risks violation of unique constraint on position: set higher items in backlog rendering, leaving out some issues (other sprint or other tracker), move stuff around (move_after) and we may hit the position of the left out issue.
 
         def lower_item(options = {})
           @lower_item ||= list_prev_next(:next, options)
         end
-        attr_writer :lower_item
+        attr_writer :lower_item #FIXME writing here risks violation of unique constraint on position
 
         def higher_item_scoped(options={})
           @higher_item_scoped ||= list_prev_next(:prev, self.higher_lower_scope_conditions(options))
@@ -125,7 +125,7 @@ module Backlogs
         attr_writer :rank
 
         def move_after(reference, options={})
-          nxt = reference.lower_item
+          nxt = reference.lower_item #FIXME must not used cached version, risk of race condition
 
           if nxt.blank?
             move_to_bottom
@@ -141,7 +141,7 @@ module Backlogs
         end
 
         def move_before(reference, options={})
-          prev = reference.higher_item
+          prev = reference.higher_item #FIXME must not used cached version, risk of race condition
           if prev.blank?
             move_to_top
           else
@@ -154,6 +154,7 @@ module Backlogs
 
       def list_commit
         self.class.connection.execute("update #{self.class.table_name} set position = #{self.position} where id = #{self.id}") unless self.new_record?
+        #FIXME now the cached lower/higher_item are wrong during this request. So are those from our old and new peers.
       end
 
       def list_prev_next(dir, options)
