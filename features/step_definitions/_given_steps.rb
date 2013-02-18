@@ -348,12 +348,12 @@ end
 
 Given /^I have defined the following stories in the following sprints?:$/ do |table|
   table.hashes.each do |story|
+    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
     if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
       project = get_project(story.delete('project_id'))
     else
-      project = @project
+      project = sprint.project || @project
     end
-    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
     sprint.should_not be_nil
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
