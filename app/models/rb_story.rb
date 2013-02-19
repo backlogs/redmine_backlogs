@@ -88,8 +88,7 @@ class RbStory < Issue
     RbStory.find_options(options.dup.merge({
       :project => self.project_id,
       :sprint => self.fixed_version_id,
-      :release => self.release_id,
-      :order => 'issues.position'
+      :release => self.release_id
     }))
   end
 
