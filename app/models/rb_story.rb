@@ -1,6 +1,56 @@
 class RbStory < Issue
   unloadable
 
+  def self.__find_options_normalize_option(option)
+    option = [option] if option && !option.is_a?(Array)
+    option = option.collect{|s| s.is_a?(Integer) ? s : s.id} if option
+  end
+
+  def self.__find_options_add_permissions(options)
+    permission = options.delete(:permission)
+    permission = false if permission.nil?
+
+    options[:conditions] ||= []
+    if permission
+      if Issue.respond_to? :visible_condition
+        visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
+      else
+    	  visible = Project.allowed_to_condition(User.current, :view_issues)
+      end
+      Backlogs::ActiveRecord.add_condition(options, visible)
+    end
+  end
+
+  def self.__find_options_sprint_condition(project_id, sprint_ids)
+    if Backlogs.settings[:sharing_enabled]
+      ["
+        tracker_id in (?)
+        and fixed_version_id IN (?)", self.trackers, sprint_ids]
+    else
+      ["
+        project_id = ?
+        and tracker_id in (?)
+        and fixed_version_id IN (?)", project_id, self.trackers, sprint_ids]
+    end
+  end
+
+  def self.__find_options_release_condition(project_id, release_ids)
+    ["
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      and tracker_id in (?)
+      and fixed_version_id is NULL
+      and release_id in (?)", self.trackers, release_ids]
+  end
+
+  def self.__find_options_pbl_condition(project_id)
+    ["
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      and tracker_id in (?)
+      and release_id is NULL
+      and fixed_version_id is NULL
+      and is_closed = ?", self.trackers, false]
+  end
+
   def self.find_options(options)
     options = options.dup
 
@@ -14,55 +64,17 @@ class RbStory < Issue
       project_id = project.id
     end
 
-    sprint_ids = options.delete(:sprint)
-    sprint_ids = [sprint_ids] if sprint_ids && !sprint_ids.is_a?(Array)
-    sprint_ids = sprint_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if sprint_ids
+    self.__find_options_add_permissions(options)
 
-    release_ids = options.delete(:release)
-    release_ids = [release_ids] if release_ids && !release_ids.is_a?(Array)
-    release_ids = release_ids.collect{|s| s.is_a?(Integer) ? s : s.id} if release_ids
-
-    permission = options.delete(:permission)
-    permission = false if permission.nil?
-
-    options[:conditions] ||= []
-
-    if permission
-      if Issue.respond_to? :visible_condition
-        visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
-      else
-    	  visible = Project.allowed_to_condition(User.current, :view_issues)
-      end
-      Backlogs::ActiveRecord.add_condition(options, visible)
-    end
+    sprint_ids = self.__find_options_normalize_option(options.delete(:sprint))
+    release_ids = self.__find_options_normalize_option(options.delete(:release))
 
     if sprint_ids
-      if Backlogs.settings[:sharing_enabled]
-        sprint_condition = ["
-          tracker_id in (?)
-          and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
-      else
-        sprint_condition = ["
-          project_id = ?
-          and tracker_id in (?)
-          and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
-      end
-      Backlogs::ActiveRecord.add_condition(options, sprint_condition)
+      Backlogs::ActiveRecord.add_condition(options, self.__find_options_sprint_condition(project_id, sprint_ids))
     elsif release_ids
-      release_condition = ["
-        project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-        and tracker_id in (?)
-        and fixed_version_id is NULL
-        and release_id in (?)", RbStory.trackers, release_ids]
-      Backlogs::ActiveRecord.add_condition(options, release_condition)
+      Backlogs::ActiveRecord.add_condition(options, self.__find_options_release_condition(project_id, release_ids))
     else #product backlog
-      pbl_condition = ["
-        project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-        and tracker_id in (?)
-        and release_id is NULL
-        and fixed_version_id is NULL
-        and is_closed = ?", RbStory.trackers, false]
-      Backlogs::ActiveRecord.add_condition(options, pbl_condition)
+      Backlogs::ActiveRecord.add_condition(options, self.__find_options_pbl_condition(project_id))
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
