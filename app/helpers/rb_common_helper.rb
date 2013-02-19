@@ -109,10 +109,6 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     story.new_record? ? "" : h(story.description).gsub(/&lt;(\/?pre)&gt;/, '<\1>')
   end
 
-  def textile_to_html(textile)
-    textile.nil? ? "" : Redmine::WikiFormatting::Textile::Formatter.new(textile).to_html
-  end
-
   def tracker_id_or_empty(story)
     story.new_record? ? "" : story.tracker_id
   end
@@ -215,7 +211,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
       el = User.current
       s << "<option value=\"#{el.id}\" color=\"#{el.backlogs_preference[:task_color]}\" color_light=\"#{el.backlogs_preference[:task_color_light]}\">&lt;&lt; #{l(:label_me)} &gt;&gt;</option>"
     end
-    
+
     collection.sort.each do |element|
       if element.is_a?(Group)
         groups << "<option value=\"#{element.id}\" color=\"#AAAAAA\" color_light=\"#E0E0E0\">#{h element.name}</option>"
