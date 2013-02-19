@@ -98,20 +98,20 @@ module Backlogs
         def higher_item(options = {})
           @higher_item ||= list_prev_next(:prev, options)
         end
-        attr_writer :higher_item #FIXME writing here risks violation of unique constraint on position: set higher items in backlog rendering, leaving out some issues (other sprint or other tracker), move stuff around (move_after) and we may hit the position of the left out issue.
 
         def lower_item(options = {})
           @lower_item ||= list_prev_next(:next, options)
         end
-        attr_writer :lower_item #FIXME writing here risks violation of unique constraint on position
 
         def higher_item_scoped(options={})
           @higher_item_scoped ||= list_prev_next(:prev, self.higher_lower_scope_conditions(options))
         end
+        attr_writer :higher_item_scoped
 
         def lower_item_scoped(options={})
           @lower_item_scoped ||= list_prev_next(:next, self.higher_lower_scope_conditions(options))
         end
+        attr_writer :lower_item_scoped
 
         def higher_lower_scope_conditions(options={}) #to be overloaded
           options

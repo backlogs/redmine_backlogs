@@ -17,24 +17,24 @@ Feature: Scrum Master
         | Sprint 004 | 2 weeks ago       | next week       | ecookbook   |
         | Sprint S05 | 2010-01-01        | 2010-01-31      | subproject1 |
 
-#  Scenario: Interlieve story creation in backlog between projects
-#    Given I have defined the following stories in the product backlog:
-#        | subject | project_id  |
-#        | Story 1 | ecookbook   |
-#        | Story 2 | ecookbook   |
-#        | Story 6 | subproject1 |
-#        | Story 7 | subproject1 |
-#        | Story 3 | ecookbook   |
-#        | Story 4 | ecookbook   |
-#        | Story 8 | subproject1 |
-#        | Story 9 | subproject1 |
-#     Then show me the higher_item attributes
-#     Then Story 1 should be the higher item of Story 2
-#     Then Story 2 should be the higher item of Story 3
-#     Then Story 3 should be the higher item of Story 4
-#     Then Story 6 should be the higher item of Story 7
-#     Then Story 7 should be the higher item of Story 8
-#     Then Story 8 should be the higher item of Story 9
+  Scenario: Interlieve story creation in backlog between projects
+    Given I have defined the following stories in the product backlog:
+        | subject | project_id  |
+        | Story 1 | ecookbook   |
+        | Story 2 | ecookbook   |
+        | Story 6 | subproject1 |
+        | Story 7 | subproject1 |
+        | Story 3 | ecookbook   |
+        | Story 4 | ecookbook   |
+        | Story 8 | subproject1 |
+        | Story 9 | subproject1 |
+     #Then show me the higher_item attributes
+     Then Story 1 should be the higher item of Story 2
+     Then Story 2 should be the higher item of Story 3
+     Then Story 3 should be the higher item of Story 4
+     Then Story 6 should be the higher item of Story 7
+     Then Story 7 should be the higher item of Story 8
+     Then Story 8 should be the higher item of Story 9
 
   Scenario: Interlieve story creation in sprints between projects
     Given I have defined the following stories in the following sprints:

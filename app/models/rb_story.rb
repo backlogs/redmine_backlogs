@@ -36,63 +36,56 @@ class RbStory < Issue
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
 
-    pbl_condition = ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and release_id is NULL
-      and fixed_version_id is NULL
-      and is_closed = ?", RbStory.trackers, false]
-    if Backlogs.settings[:sharing_enabled]
-      sprint_condition = ["
-        tracker_id in (?)
-        and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
-    else
-      sprint_condition = ["
-        project_id = ?
+    if sprint_ids
+      if Backlogs.settings[:sharing_enabled]
+        sprint_condition = ["
+          tracker_id in (?)
+          and fixed_version_id IN (?)", RbStory.trackers, sprint_ids]
+      else
+        sprint_condition = ["
+          project_id = ?
+          and tracker_id in (?)
+          and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
+      end
+      Backlogs::ActiveRecord.add_condition(options, sprint_condition)
+    elsif release_ids
+      release_condition = ["
+        project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
         and tracker_id in (?)
-        and fixed_version_id IN (?)", project_id, RbStory.trackers, sprint_ids]
-    end
-    release_condition = ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and fixed_version_id is NULL
-      and release_id in (?)", RbStory.trackers, release_ids]
-
-    if release_ids
+        and fixed_version_id is NULL
+        and release_id in (?)", RbStory.trackers, release_ids]
       Backlogs::ActiveRecord.add_condition(options, release_condition)
-    elsif sprint_ids.nil?
+    else #product backlog
+      pbl_condition = ["
+        project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+        and tracker_id in (?)
+        and release_id is NULL
+        and fixed_version_id is NULL
+        and is_closed = ?", RbStory.trackers, false]
       Backlogs::ActiveRecord.add_condition(options, pbl_condition)
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
-    else
-      Backlogs::ActiveRecord.add_condition(options, sprint_condition)
     end
 
-    return options
+    options
   end
 
   def higher_lower_scope_conditions(options={})
-    options = options.dup
-    Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.tracker_id = (?)", self.class.trackers])
-    if self.fixed_version_id #same sprint. any release
-      Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.fixed_version_id = ?", self.fixed_version_id])
-    elsif self.release_id #same release, no sprint
-      Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.release_id = ?", self.release_id])
-      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.fixed_version_id is NULL")
-    else #backlog, no sprint, no release
-      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.release_id is NULL")
-      Backlogs::ActiveRecord.add_condition(options, "#{self.class.table_name}.fixed_version_id is NULL")
-    end
-    options
+    RbStory.find_options(options.dup.merge({
+      :project => self.project_id,
+      :sprint => self.fixed_version_id,
+      :release => self.release_id,
+      :order => 'issues.position'
+    }))
   end
 
   def self.backlog(project_id, sprint_id, release_id, options={})
     stories = []
 
     prev = nil
-    RbStory.visible.find(:all, RbStory.find_options(options.merge({
+    RbStory.visible.find(:all, RbStory.find_options(options.merge({ #FIXME visible is already contained in find_option???
       :project => project_id,
       :sprint => sprint_id,
       :release => release_id,
@@ -100,8 +93,10 @@ class RbStory < Issue
     }))).each_with_index {|story, i|
       stories << story
 
-      prev.higher_item = story if prev #FIXME must use scoped api of higher_item to ensure unique constraint on position
-      story.lower_item = prev #FIXME use scoped api
+      #optimization: set virtual attributes to avoid hundreds of sql queries
+      # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
+      prev.higher_item_scoped = story if prev
+      story.lower_item_scoped = prev
 
       story.rank = i + 1
 
