@@ -233,7 +233,7 @@ class RbStory < Issue
   def position!(params)
     if params.include?('prev')
       if params['prev'].blank?
-        self.move_to_top
+        self.move_to_top # move after 'prev'. Meaning no prev, we go at top
       else
         self.move_after(RbStory.find(params['prev']))
       end
