@@ -162,10 +162,6 @@ class RbTask < Issue
     return @rank
   end
 
-  def higher_item_scoped(options={})
-    self.higher_item(options)
-  end
-
   def burndown(sprint = nil, status=nil)
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
