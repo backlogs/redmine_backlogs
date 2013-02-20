@@ -130,23 +130,21 @@ class RbStory < Issue
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
-    #FIXME #842 this pollutes the higher_item/lower_item scope when rendering more than one sprint
-    ret = RbStory.backlog(project.id, sprints.map {|s| s.id }, nil, options)
+    #make separate queries for each sprint to get higher/lower item right
     sprint_of = {}
-    ret.each do |backlog|
-      sprint_of[backlog.fixed_version_id] ||= []
-      sprint_of[backlog.fixed_version_id].push(backlog)
+    sprints.each do |s|
+      sprint_of[s.id] ||= []
+      sprint_of[s.id] = RbStory.backlog(project.id, s.id, nil, options)
     end
     return sprint_of
   end
 
   def self.backlogs_by_release(project, releases, options={})
-    #FIXME #842 this pollutes the higher_item/lower_item scope when rendering more than one release
-    ret = RbStory.backlog(project.id, nil, releases.map {|s| s.id }, options)
+    #make separate queries for each release to get higher/lower item right
     release_of = {}
-    ret.each do |backlog|
-      release_of[backlog.release_id] ||= []
-      release_of[backlog.release_id].push(backlog)
+    releases.each do |r|
+      release_of[r.id] ||= []
+      release_of[r.id] = RbStory.backlog(project.id, nil, r.id, options)
     end
     return release_of
   end
