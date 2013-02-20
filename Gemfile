@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
