@@ -125,7 +125,7 @@ module Backlogs
         attr_writer :rank
 
         def move_after(reference, options={})
-          nxt = reference.lower_item #FIXME must not used cached version, risk of race condition
+          nxt = reference.lower_item
 
           if nxt.blank?
             move_to_bottom
@@ -140,14 +140,24 @@ module Backlogs
           list_commit
         end
 
+        #issues are listed by position ascending, which is in rank descending. Higher means lower position
+        #before means lower position
         def move_before(reference, options={})
-          prev = reference.higher_item #FIXME must not used cached version, risk of race condition
+          prev = reference.higher_item
+
           if prev.blank?
             move_to_top
           else
-            move_after(prev, options)
+            if (reference.position - prev.position) < 2
+              self.class.connection.execute("update #{self.class.table_name} set position = position - #{self.class.list_spacing} where position <= #{prev.position}")
+              prev.position += self.class.list_spacing
+            end
+            self.position = (reference.position + prev.position) / 2
           end
+
+          list_commit
         end
+
       end
 
       private

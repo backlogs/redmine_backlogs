@@ -320,6 +320,10 @@ Given /^I have made the following task mutations:$/ do |table|
   end
 end
 
+Given /^I have deleted all existing issues from all projects$/ do
+  Issue.delete_all
+end
+
 Given /^I have deleted all existing issues$/ do
   @project.issues.delete_all
 end

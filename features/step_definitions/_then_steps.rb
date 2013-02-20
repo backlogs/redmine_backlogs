@@ -124,7 +124,8 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
 end
 
 Then /^show me the higher_item attributes$/ do
-  RbStory.where(['tracker_id in (?)',RbStory.trackers]).order('position').each{|s|
+  #RbStory.where(['tracker_id in (?)',RbStory.trackers]).order('position').each{|s|
+  Issue.all.each{|s|
     pos = s.position
     hid = '  '
     lsid = '  '
@@ -517,3 +518,26 @@ Then /^the done ratio for story (.+?) should be (\d+)$/ do |story, ratio|
   story.should_not be_nil
   story.done_ratio.should == ratio.to_i
 end
+
+# Low level tests on higher_item and lower_item, should be rspec tests
+Then /^"([^"]*)"\.higher_item should be "([^"]*)"$/ do |obj, arg|
+  obj = RbStory.find_by_subject(obj)
+  if arg == "nil"
+    obj.higher_item.should be_nil
+  else
+    arg = RbStory.find_by_subject(arg)
+    obj.higher_item.should == arg
+    arg.lower_item.should == obj
+  end
+end
+Then /^"([^"]*)"\.lower_item should be "([^"]*)"$/ do |obj, arg|
+  obj = RbStory.find_by_subject(obj)
+  if arg == "nil"
+    obj.lower_item.should be_nil
+  else
+    arg = RbStory.find_by_subject(arg)
+    obj.lower_item.should == arg
+    arg.higher_item.should == obj
+  end
+end
+

@@ -260,3 +260,15 @@ When /^I update the status of task (.+?) to (.+?)$/ do |task, state|
   verify_request_status(200)
 end
 
+# Low level tests on higher_item and lower_item, should be rspec tests
+When /^I call move_after\("([^"]*)"\) on "([^"]*)"$/ do |arg, obj|
+  obj = RbStory.find_by_subject(obj)
+  arg = (arg=="nil") ? nil : RbStory.find_by_subject(arg)
+  obj.move_after(arg)
+end
+When /^I call move_before\("([^"]*)"\) on "([^"]*)"$/ do |arg, obj|
+  obj = RbStory.find_by_subject(obj)
+  arg = (arg=="nil") ? nil : RbStory.find_by_subject(arg)
+  obj.move_before(arg)
+end
+

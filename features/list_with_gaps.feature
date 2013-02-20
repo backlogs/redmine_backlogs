@@ -79,3 +79,32 @@ Feature: Scrum Master
         | Story D | Sprint 004 |
      When I move the story named Story 1 to the 2nd position of the sprint named Sprint 003
      Then Story C should be the higher item of Story 1
+
+  Scenario: Lowlevel higher_item and lower_item api test; should be an rspec test
+    Given I have deleted all existing issues from all projects
+      And I have defined the following stories in the product backlog:
+        | subject | project_id  |
+        | Story 1 | ecookbook   |
+        | Story 2 | ecookbook   |
+        | Story 6 | subproject1 |
+        | Story 7 | subproject1 |
+        | Story 3 | ecookbook   |
+        | Story 4 | ecookbook   |
+        | Story 8 | subproject1 |
+        | Story 9 | subproject1 |
+     #move after
+     When I call move_after("Story 7") on "Story 1"
+     Then "Story 1".higher_item should be "Story 7"
+     Then "Story 1".lower_item should be "Story 3"
+     #move after to the end
+     When I call move_after("Story 9") on "Story 1"
+     Then "Story 1".higher_item should be "Story 9"
+     Then "Story 1".lower_item should be "nil"
+     #move before
+     When I call move_before("Story 7") on "Story 1"
+     Then "Story 1".higher_item should be "Story 6"
+     Then "Story 1".lower_item should be "Story 7"
+     #move before to the beginning
+     When I call move_before("Story 2") on "Story 1"
+     Then "Story 1".lower_item should be "Story 2"
+     Then "Story 1".higher_item should be "nil"
