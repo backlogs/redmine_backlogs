@@ -22,8 +22,7 @@ module Backlogs
     if File.directory?(git)
       Dir.chdir(root)
       g = `git describe --tags --abbrev=10`
-      g.strip!
-      g = "(#{g})"
+      g = "(#{g.strip})" if g
     end
 
     v = [v, g].compact.join(' ')
