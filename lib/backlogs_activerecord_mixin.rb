@@ -150,7 +150,7 @@ module Backlogs
           else
             if (reference.position - prev.position) < 2
               self.class.connection.execute("update #{self.class.table_name} set position = position - #{self.class.list_spacing} where position <= #{prev.position}")
-              prev.position += self.class.list_spacing
+              prev.position -= self.class.list_spacing
             end
             self.position = (reference.position + prev.position) / 2
           end
