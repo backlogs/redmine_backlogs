@@ -85,6 +85,7 @@ class RbStory < Issue
   end
 
   def higher_lower_scope_conditions(options={})
+    return options if self.new_record?
     RbStory.find_options(options.dup.merge({
       :project => self.project_id,
       :sprint => self.fixed_version_id,
