@@ -77,7 +77,7 @@ Feature: Shared versions
     Given I have selected the ecookbook project
       And I am viewing the master backlog
      When the browser fetches stories updated since 1 week ago
-     Then the server should return 3 updated stories
+     Then the server should return 4 updated stories
 
   Scenario: Fetch the updated tasks
     Given I have selected the ecookbook project
