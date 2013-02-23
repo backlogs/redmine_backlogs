@@ -1,8 +1,16 @@
 class RbQueriesController < RbApplicationController
   unloadable
 
+  def __queryClass
+    if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3) || Redmine::VERSION::BRANCH == 'devel' #FIXME: remove 'devel' expression when rm 2.3.0 is tagged
+      IssueQuery
+    else
+      Query
+    end
+  end
+
   def show
-    @query = Query.new(:name => "_")
+    @query = __queryClass.new(:name => "_")
     @query.project = @project
 
     if params[:sprint_id]
@@ -23,7 +31,7 @@ class RbQueriesController < RbApplicationController
   end
 
   def impediments
-    @query = Query.new(:name => "_")
+    @query = __queryClass.new(:name => "_")
     @query.project = @project
     @query.add_filter("status_id", 'o', ['']) # only open
     @query.add_filter("fixed_version_id", '=', [params[:sprint_id]])
