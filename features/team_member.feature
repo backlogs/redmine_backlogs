@@ -64,11 +64,13 @@ Feature: Team Member
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches tasks updated since 1 week ago
      Then the server should return 1 updated task
+     #FIXME tests on sharing
 
   Scenario: Fetch the updated impediments
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches impediments updated since 1 week ago
      Then the server should return 2 updated impediments
+     #FIXME tests on sharing
 
   Scenario: Fetch zero updated impediments 
     Given I am viewing the taskboard for Sprint 001

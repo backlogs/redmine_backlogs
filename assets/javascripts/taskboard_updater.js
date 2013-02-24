@@ -47,7 +47,7 @@ RB.TaskboardUpdater = RB.Object.create(RB.BoardUpdater, {
   },
   
   start: function(){
-    this.params = 'only=tasks,impediments';    
+    this.params = 'only=tasks,impediments&sprint='+RB.constants.sprint_id;    
     this.initialize();
   }
 
