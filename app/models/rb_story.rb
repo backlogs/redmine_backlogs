@@ -166,20 +166,14 @@ class RbStory < Issue
 
   def self.find_all_updated_since(since, project_id)
     #look in backlog, sprint and releases. look in shared sprints and shared releases
-    project = Project.find_by_id(project_id)
-    stories = []
-
-    stories += 
-      self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
-          updated_since(since)
-
+    project = Project.select("id,lft,rgt").find_by_id(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
-    stories += 
-      self.backlog_scope( {:project => project_id, :sprint => sprints, :release => nil } ).
-          updated_since(since)
-
     releases = project.open_releases_by_date.map{|s|s.id}
-    stories +=
+    #following will execute 3 queries and join it as array
+    self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
+          updated_since(since) |
+      self.backlog_scope( {:project => project_id, :sprint => sprints, :release => nil } ).
+          updated_since(since) |
       self.backlog_scope( {:project => project_id, :sprint => nil, :release => releases } ).
           updated_since(since)
   end
