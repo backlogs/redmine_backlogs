@@ -12,12 +12,6 @@ class RbMasterBacklogsController < RbApplicationController
     #TIB (ajout des sprints fermés)
     c_sprints = @project.closed_shared_sprints
 
-    last_story = RbStory.find(
-                          :first,
-                          :conditions => ["project_id=? AND tracker_id in (?)", @project.id, RbStory.trackers],
-                          :order => "updated_on DESC"
-                          )
-    @last_update = (last_story ? last_story.updated_on : nil)
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
     sprints_backlog_storie_of = RbStory.backlogs_by_sprint(@project, [sprints, c_sprints].flatten)
     @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
@@ -26,6 +20,8 @@ class RbMasterBacklogsController < RbApplicationController
     releases = @project.open_releases_by_date
     releases_backlog_storie_of = RbStory.backlogs_by_release(@project, releases)
     @release_backlogs = releases.map{ |r| { :release => r, :stories => releases_backlog_storie_of[r.id] } }
+
+    @last_update = [product_backlog_stories, sprints_backlog_storie_of.values, releases_backlog_storie_of.values].flatten.map{|s| s.updated_on}.sort.last
 
     respond_to do |format|
       format.html { render :layout => "rb"}

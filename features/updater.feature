@@ -47,12 +47,12 @@ Feature: Team Member live board updater
     Given sharing is not enabled
     Given I have selected the p1 project
      When the browser fetches stories updated since 1 week ago
-     Then the server should return 4 updated stories
      Then Story "Sb1" should be updated
      Then Story "Sp1s1" should be updated
      Then Story "Sp1s2" should be updated
-     Then Story "Sp1s3" should be updated
+     Then Story "Sp1s3" should not be updated
      Then Story "Sb2" should not be updated
+     Then the server should return 3 updated stories
     Given I have selected the p1s1 project
      When the browser fetches stories updated since 1 week ago
      Then the server should return 2 updated stories
@@ -71,7 +71,6 @@ Feature: Team Member live board updater
     Given sharing is enabled
     Given I have selected the p1 project
      When the browser fetches stories updated since 1 week ago
-     #Then the server should return 8 updated stories
      Then Story "Sb1" should be updated
      Then Story "Sb2" should be updated
      Then Story "Sb3" should be updated
@@ -81,49 +80,31 @@ Feature: Team Member live board updater
      Then Story "Sp2s1" should be updated
      Then Story "Sp2s2" should be updated
      Then Story "Sp2s3" should not be updated
+     Then the server should return 8 updated stories
     Given I have selected the p1s1 project
      When the browser fetches stories updated since 1 week ago
-#     Then the server should return 5 updated stories
      Then Story "Sb2" should be updated
      Then Story "Sp1s1" should be updated
      Then Story "Sp1s2" should be updated
      Then Story "Sp1s3" should be updated
      Then Story "Sp2s1" should be updated
+     Then Story "Sp2s2" should not be updated
+     Then Story "Sp2s3" should not be updated
+     Then the server should return 5 updated stories
     Given I have selected the p1s2 project
      When the browser fetches stories updated since 1 week ago
-#     Then the server should return 5 updated stories
      Then Story "Sb3" should be updated
      Then Story "Sp1s1" should be updated
      Then Story "Sp1s2" should be updated
-     Then Story "Sp1s3" should be updated
      Then Story "Sp2s2" should be updated
+     Then Story "Sp2s3" should be updated
+     Then Story "Sp1s3" should not be updated
+     Then Story "Sb2" should not be updated
+     Then Story "Sb1" should not be updated
+     Then the server should return 5 updated stories
 
-
-#  Scenario: Fetch stories from one project
-#    Given the current time is 2012-11-21 08:00:00
-#    Given I have selected the p1 project
-#    Given I have defined the following stories in the product backlog:
-#        | subject | project_id  |
-#        | Story u1 | p1   |
-#        | Story u2 | p1   |
-#        | Story u6 | p1s1 |
-#        | Story u7 | p1s1 |
-#        | Story u3 | p1   |
-#        | Story u4 | p1   |
-#        | Story u8 | p1s1 |
-#        | Story u9 | p1s1 |
-#    Given I have selected the p1s1 project
-#      And sharing is not enabled
-#     When the browser fetches stories updated since 1 week ago
-#     Then the server should return 5 updated stories
-#    Given I have selected the p1 project
-#     When the browser fetches stories updated since 1 week ago
-#     Then the server should return 8 updated stories
-#
-#    Given I have selected the p1s1 project
-#      And sharing is enabled
-#     When the browser fetches stories updated since 1 week ago
-#     Then the server should return 5 updated stories
-#    Given I have selected the p1 project
-#     When the browser fetches stories updated since 1 week ago
-#     Then the server should return 12 updated stories
+  Scenario: Get the last updated stories date when viewing master backlog
+    Given sharing is enabled
+      And I have selected the p1 project
+      And I am viewing the master backlog
+     Then The last_update information should be correct

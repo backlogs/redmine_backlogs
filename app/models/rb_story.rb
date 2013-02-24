@@ -86,23 +86,26 @@ class RbStory < Issue
 
   def higher_lower_scope_conditions(options={})
     return options if self.new_record?
-    RbStory.find_options(options.dup.merge({
+    RbStory.find_options(options.dup.merge({ #FIXME options.dup.merge ???
       :project => self.project_id,
       :sprint => self.fixed_version_id,
       :release => self.release_id
     }))
   end
 
+  scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
+
   def self.backlog(project_id, sprint_id, release_id, options={})
     stories = []
 
     prev = nil
-    RbStory.visible.find(:all, RbStory.find_options(options.merge({ #FIXME visible is already contained in find_option???
-      :project => project_id,
-      :sprint => sprint_id,
-      :release => release_id,
-      :order => 'issues.position'
-    }))).each_with_index {|story, i|
+    RbStory.visible.order("#{self.table_name}.position").
+      backlog_scope(
+        options.merge({ #FIXME visible is already contained in find_option???
+          :project => project_id,
+          :sprint => sprint_id,
+          :release => release_id
+      })).each_with_index {|story, i|
       stories << story
 
       #optimization: set virtual attributes to avoid hundreds of sql queries
@@ -165,10 +168,29 @@ class RbStory < Issue
     return s
   end
 
+  scope :updated_since, lambda {|since|
+          where(["#{self.table_name}.updated_on > ?", Time.parse(since)]).
+          order("#{self.table_name}.updated_on ASC")
+        }
+
   def self.find_all_updated_since(since, project_id)
-    find(:all,
-          :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?)", project_id, Time.parse(since), trackers],
-          :order => "updated_on ASC")
+    #look in backlog, sprint and releases. look in shared sprints and shared releases
+    project = Project.find_by_id(project_id)
+    stories = []
+
+    stories += 
+      self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
+          updated_since(since)
+
+    sprints = project.open_shared_sprints.map{|s|s.id}
+    stories += 
+      self.backlog_scope( {:project => project_id, :sprint => sprints, :release => nil } ).
+          updated_since(since)
+
+    releases = project.open_releases_by_date.map{|s|s.id}
+    stories +=
+      self.backlog_scope( {:project => project_id, :sprint => nil, :release => releases } ).
+          updated_since(since)
   end
 
   def self.trackers(options = {})
