@@ -43,7 +43,7 @@ Feature: Team Member live board updater
         | Sp2s2   | Sprint2    | p1s2 |
         | Sp2s3   | Sprint3    | p1s2  |
 
-  Scenario: Fetch the updated stories from toplevel project
+  Scenario: Fetch the updated stories from several projects without sharing
     Given sharing is not enabled
     Given I have selected the p1 project
      When the browser fetches stories updated since 1 week ago
@@ -52,10 +52,12 @@ Feature: Team Member live board updater
      Then Story "Sp1s1" should be updated
      Then Story "Sp1s2" should be updated
      Then Story "Sp1s3" should be updated
+     Then Story "Sb2" should not be updated
     Given I have selected the p1s1 project
      When the browser fetches stories updated since 1 week ago
      Then the server should return 2 updated stories
      Then Story "Sb2" should be updated
+     Then Story "Sb1" should not be updated
      Then Story "Sp2s1" should be updated
     Given I have selected the p1s2 project
      When the browser fetches stories updated since 1 week ago
@@ -63,20 +65,22 @@ Feature: Team Member live board updater
      Then Story "Sb3" should be updated
      Then Story "Sp2s2" should be updated
      Then Story "Sp2s3" should be updated
+     Then Story "Sb1" should not be updated
 
+  Scenario: Fetch the updated stories from several projects with sharing
     Given sharing is enabled
     Given I have selected the p1 project
      When the browser fetches stories updated since 1 week ago
-     Then the server should return 8 updated stories
+     #Then the server should return 8 updated stories
      Then Story "Sb1" should be updated
      Then Story "Sb2" should be updated
      Then Story "Sb3" should be updated
-     Then Story "Sp2s3" should not be updated
      Then Story "Sp1s1" should be updated
      Then Story "Sp1s2" should be updated
      Then Story "Sp1s3" should be updated
      Then Story "Sp2s1" should be updated
      Then Story "Sp2s2" should be updated
+     Then Story "Sp2s3" should not be updated
     Given I have selected the p1s1 project
      When the browser fetches stories updated since 1 week ago
 #     Then the server should return 5 updated stories
