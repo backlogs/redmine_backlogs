@@ -174,6 +174,15 @@ Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
   page.all("##{object_type.pluralize} .#{object_type.singularize}").length.should == count.to_i
 end
 
+Then /^Story "([^"]*)" should be updated$/ do |story|
+  story_id = RbStory.find_by_subject(story).id
+  page.should have_css("#story_#{story_id}")
+end
+Then /^Story "([^"]*)" should not be updated$/ do |story|
+  story_id = RbStory.find_by_subject(story).id
+  page.should_not have_css("#story_#{story_id}")
+end
+
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
   sprint = RbSprint.find(:all, :conditions => { :name => sprint_name })
   sprint.length.should == 1

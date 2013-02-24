@@ -60,11 +60,6 @@ Feature: Team Member
      When I view the stories in the issues tab
      Then I should see the Issues page
 
-  Scenario: Fetch the updated stories
-    Given I am viewing the master backlog
-     When the browser fetches stories updated since 1 week ago
-     Then the server should return 4 updated stories
-
   Scenario: Fetch the updated tasks
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches tasks updated since 1 week ago
