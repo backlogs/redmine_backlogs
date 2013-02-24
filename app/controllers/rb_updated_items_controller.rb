@@ -14,24 +14,22 @@ class RbUpdatedItemsController < RbApplicationController
     @last_update = nil
 
     latest_updates = []
-    project_ids = @project.projects_in_shared_product_backlog #this is not correct. see menu: sprints/releases
-
     if only.include? :stories
-      @items[:stories] = RbStory.find_all_updated_since(params[:since], project_ids)
+      @items[:stories] = RbStory.find_all_updated_since(params[:since], @project.id)
       if @items[:stories].length > 0
         latest_updates << @items[:stories].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
     end
 
     if only.include? :tasks
-      @items[:tasks] = RbTask.find_all_updated_since(params[:since], project_ids)
+      @items[:tasks] = RbTask.find_all_updated_since(params[:since], @project.id)
       if @items[:tasks].length > 0
         latest_updates << @items[:tasks].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
     end
 
     if only.include? :impediments
-      @items[:impediments] = RbTask.find_all_updated_since(params[:since], project_ids, true)
+      @items[:impediments] = RbTask.find_all_updated_since(params[:since], @project.id, true)
       if @items[:impediments].length > 0
         latest_updates << @items[:impediments].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
