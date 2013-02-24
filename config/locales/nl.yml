@@ -5,12 +5,34 @@ nl:
   backlogs_auto_assign_task: Automatisch taak toekennen aan huidige gebruiker
   backlogs_burndown_print_height: Hoogte voor afdrukken burndown
   backlogs_burndown_print_width: Breedte voor afdrukken burndown
+  backlogs_burndown_settings: Burndown settings
   backlogs_card_specification: Label type voor kaartjes
+  backlogs_general_settings: General settings
   backlogs_impediment: Impediment
   backlogs_include_sat_and_sun: Zaterdag en zondag opnemen in Burndown
+  backlogs_new_story_position: Nieuwe stories verschijnen
+  backlogs_new_story_position_bottom: onderaan (vereist herstart)
+  backlogs_new_story_position_top: bovenaan
+  backlogs_not_all_themes_are_supported: Not all themes are supported.
+  backlogs_pblpage_settings: Product backlog page settings
   backlogs_points_burn_direction: Points burn omhoog/omlaag
-  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Product backlog
+  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
+  backlogs_sharing_enabled: Enable sharing
+  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_sharing_new_sprint_explanation: Although all possible options are available
+    here, new sprints are shared only according to the users and projects permissions.
+    System shared sprints can only be created by admins, hierarchy and tree shared
+    sprints need permissions on the topmost project.
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics
+  backlogs_show_redmine_std_header: Show redmine header in backlogs
+  backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects
+    in backlog
+  backlogs_sprint_card_settings: Card printing
+  backlogs_sprint_sort_order: Sort Sprints by start date
+  backlogs_sprint_sort_order_asc: ascending
+  backlogs_sprint_sort_order_desc: descending
   backlogs_sprints: Sprints
   backlogs_statistics_active: Project is actief
   backlogs_statistics_active_failed: Project is niet actief
@@ -31,6 +53,8 @@ nl:
     van de schattingen
   backlogs_statistics_sizing_stddev: ! 'Standaard deviatie uren t.o.v. points: %{value}
     uren'
+  backlogs_statistics_spent_hours_per_point: ! '%{value} hours spent per accepted
+    point on average'
   backlogs_statistics_sprint_notes_available: De recent afgesloten sprints hebben
     retrospective/review verslagen
   backlogs_statistics_sprint_notes_available_failed: Recent afgesloten sprints missen
@@ -49,6 +73,14 @@ nl:
   backlogs_statistics_yield: Project heeft een goede gemiddelde opbrengst
   backlogs_statistics_yield_failed: Project heeft een lage gemiddelde opbrengst
   backlogs_story: Story
+  backlogs_story_close_status: Status to close story automatically
+  backlogs_story_follow_task_status_close: Close when all Tasks are closed
+  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_follow_task_status_nil: Disabled
+  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
+    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_status: Story follows Task status
+  backlogs_story_settings: Story and Task settings
   backlogs_story_tracker: Story trackers
   backlogs_task: Taak
   backlogs_task_tracker: Taak tracker
@@ -72,12 +104,14 @@ nl:
   error_taken: is al in gebruik
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Toegekend aan
-  field_base: ""
   field_backlogs_issue_type: Backlog type
+  field_base: ''
   field_blocks: Blokkeert
   field_name: Naam
   field_position: Positie
   field_priority: Prioriteit
+  field_project_id: Project Id
+  field_release: Release
   field_release_end_date: Eind datum van de release
   field_release_start_date: Start datum release
   field_remaining_hours: Resterend (uren)
@@ -89,6 +123,7 @@ nl:
   field_time_entry_user_id: Tijd registratie gebruiker
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Schatting op basis van velocity
+  label_all_tasks: All tasks
   label_back_to_project: Terug naar het project
   label_backlogs: Backlogs
   label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft
@@ -98,21 +133,26 @@ nl:
   label_burndown: Burndown
   label_chart_options: Grafiek Opties
   label_close_completed_sprints: Sluit gecompleteerde sprints
+  label_closed_releases: Closed releases
   label_column_width: Kolom breedte
   label_download_sprint: Download
+  label_filter_tasks: Filter by user
+  label_filter_tasks_my_tasks: Filter by user - my tasks
   label_hide_completed_sprints: Verberg gecompleteerde sprints
+  label_hours: uren
   label_hours_remaining: resterende uren
   label_hours_required_burn_rate: benodigde burn rate (uren)
-  label_hours: uren
   label_ideal: ideaal
   label_impediments: Impediments
   label_master_backlog: Master Backlog
+  label_my_tasks: My tasks
   label_new_sprint: New Sprint
   label_new_story: New Story
   label_no_data_to_show: No data to show
   label_no_end: no end
   label_no_start: no start
   label_not_prioritized: geen prioriteit
+  label_points: points
   label_points_accepted: points geaccepteerd
   label_points_added: points added
   label_points_backlog: points backlog
@@ -123,7 +163,6 @@ nl:
   label_points_resolved: points opgelost
   label_points_to_accept: points niet geaccepteerd
   label_points_to_resolve: points niet opgelost
-  label_points: points
   label_product_backlog: product backlog
   label_product_cards: Product backlog kaarten
   label_release: Release
@@ -143,8 +182,17 @@ nl:
   label_stories: Stories
   label_stories_tasks: Stories/Taken
   label_task_board: Taakbord
+  label_view_options: View options
   label_webcal: Agenda
   rb_auto_refresh: Automatische verversing backlogs/taakbord (seconden)
+  rb_burndown_timezone: Time zone for burndown day boundary
+  rb_burndown_timezone_explanation: ! 'To support distributed teams, calculations
+    for burndown graphs use a common concept of when a day begins.
+
+    Your user timezone is %{user_timezone}, the server timezone is %{server_timezone}
+    and Burndowns use %{burndown_timezone} to calculate the graphs.
+
+    Note: Historic data is not affected when changing this option.'
   rb_label_copy_tasks: Kopieer taken
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Geen
@@ -152,7 +200,10 @@ nl:
   rb_label_link_to_original: Relateer aan originele story
   rb_label_timelog_disable: Uitzetten
   rb_label_timelog_enable: Aanzetten
+  rb_project_settings_update_error: Error while updating settings
+  rb_project_settings_updated: Settings updated
   rb_show_burndown_in_sidebar: Toon burndown grafiek in de issues zijbalk
+  rb_show_project_name: Show project name in backlogs
   rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
   rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
   rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
@@ -177,6 +228,3 @@ nl:
     notities,\n   zullen worden VERWIJDERD\n* De huidige waarde wordt de startwaarde
     voor alle\n   eigenschappen van de story/taak\n* De status wordt teruggezet naar
     de standaard status"
-  backlogs_new_story_position: Nieuwe stories verschijnen
-  backlogs_new_story_position_top: bovenaan
-  backlogs_new_story_position_bottom: onderaan (vereist herstart)

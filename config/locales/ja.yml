@@ -1,89 +1,137 @@
 ---
-ja: 
-  project_module_backlogs: バックログ
+ja:
   backlogs_active: active
   backlogs_any: any
-  backlogs_card_specification: カード印刷のラベルタイプ
-  backlogs_impediment: 障害事項
-  backlogs_statistics_active_failed: "プロジェクトにはアクティビティがありません"
-  backlogs_statistics_active: "プロジェクトには幾つかのアクティビティがあります"
-  backlogs_statistics_product_backlog_filled_failed: "プロダクトバックログが見つかりません"
-  backlogs_statistics_product_backlog_filled: "プロダクトバックログはストーリーを持っています"
-  backlogs_statistics_sprints_estimated_failed: "クローズされたもしくはアクティブなスプリントは残り時間がないストーリーが存在します"
-  backlogs_statistics_sprints_estimated: アクティブで最近クローズされたスプリントはタスクの残り時間が設定されています
-  backlogs_statistics_product_backlog_sized_failed: プロダクトバックログはサイズが合っていないストーリーを持っています
-  backlogs_statistics_product_backlog_sized: プロダクトバックログのストーリーはサイズが合っています
-  backlogs_statistics_sprint_notes_available_failed: スプリントは、振り返り/レビューノートを入力せずにクローズされました
-  backlogs_statistics_sprint_notes_available: 最近クローズされたスプリントは、振り返り/レビューノートがあります
-  backlogs_statistics_sprints_sized_failed: プロジェクトはアクティブなもしくは最近クローズされたスプリントに対しサイズが合っていないストーリーを含んでいます
-  backlogs_statistics_sprints_sized: アクティブで最近クローズされたスプリントは達成しています
-  backlogs_statistics_sizing_consistent_failed: "ストーリーサイズは残り時間に対して乖離しています"
-  backlogs_statistics_sizing_consistent: "ストーリーサイズは、残り時間に対して安定しています"
-  backlogs_statistics_yield_failed: "プロジェクトは低い平均値を出しています"
-  backlogs_statistics_yield: "プロジェクトは良い平均値を出しています"
-  backlogs_statistics_committed_velocity_stable_failed: "承認されたベロシティはスプリントをまたがって安定していません"
-  backlogs_statistics_committed_velocity_stable: "承認されたベロシティはスプリントをまたがって安定しています"
-  backlogs_statistics_sizing_stddev: "ポイントに対する時間の標準偏差 %{value} 時間"
-  backlogs_statistics_sprints: "%{value} スプリントに渡って測定されています"
-  backlogs_statistics_velocity: "ベロシティ: %{value}"
-  backlogs_statistics_velocity_stddev: "ベロシティの標準偏差: %{value} ポイント"
-  backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
-  backlogs_story_close_status: "ストーリーを自動クローズするときのステータス"
-  backlogs_product_backlog: "プロダクトバックログ"
-  backlogs_sprints: "スプリント"
-  backlogs_story: "ストーリー"
-  backlogs_story_tracker: "ストーリーに利用するトラッカー"
-  backlogs_task: "タスク"
-  backlogs_task_tracker: "タスクとして利用のトラッカー"
-  backlogs_wiki_template: "スプリントのテンプレートのWikiページ"
-  backlogs_burndown_print_width: バーンダウンの印刷の幅
-  backlogs_burndown_print_height: バーンダウンの印刷の高さ
   backlogs_auto_assign_task: 現在のユーザにタスクを自動でアサイン
+  backlogs_burndown_print_height: バーンダウンの印刷の高さ
+  backlogs_burndown_print_width: バーンダウンの印刷の幅
+  backlogs_burndown_settings: Burndown settings
+  backlogs_card_specification: カード印刷のラベルタイプ
+  backlogs_general_settings: General settings
+  backlogs_impediment: 障害事項
   backlogs_include_sat_and_sun: 土曜と日曜をバーンダウンに含める
-  button_edit_wiki: "Wikiページの編集"
-  comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
-  current_open_story_points: "現在オープンしているストーリーポイント:"
-  error_blank: "ブランクにしないでください"
+  backlogs_new_story_position: 新しく作成されたストーリーが追加される位置
+  backlogs_new_story_position_bottom: 下に (再起動が必要)
+  backlogs_new_story_position_top: 上に
+  backlogs_not_all_themes_are_supported: Not all themes are supported.
+  backlogs_pblpage_settings: Product backlog page settings
+  backlogs_points_burn_direction: ポイントのバーンアップ/ダウン
+  backlogs_product_backlog: プロダクトバックログ
+  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
+  backlogs_sharing_enabled: 有効化
+  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_sharing_new_sprint_explanation: Although all possible options are available
+    here, new sprints are shared only according to the users and projects permissions.
+    System shared sprints can only be created by admins, hierarchy and tree shared
+    sprints need permissions on the topmost project.
+  backlogs_sharing_support: バックログの共有
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics
+  backlogs_show_redmine_std_header: Show redmine header in backlogs
+  backlogs_show_stories_from_subprojects_in_backlog: バックログでサブプロジェクトのストーリーを表示する
+  backlogs_sprint_card_settings: Card printing
+  backlogs_sprint_sort_order: Sort Sprints by start date
+  backlogs_sprint_sort_order_asc: ascending
+  backlogs_sprint_sort_order_desc: descending
+  backlogs_sprints: スプリント
+  backlogs_statistics_active: プロジェクトには幾つかのアクティビティがあります
+  backlogs_statistics_active_failed: プロジェクトにはアクティビティがありません
+  backlogs_statistics_committed_velocity_stable: 承認されたベロシティはスプリントをまたがって安定しています
+  backlogs_statistics_committed_velocity_stable_failed: 承認されたベロシティはスプリントをまたがって安定していません
+  backlogs_statistics_hours_per_point: ! '%{value} hours per point on average'
+  backlogs_statistics_product_backlog_filled: プロダクトバックログはストーリーを持っています
+  backlogs_statistics_product_backlog_filled_failed: プロダクトバックログが見つかりません
+  backlogs_statistics_product_backlog_sized: プロダクトバックログのストーリーはサイズが合っています
+  backlogs_statistics_product_backlog_sized_failed: プロダクトバックログはサイズが合っていないストーリーを持っています
+  backlogs_statistics_sizing_consistent: ストーリーサイズは、残り時間に対して安定しています
+  backlogs_statistics_sizing_consistent_failed: ストーリーサイズは残り時間に対して乖離しています
+  backlogs_statistics_sizing_stddev: ポイントに対する時間の標準偏差 %{value} 時間
+  backlogs_statistics_spent_hours_per_point: ! '%{value} hours spent per accepted
+    point on average'
+  backlogs_statistics_sprint_notes_available: 最近クローズされたスプリントは、振り返り/レビューノートがあります
+  backlogs_statistics_sprint_notes_available_failed: スプリントは、振り返り/レビューノートを入力せずにクローズされました
+  backlogs_statistics_sprints: ! '%{value} スプリントに渡って測定されています'
+  backlogs_statistics_sprints_estimated: アクティブで最近クローズされたスプリントはタスクの残り時間が設定されています
+  backlogs_statistics_sprints_estimated_failed: クローズされたもしくはアクティブなスプリントは残り時間がないストーリーが存在します
+  backlogs_statistics_sprints_sized: アクティブで最近クローズされたスプリントは達成しています
+  backlogs_statistics_sprints_sized_failed: プロジェクトはアクティブなもしくは最近クローズされたスプリントに対しサイズが合っていないストーリーを含んでいます
+  backlogs_statistics_velocity: ! 'ベロシティ: %{value}'
+  backlogs_statistics_velocity_stddev: ! 'ベロシティの標準偏差: %{value} ポイント'
+  backlogs_statistics_yield: プロジェクトは良い平均値を出しています
+  backlogs_statistics_yield_failed: プロジェクトは低い平均値を出しています
+  backlogs_story: ストーリー
+  backlogs_story_close_status: ストーリーを自動クローズするときのステータス
+  backlogs_story_follow_task_status_close: Close when all Tasks are closed
+  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_follow_task_status_nil: Disabled
+  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
+    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_status: Story follows Task status
+  backlogs_story_settings: Story and Task settings
+  backlogs_story_tracker: ストーリーに利用するトラッカー
+  backlogs_task: タスク
+  backlogs_task_tracker: タスクとして利用のトラッカー
+  backlogs_wiki_template: スプリントのテンプレートのWikiページ
+  button_edit_wiki: Wikiページの編集
+  comma_delimited_numbers: ! 'カンマで区切った数字(ex: 1,2,3,5,8,13,...)'
+  current_open_story_points: ! '現在オープンしているストーリーポイント:'
+  error_blank: ブランクにできません
   error_greater_than_start_date: 開始日より前にできません
   error_inclusion: はリストに含まれていません
-  error_intro_plural: "下記のエラーが発生しました:"
-  error_intro_singular: "下記のエラーが発生しました:"
-  error_must_have_comma_delimited_list: "ストーリーもしくはタスクのIDはカンマ「,」で区切ってください"
-  error_no_workflow_for_task_tracker: "タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください"
+  error_intro_plural: ! '下記のエラーが発生しました:'
+  error_intro_singular: ! '下記のエラーが発生しました:'
+  error_must_have_comma_delimited_list: ストーリーもしくはタスクのIDはカンマ「,」で区切ってください
+  error_no_workflow_for_task_tracker: タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください
   error_outro: 送信する前に、上記のエラーを訂正してください
-  error_release_end_after_start: リリース終了日は開始日の後に設定してください
+  error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
   error_sprint_end_before_start: Sprint cannot end before it starts
   error_taken: は既に利用されています
-  event_sprint_summary: "%{project}: %{summary}"
+  event_sprint_summary: ! '%{project}: %{summary}'
+  field_assigned_to: 担当者
   field_backlogs_issue_type: バックログタイプ
-  field_base: ""
+  field_base: ''
   field_blocks: ブロック
   field_name: 名前
   field_position: Position
+  field_priority: 優先度
+  field_project_id: Project Id
+  field_release: Release
   field_release_end_date: リリース終了日
   field_release_start_date: リリース開始日
+  field_remaining_hours: 残り時間
   field_story_points: ストーリーポイント
   field_subject: 題名
+  field_time_entry_comments: コメント
+  field_time_entry_hours: 作業時間
+  field_time_entry_spend_on: 作業内容
+  field_time_entry_user_id: 作業者のユーザID
   field_tracker_id: トラッカーID
   field_velocity_based_estimate: 残り時間に基づくベロシティ
-  field_assigned_to: 担当者
-  field_priority: 優先度
-  field_remaining_hours: 残り時間
-  field_time_entry_hours: 作業時間
-  field_time_entry_user_id: 作業者のユーザID
-  field_time_entry_spend_on: 作業内容
-  field_time_entry_comments: コメント
+  label_all_tasks: All tasks
   label_back_to_project: プロジェクトページへ戻る
   label_backlogs: バックログ
-  label_backlogs_unconfigured: "バックログが設定されていません。設定画面 %{administration} > %{plugins}, からリンク %{configure} をクリックして設定してください。フィールドを設定後、このページへ戻りツールを利用してください。"
+  label_backlogs_unconfigured: バックログが設定されていません。設定画面 %{administration} > %{plugins},
+    からリンク %{configure} をクリックして設定してください。フィールドを設定後、このページへ戻りツールを利用してください。
   label_burndown: バーンダウン
   label_chart_options: チャートオプション
+  label_close_completed_sprints: 完了したスプリントをクローズ
+  label_closed_releases: Closed releases
+  label_column_width: 列の幅
+  label_download_sprint: ダウンロード
+  label_filter_tasks: Filter by user
+  label_filter_tasks_my_tasks: Filter by user - my tasks
+  label_hide_completed_sprints: 完了したスプリントを隠す
   label_hours: 時間
-  label_ideal: 理想時間
   label_hours_remaining: 残り時間
   label_hours_required_burn_rate: 必要なバーンレート(時間)
+  label_ideal: 理想時間
   label_impediments: 障害事項
   label_master_backlog: マスターバックログ
+  label_my_tasks: My tasks
+  label_new_sprint: 新しいスプリント
+  label_new_story: 新しいストーリー
+  label_no_data_to_show: 表示するデータがありません
+  label_no_end: 終了日未設定
+  label_no_start: 開始日未設定
   label_not_prioritized: 優先度が未設定
   label_points: ポイント
   label_points_accepted: 進行中のポイント
@@ -99,74 +147,33 @@ ja:
   label_product_backlog: プロダクトバックログ
   label_product_cards: プロダクトバックログカード
   label_release: リリース
-  label_release_end_date: リリースと日付
+  label_release_end_date: リリース日
   label_release_new: 新しいリリース
   label_release_planning: リリース計画
   label_release_plural: リリース
   label_release_start_date: リリース開始日
-  label_release_end_date: リリース日
-  error_release_end_after_start: リリース終了日は開始日の後ろに設定してください
-
-  # Version fields
-  field_name: "名前"
-  
-  # Error messages
-  error_blank: "ブランクにできません"
-  error_greater_than_start_date: "開始日より前にできません"
-
-  rb_label_link_to_original: "オリジナルのストーリーのリンクを含める"
-  rb_label_copy_tasks: "タスクをコピー"
-  rb_label_copy_tasks_none: "None"
-  rb_label_copy_tasks_all: "全て"
-  rb_label_copy_tasks_open: "開く"
-
-  # Permission
-  permission_reset_sprint: "スプリントのリセット"
-  permission_view_master_backlog: "マスターバックログの閲覧"
-  permission_view_releases: "リリースの閲覧"
-  permission_view_taskboards: "かんばんの閲覧"
-  permission_modify_releases: "リリースの編集"
-  permission_create_sprints: "スプリントの作成"
-  permission_update_sprints: "スプリントの更新"
-  permission_create_stories: "ストーリーの作成"
-  permission_update_stories: "ストーリーの更新"
-  permission_create_tasks: "タスクの作成"
-  permission_update_tasks: "タスクの更新"
-  permission_create_impediments: "障害事項の作成"
-  permission_update_impediments: "障害事項の更新"
-  permission_subscribe_to_calendars: "カレンダーへの取り込み"
-  permission_view_scrum_statistics: "スクラム統計の閲覧"
-  permission_update_remaining_hours: "残り時間の更新"
-
-  # Tooltips
-  story_description: "説明"
-  story_status: "ステータス"
-  story_points: "ストーリーポイント"
-  story_estimation_hours: "見積もり(時間)"
-  story_remaining_hours: "残り時間(時間)"
-  story_spent_time: "消費時間"
-  rb_taskboard_card_order: カードの印刷順
+  label_reset: リセット
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
+  label_show_completed_sprints: 完了したスプリントを表示
   label_sprint_backlog: スプリントバックログ
   label_sprint_cards: スプリントカード
   label_sprint_impediments: スプリント障害事項
-  label_sprint_name: "スプリント: %{name}"
+  label_sprint_name: ! 'スプリント: %{name}'
   label_stories: ストーリー
   label_stories_tasks: ストーリー/タスク
   label_task_board: かんばん
+  label_view_options: View options
   label_webcal: Webcal Feed
-  label_new_story: 新しいストーリー
-  label_new_sprint: 新しいスプリント
-  label_download_sprint: ダウンロード
-  label_reset: リセット
-  label_close_completed_sprints: 完了したスプリントをクローズ
-  label_no_start: 開始日未設定
-  label_no_end: 終了日未設定
-  label_hide_completed_sprints: 完了したスプリントを隠す
-  label_show_completed_sprints: 完了したスプリントを表示
-  label_no_data_to_show: 表示するデータがありません
-  label_column_width: 列の幅
+  rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
+  rb_burndown_timezone: Time zone for burndown day boundary
+  rb_burndown_timezone_explanation: ! 'To support distributed teams, calculations
+    for burndown graphs use a common concept of when a day begins.
+
+    Your user timezone is %{user_timezone}, the server timezone is %{server_timezone}
+    and Burndowns use %{burndown_timezone} to calculate the graphs.
+
+    Note: Historic data is not affected when changing this option.'
   rb_label_copy_tasks: タスクをコピー
   rb_label_copy_tasks_all: 全て
   rb_label_copy_tasks_none: なし
@@ -174,33 +181,37 @@ ja:
   rb_label_link_to_original: 元のストーリーへのリンクを含める
   rb_label_timelog_disable: 無効
   rb_label_timelog_enable: 有効
+  rb_project_settings_update_error: 失敗しました。
+  rb_project_settings_updated: 更新しました。
+  rb_show_burndown_in_sidebar: バーンダウンチャートをチケットのサイドバーに表示
+  rb_show_project_name: Show project name in backlogs
   rb_task_cards_stories_then_tasks: 全てのストーリーを印刷した後、全てのタスクを印刷
   rb_task_cards_story_follows_tasks: ストーリー、タスクの順に印刷
   rb_task_cards_tasks_follow_story: タスク、ストーリーの順に印刷
   rb_taskboard_card_order: カードの印刷順
   rb_timelog_from_taskboard: かんばんのタイムログ
-  rb_show_burndown_in_sidebar: バーンダウンチャートをチケットのサイドバーに表示
-  rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
   remaining_story_points: 残りのストーリーポイント
-  today_not_in_release_warning: "警告: 今日はリリース日の範囲に入っています"
-  todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: "もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください"
-  warning_reset_sprint: |
-    このスプリントをリセットする際の注意！！
-    
-    本当にスプリントをリセットしますか? スプリントのリセットは
-    ストーリーとタスクに次の影響があります:
-    
-    * 作成日はスプリントの開始日に設定されます
-    * コメントを除いた全てのストーリーとタスクの変更は削除されます
-    * 現在の値は、全てのストーリーとタスクの初期値になります
-    * ステータスはチケットのデフォルトのステータスになります
-  backlogs_new_story_position: "新しく作成されたストーリーが追加される位置"
-  backlogs_new_story_position_top: "上に"
-  backlogs_new_story_position_bottom: "下に (再起動が必要)"
-  backlogs_sharing_support: "バックログの共有"
-  backlogs_sharing_enabled: "有効化"
-  backlogs_show_stories_from_subprojects_in_backlog: "バックログでサブプロジェクトのストーリーを表示する"
-  rb_project_settings_updated: "更新しました。"
-  rb_project_settings_update_error: "失敗しました。"
+  story_description: 説明
+  story_estimation_hours: 見積もり(時間)
+  story_points: ストーリーポイント
+  story_remaining_hours: 残り時間(時間)
+  story_spent_time: 消費時間
+  story_status: ステータス
+  today_not_in_release_warning: ! '警告: 今日はリリース日の範囲に入っています'
+  todo_issue_summary: ! '%{type}: %{summary}'
+  use_free_text_if_empty: もし空なら、ドロップダウンの代わりにテキストフィールドとして利用してください
+  warning_reset_sprint: ! 'このスプリントをリセットする際の注意！！
 
+
+    本当にスプリントをリセットしますか? スプリントのリセットは
+
+    ストーリーとタスクに次の影響があります:
+
+
+    * 作成日はスプリントの開始日に設定されます
+
+    * コメントを除いた全てのストーリーとタスクの変更は削除されます
+
+    * 現在の値は、全てのストーリーとタスクの初期値になります
+
+    * ステータスはチケットのデフォルトのステータスになります'

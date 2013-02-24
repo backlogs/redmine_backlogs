@@ -5,12 +5,34 @@
   backlogs_auto_assign_task: Auto assign task to current user
   backlogs_burndown_print_height: Burndown print height
   backlogs_burndown_print_width: Burndown print width
+  backlogs_burndown_settings: Burndown settings
   backlogs_card_specification: Etikettype for utskrift
+  backlogs_general_settings: General settings
   backlogs_impediment: Impedimenter
   backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
+  backlogs_new_story_position: Newly created stories go to the
+  backlogs_new_story_position_bottom: bottom (requires restart)
+  backlogs_new_story_position_top: top
+  backlogs_not_all_themes_are_supported: Not all themes are supported.
+  backlogs_pblpage_settings: Product backlog page settings
   backlogs_points_burn_direction: Poeng burn opp/ned
-  backlogs_story_close_status: "Status to close story automatically"
   backlogs_product_backlog: Produkt backlog
+  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
+  backlogs_sharing_enabled: Enable sharing
+  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_sharing_new_sprint_explanation: Although all possible options are available
+    here, new sprints are shared only according to the users and projects permissions.
+    System shared sprints can only be created by admins, hierarchy and tree shared
+    sprints need permissions on the topmost project.
+  backlogs_sharing_support: Backlogs sharing
+  backlogs_show_in_scrum_stats: Show project in Scrum statistics
+  backlogs_show_redmine_std_header: Show redmine header in backlogs
+  backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects
+    in backlog
+  backlogs_sprint_card_settings: Card printing
+  backlogs_sprint_sort_order: Sort Sprints by start date
+  backlogs_sprint_sort_order_asc: ascending
+  backlogs_sprint_sort_order_desc: descending
   backlogs_sprints: Sprinter
   backlogs_statistics_active: Project show activity
   backlogs_statistics_active_failed: Project shows no activity
@@ -29,6 +51,8 @@
   backlogs_statistics_sizing_consistent_failed: Story sizes vary against their estimates
   backlogs_statistics_sizing_stddev: ! 'Standard deviation on hours vs. points: %{value}
     hours'
+  backlogs_statistics_spent_hours_per_point: ! '%{value} hours spent per accepted
+    point on average'
   backlogs_statistics_sprint_notes_available: Recently closed sprints have retrospective/review
     notes
   backlogs_statistics_sprint_notes_available_failed: Closed sprints without retrospective/review
@@ -46,6 +70,14 @@
   backlogs_statistics_yield: Project has good average yield
   backlogs_statistics_yield_failed: Project has low average yield
   backlogs_story: Story
+  backlogs_story_close_status: Status to close story automatically
+  backlogs_story_follow_task_status_close: Close when all Tasks are closed
+  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_follow_task_status_nil: Disabled
+  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
+    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_status: Story follows Task status
+  backlogs_story_settings: Story and Task settings
   backlogs_story_tracker: Story trackers
   backlogs_task: Task
   backlogs_task_tracker: Task tracker
@@ -70,11 +102,13 @@
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Assigned To
   field_backlogs_issue_type: Backlog type
-  field_base: ""
+  field_base: ''
   field_blocks: Blokker
   field_name: Navn
   field_position: Posisjon
   field_priority: Priority
+  field_project_id: Project Id
+  field_release: Release
   field_release_end_date: Utgivelse sluttdato
   field_release_start_date: Utgivelse startdato
   field_remaining_hours: Remaining (hours)
@@ -86,6 +120,7 @@
   field_time_entry_user_id: Time Entry User Id
   field_tracker_id: Tracker ID
   field_velocity_based_estimate: Hastighetbasert estimat
+  label_all_tasks: All tasks
   label_back_to_project: Tilbake til prosjektsiden
   label_backlogs: Backlogs
   label_backlogs_unconfigured: Ingen backlogs er konfigurert ennå. Vennligst gå til
@@ -94,22 +129,29 @@
   label_burndown: Burndown
   label_chart_options: Valg for Charts
   label_close_completed_sprints: Close completed Sprints
+  label_closed_releases: Closed releases
   label_column_width: Column width
   label_download_sprint: Download
+  label_filter_tasks: Filter by user
+  label_filter_tasks_my_tasks: Filter by user - my tasks
   label_hide_completed_sprints: Hide Completed Sprints
+  label_hours: timer
   label_hours_remaining: gjenværende timer
   label_hours_required_burn_rate: påkrevet burn rate (timer)
-  label_hours: timer
   label_ideal: ideal
   label_impediments: Hindringer
   label_master_backlog: Master Backlog
+  label_my_tasks: My tasks
   label_new_sprint: New Sprint
   label_new_story: New Story
   label_no_data_to_show: No data to show
   label_no_end: no end
   label_no_start: no start
   label_not_prioritized: uprioritert
+  label_points: poeng
   label_points_accepted: aksepterte poeng
+  label_points_added: points added
+  label_points_backlog: points backlog
   label_points_burn_down: Ned
   label_points_burn_up: Opp
   label_points_committed: låste poenger
@@ -117,7 +159,6 @@
   label_points_resolved: løste poeng
   label_points_to_accept: ikke antatte poeng
   label_points_to_resolve: uløste poeng
-  label_points: poeng
   label_product_backlog: produkt backlog
   label_product_cards: Produkt backlogkort
   label_release: Utgivelse
@@ -137,17 +178,28 @@
   label_stories: Stories
   label_stories_tasks: Stories/Tasks
   label_task_board: Oppgavetavle
+  label_view_options: View options
   label_webcal: Webkalender-Feed
   rb_auto_refresh: Auto-refresh backlogs/taskboard (seconds)
+  rb_burndown_timezone: Time zone for burndown day boundary
+  rb_burndown_timezone_explanation: ! 'To support distributed teams, calculations
+    for burndown graphs use a common concept of when a day begins.
+
+    Your user timezone is %{user_timezone}, the server timezone is %{server_timezone}
+    and Burndowns use %{burndown_timezone} to calculate the graphs.
+
+    Note: Historic data is not affected when changing this option.'
   rb_label_copy_tasks: Kopier tasks
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Ingen
-  rb_label_copy_tasks_open: !binary |-
-    w4VwbmU=
+  rb_label_copy_tasks_open: Åpne
   rb_label_link_to_original: Inkluder lenke til orginal story
   rb_label_timelog_disable: Deaktiver
   rb_label_timelog_enable: Aktiver
+  rb_project_settings_update_error: Error while updating settings
+  rb_project_settings_updated: Settings updated
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
+  rb_show_project_name: Show project name in backlogs
   rb_task_cards_stories_then_tasks: Først alle, deretter alle tasks
   rb_task_cards_story_follows_tasks: Tasks etterfulgt av tilhørende story
   rb_task_cards_tasks_follow_story: Story etterfulgt av tilhørende tasks
