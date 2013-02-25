@@ -108,8 +108,6 @@ class RbStory < Issue
       prev.higher_item = story if prev
       story.lower_item = prev
 
-      story.rank = i + 1
-
       prev = story
     }
 
@@ -361,10 +359,6 @@ class RbStory < Issue
       :sprint => self.fixed_version_id,
       :release => self.release_id
     }))
-  end
-
-  def rank
-    return super(RbStory.find_options(:project => self.project_id, :sprint => self.fixed_version_id))
   end
 
   def story_follow_task_state
