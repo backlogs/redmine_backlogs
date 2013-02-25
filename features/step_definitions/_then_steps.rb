@@ -183,9 +183,9 @@ Then /^Story "([^"]*)" should not be updated$/ do |story|
   page.should_not have_css("#story_#{story_id}")
 end
 
-Then /^The last_update information should be correct$/ do
+Then /^The last_update information should be near (.+)$/ do |t|
   lu = page.find(:css, "#last_updated").text()
-  lu.start_with?("November 20, 2012 08:00").should be_true #coarse. hmm.
+  lu.start_with?(t).should be_true #coarse. hmm.
 end
 
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|

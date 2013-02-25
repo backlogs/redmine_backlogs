@@ -105,6 +105,20 @@ Feature: Team Member live board updater
 
   Scenario: Get the last updated stories date when viewing master backlog
     Given sharing is enabled
+      And the current time is 2012-11-20 10:00:00
+      And I have defined the following stories in the product backlog:
+        | subject | project_id    |
+        | Sb1     | p1     |
       And I have selected the p1 project
       And I am viewing the master backlog
-     Then The last_update information should be correct
+     Then The last_update information should be near November 20, 2012 10:00
+
+    Given the current time is 2012-11-20 12:00:00
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | project_id |
+        | lorem   | Sprint2    | p1s2 |
+      And I have selected the p1 project
+      And I am viewing the master backlog
+     Then The last_update information should be near November 20, 2012 12:00
+
+#FIXME taskboard checks
