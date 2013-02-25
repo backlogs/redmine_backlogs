@@ -5,23 +5,26 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
+    @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
 
     #collect all sprints which are sharing into @project
     sprints = @project.open_shared_sprints
-
-    #TIB (ajout des sprints fermés)
-    c_sprints = @project.closed_shared_sprints
-
-    @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
-    sprints_backlog_storie_of = RbStory.backlogs_by_sprint(@project, [sprints, c_sprints].flatten)
-    @sprint_backlogs = sprints.map{ |s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
-    @c_sprint_backlogs = c_sprints.map{|s| { :sprint => s, :stories => sprints_backlog_storie_of[s.id] } }
+    @sprint_backlogs = RbStory.backlogs_by_sprint(@project, sprints)
+    if @settings[:disable_closed_sprints_to_master_backlogs]
+      #TIB (ajout des sprints fermés)
+      @c_sprint_backlogs = []
+    else
+      c_sprints = @project.closed_shared_sprints
+      @c_sprint_backlogs = RbStory.backlogs_by_sprint(@project, c_sprints)
+    end
 
     releases = @project.open_releases_by_date
-    releases_backlog_storie_of = RbStory.backlogs_by_release(@project, releases)
-    @release_backlogs = releases.map{ |r| { :release => r, :stories => releases_backlog_storie_of[r.id] } }
+    @release_backlogs = RbStory.backlogs_by_release(@project, releases)
 
-    @last_update = [product_backlog_stories, sprints_backlog_storie_of.values, releases_backlog_storie_of.values].flatten.map{|s| s.updated_on}.sort.last
+    @last_update = [product_backlog_stories,
+      @sprint_backlogs.map{|s| s[:stories]},
+      @release_backlogs.map{|r| r[:releases]}
+      ].flatten.map{|s| s.updated_on}.sort.last
 
     respond_to do |format|
       format.html { render :layout => "rb"}

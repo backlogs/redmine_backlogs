@@ -130,22 +130,22 @@ class RbStory < Issue
 
   def self.backlogs_by_sprint(project, sprints, options={})
     #make separate queries for each sprint to get higher/lower item right
-    sprint_of = {}
-    sprints.each do |s|
-      sprint_of[s.id] ||= []
-      sprint_of[s.id] = RbStory.backlog(project.id, s.id, nil, options)
+    return [] unless sprints
+    sprints.map do |s|
+      { :sprint => s,
+        :stories => RbStory.backlog(project.id, s.id, nil, options)
+      }
     end
-    return sprint_of
   end
 
   def self.backlogs_by_release(project, releases, options={})
     #make separate queries for each release to get higher/lower item right
-    release_of = {}
-    releases.each do |r|
-      release_of[r.id] ||= []
-      release_of[r.id] = RbStory.backlog(project.id, nil, r.id, options)
+    return [] unless releases
+    releases.map do |r|
+      { :release => r,
+        :stories => RbStory.backlog(project.id, nil, r.id, options)
+      }
     end
-    return release_of
   end
 
   def self.create_and_position(params)
