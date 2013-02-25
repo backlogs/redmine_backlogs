@@ -1,6 +1,8 @@
 class RbStory < Issue
   unloadable
 
+  private
+
   def self.__find_options_normalize_option(option)
     option = [option] if option && !option.is_a?(Array)
     option = option.collect{|s| s.is_a?(Integer) ? s : s.id} if option
@@ -50,6 +52,8 @@ class RbStory < Issue
       and fixed_version_id is NULL
       and is_closed = ?", self.trackers, false]
   end
+
+  public
 
   def self.find_options(options)
     options = options.dup
