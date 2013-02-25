@@ -218,18 +218,23 @@ class RbRelease < ActiveRecord::Base
     end
     #each release from newest to oldest
     RbRelease.order('release_end_date desc').each do |release|
-      release.project.versions.select{ |v| v.due_date && (v.due_date>=release.release_start_date && v.due_date<=release.release_end_date)
-      }.each do |version|
-        #each sprint that lies within the release
-        version.fixed_issues.where('tracker_id in (?)', RbStory.trackers).each { |issue|
-          #each issue in that version which is a story and does not belong to a release, yet
-          if issue.release_id.nil?
-            issue.release = release;
-            issue.save!
-          end
-        }
-      end #sprints
-    end #releases
+      if release.project.nil?
+        # Release comes from deleted project before dependency was added.
+        release.delete
+      else
+        release.project.versions.select{ |v| v.due_date && (v.due_date>=release.release_start_date && v.due_date<=release.release_end_date)
+        }.each do |version|
+          #each sprint that lies within the release
+          version.fixed_issues.where('tracker_id in (?)', RbStory.trackers).each { |issue|
+            #each issue in that version which is a story and does not belong to a release, yet
+            if issue.release_id.nil?
+              issue.release = release;
+              issue.save!
+            end
+          }
+        end #sprints
+      end #releases
+    end #if project.nil?
   end
 
 end
