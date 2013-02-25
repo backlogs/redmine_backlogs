@@ -84,15 +84,6 @@ class RbStory < Issue
     options
   end
 
-  def higher_lower_scope_conditions(options={})
-    return options if self.new_record?
-    RbStory.find_options(options.dup.merge({ #FIXME options.dup.merge ???
-      :project => self.project_id,
-      :sprint => self.fixed_version_id,
-      :release => self.release_id
-    }))
-  end
-
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
 
   def self.backlog(project_id, sprint_id, release_id, options={})
@@ -363,6 +354,15 @@ class RbStory < Issue
       end
     }
     return bd
+  end
+
+  def list_with_gaps_scope_condition(options={})
+    return options if self.new_record?
+    self.class.find_options(options.dup.merge({
+      :project => self.project_id,
+      :sprint => self.fixed_version_id,
+      :release => self.release_id
+    }))
   end
 
   def rank

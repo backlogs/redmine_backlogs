@@ -104,16 +104,18 @@ module Backlogs
         end
 
         def higher_item_scoped(options={})
-          @higher_item_scoped ||= list_prev_next(:prev, self.higher_lower_scope_conditions(options))
+          @higher_item_scoped ||= list_prev_next(:prev, self.list_with_gaps_scope_condition(options))
         end
         attr_writer :higher_item_scoped
 
         def lower_item_scoped(options={})
-          @lower_item_scoped ||= list_prev_next(:next, self.higher_lower_scope_conditions(options))
+          @lower_item_scoped ||= list_prev_next(:next, self.list_with_gaps_scope_condition(options))
         end
         attr_writer :lower_item_scoped
 
-        def higher_lower_scope_conditions(options={}) #to be overloaded
+        # higher_item_scoped and lower_item_scoped use this scope condition to determine neighbours
+        # to be overloaded
+        def list_with_gaps_scope_condition(options={})
           options
         end
 
