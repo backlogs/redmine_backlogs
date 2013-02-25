@@ -115,28 +115,12 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
   lower = RbStory.find_by_subject(lower_subject)
   higher.should_not be_nil 
   lower.should_not be_nil 
-  lower.higher_item_scoped.should_not be_nil
-  higher.lower_item_scoped.should_not be_nil
+  lower.higher_item.should_not be_nil
+  higher.lower_item.should_not be_nil
 
   higher.position.should < lower.position
-  lower.higher_item_scoped.id.should == higher.id
-  higher.lower_item_scoped.id.should == lower.id
-end
-
-Then /^show me the higher_item attributes$/ do
-  #RbStory.where(['tracker_id in (?)',RbStory.trackers]).order('position').each{|s|
-  Issue.all.each{|s|
-    pos = s.position
-    hid = '  '
-    lsid = '  '
-    hsid = '  '
-    lid = '  '
-    hid = s.higher_item.id if s.higher_item
-    hsid = s.higher_item_scoped.id if s.higher_item_scoped
-    lid = s.lower_item.id if s.lower_item
-    lsid = s.lower_item_scoped.id if s.lower_item_scoped
-    puts "#{s} #{pos} #{s.id} higher-scoped:#{hsid} lower-scoped:#{lsid} higher:#{hid} lower:#{lid} sprint:#{s.fixed_version_id} release:#{s.release_id} project:#{s.project_id}"
-  }
+  lower.higher_item.id.should == higher.id
+  higher.lower_item.id.should == lower.id
 end
 
 Then /^the request should complete successfully$/ do
@@ -533,25 +517,25 @@ Then /^the done ratio for story (.+?) should be (\d+)$/ do |story, ratio|
   story.done_ratio.should == ratio.to_i
 end
 
-# Low level tests on higher_item and lower_item, should be rspec tests
-Then /^"([^"]*)"\.higher_item should be "([^"]*)"$/ do |obj, arg|
+# Low level tests on private methods higher_item_unscoped and lower_item_unscoped, should be rspec tests
+Then /^"([^"]*)"\.higher_item_unscoped should be "([^"]*)"$/ do |obj, arg|
   obj = RbStory.find_by_subject(obj)
   if arg == "nil"
-    obj.higher_item.should be_nil
+    obj.send(:higher_item_unscoped).should be_nil
   else
     arg = RbStory.find_by_subject(arg)
-    obj.higher_item.should == arg
-    arg.lower_item.should == obj
+    obj.send(:higher_item_unscoped).should == arg
+    arg.send(:lower_item_unscoped).should == obj
   end
 end
-Then /^"([^"]*)"\.lower_item should be "([^"]*)"$/ do |obj, arg|
+Then /^"([^"]*)"\.lower_item_unscoped should be "([^"]*)"$/ do |obj, arg|
   obj = RbStory.find_by_subject(obj)
   if arg == "nil"
-    obj.lower_item.should be_nil
+    obj.send(:lower_item_unscoped).should be_nil
   else
     arg = RbStory.find_by_subject(arg)
-    obj.lower_item.should == arg
-    arg.higher_item.should == obj
+    obj.send(:lower_item_unscoped).should == arg
+    arg.send(:higher_item_unscoped).should == obj
   end
 end
 

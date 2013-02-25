@@ -105,8 +105,8 @@ class RbStory < Issue
 
       #optimization: set virtual attributes to avoid hundreds of sql queries
       # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
-      prev.higher_item_scoped = story if prev
-      story.lower_item_scoped = prev
+      prev.higher_item = story if prev
+      story.lower_item = prev
 
       story.rank = i + 1
 

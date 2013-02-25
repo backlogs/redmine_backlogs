@@ -94,26 +94,17 @@ module Backlogs
           return self.class.find_by_position(self.class.maximum(:position, options))
         end
 
-        #higher item is the one with lower position. self is visually displayed below its higher item.
-        def higher_item(options = {})
-          @higher_item ||= list_prev_next(:prev, options)
+        def higher_item(options={})
+          @higher_item ||= list_prev_next(:prev, self.list_with_gaps_scope_condition(options))
         end
+        attr_writer :higher_item
 
-        def lower_item(options = {})
-          @lower_item ||= list_prev_next(:next, options)
+        def lower_item(options={})
+          @lower_item ||= list_prev_next(:next, self.list_with_gaps_scope_condition(options))
         end
+        attr_writer :lower_item
 
-        def higher_item_scoped(options={})
-          @higher_item_scoped ||= list_prev_next(:prev, self.list_with_gaps_scope_condition(options))
-        end
-        attr_writer :higher_item_scoped
-
-        def lower_item_scoped(options={})
-          @lower_item_scoped ||= list_prev_next(:next, self.list_with_gaps_scope_condition(options))
-        end
-        attr_writer :lower_item_scoped
-
-        # higher_item_scoped and lower_item_scoped use this scope condition to determine neighbours
+        # higher_item and lower_item use this scope condition to determine neighbours
         # to be overloaded
         def list_with_gaps_scope_condition(options={})
           options
@@ -127,7 +118,7 @@ module Backlogs
         attr_writer :rank
 
         def move_after(reference, options={})
-          nxt = reference.lower_item
+          nxt = reference.send(:lower_item_unscoped)
 
           if nxt.blank?
             move_to_bottom
@@ -145,7 +136,7 @@ module Backlogs
         #issues are listed by position ascending, which is in rank descending. Higher means lower position
         #before means lower position
         def move_before(reference, options={})
-          prev = reference.higher_item
+          prev = reference.send(:higher_item_unscoped)
 
           if prev.blank?
             move_to_top
@@ -163,6 +154,15 @@ module Backlogs
       end
 
       private
+
+      #higher item is the one with lower position. self is visually displayed below its higher item.
+      def higher_item_unscoped(options = {})
+        @higher_item_unscoped ||= list_prev_next(:prev, options)
+      end
+
+      def lower_item_unscoped(options = {})
+        @lower_item_unscoped ||= list_prev_next(:next, options)
+      end
 
       def list_commit
         self.class.connection.execute("update #{self.class.table_name} set position = #{self.position} where id = #{self.id}") unless self.new_record?

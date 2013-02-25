@@ -94,17 +94,17 @@ Feature: Scrum Master
         | Story 9 | subproject1 |
      #move after
      When I call move_after("Story 7") on "Story 1"
-     Then "Story 1".higher_item should be "Story 7"
-     Then "Story 1".lower_item should be "Story 3"
+     Then "Story 1".higher_item_unscoped should be "Story 7"
+     Then "Story 1".lower_item_unscoped should be "Story 3"
      #move after to the end
      When I call move_after("Story 9") on "Story 1"
-     Then "Story 1".higher_item should be "Story 9"
-     Then "Story 1".lower_item should be "nil"
+     Then "Story 1".higher_item_unscoped should be "Story 9"
+     Then "Story 1".lower_item_unscoped should be "nil"
      #move before
      When I call move_before("Story 7") on "Story 1"
-     Then "Story 1".higher_item should be "Story 6"
-     Then "Story 1".lower_item should be "Story 7"
+     Then "Story 1".higher_item_unscoped should be "Story 6"
+     Then "Story 1".lower_item_unscoped should be "Story 7"
      #move before to the beginning
      When I call move_before("Story 2") on "Story 1"
-     Then "Story 1".lower_item should be "Story 2"
-     Then "Story 1".higher_item should be "nil"
+     Then "Story 1".lower_item_unscoped should be "Story 2"
+     Then "Story 1".higher_item_unscoped should be "nil"
