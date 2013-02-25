@@ -90,28 +90,26 @@ class RbStory < Issue
 
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
 
-  def self.backlog(project_id, sprint_id, release_id, options={})
-    stories = []
-
+  def self.inject_lower_higher
     prev = nil
-    RbStory.visible.order("#{self.table_name}.position").
-      backlog_scope(
-        options.merge({ #FIXME visible is already contained in find_option???
-          :project => project_id,
-          :sprint => sprint_id,
-          :release => release_id
-      })).each_with_index {|story, i|
-      stories << story
-
+    i = 1
+    all.map {|story|
       #optimization: set virtual attributes to avoid hundreds of sql queries
       # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
       prev.higher_item = story if prev
       story.lower_item = prev
-
       prev = story
     }
+  end
 
-    return stories
+  def self.backlog(project_id, sprint_id, release_id, options={})
+    self.visible.order("#{self.table_name}.position").
+      backlog_scope(
+        options.merge({
+          :project => project_id,
+          :sprint => sprint_id,
+          :release => release_id
+      })).inject_lower_higher
   end
 
   def self.product_backlog(project, limit=nil)
