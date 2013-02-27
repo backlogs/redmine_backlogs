@@ -59,7 +59,11 @@ class RbIssueHistory < ActiveRecord::Base
     #if we have no day matching, find one earlier to get the latest status
     #first day allowed to find status before first day. Others only allowed
     # to find status until the day listed before in the days array.
-    limits = [nil,days[0..-2]].flatten
+#FIXME Figure out when/if the date limit is necessary.
+# Right now sprints with end date in the future are better off with the [nil].
+# release_burndown_complex.feature passes on both solutions.
+#    limits = [nil,days[0..-2]].flatten
+limits = [nil] * days.size
     # Limit search to history of story
     hist_limit = h.keys[0]
     filtered = days.each_with_index.collect{|d,i|
