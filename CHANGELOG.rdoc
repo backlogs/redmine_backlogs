@@ -1,3 +1,46 @@
+== 2013-02-22 v0.9.36
+
+* Major features/changes:
+* Releases reworked - issues are assignable to planned releases, and releases can be used on the master backlogs page to plan and priorize
+* Floating layout - master backlog page is now resizable
+* Configurable timezone for burndown, explicitly explain what happens with dates/times on burndown, Fixes "Burndown chart skips Friday and Saturday when set to skip Saturday & Sunday"
+* jquery and jquery-ui updated to 1.7.2/1.8.21 and loading optimized, updated jqplot and other assets
+* Redmine 2.2.3 support
+
+* More details:
+* Fix a crash on the config page if the git binary wasn't on the PATH. from ctlajoie/fixcrash
+* Fix error from bundler: The source :rubygems is deprecated because HTTP requests are insecure.
+* Fix images in tooltips. from ctlajoie/ctl-fix-tooltip-images
+* Some layout fine-tunings and fixes: give "close sprints" more room, give issue status more room, correct font-family for tooltips, use 12px for jquery widget font
+* Fixes and tests for story following task states, some usability on settings page
+* Re-use redmine project jump box to increase compatibility and usability
+* Javascript code cleanups
+* Show task board menu item
+* Fix "Database Migration Failure: String can't be coerced into Fixnum"
+* css: remove unused compact view styles for taskboard
+* js: cleanup monkey-inheritance, refactor editor dialog classes, remove jeditable, we do not use it
+* Sidebar: show burndown explanation only in full mode
+* Inline release title editing on master backlog page
+* Fix "Duplicate file upload entries on issue page after installing backlogs plugin"
+* Fix "Firexfox exposes rendering bug on Taskboard" for floating table header
+* Fix "Remaining Hours Migration Fails During Upgrade"
+* Adapt to new travis workers: explicit exit travis script on error
+* Note the limited support for themes when showing redmine header
+* development: fix recursive links created by redmine install
+* Fix story color on taskboard
+* Adapt base layout to better support themes. For more tuning use x_backlogs_styleadapter plugin on github (support: best effort)
+* Remove duplicate locale entries
+* rake 10 support, fixes installation troubles
+* Cleanups on release pages
+* List releases in sidebar
+* Add release to bulk edit
+* Improvements for anonymous users and some more permission consistency
+* Fix frontend error dialog
+* Fix issues on project settings, fixes compatibility to redmineCRM
+* More details in story tooltips: assignee, project and custom fields are now available
+* Wiki page links fixed
+* Fix ajax parameter injection issue resulting in broken redmine buttons
+
 == 2013-01-20 v0.9.35
 
 * reworked fix for #669 (the infamous test-unit bundle conflict) from inger/master

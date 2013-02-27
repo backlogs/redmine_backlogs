@@ -1,16 +1,14 @@
 /***************************************
-  MODEL
+  MODEL FIXME: rename this to EDITABLE
   Common methods for sprint, issue,
   story, task, and impediment
+  mostly about editing these.
 ***************************************/
 
 RB.Model = RB.Object.create({
 
   initialize: function(el){
-    var j;  // This ensures that we use a local 'j' variable, not a global one.
-    var self = this;
-    
-    this.$ = j = RB.$(el);
+    this.$ = RB.$(el);
     this.el = el;
   },
 
@@ -71,7 +69,7 @@ RB.Model = RB.Object.create({
         "OK" : function(){ self.copyFromDialog(); RB.$(this).dialog("close"); }
       },
       close: function(event, ui){ if(event.which==27) self.cancelEdit(); },
-      dialogClass: self.getType().toLowerCase() + '_editor_dialog',
+      dialogClass: self.getType().toLowerCase() + '_editor_dialog rb_editor_dialog',
       modal: true,
       position: [pos.left - RB.$(document).scrollLeft(), pos.top - RB.$(document).scrollTop()],
       resizable: false,
@@ -175,6 +173,7 @@ RB.Model = RB.Object.create({
     if(!editor.length){
       editor = RB.$( document.createElement("div") ).
                  attr('id', editor_id).
+                 addClass('rb_editor').
                  appendTo("body");
     }
     return editor;

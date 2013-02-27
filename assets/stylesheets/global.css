@@ -6,6 +6,7 @@ body{
   margin:0;
   width:100%;
 }
+.ui-tooltip,
 .rb-toolbar, .rb-main {
   font-family:Verdana, Arial, sans-serif;
   font-size:12px;
@@ -117,9 +118,3 @@ ul.ui-sortable {
 /* redmine header in backlogs page */
 #usability-compat-wrapper {font-size:12px; }
 .w-rb-header-collapsed { height:18px; overflow:hidden; }
-
-/* theme support */
-body.theme-Highrise #main { margin-left:165px; }
-body.theme-Highrise #rbcontentwrapper { margin-right:165px; }
-body.theme-Highrise.tabs #main { margin-left:0; }
-body.theme-Highrise.tabs #rbcontentwrapper { margin-right:0; }

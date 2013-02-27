@@ -75,6 +75,6 @@ Dir.chdir('../www')
 
 File.open('_includes/version.html', 'w') { |f| f.write(newversion) }
 
-`git add _includes/supported.html _includes/version.html`
+`git add _includes/version.html`
 `git commit -m #{newversion}`
 `git push`

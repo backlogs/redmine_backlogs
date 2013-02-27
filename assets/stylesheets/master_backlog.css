@@ -47,7 +47,7 @@
   width: 100%;
 }
 .fff-middle{
-  margin-right:100px;
+  margin-right:112px;
   margin-left:110px;
 }
 .fff-left{
@@ -57,20 +57,20 @@
 }
 .fff-right{
   float: left;
-  width: 100px;
-  margin-left: -100px;
+  width: 112px;
+  margin-left: -112px;
 }
 
 .header .fff-middle{
-  margin-right:212px;
+  margin-right:228px;
   margin-left: 29px;
 }
 .header .fff-left{
   width: 29px;
 }
 .header .fff-right{
-  width: 212px;
-  margin-left: -212px;
+  width: 228px;
+  margin-left: -228px;
 }
 /* end fixed-fluid-fixed layout */
 
@@ -82,12 +82,12 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 /*the close completed sprint button in pbl header */
 #product_backlog_container .header .close_sprint {
-  font-size:11px;
   height:28px;
   line-height:30px;
   padding:0;
   float: left;
-  width:150px;
+  width:194px;
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -418,7 +418,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   text-decoration:line-through;
 }
 #backlogs_container .stories .story .status_id {
-  width:56px;
+  width:68px;
   float: left;
   padding-left:8px;
   white-space: nowrap;
@@ -548,7 +548,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 #backlogs_container .stories .story.editing .status_id{
   margin:0;
-  width:84px;
+  width:76px;
 }
 #backlogs_container .stories .story.editing select.story_points.editor {
   margin:0;

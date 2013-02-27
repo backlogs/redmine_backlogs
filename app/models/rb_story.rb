@@ -359,13 +359,13 @@ class RbStory < Issue
       when 'close'
         set_closed_status_if_following_to_close
       when 'loose'
-        avg_ratio = tasks.map{|task| task.status.default_done_ratio }.sum / tasks.length
+        avg_ratio = tasks.map{|task| task.status.default_done_ratio.to_f }.sum / tasks.length # #837 coerce to float, nil counts for 0.0
         #find status near avg_ratio
         #find the status allowed, order by position, with nearest default_done_ratio not higher then avg_ratio
         new_st = nil
         self.new_statuses_allowed_to.each{|status|
-          new_st = status if status.default_done_ratio <= avg_ratio
-          break if status.default_done_ratio > avg_ratio
+          new_st = status if status.default_done_ratio.to_f <= avg_ratio # #837 use to_f for comparison of number OR nil
+          break if status.default_done_ratio.to_f > avg_ratio
         }
         #set status and good.
         self.journalized_update_attributes :status_id => new_st.id if new_st

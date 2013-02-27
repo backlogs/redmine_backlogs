@@ -1,4 +1,5 @@
-RB.EditableInplace = RB.Object.create(RB.Model, {
+/* pure mixin. use along with Model */
+RB.EditableInplace = RB.Object.create({
 
   displayEditor: function(editor){
     var self = this;

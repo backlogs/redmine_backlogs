@@ -51,4 +51,15 @@ class RbTaskboardsController < RbApplicationController
     end
   end
 
+  def current
+    sprint = @project.active_sprint
+    if sprint
+      redirect_to :controller => 'rb_taskboards', :action => 'show', :sprint_id => sprint
+      return
+    end
+    respond_to do |format|
+      format.html { redirect_back_or_default(project_url(@project)) }
+    end
+  end
+
 end

@@ -31,12 +31,13 @@ module Backlogs
             }
             response.body = body.to_xml
           when 'json'
-            body = JSON.parse(response.body)
+            jsonp = (request.params[:callback] || request.params[:jsonp]).to_s.gsub(/[^a-zA-Z0-9_]/, '')
+            body = JSON.parse(jsonp.present? ? response.body.sub("#{jsonp}(","").chop : response.body)
             body['issues'].each{|issue|
               next unless story_trackers.include?(issue['tracker']['id'])
               issue['story_points'] = RbStory.find(issue['id']).story_points
             }
-            response.body = body.to_json
+            response.body = jsonp.present? ? "#{jsonp}(#{body.to_json})" : body.to_json
         end
       end
     end

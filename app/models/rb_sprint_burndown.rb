@@ -95,7 +95,7 @@ class RbSprintBurndown < ActiveRecord::Base
           data.each_with_index{|d, i|
             next unless d
             @_burndown[k][i] ||= 0
-            @_burndown[k][i] += d
+            @_burndown[k][i] += d.to_f
           }
         }
       }

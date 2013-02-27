@@ -6,7 +6,7 @@ module Backlogs
       @project = project
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
-      @active_sprint = RbSprint.find(:first, :conditions => ["project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? between sprint_start_date and effective_date", @project.id, Date.today])
+      @active_sprint = @project.active_sprint
       @past_sprints = RbSprint.find(:all,
         :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
         :order => "effective_date desc",
@@ -233,6 +233,13 @@ module Backlogs
             RbSprint.closed_sprints(self)
           end
         end #disable_closed
+      end
+
+      def active_sprint
+        @active_sprint ||= RbSprint.find(:first, :conditions => [
+          "project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? between sprint_start_date and effective_date",
+          self.id, (Time.zone ? Time.zone : Time).now.beginning_of_day
+        ])
       end
 
       def open_releases_by_date
