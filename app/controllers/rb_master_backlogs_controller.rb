@@ -1,9 +1,20 @@
-include RbCommonHelper
+require 'benchmark'
+include Benchmark
 
 class RbMasterBacklogsController < RbApplicationController
   unloadable
 
+  around_filter :profile
+  def profile
+    if params[:profile]
+      Rails.logger.info("AROUND_FILTER #{Benchmark.measure { yield } }")
+    else
+      yield
+    end
+  end
+
   def show
+    b = Benchmark.measure do
     product_backlog_stories = RbStory.product_backlog(@project)
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
 
@@ -25,10 +36,15 @@ class RbMasterBacklogsController < RbApplicationController
       @sprint_backlogs.map{|s| s[:stories]},
       @release_backlogs.map{|r| r[:releases]}
       ].flatten.compact.map{|s| s.updated_on}.sort.last
+    end
+    puts "PREPARE #{b}"
 
+    b = Benchmark.measure do
     respond_to do |format|
       format.html { render :layout => "rb"}
     end
+    end
+    puts "RESPOND_TO #{b}"
   end
 
   def _menu_new
