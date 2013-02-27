@@ -51,7 +51,10 @@
           { :disableStack => true,
             :label => "Trend added"},
           { :disableStack => true,
-            :label => "Trend closed"}
+            :label => "Trend closed"},
+          { :disableStack => true,
+            :label => "Planned velocity",
+            :linePattern => "dotted"}
         ],
         :noDataIndicator => { :show => true, :indicator => 'No data' }
       }
@@ -63,6 +66,7 @@ RB.$(function() { // render when dom is ready
   RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.DateAxisRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[4].renderer = RB.$.jqplot.LineRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[5].renderer = RB.$.jqplot.LineRenderer;
+  RB.burndown.charts[<%= release.id %>].options.series[6].renderer = RB.$.jqplot.LineRenderer;
   var graph_width = $("#burndown_<%= release.id %>").innerWidth();
   //FIXME calculate bar width according to longest sprint vs. total period
   // covered by the graph including trend lines.

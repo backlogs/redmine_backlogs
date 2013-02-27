@@ -69,6 +69,16 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
   <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
+  <p><b><%= l(:field_planned_velocity) %>:</b>     <%= @release.planned_velocity     %></p>
+  <p><br/></p>
+<% if @release.has_burndown? %>
+  <% if @release.burndown.planned_estimate_end_date.is_a? Date %>
+    <p><b><%= l(:label_release_planned_velocity_end_date) %>:</b>     <%= @release.burndown.planned_estimate_end_date     %></p>
+  <% end %>
+  <% if @release.burndown.trend_estimate_end_date.is_a? Date %>
+    <p><b><%= l(:label_release_trend_end_date) %>:</b>     <%= @release.burndown.trend_estimate_end_date     %></p>
+  <% end %>
+<% end # has burndown %>
 <% end %>
 
 <% html_title(@release.name) -%>

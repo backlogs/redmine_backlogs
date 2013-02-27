@@ -2,69 +2,13 @@ require 'date'
 
 class ReleaseBurndown
   def initialize(release)
-    days = release.days
-    @release_id = release.id
-    @project = release.project
-    #initialize empty release
+    @days = release.days
+    @planned_velocity = release.planned_velocity
     @data = {}
-    @data[:offset_points] = []
-    @data[:added_points] = []
-    @data[:backlog_points] = []
-    @data[:closed_points] = []
-    @data[:trend_added] = []
-    @data[:trend_closed] = []
 
-    baseline = [0] * days.size
-
-    series = Backlogs::MergedArray.new
-    series.merge(:offset_points => baseline.dup)
-    series.merge(:added_points => baseline.dup)
-    series.merge(:backlog_points => baseline.dup)
-    series.merge(:closed_points => baseline.dup)
-
-#TODO Caching
-#TODO Maybe utilize/extend sprint burndown data?
-#TODO Stories continued over several sprints (by duplicating) should not show up as added
-#TODO Likewise stories split from inital epics should not show up as added
-
-    # Go through each story in the release
-    release.stories_all_time.each{|story|
-      series.add(story.release_burndown_data(days,release.id))
-    }
-
-    # Series collected, now format data for jqplot
-    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
-    # sorted out:
-    # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
-#TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data[:offset_points] = series.collect{|s| -1 * s.offset_points }
-    @data[:added_points] = series.collect{|s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
-    @data[:backlog_points] = series.collect{|s| s.backlog_points >= 0 ? s.backlog_points : 0 }
-    @data[:closed_points] = series.series(:closed_points)
-
-
-    # Forecast (probably just as good as the weather forecast...)
-#TODO Move forecast to RbRelease?
-    avg_count = 3
-#FIXME only add trendlines if backlog/added points is greater than zero
-#FIXME does the sprints need to be closed? 
-    if release.closed_sprints.size >= avg_count
-      avg_added = (@data[:offset_points][-1] - @data[:offset_points][-avg_count])
-      avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p}
-      trend_days = (release.days[-1] - release.days[-avg_count - 1]).to_i
-
-      last_backlog = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
-      last_added = @data[:offset_points][-1]
-      last_date = release.days[-1]
-
-      # Add beginning and end dataset [sprint,points] for trendlines
-      @data[:trend_closed] << [last_date, last_backlog]
-      @data[:trend_closed] << [last_date + trend_days.days, last_backlog - avg_closed]
-      @data[:trend_added] << [last_date, last_added]
-      @data[:trend_added] << [last_date + trend_days.days, last_added + avg_added]
-    end
-
-
+    calculate_burndown(release)
+    calculate_trend
+    calculate_planned
   end
 
   def [](i)
@@ -79,12 +23,90 @@ class ReleaseBurndown
 #    return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
   end
 
-  attr_reader :days
-  attr_reader :release_id
-  attr_reader :max
+  attr_reader :planned_estimate_end_date
+  attr_reader :trend_estimate_end_date
 
-  attr_reader :remaining_story_points
-  attr_reader :ideal
+  private
+
+  def calculate_burndown(release)
+    @data[:offset_points] = []
+    @data[:added_points] = []
+    @data[:backlog_points] = []
+    @data[:closed_points] = []
+
+    baseline = [0] * @days.size
+
+    series = Backlogs::MergedArray.new
+    series.merge(:offset_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
+    series.merge(:backlog_points => baseline.dup)
+    series.merge(:closed_points => baseline.dup)
+
+    # Go through each story in the release
+    release.stories_all_time.each{|story|
+      series.add(story.release_burndown_data(@days,release.id))
+    }
+
+    # Series collected, now format data for jqplot
+    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
+    # sorted out:
+    # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
+    @data[:offset_points] = series.collect{|s| -1 * s.offset_points }
+    @data[:added_points] = series.collect{|s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
+    @data[:backlog_points] = series.collect{|s| s.backlog_points >= 0 ? s.backlog_points : 0 }
+    @data[:closed_points] = series.series(:closed_points)
+
+    # Keyfigures for later calculations
+#FIXME - change keyfigures to use last closed sprint as basis for calculations
+# see RbRelease.last_closed_sprint_date
+    @last_backlog_points = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
+    @last_points_left = @last_backlog_points - @data[:offset_points][-1]
+    @last_added_points = @data[:offset_points][-1]
+    @last_date = release.days[-1]
+  end
+
+  def calculate_trend
+    @data[:trend_added] = []
+    @data[:trend_closed] = []
+
+    return unless @last_points_left > 0
+    return unless @days.size > 1
+    avg_count = @days.size >= 3 ? 3 : @days.size
+
+    avg_days = (@days[-1] - @days[-avg_count]).to_i
+    avg_added_per_day = (@data[:offset_points][-1] - @data[:offset_points][-avg_count]) / avg_days
+    avg_closed_per_day = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_days * -1
+
+    #Calculate trend end date (crossing trend_closed and trend_added)
+    trend_cross_days = (@last_backlog_points - @last_added_points)/(avg_added_per_day - avg_closed_per_day)
+
+    # Value for display in sidebar
+    @trend_estimate_end_date = @last_date + trend_cross_days unless trend_cross_days.infinite? or trend_cross_days <= 0
+
+    # Add beginning and end dataset [sprint,points] for trendlines
+    trendline_end_date = trend_cross_days.between?(1,365) ? @last_date + trend_cross_days + 30 : @last_date + avg_days
+
+    trendline_days = (trendline_end_date - @last_date).to_i
+
+    @data[:trend_closed] << [@last_date, @last_backlog_points]
+    @data[:trend_closed] << [trendline_end_date,
+                             @last_backlog_points + (avg_closed_per_day * trendline_days)]
+    @data[:trend_added] << [@last_date, @last_added_points]
+    @data[:trend_added] << [trendline_end_date,
+                            @last_added_points + (avg_added_per_day * trendline_days)]
+  end
+
+  def calculate_planned
+    return unless @last_points_left > 0
+    return unless @planned_velocity.is_a? Float
+
+    @data[:planned] = []
+    @data[:planned] << [@last_date, @last_backlog_points]
+    #FIXME add possibility to choose velocity per week, fortnight, month?
+    @planned_estimate_end_date = @last_date + (@last_points_left / @planned_velocity * 30)
+    @data[:planned] << [@planned_estimate_end_date, @data[:offset_points][-1]]
+
+  end
 end
 
 class RbRelease < ActiveRecord::Base
@@ -164,7 +186,19 @@ class RbRelease < ActiveRecord::Base
     days_of_interest << self.release_start_date.to_date
     self.sprints.each{|sprint|
       days_of_interest << sprint.effective_date.to_date }
+    # Add current day if we are past last sprint end date and has open stories
+    days_of_interest << Time.now.to_date if self.has_open_stories? and Time.now.to_date > days_of_interest[-1]
     return days_of_interest
+  end
+
+  def last_closed_sprint_date
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?) and versions.status = ?', id, "closed")
+      .order("versions.effective_date DESC")
+      .first.effective_date.to_date unless closed_sprints.size == 0
+  end
+
+  def has_open_stories?
+    stories.open.size > 0
   end
 
   def has_burndown?
@@ -172,6 +206,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def burndown
+#FIXME What retriggers rebuild of burndown? Need similar structure from sprint burndown?
     return nil if not self.has_burndown?
     @cached_burndown ||= ReleaseBurndown.new(self)
     return @cached_burndown

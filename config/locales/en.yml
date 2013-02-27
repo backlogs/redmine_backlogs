@@ -65,6 +65,7 @@ en:
   field_base: ""
   field_blocks: Blocks
   field_name: Name
+  field_planned_velocity: Planned velocity
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
@@ -109,9 +110,11 @@ en:
   label_release: Release
   label_release_end_date: Release end date
   label_release_new: New release
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
   label_release_planning: Release Planning
   label_release_plural: Releases
   label_release_start_date: Release start date
+  label_release_trend_end_date: Trend estimated end date
   label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint
