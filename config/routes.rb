@@ -77,6 +77,7 @@ def rb_common_routes(rb)
   rb_match rb, 'stories/:project_id.pdf', :to => 'rb_stories#index', :format => 'pdf'
   rb_match rb, 'story/create', :to => 'rb_stories#create'
   rb_match rb, 'story/update/:id', :to => 'rb_stories#update'
+  rb_match rb, 'story/:id/tooltip', :to => 'rb_stories#tooltip'
 
   rb_match rb, 'calendar/:key/:project_id.ics', :to => 'rb_calendars#ical',
           :format => 'xml'

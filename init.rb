@@ -75,7 +75,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_sprints          => [:index, :show, :download],
                                         :rb_hooks_render     => [:view_issues_sidebar],
                                         :rb_wikis            => :show,
-                                        :rb_stories          => [:index, :show],
+                                        :rb_stories          => [:index, :show, :tooltip],
                                         :rb_queries          => [:show, :impediments],
                                         :rb_server_variables => [:project, :sprint, :index],
                                         :rb_burndown_charts  => [:embedded, :show, :print],
@@ -86,7 +86,7 @@ Redmine::Plugin.register :redmine_backlogs do
                                         :rb_releases         => [:index, :show],
                                         :rb_sprints          => [:index, :show, :download],
                                         :rb_wikis            => :show,
-                                        :rb_stories          => [:index, :show],
+                                        :rb_stories          => [:index, :show, :tooltip],
                                         :rb_server_variables => [:project, :sprint, :index],
                                         :rb_burndown_charts  => [:embedded, :show, :print],
                                         :rb_updated_items    => :show
@@ -95,7 +95,7 @@ Redmine::Plugin.register :redmine_backlogs do
     permission :view_taskboards,      {
                                         :rb_taskboards       => [:current, :show],
                                         :rb_sprints          => :show,
-                                        :rb_stories          => [:index, :show],
+                                        :rb_stories          => [:index, :show, :tooltip],
                                         :rb_tasks            => [:index, :show],
                                         :rb_impediments      => [:index, :show],
                                         :rb_wikis            => :show,

@@ -1,6 +1,8 @@
 <div class="model issue task <%= mark_if_closed(task) %>" id="issue_<%= task.id %>" <%= build_inline_style(task).html_safe %>>
-  <div class="id story_tooltip">
-    <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => task %></div>
+  <% qtip_cls = "story_tooltip"
+     qtip_cls = "story_tooltip_ajax" unless defined?(render_tooltip)  %>
+  <div class="id <%= qtip_cls %>">
+    <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => task if defined?(render_tooltip) %></div>
     <div class="t"><%= issue_link_or_empty(task) %></div>
     <div class="v"><%= id_or_empty(task) %></div>
   </div>
