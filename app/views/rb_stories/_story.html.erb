@@ -41,7 +41,10 @@
   <div class="release_id meta"><%= story.release_id %></div>
   <div class="user_status meta"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
   <div class="story_project meta"><%= story.project_id %></div>
+  <% render_higher_item_id = false unless defined?(render_higher_item_id) %>
+  <% if render_higher_item_id %>
   <div class="higher_item_id meta"><%= story.higher_item.nil? ? '' : story.higher_item.id %></div>
+  <% end %>
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors %>
   </div>

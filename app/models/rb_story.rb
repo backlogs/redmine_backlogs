@@ -109,7 +109,7 @@ class RbStory < Issue
           :project => project_id,
           :sprint => sprint_id,
           :release => release_id
-      })).inject_lower_higher
+      }))
   end
 
   def self.product_backlog(project, limit=nil)
