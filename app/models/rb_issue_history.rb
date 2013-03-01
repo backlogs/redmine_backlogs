@@ -55,7 +55,7 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def filter_release(days)
-    h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
+    h = Hash[*(self.history.collect{|d| [d[:date], d]}.flatten)]
     #if we have no day matching, find one earlier to get the latest status
     #first day allowed to find status before first day. Others only allowed
     # to find status until the day listed before in the days array.
