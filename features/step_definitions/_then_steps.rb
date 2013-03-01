@@ -191,6 +191,14 @@ Then /^the sprint should be updated accordingly$/ do
   end
 end
 
+Then /^the sprint "([^"]*)" should be in project "([^"]*)"$/ do |sprint, project|
+  project = get_project(project)
+  sprint = RbSprint.find_by_name(sprint)
+  project.should_not be_nil
+  sprint.should_not be_nil
+  sprint.project.should == project
+end
+
 Then /^the status of the story should be set as (.+)$/ do |status|
   @story.reload
   @story.status.name.downcase.should == status

@@ -136,6 +136,16 @@ When /^I (try to )?update the sprint$/ do |attempt|
   verify_request_status(200) if attempt == ''
 end
 
+# Bug #855 update sprint details must not change project of sprint. Use complete javascript stack, as it injects project_id into request
+When /^I change the sprint name of "([^"]*)" to "([^"]*)"$/ do |sprint, newname|
+  page.find(:xpath, "//div[contains(normalize-space(text()), '#{sprint}')]").click
+  within "#content" do
+    fill_in('name', :with => newname)
+    click_link('Save')
+  end
+  wait_for_ajax
+end
+
 When /^I (try to )?update the story$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_stories,
