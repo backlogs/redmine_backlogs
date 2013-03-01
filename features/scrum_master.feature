@@ -86,6 +86,19 @@ Feature: Scrum Master
      Then the request should complete successfully
       And the sprint should be updated accordingly
 
+  @javascript
+  Scenario: Bug #855 update sprint details must not change project of sprint
+    Given the subproject1 project has the backlogs plugin enabled
+      And sharing is enabled
+      And I am a scrum master of the project
+      And I have defined the following sprints:
+        | name       | sprint_start_date | effective_date | project_id   | sharing     |
+        | Shared | 2010-01-01        | 2010-01-31     | ecookbook    | descendants |
+      And I have selected the subproject1 project
+    Given I am viewing the master backlog
+     When I change the sprint name of "Shared" to "sprint xxx"
+     Then the sprint "sprint xxx" should be in project "ecookbook"
+
   Scenario: Update sprint with no name
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001
