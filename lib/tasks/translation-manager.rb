@@ -31,6 +31,7 @@ $jargon = %w{
   points
   product
   rate
+  release
   retrospective
   size
   sizes

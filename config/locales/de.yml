@@ -42,7 +42,7 @@ de:
     ist über die Sprints stabil
   backlogs_statistics_committed_velocity_stable_failed: Die definierte Entwicklungsgeschwindigkeit
     ist über die Sprints nicht stabil
-  backlogs_statistics_hours_per_point: ! '%{value} hours per point on average'
+  backlogs_statistics_hours_per_point: durchschnittlich %{value} Stunden pro Punkt
   backlogs_statistics_product_backlog_filled: Produkt Backlog hat Stories
   backlogs_statistics_product_backlog_filled_failed: Produkt Backlog ist leer
   backlogs_statistics_product_backlog_sized: Die Stories am Anfang des Produkt Backlog
@@ -107,7 +107,7 @@ de:
   error_outro: Bitte beheben Sie die obigen Fehler bevor Sie erneut abschicken.
   error_release_end_after_start: das Release Abgabedatum muss nach dem Beginndatum
     liegen
-  error_sprint_end_before_start: Sprint cannot end before it starts
+  error_sprint_end_before_start: Sprint kann nicht vor seinem Startdatum enden.
   error_taken: ist bereits in Bearbeitung
   event_sprint_summary: ! '%{project}: %{summary}'
   field_assigned_to: Zugeordnet zu
@@ -161,8 +161,8 @@ de:
   label_not_prioritized: nicht priorisiert
   label_points: Punkte
   label_points_accepted: Punkte akzeptiert
-  label_points_added: points added
-  label_points_backlog: points backlog
+  label_points_added: Punkte hinzugefügt
+  label_points_backlog: Backlog Punkte
   label_points_burn_down: Runter
   label_points_burn_up: Hoch
   label_points_committed: Punkte vereinbart
