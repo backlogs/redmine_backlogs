@@ -1,204 +1,232 @@
 ---
 ru:
-  backlogs_active: "активный"
-  backlogs_any: "любой"
-  backlogs_auto_assign_task: "Автоназначить задачу текущему пользователю"
-  backlogs_burndown_print_height: "Высота графика выполнения"
-  backlogs_burndown_print_width: "Ширина графика выполнения"
-  backlogs_burndown_settings: "Настройки графика выполнения"
-  backlogs_card_specification: "Тип заголовков для печати карт"
-  backlogs_general_settings: "Общие настройки"
-  backlogs_impediment: "Задержка"
-  backlogs_include_sat_and_sun: "Включать субботу и воскресенье в график выполнения"
-  backlogs_new_story_position_bottom: "вниз (требует перезапуска)"
-  backlogs_new_story_position_top: "вверх"
-  backlogs_new_story_position: "Вновь создаемые истории попадают"
-  backlogs_not_all_themes_are_supported: "Не все темы поддерживаются"
-  backlogs_pblpage_settings: "Настройка страницы бэклога продукта"
-  backlogs_points_burn_direction: "Баллов выполнено/осталось"
-  backlogs_product_backlog: "Бэклог продукта"
-  backlogs_set_start_and_duedates_from_sprint: "Установить дату начала и окончания истории из спринта"
-  backlogs_sharing_enabled: "Разрешить совместное использование"
-  backlogs_sharing_new_sprint_explanation: "Несмотря на то, что все возможные опции доступны здесь, новые спринты могут совместно использоваться только в соответствии с правами пользователей и разрешениями проектов. Используемые совместно на уровне системы спринты могут быть созданы только админами. Спринты, используемые совместно на уровне иерархии или дерева требуют разрешений на проекте верхнего уровня."
-  backlogs_sharing_new_sprint: "Использовать совместно новые спринты"
-  backlogs_sharing_support: "Совместное использование бэклогов"
-  backlogs_show_in_scrum_stats: "Показывать проект в Скрам-статистике"
-  backlogs_show_redmine_std_header: "Показывать заголовок трекера в бэклогах"
-  backlogs_show_stories_from_subprojects_in_backlog: "Показывать в бэклоге истории из подпроектов"
-  backlogs_sprint_card_settings: "Печать карт спринта"
-  backlogs_sprint_sort_order_asc: "по возрастанию"
-  backlogs_sprint_sort_order_desc: "по убыванию"
-  backlogs_sprint_sort_order: "Сортировать спринты по дате начала"
-  backlogs_sprints: "Спринты"
-  backlogs_statistics_active_failed: "В проекте нет активности"
-  backlogs_statistics_active: "В проекте есть активность"
-  backlogs_statistics_committed_velocity_stable_failed: "Скорость команды нестабильна на протяжении спринтов"
-  backlogs_statistics_committed_velocity_stable: "Скорость команды стабильна на протяжении спринтов"
-  backlogs_statistics_hours_per_point: "%{value} часов на 1 балл в среднем"
-  backlogs_statistics_product_backlog_filled_failed: "Бэклог продукта пуст"
-  backlogs_statistics_product_backlog_filled: "Бэклог продукта содержит истории"
-  backlogs_statistics_product_backlog_sized_failed: "Начало бэклога содержит истории без длительности"
-  backlogs_statistics_product_backlog_sized: "Начало бэклога содержит истории с длительностью"
-  backlogs_statistics_sizing_consistent_failed: "Длительности историй отличаются от их оценок"
-  backlogs_statistics_sizing_consistent: "Длительности историй близки к их оценке"
-  backlogs_statistics_sizing_stddev: "Стандартное отклонение стоимости 1 балла в часах: %{value} часов"
-  backlogs_statistics_spent_hours_per_point: "%{value} часов потрачено на 1 балл в среднем"
-  backlogs_statistics_sprint_notes_available_failed: "Недавние спринты закрыты без ретроспективы / заметок"
-  backlogs_statistics_sprint_notes_available: "Недавние спринты закрыты с ретроспективой / заметками"
-  backlogs_statistics_sprints_estimated_failed: "Закрытые или активные спринты содержат неоцененные истории"
-  backlogs_statistics_sprints_estimated: "Активные и недавно закрытые спринты имеют оценку историй"
-  backlogs_statistics_sprints_sized_failed: "Проект содержит истории без длительности в активных или недавно закрытых спринтах"
-  backlogs_statistics_sprints_sized: "Активные и недавно закрытые спринты имеют длительность"
-  backlogs_statistics_sprints: "Измерено по %{value} спринтам"
-  backlogs_statistics_velocity_stddev: "Стандартное отклонение скорости: %{value} баллов"
-  backlogs_statistics_velocity: "Скорость: %{value}"
-  backlogs_statistics_yield_failed: "Проект имеет низкую среднюю производительность"
-  backlogs_statistics_yield: "Проект имеет хорошую среднюю производительность"
-  backlogs_story_close_status: "Когда все задачи закрыты, менять статус истории на:"
-  backlogs_story_follow_task_status_close: "Закрывать когда все задачи закрыты"
-  backlogs_story_follow_task_status_loose: "Менять вслед за средним прогрессом задач"
-  backlogs_story_follow_task_status_nil: "Отключено"
-  backlogs_story_follows_task_status: "История наследует статус задач"
-  backlogs_story_settings: "Настройки историй и задач"
-  backlogs_story_tracker: "Трекеры историй"
-  backlogs_story: "История"
-  backlogs_task_tracker: "Трекер задач"
-  backlogs_task: "Задача"
-  backlogs_wiki_template: "Шаблон для страницы спринта в Вики"
-  button_edit_wiki: "Редактировать страницу Вики"
-  comma_delimited_numbers: "Числа, разделенные запятыми"
-  current_open_story_points: "Баллы текущей открытой истории:"
-  error_blank: "не может быть пустым"
-  error_greater_than_start_date: "не может быть раньше, чем дата начала"
-  error_inclusion: "не включен в список"
-  error_intro_plural: "Произошли ошибки:"
-  error_intro_singular: "Произошла ошибка:"
-  error_must_have_comma_delimited_list: "должен быть список из идентификаторов историй или задач, разделенный запятыми"
-  error_no_workflow_for_task_tracker: "У вас нет доступа к трекеру задач. Если вы считаете, что это ошибка, свяжитесь с администратором."
-  error_outro: "Пожалуйста, исправьте перечисленные выше ошибки перед тем, как вносить изменения снова."
-  error_release_end_after_start: "Дата окончания релиза должна быть позже, чем дата начала"
-  error_sprint_end_before_start: "Спринт не может заканчиваться до того, как начинается"
-  error_taken: "уже используется"
-  event_sprint_summary: "%{project}: %{summary}"
-  field_assigned_to: "Назначена"
-  field_backlogs_issue_type: "Тип бэклога"
-  field_base: ""
-  field_blocks: "Блокировки"
-  field_name: "Название"
-  field_position: "Положение"
-  field_priority: "Приоритет"
-  field_project_id: "Идентификатор проекта"
-  field_release_end_date: "Дата окончания релиза"
-  field_release_start_date: "Дата начала релиза"
-  field_release: "Релиз"
-  field_remaining_hours: "Осталось (часов)"
-  field_story_points: "Оценка истории (в баллах)"
-  field_subject: "Тема"
-  field_time_entry_comments: "Time Entry Comments"
-  field_time_entry_hours: "Time Entry Hours"
-  field_time_entry_spend_on: "Time Entry Spend on"
-  field_time_entry_user_id: "Time Entry User Id"
-  field_tracker_id: "Идентификатор трекера"
-  field_velocity_based_estimate: "Оценка на основе скорости"
-  label_all_tasks: "Все задачи"
-  label_back_to_project: "Назад на страницу проекта"
-  label_backlogs_unconfigured: "Вы еще не настроили модуль Бэклогов. Пожалуйста, передите в %{administration} > %{plugins}, затем кликните по ссылке %{configure} для этого плагина. Как только вы все настроите, возвращайтесь на эту страницу, чтобы начать использовать инструменты."
-  label_backlogs: "Бэклоги"
-  label_burndown: "График выполнения"
-  label_chart_options: "Настройки графика"
-  label_close_completed_sprints: "Закрыть выполненные спринты"
-  label_closed_releases: "Закрытые релизы"
-  label_column_width: "Ширина колонки"
-  label_download_sprint: "Скачать"
-  label_filter_tasks_my_tasks: "Фильтровать по пользователю - мои задачи"
-  label_filter_tasks: "Фильтровать по пользователю"
-  label_hide_completed_sprints: "Спрятать выполненные спринты"
-  label_hours_remaining: "осталось часов"
-  label_hours_required_burn_rate: "требуемая скорость выполнения (часов в день)"
-  label_hours: "часы"
-  label_ideal: "идеальное выполнение"
-  label_impediments: "Задержки"
-  label_master_backlog: "Бэклоги"
-  label_my_tasks: "Мои задачи"
-  label_new_sprint: "Новый спринт"
-  label_new_story: "Новая история"
-  label_no_data_to_show: "Нет информации"
-  label_no_end: "нет окончания"
-  label_no_start: "нет начала"
-  label_not_prioritized: "не приоритезированы"
-  label_points_accepted: "баллов принято"
-  label_points_added: "баллов добавлено"
-  label_points_backlog: "баллов в бэклоге"
-  label_points_burn_down: "Осталось выполнить"
-  label_points_burn_up: "Выполнено"
-  label_points_committed: "баллов выполнено"
-  label_points_required_burn_rate: "требуемая скорость выполнения (в баллах)"
-  label_points_resolved: "баллов решено"
-  label_points_to_accept: "баллов не принято"
-  label_points_to_resolve: "баллов не решено"
-  label_points: "баллы"
-  label_product_backlog: "Бэклог продукта"
-  label_product_cards: "Карты бэклога продукта"
-  label_release_end_date: "Дата окончания релиза"
-  label_release_new: "Новый релиз"
-  label_release_planning: "Планирование релиза"
-  label_release_plural: "Релизы"
-  label_release_start_date: "Дата начала релиза"
-  label_release: "Релиз"
-  label_reset: "Сбросить"
-  label_scrum_statistics: "Скрам-статистика"
-  label_select_all: "Выбрать все"
-  label_show_completed_sprints: "Показать выполненные спринты"
-  label_sprint_backlog: "бэклог спринта"
-  label_sprint_cards: "Карты спринта"
-  label_sprint_impediments: "Задержки спринта"
-  label_sprint_name: "Спринт %{name}"
-  label_stories_tasks: "Истории/Задачи"
-  label_stories: "Истории"
-  label_task_board: "Доска задач"
-  label_view_options: "Посмотреть настройки"
-  label_webcal: "Лента веб-календаря"
-  rb_auto_refresh: "Автоматически обновлять бэклоги / доску задач (в секундах)"
-  rb_burndown_timezone: "Часовой пояс для границы дня выполнения"
-  rb_burndown_timezone_explanation: "    Чтобы поддерживать команды из разных стран,
+  backlogs_active: активный
+  backlogs_any: любой
+  backlogs_auto_assign_task: Автоназначить задачу текущему пользователю
+  backlogs_burndown_print_height: Высота графика выполнения
+  backlogs_burndown_print_width: Ширина графика выполнения
+  backlogs_burndown_settings: Настройки графика выполнения
+  backlogs_card_specification: Тип заголовков для печати карт
+  backlogs_general_settings: Общие настройки
+  backlogs_impediment: Задержка
+  backlogs_include_sat_and_sun: Включать субботу и воскресенье в график выполнения
+  backlogs_new_story_position: Вновь создаемые истории попадают
+  backlogs_new_story_position_bottom: вниз (требует перезапуска)
+  backlogs_new_story_position_top: вверх
+  backlogs_not_all_themes_are_supported: Не все темы поддерживаются
+  backlogs_pblpage_settings: Настройка страницы бэклога продукта
+  backlogs_points_burn_direction: Баллов выполнено/осталось
+  backlogs_product_backlog: Бэклог продукта
+  backlogs_set_start_and_duedates_from_sprint: Установить дату начала и окончания
+    истории из спринта
+  backlogs_sharing_enabled: Разрешить совместное использование
+  backlogs_sharing_new_sprint: Использовать совместно новые спринты
+  backlogs_sharing_new_sprint_explanation: Несмотря на то, что все возможные опции
+    доступны здесь, новые спринты могут совместно использоваться только в соответствии
+    с правами пользователей и разрешениями проектов. Используемые совместно на уровне
+    системы спринты могут быть созданы только админами. Спринты, используемые совместно
+    на уровне иерархии или дерева требуют разрешений на проекте верхнего уровня.
+  backlogs_sharing_support: Совместное использование бэклогов
+  backlogs_show_in_scrum_stats: Показывать проект в Скрам-статистике
+  backlogs_show_redmine_std_header: Показывать заголовок трекера в бэклогах
+  backlogs_show_stories_from_subprojects_in_backlog: Показывать в бэклоге истории
+    из подпроектов
+  backlogs_sprint_card_settings: Печать карт спринта
+  backlogs_sprint_sort_order: Сортировать спринты по дате начала
+  backlogs_sprint_sort_order_asc: по возрастанию
+  backlogs_sprint_sort_order_desc: по убыванию
+  backlogs_sprints: Спринты
+  backlogs_statistics_active: В проекте есть активность
+  backlogs_statistics_active_failed: В проекте нет активности
+  backlogs_statistics_committed_velocity_stable: Скорость команды стабильна на протяжении
+    спринтов
+  backlogs_statistics_committed_velocity_stable_failed: Скорость команды нестабильна
+    на протяжении спринтов
+  backlogs_statistics_hours_per_point: ! '%{value} часов на 1 балл в среднем'
+  backlogs_statistics_product_backlog_filled: Бэклог продукта содержит истории
+  backlogs_statistics_product_backlog_filled_failed: Бэклог продукта пуст
+  backlogs_statistics_product_backlog_sized: Начало бэклога содержит истории с длительностью
+  backlogs_statistics_product_backlog_sized_failed: Начало бэклога содержит истории
+    без длительности
+  backlogs_statistics_sizing_consistent: Длительности историй близки к их оценке
+  backlogs_statistics_sizing_consistent_failed: Длительности историй отличаются от
+    их оценок
+  backlogs_statistics_sizing_stddev: ! 'Стандартное отклонение стоимости 1 балла в
+    часах: %{value} часов'
+  backlogs_statistics_spent_hours_per_point: ! '%{value} часов потрачено на 1 балл
+    в среднем'
+  backlogs_statistics_sprint_notes_available: Недавние спринты закрыты с ретроспективой
+    / заметками
+  backlogs_statistics_sprint_notes_available_failed: Недавние спринты закрыты без
+    ретроспективы / заметок
+  backlogs_statistics_sprints: Измерено по %{value} спринтам
+  backlogs_statistics_sprints_estimated: Активные и недавно закрытые спринты имеют
+    оценку историй
+  backlogs_statistics_sprints_estimated_failed: Закрытые или активные спринты содержат
+    неоцененные истории
+  backlogs_statistics_sprints_sized: Активные и недавно закрытые спринты имеют длительность
+  backlogs_statistics_sprints_sized_failed: Проект содержит истории без длительности
+    в активных или недавно закрытых спринтах
+  backlogs_statistics_velocity: ! 'Скорость: %{value}'
+  backlogs_statistics_velocity_stddev: ! 'Стандартное отклонение скорости: %{value}
+    баллов'
+  backlogs_statistics_yield: Проект имеет хорошую среднюю производительность
+  backlogs_statistics_yield_failed: Проект имеет низкую среднюю производительность
+  backlogs_story: История
+  backlogs_story_close_status: ! 'Когда все задачи закрыты, менять статус истории
+    на:'
+  backlogs_story_follow_task_status_close: Закрывать когда все задачи закрыты
+  backlogs_story_follow_task_status_loose: Менять вслед за средним прогрессом задач
+  backlogs_story_follow_task_status_nil: Отключено
+  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
+    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_status: История наследует статус задач
+  backlogs_story_settings: Настройки историй и задач
+  backlogs_story_tracker: Трекеры историй
+  backlogs_task: Задача
+  backlogs_task_tracker: Трекер задач
+  backlogs_wiki_template: Шаблон для страницы спринта в Вики
+  button_edit_wiki: Редактировать страницу Вики
+  comma_delimited_numbers: Числа, разделенные запятыми
+  current_open_story_points: ! 'Баллы текущей открытой истории:'
+  error_blank: не может быть пустым
+  error_greater_than_start_date: не может быть раньше, чем дата начала
+  error_inclusion: не включен в список
+  error_intro_plural: ! 'Произошли ошибки:'
+  error_intro_singular: ! 'Произошла ошибка:'
+  error_must_have_comma_delimited_list: должен быть список из идентификаторов историй
+    или задач, разделенный запятыми
+  error_no_workflow_for_task_tracker: У вас нет доступа к трекеру задач. Если вы считаете,
+    что это ошибка, свяжитесь с администратором.
+  error_outro: Пожалуйста, исправьте перечисленные выше ошибки перед тем, как вносить
+    изменения снова.
+  error_release_end_after_start: Дата окончания релиза должна быть позже, чем дата
+    начала
+  error_sprint_end_before_start: Спринт не может заканчиваться до того, как начинается
+  error_taken: уже используется
+  event_sprint_summary: ! '%{project}: %{summary}'
+  field_assigned_to: Назначена
+  field_backlogs_issue_type: Тип бэклога
+  field_base: ''
+  field_blocks: Блокировки
+  field_name: Название
+  field_position: Положение
+  field_priority: Приоритет
+  field_project_id: Идентификатор проекта
+  field_release: Релиз
+  field_release_end_date: Дата окончания релиза
+  field_release_start_date: Дата начала релиза
+  field_remaining_hours: Осталось (часов)
+  field_story_points: Оценка истории (в баллах)
+  field_subject: Тема
+  field_time_entry_comments: Time Entry Comments
+  field_time_entry_hours: Time Entry Hours
+  field_time_entry_spend_on: Time Entry Spend on
+  field_time_entry_user_id: Time Entry User Id
+  field_tracker_id: Идентификатор трекера
+  field_velocity_based_estimate: Оценка на основе скорости
+  label_all_tasks: Все задачи
+  label_back_to_project: Назад на страницу проекта
+  label_backlogs: Бэклоги
+  label_backlogs_unconfigured: Вы еще не настроили модуль Бэклогов. Пожалуйста, передите
+    в %{administration} > %{plugins}, затем кликните по ссылке %{configure} для этого
+    плагина. Как только вы все настроите, возвращайтесь на эту страницу, чтобы начать
+    использовать инструменты.
+  label_burndown: График выполнения
+  label_chart_options: Настройки графика
+  label_close_completed_sprints: Закрыть выполненные спринты
+  label_closed_releases: Закрытые релизы
+  label_column_width: Ширина колонки
+  label_download_sprint: Скачать
+  label_filter_tasks: Фильтровать по пользователю
+  label_filter_tasks_my_tasks: Фильтровать по пользователю - мои задачи
+  label_hide_completed_sprints: Спрятать выполненные спринты
+  label_hours: часы
+  label_hours_remaining: осталось часов
+  label_hours_required_burn_rate: требуемая скорость выполнения (часов в день)
+  label_ideal: идеальное выполнение
+  label_impediments: Задержки
+  label_master_backlog: Бэклоги
+  label_my_tasks: Мои задачи
+  label_new_sprint: Новый спринт
+  label_new_story: Новая история
+  label_no_data_to_show: Нет информации
+  label_no_end: нет окончания
+  label_no_start: нет начала
+  label_not_prioritized: не приоритезированы
+  label_points: баллы
+  label_points_accepted: баллов принято
+  label_points_added: баллов добавлено
+  label_points_backlog: баллов в бэклоге
+  label_points_burn_down: Осталось выполнить
+  label_points_burn_up: Выполнено
+  label_points_committed: баллов выполнено
+  label_points_required_burn_rate: требуемая скорость выполнения (в баллах)
+  label_points_resolved: баллов решено
+  label_points_to_accept: баллов не принято
+  label_points_to_resolve: баллов не решено
+  label_product_backlog: Бэклог продукта
+  label_product_cards: Карты бэклога продукта
+  label_release: Релиз
+  label_release_end_date: Дата окончания релиза
+  label_release_new: Новый релиз
+  label_release_planning: Планирование релиза
+  label_release_plural: Релизы
+  label_release_start_date: Дата начала релиза
+  label_reset: Сбросить
+  label_scrum_statistics: Скрам-статистика
+  label_select_all: Выбрать все
+  label_show_completed_sprints: Показать выполненные спринты
+  label_sprint_backlog: бэклог спринта
+  label_sprint_cards: Карты спринта
+  label_sprint_impediments: Задержки спринта
+  label_sprint_name: Спринт %{name}
+  label_stories: Истории
+  label_stories_tasks: Истории/Задачи
+  label_task_board: Доска задач
+  label_view_options: Посмотреть настройки
+  label_webcal: Лента веб-календаря
+  rb_auto_refresh: Автоматически обновлять бэклоги / доску задач (в секундах)
+  rb_burndown_timezone: Часовой пояс для границы дня выполнения
+  rb_burndown_timezone_explanation: ! 'Чтобы поддерживать команды из разных стран,
     расчеты для графиков выполнения используют общую концепцию начала дня.
 
-    Ваш часовой пояс %{user_timezone}, часовой пояс сервера %{server_timezone},
-    а для расчета графика выполнения используется часовой пояс %{burndown_timezone}.
+    Ваш часовой пояс %{user_timezone}, часовой пояс сервера %{server_timezone}, а
+    для расчета графика выполнения используется часовой пояс %{burndown_timezone}.
 
-    Примечание: Имеющаяся информация не меняется при изменении этой настройки."
-  rb_label_copy_tasks_all: "Все"
-  rb_label_copy_tasks_none: "Никакие"
-  rb_label_copy_tasks_open: "Открытые"
-  rb_label_copy_tasks: "Копировать задачи"
-  rb_label_link_to_original: "Включить ссылку на исходную историю"
-  rb_label_timelog_disable: "Запретить"
-  rb_label_timelog_enable: "Разрешить"
-  rb_project_settings_update_error: "Ошибка при сохранении настроек"
-  rb_project_settings_updated: "Настройки сохранены"
-  rb_show_burndown_in_sidebar: "Показывать график выполнения в боковой колонке задач"
-  rb_show_project_name: "Показывать имя проекта в бэклоге"
-  rb_task_cards_stories_then_tasks: "Сначала все истории, затем все задачи"
-  rb_task_cards_story_follows_tasks: "История следует за своими задачами"
-  rb_task_cards_tasks_follow_story: "Задачи следуют за своей историей"
-  rb_taskboard_card_order: "Порядок печати карт"
-  rb_timelog_from_taskboard: "Записывать время с доски задач"
-  remaining_story_points: "Оставшиеся баллы истории"
-  story_description: "Описание"
-  story_estimation_hours: "Оценка (часов)"
-  story_points: "Баллы"
-  story_remaining_hours: "Осталось (часов)"
-  story_spent_time: "Потрачено времени"
-  story_status: "Статус"
-  today_not_in_release_warning: "Предупреждение: текущая дата вне периода текущего релиза."
-  todo_issue_summary: "%{type}: %{summary}"
-  use_free_text_if_empty: "Если список пуст, будет использовано текстовое поле"
-  warning_reset_sprint: "    ВЫ СОБИРАЕТЕСЬ СБРОСИТЬ СПРИНТ!
+    Примечание: Имеющаяся информация не меняется при изменении этой настройки.'
+  rb_label_copy_tasks: Копировать задачи
+  rb_label_copy_tasks_all: Все
+  rb_label_copy_tasks_none: Никакие
+  rb_label_copy_tasks_open: Открытые
+  rb_label_link_to_original: Включить ссылку на исходную историю
+  rb_label_timelog_disable: Запретить
+  rb_label_timelog_enable: Разрешить
+  rb_project_settings_update_error: Ошибка при сохранении настроек
+  rb_project_settings_updated: Настройки сохранены
+  rb_show_burndown_in_sidebar: Показывать график выполнения в боковой колонке задач
+  rb_show_project_name: Показывать имя проекта в бэклоге
+  rb_task_cards_stories_then_tasks: Сначала все истории, затем все задачи
+  rb_task_cards_story_follows_tasks: История следует за своими задачами
+  rb_task_cards_tasks_follow_story: Задачи следуют за своей историей
+  rb_taskboard_card_order: Порядок печати карт
+  rb_timelog_from_taskboard: Записывать время с доски задач
+  remaining_story_points: Оставшиеся баллы истории
+  story_description: Описание
+  story_estimation_hours: Оценка (часов)
+  story_points: Баллы
+  story_remaining_hours: Осталось (часов)
+  story_spent_time: Потрачено времени
+  story_status: Статус
+  today_not_in_release_warning: ! 'Предупреждение: текущая дата вне периода текущего
+    релиза.'
+  todo_issue_summary: ! '%{type}: %{summary}'
+  use_free_text_if_empty: Если список пуст, будет использовано текстовое поле
+  warning_reset_sprint: ! 'ВЫ СОБИРАЕТЕСЬ СБРОСИТЬ СПРИНТ!
 
-    Вы уверены, что хотите это сделать? Сброс спринта
-    повлияет на истории и задачи следующим образом:
+    Вы уверены, что хотите это сделать? Сброс спринта повлияет на истории и задачи
+    следующим образом:
 
-    * Дата создания будет приравнена к начальной дате спринта
-    * Все изменения в задачах и историях кроме комментариев будут УДАЛЕНЫ
-    * Текущее значение всех свойств историй / задач станет начальным
-    * Состояние получит значение по умолчанию"
+    * Дата создания будет приравнена к начальной дате спринта * Все изменения в задачах
+    и историях кроме комментариев будут УДАЛЕНЫ * Текущее значение всех свойств историй
+    / задач станет начальным * Состояние получит значение по умолчанию'
