@@ -74,8 +74,8 @@ zh:
   backlogs_story_follow_task_status_close: Close when all Tasks are closed
   backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
   backlogs_story_follow_task_status_nil: Disabled
-  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
-    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
+    a valid %done between 0 and 100.'
   backlogs_story_follows_task_status: Story follows Task status
   backlogs_story_settings: Story and Task settings
   backlogs_story_tracker: 故事跟踪

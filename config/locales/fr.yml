@@ -81,8 +81,8 @@ fr:
   backlogs_story_follow_task_status_close: Fermer quand toutes les tâches sont fermées
   backlogs_story_follow_task_status_loose: Suivre en gros le ratio complété des tâches
   backlogs_story_follow_task_status_nil: Désactivé
-  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
-    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
+    a valid %done between 0 and 100.'
   backlogs_story_follows_task_status: Story suit le statut de tâche
   backlogs_story_settings: Préférences de Story/Tâches
   backlogs_story_tracker: Tracker de stories

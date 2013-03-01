@@ -148,7 +148,7 @@ def translated(l, s)
   speller.set_option('ignore-case', 'true')
   s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word|
     next if $jargon.include?(word.downcase)
-    next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
+    #next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
     unless speller.check(word)
       status = false
       puts "#{l}: #{word}"

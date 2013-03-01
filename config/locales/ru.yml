@@ -78,8 +78,8 @@ ru:
   backlogs_story_follow_task_status_close: Закрывать когда все задачи закрыты
   backlogs_story_follow_task_status_loose: Менять вслед за средним прогрессом задач
   backlogs_story_follow_task_status_nil: Отключено
-  backlogs_story_follows_task_loose_explanation: ! 'Achtung: alle Ticket Stati müssen
-    ein %erledigt zwischen 0 und 100 haben.'
+  backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
+    a valid %done between 0 and 100.'
   backlogs_story_follows_task_status: История наследует статус задач
   backlogs_story_settings: Настройки историй и задач
   backlogs_story_tracker: Трекеры историй
