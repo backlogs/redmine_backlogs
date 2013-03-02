@@ -24,7 +24,7 @@ class RbMasterBacklogsController < RbApplicationController
     @last_update = [product_backlog_stories,
       @sprint_backlogs.map{|s| s[:stories]},
       @release_backlogs.map{|r| r[:releases]}
-      ].flatten.map{|s| s.updated_on}.sort.last
+      ].flatten.compact.map{|s| s.updated_on}.sort.last
 
     respond_to do |format|
       format.html { render :layout => "rb"}
