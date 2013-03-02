@@ -6,7 +6,7 @@ Feature: Scrum Master
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And the subproject1 project has the backlogs plugin enabled
-    
+
       And I am a scrum master of the project
       And I have deleted all existing issues
       And I have defined the following sprints:

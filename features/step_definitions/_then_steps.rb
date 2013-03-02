@@ -113,8 +113,8 @@ end
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
   higher = RbStory.find_by_subject(higher_subject)
   lower = RbStory.find_by_subject(lower_subject)
-  higher.should_not be_nil 
-  lower.should_not be_nil 
+  higher.should_not be_nil
+  lower.should_not be_nil
   lower.higher_item.should_not be_nil
   higher.lower_item.should_not be_nil
 
