@@ -36,8 +36,8 @@ Feature: Release burndown complex
         | Story E | Rel 1   | 8 |
         | Story X | Rel 1   | 2 |
 # Sprint 1
-      And I move the story named Story A down to the 1st position of the sprint named Sprint 001
-      And I move the story named Story B down to the 1st position of the sprint named Sprint 001
+      And I move the story named Story A to the 1st position of the sprint named Sprint 001
+      And I move the story named Story B to the 1st position of the sprint named Sprint 001
       And I have made the following story mutations:
         | day | story   | status   |
         | 1   | Story A | Closed   |
@@ -48,26 +48,26 @@ Feature: Release burndown complex
         | Story F | Rel 1   | 4 |
         | Story G | Rel 1   | 2 |
 # Sprint 2
-      And I move the story named Story C down to the 1st position of the sprint named Sprint 002
+      And I move the story named Story C to the 1st position of the sprint named Sprint 002
       And the current time is 2011-02-01 08:00:00
       And I have made the following story mutations:
         | day | story   | status    |
         | 1   | Story C | Closed    |
 # Sprint 3
-      And I move the story named Story E down to the 1st position of the sprint named Sprint 003
+      And I move the story named Story E to the 1st position of the sprint named Sprint 003
       And the current time is 2011-03-01 08:00:00
       And I duplicate Story E to release Rel 1 as Story E 2nd
       And I have made the following story mutations:
         | day | story   | status      |
         | 5   | Story E | Rejected    |
 # Sprint 4
-      And I move the story named Story G down to the 1st position of the sprint named Sprint 004
+      And I move the story named Story G to the 1st position of the sprint named Sprint 004
       And the current time is 2011-04-01 08:00:00
       And I have made the following story mutations:
         | day | story   | status      |
         | 5   | Story G | Rejected    |
 # Sprint 5
-      And I move the story named Story X down to the 1st position of the sprint named Sprint 005
+      And I move the story named Story X to the 1st position of the sprint named Sprint 005
       And the current time is 2011-05-01 08:00:00
     Given I am viewing the master backlog
      When I move story Story E 2nd to the product backlog
@@ -75,13 +75,13 @@ Feature: Release burndown complex
         | day | story   | status      |
         | 5   | Story X | Closed      |
 # Sprint 6
-      And I move the story named Story D down to the 1st position of the sprint named Sprint 006
+      And I move the story named Story D to the 1st position of the sprint named Sprint 006
       And the current time is 2011-06-01 08:00:00
       And I have made the following story mutations:
         | day | story   | status      |
         | 5   | Story D | Closed      |
 # Sprint 7
-      And I move the story named Story F down to the 1st position of the sprint named Sprint 007
+      And I move the story named Story F to the 1st position of the sprint named Sprint 007
       And the current time is 2011-07-01 08:00:00
       And I have made the following story mutations:
         | day | story   | status      |
