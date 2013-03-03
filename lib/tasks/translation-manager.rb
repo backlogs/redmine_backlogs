@@ -5,6 +5,7 @@ require 'yaml'
 require 'raspell'
 require 'iconv'
 
+raise "Ruby 1.9.3 required" unless RUBY_VERSION == '1.9.3' #require psych for utf-8
 platform = `rvm-prompt`
 if platform == ''
   puts 'Could not detect platform'
@@ -30,6 +31,7 @@ $jargon = %w{
   points
   product
   rate
+  release
   retrospective
   size
   sizes
@@ -85,8 +87,8 @@ end
 
 webdir = dir('www')
 Dir.chdir(webdir)
-puts "Updating website"
-puts `git pull`
+#puts "Updating website"
+#puts `git pull`
 
 Dir.chdir(dir('redmine_backlogs'))
 webpage = File.open("#{webdir}/_posts/en/1992-01-01-translations.textile", 'w')
@@ -147,7 +149,7 @@ def translated(l, s)
   speller.set_option('ignore-case', 'true')
   s.gsub(/[^-,\s\.\/:\(\)\?!]+/) do |word|
     next if $jargon.include?(word.downcase)
-    next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
+    #next if Iconv.iconv('ascii//ignore', 'utf-8', word).to_s != word
     unless speller.check(word)
       status = false
       puts "#{l}: #{word}"
@@ -204,15 +206,19 @@ translation.keys.sort.each {|t|
       webpage.write("|" + row.join("|") + "|\n")
     end
 
-    locale_hash = {t => nt}.each_pair{|key,value| [key, value.each_pair {|key,value| [key, value.force_encoding("UTF-8")] }]}
-    File.open("#{translations}/#{t}.yml", 'w') { |out| out.write(locale_hash.to_yaml) }
-
     webpage.write("\n")
   }
+
+  locale_hash = {t => nt}.each_pair{|key,value| [key, value.each_pair {|key,value| [key, value.force_encoding("UTF-8")] }]}
+  File.open("#{translations}/#{t}.yml", 'w') { |out| out.write(locale_hash.to_yaml.
+  gsub(' !ruby/object:Hash',''). #another psych - emitted yaml will not load again, failing in to_ruby
+  gsub('no:','\'no\':') #cannot believe it - psych loads no: as false: !!!
+  ) }
+
 }
 
 Dir.chdir(webdir)
-puts "Updating website"
-puts `git add .`
-puts `git commit -m 'Translations updated'`
-puts `git push`
+#puts "Updating website"
+#puts `git add .`
+#puts `git commit -m 'Translations updated'`
+puts "Now, please update the website"

@@ -126,16 +126,15 @@ def set_now(time, options={})
   Timecop.travel(time)
 end
 
-def story_before(rank, project, sprint=nil)
+def story_after(rank, project, sprint=nil)
   return nil if rank.blank?
 
   rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
-  return nil if rank == 1
 
-  prev = RbStory.find_by_rank(rank - 1, RbStory.find_options(:project => project, :sprint => sprint))
-  prev.should_not be_nil
+  nxt = RbStory.find_by_rank(rank, RbStory.find_options(:project => project, :sprint => sprint))
+  return nil if nxt.nil?
 
-  return prev.id
+  return nxt.id
 end
 
 def time_offset(o)

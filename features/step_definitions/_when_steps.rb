@@ -43,13 +43,12 @@ When /^I (try to )?create the sprint$/ do |attempt|
   verify_request_status(200) if attempt == ''
 end
 
-When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_subject, prev_subject|
+When /^I (try to )?move the story named (.+) above (.+)$/ do |attempt, story_subject, next_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
-  prev  = RbStory.find(:first, :conditions => ["subject=?", prev_subject])
+  nxt  = RbStory.find(:first, :conditions => ["subject=?", next_subject])
   
   attributes = story.attributes
-  attributes[:prev]             = prev.id
-  attributes[:fixed_version_id] = prev.fixed_version_id
+  attributes[:next]             = nxt.id
 
   page.driver.post(
                       url_for(:controller => 'rb_stories',
@@ -61,16 +60,14 @@ When /^I (try to )?move the story named (.+) below (.+)$/ do |attempt, story_sub
   verify_request_status(200) if attempt == ''
 end
 
-When /^I (try to )?move the story named (.+) (up|down) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, direction, position, sprint_name|
+When /^I (try to )?move the story named (.+) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, position, sprint_name|
   position = position.to_i
   story = RbStory.find_by_subject(story_subject)
   sprint = RbSprint.find_by_name(sprint_name)
   story.fixed_version = sprint
   
   attributes = story.attributes
-  attributes[:prev] = story_before(position, sprint.project, sprint).to_s
-
-  # TODO: why do we need 'direction'?
+  attributes[:next] = story_after(position, sprint.project, sprint).to_s
 
   page.driver.post(
                       url_for(:controller => 'rb_stories',
@@ -134,6 +131,16 @@ When /^I (try to )?update the sprint$/ do |attempt|
                       @sprint_params.merge({ "_method" => "put" })
                   )
   verify_request_status(200) if attempt == ''
+end
+
+# Bug #855 update sprint details must not change project of sprint. Use complete javascript stack, as it injects project_id into request
+When /^I change the sprint name of "([^"]*)" to "([^"]*)"$/ do |sprint, newname|
+  page.find(:xpath, "//div[contains(normalize-space(text()), '#{sprint}')]").click
+  within "#content" do
+    fill_in('name', :with => newname)
+    click_link('Save')
+  end
+  wait_for_ajax
 end
 
 When /^I (try to )?update the story$/ do |attempt|
@@ -251,5 +258,17 @@ When /^I update the status of task (.+?) to (.+?)$/ do |task, state|
                       @task_params.merge({ "_method" => "put" })
                   )
   verify_request_status(200)
+end
+
+# Low level tests on higher_item and lower_item, should be rspec tests
+When /^I call move_after\("([^"]*)"\) on "([^"]*)"$/ do |arg, obj|
+  obj = RbStory.find_by_subject(obj)
+  arg = (arg=="nil") ? nil : RbStory.find_by_subject(arg)
+  obj.move_after(arg)
+end
+When /^I call move_before\("([^"]*)"\) on "([^"]*)"$/ do |arg, obj|
+  obj = RbStory.find_by_subject(obj)
+  arg = (arg=="nil") ? nil : RbStory.find_by_subject(arg)
+  obj.move_before(arg)
 end
 

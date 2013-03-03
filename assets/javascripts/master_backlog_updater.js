@@ -14,10 +14,10 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
   },
 
   processItem: function(html){
-    var update = RB.Factory.initialize(RB.Story, html);
-    var target;
-    var oldParent;
-    var stories;
+    var update = RB.Factory.initialize(RB.Story, html),
+        target,
+        oldParent,
+        stories;
     
     if(RB.$('#story_' + update.getID()).length===0){
       target = update;                                      // Create a new item
@@ -28,20 +28,33 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     }
 
     // Position the story properly in the backlog
-    var previous = update.$.find(".higher_item_id").text();
-    if(previous.length > 0){
-      target.$.insertAfter( RB.$('#story_' + previous) );
-    } else {
-      if(target.$.find(".fixed_version_id").text().length===0){
-        // Story belongs to the product backlog
-        stories = RB.$('#product_backlog_container .backlog .stories');
-      } else {
-        // Story belongs to a sprint backlog
-        stories = RB.$('#sprint_' + target.$.find(".fixed_version_id").text()).siblings(".stories").first();
-      }
-      stories.prepend(target.$);
+    var higher_item = null,
+        previous = update.$.find(".higher_item_id").text(),
+        fixed_version_id = target.$.find(".fixed_version_id").text(),
+        release_id = target.$.find(".release_id").text();
+
+    //find the correct container
+    if (fixed_version_id !== '') { //sprint
+      stories = RB.$('#stories-for-' + fixed_version_id);
+    }
+    else if (release_id !== '') { //release
+      stories = RB.$('#stories-for-release-' + release_id);
+    }
+    else { //backlog
+      stories = RB.$('#stories-for-product-backlog');
+    }
+    // put after higher_item (FIXME name is confusing) or at top
+    if (previous.length) {
+      higher_item = stories.find('#story_' + previous);
+    }
+    if (higher_item && higher_item.length) { //FIXME not having found higher item means a) we are first OR b) the backend gave us one which is not in this backlog OR not in the current scope (other project? other tracker?)
+      target.$.insertAfter(higher_item);
+    }
+    else {
+      stories.first().prepend(target.$);
     }
 
+    //update tooltip
     var _ = target.$.find('div.story_tooltip');
     _.qtip(RB.$.qtipMakeOptions(_));
 
