@@ -38,9 +38,10 @@
   </div>
   <% end %>
   <div class="fixed_version_id meta"><%= story.fixed_version_id %></div>
+  <div class="release_id meta"><%= story.release_id %></div>
   <div class="user_status meta"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
   <div class="story_project meta"><%= story.project_id %></div>
-  <div class="higher_item_id meta"><%= story.higher_item.blank? ? '' : story.higher_item.id %></div>
+  <div class="higher_item_id meta"><%= story.higher_item.nil? ? '' : story.higher_item.id %></div>
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors %>
   </div>

@@ -108,24 +108,24 @@ Feature: Scrum Master
 
   Scenario: Move a story from product backlog to sprint backlog
     Given I am viewing the master backlog
-     When I move the story named Story 1 up to the 1st position of the sprint named Sprint 001
+     When I move the story named Story 1 to the 1st position of the sprint named Sprint 001
      Then the request should complete successfully
-     When I move the story named Story 4 up to the 2nd position of the sprint named Sprint 001
-      And I move the story named Story 2 up to the 1st position of the sprint named Sprint 002
-      And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
+     When I move the story named Story 4 to the 2nd position of the sprint named Sprint 001
+      And I move the story named Story 2 to the 1st position of the sprint named Sprint 002
+      And I move the story named Story 4 to the 1st position of the sprint named Sprint 001
      Then Story 4 should be in the 1st position of the sprint named Sprint 001
       And Story 1 should be in the 2nd position of the sprint named Sprint 001
       And Story 2 should be in the 1st position of the sprint named Sprint 002
   
   Scenario: Move a story down in a sprint
     Given I am viewing the master backlog
-     When I move the story named Story A below Story B
+     When I move the story named Story B above Story A
      Then the request should complete successfully
       And Story A should be in the 2nd position of the sprint named Sprint 001
       And Story B should be the higher item of Story A
 
   Scenario: Authorized request to the project calendar feed
-    Given I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
+    Given I move the story named Story 4 to the 1st position of the sprint named Sprint 004
       And I have set my API access key
       And I am logged out
      When I try to download the calendar feed
@@ -133,7 +133,7 @@ Feature: Scrum Master
       And calendar feed download should succeed
 
   Scenario: Unauthorized request to the project calendar feed
-    Given I move the story named Story 4 down to the 1st position of the sprint named Sprint 004
+    Given I move the story named Story 4 to the 1st position of the sprint named Sprint 004
       And I have set my API access key
       And I am logged out
       And I have guessed an API access key
@@ -147,7 +147,7 @@ Feature: Scrum Master
      Then the request should complete successfully
 
   Scenario: Download printable cards for the task board
-      And I move the story named Story 4 up to the 1st position of the sprint named Sprint 001
+      And I move the story named Story 4 to the 1st position of the sprint named Sprint 001
       And I am viewing the issues sidebar for Sprint 001
      When I follow "Sprint cards"
      Then the request should complete successfully

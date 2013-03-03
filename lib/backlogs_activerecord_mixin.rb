@@ -94,15 +94,21 @@ module Backlogs
           return self.class.find_by_position(self.class.maximum(:position, options))
         end
 
-        def higher_item(options = {})
-          @higher_item ||= list_prev_next(:prev, options)
+        def higher_item(options={})
+          @higher_item ||= list_prev_next(:prev, self.list_with_gaps_scope_condition(options))
         end
         attr_writer :higher_item
 
-        def lower_item(options = {})
-          @lower_item ||= list_prev_next(:next, options)
+        def lower_item(options={})
+          @lower_item ||= list_prev_next(:next, self.list_with_gaps_scope_condition(options))
         end
         attr_writer :lower_item
+
+        # higher_item and lower_item use this scope condition to determine neighbours
+        # to be overloaded
+        def list_with_gaps_scope_condition(options={})
+          options
+        end
 
         def rank(options={})
           options = options.dup
@@ -112,7 +118,7 @@ module Backlogs
         attr_writer :rank
 
         def move_after(reference, options={})
-          nxt = reference.lower_item
+          nxt = reference.send(:lower_item_unscoped)
 
           if nxt.blank?
             move_to_bottom
@@ -127,20 +133,40 @@ module Backlogs
           list_commit
         end
 
+        #issues are listed by position ascending, which is in rank descending. Higher means lower position
+        #before means lower position
         def move_before(reference, options={})
-          prev = reference.higher_item
+          prev = reference.send(:higher_item_unscoped)
+
           if prev.blank?
             move_to_top
           else
-            move_after(prev, options)
+            if (reference.position - prev.position) < 2
+              self.class.connection.execute("update #{self.class.table_name} set position = position - #{self.class.list_spacing} where position <= #{prev.position}")
+              prev.position -= self.class.list_spacing
+            end
+            self.position = (reference.position + prev.position) / 2
           end
+
+          list_commit
         end
+
       end
 
       private
 
+      #higher item is the one with lower position. self is visually displayed below its higher item.
+      def higher_item_unscoped(options = {})
+        @higher_item_unscoped ||= list_prev_next(:prev, options)
+      end
+
+      def lower_item_unscoped(options = {})
+        @lower_item_unscoped ||= list_prev_next(:next, options)
+      end
+
       def list_commit
         self.class.connection.execute("update #{self.class.table_name} set position = #{self.position} where id = #{self.id}") unless self.new_record?
+        #FIXME now the cached lower/higher_item are wrong during this request. So are those from our old and new peers.
       end
 
       def list_prev_next(dir, options)
