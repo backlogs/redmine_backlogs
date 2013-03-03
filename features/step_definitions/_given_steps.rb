@@ -7,7 +7,10 @@ Before do
   @projects = nil
   @sprint = nil
   @story = nil
+  #sanitize settings, they spill over from previous tests
   Backlogs.setting[:include_sat_and_sun] = false
+  Backlogs.setting[:sharing_enabled] = false
+  Backlogs.setting[:story_follow_task_status] = nil
   Time.zone = 'UTC'
 end
 
