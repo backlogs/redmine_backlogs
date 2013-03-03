@@ -68,7 +68,7 @@ case $REDMINE_VER in
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           #export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=master
+          export REDMINE_GIT_TAG=2.3-stable
           ;;
   v3.3.0) export PATH_TO_PLUGINS=./vendor/plugins
           export GENERATE_SECRET=generate_session_store
@@ -90,7 +90,7 @@ clone_redmine()
     QUIET=--quiet
   fi
   if [ -n "${REDMINE_GIT_TAG}" ]; then
-    git clone -b master --depth=10 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
+    git clone -b master --depth=100 $QUIET $REDMINE_GIT_REPO $PATH_TO_REDMINE
     cd $PATH_TO_REDMINE
     git checkout $REDMINE_GIT_TAG
   else
