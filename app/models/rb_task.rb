@@ -67,10 +67,17 @@ class RbTask < Issue
 
   # TODO: there's an assumption here that impediments always have the
   # task-tracker as their tracker, and are top-level issues.
-  def self.find_all_updated_since(since, project_id, find_impediments = false)
-    find(:all,
-         :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
-         :order => "updated_on ASC")
+  def self.find_all_updated_since(since, project_id, find_impediments = false, sprint_id = nil)
+    #find all updated visible on taskboard - which may span projects.
+    if sprint_id.nil?
+      find(:all,
+           :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
+           :order => "updated_on ASC")
+    else
+      find(:all,
+           :conditions => ["fixed_version_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", sprint_id, Time.parse(since), tracker],
+           :order => "updated_on ASC")
+    end
   end
 
   def update_with_relationships(params, is_impediment = false)

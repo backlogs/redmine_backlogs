@@ -111,13 +111,16 @@ Then /^show me the response body$/ do
 end
 
 Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subject|
-  higher = RbStory.find(:all, :conditions => { :subject => higher_subject })
-  higher.length.should == 1
-  
-  lower = RbStory.find(:all, :conditions => { :subject => lower_subject })
-  lower.length.should == 1
-  
-  lower.first.higher_item.id.should == higher.first.id
+  higher = RbStory.find_by_subject(higher_subject)
+  lower = RbStory.find_by_subject(lower_subject)
+  higher.should_not be_nil
+  lower.should_not be_nil
+  lower.higher_item.should_not be_nil
+  higher.lower_item.should_not be_nil
+
+  higher.position.should < lower.position
+  lower.higher_item.id.should == higher.id
+  higher.lower_item.id.should == lower.id
 end
 
 Then /^the request should complete successfully$/ do
@@ -155,6 +158,20 @@ Then /^the server should return (\d+) updated (.+)$/ do |count, object_type|
   page.all("##{object_type.pluralize} .#{object_type.singularize}").length.should == count.to_i
 end
 
+Then /^Story "([^"]*)" should be updated$/ do |story|
+  story_id = RbStory.find_by_subject(story).id
+  page.should have_css("#story_#{story_id}")
+end
+Then /^Story "([^"]*)" should not be updated$/ do |story|
+  story_id = RbStory.find_by_subject(story).id
+  page.should_not have_css("#story_#{story_id}")
+end
+
+Then /^The last_update information should be near (.+)$/ do |t|
+  lu = page.find(:css, "#last_updated").text()
+  lu.start_with?(t).should be_true #coarse. hmm.
+end
+
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
   sprint = RbSprint.find(:all, :conditions => { :name => sprint_name })
   sprint.length.should == 1
@@ -189,6 +206,14 @@ Then /^the sprint should be updated accordingly$/ do
       end
     end
   end
+end
+
+Then /^the sprint "([^"]*)" should be in project "([^"]*)"$/ do |sprint, project|
+  project = get_project(project)
+  sprint = RbSprint.find_by_name(sprint)
+  project.should_not be_nil
+  sprint.should_not be_nil
+  sprint.project.should == project
 end
 
 Then /^the status of the story should be set as (.+)$/ do |status|
@@ -491,3 +516,26 @@ Then /^the done ratio for story (.+?) should be (\d+)$/ do |story, ratio|
   story.should_not be_nil
   story.done_ratio.should == ratio.to_i
 end
+
+# Low level tests on private methods higher_item_unscoped and lower_item_unscoped, should be rspec tests
+Then /^"([^"]*)"\.higher_item_unscoped should be "([^"]*)"$/ do |obj, arg|
+  obj = RbStory.find_by_subject(obj)
+  if arg == "nil"
+    obj.send(:higher_item_unscoped).should be_nil
+  else
+    arg = RbStory.find_by_subject(arg)
+    obj.send(:higher_item_unscoped).should == arg
+    arg.send(:lower_item_unscoped).should == obj
+  end
+end
+Then /^"([^"]*)"\.lower_item_unscoped should be "([^"]*)"$/ do |obj, arg|
+  obj = RbStory.find_by_subject(obj)
+  if arg == "nil"
+    obj.send(:lower_item_unscoped).should be_nil
+  else
+    arg = RbStory.find_by_subject(arg)
+    obj.send(:lower_item_unscoped).should == arg
+    arg.send(:higher_item_unscoped).should == obj
+  end
+end
+

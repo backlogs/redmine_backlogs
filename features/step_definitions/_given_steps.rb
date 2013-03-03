@@ -7,7 +7,10 @@ Before do
   @projects = nil
   @sprint = nil
   @story = nil
+  #sanitize settings, they spill over from previous tests
   Backlogs.setting[:include_sat_and_sun] = false
+  Backlogs.setting[:sharing_enabled] = false
+  Backlogs.setting[:story_follow_task_status] = nil
   Time.zone = 'UTC'
 end
 
@@ -320,6 +323,10 @@ Given /^I have made the following task mutations:$/ do |table|
   end
 end
 
+Given /^I have deleted all existing issues from all projects$/ do
+  Issue.delete_all
+end
+
 Given /^I have deleted all existing issues$/ do
   @project.issues.delete_all
 end
@@ -348,12 +355,12 @@ end
 
 Given /^I have defined the following stories in the following sprints?:$/ do |table|
   table.hashes.each do |story|
+    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
     if story['project_id'] # where to put the story into, so we can have a story of project A in a sprint of project B
       project = get_project(story.delete('project_id'))
     else
-      project = @project
+      project = sprint.project || @project
     end
-    sprint = RbSprint.find_by_name(story.delete('sprint')) #find by name only, please use unique sprint names over projects for tests
     sprint.should_not be_nil
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
