@@ -1,6 +1,8 @@
 class RbStory < Issue
   unloadable
 
+  RELEASE_RELATIONSHIP = %w(auto initial added)
+
   private
 
   def self.__find_options_normalize_option(option)

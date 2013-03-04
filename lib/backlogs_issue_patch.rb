@@ -15,7 +15,9 @@ module Backlogs
 
         has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
 
-        safe_attributes 'release_id' #FIXME merge conflict. is this required?
+        validates_inclusion_of :release_relationship, :in => RbStory::RELEASE_RELATIONSHIP
+
+        safe_attributes 'release_id','release_relationship' #FIXME merge conflict. is this required?
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
