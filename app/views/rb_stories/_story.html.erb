@@ -47,7 +47,7 @@
   <div class="higher_item_id meta"><%= story.higher_item.nil? ? '' : story.higher_item.id %></div>
   <% end %>
   <div class="meta">
-    <%= render :partial => "backlogs/model_errors", :object => story.errors %>
+    <%= render :partial => "backlogs/model_errors", :object => story.errors unless story.errors.empty? %>
   </div>
  </div>
   <div class="clearfix"></div>
