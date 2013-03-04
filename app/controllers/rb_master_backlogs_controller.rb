@@ -130,9 +130,7 @@ class RbMasterBacklogsController < RbApplicationController
     c_sprints = @project.closed_shared_sprints
     @backlogs = RbStory.backlogs_by_sprint(@project, c_sprints)
     respond_to do |format|
-      format.html { render :partial => 'closedbacklog', :collection => @backlogs,
-        :locals => {:cls => ' model sprint'}
-      }
+      format.html { render :partial => 'closedbacklog', :collection => @backlogs }
     end
   end
 
