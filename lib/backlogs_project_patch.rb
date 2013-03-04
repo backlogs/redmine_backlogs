@@ -223,16 +223,12 @@ module Backlogs
 
       #depending on sharing mode
       def closed_shared_sprints
-        if Backlogs.setting[:disable_closed_sprints_to_master_backlogs]
-          return []
-        else
-          if Backlogs.setting[:sharing_enabled]
-            order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-            shared_versions.visible.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
-          else #no backlog sharing
-            RbSprint.closed_sprints(self)
-          end
-        end #disable_closed
+        if Backlogs.setting[:sharing_enabled]
+          order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+          shared_versions.visible.scoped(:conditions => {:status => ['closed']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+        else #no backlog sharing
+          RbSprint.closed_sprints(self)
+        end
       end
 
       def active_sprint

@@ -25,4 +25,14 @@ RB.$(function() {
       return false;
     }
   });
+
+  // show closed sprints
+  RB.$('#show_completed_sprints').click(function(e) {
+    e.preventDefault();
+    RB.$('#closed_sprint_backlogs_container').
+      html('Loading...').
+      show().
+      load(RB.routes.closed_sprints, function(){ RB.util.initToolTip(); }); //refreshToolTip requires a model scope.
+    RB.$('#show_completed_sprints').hide();
+  });
 });

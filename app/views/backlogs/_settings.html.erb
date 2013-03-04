@@ -261,11 +261,6 @@
 </p>
 
 <p>
-  <%= content_tag(:label, l(:label_hide_completed_sprints)) %>
-  <%= check_box_tag("settings[disable_closed_sprints_to_master_backlogs]", 'enabled', Backlogs.setting[:disable_closed_sprints_to_master_backlogs]) %>
-</p>
-
-<p>
   <%= content_tag(:label, l(:backlogs_sprint_sort_order)) %>
   <%= radio_button_tag("settings[sprint_sort_order]", 'asc', Backlogs.setting[:sprint_sort_order].nil?|| Backlogs.setting[:sprint_sort_order] == 'asc') %><%= l(:backlogs_sprint_sort_order_asc) %>
   <%= radio_button_tag("settings[sprint_sort_order]", 'desc', Backlogs.setting[:sprint_sort_order] == 'desc') %><%= l(:backlogs_sprint_sort_order_desc) %>

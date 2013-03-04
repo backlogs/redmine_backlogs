@@ -21,13 +21,6 @@ class RbMasterBacklogsController < RbApplicationController
     #collect all sprints which are sharing into @project
     sprints = @project.open_shared_sprints
     @sprint_backlogs = RbStory.backlogs_by_sprint(@project, sprints)
-    if @settings[:disable_closed_sprints_to_master_backlogs]
-      #TIB (ajout des sprints fermés)
-      @c_sprint_backlogs = []
-    else
-      c_sprints = @project.closed_shared_sprints
-      @c_sprint_backlogs = RbStory.backlogs_by_sprint(@project, c_sprints)
-    end
 
     releases = @project.open_releases_by_date
     @release_backlogs = RbStory.backlogs_by_release(@project, releases)
@@ -132,4 +125,15 @@ class RbMasterBacklogsController < RbApplicationController
       @template
     end
   end
+
+  def closed_sprints
+    c_sprints = @project.closed_shared_sprints
+    @backlogs = RbStory.backlogs_by_sprint(@project, c_sprints)
+    respond_to do |format|
+      format.html { render :partial => 'closedbacklog', :collection => @backlogs,
+        :locals => {:cls => ' model sprint'}
+      }
+    end
+  end
+
 end

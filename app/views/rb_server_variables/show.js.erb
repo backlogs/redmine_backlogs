@@ -122,4 +122,5 @@ if (!RB.constants) {
   RB.constants.project_releases = <%= project_releases.to_json.html_safe %>;
   RB.constants.story_states = <%= workflow_transitions(RbStory).to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
+  RB.routes.closed_sprints = <%= url_for(:controller => 'rb_master_backlogs', :action => 'closed_sprints', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
 <% end %>

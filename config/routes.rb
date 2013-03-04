@@ -63,6 +63,7 @@ def rb_common_routes(rb)
                :to => 'rb_master_backlogs#show'
   rb_match rb, 'master_backlog/:project_id/menu',
                :to => 'rb_master_backlogs#menu'
+  rb_match rb, 'master_backlog/:project_id/closed_sprints', :to => 'rb_master_backlogs#closed_sprints'
 
   rb_match rb, 'impediment/create', :to => 'rb_impediments#create'
   rb_match rb, 'impediment/update/:id', :to => 'rb_impediments#update'
