@@ -68,16 +68,19 @@ class RbTask < Issue
   # TODO: there's an assumption here that impediments always have the
   # task-tracker as their tracker, and are top-level issues.
   def self.find_all_updated_since(since, project_id, find_impediments = false, sprint_id = nil)
-    #find all updated visible on taskboard - which may span projects.
-    if sprint_id.nil?
-      find(:all,
-           :conditions => ["project_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", project_id, Time.parse(since), tracker],
-           :order => "updated_on ASC")
-    else
-      find(:all,
-           :conditions => ["fixed_version_id = ? AND updated_on > ? AND tracker_id in (?) and parent_id IS #{ find_impediments ? '' : 'NOT' } NULL", sprint_id, Time.parse(since), tracker],
-           :order => "updated_on ASC")
+    #find all updated visible on taskboard - which may span projects. This returns a Relation/scope
+
+    if sprint_id.nil? #FIXME this branch makes no sense, we are on a taskboard which may be sharing across projects
+      Rails.logger.warn("DEPRECATION WARNING: RbTask.find_all_updated_since used without sprint")
+      scope = where(:project_id => project_id)
+    else #this should be the only branch here.
+      scope = where(:fixed_version_id => sprint_id)
     end
+    scope.where(["updated_on > ?
+                  AND tracker_id in (?)
+                  AND parent_id IS #{ find_impediments ? '' : 'NOT' } NULL",
+                 Time.parse(since), tracker]).
+        order("updated_on ASC")
   end
 
   def update_with_relationships(params, is_impediment = false)
