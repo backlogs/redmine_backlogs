@@ -293,7 +293,7 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should not see the backlog of Sprint Sp002c
       And I should not see the backlog of Sprint Sp004c
-     When I follow "Show Completed Sprints"
+     When I request the completed sprints
      Then I should see the backlog of Sprint Sp002c
       And I should see the backlog of Sprint Sp004c
 
@@ -304,7 +304,7 @@ Feature: Shared versions
      Then I should see the product backlog
       And I should not see the backlog of Sprint Sp002c
       And I should not see the backlog of Sprint Sp004c
-     When I follow "Show Completed Sprints"
+     When I request the completed sprints
      Then I should see the backlog of Sprint Sp002c
       And I should see the backlog of Sprint Sp004c
 
