@@ -23,56 +23,20 @@ Given /^I am admin$/ do
 end
 
 Given /^I am a product owner of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
-  role.permissions << :view_master_backlog
-  role.permissions << :create_stories
-  role.permissions << :update_stories
-  role.permissions << :view_releases
-  role.permissions << :modify_releases
-  role.permissions << :view_scrum_statistics
-  role.permissions << :configure_backlogs
-  role.save!
   login_as_product_owner
-  @projects.each{|project|
-    m = Member.new(:user => @user, :roles => [role])
-    project.members << m
-  }
 end
 
 Given /^I am a scrum master of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
-  role.permissions << :view_master_backlog
-  role.permissions << :view_releases
-  role.permissions << :view_taskboards
-  role.permissions << :update_sprints
-  role.permissions << :update_stories
-  role.permissions << :create_impediments
-  role.permissions << :update_impediments
-  role.permissions << :subscribe_to_calendars
-  role.permissions << :view_wiki_pages        # NOTE: This is a Redmine core permission
-  role.permissions << :edit_wiki_pages        # NOTE: This is a Redmine core permission
-  role.permissions << :create_sprints
-  role.save!
   login_as_scrum_master
-  @projects.each{|project|
-    m = Member.new(:user => @user, :roles => [role])
-    project.members << m
-  }
+end
+
+#must not login twice on redmine 2.3
+Given /^I am a scrum master of all projects$/ do
+  setup_permissions('scrum master')
 end
 
 Given /^I am a team member of the project$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
-  role.permissions << :view_master_backlog
-  role.permissions << :view_releases
-  role.permissions << :view_taskboards
-  role.permissions << :create_tasks
-  role.permissions << :update_tasks
-  role.save!
   login_as_team_member
-  @projects.each{|project|
-    m = Member.new(:user => @user, :roles => [role])
-    project.members << m
-  }
 end
 
 Given /^I am logged out$/ do

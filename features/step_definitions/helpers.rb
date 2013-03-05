@@ -201,20 +201,60 @@ def login_as(user, password)
 end
 
 def login_as_product_owner
+  setup_permissions('product owner')
   login_as('jsmith', 'jsmith')
 end
 
 def login_as_scrum_master
+  setup_permissions('scrum master')
   login_as('jsmith', 'jsmith')
 end
 
 def login_as_team_member
+  setup_permissions('team member')
   login_as('jsmith', 'jsmith')
 end
 
 def login_as_admin
   login_as('admin', 'admin')
-end  
+end
+
+def setup_permissions(typ)
+  role = Role.find(:first, :conditions => "name='Manager'")
+  if typ == 'scrum master'
+    role.permissions << :view_master_backlog
+    role.permissions << :view_releases
+    role.permissions << :view_taskboards
+    role.permissions << :update_sprints
+    role.permissions << :update_stories
+    role.permissions << :create_impediments
+    role.permissions << :update_impediments
+    role.permissions << :subscribe_to_calendars
+    role.permissions << :view_wiki_pages        # NOTE: This is a Redmine core permission
+    role.permissions << :edit_wiki_pages        # NOTE: This is a Redmine core permission
+    role.permissions << :create_sprints
+  elsif typ == 'team member'
+    role.permissions << :view_master_backlog
+    role.permissions << :view_releases
+    role.permissions << :view_taskboards
+    role.permissions << :create_tasks
+    role.permissions << :update_tasks
+  else #product owner
+    role.permissions << :view_master_backlog
+    role.permissions << :create_stories
+    role.permissions << :update_stories
+    role.permissions << :view_releases
+    role.permissions << :modify_releases
+    role.permissions << :view_scrum_statistics
+    role.permissions << :configure_backlogs
+  end
+  role.save!
+  
+  @projects.each{|project|
+    m = Member.new(:user => @user, :roles => [role])
+    project.members << m
+  }
+end
 
 def task_position(task)
   p1 = task.story.tasks.select{|t| t.id == task.id}[0].rank
