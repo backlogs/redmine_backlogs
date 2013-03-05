@@ -131,8 +131,8 @@ class RbSprint < Version
   end
 
   def impediments
-    @impediments ||= Issue.find(:all,
-      :conditions => ["id in (
+    @impediments ||= Issue.where(
+            ["id in (
               select issue_from_id
               from issue_relations ir
               join issues blocked
