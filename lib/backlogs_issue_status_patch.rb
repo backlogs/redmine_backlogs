@@ -16,7 +16,7 @@ module Backlogs
           Rails.logger.warn("IssueStatus.backlog called without parameter")
           begin 5 / 0; rescue => e; Rails.logger.warn e; Rails.logger.warn e.backtrace.join("\n"); end
         end
-        if Redmine::VERSION::MAJOR >= 3
+        if Redmine::VERSION::MAJOR >= 3 && tracker
           is_default = tracker.default_status_id == id
         else
           is_default = is_default?
@@ -27,10 +27,10 @@ module Backlogs
         return :in_progress
       end
 
-      def backlog_is?(states)
+      def backlog_is?(states, tracker=nil)
         states = [states] unless states.is_a?(Array)
         raise "Not a valid state set #{states.inspect}" unless (states - [:success, :failure, :new, :in_progress]) == []
-        return states.include?(backlog)
+        return states.include?(backlog(tracker))
       end
     end
   end

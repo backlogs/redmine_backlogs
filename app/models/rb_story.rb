@@ -58,7 +58,6 @@ class RbStory < Issue
   public
 
   def self.class_default_status
-    Rails.logger.error("Story has no trackers configured")
     begin
       RbStory.trackers(:trackers)[0].default_status
     rescue
@@ -377,7 +376,7 @@ class RbStory < Issue
     self.relations.each{|r|
       if r.relation_type == IssueRelation::TYPE_COPIED_TO
         from_story = RbStory.find(r.issue_from_id)
-        if from_story.status.backlog_is?(:failure)
+        if from_story.status.backlog_is?(:failure, RbStory.trackers(:trackers)[0])
 #FIXME check from_story is in the same release as this story at the
 # point in time being examined.
           return true

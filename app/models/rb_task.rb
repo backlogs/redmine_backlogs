@@ -9,10 +9,41 @@ class RbTask < Issue
     return Integer(task_tracker)
   end
 
+  def self.class_default_status
+    begin
+      puts("task tracker #{self.tracker}")
+      t = Tracker.find(self.tracker)
+      puts("Tracker default status #{t}")
+      return t.default_status
+    rescue => e
+      Rails.logger.error("Task has no trackers configured #{e}")
+      puts("Task has no trackers configured #{e}")
+      nil
+    end
+  end
+
   # unify api between story and task. FIXME: remove this when merging to tracker-free-tasks
   # required for RbServerVariablesHelper.workflow_transitions
-  def self.trackers
-    [self.tracker]
+  def self.trackers(options = {})
+    options = {:type => options} if options.is_a?(Symbol)
+
+    # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
+    trackers = [self.tracker]
+
+    begin
+      trackers = Tracker.where(id: trackers)
+    rescue ActiveRecord::RecordNotFound => e
+      trackers = nil
+    end
+    trackers = trackers & options[:project].trackers if options[:project]
+    trackers = trackers.sort_by { |t| [t.position] }
+
+    case options[:type]
+      when :trackers    then return trackers
+      when :array, nil  then return trackers.collect{|t| t.id}
+      when :string      then return trackers.collect{|t| t.id.to_s}.join(',')
+      else                   raise "Unexpected return type #{options[:type].inspect}"
+    end
   end
 
   def self.rb_safe_attributes(params)
@@ -151,6 +182,9 @@ class RbTask < Issue
 
   # assumes the task is already under the same story as 'id'
   def move_before(id)
+    puts("RbTask::move_before NOT IMPLEMENTED")
+    Rails.logger.error("RbTask::move_before NOT IMPLEMENTED")
+    return
     id = nil if id.respond_to?('blank?') && id.blank?
     if id.nil?
       sib = self.siblings

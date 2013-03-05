@@ -175,7 +175,7 @@ def initialize_task_params(story_id)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.class_default_status.id
   params
 end
 
@@ -190,7 +190,7 @@ def initialize_impediment_params(attributes)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.class_default_status.id
   params
 end
 

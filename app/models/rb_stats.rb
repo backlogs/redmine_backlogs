@@ -55,7 +55,7 @@ class RbStats < ActiveRecord::Base
         status = nil
       end
       changes = [ { :property => 'status_open',              :value => status && !status.is_closed },
-                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success) } ]
+                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) } ]
     else
       changes = [ { :property => journal_property_key(prop), :value => journal_property_value(prop, j) } ]
     end
@@ -138,7 +138,7 @@ class RbStats < ActiveRecord::Base
     changes['status_id'].each{|change|
       status = issue_status[change[:new]]
       changes['status_open'] << change.merge(:new => status && !status.is_closed?)
-      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success))
+      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success, RbStory.trackers(:trackers)[0]))
     }
     changes.delete('status_id')
 

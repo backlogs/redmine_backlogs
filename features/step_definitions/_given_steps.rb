@@ -391,8 +391,9 @@ end
 
 Given /^I have defined the following tasks:$/ do |table|
   table.hashes.each do |task|
-    story = RbStory.find(:first, :conditions => { :subject => task.delete('story') })
-    story.should_not be_nil
+    story = RbStory.where( :subject => task.delete('story') ).first
+    story.should_not be nil
+    puts("Story: #{story}")
 
     params = initialize_task_params(story.id)
     params['subject'] = task.delete('subject')
