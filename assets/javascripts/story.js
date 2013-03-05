@@ -105,12 +105,25 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     var url;
     var j = this.$;
     var nxt = this.$.next();
+    var prv = this.$.prev();
     var sprint_id = this.$.parents('.backlog').data('this').isSprintBacklog() ? 
                     this.$.parents('.backlog').data('this').getSprint().data('this').getID() : '';
     var release_id = this.$.parents('.backlog').data('this').isReleaseBacklog() ? 
                     this.$.parents('.backlog').data('this').getRelease().data('this').getID() : '';
-    var data = "next=" + (nxt.length==1 ? this.$.next().data('this').getID() : '') +
-               "&fixed_version_id=" + sprint_id;
+    var data = "";
+    // move_to_top
+    if(prv.length != 1) {
+      data = "prev=";
+    } else if(nxt.length != 1 && prv.length == 1) {
+      // move_to_bottom
+      data = "prev=" + prv.data('this').getID();
+    } else {
+      // move_before
+      data = "next=" + nxt.data('this').getID();
+    }
+
+    data += "&fixed_version_id=" + sprint_id;
+
     if (release_id || !sprint_id) { /* when not sprint_id, issue goes to backlog, so remove release */
       data += "&release_id=" + release_id;
     }
