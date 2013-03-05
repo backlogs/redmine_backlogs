@@ -6,7 +6,7 @@
 
   <div class="fff-wrapmiddle">
     <div class="fff-middle">
-      <div class="name editable story_tooltip" fieldname="name" fieldlabel="<%=l(:field_name)%>" title="<%= h sprint.project%>"><%= h sprint.name %></div>
+      <div class="name editable" fieldname="name" fieldlabel="<%=l(:field_name)%>"><%= h sprint.name %></div>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
     <div class="effective_date editable date" fieldname="effective_date" fieldlabel="<%=l(:field_effective_date)%>"><%= sprint.effective_date || l(:label_no_end) %></div>
     <div class="description editable" fieldname="description" fieldlabel="<%=l(:field_description)%>" fieldtype="textarea"><%= h sprint.description %></div>
     <div class="meta">
-      <%= render :partial => "backlogs/model_errors", :object => sprint.errors %>
+      <%= render :partial => "backlogs/model_errors", :object => sprint.errors unless sprint.errors.empty? %>
     </div>
     <div class="velocity story_tooltip" title="<b>Tracker statistics</b><br />"> </div>
   </div>

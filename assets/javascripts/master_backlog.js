@@ -25,4 +25,18 @@ RB.$(function() {
       return false;
     }
   });
+
+  // show closed sprints
+  RB.$('#show_completed_sprints').click(function(e) {
+    e.preventDefault();
+    RB.$('#closed_sprint_backlogs_container').
+      html('Loading...').
+      show().
+      load(RB.routes.closed_sprints, function(){ //success callback
+        var csbc = RB.$('#closed_sprint_backlogs_container');
+        if (!RB.$.trim(csbc.html())) csbc.html(RB.constants.locale._('No data to show'));
+        else RB.util.initToolTip(); //refreshToolTip requires a model scope.
+      });
+    RB.$('#show_completed_sprints').hide();
+  });
 });

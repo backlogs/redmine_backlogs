@@ -90,30 +90,26 @@ class RbStory < Issue
 
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
 
-  def self.backlog(project_id, sprint_id, release_id, options={})
-    stories = []
-
+  def self.inject_lower_higher
     prev = nil
-    RbStory.visible.order("#{self.table_name}.position").
-      backlog_scope(
-        options.merge({ #FIXME visible is already contained in find_option???
-          :project => project_id,
-          :sprint => sprint_id,
-          :release => release_id
-      })).each_with_index {|story, i|
-      stories << story
-
+    i = 1
+    all.map {|story|
       #optimization: set virtual attributes to avoid hundreds of sql queries
       # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
       prev.higher_item = story if prev
       story.lower_item = prev
-
-      story.rank = i + 1
-
       prev = story
     }
+  end
 
-    return stories
+  def self.backlog(project_id, sprint_id, release_id, options={})
+    self.visible.order("#{self.table_name}.position").
+      backlog_scope(
+        options.merge({
+          :project => project_id,
+          :sprint => sprint_id,
+          :release => release_id
+      }))
   end
 
   def self.product_backlog(project, limit=nil)
@@ -130,22 +126,22 @@ class RbStory < Issue
 
   def self.backlogs_by_sprint(project, sprints, options={})
     #make separate queries for each sprint to get higher/lower item right
-    sprint_of = {}
-    sprints.each do |s|
-      sprint_of[s.id] ||= []
-      sprint_of[s.id] = RbStory.backlog(project.id, s.id, nil, options)
+    return [] unless sprints
+    sprints.map do |s|
+      { :sprint => s,
+        :stories => RbStory.backlog(project.id, s.id, nil, options)
+      }
     end
-    return sprint_of
   end
 
   def self.backlogs_by_release(project, releases, options={})
     #make separate queries for each release to get higher/lower item right
-    release_of = {}
-    releases.each do |r|
-      release_of[r.id] ||= []
-      release_of[r.id] = RbStory.backlog(project.id, nil, r.id, options)
+    return [] unless releases
+    releases.map do |r|
+      { :release => r,
+        :stories => RbStory.backlog(project.id, nil, r.id, options)
+      }
     end
-    return release_of
   end
 
   def self.create_and_position(params)
@@ -361,10 +357,6 @@ class RbStory < Issue
       :sprint => self.fixed_version_id,
       :release => self.release_id
     }))
-  end
-
-  def rank
-    return super(RbStory.find_options(:project => self.project_id, :sprint => self.fixed_version_id))
   end
 
   def story_follow_task_state

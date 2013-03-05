@@ -110,10 +110,11 @@ module Backlogs
           options
         end
 
-        def rank(options={})
-          options = options.dup
-          Backlogs::ActiveRecord.add_condition(options, ["#{self.class.table_name}.position <= ?", self.position])
-          @rank ||= self.class.count(options)
+        def rank
+          @rank ||= self.class.
+            scoped(self.list_with_gaps_scope_condition).
+            where(["#{self.class.table_name}.position <= ?", self.position]).
+            count
         end
         attr_writer :rank
 

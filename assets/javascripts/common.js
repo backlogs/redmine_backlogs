@@ -123,3 +123,27 @@ RB.UserPreferences = RB.Object.create({
     }
   }
 });
+
+RB.util = {
+  initToolTip: function() {
+    RB.$('div.story_tooltip').each(function(el) {
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_));
+    });
+    RB.$('div.story_tooltip_ajax').each(function(el) {
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_, true));
+    });
+  },
+
+  refreshToolTip: function(scope) {
+    scope.$.find('div.story_tooltip').each(function(el) {
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_));
+    });
+    scope.$.find('div.story_tooltip_ajax').each(function(el) {
+        var _ = RB.$(this);
+        _.qtip(RB.$.qtipMakeOptions(_, true));
+    });
+  }
+}

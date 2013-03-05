@@ -157,18 +157,6 @@ class RbTask < Issue
     end
   end
 
-  def rank=(r)
-    @rank = r
-  end
-
-  def rank
-    s = self.story
-    return nil if !s
-
-    @rank ||= Issue.count( :conditions => ['tracker_id = ? and root_id = ? and lft > ? and lft <= ?', RbTask.tracker, s.root_id, s.lft, self.lft])
-    return @rank
-  end
-
   def burndown(sprint = nil, status=nil)
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
