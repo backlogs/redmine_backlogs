@@ -9,15 +9,7 @@ class RbSprint < Version
     errors.add(:base, "sprint_end_before_start") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
 
-  def self.rb_scope(symbol, func)
-    if Rails::VERSION::MAJOR < 3
-      named_scope symbol, func
-    else
-      scope symbol, func
-    end
-  end
-
-  rb_scope :open_sprints, lambda { |project|
+  scope :open_sprints, lambda { |project|
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
     where("status = 'open' and project_id = ?", project.id).
     order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
@@ -34,7 +26,7 @@ class RbSprint < Version
   }
 
   #TIB ajout du scope :closed_sprints
-  rb_scope :closed_sprints, lambda { |project|
+  scope :closed_sprints, lambda { |project|
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
     where("status = 'closed' and project_id = ?", project.id).
     order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
