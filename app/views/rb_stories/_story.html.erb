@@ -4,15 +4,16 @@
   </div>
  </div>
  <div class="fff-left">
-  <div class="id story_tooltip story_field">
-    <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
+    <% qtip_cls = "story_tooltip"
+       qtip_cls = "story_tooltip_ajax" unless defined?(render_tooltip)  %>
+  <div class="id <%= qtip_cls %> story_field">
+    <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story if defined?(render_tooltip) %></div>
     <div class="t"><%= issue_link_or_empty(story) %></div>
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
 
   <% if Backlogs.setting[:show_project_name] == 'enabled' %>
-  <div class="project editable story_tooltip story_field" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
-    <div class="tooltip_text"><%= story.project %></div>
+  <div class="project editable story_field" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
     <div class="t"><%= story.project %></div>
     <div class="v"><%= story.project_id %></div>
   </div>
@@ -41,9 +42,12 @@
   <div class="release_id meta"><%= story.release_id %></div>
   <div class="user_status meta"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
   <div class="story_project meta"><%= story.project_id %></div>
+  <% render_higher_item_id = false unless defined?(render_higher_item_id) %>
+  <% if render_higher_item_id %>
   <div class="higher_item_id meta"><%= story.higher_item.nil? ? '' : story.higher_item.id %></div>
+  <% end %>
   <div class="meta">
-    <%= render :partial => "backlogs/model_errors", :object => story.errors %>
+    <%= render :partial => "backlogs/model_errors", :object => story.errors unless story.errors.empty? %>
   </div>
  </div>
   <div class="clearfix"></div>

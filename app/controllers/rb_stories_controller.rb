@@ -59,4 +59,11 @@ class RbStoriesController < RbApplicationController
     end
   end
 
+  def tooltip
+    story = RbStory.find(params[:id])
+    respond_to do |format|
+      format.html { render :partial => "tooltip", :object => story }
+    end
+  end
+
 end

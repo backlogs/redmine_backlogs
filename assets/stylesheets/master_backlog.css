@@ -707,3 +707,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   height: auto;
   overflow: show;
 }
+
+/* show completed sprints */
+#show_completed_sprints { cursor:pointer; }

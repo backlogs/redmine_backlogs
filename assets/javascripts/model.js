@@ -316,10 +316,7 @@ RB.Model = RB.Object.create({
     if (typeof model == 'undefined') {
         model = this;
     }
-    model.$.find('div.story_tooltip').each(function(el) {
-        var _ = RB.$(this);
-        _.qtip(RB.$.qtipMakeOptions(_));
-    });
+    RB.util.refreshToolTip(model);
   },
   
   unmarkError: function(){
