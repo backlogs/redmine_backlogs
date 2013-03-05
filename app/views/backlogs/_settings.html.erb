@@ -120,6 +120,12 @@
       Backlogs.setting[:show_redmine_std_header]) %><span><%= l(:backlogs_not_all_themes_are_supported) %></span>
 </p>
 
+<p>
+  <%= content_tag(:label, l(:backlogs_scrum_stats_menu_position)) %>
+  <%= radio_button_tag("settings[scrum_stats_menu_position]", 'top', Backlogs.setting[:scrum_stats_menu_position].nil? || Backlogs.setting[:scrum_stats_menu_position] == 'top') %><%= l(:backlogs_scrum_stats_menu_top) %>
+  <%= radio_button_tag("settings[scrum_stats_menu_position]", 'application', Backlogs.setting[:scrum_stats_menu_position] == 'application') %><%= l(:backlogs_scrum_stats_menu_application) %>
+  <%= radio_button_tag("settings[scrum_stats_menu_position]", 'none', Backlogs.setting[:scrum_stats_menu_position] == 'none') %><%= l(:backlogs_scrum_stats_menu_none) %>
+</p>
 </fieldset>
 
 <fieldset>
