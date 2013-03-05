@@ -201,18 +201,18 @@ def login_as(user, password)
 end
 
 def login_as_product_owner
-  setup_permissions('product owner')
   login_as('jsmith', 'jsmith')
+  setup_permissions('product owner')
 end
 
 def login_as_scrum_master
-  setup_permissions('scrum master')
   login_as('jsmith', 'jsmith')
+  setup_permissions('scrum master')
 end
 
 def login_as_team_member
-  setup_permissions('team member')
   login_as('jsmith', 'jsmith')
+  setup_permissions('team member')
 end
 
 def login_as_admin
