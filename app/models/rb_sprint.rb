@@ -9,38 +9,21 @@ class RbSprint < Version
     errors.add(:base, "sprint_end_before_start") if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
 
-  scope :open_sprints, lambda { |project|
-    order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-    where("status = 'open' and project_id = ?", project.id).
-    order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 sprint_start_date #{order},
-                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 effective_date #{order}")
-#    {
-      #:order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
-      #           sprint_start_date #{order},
-      #           CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-      #           effective_date #{order}",
-      #:conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
-#    }
-  }
+  scope :open_sprints, lambda { |project| open_or_locked.by_date.in_project(project) }
+  scope :closed_sprints, lambda { |project| closed.by_date.in_project(project) }
 
-  #TIB ajout du scope :closed_sprints
-  scope :closed_sprints, lambda { |project|
-    order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-    where("status = 'closed' and project_id = ?", project.id).
-    order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 sprint_start_date #{order},
-                 CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 effective_date #{order}")
-    #{
-    #  :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
-    #             sprint_start_date #{order},
-    #             CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-    #             effective_date #{order}",
-    #  :conditions => [ "status = 'closed' and project_id = ?", project.id ]
-    #}
-  }
+  scope :closed, -> { where(:status => 'closed') }
+  scope :open_or_locked, -> { where(:status => ['open', 'locked']) }
+
+  def self.by_date_clause
+    dir = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+    "CASE #{table_name}.sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{dir},
+     #{table_name}.sprint_start_date #{dir},
+     CASE #{table_name}.effective_date WHEN NULL THEN 1 ELSE 0 END #{dir},
+     #{table_name}.effective_date #{dir}"
+  end
+  scope :by_date, -> { order(by_date_clause) }
+  scope :in_project, lambda {|project| where(:project_id => project) }
 
   #depending on sharing mode
   #return array of projects where this sprint is visible
