@@ -14,9 +14,7 @@ env:
 - REDMINE_VER=2.2.3 DB=sqlite CLUSTER=CLUSTER2
 - REDMINE_VER=2.2.3 DB=mysql CLUSTER=CLUSTER1
 - REDMINE_VER=2.2.3 DB=mysql CLUSTER=CLUSTER2
-- REDMINE_VER=2.1.6 DB=postgresql CLUSTER=CLUSTER1
 - REDMINE_VER=2.2.3 DB=postgresql CLUSTER=CLUSTER1
-- REDMINE_VER=2.1.6 DB=postgresql CLUSTER=CLUSTER2
 - REDMINE_VER=2.2.3 DB=postgresql CLUSTER=CLUSTER2
 matrix:
   allow_failures:
@@ -32,11 +30,7 @@ matrix:
   - rvm: 1.8.7
     env: REDMINE_VER=2.2.3 DB=mysql CLUSTER=CLUSTER2
   - rvm: 1.8.7
-    env: REDMINE_VER=2.1.6 DB=postgresql CLUSTER=CLUSTER1
-  - rvm: 1.8.7
     env: REDMINE_VER=2.2.3 DB=postgresql CLUSTER=CLUSTER1
-  - rvm: 1.8.7
-    env: REDMINE_VER=2.1.6 DB=postgresql CLUSTER=CLUSTER2
   - rvm: 1.8.7
     env: REDMINE_VER=2.2.3 DB=postgresql CLUSTER=CLUSTER2
 install: echo skip bundle install
