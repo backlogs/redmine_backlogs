@@ -156,7 +156,7 @@ class RbRelease < ActiveRecord::Base
             journal_details.prop_key = 'release_id' and
             (journal_details.old_value = ? or journal_details.value = ?)",
             self.id,self.id.to_s,self.id.to_s)
-    issues + missing_stories
+    (issues + missing_stories).uniq
   end
 
   #Return sprints that contain issues within this release
@@ -180,7 +180,6 @@ class RbRelease < ActiveRecord::Base
   # start: first day of release
   # 1..n: a day after the nth sprint
 #FIXME duplicates if sprints are run in parallel with same end date?
-#FIXME last date of latest sprint does not necessarily reflect what's left in the release backlog. Add current day to days of interest?
   def days
     days_of_interest = Array.new
     days_of_interest << self.release_start_date.to_date
