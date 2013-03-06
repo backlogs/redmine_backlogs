@@ -4,6 +4,6 @@
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= release.release_end_date     %></p>
   <br />
   <div class="meta">
-    <%= render :partial => "backlogs/model_errors", :object => release.errors %>
+    <%= render :partial => "backlogs/model_errors", :object => release.errors unless release.errors.empty? %>
   </div>
 </div>

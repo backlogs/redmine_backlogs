@@ -272,3 +272,7 @@ When /^I call move_before\("([^"]*)"\) on "([^"]*)"$/ do |arg, obj|
   obj.move_before(arg)
 end
 
+When /^I request the completed sprints$/ do
+  page.find(:css, "#show_completed_sprints").click
+  wait_for_ajax
+end

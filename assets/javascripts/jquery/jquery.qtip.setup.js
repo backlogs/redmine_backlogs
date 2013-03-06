@@ -1,5 +1,5 @@
-$.qtipMakeOptions = function(container) {
-    return {
+$.qtipMakeOptions = function(container, ajax) {
+    var options = {
         content: {
             text: container.children('div.tooltip_text')
         },
@@ -14,12 +14,22 @@ $.qtipMakeOptions = function(container) {
         hide: {
            fixed: true // Helps to prevent the tooltip from hiding ocassionally when tracking!
         }
+    };
+    if (ajax) {
+      var id = container.children('.id .v').text();
+      options['content'] = {
+              text: '<div class="tooltip_text">Loading...</div>',
+              ajax: {
+                url: '/rb/story/'+id+'/tooltip',
+                type: 'GET',
+                data: { project_id: RB.constants.project_id }, //to satisfy before_filter and authorize
+                once: true
+              }
+            };
     }
+    return options;
 }
 
 $(function($) {
-    $('div.story_tooltip').each(function(el) {
-        var _ = $(this);
-        _.qtip($.qtipMakeOptions(_));
-    });
+  RB.util.initToolTip();
 });

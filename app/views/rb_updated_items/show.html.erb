@@ -1,7 +1,8 @@
 <div id="updates">
   <div id="last_updated"><%= date_string_with_milliseconds(@last_update, 0.001) %></div>
   <div id="stories">
-    <%= render :partial => "rb_stories/story", :collection => @items[:stories] %>
+    <%= render :partial => "rb_stories/story", :collection => @items[:stories],
+      :locals => { :render_higher_item_id => true } %>
   </div>
   <div id="tasks">
     <%= render :partial => "rb_tasks/task", :collection => @items[:tasks] %>
