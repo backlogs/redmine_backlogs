@@ -343,11 +343,17 @@ class RbStory < Issue
     return rl
   end
 
+  def continued_story?
+    return auto_detect_continued_story? if release_relationship == "auto"
+    return true if release_relationship == "initial"
+    return false
+  end
+
   # Definition of a continued story:
   # * "Copied to" relation with another story
   # * The other story is in same release
   # * The other story is rejected
-  def continued_story?
+  def auto_detect_continued_story?
     self.relations.each{|r|
       if r.relation_type == IssueRelation::TYPE_COPIED_TO
         from_story = RbStory.find(r.issue_from_id)
