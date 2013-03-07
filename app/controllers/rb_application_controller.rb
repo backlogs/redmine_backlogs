@@ -34,7 +34,7 @@ class RbApplicationController < ApplicationController
     @settings = Backlogs.settings
     if @settings[:story_trackers].blank? || @settings[:task_tracker].blank?
       respond_to do |format|
-        format.html { render :file => "shared/not_configured" }
+        format.html { render :file => "backlogs/not_configured" }
       end
     end
   end
