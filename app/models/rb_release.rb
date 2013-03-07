@@ -191,9 +191,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def last_closed_sprint_date
-    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?) and versions.status = ?', id, "closed")
-      .order("versions.effective_date DESC")
-      .first.effective_date.to_date unless closed_sprints.size == 0
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?) and versions.status = ?', id, "closed").order("versions.effective_date DESC").first.effective_date.to_date unless closed_sprints.size == 0
   end
 
   def has_open_stories?
