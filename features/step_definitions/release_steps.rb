@@ -119,6 +119,13 @@ Given /^I duplicate ([^"]*) to release ([^"]*) as ([^"]*)$/ do |story_old, relea
   issue_copy.save
 end
 
+Given /^I set story ([^"]*) release relationship to (auto|initial|added)$/ do |story_name,relation_type|
+  issue = Issue.find_by_subject(story_name)
+  issue.should_not be_nil
+  issue.release_relationship = relation_type
+  issue.save
+end
+
 Then /^release "([^"]*)" should have (\d+) sprints$/ do |release, num|
   release = RbRelease.find_by_name(release)
   release.should_not be_nil

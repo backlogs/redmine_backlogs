@@ -57,6 +57,7 @@ Feature: Release burndown complex
       And I move the story named Story E to the 1st position of the sprint named Sprint 003
       And the current time is 2011-03-01 08:00:00
       And I duplicate Story E to release Rel 1 as Story E 2nd
+      And I set story Story E 2nd release relationship to initial
       And I have made the following story mutations:
         | day | story   | status      |
         | 5   | Story E | Rejected    |
