@@ -33,7 +33,8 @@ module Backlogs
 
     module InstanceMethods
       def history
-        @history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
+        @history ||= RbIssueHistory.where(:issue_id => self.id).first_or_initialize
+        #@history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
       end
 
       def release_burnchart_day_caches(release_id)
@@ -166,7 +167,7 @@ module Backlogs
           # raw sql and manual journal here because not
           # doing so causes an update loop when Issue calls
           # update_parent :<
-          tasklist = RbTask.find(:all, :conditions => ["root_id=? and lft>? and rgt<? and
+          tasklist = RbTask.where("root_id=? and lft>? and rgt<? and
                                           (
                                             (? is NULL and not fixed_version_id is NULL)
                                             or
@@ -178,7 +179,7 @@ module Backlogs
                                           )", self.root_id, self.lft, self.rgt,
                                               self.fixed_version_id, self.fixed_version_id,
                                               self.fixed_version_id, self.fixed_version_id,
-                                              RbTask.tracker]).to_a
+                                              RbTask.tracker).all.to_a
           tasklist.each{|task| task.history.save! }
           if tasklist.size > 0
             task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'

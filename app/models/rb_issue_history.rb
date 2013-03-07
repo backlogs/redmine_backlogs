@@ -28,9 +28,9 @@ class RbIssueHistory < ActiveRecord::Base
 
   def self.statuses
     Hash.new{|h, k|
-      s = IssueStatus.find_by_id(k.to_i)
+      s = IssueStatus.where(:id => k.to_i).take
       if s.nil?
-        s = IssueStatus.default
+        s = IssueStatus.first.id
         puts "IssueStatus #{k.inspect} not found, using default #{s.id} instead"
       end
       h[k] = {:id => s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
@@ -105,7 +105,7 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def self.rebuild_issue(issue, status=nil)
-    rb = RbIssueHistory.find_or_initialize_by_issue_id(issue.id)
+    rb = RbIssueHistory.where(:issue_id => issue.id).first_or_initialize
 
     rb.history = [{:date => issue.created_on.to_date - 1, :origin => :rebuild}]
 
@@ -306,7 +306,7 @@ class RbIssueHistory < ActiveRecord::Base
 
     if rb.history.detect{|h| h[:tracker] == :story }
       rb.history.collect{|h| h[:sprint] }.compact.uniq.each{|sprint_id|
-        sprint = RbSprint.find_by_id(sprint_id)
+        sprint = RbSprint.find(sprint_id.to_i)
         next unless sprint
         sprint.burndown.touch!(issue.id)
       }
@@ -368,7 +368,7 @@ class RbIssueHistory < ActiveRecord::Base
 
   def touch_sprint
     self.history.select{|h| h[:sprint]}.uniq{|h| "#{h[:sprint]}::#{h[:tracker]}"}.each{|h|
-      sprint = RbSprint.find_by_id(h[:sprint])
+      sprint = RbSprint.find(h[:sprint].to_i)
       next unless sprint
       sprint.burndown.touch!(h[:tracker] == :story ? self.issue.id : nil)
     }

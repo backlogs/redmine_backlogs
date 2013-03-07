@@ -64,6 +64,7 @@ class RbStory < Issue
     rescue
       Rails.logger.error("Story has no trackers configured")
       nil
+    end
   end
 
   def self.find_options(options)
