@@ -264,6 +264,9 @@ class RbStory < Issue
   def release_burndown_data(days,release_burndown_id)
     return nil unless self.is_story?
 
+    rl = self.release_burndown_cache.get
+    return rl unless rl.empty?
+
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
@@ -336,9 +339,14 @@ class RbStory < Issue
     rl[:backlog_points] = series.series(:backlog_points)
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
+    self.release_burndown_cache.set rl
     return rl
   end
 
+  #optimization for RbRelease.stories_all_time to eager load all the required stuff
+  scope :release_burndown_includes, includes(:rb_release_burndown_cache,
+    :relations_from, :relations_to)
+ 
   def continued_story?
     return auto_detect_continued_story? if release_relationship == "auto"
     return true if release_relationship == "initial"
