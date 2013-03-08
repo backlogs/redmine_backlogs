@@ -65,7 +65,7 @@ class RbIssueHistory < ActiveRecord::Base
 #    limits = [nil,days[0..-2]].flatten
 limits = [nil] * days.size
     # Limit search to history of story
-    hist_limit = h.keys[0]
+    hist_limit = h.keys.sort[0] # hashes are ordered in ruby 1.9. They are not ordered in 1.8.
     filtered = days.each_with_index.collect{|d,i|
       #FIXME why did self.expand not give us all days in h?
       while !h[d] && (limits[i].nil? || d > limits[i]) && d > hist_limit
