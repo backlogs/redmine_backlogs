@@ -60,7 +60,7 @@ module Backlogs
       matrix.each{|cell|
         cell[:unsupported] = true if af.keys.collect{|k| cell[k] == af[k] ? '' : 'x'}.join('') == ''
       }
-    }
+    } unless travis['matrix']['allowed_failures'].nil?
     matrix.each{|cell|
       cell[:version] = cell.delete('env').gsub(/^REDMINE_VER=/, '').gsub(/\s.*/, '')
       cell[:platform] = (cell[:version] =~ /^[0-9]/ ? :redmine : :chiliproject)
