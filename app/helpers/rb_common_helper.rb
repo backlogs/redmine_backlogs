@@ -154,12 +154,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     initial_points - ( (workdays(initial_day, day).size - 1) * day_diff )
   end
 
-  def ic(s)
+  def csv_encode(s)
     if RUBY_VERSION >= "1.9"
-      s
+      s.encode(l(:general_csv_encoding))
     else
-      ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
-      ic.iconv(s)
+      Iconv.conv(l(:general_csv_encoding), 'UTF-8', s)
     end
   rescue
     s
@@ -176,7 +175,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
                   l(:label_points_added),
                   l(:label_points_accepted)
                 ]
-      csv << headers.collect {|c| ic(c.to_s) }
+      csv << headers.collect {|c| csv_encode(c.to_s) }
 
       bd = release.burndown
       lines = 0
@@ -186,7 +185,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
                    bd[:backlog_points][i].to_s.gsub('.', ','),
                    bd[:closed_points][i].to_s.gsub('.', ',')
                  ]
-        csv << fields.collect{ |c| ic(c.to_s) }
+        csv << fields.collect{ |c| csv_encode(c.to_s) }
       end
     end
     export
