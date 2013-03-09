@@ -344,7 +344,7 @@ class RbStory < Issue
   end
 
   #optimization for RbRelease.stories_all_time to eager load all the required stuff
-  def release_burndown_includes
+  def self.release_burndown_includes
     #return a scope for release burndown chart rendering
     includes(:rb_release_burndown_cache, :relations_from, :relations_to)
   end
