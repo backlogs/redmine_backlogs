@@ -601,3 +601,9 @@ end
 Given /^Issue done_ratio is determined by the issue field$/ do
   Setting.issue_done_ratio = 'issue_field'
 end
+
+Given(/^I request the csv format for release "(.*?)"$/) do |arg1|
+  r = RbRelease.where(:name => arg1).first
+  r.should_not be_nil
+  visit url_for(:controller => :rb_releases, :action => :show, :format => :csv, :release_id => r.id, :only_path => true)
+end
