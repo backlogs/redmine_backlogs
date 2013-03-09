@@ -344,8 +344,10 @@ class RbStory < Issue
   end
 
   #optimization for RbRelease.stories_all_time to eager load all the required stuff
-  scope :release_burndown_includes, includes(:rb_release_burndown_cache,
-    :relations_from, :relations_to)
+  def release_burndown_includes
+    #return a scope for release burndown chart rendering
+    includes(:rb_release_burndown_cache, :relations_from, :relations_to)
+  end
  
   def continued_story?
     return auto_detect_continued_story? if release_relationship == "auto"
