@@ -172,8 +172,8 @@ class RbRelease < ActiveRecord::Base
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
             (journal_details.old_value = ? or journal_details.value = ?)",
-            self.id,self.id.to_s,self.id.to_s)
-    (issues + missing_stories).uniq
+            self.id,self.id.to_s,self.id.to_s).release_burndown_includes
+    (issues.release_burndown_includes + missing_stories).uniq
   end
 
   #Return sprints that contain issues within this release
