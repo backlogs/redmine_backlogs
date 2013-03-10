@@ -48,27 +48,16 @@ case $REDMINE_VER in
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.0.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  2.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.1.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.1
+  master) export PATH_TO_PLUGINS=./plugins
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
-          ;;
-  2.2.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.2
-          export GENERATE_SECRET=generate_secret_token
-          export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
-          ;;
-  2.3.*)  export PATH_TO_PLUGINS=./plugins
-          export GENERATE_SECRET=generate_secret_token
-          export MIGRATE_PLUGINS=redmine:plugins:migrate
-          #export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
-          export REDMINE_GIT_TAG=2.3-stable
+          export REDMINE_GIT_TAG=master
           ;;
   v3.3.0) export PATH_TO_PLUGINS=./vendor/plugins
           export GENERATE_SECRET=generate_session_store
