@@ -58,6 +58,53 @@ Feature: Release burndown
         | 1     | 12        | 2         | 0     |
         | 2     |  9        | 0         | 0     |
 
+   Scenario: See planned/trend end date at different time in the release.
+    Given I view the release page
+      And I have set planned velocity to 5 points per month for Rel 1
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | release | points |
+        | Story A | Sprint 001 | Rel 1	 | 2 |
+        | Story B | Sprint 002 | Rel 1   | 3 |
+      And I have made the following story mutations:
+        | day | story   | status   |
+        | 1   | Story A | Accepted |
+      And the current time is 2011-01-12 23:00:00
+     Then show me the burndown data for release "Rel 1"
+# Reason: In the middle of a sprint - planned/trend estimate should start from last sprint.
+      And Rel 1 has planned timespan of 72 days starting from 2011-01-08
+# Reason: 2 points/6 days = 0.33 points per day => 36 days to complete 12 points
+      And Rel 1 has trend estimate end date at 2011-02-13
+
+      And the current time is 2011-01-16 23:00:00
+     Then show me the burndown data for release "Rel 1"
+# Reason: No current sprint - planned estimate should start from today.
+      And Rel 1 has planned timespan of 72 days starting from 2011-01-16
+# Reason: 2 points/14 days = 0.143 points/day => 84 days to complete 12 points
+      And Rel 1 has trend estimate end date at 2011-04-10
+
+   Scenario: See impact of added stories to trend estimate end date
+    Given I view the release page
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | release | points |
+        | Story A | Sprint 001 | Rel 1   | 2      |
+        | Story B | Sprint 002 | Rel 1   | 3      |
+      And I have made the following story mutations:
+        | day | story   | status   |
+        | 1   | Story A | Accepted |
+      And the current time is 2011-01-12 23:00:00
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | release | points |
+        | Story C | Sprint 002 | Rel 1   | 1      |
+     Then show me the burndown data for release "Rel 1"
+# Similar to previous scenario. Added story is not yet in calculation window
+      And Rel 1 has trend estimate end date at 2011-02-13
+      And the current time is 2011-01-16 23:00:00
+     Then show me the burndown data for release "Rel 1"
+# Added story in calculation window. By linear extrapolation of
+# trend added and closed it takes 182 days to complete release
+      And Rel 1 has trend estimate end date at 2011-07-17
+
+
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00
 #     When I update story "Story 3" to 13 story points

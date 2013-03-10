@@ -26,6 +26,12 @@ When /^I move story (.+) to the product backlog$/ do |story_name|
   story.save
 end
 
+Given /^I have set planned velocity to (\d+) points per (month|fortnight|week) for (.+)$/ do |velocity,velocity_timespan, release_name|
+  release = RbRelease.find_by_name(release_name)
+  release.planned_velocity = velocity
+  release.save
+end
+
 
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
   story = RbStory.find_by_subject(story_name)
@@ -135,12 +141,14 @@ end
 Then /^show me the burndown data for release "([^"]*)"$/ do |release|
   release = RbRelease.find_by_name(release)
   burndown = release.burndown
+  puts "days      #{release.days.collect{|d| d[:date]}}"
   puts "offset    #{burndown[:offset_points]}"
   puts "added     #{burndown[:added_points]}"
   puts "bl points #{burndown[:backlog_points]}"
   puts "closed    #{burndown[:closed_points]}"
   puts "trend add #{burndown[:trend_added]}"
   puts "trend cls #{burndown[:trend_closed]}"
+  puts "planned   #{burndown[:planned]}"
 end
 
 Then /^the release burndown for release "([^"]*)" should be:$/ do |release, table|
@@ -159,6 +167,26 @@ Then /^the release burndown for release "([^"]*)" should be:$/ do |release, tabl
     end
   end
 end
+
+Then /^([^"]*) has planned timespan of (\d+) days starting from ([^"]*)$/ do |release_name, days, start|
+  release = RbRelease.find_by_name(release_name)
+  burndown = release.burndown
+
+  start_date = Date.parse start
+  expected_date = start_date + days.to_i
+
+  burndown[:planned][0][0].should == start_date
+  burndown[:planned][1][0].should == expected_date
+end
+
+Then /^([^"]*) has trend estimate end date at ([^"]*)$/ do |release_name, expected_end_date|
+  release = RbRelease.find_by_name(release_name)
+  burndown = release.burndown
+  expected_end_date = Date.parse expected_end_date
+
+  burndown.trend_estimate_end_date.should == expected_end_date
+end
+
 
 Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story_name,release_name|
   release = RbRelease.find_by_name(release_name)

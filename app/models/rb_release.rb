@@ -57,25 +57,28 @@ class ReleaseBurndown
     @data[:closed_points] = series.series(:closed_points)
 
     # Keyfigures for later calculations
-#FIXME - change keyfigures to use last closed sprint as basis for calculations
-# see RbRelease.last_closed_sprint_date
-    @last_backlog_points = @data[:offset_points][-1] + @data[:added_points][-1] + @data[:backlog_points][-1]
-    @last_points_left = @last_backlog_points - @data[:offset_points][-1]
-    @last_added_points = @data[:offset_points][-1]
-    @last_date = release.days[-1]
+    @index_estimate_last = calc_index_estimate_last
+    @last_backlog_points = @data[:offset_points][@index_estimate_last] +
+                             @data[:added_points][@index_estimate_last] +
+                             @data[:backlog_points][@index_estimate_last]
+    @last_points_left = @last_backlog_points - @data[:offset_points][@index_estimate_last]
+    @last_added_points = @data[:offset_points][@index_estimate_last]
+    @last_date = release.days[@index_estimate_last][:date]
   end
+
 
   def calculate_trend
     @data[:trend_added] = []
     @data[:trend_closed] = []
 
     return unless @last_points_left > 0
-    return unless @days.size > 1
-    avg_count = @days.size >= 3 ? 3 : @days.size
+    return unless @index_estimate_last > 0
+    avg_count = @index_estimate_last >= 3 ? 3 : @index_estimate_last
+    index_estimate_first = @index_estimate_last - avg_count
 
-    avg_days = (@days[-1] - @days[-avg_count]).to_i
-    avg_added_per_day = (@data[:offset_points][-1] - @data[:offset_points][-avg_count]) / avg_days
-    avg_closed_per_day = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_days * -1
+    avg_days = (@days[@index_estimate_last][:date] - @days[index_estimate_first][:date]).to_i
+    avg_added_per_day = (@data[:offset_points][@index_estimate_last] - @data[:offset_points][index_estimate_first]) / avg_days
+    avg_closed_per_day = @data[:closed_points][index_estimate_first..@index_estimate_last].inject(0){|sum,p| sum += p} / avg_days * -1
 
     #Calculate trend end date (crossing trend_closed and trend_added)
     trend_cross_days = (@last_backlog_points - @last_added_points)/(avg_added_per_day - avg_closed_per_day)
@@ -99,14 +102,28 @@ class ReleaseBurndown
   def calculate_planned
     return unless @last_points_left > 0
     return unless @planned_velocity.is_a? Float
+    return unless @planned_velocity > 0.0
 
     @data[:planned] = []
     @data[:planned] << [@last_date, @last_backlog_points]
     #FIXME add possibility to choose velocity per week, fortnight, month?
     @planned_estimate_end_date = @last_date + (@last_points_left / @planned_velocity * 30)
-    @data[:planned] << [@planned_estimate_end_date, @data[:offset_points][-1]]
+    @data[:planned] << [@planned_estimate_end_date, @data[:offset_points][@index_estimate_last]]
 
   end
+
+  # Calculate index in days array for last date to be included for trend calculations.
+  def calc_index_estimate_last
+    result = []
+    result << 0
+    @days.each_with_index{|d,i|
+      # Avoid using a date which is within the active sprint. Fallback to previous sprint
+      # as data in current sprint is likely not up-to-date
+      result << i if d[:date] <= Time.now.to_date
+    }
+    return result[-1]
+  end
+
 end
 
 class RbRelease < ActiveRecord::Base
@@ -181,12 +198,14 @@ class RbRelease < ActiveRecord::Base
   # 1..n: a day after the nth sprint
 #FIXME duplicates if sprints are run in parallel with same end date?
   def days
+    current_date = Time.now.to_date
     days_of_interest = Array.new
-    days_of_interest << self.release_start_date.to_date
+    days_of_interest << { :date => self.release_start_date.to_date, :sprint =>nil}
     self.sprints.each{|sprint|
-      days_of_interest << sprint.effective_date.to_date }
+      days_of_interest << { :date => sprint.effective_date.to_date, :sprint => sprint}
+    }
     # Add current day if we are past last sprint end date and has open stories
-    days_of_interest << Time.now.to_date if self.has_open_stories? and Time.now.to_date > days_of_interest[-1]
+    days_of_interest << { :date => Time.now.to_date, :sprint => nil} if self.has_open_stories? and Time.now.to_date > days_of_interest[-1][:date]
     return days_of_interest
   end
 
