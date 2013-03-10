@@ -149,6 +149,16 @@ Feature: Release burndown
         | 1     | 12             | 6         | 0     | 0  |
         | 2     | 12             | 0         | 0     | 0  |
 
+   Scenario: Close story in release but outside sprint
+    Given I view the release page
+      And the current time is 2011-01-07 23:00:00
+      And I accept story Story 1
+      And the current time is 2011-01-12 23:00:00
+     Then show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 9              | 0         | 0     | 0  |
+        | 1     | 7              | 2         | 0     | 0  |
 
 
 #   Scenario: Add complexity by re-estimating a story
