@@ -104,6 +104,30 @@ Feature: Release burndown
 # trend added and closed it takes 182 days to complete release
       And Rel 1 has trend estimate end date at 2011-07-17
 
+   Scenario: Story closed after sprint end date should appear closed in the original sprint
+    Given I view the release page
+      And I have defined the following stories in the following sprints:
+        | subject | sprint     | release | points |
+        | Story A | Sprint 001 | Rel 1   | 2      |
+        | Story B | Sprint 002 | Rel 1   | 3      |
+      And the current time is 2011-01-12 23:00:00
+      And I accept story Story A
+     Then show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 14             | 0         | 0     | 0  |
+        | 1     | 12             | 2         | 0     | 0  |
+        | 2     | 12             | 0         | 0     | 0  |
+      And the current time is 2011-01-16 23:00:00
+     Then show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 14             | 0         | 0     | 0  |
+        | 1     | 12             | 2         | 0     | 0  |
+        | 2     | 12             | 0         | 0     | 0  |
+        | 3     | 12             | 0         | 0     | 0  |
+
+
 
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00

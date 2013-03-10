@@ -55,6 +55,19 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def filter_release(days)
+    # if story is closed, make sure closed information is returned
+    # from the end date of the sprint.
+    closed_in_sprint = nil
+    if self.issue.status.is_closed?
+      self.history.select{|h| h[:date] > self.issue.fixed_version.effective_date}.each{|h|
+        if !h[:status_open]
+          closed_in_sprint = { :date => self.issue.fixed_version.effective_date, :history => h }
+          closed_in_sprint[:history][:origin] = :filter_closed_after
+          break
+        end
+      }
+    end
+
     h = Hash[*(self.history.collect{|d| [d[:date], d]}.flatten)]
     #if we have no day matching, find one earlier to get the latest status
     #first day allowed to find status before first day. Others only allowed
@@ -68,28 +81,19 @@ limits = [nil] * days.size
     hist_limit = h.keys.sort[0] # hashes are ordered in ruby 1.9. They are not ordered in 1.8.
     filtered = days.each_with_index.collect{|day,i|
       d = day[:date]
-      #FIXME why did self.expand not give us all days in h?
-      while !h[d] && (limits[i].nil? || d > limits[i]) && d > hist_limit
-        if d > days[-1][:date]
-          d = days[-1][:date]
-        else
-          d = d.yesterday
+      if !closed_in_sprint.nil? && d >= closed_in_sprint[:date]
+        closed_in_sprint[:history]
+      else
+        while !h[d] && (limits[i].nil? || d > limits[i]) && d > hist_limit
+          if d > days[-1][:date]
+            d = days[-1][:date]
+          else
+            d = d.yesterday
+          end
         end
+        h[d] ? h[d] : {:date => d, :origin => :filter}
       end
-      h[d] ? h[d] : {:date => d, :origin => :filter}
     }
-    # FIXME What if story was closed a few days after the sprint end date?
-    # Should this show up at the end date of that sprint or the next?
-    
-    # see if this issue was closed after last day
-    if filtered[-1][:status_open]
-      self.history.select{|h| h[:date] > days[-1][:date]}.each{|h|
-        if !h[:status_open]
-          filtered[-1] = h
-          break
-        end
-      }
-    end
     return filtered
   end
 

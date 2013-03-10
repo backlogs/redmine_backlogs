@@ -114,6 +114,15 @@ Given /^I have made the following story mutations:$/ do |table|
   end
 end
 
+Given /^I accept story ([^"]*)$/ do |story_name|
+  story = RbStory.find_by_subject(story_name)
+  story.should_not be_nil
+  status = IssueStatus.find(:first, :conditions => ['name = ?', "Accepted"])
+  story.status_id = status.id
+  story.save!.should be_true
+end
+
+
 Given /^I duplicate ([^"]*) to release ([^"]*) as ([^"]*)$/ do |story_old, release_name, story_new|
   issue = Issue.find_by_subject(story_old)
   release = RbRelease.find_by_name(release_name)
