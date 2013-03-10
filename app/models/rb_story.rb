@@ -304,18 +304,18 @@ class RbStory < Issue
                      false
                    end
                  })
-    series.merge(:day => days.collect{|d| d[:date]})
+    series.merge(:day => days)
 
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
-      if (created_on.to_date <= days.first[:date]) && p.open
+      if (created_on.to_date <= days.first) && p.open
         p.backlog_points = p.points
       end
       if p.accepted_first
         p.closed_points = p.points
       end
       # Is the story created after the release was started?
-      if (created_on.to_date > days.first[:date]) &&
+      if (created_on.to_date > days.first) &&
           (created_on.to_date <= p.day) #day is the end-date of a sprint
         # Candidate for being an added story - is it a duplicate of a
         # previously rejected story in the same release? (aka continued story)

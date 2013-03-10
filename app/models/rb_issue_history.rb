@@ -71,8 +71,7 @@ class RbIssueHistory < ActiveRecord::Base
     # Fetch history to search for days
     h = Hash[*(self.history.collect{|d| [d[:date], d]}.flatten)]
 
-    filtered = days.collect{|day|
-      d = day[:date]
+    filtered = days.collect{|d|
       # if we are past date of closing issue just provide the closed history.
       if !closed_in_sprint.nil? && d >= closed_in_sprint[:date]
         closed_in_sprint[:history]

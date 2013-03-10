@@ -63,7 +63,7 @@ class ReleaseBurndown
                              @data[:backlog_points][@index_estimate_last]
     @last_points_left = @last_backlog_points - @data[:offset_points][@index_estimate_last]
     @last_added_points = @data[:offset_points][@index_estimate_last]
-    @last_date = release.days[@index_estimate_last][:date]
+    @last_date = release.days[@index_estimate_last]
   end
 
 
@@ -76,7 +76,7 @@ class ReleaseBurndown
     avg_count = @index_estimate_last >= 3 ? 3 : @index_estimate_last
     index_estimate_first = @index_estimate_last - avg_count
 
-    avg_days = (@days[@index_estimate_last][:date] - @days[index_estimate_first][:date]).to_i
+    avg_days = (@days[@index_estimate_last] - @days[index_estimate_first]).to_i
     avg_added_per_day = (@data[:offset_points][@index_estimate_last] - @data[:offset_points][index_estimate_first]) / avg_days
     avg_closed_per_day = @data[:closed_points][index_estimate_first..@index_estimate_last].inject(0){|sum,p| sum += p} / avg_days * -1
 
@@ -119,7 +119,7 @@ class ReleaseBurndown
     @days.each_with_index{|d,i|
       # Avoid using a date which is within the active sprint. Fallback to previous sprint
       # as data in current sprint is likely not up-to-date
-      result << i if d[:date] <= Time.now.to_date
+      result << i if d <= Time.now.to_date
     }
     return result[-1]
   end
@@ -196,17 +196,16 @@ class RbRelease < ActiveRecord::Base
   # The dates are:
   # start: first day of release
   # 1..n: a day after the nth sprint
-#FIXME duplicates if sprints are run in parallel with same end date?
   def days
     current_date = Time.now.to_date
     days_of_interest = Array.new
-    days_of_interest << { :date => self.release_start_date.to_date, :sprint =>nil}
+    days_of_interest << self.release_start_date.to_date
     self.sprints.each{|sprint|
-      days_of_interest << { :date => sprint.effective_date.to_date, :sprint => sprint}
+      days_of_interest << sprint.effective_date.to_date
     }
     # Add current day if we are past last sprint end date and has open stories
-    days_of_interest << { :date => Time.now.to_date, :sprint => nil} if self.has_open_stories? and Time.now.to_date > days_of_interest[-1][:date]
-    return days_of_interest
+    days_of_interest << Time.now.to_date if self.has_open_stories? and Time.now.to_date > days_of_interest[-1]
+    return days_of_interest.uniq.sort
   end
 
   def last_closed_sprint_date

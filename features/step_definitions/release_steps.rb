@@ -150,7 +150,7 @@ end
 Then /^show me the burndown data for release "([^"]*)"$/ do |release|
   release = RbRelease.find_by_name(release)
   burndown = release.burndown
-  puts "days      #{release.days.collect{|d| d[:date]}}"
+  puts "days      #{release.days}"
   puts "offset    #{burndown[:offset_points]}"
   puts "added     #{burndown[:added_points]}"
   puts "bl points #{burndown[:backlog_points]}"
