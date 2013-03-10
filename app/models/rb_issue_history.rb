@@ -58,7 +58,7 @@ class RbIssueHistory < ActiveRecord::Base
     # if story is closed, make sure closed information is returned
     # from the end date of the sprint.
     closed_in_sprint = nil
-    if self.issue.status.is_closed?
+    if self.issue.status.is_closed? && !self.issue.fixed_version.nil?
       self.history.select{|h| h[:date] > self.issue.fixed_version.effective_date}.each{|h|
         if !h[:status_open]
           closed_in_sprint = { :date => self.issue.fixed_version.effective_date, :history => h }
