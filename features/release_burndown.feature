@@ -127,6 +127,28 @@ Feature: Release burndown
         | 2     | 12             | 0         | 0     | 0  |
         | 3     | 12             | 0         | 0     | 0  |
 
+   Scenario: Release burndown with parallel sprint end dates merged
+    Given I view the release page
+      And I have defined the following sprints:
+        | name        | sprint_start_date | effective_date |
+        | Sprint 001a | 2011-01-02        | 2011-01-08     |
+      And I have defined the following stories in the following sprints:
+        | subject | sprint      | release | points |
+        | Story A | Sprint 001  | Rel 1   | 2      |
+        | Story B | Sprint 002  | Rel 1   | 3      |
+        | Story C | Sprint 001a | Rel 1   | 4      |
+      And I have made the following story mutations:
+        | day | story   | status   |
+        | 1   | Story A | Accepted |
+        | 3   | Story C | Accepted |
+      And the current time is 2011-01-12 23:00:00
+     Then show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 18             | 0         | 0     | 0  |
+        | 1     | 12             | 6         | 0     | 0  |
+        | 2     | 12             | 0         | 0     | 0  |
+
 
 
 #   Scenario: Add complexity by re-estimating a story
