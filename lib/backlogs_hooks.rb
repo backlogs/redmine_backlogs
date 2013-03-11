@@ -192,6 +192,13 @@ module BacklogsPlugin
                                    content_tag('option', l(:label_none), :value => 'none') +
                                    release_options_for_select(project.releases)) }
           </p>"
+        snippet += "<p>
+          <label for='issue_release_relationship'>#{ l(:field_release_relationship)}</label>"
+        snippet += select_tag 'issue[release_relationship]',
+                     options_for_select([[l(:label_no_change_option),'']] +
+                       RbStory::RELEASE_RELATIONSHIP.collect{|v|
+                        [l("label_release_relationship_#{v}"), v] } )
+        snippet += "</p>"
       end
 
       def view_issues_context_menu_end(context={ })
