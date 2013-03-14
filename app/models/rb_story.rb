@@ -1,7 +1,7 @@
 class RbStory < Issue
   unloadable
 
-  RELEASE_RELATIONSHIP = %w(auto initial added)
+  RELEASE_RELATIONSHIP = %w(auto initial continued added)
 
   private
 
@@ -308,7 +308,8 @@ class RbStory < Issue
 
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
-      if (created_on.to_date <= days.first) && p.open
+      if (created_on.to_date <= days.first ||
+          release_relationship == 'initial') && p.open
         p.backlog_points = p.points
       end
       if p.accepted_first
@@ -342,6 +343,7 @@ class RbStory < Issue
   def continued_story?
     return auto_detect_continued_story? if release_relationship == "auto"
     return true if release_relationship == "initial"
+    return true if release_relationship == "continued"
     return false
   end
 

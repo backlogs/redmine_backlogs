@@ -119,6 +119,7 @@ en:
   label_release_relationship_auto: Auto
   label_release_relationship_initial: Initial
   label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint
