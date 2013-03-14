@@ -61,6 +61,9 @@ class RbSprintBurndown < ActiveRecord::Base
     return self.burndown[:days]
   end
 
+  def cached_data
+    return self.cached_burndown[@direction]
+  end
   def data
     return self.burndown[@direction]
   end
@@ -68,6 +71,10 @@ class RbSprintBurndown < ActiveRecord::Base
   def init
     self.stories ||= []
     self.direction = Backlogs.setting[:points_burn_direction]
+  end
+
+  def cached_burndown
+    read_attribute(:burndown) || burndown
   end
 
   def burndown
