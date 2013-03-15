@@ -224,7 +224,7 @@ en:
 
     Note: Historic data is not affected when changing this option."
   backlogs_story_follows_task_loose_explanation: "Note: all issue statuses require a valid %done between 0 and 100."
-  backlogs_scrum_stats_menu_position: Position of Scum Statistics menu
+  backlogs_scrum_stats_menu_position: Position of Scrum Statistics menu
   backlogs_scrum_stats_menu_top: Top menu
   backlogs_scrum_stats_menu_application: Application menu
   backlogs_scrum_stats_menu_none: None

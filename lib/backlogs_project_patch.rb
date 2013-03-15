@@ -16,11 +16,11 @@ module Backlogs
       @all_sprints.each{|sprint| sprint.burndown.direction = :up }
       days = @past_sprints.collect{|s| s.days.size}.sum
       if days != 0
-        @points_per_day = @past_sprints.collect{|s| s.burndown.data[:points_committed][0]}.compact.sum / days
+        @points_per_day = @past_sprints.collect{|s| s.burndown.cached_data[:points_committed][0]}.compact.sum / days #FIXME this is very expensive
       end
 
       if @all_sprints.size != 0
-        @velocity = @past_sprints.collect{|sprint| sprint.burndown.data[:points_accepted][-1].to_f}
+        @velocity = @past_sprints.collect{|sprint| sprint.burndown.cached_data[:points_accepted][-1].to_f}
         @velocity_stddev = stddev(@velocity)
       end
 
@@ -31,10 +31,11 @@ module Backlogs
 
       hours_per_point = []
       @all_sprints.each {|sprint|
-        hours = sprint.burndown.data[:hours_remaining][0].to_f
+        hours = sprint.burndown.cached_data[:hours_remaining][0].to_f
         next if hours == 0.0
-        hours_per_point << sprint.burndown.data[:points_committed][0].to_f / hours
+        hours_per_point << sprint.burndown.cached_data[:points_committed][0].to_f / hours
       }
+
       @hours_per_point_stddev = stddev(hours_per_point)
       @hours_per_point = hours_per_point.sum.to_f / hours_per_point.size unless hours_per_point.size == 0
 
@@ -117,8 +118,8 @@ module Backlogs
       @past_sprints.each {|sprint|
         bd = sprint.burndown
         bd.direction = :up
-        c = bd.data[:points_committed][-1]
-        a = bd.data[:points_accepted][-1]
+        c = bd.cached_data[:points_committed][-1]
+        a = bd.cached_data[:points_accepted][-1]
         next unless c && a && c != 0
 
         accepted << [(a * 100.0) / c, 100.0].min

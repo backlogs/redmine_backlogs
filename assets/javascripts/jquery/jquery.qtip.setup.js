@@ -20,7 +20,7 @@ $.qtipMakeOptions = function(container, ajax) {
       options['content'] = {
               text: '<div class="tooltip_text">Loading...</div>',
               ajax: {
-                url: '/rb/story/'+id+'/tooltip',
+                url: RB.urlFor('show_tooltip', {id: id}),
                 type: 'GET',
                 data: { project_id: RB.constants.project_id }, //to satisfy before_filter and authorize
                 once: true
