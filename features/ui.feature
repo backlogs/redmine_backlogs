@@ -6,7 +6,7 @@ Feature: User interface
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And I am logged out
-      And I am a team member of the project
+      #And I am a team member of the project
       And I am a scrum master of the project
       And I have deleted all existing issues
       And I have defined the following sprints:

@@ -50,6 +50,10 @@ Feature: Release burndown
         | 1     | 12        | 2         | 0     |
         | 2     |  9        | 0         | 0     |
 
+   Scenario: load burndown csv
+    Given I request the csv format for release "Rel 1"
+     Then the request should complete successfully
+
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00
 #     When I update story "Story 3" to 13 story points
