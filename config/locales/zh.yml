@@ -2,28 +2,28 @@
 zh:
   backlogs_active: 活跃
   backlogs_any: 所有
-  backlogs_auto_assign_task: Auto assign task to current user
-  backlogs_burndown_print_height: Burndown print height
-  backlogs_burndown_print_width: Burndown print width
-  backlogs_burndown_settings: Burndown settings
-  backlogs_card_specification: 打印卡片的标签类型
-  backlogs_general_settings: General settings
+  backlogs_auto_assign_task: 将任务自动分配给当前用户
+  backlogs_burndown_print_height: 燃尽图打印高度
+  backlogs_burndown_print_width: 燃尽图打印宽度
+  backlogs_burndown_settings: 燃尽图配置
+  backlogs_card_specification: 卡片类型
+  backlogs_general_settings: 通用配置
   backlogs_impediment: Impediment
-  backlogs_include_sat_and_sun: Include Saturday and Sunday in Burndown
-  backlogs_new_story_position: Newly created stories go to the
-  backlogs_new_story_position_bottom: bottom (requires restart)
-  backlogs_new_story_position_top: top
-  backlogs_not_all_themes_are_supported: Not all themes are supported.
-  backlogs_pblpage_settings: Product backlog page settings
-  backlogs_points_burn_direction: 点数消耗 燃起/燃尽
-  backlogs_product_backlog: 产品backlog
-  backlogs_scrum_stats_menu_application: Application menu
+  backlogs_include_sat_and_sun: 燃尽图包含周六和周日
+  backlogs_new_story_position: 新故事位置
+  backlogs_new_story_position_bottom: 新故事底部 (需要重启)
+  backlogs_new_story_position_top: 新故事顶部 (需要重启)
+  backlogs_not_all_themes_are_supported: 无法支持全部主题
+  backlogs_pblpage_settings: 产品条目页配置
+  backlogs_points_burn_direction: 点数消耗
+  backlogs_product_backlog: 产品条目
+  backlogs_scrum_stats_menu_application: 应用菜单
   backlogs_scrum_stats_menu_none: None
-  backlogs_scrum_stats_menu_position: Position of Scum Statistics menu
-  backlogs_scrum_stats_menu_top: Top menu
-  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
-  backlogs_sharing_enabled: Enable sharing
-  backlogs_sharing_new_sprint: Share new Sprints
+  backlogs_scrum_stats_menu_position: Scrum 统计菜单
+  backlogs_scrum_stats_menu_top: 顶部菜单
+  backlogs_set_start_and_duedates_from_sprint: 设置故事开始日期和冲刺完成日期
+  backlogs_sharing_enabled: 启用共享
+  backlogs_sharing_new_sprint: 共享新冲刺
   backlogs_sharing_new_sprint_explanation: Although all possible options are available
     here, new sprints are shared only according to the users and projects permissions.
     System shared sprints can only be created by admins, hierarchy and tree shared
