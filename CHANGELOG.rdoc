@@ -1,3 +1,38 @@
+== 2013-03-15 v0.9.37
+
+* Speed improvements on the backlog page
+* Speed improvements on issues details page
+* Auto-updater fixed for 'jumping stories' and sharing
+* All translations updated
+
+* More details:
+* use cached burndown data for statistics calculation. helps "very slow loading of stories."
+* fix rb_application_controller not_configure render path error bpct/fix_not_configure
+* fix tooltip url for sub-uri setups
+* Update README.md
+* fix typo in locale
+* Updated simplified chinese locale
+* fixed "misleading error messages when adding/dropping story to locked sprint"
+* Config option for scrum statistics menu entry, fixes "Scrum Stats" menu entry on wrong position"
+* user feedback if no closed sprints to show
+* Speed improvements on loading backlogs page:
+** remove tooltip from sprint title, it is not useful.
+** render model_errors only if there are errors
+** Load closed sprints on request using ajax
+** load tooltips via ajax, speeding up backlog loading. "Very slow loading of Backlogs page"
+** do not render higher_item_id on backlog std load
+** make rank use scoped list_with_gaps_scope_condition
+** refactor: remove some master backlog calculation loops and do not request closed sprint data if not enabled
+** tests
+* Auto updater fixed:
+** Merge pull request "Bug/842 boardupdater4 - fix auto-refresh by scoping list_with_gaps higher/lower_item" from backlogs/bug/842-boardupdater4
+** list_with_gaps method rename: lower/higher_item are scoped, the unscoped ones are private
+** shared last_update on master bl page
+** scope taskboard updater to sprint
+** updater checks for correct scope
+** workaround effect of a ui race with auto-updater
+** tests
+
 == 2013-02-22 v0.9.36
 
 * Major features/changes:
