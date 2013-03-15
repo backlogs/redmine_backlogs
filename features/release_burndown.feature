@@ -149,7 +149,7 @@ Feature: Release burndown
         | 1     | 12             | 6         | 0     | 0  |
         | 2     | 12             | 0         | 0     | 0  |
 
-   Scenario: Close story in release but outside sprint
+   Scenario: Close story in release but after sprint end date
     Given I view the release page
       And the current time is 2011-01-07 23:00:00
       And I accept story Story 1
@@ -160,6 +160,16 @@ Feature: Release burndown
         | start | 9              | 0         | 0     | 0  |
         | 1     | 7              | 2         | 0     | 0  |
 
+   Scenario: Close story in release but before sprint start date
+    Given I view the release page
+      And I accept story Story 1
+      And the current time is 2011-01-12 23:00:00
+     Then show me the burndown data for release "Rel 1"
+      And the release burndown for release "Rel 1" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 7              | 2         | 0     | 0  |
+        | 1     | 7              | 0         | 0     | 0  |
+# Expecting to see story closed before the sprint
 
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00
