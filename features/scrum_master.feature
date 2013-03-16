@@ -90,7 +90,7 @@ Feature: Scrum Master
   Scenario: Bug #855 update sprint details must not change project of sprint
     Given the subproject1 project has the backlogs plugin enabled
       And sharing is enabled
-      And I am a scrum master of the project
+      And I am a scrum master of all projects
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date | project_id   | sharing     |
         | Shared | 2010-01-01        | 2010-01-31     | ecookbook    | descendants |
