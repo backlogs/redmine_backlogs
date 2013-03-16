@@ -54,13 +54,21 @@ module Backlogs
     travis['matrix']['exclude'].each{|exc|
       # if all values of the exclusion match, remove the cell
       matrix.delete_if{|cell| exc.keys.collect{|k| cell[k] == exc[k] ? '' : 'x'}.join('') == '' }
-    }
+    } unless travis['matrix']['exclude'].nil?
+
+    travis['matrix']['include'].each{|exc|
+      rvm = exc['rvm']
+      env = exc['env']
+      matrix << {'ruby' => rvm, 'env' => env}
+    } unless travis['matrix']['include'].nil?
+
     travis['matrix']['allow_failures'].each{|af|
       # if all values of the allowed failure match, the cell is unsupported
       matrix.each{|cell|
         cell[:unsupported] = true if af.keys.collect{|k| cell[k] == af[k] ? '' : 'x'}.join('') == ''
       }
-    }
+    } unless travis['matrix']['allowed_failures'].nil?
+
     matrix.each{|cell|
       cell[:version] = cell.delete('env').gsub(/^REDMINE_VER=/, '').gsub(/\s.*/, '')
       cell[:platform] = (cell[:version] =~ /^[0-9]/ ? :redmine : :chiliproject)
