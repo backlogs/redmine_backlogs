@@ -59,9 +59,12 @@ class RbIssueHistory < ActiveRecord::Base
     # from the end date of the sprint.
     closed_in_sprint = nil
     if self.issue.status.is_closed? && !self.issue.fixed_version.nil?
-      self.history.select{|h| h[:date] > self.issue.fixed_version.effective_date}.each{|h|
-        if !h[:status_open]
-          closed_in_sprint = { :date => self.issue.fixed_version.effective_date, :history => h }
+      # get closed history sorted by date
+      #FIXME wishlist: history table column expansion to allow select and order by date
+      h_closed = self.history.select{|h| h[:date] >= self.issue.fixed_version.effective_date}.collect{|d| [d[:date],d]}.sort{|a,b| a[0] <=> b[0]}
+      h_closed.each{|h|
+        if !h[1][:status_open]
+          closed_in_sprint = { :date => self.issue.fixed_version.effective_date, :history => h[1] }
           closed_in_sprint[:history][:origin] = :filter_closed_after
           break
         end
