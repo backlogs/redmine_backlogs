@@ -104,3 +104,40 @@ Feature: Release burndown complex
         | 5     |  4             | 2         | 4     | -6 |
         | 6     |  0             | 4         | 4     | -6 |
         | 7     |  0             | 4         | 0     | -6 |
+
+   Scenario: Move stories to another release to simulate migrated project
+    Given I have defined the following releases:
+        | name    | project    | release_start_date | release_end_date |
+        | Moved   | ecookbook  | 2011-01-01         | 2011-07-31       |
+      And the current time is 2011-09-01 08:00:00
+     When I move story Story A to the release Moved
+     When I move story Story B to the release Moved
+     When I move story Story C to the release Moved
+     When I move story Story D to the release Moved
+     When I move story Story E to the release Moved
+     When I move story Story F to the release Moved
+     When I move story Story G to the release Moved
+     When I move story Story X to the release Moved
+      And I set story Story A release relationship to initial
+      And I set story Story B release relationship to initial
+      And I set story Story C release relationship to initial
+      And I set story Story D release relationship to initial
+      And I set story Story E release relationship to initial
+      And I set story Story X release relationship to initial
+      And I set story Story F release relationship to added
+      And I set story Story G release relationship to added
+      And I view the release page
+     Then show me the burndown data for release "Moved"
+      And the release burndown for release "Moved" should be:
+        | sprint| backlog_points | closed_points | added_points | offset_points |
+        | start | 24             | 0         | 0     | 0  |
+        | 1     | 19             | 5         | 6     | -6 |
+        | 2     | 14             | 5         | 6     | -6 |
+# The next two backlog_points differ from the original (14=>6)
+# Due to the moved stories there is no history information regarding
+# Story 2nd being part of the release during sprints 3+4.
+        | 3     |  6             | 0         | 6     | -6 |
+        | 4     |  6             | 0         | 4     | -6 |
+        | 5     |  4             | 2         | 4     | -6 |
+        | 6     |  0             | 4         | 4     | -6 |
+        | 7     |  0             | 4         | 0     | -6 |

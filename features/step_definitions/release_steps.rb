@@ -26,6 +26,15 @@ When /^I move story (.+) to the product backlog$/ do |story_name|
   story.save
 end
 
+When /^I move story (.+) to the release (.+)$/ do |story_name,release_name|
+  story = RbStory.find_by_subject(story_name)
+  story.should_not be_nil
+  release = RbRelease.find_by_name(release_name)
+  release.should_not be_nil
+  story.release = release
+  story.save
+end
+
 Given /^I have set planned velocity to (\d+) points per (month|fortnight|week) for (.+)$/ do |velocity,velocity_timespan, release_name|
   release = RbRelease.find_by_name(release_name)
   release.planned_velocity = velocity
