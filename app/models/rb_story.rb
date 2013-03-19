@@ -273,18 +273,15 @@ class RbStory < Issue
     series.merge(:closed_points => baseline.dup)
 
     # Collect data
-    bd = {:points => [], :open => [], :accepted => [] }
+    bd = {:points => [], :open => [], :accepted => [], :in_release => [] }
     self.history.filter_release(days).each{|d|
       if d.nil? || d[:tracker] != :story
-        [:points, :open, :accepted].each{|k| bd[k] << nil }
+        [:points, :open, :accepted, :in_release].each{|k| bd[k] << nil }
       else
-        if d[:release] == release_burndown_id
-          bd[:points] << d[:story_points]
-          bd[:open] << d[:status_open]
-          bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
-        else
-          [:points, :open, :accepted].each{|k| bd[k] << nil }
-        end
+        bd[:points] << d[:story_points]
+        bd[:open] << d[:status_open]
+        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+        bd[:in_release] << (d[:release] == release_burndown_id)
       end
     }
 
@@ -304,15 +301,17 @@ class RbStory < Issue
                      false
                    end
                  })
+    series.merge(:in_release => bd[:in_release])
     series.merge(:day => days)
 
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
-      if (created_on.to_date <= days.first ||
-          release_relationship == 'initial') && p.open
+      if ((created_on.to_date <= days.first && p.in_release == true) ||
+         (release_relationship == 'initial' &&
+          release_id == release_burndown_id)) && p.open
         p.backlog_points = p.points
       end
-      if p.accepted_first
+      if p.accepted_first && (p.in_release || release_relationship != 'auto')
         p.closed_points = p.points
       end
       # Is the story created after the release was started?
@@ -322,7 +321,11 @@ class RbStory < Issue
         # previously rejected story in the same release? (aka continued story)
         if self.continued_story?
           #FIXME what if story was continued from an added story?
-          p.backlog_points = p.points
+          if ((release_relationship == 'auto' ||
+               release_relationship == 'continued') && p.in_release == true) ||
+              (!release_id.nil? && release_id == release_burndown_id)
+            p.backlog_points = p.points
+          end
         else
           if p.open
             p.added_points = p.points
