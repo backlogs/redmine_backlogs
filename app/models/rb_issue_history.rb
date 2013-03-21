@@ -127,7 +127,7 @@ class RbIssueHistory < ActiveRecord::Base
 
       ## TODO: SKIP estimated_hours and remaining_hours if not a leaf node
       journal.details.each{|jd|
-        next unless jd.property == 'attr' && ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id'].include?(jd.prop_key)
+        next unless jd.property == 'attr' && ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id','release_id'].include?(jd.prop_key)
 
         prop = jd.prop_key.intern
         update = {:old => convert.call(prop, jd.old_value), :new => convert.call(prop, jd.value)}
@@ -147,6 +147,8 @@ class RbIssueHistory < ActiveRecord::Base
           }
         when :tracker_id
           full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old]), :new => RbIssueHistory.issue_type(update[:new])}
+        when :release_id
+          full_journal[date][:release] = update
         else
           raise "Unhandled property #{jd.prop}"
         end
