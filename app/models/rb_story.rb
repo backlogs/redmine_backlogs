@@ -304,34 +304,19 @@ class RbStory < Issue
     series.merge(:in_release => bd[:in_release])
     series.merge(:day => days)
 
+    in_release_first = (bd[:in_release][0] == true)
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
-      if ((created_on.to_date <= days.first && p.in_release == true) ||
-         (release_relationship == 'initial' &&
-          release_id == release_burndown_id)) && p.open
-        p.backlog_points = p.points
-      end
-      if p.accepted_first && (p.in_release || release_relationship != 'auto')
-        p.closed_points = p.points
-      end
-      # Is the story created after the release was started?
-      if (created_on.to_date > days.first) &&
-          (created_on.to_date <= p.day) #day is the end-date of a sprint
-        # Candidate for being an added story - is it a duplicate of a
-        # previously rejected story in the same release? (aka continued story)
-        if self.continued_story?
-          #FIXME what if story was continued from an added story?
-          if ((release_relationship == 'auto' ||
-               release_relationship == 'continued') && p.in_release == true) ||
-              (!release_id.nil? && release_id == release_burndown_id)
-            p.backlog_points = p.points
-          end
-        else
-          if p.open
-            p.added_points = p.points
-          end
-          p.offset_points = p.points
-        end
+      if release_relationship == 'auto'
+        p.backlog_points = calc_backlog_auto(p,days,in_release_first)
+        p.closed_points = calc_closed_auto(p,days)
+        p.added_points = calc_added_auto(p,days,in_release_first)
+        p.offset_points = calc_offset_auto(p,days,in_release_first)
+      else
+        p.backlog_points = calc_backlog_manual(p,days,release_burndown_id)
+        p.closed_points = calc_closed_manual(p,days,release_burndown_id)
+        p.added_points = calc_added_manual(p,days,release_burndown_id)
+        p.offset_points = calc_offset_manual(p,days,release_burndown_id)
       end
     }
 
@@ -343,18 +328,11 @@ class RbStory < Issue
     return rl
   end
 
-  def continued_story?
-    return auto_detect_continued_story? if release_relationship == "auto"
-    return true if release_relationship == "initial"
-    return true if release_relationship == "continued"
-    return false
-  end
-
   # Definition of a continued story:
   # * "Copied to" relation with another story
   # * The other story is in same release
   # * The other story is rejected
-  def auto_detect_continued_story?
+  def continued_story?
     self.relations.each{|r|
       if r.relation_type == IssueRelation::TYPE_COPIED_TO
         from_story = RbStory.find(r.issue_from_id)
@@ -435,4 +413,60 @@ class RbStory < Issue
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
         end
   end
+
+private
+    def calc_backlog_auto(p,days,in_release_first)
+      return 0 if p.open == false || p.in_release == false
+      return p.points if in_release_first || continued_story?
+      0
+    end
+
+    def calc_backlog_manual(p,days,release_burndown_id)
+      return 0 if p.open == false ||
+        (release_id != release_burndown_id && p.in_release == false)
+
+      #FIXME - this one should actually return the first history
+      # entry of a story no matter if it's newer than the release
+      return p.points if release_relationship == 'initial'
+
+      if (release_relationship == 'continued') &&
+          (created_on <= p.day) # day is the end-date of a sprint
+        return p.points
+      end
+      0
+    end
+
+    def calc_added_auto(p,days,in_release_first)
+      return 0 if p.open == false || p.in_release == false
+      return p.points if in_release_first == false &&
+                          continued_story? == false
+      0
+    end
+
+    def calc_added_manual(p,days,release_burndown_id)
+      return 0 if p.open == false
+      return p.points if release_relationship == 'added' && created_on <= p.day
+      0
+    end
+
+    def calc_closed_auto(p,days)
+      return p.points if p.accepted_first && p.in_release
+      0
+    end
+
+    def calc_closed_manual(p,days,release_burndown_id)
+      return p.points if p.accepted_first && release_id == release_burndown_id
+      0
+    end
+
+    def calc_offset_auto(p,days,in_release_first)
+      return p.points if in_release_first == false &&
+                          continued_story? == false
+      0
+    end
+
+    def calc_offset_manual(p,days,release_burndown_id)
+      return p.points if release_relationship == 'added' && created_on <= p.day
+      0
+    end
 end
