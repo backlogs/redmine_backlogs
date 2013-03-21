@@ -107,6 +107,8 @@ Given /^I have made the following story mutations:$/ do |table|
     set_now(mutation.delete('day'), :msg => story.subject, :sprint => current_sprint)
     Time.zone.now.should be >= story.created_on
 
+    story.init_journal(User.current)
+
     status_name = mutation.delete('status').to_s
     if status_name.blank?
       status = nil
