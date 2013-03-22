@@ -58,6 +58,10 @@ Feature: Release burndown
         | 1     | 12        | 2         | 0     |
         | 2     |  9        | 0         | 0     |
 
+   Scenario: load burndown csv
+    Given I request the csv format for release "Rel 1"
+     Then the request should complete successfully
+
    Scenario: See planned/trend end date at different time in the release.
     Given I view the release page
       And I have set planned velocity to 5 points per month for Rel 1
@@ -170,6 +174,8 @@ Feature: Release burndown
         | start | 7              | 2         | 0     | 0  |
         | 1     | 7              | 0         | 0     | 0  |
 # Expecting to see story closed before the sprint
+
+
 
 #   Scenario: Add complexity by re-estimating a story
 #    Given the current time is 2011-01-15 08:00:00

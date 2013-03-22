@@ -154,9 +154,17 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     initial_points - ( (workdays(initial_day, day).size - 1) * day_diff )
   end
 
-  def release_burndown_to_csv(release)
-    ic = Iconv.new(l(:general_csv_encoding), 'UTF-8')
+  def csv_encode(s)
+    if RUBY_VERSION >= "1.9"
+      s.encode(l(:general_csv_encoding))
+    else
+      Iconv.conv(l(:general_csv_encoding), 'UTF-8', s)
+    end
+  rescue
+    s
+  end
 
+  def release_burndown_to_csv(release)
     # FIXME decimal_separator is not used, instead a hardcoded s/\./,/g is done
     # below to make (German) Excel happy
     #decimal_separator = l(:general_csv_decimal_separator)
@@ -167,7 +175,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
                   l(:label_points_added),
                   l(:label_points_accepted)
                 ]
-      csv << headers.collect {|c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+      csv << headers.collect {|c| csv_encode(c.to_s) }
 
       bd = release.burndown
       lines = 0
@@ -177,7 +185,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
                    bd[:backlog_points][i].to_s.gsub('.', ','),
                    bd[:closed_points][i].to_s.gsub('.', ',')
                  ]
-        csv << fields.collect{ |c| begin; ic.iconv(c.to_s); rescue; c.to_s; end }
+        csv << fields.collect{ |c| csv_encode(c.to_s) }
       end
     end
     export
