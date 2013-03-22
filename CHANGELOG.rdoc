@@ -1,3 +1,9 @@
+== 2013-03-22 v0.9.38
+
+* rails 3.2.13
+* redmine 2.2.4 security release
+* redmine 2.3.0 compatibiliy
+
 == 2013-03-15 v0.9.37
 
 * Speed improvements on the backlog page
