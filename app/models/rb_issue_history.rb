@@ -164,6 +164,7 @@ class RbIssueHistory < ActiveRecord::Base
         when 'status_success' then full_journal[date][:status_success] = {:new => j.value == 'true'}
         when 'status_open' then full_journal[date][:status_open] = {:new => j.value == 'true'}
         when 'fixed_version_id' then full_journal[date][:sprint] = {:new => j.value ? j.value.to_i : nil}
+        when 'release_id' then full_journal[date][:release] = {:new => j.value ? j.value.to_i : nil}
         when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j.value ? j.value.to_f : nil}
         when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j.value ? j.value.to_f : nil}
   
@@ -185,6 +186,7 @@ class RbIssueHistory < ActiveRecord::Base
     full_journal[issue.updated_on.to_date] = {
       :story_points => {:new => issue.story_points},
       :sprint => {:new => issue.fixed_version_id },
+      :release => {:new => issue.release_id },
       :status_id => {:new => issue.status_id },
       :status_open => {:new => status[issue.status_id][:open] },
       :status_success => {:new => status[issue.status_id][:success] },
@@ -210,6 +212,7 @@ class RbIssueHistory < ActiveRecord::Base
       current = {}
       full_journal.keys.sort.select{|d| d <= date}.each{|d|
         current[:sprint] = full_journal[d][:sprint][:new] if full_journal[d][:sprint]
+        current[:release] = full_journal[d][:release][:new] if full_journal[d][:release]
         current[:estimated_hours] = full_journal[d][:estimated_hours][:new] if full_journal[d][:estimated_hours]
         current[:remaining_hours] = full_journal[d][:remaining_hours][:new] if full_journal[d][:remaining_hours]
         current[:tracker] = full_journal[d][:tracker][:new] if full_journal[d][:tracker]
@@ -218,25 +221,28 @@ class RbIssueHistory < ActiveRecord::Base
 
       change = {
         :sprint => [],
+        :release => [],
         :estimated_hours => [],
         :remaining_hours => [],
       }
       subhists.each{|h|
-        [:sprint, :remaining_hours, :estimated_hours].each{|prop|
+        [:sprint, :release, :remaining_hours, :estimated_hours].each{|prop|
           change[prop] << h[date][prop] if h[date] && h[date].include?(prop)
         }
       }
-      change[:sprint].uniq!
-      change[:sprint].sort!{|a, b|
-        if a.nil? && b.nil?
-          0
-        elsif a.nil?
-          1
-        elsif b.nil?
-          -1
-        else
-          a <=> b
-        end
+      [:sprint, :release].each{|key|
+        change[key].uniq!
+        change[key].sort!{|a, b|
+          if a.nil? && b.nil?
+            0
+          elsif a.nil?
+            1
+          elsif b.nil?
+            -1
+          else
+            a <=> b
+          end
+        }
       }
 
       [:remaining_hours, :estimated_hours].each{|prop|
@@ -250,6 +256,10 @@ class RbIssueHistory < ActiveRecord::Base
       if change[:sprint].size != 0 && current[:sprint] != change[:sprint][0]
         full_journal[date] ||= {}
         full_journal[date][:sprint] = {:old => current[:sprint], :new => change[:sprint][0]}
+      end
+      if change[:release].size != 0 && current[:release] != change[:release][0]
+        full_journal[date] ||= {}
+        full_journal[date][:release] = {:old => current[:release], :new => change[:release][0]}
       end
       if change.include?(:estimated_hours) && current[:estimated_hours] != change[:estimated_hours]
         full_journal[date] ||= {}
@@ -283,6 +293,7 @@ class RbIssueHistory < ActiveRecord::Base
       h[:remaining_hours] = issue.remaining_hours             unless h.include?(:remaining_hours)
       h[:tracker] = RbIssueHistory.issue_type(issue.tracker_id)              unless h.include?(:tracker)
       h[:sprint] = issue.fixed_version_id                     unless h.include?(:sprint)
+      h[:release] = issue.release_id                          unless h.include?(:release)
       h[:status_open] = status[issue.status_id][:open]        unless h.include?(:status_open)
       h[:status_success] = status[issue.status_id][:success]  unless h.include?(:status_success)
 
