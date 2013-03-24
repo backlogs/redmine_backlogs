@@ -448,7 +448,7 @@ private
 
     def calc_added_manual(p,days,release_burndown_id)
       return 0 if p.open == false
-      return p.points if release_relationship == 'added' && created_on <= p.day
+      return p.points if release_relationship == 'added' && created_on.to_date <= p.day
       0
     end
 
@@ -469,7 +469,7 @@ private
     end
 
     def calc_offset_manual(p,days,release_burndown_id)
-      return p.points if release_relationship == 'added' && created_on <= p.day
+      return p.points if release_relationship == 'added' && created_on.to_date <= p.day
       0
     end
 end
