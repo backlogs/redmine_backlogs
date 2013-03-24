@@ -305,6 +305,8 @@ class RbStory < Issue
     series.merge(:day => days)
 
     in_release_first = (bd[:in_release][0] == true)
+    index_first = bd[:points].find_index{|i| i}
+    story_points_first = index_first ? bd[:points][index_first] : 0
     # Extract added_points, backlog_points and closed points from the data collected
     series.each{|p|
       if release_relationship == 'auto'
@@ -313,7 +315,7 @@ class RbStory < Issue
         p.added_points = calc_added_auto(p,days,in_release_first)
         p.offset_points = calc_offset_auto(p,days,in_release_first)
       else
-        p.backlog_points = calc_backlog_manual(p,days,release_burndown_id)
+        p.backlog_points = calc_backlog_manual(p,days,release_burndown_id,story_points_first)
         p.closed_points = calc_closed_manual(p,days,release_burndown_id)
         p.added_points = calc_added_manual(p,days,release_burndown_id)
         p.offset_points = calc_offset_manual(p,days,release_burndown_id)
@@ -421,16 +423,17 @@ private
       0
     end
 
-    def calc_backlog_manual(p,days,release_burndown_id)
+    def calc_backlog_manual(p,days,release_burndown_id,first_points)
       return 0 if p.open == false ||
         (release_id != release_burndown_id && p.in_release == false)
 
-      #FIXME - this one should actually return the first history
-      # entry of a story no matter if it's newer than the release
-      return p.points if release_relationship == 'initial'
+      # Initial relationship forces first point entry to appear
+      # in the initial release backlog no matter creation date
+      points = p.points ? p.points : first_points
+      return points if release_relationship == 'initial'
 
       if (release_relationship == 'continued') &&
-          (created_on <= p.day) # day is the end-date of a sprint
+          (created_on.to_date <= p.day) # day is the end-date of a sprint
         return p.points
       end
       0
