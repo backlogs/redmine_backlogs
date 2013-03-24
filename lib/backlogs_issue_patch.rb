@@ -134,7 +134,7 @@ module Backlogs
 
       def backlogs_after_save
         self.history.save!
-        self.release_burndown_cache.set nil
+        self.release_burndown_cache.drop
 
         [self.parent_id, self.parent_id_was].compact.uniq.each{|pid|
           p = Issue.find(pid)
