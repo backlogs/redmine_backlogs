@@ -221,7 +221,15 @@ class RbRelease < ActiveRecord::Base
   end
 
   def burndown
-#FIXME What retriggers rebuild of burndown? Need similar structure from sprint burndown?
+    # @cached_burndown is not the release_burndown_cache. This is just an instance variable to avoid
+    # calculating the object more than once _per request_.
+    # Nevertheless, @cached_burndown will be calculated at least once per request.
+    #
+    # On the other hand, rebuild of individual release_burndown_cache entries is triggered inside
+    # each story when a story changes. Release_burndown_cache is not one atomic piece of data but
+    # a set of fragments per story and therefore it does not need a logic similar to the sprint burndown cache.
+    # If anything (dates, sprints, sprint status etc.) changes, the release burndown will ask just more
+    # stories and thus the cache needs no touching.
     return nil if not self.has_burndown?
     @cached_burndown ||= ReleaseBurndown.new(self)
     return @cached_burndown
