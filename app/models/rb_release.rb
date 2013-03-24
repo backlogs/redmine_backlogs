@@ -44,11 +44,6 @@ class ReleaseBurndown
 
     # Go through each story in the release
     release.stories_all_time.each{|story|
-      bd = story.release_burndown_data(@days,release.id)
-      # Repeat last day if we have moved past end date of last sprint without
-      # any changes to the story. This allows to show current day correctly.
-      [:offset_points, :added_points, :backlog_points, :closed_points].each{|k|
-        bd[k] << bd[k][-1] } if baseline.size > bd[:offset_points].size
       series.add(story.release_burndown_data(@days,release.id))
     }
 
