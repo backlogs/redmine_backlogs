@@ -28,6 +28,9 @@ module Backlogs
             body.xpath('//issue').each{|issue|
               next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
               issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
+              next unless RbStory.find(issue.at('.//id').text).release
+              issue << body.create_element('release', :id => RbStory.find(issue.at('.//id').text).release_id.to_s,
+                                                      :name => RbStory.find(issue.at('.//id').text).release.to_s)
             }
             response.body = body.to_xml
           when 'json'
@@ -36,6 +39,8 @@ module Backlogs
             body['issues'].each{|issue|
               next unless story_trackers.include?(issue['tracker']['id'])
               issue['story_points'] = RbStory.find(issue['id']).story_points
+              next unless RbStory.find(issue['id']).release
+              issue['release'] = {:release => {:id=> RbStory.find(issue['id']).release_id, :name => RbStory.find(issue['id']).release.name}}
             }
             response.body = jsonp.present? ? "#{jsonp}(#{body.to_json})" : body.to_json
         end
