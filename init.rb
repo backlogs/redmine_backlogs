@@ -21,7 +21,7 @@ object_to_prepare.to_prepare do
     Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
-  require_dependency 'backlogs_query_patch'
+  require_dependency 'backlogs_issue_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
   require_dependency 'backlogs_tracker_patch'

@@ -1,4 +1,8 @@
-require_dependency 'query'
+if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
+  require_dependency 'issue_query'
+else
+  require_dependency 'query'
+end
 require 'erb'
 
 module Backlogs
@@ -12,7 +16,7 @@ module Backlogs
     end
   end
 
-  module QueryPatch
+  module IssueQueryPatch
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
       base.send(:include, InstanceMethods)
@@ -120,4 +124,8 @@ module Backlogs
   end
 end
 
-Query.send(:include, Backlogs::QueryPatch) unless Query.included_modules.include? Backlogs::QueryPatch
+if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
+  IssueQuery.send(:include, Backlogs::IssueQueryPatch) unless IssueQuery.included_modules.include? Backlogs::IssueQueryPatch
+else
+  Query.send(:include, Backlogs::IssueQueryPatch) unless Query.included_modules.include? Backlogs::IssueQueryPatch
+end
