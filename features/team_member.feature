@@ -50,6 +50,10 @@ Feature: Team Member
     Given I am viewing the burndown for Sprint 002
      Then I should see the burndown chart
 
+  Scenario: View issues tab with custom backlog columns
+    Given I view issues tab with backlog columns
+     Then I should see custom backlog columns on the Issues page
+
   Scenario: View sprint stories in the issues tab
     Given I am viewing the master backlog
      When I view the stories of Sprint 001 in the issues tab

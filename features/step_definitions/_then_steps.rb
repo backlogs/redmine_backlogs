@@ -44,6 +44,13 @@ Then /^I should see the Issues page$/ do
   page.should have_css("#query_form")
 end
 
+Then /^I should see custom backlog columns on the Issues page$/ do
+  page.should have_css("#query_form")
+  ['story_points','release','position','velocity_based_estimate','remaining_hours'].each{|c|
+    page.should have_xpath("//td[@class='#{c}']")
+  }
+end
+
 Then /^I should see the taskboard$/ do
   page.should have_css('#taskboard')
 end
