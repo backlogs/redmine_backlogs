@@ -266,6 +266,13 @@ class RbStory < Issue
   def release_burndown_data(days,release_burndown_id)
     return nil unless self.is_story?
 
+    rl = self.release_burndown_cache.get(days)
+    return rl unless rl.nil? || rl.empty?
+    calculate_release_burndown_data(days, release_burndown_id) #Idea: is it feasible to only recalculate missing days?
+  end
+
+  #private
+  def calculate_release_burndown_data(days, release_burndown_id)
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
@@ -316,7 +323,15 @@ class RbStory < Issue
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
 
+    self.release_burndown_cache.set(days, rl)
+
     return rl
+  end
+
+  #optimization for RbRelease.stories_all_time to eager load all the required stuff
+  def self.release_burndown_includes
+    #return a scope for release burndown chart rendering
+    includes(:rb_release_burndown_cache, :relations_from, :relations_to)
   end
 
   # Definition of a continued story:
