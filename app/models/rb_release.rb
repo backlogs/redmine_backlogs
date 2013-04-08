@@ -37,9 +37,8 @@ class ReleaseBurndown
     baseline = [0] * @days.size
 
     series = Backlogs::MergedArray.new
-    series.merge(:offset_points => baseline.dup)
+    series.merge(:total_points => baseline.dup)
     series.merge(:added_points => baseline.dup)
-    series.merge(:backlog_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
 
     # Go through each story in the release
@@ -51,24 +50,22 @@ class ReleaseBurndown
     # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
-    @data[:offset_points] = series.collect{|s| -1 * s.offset_points }
-    @data[:added_points] = series.collect{|s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
-    @data[:backlog_points] = series.collect{|s| s.backlog_points >= 0 ? s.backlog_points : 0 }
     @data[:closed_points] = series.series(:closed_points)
+    @data[:backlog_points] = series.collect{|s| s.total_points - s.closed_points - s.added_points  }
+    @data[:added_points] = series.series(:added_points)
+    @data[:total_points] = series.series(:total_points)
 
     # Keyfigures for later calculations
     @index_estimate_last = calc_index_estimate_last
-    @last_backlog_points = @data[:offset_points][@index_estimate_last] +
-                             @data[:added_points][@index_estimate_last] +
-                             @data[:backlog_points][@index_estimate_last]
-    @last_points_left = @last_backlog_points - @data[:offset_points][@index_estimate_last]
-    @last_added_points = @data[:offset_points][@index_estimate_last]
+    @last_total_points = @data[:total_points][@index_estimate_last]
+    @last_closed_points = @data[:closed_points][@index_estimate_last]
+    @last_points_left = @last_total_points - @last_closed_points
     @last_date = release.days[@index_estimate_last]
   end
 
 
   def calculate_trend
-    @data[:trend_added] = []
+    @data[:trend_scope] = []
     @data[:trend_closed] = []
 
     return unless @last_points_left > 0
@@ -77,38 +74,39 @@ class ReleaseBurndown
     index_estimate_first = @index_estimate_last - avg_count
 
     avg_days = (@days[@index_estimate_last] - @days[index_estimate_first]).to_i
-    avg_added_per_day = (@data[:offset_points][@index_estimate_last] - @data[:offset_points][index_estimate_first]) / avg_days
-    avg_closed_per_day = @data[:closed_points][index_estimate_first..@index_estimate_last].inject(0){|sum,p| sum += p} / avg_days * -1
+    avg_scope_per_day = (@data[:total_points][@index_estimate_last] - @data[:total_points][index_estimate_first]) / avg_days
+    avg_closed_per_day = (@data[:closed_points][@index_estimate_last] - @data[:closed_points][index_estimate_first]) / avg_days
 
     #Calculate trend end date (crossing trend_closed and trend_added)
-    trend_cross_days = (@last_backlog_points - @last_added_points)/(avg_added_per_day - avg_closed_per_day)
+    trend_cross_days = (@last_closed_points - @last_total_points)/(avg_scope_per_day - avg_closed_per_day)
 
     # Value for display in sidebar
     @trend_estimate_end_date = @last_date + trend_cross_days unless trend_cross_days.infinite? or trend_cross_days <= 0
 
     # Add beginning and end dataset [sprint,points] for trendlines
-    trendline_end_date = trend_cross_days.between?(1,365) ? @last_date + trend_cross_days + 30 : @last_date + avg_days
+    trendline_end_date = trend_cross_days.between?(1,730) ? @last_date + trend_cross_days + 30 : @last_date + avg_days
 
     trendline_days = (trendline_end_date - @last_date).to_i
 
-    @data[:trend_closed] << [@last_date, @last_backlog_points]
+    @data[:trend_closed] << [@last_date, @last_closed_points]
     @data[:trend_closed] << [trendline_end_date,
-                             @last_backlog_points + (avg_closed_per_day * trendline_days)]
-    @data[:trend_added] << [@last_date, @last_added_points]
-    @data[:trend_added] << [trendline_end_date,
-                            @last_added_points + (avg_added_per_day * trendline_days)]
+                             @last_closed_points + (avg_closed_per_day * trendline_days)]
+    @data[:trend_scope] << [@last_date, @last_total_points]
+    @data[:trend_scope] << [trendline_end_date,
+                            @last_total_points + (avg_scope_per_day * trendline_days)]
   end
 
   def calculate_planned
+    @data[:planned] = []
+
     return unless @last_points_left > 0
     return unless @planned_velocity.is_a? Float
     return unless @planned_velocity > 0.0
 
-    @data[:planned] = []
-    @data[:planned] << [@last_date, @last_backlog_points]
+    @data[:planned] << [@last_date, @last_closed_points]
     #FIXME add possibility to choose velocity per week, fortnight, month?
     @planned_estimate_end_date = @last_date + (@last_points_left / @planned_velocity * 30)
-    @data[:planned] << [@planned_estimate_end_date, @data[:offset_points][@index_estimate_last]]
+    @data[:planned] << [@planned_estimate_end_date, @data[:total_points][@index_estimate_last]]
 
   end
 

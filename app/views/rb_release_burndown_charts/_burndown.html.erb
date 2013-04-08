@@ -19,8 +19,8 @@
 
     chart = {
       # Add date to each value. Except trendlines which already carry date info.
-      :series => series.collect{|s|
-		     burndown[s.intern].each_with_index.collect{|d,i|
+      :series => [:closed_points, :backlog_points,:added_points,:trend_closed,:trend_scope,:planned].collect{|s|
+		     burndown[s].each_with_index.collect{|d,i|
 		       d.is_a?(Array) ? d : [days[i],d]
 		     }},
       :mode => 'full',
@@ -43,11 +43,9 @@
         },
         :legend => { :show => true, :location => 'ne'},
         :series => [
-          { :label => "",
-            :rendererOptions => {:barWidth => 0}},
-          { :label => "Added" },
-          { :label => "Backlog" },
           { :label => "Closed" },
+          { :label => "Backlog" },
+          { :label => "Backlog (added)" },
           { :disableStack => true,
             :label => "Trend added"},
           { :disableStack => true,
@@ -56,7 +54,8 @@
             :label => "Planned velocity",
             :linePattern => "dotted"}
         ],
-        :noDataIndicator => { :show => true, :indicator => 'No data' }
+        :noDataIndicator => { :show => true, :indicator => 'No data' },
+        :seriesColors => [ "#579575", "#c5b47f","#EAA228", "#4bb2c5", "#839557", "#958c12"]
       }
     }
   %>
@@ -64,9 +63,9 @@ RB.$(function() { // render when dom is ready
   RB.burndown.charts[<%= release.id %>] = <%= chart.to_json.html_safe %>;
   RB.burndown.charts[<%= release.id %>].options.seriesDefaults.renderer = RB.$.jqplot.BarRenderer;
   RB.burndown.charts[<%= release.id %>].options.axes.xaxis.renderer = RB.$.jqplot.DateAxisRenderer;
+  RB.burndown.charts[<%= release.id %>].options.series[3].renderer = RB.$.jqplot.LineRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[4].renderer = RB.$.jqplot.LineRenderer;
   RB.burndown.charts[<%= release.id %>].options.series[5].renderer = RB.$.jqplot.LineRenderer;
-  RB.burndown.charts[<%= release.id %>].options.series[6].renderer = RB.$.jqplot.LineRenderer;
   var graph_width = $("#burndown_<%= release.id %>").innerWidth();
   //FIXME calculate bar width according to longest sprint vs. total period
   // covered by the graph including trend lines.

@@ -56,7 +56,7 @@ Feature: Release burndown
         | sprint| backlog_points | closed_points | added_points |
         | start | 14        | 0         | 0     |
         | 1     | 12        | 2         | 0     |
-        | 2     |  9        | 0         | 0     |
+        | 2     |  9        | 2         | 0     |
 
    Scenario: load burndown csv
     Given I request the csv format for release "Rel 1"
@@ -118,18 +118,18 @@ Feature: Release burndown
       And I accept story Story A
      Then show me the burndown data for release "Rel 1"
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 14             | 0         | 0     | 0  |
-        | 1     | 12             | 2         | 0     | 0  |
-        | 2     | 12             | 0         | 0     | 0  |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 14             | 0         | 0     |
+        | 1     | 12             | 2         | 0     |
+        | 2     | 12             | 2         | 0     |
       And the current time is 2011-01-16 23:00:00
      Then show me the burndown data for release "Rel 1"
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 14             | 0         | 0     | 0  |
-        | 1     | 12             | 2         | 0     | 0  |
-        | 2     | 12             | 0         | 0     | 0  |
-        | 3     | 12             | 0         | 0     | 0  |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 14             | 0         | 0     |
+        | 1     | 12             | 2         | 0     |
+        | 2     | 12             | 2         | 0     |
+        | 3     | 12             | 2         | 0     |
 
    Scenario: Release burndown with parallel sprint end dates merged
     Given I view the release page
@@ -148,10 +148,10 @@ Feature: Release burndown
       And the current time is 2011-01-12 23:00:00
      Then show me the burndown data for release "Rel 1"
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 18             | 0         | 0     | 0  |
-        | 1     | 12             | 6         | 0     | 0  |
-        | 2     | 12             | 0         | 0     | 0  |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 18             | 0         | 0     |
+        | 1     | 12             | 6         | 0     |
+        | 2     | 12             | 6         | 0     |
 
    Scenario: Close story in release but after sprint end date
     Given I view the release page
@@ -160,9 +160,9 @@ Feature: Release burndown
       And the current time is 2011-01-12 23:00:00
      Then show me the burndown data for release "Rel 1"
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 9              | 0         | 0     | 0  |
-        | 1     | 7              | 2         | 0     | 0  |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 9              | 0         | 0     |
+        | 1     | 7              | 2         | 0     |
 
    Scenario: Close story in release but before sprint start date
     Given I view the release page
@@ -170,9 +170,9 @@ Feature: Release burndown
       And the current time is 2011-01-12 23:00:00
      Then show me the burndown data for release "Rel 1"
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 7              | 2         | 0     | 0  |
-        | 1     | 7              | 0         | 0     | 0  |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 7              | 2         | 0     |
+        | 1     | 7              | 2         | 0     |
 # Expecting to see story closed before the sprint
 
 

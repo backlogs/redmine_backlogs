@@ -162,13 +162,14 @@ Then /^show me the burndown data for release "([^"]*)"$/ do |release|
   release = RbRelease.find_by_name(release)
   burndown = release.burndown
   puts "days      #{release.days}"
-  puts "offset    #{burndown[:offset_points]}"
+  puts "closed    #{burndown[:closed_points]}"
   puts "added     #{burndown[:added_points]}"
   puts "bl points #{burndown[:backlog_points]}"
-  puts "closed    #{burndown[:closed_points]}"
+  puts "total     #{burndown[:total_points]}"
   puts "trend add #{burndown[:trend_added]}"
   puts "trend cls #{burndown[:trend_closed]}"
   puts "planned   #{burndown[:planned]}"
+
 end
 
 Then /^the release burndown for release "([^"]*)" should be:$/ do |release, table|

@@ -258,75 +258,64 @@ class RbStory < Issue
 
   # Produces relevant information for release graphs
   # @param days of interest in the release
+  # @param release_burndown_id release_id of burndown under calculation
   # @return hash collection of
-  #  :backlog_points :added_points :closed_points
-#FIXME is it better to let the story fetch days directly from RbRelease?
+  #  :total_points is all points in release including closed+added at given day
+  #  :added_points is points from stories added after release start
+  #  :closed_points is accumulated number of closed points
   def release_burndown_data(days,release_burndown_id)
     return nil unless self.is_story?
 
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
-    series.merge(:offset_points => baseline.dup)
-    series.merge(:added_points => baseline.dup)
-    series.merge(:backlog_points => baseline.dup)
+    series.merge(:total_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
 
     # Collect data
-    bd = {:points => [], :open => [], :accepted => [], :in_release => [] }
+    bd = {:points => [], :open => [], :accepted => [], :in_release => [], :rejected => [] }
     self.history.filter_release(days).each{|d|
       if d.nil? || d[:tracker] != :story
-        [:points, :open, :accepted, :in_release].each{|k| bd[k] << nil }
+        [:points, :open, :accepted, :in_release, :rejected].each{|k| bd[k] << nil }
       else
         bd[:points] << d[:story_points]
         bd[:open] << d[:status_open]
-        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+        bd[:accepted] << d[:status_success]
         bd[:in_release] << (d[:release] == release_burndown_id)
+        bd[:rejected] << (d[:status_open] == false && d[:status_success] == false)
       end
     }
 
     series.merge(:accepted => bd[:accepted])
     series.merge(:points => bd[:points])
     series.merge(:open => bd[:open])
-    first = true;
-    series.merge(:accepted_first => series.series(:accepted).collect{ |a|
-                   if a
-                     if a == true && first == true
-                       first = false
-                       true
-                     else
-                       false
-                     end
-                   else
-                     false
-                   end
-                 })
     series.merge(:in_release => bd[:in_release])
+    series.merge(:rejected => bd[:rejected])
     series.merge(:day => days)
 
     in_release_first = (bd[:in_release][0] == true)
     index_first = bd[:points].find_index{|i| i}
     story_points_first = index_first ? bd[:points][index_first] : 0
-    # Extract added_points, backlog_points and closed points from the data collected
+
+    # Extract total, closed and added points during release
     series.each{|p|
       if release_relationship == 'auto'
-        p.backlog_points = calc_backlog_auto(p,days,in_release_first)
-        p.closed_points = calc_closed_auto(p,days)
+        p.total_points = calc_total_auto(p,days,in_release_first)
+        p.closed_points = calc_closed_auto(p,days,in_release_first)
         p.added_points = calc_added_auto(p,days,in_release_first)
-        p.offset_points = calc_offset_auto(p,days,in_release_first)
       else
-        p.backlog_points = calc_backlog_manual(p,days,release_burndown_id,story_points_first)
+        p.total_points = calc_total_manual(p,days,release_burndown_id)
         p.closed_points = calc_closed_manual(p,days,release_burndown_id)
         p.added_points = calc_added_manual(p,days,release_burndown_id)
-        p.offset_points = calc_offset_manual(p,days,release_burndown_id)
       end
     }
 
     rl = {}
-    rl[:offset_points] = series.series(:offset_points)
-    rl[:backlog_points] = series.series(:backlog_points)
+    rl[:total_points] = series.series(:total_points)
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
+
     return rl
   end
 
@@ -417,59 +406,40 @@ class RbStory < Issue
   end
 
 private
-    def calc_backlog_auto(p,days,in_release_first)
-      return 0 if p.open == false || p.in_release == false
-      return p.points if in_release_first || continued_story?
-      0
-    end
 
-    def calc_backlog_manual(p,days,release_burndown_id,first_points)
-      return 0 if p.open == false ||
-        (release_id != release_burndown_id && p.in_release == false)
+  def calc_total_auto(p,days,in_release_first)
+    return p.points if (p.in_release == true) && (p.rejected == false)
+    0
+  end
 
-      # Initial relationship forces first point entry to appear
-      # in the initial release backlog no matter creation date
-      points = p.points ? p.points : first_points
-      return points if release_relationship == 'initial'
+  def calc_total_manual(p,days,release_burndown_id)
+    return p.points if p.rejected == false && (release_id == release_burndown_id || p.in_release)
+    0
+  end
 
-      if (release_relationship == 'continued') &&
-          (created_on.to_date <= p.day) # day is the end-date of a sprint
-        return p.points
-      end
-      0
-    end
+  def calc_closed_auto(p,days,in_release_first)
+    return p.points if p.in_release == true && p.accepted == true
+    0
+  end
 
-    def calc_added_auto(p,days,in_release_first)
-      return 0 if p.open == false || p.in_release == false
-      return p.points if in_release_first == false &&
-                          continued_story? == false
-      0
-    end
+  def calc_closed_manual(p,days,release_burndown_id)
+    return p.points if p.accepted == true && release_id == release_burndown_id
+    0
+  end
 
-    def calc_added_manual(p,days,release_burndown_id)
-      return 0 if p.open == false
-      return p.points if release_relationship == 'added' && created_on.to_date <= p.day
-      0
-    end
+  def calc_added_auto(p,day,in_release_first)
+    return p.points if p.in_release == true &&
+                       p.open == true &&
+                       continued_story? == false &&
+                       in_release_first == false
+    0
+  end
 
-    def calc_closed_auto(p,days)
-      return p.points if p.accepted_first && p.in_release
-      0
-    end
+  def calc_added_manual(p,days,release_burndown_id)
+    return p.points if release_id == release_burndown_id &&
+                       release_relationship == 'added' &&
+                       p.open == true
+    0
+  end
 
-    def calc_closed_manual(p,days,release_burndown_id)
-      return p.points if p.accepted_first && release_id == release_burndown_id
-      0
-    end
-
-    def calc_offset_auto(p,days,in_release_first)
-      return p.points if in_release_first == false &&
-                          continued_story? == false
-      0
-    end
-
-    def calc_offset_manual(p,days,release_burndown_id)
-      return p.points if release_relationship == 'added' && created_on.to_date <= p.day
-      0
-    end
 end

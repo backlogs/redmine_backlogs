@@ -55,7 +55,7 @@ Feature: Release burndown complex
         | 1   | Story C | Closed    |
 # Sprint 3
       And I move the story named Story E to the 1st position of the sprint named Sprint 003
-      And the current time is 2011-03-01 08:00:00
+      And the current time is 2011-03-02 08:00:00
       And I duplicate Story E to release Rel 1 as Story E 2nd
       And I set story Story E 2nd release relationship to continued
       And I have made the following story mutations:
@@ -95,15 +95,15 @@ Feature: Release burndown complex
      Then show me the burndown data for release "Rel 1"
 #     Then dump the database to pg_new.dump
       And the release burndown for release "Rel 1" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 24             | 0         | 0     | 0  |
-        | 1     | 19             | 5         | 6     | -6 |
-        | 2     | 14             | 5         | 6     | -6 |
-        | 3     | 14             | 0         | 6     | -6 |
-        | 4     | 14             | 0         | 4     | -6 |
-        | 5     |  4             | 2         | 4     | -6 |
-        | 6     |  0             | 4         | 4     | -6 |
-        | 7     |  0             | 4         | 0     | -6 |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 24             | 0         | 0     |
+        | 1     | 19             | 5         | 6     |
+        | 2     | 14             | 10         | 6     |
+        | 3     | 14             | 10         | 6     |
+        | 4     | 14             | 10         | 4     |
+        | 5     |  4             | 12         | 4     |
+        | 6     |  0             | 16         | 4     |
+        | 7     |  0             | 20         | 0     |
 
    Scenario: Move stories to another release to simulate migrated project
     Given I have defined the following releases:
@@ -129,15 +129,15 @@ Feature: Release burndown complex
       And I view the release page
      Then show me the burndown data for release "Moved"
       And the release burndown for release "Moved" should be:
-        | sprint| backlog_points | closed_points | added_points | offset_points |
-        | start | 24             | 0         | 0     | 0  |
-        | 1     | 19             | 5         | 6     | -6 |
-        | 2     | 14             | 5         | 6     | -6 |
+        | sprint| backlog_points | closed_points | added_points |
+        | start | 24             | 0         | 0     |
+        | 1     | 19             | 5         | 6     |
+        | 2     | 14             | 10         | 6     |
 # The next two backlog_points differ from the original (14=>6)
 # Due to the moved stories there is no history information regarding
 # Story 2nd being part of the release during sprints 3+4.
-        | 3     |  6             | 0         | 6     | -6 |
-        | 4     |  6             | 0         | 4     | -6 |
-        | 5     |  4             | 2         | 4     | -6 |
-        | 6     |  0             | 4         | 4     | -6 |
-        | 7     |  0             | 4         | 0     | -6 |
+        | 3     |  6             | 10         | 6     |
+        | 4     |  6             | 10         | 4     |
+        | 5     |  4             | 12         | 4     |
+        | 6     |  0             | 16         | 4     |
+        | 7     |  0             | 20         | 0     |
