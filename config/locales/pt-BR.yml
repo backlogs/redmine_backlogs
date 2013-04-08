@@ -80,7 +80,6 @@ pt-BR:
   backlogs_story_follow_task_status_nil: Desabilitado
   backlogs_story_follows_task_loose_explanation: ! 'Nota: todos os status de issue requerem 
     um valor válido %done entre 0 e 100.'
-    a valid %done between 0 and 100.'
   backlogs_story_follows_task_status: História segue o status da tarefa
   backlogs_story_settings: Configurações de História e Tarefa
   backlogs_story_tracker: Sequência da estória
