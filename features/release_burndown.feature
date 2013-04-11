@@ -19,6 +19,7 @@ Feature: Release burndown
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2011-01-02        | 2011-01-08     |
         | Sprint 002 | 2011-01-09        | 2011-01-15     |
+        | Sprint X   |                   |                |
       And I have defined the following releases:
         | name    | project    | release_start_date | release_end_date |
         | Rel 1   | ecookbook  | 2011-01-02         | 2011-01-31       |
@@ -175,6 +176,12 @@ Feature: Release burndown
         | 1     | 7              | 2         | 0     |
 # Expecting to see story closed before the sprint
 
+   Scenario: Add story from release to sprint without start/end date
+    Given I view the release page
+      And I have defined the following stories in the following sprints:
+        | subject | sprint      | release | points |
+        | Story X | Sprint X    | Rel 1   | 2      |
+    Then show me the burndown data for release "Rel 1"
 
 
 #   Scenario: Add complexity by re-estimating a story
