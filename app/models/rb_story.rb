@@ -423,12 +423,19 @@ class RbStory < Issue
 private
 
   def calc_total_auto(p,days,in_release_first)
-    return p.points if (p.in_release == true) && (p.rejected == false)
+    return p.points if (p.in_release == true) && (p.rejected == false) &&
+      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
+    # last part above (continued... || continu....) takes care of an edge case because
+    # RbIssueHistory adds an entry for all issues the day before created_on.
+    # Without this the continued story's points might show up a sprint too early.
     0
   end
 
   def calc_total_manual(p,days,release_burndown_id)
-    return p.points if p.rejected == false && (release_id == release_burndown_id || p.in_release)
+    return p.points if p.rejected == false &&
+      (release_id == release_burndown_id || p.in_release) &&
+      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
+    # See description for calc_total_auto
     0
   end
 
