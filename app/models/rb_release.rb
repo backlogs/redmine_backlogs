@@ -199,7 +199,7 @@ class RbRelease < ActiveRecord::Base
     days_of_interest = Array.new
     days_of_interest << self.release_start_date.to_date
     self.sprints.each{|sprint|
-      days_of_interest << sprint.effective_date.to_date
+      days_of_interest << sprint.effective_date.to_date unless sprint.effective_date.nil?
     }
     # Add current day if we are past last sprint end date and has open stories
     days_of_interest << Time.now.to_date if self.has_open_stories? and Time.now.to_date > days_of_interest[-1]
