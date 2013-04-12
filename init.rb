@@ -21,7 +21,7 @@ object_to_prepare.to_prepare do
     Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
-  require_dependency 'backlogs_query_patch'
+  require_dependency 'backlogs_issue_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
   require_dependency 'backlogs_tracker_patch'
@@ -48,7 +48,7 @@ Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
   author "friflaj,Mark Maglana,John Yani,mikoto20000,Frank Blendinger,Bo Hansen,stevel,Patrick Atamaniuk"
   description 'A plugin for agile teams'
-  version 'v0.9.37'
+  version 'v0.9.38'
 
   settings :default => {
                          :story_trackers            => nil,

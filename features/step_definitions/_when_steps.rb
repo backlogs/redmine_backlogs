@@ -188,6 +188,10 @@ When /^I view the stories in the issues tab/ do
   visit url_for(:controller => :rb_queries, :action => :show, :project_id=> @project.id, :only_path => true)
 end
 
+When /^I view issues tab with backlog columns/ do
+  visit url_for(:controller => :issues, :action => :index, :project_id=> @project.id, :c => ["subject","story_points","release","position","velocity_based_estimate","remaining_hours"], :only_path => false)
+end
+
 When /^I view the sprint notes$/ do
   visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => current_sprint.id, :only_path => true)
 end

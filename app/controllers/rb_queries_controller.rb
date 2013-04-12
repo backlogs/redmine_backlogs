@@ -35,7 +35,7 @@ class RbQueriesController < RbApplicationController
   private
 
   def __IssueQueryClass
-    if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3) || Redmine::VERSION::BRANCH == 'devel' #FIXME: remove 'devel' expression when rm 2.3.0 is tagged
+    if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
       IssueQuery
     else
       Query
