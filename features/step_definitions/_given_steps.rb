@@ -11,6 +11,7 @@ Before do
   Backlogs.setting[:include_sat_and_sun] = false
   Backlogs.setting[:sharing_enabled] = false
   Backlogs.setting[:story_follow_task_status] = nil
+  Backlogs.setting[:release_burnup_enabled] = 'enabled'
   Time.zone = 'UTC'
 end
 

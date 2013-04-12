@@ -229,6 +229,12 @@
     :burndown_timezone => RbIssueHistory.burndown_timezone }).gsub("\n","<br/>").html_safe %></span>
 </p>
 
+<p>
+  <%= content_tag(:label, l(:rb_release_burnup_enabled)) %>
+  <%= check_box_tag("settings[release_burnup_enabled]",'enabled',
+            Backlogs.setting[:release_burnup_enabled]) %>
+</p>
+
 </fieldset>
 
 <fieldset>

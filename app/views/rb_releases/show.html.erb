@@ -21,13 +21,15 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 
 <p><%= @release.description %></p>
 
-<h3>Release Burndown</h3>
-<!--Release Burndown Visualization-->
-<% unless @release.has_burndown? %>
-  <p class="nodata">No burndown available</p>
-<% else %>
-    <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
-  <br />
+<% if Backlogs.setting[:release_burnup_enabled] %>
+  <h3>Release Burnup chart</h3>
+  <!--Release Burnup Visualization-->
+  <% unless @release.has_burndown? %>
+    <p class="nodata">No burndown available</p>
+  <% else %>
+      <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
+    <br />
+  <% end %>
 <% end %>
 
 <!--Visualization of related sprints -->
@@ -71,7 +73,7 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
   <p><b><%= l(:field_planned_velocity) %>:</b>     <%= @release.planned_velocity     %></p>
   <p><br/></p>
-<% if @release.has_burndown? %>
+<% if @release.has_burndown? && Backlogs.setting[:release_burnup_enabled] %>
   <% if @release.burndown.planned_estimate_end_date.is_a? Date %>
     <p><b><%= l(:label_release_planned_velocity_end_date) %>:</b>     <%= @release.burndown.planned_estimate_end_date     %></p>
   <% end %>

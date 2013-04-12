@@ -208,6 +208,7 @@ en:
   backlogs_show_in_scrum_stats: Show project in Scrum statistics
   rb_project_settings_updated: Settings updated
   rb_project_settings_update_error: Error while updating settings
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
   backlogs_sprint_sort_order: Sort Sprints by start date
   backlogs_sprint_sort_order_asc: ascending
