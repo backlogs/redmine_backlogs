@@ -1,4 +1,5 @@
 require 'date'
+require 'average_trend'
 
 class ReleaseBurndown
   def initialize(release)
@@ -73,27 +74,25 @@ class ReleaseBurndown
     avg_count = @index_estimate_last >= 3 ? 3 : @index_estimate_last
     index_estimate_first = @index_estimate_last - avg_count
 
-    avg_days = (@days[@index_estimate_last] - @days[index_estimate_first]).to_i
-    avg_scope_per_day = (@data[:total_points][@index_estimate_last] - @data[:total_points][index_estimate_first]) / avg_days
-    avg_closed_per_day = (@data[:closed_points][@index_estimate_last] - @data[:closed_points][index_estimate_first]) / avg_days
+    lr_closed = Backlogs::AverageTrend.new(@days[index_estimate_first..@index_estimate_last],@data[:closed_points][index_estimate_first..@index_estimate_last])
+
+    lr_scope = Backlogs::AverageTrend.new(@days[index_estimate_first..@index_estimate_last],@data[:total_points][index_estimate_first..@index_estimate_last])
 
     #Calculate trend end date (crossing trend_closed and trend_added)
-    trend_cross_days = (@last_closed_points - @last_total_points)/(avg_scope_per_day - avg_closed_per_day)
+    trend_cross_date = lr_closed.crossing_date(lr_scope)
+
+    return if trend_cross_date.nil?
+
+    trend_cross_days = (trend_cross_date - @last_date).to_i
 
     # Value for display in sidebar
-    @trend_estimate_end_date = @last_date + trend_cross_days unless trend_cross_days.infinite? or trend_cross_days <= 0
+    @trend_estimate_end_date = trend_cross_date
 
     # Add beginning and end dataset [sprint,points] for trendlines
-    trendline_end_date = trend_cross_days.between?(1,730) ? @last_date + trend_cross_days + 30 : @last_date + avg_days
+    trendline_end_date = trend_cross_days.between?(1,730) ? trend_cross_date + 30 : @last_date + avg_days
 
-    trendline_days = (trendline_end_date - @last_date).to_i
-
-    @data[:trend_closed] << [@last_date, @last_closed_points]
-    @data[:trend_closed] << [trendline_end_date,
-                             @last_closed_points + (avg_closed_per_day * trendline_days)]
-    @data[:trend_scope] << [@last_date, @last_total_points]
-    @data[:trend_scope] << [trendline_end_date,
-                            @last_total_points + (avg_scope_per_day * trendline_days)]
+    @data[:trend_closed] = lr_closed.predict_line(trendline_end_date)
+    @data[:trend_scope] = lr_scope.predict_line(trendline_end_date)
   end
 
   def calculate_planned
