@@ -1,5 +1,5 @@
 require 'date'
-require 'average_trend'
+require 'linear_regression'
 
 class ReleaseBurndown
   def initialize(release)
@@ -26,6 +26,8 @@ class ReleaseBurndown
 
   attr_reader :planned_estimate_end_date
   attr_reader :trend_estimate_end_date
+  attr_reader :lr_closed # linear regression closed
+  attr_reader :lr_scope # linear regression scope
 
   private
 
@@ -57,9 +59,10 @@ class ReleaseBurndown
     @data[:total_points] = series.series(:total_points)
 
     # Keyfigures for later calculations
-    @index_estimate_last = calc_index_estimate_last
-    @last_total_points = @data[:total_points][@index_estimate_last]
-    @last_closed_points = @data[:closed_points][@index_estimate_last]
+    @index_last_active = calc_index_before(release.last_active_sprint_date)
+    @index_estimate_last = calc_index_before
+    @last_total_points = @data[:total_points][@index_last_active] # notice total points utilize latest active sprint
+    @last_closed_points = @data[:closed_points][@index_estimate_last] # whereas closed points does not look at ongoing sprints
     @last_points_left = @last_total_points - @last_closed_points
     @last_date = release.days[@index_estimate_last]
   end
@@ -73,23 +76,37 @@ class ReleaseBurndown
     return unless @index_estimate_last > 0
     avg_count = @index_estimate_last >= 3 ? 3 : @index_estimate_last
     index_estimate_first = @index_estimate_last - avg_count
+    index_last_active_first = @index_last_active - avg_count
 
-    lr_closed = Backlogs::AverageTrend.new(@days[index_estimate_first..@index_estimate_last],@data[:closed_points][index_estimate_first..@index_estimate_last])
+    @lr_closed = Backlogs::LinearRegression.new(@days[index_estimate_first..@index_estimate_last],
+                                                @data[:closed_points][index_estimate_first..@index_estimate_last])
 
-    lr_scope = Backlogs::AverageTrend.new(@days[index_estimate_first..@index_estimate_last],@data[:total_points][index_estimate_first..@index_estimate_last])
+    @lr_scope = Backlogs::LinearRegression.new(@days[index_last_active_first..@index_last_active],
+                                               @data[:total_points][index_last_active_first..@index_last_active])
 
     #Calculate trend end date (crossing trend_closed and trend_added)
-    trend_cross_date = lr_closed.crossing_date(lr_scope)
+    trend_cross_date = @lr_closed.crossing_date(@lr_scope)
 
-    return if trend_cross_date.nil?
+    # Use active sprint closed points data to recalculate closed trendline if crossing is before current date
+    if trend_cross_date.nil? or trend_cross_date < Time.now.to_date
+      @lr_closed = Backlogs::LinearRegression.new(@days[index_estimate_first..@index_last_active],
+                                                  @data[:closed_points][index_estimate_first..@index_last_active])
+    end
+
+    # Recalculate crossing date
+    trend_cross_date = @lr_closed.crossing_date(@lr_scope)
+
+    return if trend_cross_date.nil? # Still no crossing date in the future, nothing to show...
+
 
     trend_cross_days = (trend_cross_date - @last_date).to_i
 
     # Value for display in sidebar
     @trend_estimate_end_date = trend_cross_date
 
+    estimate_days = 800
     # Add beginning and end dataset [sprint,points] for trendlines
-    trendline_end_date = trend_cross_days.between?(1,730) ? trend_cross_date + 30 : @last_date + avg_days
+    trendline_end_date = trend_cross_days.between?(1,730) ? trend_cross_date + 30 : @last_date + estimate_days
 
     @data[:trend_closed] = lr_closed.predict_line(trendline_end_date)
     @data[:trend_scope] = lr_scope.predict_line(trendline_end_date)
@@ -109,14 +126,13 @@ class ReleaseBurndown
 
   end
 
-  # Calculate index in days array for last date to be included for trend calculations.
-  def calc_index_estimate_last
+  # Calculate index in days array before last_date
+  def calc_index_before(last_date = nil)
+    date = last_date.nil? ? Time.now.to_date : last_date
     result = []
     result << 0
     @days.each_with_index{|d,i|
-      # Avoid using a date which is within the active sprint. Fallback to previous sprint
-      # as data in current sprint is likely not up-to-date
-      result << i if d <= Time.now.to_date
+      result << i if d <= date
     }
     return result[-1]
   end
@@ -207,6 +223,11 @@ class RbRelease < ActiveRecord::Base
 
   def last_closed_sprint_date
     RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?) and versions.status = ?', id, "closed").order("versions.effective_date DESC").first.effective_date.to_date unless closed_sprints.size == 0
+  end
+
+  def last_active_sprint_date
+    last_active_sprint = RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=? and ? between sprint_start_date and effective_date)', id,Time.now.beginning_of_day).order("versions.effective_date DESC")
+    return last_active_sprint.first.effective_date.to_date unless last_active_sprint.size == 0
   end
 
   def has_open_stories?

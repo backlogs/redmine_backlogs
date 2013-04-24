@@ -196,16 +196,39 @@ Then /^([^"]*) has planned timespan of (\d+) days starting from ([^"]*)$/ do |re
   start_date = Date.parse start
   expected_date = start_date + days.to_i
 
-  burndown[:planned][0][0].should == start_date
-  burndown[:planned][1][0].should == expected_date
+  burndown[:planned][0][0].should === start_date
+  burndown[:planned][1][0].should === expected_date
 end
 
 Then /^([^"]*) has trend estimate end date at ([^"]*)$/ do |release_name, expected_end_date|
   release = RbRelease.find_by_name(release_name)
   burndown = release.burndown
   expected_end_date = Date.parse expected_end_date
+  puts "Trend estimated end date: #{burndown.trend_estimate_end_date}"
+  burndown.trend_estimate_end_date.should === expected_end_date
+end
 
-  burndown.trend_estimate_end_date.should == expected_end_date
+Then /^(.*?) has trend (scope|closed) based on dates "(.*?)"$/ do |release_name,line_name, list_dates|
+  release = RbRelease.find_by_name(release_name)
+  burndown = release.burndown
+  burndown_line = "lr_#{line_name}".intern
+  lr = burndown.send(burndown_line) # fetch linear regression object
+  array_dates = list_dates.split(",").collect{|d| Date.parse d }
+  puts "days: #{array_dates}"
+  (((array_dates | lr.days) - (array_dates & lr.days)).empty?).should be_true
+end
+
+Then /^(.*?) has trend (scope|closed) with slope of (.*?) points per day intercepting at (.*?) points$/ do |release_name,line_name, slope, intercept|
+  release = RbRelease.find_by_name(release_name)
+  burndown = release.burndown
+  expected_slope = slope.to_f
+  expected_intercept = intercept.to_f
+  burndown_line = "lr_#{line_name}".intern
+  lr = burndown.send(burndown_line) # fetch linear regression object
+  puts "slope: #{lr.slope}"
+  puts "intercept: #{lr.intercept}"
+  ((expected_slope - lr.slope).abs <= 0.01).should be_true
+  ((expected_intercept - lr.intercept).abs <= 0.01).should be_true
 end
 
 
