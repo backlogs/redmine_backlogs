@@ -60,9 +60,11 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
   end %>
 </div>
 
+<% if @release.has_burndown? && Backlogs.setting[:release_burnup_enabled] %>
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>
   <% end %>
+<% end %>
   <br />
 
 <% content_for :sidebar do %>
