@@ -98,6 +98,8 @@ ja:
   field_position: Position
   field_priority: 優先度
   field_project_id: Project Id
+  field_planned_velocity: Planned velocity
+  field_release_relationship: Release relationship
   field_release: Release
   field_release_end_date: リリース終了日
   field_release_start_date: リリース開始日
@@ -156,6 +158,12 @@ ja:
   label_release_planning: リリース計画
   label_release_plural: リリース
   label_release_start_date: リリース開始日
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_reset: リセット
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
@@ -178,6 +186,7 @@ ja:
     and Burndowns use %{burndown_timezone} to calculate the graphs.
 
     Note: Historic data is not affected when changing this option.'
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   rb_label_copy_tasks: タスクをコピー
   rb_label_copy_tasks_all: 全て
   rb_label_copy_tasks_none: なし
