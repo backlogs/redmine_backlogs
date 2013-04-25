@@ -49,6 +49,11 @@ class MigrateLegacy < ActiveRecord::Migration
       add_index :rb_sprint_burndown, :version_id, :unique => true
     end
 
+    #migration 40 wants to add release-issue relation. issue_history tracks this, so the relation needs to be there before a history migration is performed
+    unless ActiveRecord::Base.connection.column_exists?(:issues, :release_id)
+      add_column :issues, :release_id, :integer
+    end
+
     adapter = ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter].downcase
 
     ActiveRecord::Base.connection.commit_db_transaction unless adapter.include?('sqlite')
