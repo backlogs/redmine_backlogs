@@ -411,8 +411,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
 #backlogs_container .stories .story .subject {
-  overflow:hidden;
-  white-space:nowrap;
+  float:left;
+  margin-right: 112px;
 }
 #backlogs_container .stories .story.closed .subject{
   text-decoration:line-through;
@@ -689,10 +689,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#FED0D0;
 }
 #backlogs_container .stories .story_field {
-  overflow: hidden;
   padding-top: 4px;
   padding-bottom: 5px;
-  height: 14px;
 }
 #backlogs_container .stories .story.editing .story_field {
   display: none;
