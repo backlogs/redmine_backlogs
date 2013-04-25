@@ -1,6 +1,8 @@
 class RbStory < Issue
   unloadable
 
+  RELEASE_RELATIONSHIP = %w(auto initial continued added)
+
   private
 
   def self.__find_options_normalize_option(option)
@@ -17,7 +19,7 @@ class RbStory < Issue
       if Issue.respond_to? :visible_condition
         visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
       else
-    	  visible = Project.allowed_to_condition(User.current, :view_issues)
+        visible = Project.allowed_to_condition(User.current, :view_issues)
       end
       Backlogs::ActiveRecord.add_condition(options, visible)
     end
@@ -255,79 +257,99 @@ class RbStory < Issue
   end
 
   # Produces relevant information for release graphs
-  # @param sprints is array of sprints of interest
-  # @return hash collection of 
-  #  :backlog_points :added_points :closed_points
-# The dates are:
-#  start: first day of first sprint
-#  1..n: a day after the nth sprint
-  def release_burndown_data(sprints)
+  # @param days of interest in the release
+  # @param release_burndown_id release_id of burndown under calculation
+  # @return hash collection of
+  #  :total_points is all points in release including closed+added at given day
+  #  :added_points is points from stories added after release start
+  #  :closed_points is accumulated number of closed points
+  def release_burndown_data(days,release_burndown_id)
     return nil unless self.is_story?
-    days = Array.new
-    # Find interesting days of each sprint for the release graph
-    days << sprints.first.sprint_start_date.to_date
-    sprints.each { |sprint| days << sprint.effective_date.tomorrow.to_date }
 
+    rl = self.release_burndown_cache.get(days)
+    return rl unless rl.nil? || rl.empty?
+    calculate_release_burndown_data(days, release_burndown_id) #Idea: is it feasible to only recalculate missing days?
+  end
+
+  #private
+  def calculate_release_burndown_data(days, release_burndown_id)
     baseline = [0] * days.size
 
     series = Backlogs::MergedArray.new
-    series.merge(:backlog_points => baseline.dup)
-    series.merge(:added_points => baseline.dup)
+    series.merge(:total_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
 
     # Collect data
-    bd = {:points => [], :open => [], :accepted => [] }
+    bd = {:points => [], :open => [], :accepted => [], :in_release => [], :rejected => [] }
     self.history.filter_release(days).each{|d|
       if d.nil? || d[:tracker] != :story
-        [:points, :open, :accepted].each{|k| bd[k] << nil }
+        [:points, :open, :accepted, :in_release, :rejected].each{|k| bd[k] << nil }
       else
         bd[:points] << d[:story_points]
         bd[:open] << d[:status_open]
-        bd[:accepted] << d[:status_success] #What do do with rejected points? The story is not open anymore.
+        bd[:accepted] << d[:status_success]
+        bd[:in_release] << (d[:release] == release_burndown_id)
+        bd[:rejected] << (d[:status_open] == false && d[:status_success] == false)
       end
     }
 
     series.merge(:accepted => bd[:accepted])
     series.merge(:points => bd[:points])
     series.merge(:open => bd[:open])
-    first = true;
-    series.merge(:accepted_first => series.series(:accepted).collect{ |a|
-                   if a
-                     if a == true && first == true
-                       first = false
-                       true
-                     else
-                       false
-                     end
-                   else
-                     false
-                   end
-                 })
+    series.merge(:in_release => bd[:in_release])
+    series.merge(:rejected => bd[:rejected])
     series.merge(:day => days)
 
-    # Extract added_points, backlog_points and closed points from the data collected
-    series.each { |p|
-      if (created_on.to_date < sprints.first.sprint_start_date.to_date) && p.open
-        p.backlog_points = p.points
-      end
-      if p.accepted_first
-        p.closed_points = p.points
-      end
-      # Is the story created within this sprint?
-      if (created_on.to_date >= sprints.first.sprint_start_date.to_date) &&
-          (created_on.to_date < p.day) #day is the end-date+1 of a sprint
-        p.added_points = p.points
-        if p.accepted
-          p.backlog_points = -p.points
-        end
+    in_release_first = (bd[:in_release][0] == true)
+    index_first = bd[:points].find_index{|i| i}
+    story_points_first = index_first ? bd[:points][index_first] : 0
+
+    # Extract total, closed and added points during release
+    series.each{|p|
+      if release_relationship == 'auto'
+        p.total_points = calc_total_auto(p,days,in_release_first)
+        p.closed_points = calc_closed_auto(p,days,in_release_first)
+        p.added_points = calc_added_auto(p,days,in_release_first)
+      else
+        p.total_points = calc_total_manual(p,days,release_burndown_id)
+        p.closed_points = calc_closed_manual(p,days,release_burndown_id)
+        p.added_points = calc_added_manual(p,days,release_burndown_id)
       end
     }
 
     rl = {}
-    rl[:backlog_points] = series.series(:backlog_points)
+    rl[:total_points] = series.series(:total_points)
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
+
+    self.release_burndown_cache.set(days, rl)
+
     return rl
+  end
+
+  #optimization for RbRelease.stories_all_time to eager load all the required stuff
+  def self.release_burndown_includes
+    #return a scope for release burndown chart rendering
+    includes(:rb_release_burndown_cache, :relations_from, :relations_to)
+  end
+
+  # Definition of a continued story:
+  # * "Copied to" relation with another story
+  # * The other story is in same release
+  # * The other story is rejected
+  def continued_story?
+    self.relations.each{|r|
+      if r.relation_type == IssueRelation::TYPE_COPIED_TO
+        from_story = RbStory.find(r.issue_from_id)
+        if from_story.status.backlog_is?(:failure)
+#FIXME check from_story is in the same release as this story at the
+# point in time being examined.
+          return true
+        end
+      end
+    }
+    return false
   end
 
   def burndown(sprint = nil, status=nil)
@@ -391,10 +413,55 @@ class RbStory < Issue
         status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
         unless status_id.nil? || status_id.to_i == 0
           # bail out if something is other than closed.
-          tasks.each{|task| 
+          tasks.each{|task|
             return unless task.status.is_closed?
           }
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
         end
   end
+
+private
+
+  def calc_total_auto(p,days,in_release_first)
+    return p.points if (p.in_release == true) && (p.rejected == false) &&
+      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
+    # last part above (continued... || continu....) takes care of an edge case because
+    # RbIssueHistory adds an entry for all issues the day before created_on.
+    # Without this the continued story's points might show up a sprint too early.
+    0
+  end
+
+  def calc_total_manual(p,days,release_burndown_id)
+    return p.points if p.rejected == false &&
+      (release_id == release_burndown_id || p.in_release) &&
+      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
+    # See description for calc_total_auto
+    0
+  end
+
+  def calc_closed_auto(p,days,in_release_first)
+    return p.points if p.in_release == true && p.accepted == true
+    0
+  end
+
+  def calc_closed_manual(p,days,release_burndown_id)
+    return p.points if p.accepted == true && release_id == release_burndown_id
+    0
+  end
+
+  def calc_added_auto(p,day,in_release_first)
+    return p.points if p.in_release == true &&
+                       p.open == true &&
+                       continued_story? == false &&
+                       in_release_first == false
+    0
+  end
+
+  def calc_added_manual(p,days,release_burndown_id)
+    return p.points if release_id == release_burndown_id &&
+                       release_relationship == 'added' &&
+                       p.open == true
+    0
+  end
+
 end

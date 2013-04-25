@@ -112,6 +112,8 @@
   field_position: Posisjon
   field_priority: Priority
   field_project_id: Project Id
+  field_planned_velocity: Planned velocity
+  field_release_relationship: Release relationship
   field_release: Release
   field_release_end_date: Utgivelse sluttdato
   field_release_start_date: Utgivelse startdato
@@ -171,6 +173,12 @@
   label_release_planning: Planlegging av utgivelse
   label_release_plural: Utgivelser
   label_release_start_date: Utgivelse startdato
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_reset: Reset
   label_scrum_statistics: Scrum statistikk
   label_select_all: Velg alle
@@ -193,6 +201,7 @@
     and Burndowns use %{burndown_timezone} to calculate the graphs.
 
     Note: Historic data is not affected when changing this option.'
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   rb_label_copy_tasks: Kopier tasks
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Ingen

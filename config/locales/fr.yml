@@ -120,6 +120,8 @@ fr:
   field_position: Position
   field_priority: Priorité
   field_project_id: Projet ID
+  field_planned_velocity: Planned velocity
+  field_release_relationship: Release relationship
   field_release: Release
   field_release_end_date: Date de fin de la release
   field_release_start_date: Date de début de la release
@@ -180,6 +182,12 @@ fr:
   label_release_planning: Planification des releases
   label_release_plural: Releases
   label_release_start_date: Date de début de la release
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_reset: Reinitialiser
   label_scrum_statistics: Statistiques Scrum
   label_select_all: sélectionner tout
@@ -202,6 +210,7 @@ fr:
     and Burndowns use %{burndown_timezone} to calculate the graphs.
 
     Note: Historic data is not affected when changing this option.'
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   rb_label_copy_tasks: Copier les tâches
   rb_label_copy_tasks_all: Tous
   rb_label_copy_tasks_none: Aucun

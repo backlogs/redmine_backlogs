@@ -111,6 +111,8 @@ en-GB:
   field_position: Position
   field_priority: Priority
   field_project_id: Project Id
+  field_planned_velocity: Planned velocity
+  field_release_relationship: Release relationship
   field_release: Release
   field_release_end_date: Release end date
   field_release_start_date: Release start date
@@ -170,6 +172,12 @@ en-GB:
   label_release_planning: Release Planning
   label_release_plural: Releases
   label_release_start_date: field_release_start_date
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_reset: Reset
   label_scrum_statistics: Scrum statistics
   label_select_all: Select all
@@ -201,6 +209,7 @@ en-GB:
   rb_label_timelog_enable: Enable
   rb_project_settings_update_error: Error while updating settings
   rb_project_settings_updated: Settings updated
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   rb_show_burndown_in_sidebar: Show burndown chart in issues sidebar
   rb_show_project_name: Show project name in backlogs
   rb_task_cards_stories_then_tasks: First all stories, then all tasks
