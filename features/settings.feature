@@ -17,6 +17,7 @@ Feature: Configuration
 
   Scenario: view the project local settings
     Given I am a product owner of the project
+      And sharing is enabled
       And I am viewing the backlog settings page for project ecookbook
      Then I should see "Show stories from subprojects"
       And show_stories_from_subprojects for ecookbook should be true
@@ -27,6 +28,7 @@ Feature: Configuration
 
   Scenario: disable subproject for product backlog
     Given I am a product owner of the project
+      And sharing is enabled
       And I have selected the ecookbook project
       And the project selected not to include subprojects in the product backlog
       And I am viewing the backlog settings page for project ecookbook
