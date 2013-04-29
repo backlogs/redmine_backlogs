@@ -110,6 +110,8 @@ zh:
   field_position: 位置
   field_priority: Priority
   field_project_id: Project Id
+  field_planned_velocity: Planned velocity
+  field_release_relationship: Release relationship
   field_release: Release
   field_release_end_date: Release end date
   field_release_start_date: Release start date
@@ -167,6 +169,12 @@ zh:
   label_release_planning: Release Planning
   label_release_plural: Releases
   label_release_start_date: Release start date
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_reset: Reset
   label_scrum_statistics: Scrum 统计
   label_select_all: 全选
@@ -189,6 +197,7 @@ zh:
     and Burndowns use %{burndown_timezone} to calculate the graphs.
 
     Note: Historic data is not affected when changing this option.'
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   rb_label_copy_tasks: ! '[[Copy tasks]]'
   rb_label_copy_tasks_all: ! '[[All]]'
   rb_label_copy_tasks_none: ! '[[None]]'

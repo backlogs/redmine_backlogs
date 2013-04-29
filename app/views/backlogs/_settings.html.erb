@@ -213,12 +213,6 @@
 </p>
 
 <p>
-  <%= content_tag(:label, l(:rb_show_project_name)) %>
-  <%= check_box_tag("settings[show_project_name]",'enabled',
-            Backlogs.setting[:show_project_name]) %>
-</p>
-
-<p>
   <%= content_tag(:label, l(:rb_burndown_timezone)) %>
   <%= select_tag("settings[burndown_timezone]",
         time_zone_options_for_select(RbIssueHistory.burndown_timezone(true).name, nil)
@@ -227,6 +221,12 @@
     :user_timezone => User.current.time_zone,
     :server_timezone => ActiveSupport::TimeZone["Etc/GMT-#{Time.now.utc_offset/3600}"],
     :burndown_timezone => RbIssueHistory.burndown_timezone }).gsub("\n","<br/>").html_safe %></span>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:rb_release_burnup_enabled)) %>
+  <%= check_box_tag("settings[release_burnup_enabled]",'enabled',
+            Backlogs.setting[:release_burnup_enabled]) %>
 </p>
 
 </fieldset>
@@ -270,6 +270,11 @@
   <%= content_tag(:label, l(:backlogs_sprint_sort_order)) %>
   <%= radio_button_tag("settings[sprint_sort_order]", 'asc', Backlogs.setting[:sprint_sort_order].nil?|| Backlogs.setting[:sprint_sort_order] == 'asc') %><%= l(:backlogs_sprint_sort_order_asc) %>
   <%= radio_button_tag("settings[sprint_sort_order]", 'desc', Backlogs.setting[:sprint_sort_order] == 'desc') %><%= l(:backlogs_sprint_sort_order_desc) %>
+</p>
+<p>
+  <%= content_tag(:label, l(:rb_show_project_name)) %>
+  <%= check_box_tag("settings[show_project_name]",'enabled',
+            Backlogs.setting[:show_project_name]) %>
 </p>
 </fieldset>
 

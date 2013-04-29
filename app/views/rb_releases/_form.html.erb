@@ -20,6 +20,9 @@
     <%= calendar_for('release_release_end_date') %>
   </p>
   <p>
+    <%= f.text_field :planned_velocity %>
+  </p>
+  <p>
     <%= f.select :sharing,
         @release.allowed_sharings.collect {|v| [
           format_release_sharing(v),

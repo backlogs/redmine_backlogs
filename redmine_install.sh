@@ -36,7 +36,7 @@ then
   exit 1;
 fi
 
-export CLUSTER1=" features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature features/release_burndown.feature features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature"
+export CLUSTER1=" features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature features/release_burndown.feature features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature features/release_burndown_complex.feature"
 export CLUSTER2=" features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
 
 export RAILS_ENV=test

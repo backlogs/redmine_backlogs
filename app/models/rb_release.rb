@@ -1,81 +1,15 @@
 require 'date'
+require 'linear_regression'
 
 class ReleaseBurndown
   def initialize(release)
-#    @days = release.days
-    @release_id = release.id
-    @project = release.project
-
-    #initialize empty release
+    @days = release.days
+    @planned_velocity = release.planned_velocity
     @data = {}
-    @data[:added_points] = []
-    @data[:added_points_pos] = []
-    @data[:backlog_points] = []
-    @data[:closed_points] = []
-    @data[:trend_added] = []
-    @data[:trend_closed] = []
 
-    # Select sprints within release period. They need not to be closed.
-    sprints = release.sprints
-    return if sprints.nil? || sprints.size == 0
-
-    baseline = [0] * (sprints.size + 1)
-
-    series = Backlogs::MergedArray.new
-    series.merge(:backlog_points => baseline.dup)
-    series.merge(:added_points => baseline.dup)
-    series.merge(:closed_points => baseline.dup)
-
-#TODO Caching
-#TODO Maybe utilize/extend sprint burndown data?
-#TODO Stories continued over several sprints (by duplicating) should not show up as added
-#TODO Likewise stories split from inital epics should not show up as added
-
-    # Go through each story in the backlog
-    release.stories.each{ |story|
-      series.add(story.release_burndown_data(sprints))
-    }
-
-    # Series collected, now format data for jqplot
-    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
-    # sorted out:
-    # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
-#TODO Maybe move jqplot format stuff to releaseburndown view?
-    @data[:added_points] = series.collect{ |s| -1 * s.added_points }
-    @data[:added_points_pos] = series.collect{ |s| s.backlog_points >= 0 ? s.added_points : s.added_points + s.backlog_points }
-    @data[:backlog_points] = series.collect{ |s| s.backlog_points >= 0 ? s.backlog_points : 0 }
-    @data[:closed_points] = series.series(:closed_points)
-
-
-    # Forecast (probably just as good as the weather forecast...)
-#TODO Move forecast to RbRelease?
-    @data[:trend_closed] = Array.new
-    @data[:trend_added] = Array.new
-    avg_count = 3
-    if release.closed_sprints.size >= avg_count
-      avg_added = (@data[:added_points][-1] - @data[:added_points][-avg_count]) / avg_count
-      avg_closed = @data[:closed_points][-avg_count..-1].inject(0){|sum,p| sum += p} / avg_count
-      current_backlog = @data[:added_points][-1] + @data[:added_points_pos][-1] + @data[:backlog_points][-1]
-      current_added = @data[:added_points][-1]
-      current_sprints = @data[:closed_points].size
-
-      # Add beginning and end dataset [sprint,points] for trendlines
-      @data[:trend_closed] << [current_sprints, current_backlog]
-      @data[:trend_closed] << [current_sprints + 10, current_backlog - avg_closed * 10]
-      @data[:trend_added] << [current_sprints, current_added]
-      @data[:trend_added] << [current_sprints + 10, current_added + avg_added * 10]
-
-    end
-
-#TODO Estimate sprints left
-    sprints_left = [0] * 10
-
-    # Extend other series with empty datapoints up to the estimated number of sprints
-    # to format plot correctly
-    @data[:added_points].concat sprints_left.dup
-    @data[:added_points_pos].concat sprints_left.dup
-    @data[:backlog_points].concat sprints_left.dup
-    @data[:closed_points].concat sprints_left.dup
+    calculate_burndown(release)
+    calculate_trend
+    calculate_planned
   end
 
   def [](i)
@@ -90,12 +24,119 @@ class ReleaseBurndown
 #    return @available_series.values.select{|s| (select == :all) }.sort{|x,y| "#{x.name}" <=> "#{y.name}"}
   end
 
-  attr_reader :days
-  attr_reader :release_id
-  attr_reader :max
+  attr_reader :planned_estimate_end_date
+  attr_reader :trend_estimate_end_date
+  attr_reader :lr_closed # linear regression closed
+  attr_reader :lr_scope # linear regression scope
 
-  attr_reader :remaining_story_points
-  attr_reader :ideal
+  private
+
+  def calculate_burndown(release)
+    @data[:offset_points] = []
+    @data[:added_points] = []
+    @data[:backlog_points] = []
+    @data[:closed_points] = []
+
+    baseline = [0] * @days.size
+
+    series = Backlogs::MergedArray.new
+    series.merge(:total_points => baseline.dup)
+    series.merge(:added_points => baseline.dup)
+    series.merge(:closed_points => baseline.dup)
+
+    # Go through each story in the release
+    release.stories_all_time.each{|story|
+      series.add(story.release_burndown_data(@days,release.id))
+    }
+
+    # Series collected, now format data for jqplot
+    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
+    # sorted out:
+    # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
+    @data[:closed_points] = series.series(:closed_points)
+    @data[:backlog_points] = series.collect{|s| s.total_points - s.closed_points - s.added_points  }
+    @data[:added_points] = series.series(:added_points)
+    @data[:total_points] = series.series(:total_points)
+
+    # Keyfigures for later calculations
+    @index_last_active = calc_index_before(release.last_active_sprint_date)
+    @index_estimate_last = calc_index_before
+    @last_total_points = @data[:total_points][@index_last_active] # notice total points utilize latest active sprint
+    @last_closed_points = @data[:closed_points][@index_estimate_last] # whereas closed points does not look at ongoing sprints
+    @last_points_left = @last_total_points - @last_closed_points
+    @last_date = release.days[@index_estimate_last]
+  end
+
+
+  def calculate_trend
+    @data[:trend_scope] = []
+    @data[:trend_closed] = []
+
+    return unless @last_points_left > 0
+    return unless @index_estimate_last > 0
+    avg_count = @index_estimate_last >= 3 ? 3 : @index_estimate_last
+    index_estimate_first = @index_estimate_last - avg_count
+    index_last_active_first = @index_last_active - avg_count
+
+    @lr_closed = Backlogs::LinearRegression.new(@days[index_estimate_first..@index_estimate_last],
+                                                @data[:closed_points][index_estimate_first..@index_estimate_last])
+
+    @lr_scope = Backlogs::LinearRegression.new(@days[index_last_active_first..@index_last_active],
+                                               @data[:total_points][index_last_active_first..@index_last_active])
+
+    #Calculate trend end date (crossing trend_closed and trend_added)
+    trend_cross_date = @lr_closed.crossing_date(@lr_scope)
+
+    # Use active sprint closed points data to recalculate closed trendline if crossing is before current date
+    if trend_cross_date.nil? or trend_cross_date < Time.now.to_date
+      @lr_closed = Backlogs::LinearRegression.new(@days[index_estimate_first..@index_last_active],
+                                                  @data[:closed_points][index_estimate_first..@index_last_active])
+    end
+
+    # Recalculate crossing date
+    trend_cross_date = @lr_closed.crossing_date(@lr_scope)
+
+    return if trend_cross_date.nil? # Still no crossing date in the future, nothing to show...
+
+
+    trend_cross_days = (trend_cross_date - @last_date).to_i
+
+    # Value for display in sidebar
+    @trend_estimate_end_date = trend_cross_date
+
+    estimate_days = 800
+    # Add beginning and end dataset [sprint,points] for trendlines
+    trendline_end_date = trend_cross_days.between?(1,730) ? trend_cross_date + 30 : @last_date + estimate_days
+
+    @data[:trend_closed] = lr_closed.predict_line(trendline_end_date)
+    @data[:trend_scope] = lr_scope.predict_line(trendline_end_date)
+  end
+
+  def calculate_planned
+    @data[:planned] = []
+
+    return unless @last_points_left > 0
+    return unless @planned_velocity.is_a? Float
+    return unless @planned_velocity > 0.0
+
+    @data[:planned] << [@last_date, @last_closed_points]
+    #FIXME add possibility to choose velocity per week, fortnight, month?
+    @planned_estimate_end_date = @last_date + (@last_points_left / @planned_velocity * 30)
+    @data[:planned] << [@planned_estimate_end_date, @data[:total_points][@index_estimate_last]]
+
+  end
+
+  # Calculate index in days array before last_date
+  def calc_index_before(last_date = nil)
+    date = last_date.nil? ? Time.now.to_date : last_date
+    result = []
+    result << 0
+    @days.each_with_index{|d,i|
+      result << i if d <= date
+    }
+    return result[-1]
+  end
+
 end
 
 class RbRelease < ActiveRecord::Base
@@ -137,9 +178,20 @@ class RbRelease < ActiveRecord::Base
     issues
   end
 
+  # Returns current stories + stories previously scheduled for this release
+  def stories_all_time
+    missing_stories = RbStory.joins(:journals => :details).where(
+            "(release_id != ? or release_id IS NULL) and
+            journal_details.property ='attr' and
+            journal_details.prop_key = 'release_id' and
+            (journal_details.old_value = ? or journal_details.value = ?)",
+            self.id,self.id.to_s,self.id.to_s).release_burndown_includes
+    (issues.release_burndown_includes + missing_stories).uniq
+  end
+
   #Return sprints that contain issues within this release
   def sprints
-    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id)
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?)', id).order('versions.effective_date')
   end
 
   # Return sprints closed within this release
@@ -151,22 +203,51 @@ class RbRelease < ActiveRecord::Base
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
 #return issues sorted into sprints. Obviously does not return issues which are not in a sprint
 #unfortunately, group_by returns unsorted results.
-    issues.joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
+    issues.where(:tracker_id => RbStory.trackers).joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
   end
 
-  def days(cutoff = nil)
-    # assumes mon-fri are working days, sat-sun are not. this
-    # assumption is not globally right, we need to make this configurable.
-    cutoff = self.release_end_date if cutoff.nil?
-    workdays(self.release_start_date, cutoff)
+  # The dates are:
+  # start: first day of release
+  # 1..n: a day after the nth sprint
+  def days
+    current_date = Time.now.to_date
+    days_of_interest = Array.new
+    days_of_interest << self.release_start_date.to_date
+    self.sprints.each{|sprint|
+      days_of_interest << sprint.effective_date.to_date unless sprint.effective_date.nil?
+    }
+    # Add current day if we are past last sprint end date and has open stories
+    days_of_interest << Time.now.to_date if self.has_open_stories? and Time.now.to_date > days_of_interest[-1]
+    return days_of_interest.uniq.sort
+  end
+
+  def last_closed_sprint_date
+    RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=?) and versions.status = ?', id, "closed").order("versions.effective_date DESC").first.effective_date.to_date unless closed_sprints.size == 0
+  end
+
+  def last_active_sprint_date
+    last_active_sprint = RbSprint.where('id in (select distinct(fixed_version_id) from issues where release_id=? and ? between sprint_start_date and effective_date)', id,Time.now.beginning_of_day).order("versions.effective_date DESC")
+    return last_active_sprint.first.effective_date.to_date unless last_active_sprint.size == 0
+  end
+
+  def has_open_stories?
+    stories.open.size > 0
   end
 
   def has_burndown?
-#merge: is it neccessary to have closed sprints for burndown? I'd like to see it immediately
-    return !!(self.release_start_date and self.release_end_date && !self.closed_sprints.nil?)
+    return self.stories.size > 0
   end
 
   def burndown
+    # @cached_burndown is not the release_burndown_cache. This is just an instance variable to avoid
+    # calculating the object more than once _per request_.
+    # Nevertheless, @cached_burndown will be calculated at least once per request.
+    #
+    # On the other hand, rebuild of individual release_burndown_cache entries is triggered inside
+    # each story when a story changes. Release_burndown_cache is not one atomic piece of data but
+    # a set of fragments per story and therefore it does not need a logic similar to the sprint burndown cache.
+    # If anything (dates, sprints, sprint status etc.) changes, the release burndown will ask just more
+    # stories and thus the cache needs no touching.
     return nil if not self.has_burndown?
     @cached_burndown ||= ReleaseBurndown.new(self)
     return @cached_burndown

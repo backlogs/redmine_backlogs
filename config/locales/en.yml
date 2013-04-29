@@ -65,10 +65,12 @@ en:
   field_base: ""
   field_blocks: Blocks
   field_name: Name
+  field_planned_velocity: Planned velocity
   field_position: Position
   field_release_end_date: Release end date
   field_release_start_date: Release start date
   field_release: Release
+  field_release_relationship: Release relationship
   field_story_points: Story points
   field_subject: Subject
   field_tracker_id: Tracker ID
@@ -109,9 +111,15 @@ en:
   label_release: Release
   label_release_end_date: Release end date
   label_release_new: New release
+  label_release_planned_velocity_end_date: Planned velocity estimated end date
   label_release_planning: Release Planning
   label_release_plural: Releases
   label_release_start_date: Release start date
+  label_release_trend_end_date: Trend estimated end date
+  label_release_relationship_auto: Auto
+  label_release_relationship_initial: Initial
+  label_release_relationship_added: Added
+  label_release_relationship_continued: Continued
   label_closed_releases: Closed releases
   label_new_story: New Story
   label_new_sprint: New Sprint
@@ -200,6 +208,7 @@ en:
   backlogs_show_in_scrum_stats: Show project in Scrum statistics
   rb_project_settings_updated: Settings updated
   rb_project_settings_update_error: Error while updating settings
+  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
   backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
   backlogs_sprint_sort_order: Sort Sprints by start date
   backlogs_sprint_sort_order_asc: ascending

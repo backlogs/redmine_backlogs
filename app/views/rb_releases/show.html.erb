@@ -2,7 +2,6 @@
 <%- controller.rb_jquery_plugins = capture do %>
   <%= javascript_include_tag(
     'jquery/jquery.jqplot/plugins/jqplot.barRenderer.min.js',
-    'jquery/jquery.jqplot/plugins/jqplot.categoryAxisRenderer.min.js',
     :plugin => 'redmine_backlogs')
   %>
 <%- end %>
@@ -22,15 +21,15 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 
 <p><%= @release.description %></p>
 
-<% if false %><!-- FIXME Disabled for now -->
-<h3>Release Burndown</h3>
-<!--Release Burndown Visualization-->
-<% unless @release.has_burndown? %>
-  <p class="nodata">No burndown available</p>
-<% else %>
-    <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
-  <br />
-<% end %>
+<% if Backlogs.setting[:release_burnup_enabled] %>
+  <h3>Release Burnup chart</h3>
+  <!--Release Burnup Visualization-->
+  <% unless @release.has_burndown? %>
+    <p class="nodata">No burndown available</p>
+  <% else %>
+      <%= render :partial => "rb_release_burndown_charts/burndown", :locals => { :release => @release, :style => "margin-left:0px; margin-top:20px;"} %>
+    <br />
+  <% end %>
 <% end %>
 
 <!--Visualization of related sprints -->
@@ -61,9 +60,11 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
   end %>
 </div>
 
+<% if @release.has_burndown? && Backlogs.setting[:release_burnup_enabled] %>
   <% other_formats_links do |f| %>
     <%= f.link_to 'CSV', :url => { :release_id => @release } %>
   <% end %>
+<% end %>
   <br />
 
 <% content_for :sidebar do %>
@@ -72,6 +73,16 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
   <p><b><%= l(:field_release_start_date) %>:</b>   <%= @release.release_start_date   %></p>
   <p><b><%= l(:field_release_end_date) %>:</b>     <%= @release.release_end_date     %></p>
   <p><b><%= l(:remaining_story_points) %>:</b>     <%= @remaining_story_points       %></p>
+  <p><b><%= l(:field_planned_velocity) %>:</b>     <%= @release.planned_velocity     %></p>
+  <p><br/></p>
+<% if @release.has_burndown? && Backlogs.setting[:release_burnup_enabled] %>
+  <% if @release.burndown.planned_estimate_end_date.is_a? Date %>
+    <p><b><%= l(:label_release_planned_velocity_end_date) %>:</b>     <%= @release.burndown.planned_estimate_end_date     %></p>
+  <% end %>
+  <% if @release.burndown.trend_estimate_end_date.is_a? Date %>
+    <p><b><%= l(:label_release_trend_end_date) %>:</b>     <%= @release.burndown.trend_estimate_end_date     %></p>
+  <% end %>
+<% end # has burndown %>
 <% end %>
 
 <% html_title(@release.name) -%>

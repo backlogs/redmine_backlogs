@@ -11,6 +11,7 @@ Before do
   Backlogs.setting[:include_sat_and_sun] = false
   Backlogs.setting[:sharing_enabled] = false
   Backlogs.setting[:story_follow_task_status] = nil
+  Backlogs.setting[:release_burnup_enabled] = 'enabled'
   Time.zone = 'UTC'
 end
 
@@ -230,7 +231,8 @@ Given /^I have defined the following sprints?:$/ do |table|
     version['project_id'] = get_project((version['project_id']||'ecookbook')).id
 
     ['effective_date', 'sprint_start_date'].each do |date_attr|
-      version[date_attr] = Chronic.parse(version[date_attr]).strftime("%Y-%m-%d")
+      date_string = Chronic.parse(version[date_attr])
+      version[date_attr] = date_string.nil? ? nil : date_string.strftime("%Y-%m-%d")
     end
 
     version['sharing'] = 'none' if version['sharing'].nil?

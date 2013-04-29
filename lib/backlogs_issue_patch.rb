@@ -14,8 +14,11 @@ module Backlogs
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
         has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
+        has_one :rb_release_burndown_cache, :dependent => :destroy
 
-        safe_attributes 'release_id' #FIXME merge conflict. is this required?
+        validates_inclusion_of :release_relationship, :in => RbStory::RELEASE_RELATIONSHIP
+
+        safe_attributes 'release_id','release_relationship' #FIXME merge conflict. is this required?
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
@@ -30,6 +33,10 @@ module Backlogs
     module InstanceMethods
       def history
         @history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
+      end
+
+      def release_burndown_cache
+        self.rb_release_burndown_cache ||= RbReleaseBurndownCache.where(:issue_id => self.id).first_or_create
       end
 
       def is_story?
@@ -127,6 +134,8 @@ module Backlogs
 
       def backlogs_after_save
         self.history.save!
+        self.release_burndown_cache.drop
+
         [self.parent_id, self.parent_id_was].compact.uniq.each{|pid|
           p = Issue.find(pid)
           r = p.leaves.sum("COALESCE(remaining_hours, 0)").to_f

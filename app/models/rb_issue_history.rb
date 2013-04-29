@@ -55,28 +55,35 @@ class RbIssueHistory < ActiveRecord::Base
   end
 
   def filter_release(days)
-    h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
-    #if we have no day matching, find one earlier to get the latest status
-    filtered = days.collect{|d| 
-      while !h[d] && d > days[0] #FIXME why did self.expand not give us all days in h?
-        if d > days[-1]
-          d = days[-1]
-        else
-          d = d.yesterday
-        end
-      end
-      h[d] ? h[d] : {:date => d, :origin => :filter}
-    }
-    
-    # see if this issue was closed after last day
-    if filtered[-1][:status_open]
-      self.history.select{|h| h[:date] > days[-1]}.each{|h|
-        if !h[:status_open]
-          filtered[-1] = h
+    # if story is closed, make sure closed information is returned
+    # from the end date of the sprint.
+    closed_in_sprint = nil
+    if self.issue.status.is_closed? && !self.issue.fixed_version.nil? && !self.issue.fixed_version.sprint_start_date.nil?
+      # get closed history sorted by date
+      #FIXME wishlist: history table column expansion to allow select and order by date
+      h_closed = self.history.select{|h| h[:date] >= self.issue.fixed_version.sprint_start_date}.collect{|d| [d[:date],d]}.sort{|a,b| a[0] <=> b[0]}
+      h_closed.each{|h|
+        if !h[1][:status_open]
+          closed_in_sprint = { :date => self.issue.fixed_version.effective_date, :history => h[1] }
+          closed_in_sprint[:history][:origin] = :filter_closed_after
           break
         end
       }
     end
+
+    # Fetch history to search for days
+    h = Hash[*(self.history.collect{|d| [d[:date], d]}.flatten)]
+
+    filtered = days.collect{|d|
+      # if we are past date of closing issue just provide the closed history.
+      if !closed_in_sprint.nil? && d >= closed_in_sprint[:date]
+        closed_in_sprint[:history]
+      else
+        # Find closest date less than current day.
+        closest_day = h.select{|k,v| k <= d }.sort[-1]
+        closest_day ? closest_day[1] : {:date => d, :origin => :filter }
+      end
+    }
     return filtered
   end
 
@@ -120,7 +127,7 @@ class RbIssueHistory < ActiveRecord::Base
 
       ## TODO: SKIP estimated_hours and remaining_hours if not a leaf node
       journal.details.each{|jd|
-        next unless jd.property == 'attr' && ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id'].include?(jd.prop_key)
+        next unless jd.property == 'attr' && ['estimated_hours', 'story_points', 'remaining_hours', 'fixed_version_id', 'status_id', 'tracker_id','release_id'].include?(jd.prop_key)
 
         prop = jd.prop_key.intern
         update = {:old => convert.call(prop, jd.old_value), :new => convert.call(prop, jd.value)}
@@ -140,6 +147,8 @@ class RbIssueHistory < ActiveRecord::Base
           }
         when :tracker_id
           full_journal[date][:tracker] = {:old => RbIssueHistory.issue_type(update[:old]), :new => RbIssueHistory.issue_type(update[:new])}
+        when :release_id
+          full_journal[date][:release] = update
         else
           raise "Unhandled property #{jd.prop}"
         end
@@ -155,6 +164,7 @@ class RbIssueHistory < ActiveRecord::Base
         when 'status_success' then full_journal[date][:status_success] = {:new => j.value == 'true'}
         when 'status_open' then full_journal[date][:status_open] = {:new => j.value == 'true'}
         when 'fixed_version_id' then full_journal[date][:sprint] = {:new => j.value ? j.value.to_i : nil}
+        when 'release_id' then full_journal[date][:release] = {:new => j.value ? j.value.to_i : nil}
         when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j.value ? j.value.to_f : nil}
         when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j.value ? j.value.to_f : nil}
   
@@ -176,6 +186,7 @@ class RbIssueHistory < ActiveRecord::Base
     full_journal[issue.updated_on.to_date] = {
       :story_points => {:new => issue.story_points},
       :sprint => {:new => issue.fixed_version_id },
+      :release => {:new => issue.release_id },
       :status_id => {:new => issue.status_id },
       :status_open => {:new => status[issue.status_id][:open] },
       :status_success => {:new => status[issue.status_id][:success] },
@@ -201,6 +212,7 @@ class RbIssueHistory < ActiveRecord::Base
       current = {}
       full_journal.keys.sort.select{|d| d <= date}.each{|d|
         current[:sprint] = full_journal[d][:sprint][:new] if full_journal[d][:sprint]
+        current[:release] = full_journal[d][:release][:new] if full_journal[d][:release]
         current[:estimated_hours] = full_journal[d][:estimated_hours][:new] if full_journal[d][:estimated_hours]
         current[:remaining_hours] = full_journal[d][:remaining_hours][:new] if full_journal[d][:remaining_hours]
         current[:tracker] = full_journal[d][:tracker][:new] if full_journal[d][:tracker]
@@ -209,25 +221,28 @@ class RbIssueHistory < ActiveRecord::Base
 
       change = {
         :sprint => [],
+        :release => [],
         :estimated_hours => [],
         :remaining_hours => [],
       }
       subhists.each{|h|
-        [:sprint, :remaining_hours, :estimated_hours].each{|prop|
+        [:sprint, :release, :remaining_hours, :estimated_hours].each{|prop|
           change[prop] << h[date][prop] if h[date] && h[date].include?(prop)
         }
       }
-      change[:sprint].uniq!
-      change[:sprint].sort!{|a, b|
-        if a.nil? && b.nil?
-          0
-        elsif a.nil?
-          1
-        elsif b.nil?
-          -1
-        else
-          a <=> b
-        end
+      [:sprint, :release].each{|key|
+        change[key].uniq!
+        change[key].sort!{|a, b|
+          if a.nil? && b.nil?
+            0
+          elsif a.nil?
+            1
+          elsif b.nil?
+            -1
+          else
+            a <=> b
+          end
+        }
       }
 
       [:remaining_hours, :estimated_hours].each{|prop|
@@ -241,6 +256,10 @@ class RbIssueHistory < ActiveRecord::Base
       if change[:sprint].size != 0 && current[:sprint] != change[:sprint][0]
         full_journal[date] ||= {}
         full_journal[date][:sprint] = {:old => current[:sprint], :new => change[:sprint][0]}
+      end
+      if change[:release].size != 0 && current[:release] != change[:release][0]
+        full_journal[date] ||= {}
+        full_journal[date][:release] = {:old => current[:release], :new => change[:release][0]}
       end
       if change.include?(:estimated_hours) && current[:estimated_hours] != change[:estimated_hours]
         full_journal[date] ||= {}
@@ -274,6 +293,7 @@ class RbIssueHistory < ActiveRecord::Base
       h[:remaining_hours] = issue.remaining_hours             unless h.include?(:remaining_hours)
       h[:tracker] = RbIssueHistory.issue_type(issue.tracker_id)              unless h.include?(:tracker)
       h[:sprint] = issue.fixed_version_id                     unless h.include?(:sprint)
+      h[:release] = issue.release_id                          unless h.include?(:release)
       h[:status_open] = status[issue.status_id][:open]        unless h.include?(:status_open)
       h[:status_success] = status[issue.status_id][:success]  unless h.include?(:status_success)
 
