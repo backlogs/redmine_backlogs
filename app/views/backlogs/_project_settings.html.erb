@@ -20,11 +20,13 @@
 <%= error_messages_for 'rb_project_settings' %>
 
 <div class="box">
-<p>
-  <%= content_tag(:label, l(:backlogs_show_stories_from_subprojects_in_backlog)) %>
-  <%= check_box_tag("settings[show_stories_from_subprojects]", 'enabled',
-      @project.rb_project_settings.show_stories_from_subprojects) %>
-</p>
+<% if Backlogs.setting[:sharing_enabled] %>
+  <p>
+    <%= content_tag(:label, l(:backlogs_show_stories_from_subprojects_in_backlog)) %>
+    <%= check_box_tag("settings[show_stories_from_subprojects]", 'enabled',
+        @project.rb_project_settings.show_stories_from_subprojects) %>
+  </p>
+<% end %>
 <p>
   <%= content_tag(:label, l(:backlogs_show_in_scrum_stats)) %>
   <%= check_box_tag("settings[show_in_scrum_stats]", 'enabled',
