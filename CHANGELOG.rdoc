@@ -1,3 +1,18 @@
+== 2013-04-30 v1.0.0
+
+* Redmine 2.3.0 compatibiliy
+** Issue queries refactored
+* Release graph (experimental support)
+** Release relationship adjustment (auto,added,continued)
+** Trendlines for scope changes and closed points within release
+* REST API (add release/story point to XML/JSON output)
+* Translations
+* Backlogs settings usability
+** Only show project setting 'show stories from subprojects in backlog' when sharing is enabled.
+** Move show project name setting into backlog page fieldset
+* UI fixes
+* Ensure project_id is always passed when creating stories in the master backlog.
+
 == 2013-03-22 v0.9.38
 
 * rails 3.2.13
