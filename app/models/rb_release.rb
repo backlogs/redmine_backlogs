@@ -291,6 +291,8 @@ class RbRelease < ActiveRecord::Base
     projects
   end
 
+  #FIXME Code should be moved to migration task and not require the real model-objects.
+  #See "Using model in your migrations." on http://guides.rubyonrails.org/migrations.html.
   #migrate old date-based releases to relation-based
   def self.integrate_implicit_stories
     unless RbStory.trackers
@@ -309,8 +311,9 @@ class RbRelease < ActiveRecord::Base
           version.fixed_issues.where('tracker_id in (?)', RbStory.trackers).each { |issue|
             #each issue in that version which is a story and does not belong to a release, yet
             if issue.release_id.nil?
-              issue.release = release;
-              issue.save!
+              # Only update column, hence no callback functions executed which
+              # might touch non-existing columns during migration.
+              issue.update_column(:release_id,release.id)
             end
           }
         end #sprints
