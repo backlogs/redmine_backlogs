@@ -1,3 +1,7 @@
+== 2013-05-04 v1.0.1
+
+* Only update release_id column when migrating releases. Should sort out "undefined method `release_relationship' for #<Issue:0xaf465a0> when upgrading to v1.0.0"
+
 == 2013-04-30 v1.0.0
 
 * Redmine 2.3.0 compatibiliy
