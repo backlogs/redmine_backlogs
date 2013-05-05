@@ -44,19 +44,33 @@ class ReleaseBurndown
     series.merge(:added_points => baseline.dup)
     series.merge(:closed_points => baseline.dup)
 
-    # Go through each story in the release
-    release.stories_all_time.each{|story|
-      series.add(story.release_burndown_data(@days,release.id))
-    }
+    # Fetch stories of all time an find out which ones has missing cache entries
+    # for any of the given days.
+    release.stories_all_time.where(
+            "( select count(c.day) from rb_release_burnchart_day_caches c
+            where issues.id = c.issue_id AND
+            c.release_id = ? AND c.day IN (?)) != ?",
+            release.id, @days, @days.size).each{|s|
+              s.update_release_burnchart_data(@days,release.id)
+            }
+
+    # Calculate total, added and closed points
+    total = RbReleaseBurnchartDayCache.where("release_id = ? AND day IN (?)",release.id,@days)
+              .order(:day).group(:day).sum(:total_points)
+    added = RbReleaseBurnchartDayCache.where("release_id = ? AND day IN (?)",release.id,@days)
+              .order(:day).group(:day).sum(:added_points)
+    closed = RbReleaseBurnchartDayCache.where("release_id = ? AND day IN (?)",release.id,@days)
+               .order(:day).group(:day).sum(:closed_points)
 
     # Series collected, now format data for jqplot
     # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
-    @data[:closed_points] = series.series(:closed_points)
-    @data[:backlog_points] = series.collect{|s| s.total_points - s.closed_points - s.added_points  }
-    @data[:added_points] = series.series(:added_points)
-    @data[:total_points] = series.series(:total_points)
+    @data[:closed_points] = closed.values
+    @data[:backlog_points] = total.values.each_with_index.map{|n,i|
+      n - closed.values[i] - added.values[i] }
+    @data[:added_points] = added.values
+    @data[:total_points] = total.values
 
     # Keyfigures for later calculations
     @index_last_active = calc_index_before(release.last_active_sprint_date)
@@ -149,6 +163,7 @@ class RbRelease < ActiveRecord::Base
 
   belongs_to :project, :inverse_of => :releases
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
+  has_many :rb_release_burnchart_day_cache, :dependent => :delete_all, :foreign_key => 'release_id'
 
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date
   validates_inclusion_of :status, :in => RELEASE_STATUSES
