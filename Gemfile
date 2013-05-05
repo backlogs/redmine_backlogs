@@ -27,6 +27,7 @@ group :test do
   if RAILS_VERSION_IS_3
     unless chiliproject
       gem 'capybara', "~> 1.1" if ENV['IN_RBL_TESTENV'] == 'true' # redmine 2.3 conflicts
+      gem "faye-websocket", "~>0.4.7"
       gem "poltergeist", "~>1.0"
     end
     gem 'cucumber-rails'
