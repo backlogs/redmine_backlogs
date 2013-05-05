@@ -180,13 +180,12 @@ class RbRelease < ActiveRecord::Base
 
   # Returns current stories + stories previously scheduled for this release
   def stories_all_time
-    missing_stories = RbStory.joins(:journals => :details).where(
-            "(release_id != ? or release_id IS NULL) and
+    RbStory.includes(:journals => :details).where(
+            "(release_id = ?) OR (
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
-            (journal_details.old_value = ? or journal_details.value = ?)",
+            (journal_details.old_value = ? or journal_details.value = ?))",
             self.id,self.id.to_s,self.id.to_s).release_burndown_includes
-    (issues.release_burndown_includes + missing_stories).uniq
   end
 
   #Return sprints that contain issues within this release
