@@ -8,6 +8,8 @@ class AddIssuesRbcache < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :rb_release_burndown_caches
+    if ActiveRecord::Base.connection.table_exists?('rb_release_burndown_caches')
+      drop_table :rb_release_burndown_caches
+    end
   end
 end
