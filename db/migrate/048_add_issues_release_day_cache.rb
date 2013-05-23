@@ -1,3 +1,5 @@
+require '047_add_issues_rbcache'
+
 class AddIssuesReleaseDayCache < ActiveRecord::Migration
   def self.up
     create_table :rb_release_burnchart_day_caches, :id => false do |t|
@@ -12,9 +14,7 @@ class AddIssuesReleaseDayCache < ActiveRecord::Migration
     add_index :rb_release_burnchart_day_caches, :release_id
     add_index :rb_release_burnchart_day_caches, :day
 
-    if ActiveRecord::Base.connection.table_exists?('rb_release_burndown_caches')
-      drop_table :rb_release_burndown_caches
-    end
+    AddIssuesRbcache.new.down
   end
 
   def self.down
@@ -22,5 +22,6 @@ class AddIssuesReleaseDayCache < ActiveRecord::Migration
     remove_index :rb_release_burnchart_day_caches, :column => :release_id
     remove_index :rb_release_burnchart_day_caches, :column => :day
     drop_table :rb_release_burnchart_day_caches
+    AddIssuesRbcache.new.up
   end
 end
