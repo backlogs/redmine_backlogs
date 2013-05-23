@@ -1,4 +1,4 @@
-require './db/migrate/047_add_issues_rbcache.rb'
+require "./plugins/redmine_backlogs/db/migrate/047_add_issues_rbcache.rb"
 
 class AddIssuesReleaseDayCache < ActiveRecord::Migration
   def self.up
