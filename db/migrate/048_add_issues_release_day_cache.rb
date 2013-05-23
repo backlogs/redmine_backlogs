@@ -1,4 +1,4 @@
-require '047_add_issues_rbcache'
+require '047_add_issues_rbcache.rb'
 
 class AddIssuesReleaseDayCache < ActiveRecord::Migration
   def self.up
