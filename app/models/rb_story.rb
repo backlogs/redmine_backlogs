@@ -256,22 +256,38 @@ class RbStory < Issue
     end
   end
 
-  # Produces relevant information for release graphs
-  # @param days of interest in the release
-  # @param release_burndown_id release_id of burndown under calculation
-  # @return hash collection of
-  #  :total_points is all points in release including closed+added at given day
-  #  :added_points is points from stories added after release start
-  #  :closed_points is accumulated number of closed points
-  def release_burndown_data(days,release_burndown_id)
-    return nil unless self.is_story?
 
-    rl = self.release_burndown_cache.get(days)
-    return rl unless rl.nil? || rl.empty?
-    calculate_release_burndown_data(days, release_burndown_id) #Idea: is it feasible to only recalculate missing days?
+  def update_release_burnchart_data(days,release_burndown_id)
+    #Idea: is it feasible to only recalculate missing days?
+    calculate_release_burndown_data(days,release_burndown_id)
+  end
+
+  def save_release_burnchart_data(series,release_burndown_id)
+    RbReleaseBurnchartDayCache.delete_all(
+      ["issue_id = ? AND release_id = ? AND day IN (?)",
+       self.id,
+       release_burndown_id,
+       series.series(:day)])
+
+    series.each{|s|
+      RbReleaseBurnchartDayCache.create(:issue_id => self.id,
+        :release_id => release_burndown_id,
+        :day => s.day,
+        :total_points => s.total_points.nil? ? 0 : s.total_points,
+        :added_points => s.added_points.nil? ? 0 : s.added_points,
+        :closed_points => s.closed_points.nil? ? 0 : s.closed_points)
+    }
   end
 
   #private
+  # Calculates total, added and closed points for each day of interest
+  # in a release. The result is stored as RbReleaseBurnchartDayCache-objects
+  # per day. Stored data include:
+  #  :total_points is all points in release including closed+added at given day
+  #  :added_points is points from stories added after release start
+  #  :closed_points is accumulated number of closed points
+  # @param days of interest in the release
+  # @param release_burndown_id release_id of burnchart under calculation
   def calculate_release_burndown_data(days, release_burndown_id)
     baseline = [0] * days.size
 
@@ -323,15 +339,13 @@ class RbStory < Issue
     rl[:added_points] = series.series(:added_points)
     rl[:closed_points] = series.series(:closed_points)
 
-    self.release_burndown_cache.set(days, rl)
-
-    return rl
+    self.save_release_burnchart_data(series,release_burndown_id)
   end
 
   #optimization for RbRelease.stories_all_time to eager load all the required stuff
   def self.release_burndown_includes
     #return a scope for release burndown chart rendering
-    includes(:rb_release_burndown_cache, :relations_from, :relations_to)
+    includes(:relations_from, :relations_to)
   end
 
   # Definition of a continued story:
