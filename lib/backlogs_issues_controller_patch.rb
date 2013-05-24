@@ -36,7 +36,11 @@ module Backlogs
           when 'json'
             jsonp = (request.params[:callback] || request.params[:jsonp]).to_s.gsub(/[^a-zA-Z0-9_]/, '')
             body = JSON.parse(jsonp.present? ? response.body.sub("#{jsonp}(","").chop : response.body)
-            body['issues'].each{|issue|
+            issuelist = body['issues']
+            if issuelist == nil 
+              issuelist = [body['issue']]
+            end
+            issuelist.each{|issue|
               next unless story_trackers.include?(issue['tracker']['id'])
               issue['story_points'] = RbStory.find(issue['id']).story_points
               next unless RbStory.find(issue['id']).release
