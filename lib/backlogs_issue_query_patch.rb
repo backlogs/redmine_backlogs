@@ -32,10 +32,23 @@ module Backlogs
 
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
+        alias_method_chain :joins_for_order_statement, :backlogs_issue_type
       end
     end
 
     module InstanceMethods
+      def joins_for_order_statement_with_backlogs_issue_type(order_options)
+        joins = joins_for_order_statement_without_backlogs_issue_type(order_options)
+        if order_options
+          if order_options.include?("#{RbRelease.table_name}")
+            joins = "" if joins.nil?
+            joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
+          end
+        end
+
+        joins
+      end
+
       def available_filters_with_backlogs_issue_type
         @available_filters = available_filters_without_backlogs_issue_type
 
