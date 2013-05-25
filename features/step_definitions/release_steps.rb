@@ -250,3 +250,11 @@ Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story
   h[0][:release].should == release.id
 end
 
+Given /^I view issues tab grouped by releases/ do
+  visit url_for(:controller => :issues, :action => :index, :project_id=> @project.id, :group_by => 'release', :only_path => false)
+end
+
+Then(/^I should see "(.*?)" group in the issues list$/) do |release_name|
+  page.should have_css("#query_form")
+  page.should have_xpath("//tr[contains(@class,'group') and contains(.,'#{release_name}')]")
+end

@@ -116,3 +116,8 @@ Feature: Release management
       And I should see 1 stories in the sprint backlog of Sprint 001
       And I should see 1 stories in the sprint backlog of Sprint 002
       And I should see 2 stories in the sprint backlog of Sprint 003
+
+  Scenario: View issues grouped by releases
+    Given I view issues tab grouped by releases
+     Then I should see "Rel 1" group in the issues list
+     Then I should see "Rel 2" group in the issues list
