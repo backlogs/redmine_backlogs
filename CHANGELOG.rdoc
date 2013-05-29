@@ -1,3 +1,12 @@
+== 2013-05-29 v1.0.2
+
+* RM 2.3.1 supported
+* Fixes for release column in RM issue queries
+* Release burnchart performance improvement (cached are now much faster, generating when cache is invalid is still rather slow)
+* Merged pull request for JSON export (#918)
+* Translation update
+* Lock version 0.4.7 of faye-websocket to stay compatible with poltergeist (for development)
+
 == 2013-05-04 v1.0.1
 
 * Only update release_id column when migrating releases. Should sort out "undefined method `release_relationship' for #<Issue:0xaf465a0> when upgrading to v1.0.0"
