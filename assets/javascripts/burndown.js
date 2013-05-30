@@ -53,7 +53,13 @@ RB.burndown.redraw = function() {
       chart.chart.legend.show = false;
     } else {
       chart.chart.legend.show = (chart.mode == 'full');
-      chart.chart.legend.location = legend;
+      if (!chart.chart.legend.location_override) {
+        chart.chart.legend.location = legend;
+      }
+      else
+      {
+        chart.chart.legend.location = chart.chart.legend.location_override;
+      }
     }
 
     chart.chart.replot();
