@@ -40,7 +40,7 @@
     <h3><%= l(:label_release_plural) %></h3>
     <% project.shared_releases.each{|r| %>
       <%= link_to(r, {
-        :controller => 'rb_releases',
+        :controller => 'rb_queries',
         :action => 'show',
         :release_id => r.id
       })
