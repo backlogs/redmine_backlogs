@@ -121,3 +121,13 @@ Feature: Release management
     Given I view issues tab grouped by releases
      Then I should see "Rel 1" group in the issues list
      Then I should see "Rel 2" group in the issues list
+
+  @javascript
+  Scenario: Go to a release backlog query using the issues sidebar
+    Given I am viewing the issues list
+     Then I should see "Rel 1" within "#sidebar"
+     When I follow "Rel 1"
+      And I should see "Issues" within "#content"
+      And I should see "Story A" within "#content"
+      And I should see "Story B" within "#content"
+      And I should not see "Story C" within "#content"
