@@ -258,3 +258,41 @@ Then(/^I should see "(.*?)" group in the issues list$/) do |release_name|
   page.should have_css("#query_form")
   page.should have_xpath("//tr[contains(@class,'group') and contains(.,'#{release_name}')]")
 end
+
+Given(/^I want to bulk edit "(.*?)" and "(.*?)"$/) do |arg1, arg2|
+  @bulk_issues = []
+  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg1])
+  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg2])
+  visit url_for(:controller => :issues,
+                :action => :bulk_edit,
+                :ids => @bulk_issues.map(&:id)
+                )
+  verify_request_status(200)
+end
+
+Given(/^I want to set the release to "(.*?)"$/) do |release_name|
+  page.select(release_name, :from => 'issue_release_id')
+end
+
+Given(/^I want to set the release relationship to (Auto|Initial|Continued|Added)$/) do |relationship|
+  page.select(relationship, :from => 'issue_release_relationship')
+end
+
+When(/^I update the stories$/) do
+  within "#content" do
+    click_button('Submit')
+  end
+  verify_request_status(200)
+  @bulk_issues.each{|i| i.reload }
+end
+
+Then(/^story "(.*?)" should have release "(.*?)"$/) do |story_name,release_name|
+  story = RbStory.find_by_subject(story_name)
+  release = RbRelease.find_by_name(release_name)
+  story.release.id.should == release.id
+end
+
+Then(/^story "(.*?)" should have release relationship (Auto|Initial|Continued|Added)$/) do |story_name,relationship|
+  story = RbStory.find_by_subject(story_name)
+  story.release_relationship.should == relationship.downcase
+end
