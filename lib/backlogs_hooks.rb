@@ -343,7 +343,7 @@ module BacklogsPlugin
         params = context[:params]
         issue = context[:issue]
 
-        if issue.is_task?
+        if issue.is_task? && params.include?(:remaining_hours)
           begin
             issue.remaining_hours = Float(params[:remaining_hours])
           rescue ArgumentError, TypeError
