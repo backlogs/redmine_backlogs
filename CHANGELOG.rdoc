@@ -1,3 +1,10 @@
+== 2013-06-20 v1.0.3
+
+* Fix JSON issue where remaining hours is reset when attribute is not in params array.
+* Bulk edit release attributes across projects.
+* Change release sidebar links to lead to an issue query. See "Releases sidebar links should lead to a query on issues page".
+* Allow administrators DnD for all roles on taskboard. See "Can't move any feature as administrator".
+
 == 2013-05-29 v1.0.2
 
 * RM 2.3.1 supported
