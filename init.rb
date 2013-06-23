@@ -60,7 +60,8 @@ Redmine::Plugin.register :redmine_backlogs do
                          :story_points              => "1,2,3,5,8",
                          :show_burndown_in_sidebar  => 'enabled',
                          :show_project_name         => nil,
-                         :scrum_stats_menu_position => 'top'
+                         :scrum_stats_menu_position => 'top',
+                         :show_redmine_std_header   => 'enabled'
                        },
            :partial => 'backlogs/settings'
 
