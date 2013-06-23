@@ -57,8 +57,16 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     item.new_record? ? "" : link_to(text, {:controller => 'versions', :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
   end
 
+  def release_display_name(release)
+    if @project == release.project
+      release.name
+    else
+      "#{release.project.try(:identifier)}-#{release.name}"
+    end
+  end
+
   def release_link_or_empty(release)
-    release.new_record? ? "" : link_to(release.name, {:controller => "rb_releases", :action => "show", :release_id => release})
+    release.new_record? ? "" : link_to(release_display_name(release), {:controller => "rb_releases", :action => "show", :release_id => release})
   end
 
   def mark_if_closed(story)

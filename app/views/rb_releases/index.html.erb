@@ -6,25 +6,25 @@
 
 <h2><%=l(:label_release_planning)%></h2>
 
-<% if @releases.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
+<% if @releases_open.empty? && @releases_closed.empty? %><p class="nodata"><%= l(:label_no_data) %></p><% end %>
 
-<% @releases.open.each do |release| %>
+<% @releases_open.each do |release| %>
     <%= render :partial => 'rb_releases/release', :object => release %>
 <% end %>
 
 <h2><%=l(:label_closed_releases)%></h2>
-<% @releases.closed.each do |release| %>
+<% @releases_closed.each do |release| %>
     <%= render :partial => 'rb_releases/release', :object => release %>
 <% end %>
 
 <% content_for :sidebar do %>
     <h3><%= l(:label_release_plural) %></h3>
-    <% if @releases.empty? %>
+    <% if @releases_open.empty? %>
         no releases
-    <% elsif @releases.size == 1 %>
+    <% elsif @releases_open.size == 1 %>
         one release
     <% else %>
-        <%= @releases.size %> releases
+        <%= @releases_open.size %> releases
     <% end %>
 <% end %>
 
