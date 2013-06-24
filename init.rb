@@ -61,7 +61,8 @@ Redmine::Plugin.register :redmine_backlogs do
                          :show_burndown_in_sidebar  => 'enabled',
                          :show_project_name         => nil,
                          :scrum_stats_menu_position => 'top',
-                         :show_redmine_std_header   => 'enabled'
+                         :show_redmine_std_header   => 'enabled',
+                         :show_priority             => false
                        },
            :partial => 'backlogs/settings'
 
