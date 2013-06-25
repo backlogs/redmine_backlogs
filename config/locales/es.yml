@@ -30,6 +30,7 @@ es:
     sprints need permissions on the topmost project.
   backlogs_sharing_support: Compartir Backlogs
   backlogs_show_in_scrum_stats: Mostrar el proyecto las estadísticas Srum
+  backlogs_show_priority: Show task priority on taskboard
   backlogs_show_redmine_std_header: Mostar el encabezado de Redmine en Backlogs
   backlogs_show_stories_from_subprojects_in_backlog: Mostrar las historias de los subproyectos en Backlog
   backlogs_sprint_card_settings: Card printing

@@ -176,6 +176,12 @@
   <%= check_box_tag("settings[auto_assign_task]", 'enabled',
       Backlogs.setting[:auto_assign_task]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_show_priority)) %>
+  <%= check_box_tag("settings[show_priority]", 'enabled',
+      Backlogs.setting[:show_priority]) %>
+</p>
 </fieldset>
 
 <fieldset>

@@ -32,6 +32,7 @@ fr:
     les permissions du projet parent initial.
   backlogs_sharing_support: Partage de Backlogs
   backlogs_show_in_scrum_stats: Afficher le projet aux statistiques Scrum
+  backlogs_show_priority: Show task priority on taskboard
   backlogs_show_redmine_std_header: Afficher le header redmine aux Backlogs
   backlogs_show_stories_from_subprojects_in_backlog: Afficher les user stories des
     sous-projets dans le backlog
