@@ -12,7 +12,7 @@
     <div class="t"><%= assignee_name_or_empty(task) %></div>
     <div class="v"><%= assignee_id_or_empty(task) %></div>
   </div>
-  <% if task.priority_id != IssuePriority.default.id %>
+  <% if Backlogs.settings[:show_priority] || task.priority_id != IssuePriority.default.id %>
     <div class="priority_id editable"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>">
       <div class="t"><%= h task.priority.name %></div>
       <div class="v"><%= task.priority_id %></div>

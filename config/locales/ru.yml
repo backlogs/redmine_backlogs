@@ -32,6 +32,7 @@ ru:
     на уровне иерархии или дерева требуют разрешений на проекте верхнего уровня.
   backlogs_sharing_support: Совместное использование бэклогов
   backlogs_show_in_scrum_stats: Показывать проект в Скрам-статистике
+  backlogs_show_priority: Show task priority on taskboard
   backlogs_show_redmine_std_header: Показывать заголовок трекера в бэклогах
   backlogs_show_stories_from_subprojects_in_backlog: Показывать в бэклоге истории
     из подпроектов
