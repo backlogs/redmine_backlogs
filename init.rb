@@ -21,6 +21,9 @@ object_to_prepare.to_prepare do
     Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
+  if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
+    require_dependency 'backlogs_time_report_patch'
+  end
   require_dependency 'backlogs_issue_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
