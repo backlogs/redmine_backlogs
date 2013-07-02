@@ -1,7 +1,7 @@
 require 'pp'
 
 class RbIssueHistory < ActiveRecord::Base
-  set_table_name 'rb_issue_history'
+  self.table_name = 'rb_issue_history'
   belongs_to :issue
 
   serialize :history, Array

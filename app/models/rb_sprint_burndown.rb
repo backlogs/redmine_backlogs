@@ -2,7 +2,7 @@ require 'date'
 require 'yaml'
 
 class RbSprintBurndown < ActiveRecord::Base
-  set_table_name 'rb_sprint_burndown'
+  self.table_name = 'rb_sprint_burndown'
   belongs_to :version
 
   serialize :stories, Array
