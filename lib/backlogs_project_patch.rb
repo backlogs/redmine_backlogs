@@ -189,12 +189,12 @@ module Backlogs
       end
 
       def rb_project_settings
-        project_settings = RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
-        unless project_settings
-          project_settings = RbProjectSettings.new( :project_id => self.id)
-          project_settings.save
+        @project_settings ||= RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
+        unless @project_settings
+          @project_settings = RbProjectSettings.new( :project_id => self.id)
+          @project_settings.save
         end
-        project_settings
+        @project_settings
       end
 
       def projects_in_shared_product_backlog
