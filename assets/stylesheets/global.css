@@ -1,4 +1,7 @@
 /* GLOBAL */
+html {
+	overflow-y: scroll;
+}
 body{
   background: none;
   background-color:#FFFFFF;
