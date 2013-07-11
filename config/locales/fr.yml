@@ -22,7 +22,7 @@ fr:
   backlogs_scrum_stats_menu_position: Position of Scrum Statistics menu
   backlogs_scrum_stats_menu_top: Top menu
   backlogs_set_start_and_duedates_from_sprint: Ajouter la date de début et de livraison
-    du scénario à partir du sprint
+    de la scénario à partir du sprint
   backlogs_sharing_enabled: Activer le partage
   backlogs_sharing_new_sprint: Partager une nouvelle Itérations
   backlogs_sharing_new_sprint_explanation: Même si toutes les options possibles sont
@@ -53,10 +53,10 @@ fr:
     du produit sont estimées
   backlogs_statistics_product_backlog_sized_failed: Les scénarios en haut du carnet
     du produit ne sont pas estimées
-  backlogs_statistics_sizing_consistent: La taille des scénarios Story est stable
+  backlogs_statistics_sizing_consistent: La taille des scénarios est stable
     par rapport aux estimations
-  backlogs_statistics_sizing_consistent_failed: La taille des scénarios Story
-    varie par rapport aux estimations
+  backlogs_statistics_sizing_consistent_failed: La taille des scénarios 
+      varie par rapport aux estimations
   backlogs_statistics_sizing_stddev: ! 'Déviation standard des heures en relation
     avec les points: %{value} heures'
   backlogs_statistics_spent_hours_per_point: ! '%{value} heures utilisées par point
@@ -80,14 +80,14 @@ fr:
   backlogs_statistics_yield: Le projet a un bonne productivité
   backlogs_statistics_yield_failed: Le projet a une faible productivité
   backlogs_story: Scénarios
-  backlogs_story_close_status: ! 'Quand les tâches sont fermées, mettre à jour Story
+  backlogs_story_close_status: ! 'Quand les tâches sont fermées, mettre à jour scénario
     pour :'
   backlogs_story_follow_task_status_close: Fermer quand toutes les tâches sont fermées
   backlogs_story_follow_task_status_loose: Suivre en gros le ratio complété des tâches
   backlogs_story_follow_task_status_nil: Désactivé
   backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
     a valid %done between 0 and 100.'
-  backlogs_story_follows_task_status: Story suit le statut de tâche
+  backlogs_story_follows_task_status: Scénario suit le statut de tâche
   backlogs_story_settings: Préférences de Scénario/Tâches
   backlogs_story_tracker: Tracker de scénarios
   backlogs_task: Tâches
@@ -215,7 +215,7 @@ fr:
   rb_label_copy_tasks_all: Tous
   rb_label_copy_tasks_none: Aucun
   rb_label_copy_tasks_open: Ouvert
-  rb_label_link_to_original: Inclure un lien au Scénario original
+  rb_label_link_to_original: Inclure un lien à la Scénario original
   rb_label_timelog_disable: Désactiver
   rb_label_timelog_enable: Activer
   rb_project_settings_update_error: Une erreur est survenue durant la mise à jour
@@ -228,7 +228,7 @@ fr:
   rb_task_cards_tasks_follow_story: Scénarios suivis par leur tâche
   rb_taskboard_card_order: Ordre des cartes pour l'impression
   rb_timelog_from_taskboard: Journal depuis le tableau des tâches
-  remaining_story_points: Points restants du scénario
+  remaining_story_points: Points restants de la scénario
   story_description: Description
   story_estimation_hours: Estimation (heures)
   story_points: Points
