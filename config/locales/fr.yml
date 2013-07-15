@@ -91,6 +91,7 @@ fr:
   backlogs_story_follows_task_status: Story suit le statut de tâche
   backlogs_story_settings: Préférences de Story/Tâches
   backlogs_story_tracker: Tracker de stories
+  backlogs_default_story_tracker: Tracker défaut de stories
   backlogs_task: Tâches
   backlogs_task_tracker: Tracker de tâches
   backlogs_wiki_template: Maquette pour page wiki des sprints
