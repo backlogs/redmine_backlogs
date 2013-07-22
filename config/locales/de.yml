@@ -94,6 +94,7 @@ de:
   backlogs_story_follows_task_status: Status der Story wird von der Aufgabe abgeleitet
   backlogs_story_settings: Story und Task Einstellungen
   backlogs_story_tracker: Story Tracker
+  backlogs_default_story_tracker: Standard Story Tracker
   backlogs_task: Aufgabe
   backlogs_task_tracker: Aufgaben Tracker
   backlogs_wiki_template: Vorlage für das Sprint-Wiki

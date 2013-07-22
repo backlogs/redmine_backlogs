@@ -90,6 +90,7 @@ fr:
   backlogs_story_follows_task_status: Scénario suit le statut de tâche
   backlogs_story_settings: Préférences de Scénario/Tâches
   backlogs_story_tracker: Tracker de scénarios
+  backlogs_default_story_tracker: Tracker défaut de scénarios
   backlogs_task: Tâches
   backlogs_task_tracker: Tracker de tâches
   backlogs_wiki_template: Maquette pour page wiki des itérations

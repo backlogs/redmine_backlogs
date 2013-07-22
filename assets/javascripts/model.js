@@ -119,6 +119,9 @@ RB.Model = RB.Object.create({
       
       // Copy the value in the field to the input element
       value = ( fieldType=='select' ? field.children('.v').first().text() : RB.$.trim(field.text()) );
+      if ((fieldType=='select') && input.children("option[selected='selected']")) {
+    	  value = input.children("option[selected='selected']:first").val();
+      }
       input.val(value);
       
       // Record in the model's root element which input field had the last focus. We will
