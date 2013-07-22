@@ -10,7 +10,7 @@ RAILS_VERSION_IS_3 = rails3 =~ deps['rails']
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
-gem "nokogiri"
+gem "nokogiri", "< 1.6.0"
 gem "open-uri-cached"
 gem "prawn"
 gem 'json'
