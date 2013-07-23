@@ -42,6 +42,28 @@ Feature: Product Owner
      When I create the story
      Then the request should complete successfully
       And the 1st story in the product backlog should be A Whole New Story
+      
+  Scenario: Create a new default story
+    Given I am viewing the master backlog
+      And I add the tracker Bug to the story trackers
+      And I set the default story tracker to Story
+      And I want to create a story
+      And I set the subject of the story to A default Story
+     When I create the story
+     Then the request should complete successfully
+      And the 1st story in the product backlog should be A default Story
+      And the 1st story in the product backlog should have the tracker Story
+      
+  Scenario: Create a new default bug
+    Given I am viewing the master backlog
+      And I add the tracker Bug to the story trackers
+      And I set the default story tracker to Bug
+      And I want to create a story
+      And I set the subject of the story to A default Bug
+     When I create the story
+     Then the request should complete successfully
+      And the 1st story in the product backlog should be A default Bug
+      And the 1st story in the product backlog should have the tracker Bug
 
   Scenario: Update a story
     Given I am viewing the master backlog

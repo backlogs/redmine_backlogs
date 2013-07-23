@@ -104,6 +104,17 @@ Given /^I set the (.+) of the task to (.+)$/ do |attribute, value|
   @task_params[attribute] = value
 end
 
+Given /^I add the tracker (.+) to the story trackers$/ do |tracker|
+  tracker_id = Tracker.find(:first, :conditions=>{:name => tracker}).id
+  @project.update_attribute :tracker_ids, (@project.tracker_ids << tracker_id)
+  Backlogs.setting[:story_trackers] << tracker_id
+end
+  
+Given /^I set the default story tracker to (.+)$/ do |tracker|
+  t = get_tracker(tracker)
+  Backlogs.setting[:default_story_tracker] = t.id
+end
+
 Given /^I want to create a story$/ do
   @story_params = initialize_story_params
 end
