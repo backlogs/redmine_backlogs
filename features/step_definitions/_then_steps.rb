@@ -150,6 +150,16 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, bac
   story.subject.should == subject
 end
 
+Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should have the tracker (.+)$/ do |position, backlog, tracker|
+  sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+  
+  t = get_tracker(tracker)
+  
+  story.should_not be_nil
+  story.tracker.should == t
+end
+
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
   story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
   story.should_not be_nil

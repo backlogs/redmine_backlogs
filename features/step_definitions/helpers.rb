@@ -52,6 +52,10 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
+def get_tracker(identifier)
+  Tracker.find_by_name(identifier)
+end
+
 
 def current_sprint(name = nil)
   if name.is_a?(Symbol)
@@ -156,7 +160,7 @@ end
 def initialize_story_params(project_id = nil)
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
   @story['project_id'] = project_id ? Project.find(project_id).id : @project.id
-  @story['tracker_id'] = RbStory.trackers.first
+  @story['tracker_id'] = RbStory.trackers.include?(Backlogs.setting[:default_story_tracker]) ? Backlogs.setting[:default_story_tracker] : RbStory.trackers.first 
   @story['author_id']  = @user.id
   @story
 end
