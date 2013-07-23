@@ -21,9 +21,9 @@ es:
   backlogs_scrum_stats_menu_none: None
   backlogs_scrum_stats_menu_position: Posición del menú de estadísticas Scrum
   backlogs_scrum_stats_menu_top: Menú superior
-  backlogs_set_start_and_duedates_from_sprint: Definir inicio de la historia- y la fecha de venciemto del Sprints
+  backlogs_set_start_and_duedates_from_sprint: Definir inicio de la historia- y la fecha de vencimiento del Sprints
   backlogs_sharing_enabled: Activar compartir
-  backlogs_sharing_new_sprint: Compartir lso nuevos Sprints
+  backlogs_sharing_new_sprint: Compartir los nuevos Sprints
   backlogs_sharing_new_sprint_explanation: Although all possible options are available
     here, new sprints are shared only according to the users and projects permissions.
     System shared sprints can only be created by admins, hierarchy and tree shared
