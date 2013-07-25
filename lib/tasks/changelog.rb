@@ -26,9 +26,13 @@ gitlog.split("\n").each{|line|
   else
     issues = line.scan(/#[0-9]+/)
     issues.each{|issueno|
-      issue = open("https://api.github.com/repos/backlogs/redmine_backlogs/issues/#{issueno.gsub(/^#/, '')}").read
-      issue = JSON.parse(issue)
-      line.gsub!(/#{issueno}/, "\"#{issue['title']}\"")
+      begin
+        issue = open("https://api.github.com/repos/backlogs/redmine_backlogs/issues/#{issueno.gsub(/^#/, '')}").read
+        issue = JSON.parse(issue)
+        line.gsub!(/#{issueno}/, "\"#{issue['title']}\"")
+      rescue OpenURI::HTTPError
+        #Skip if detected issue id is not from the github repository
+      end
     }
     puts "* #{line.gsub(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/, '').strip}"
   end
