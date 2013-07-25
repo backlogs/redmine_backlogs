@@ -6,6 +6,7 @@ Feature: Team Member
   Background:
     Given the ecookbook project has the backlogs plugin enabled
       And no versions or issues exist
+      And I add the tracker Bug to the story trackers
       And I am a team member of the project
       And I have deleted all existing issues
       And I have defined the following sprints:
@@ -15,14 +16,16 @@ Feature: Team Member
         | Sprint 003 | 2010-03-01        | 2010-03-31     |
         | Sprint 004 | 2010-03-01        | 2010-03-31     |
       And I have defined the following stories in the following sprints:
-        | subject | sprint     |
-        | Story 1 | Sprint 001 |
-        | Story 2 | Sprint 001 |
-        | Story 3 | Sprint 001 |
-        | Story 4 | Sprint 002 |
+        | subject | sprint     | tracker |
+        | Story 1 | Sprint 001 | Story   |
+        | Story 2 | Sprint 001 | Story   |
+        | Story 3 | Sprint 001 | Story   |
+        | Story 4 | Sprint 002 | Story   |
+        | Bug 1   | Sprint 001 | Bug     |
       And I have defined the following tasks:
-        | subject | story  |
+        | subject | story   |
         | Task 1  | Story 1 |
+        | Task 1B | Bug 1   |
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story 1 |
@@ -35,12 +38,26 @@ Feature: Team Member
      When I create the task
      Then the 2nd task for Story 1 should be A Whole New Task
 
+  Scenario: Create a task for a bug
+    Given I am viewing the taskboard for Sprint 001
+      And I want to create a task for Bug 1
+      And I set the subject of the task to A Whole New Bug Task
+     When I create the task
+     Then the 2nd task for Bug 1 should be A Whole New Bug Task
+
   Scenario: Update a task for a story
     Given I am viewing the taskboard for Sprint 001
       And I want to edit the task named Task 1
       And I set the subject of the task to Whoa there, Sparky
      When I update the task
      Then the story named Story 1 should have 1 task named Whoa there, Sparky
+
+  Scenario: Update a task for a bug
+    Given I am viewing the taskboard for Sprint 001
+      And I want to edit the task named Task 1B
+      And I set the subject of the task to Whoa! - Neo
+     When I update the task
+     Then the story named Bug 1 should have 1 task named Whoa! - Neo
 
   Scenario: View a taskboard
     Given I am viewing the taskboard for Sprint 001
@@ -67,7 +84,7 @@ Feature: Team Member
   Scenario: Fetch the updated tasks
     Given I am viewing the taskboard for Sprint 001
      When the browser fetches tasks updated since 1 week ago
-     Then the server should return 1 updated task
+     Then the server should return 2 updated task
      #FIXME tests on sharing
 
   Scenario: Fetch the updated impediments

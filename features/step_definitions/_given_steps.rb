@@ -315,8 +315,12 @@ Given /^I have defined the following stories in the product backlog:$/ do |table
     else
       project = @project
     end
+    
+    t = get_tracker(story.delete('tracker').strip)
+      
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
+    params['tracker_id'] = t.id
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
     params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
     story.delete('release') unless story['release'].nil?
@@ -339,6 +343,7 @@ Given /^I have defined the following stories in the following sprints?:$/ do |ta
       project = sprint.project || @project
     end
     sprint.should_not be_nil
+    t = get_tracker(story.delete('tracker'))
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject')
     params['fixed_version_id'] = sprint.id

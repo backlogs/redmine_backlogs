@@ -7,6 +7,7 @@ Feature: Product Owner
     Given the ecookbook project has the backlogs plugin enabled
       And no versions or issues exist
       And I am a product owner of the project
+      And I add the tracker Bug to the story trackers
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
@@ -15,11 +16,12 @@ Feature: Product Owner
         | Sprint 004 | 2010-03-01        | 2010-03-31     |
       And I have deleted all existing issues
       And I have defined the following stories in the product backlog:
-        | subject |
-        | Story 1 |
-        | Story 2 |
-        | Story 3 |
-        | Story 4 |
+        | subject | tracker |
+        | Story 1 | Story   |
+        | Story 2 | Story   |
+        | Story 3 | Story   |
+        | Story 4 | Story   |
+        | Bug 1   | Bug     |
       And I have defined the following stories in the following sprints:
         | subject | sprint     |
         | Story A | Sprint 001 |
@@ -28,7 +30,7 @@ Feature: Product Owner
   Scenario: View the product backlog
     Given I am viewing the master backlog
      Then I should see the product backlog
-      And I should see 4 stories in the product backlog
+      And I should see 5 stories in the product backlog
       And I should see 4 sprint backlogs
 
   Scenario: View scrum statistics
@@ -64,6 +66,26 @@ Feature: Product Owner
      Then the request should complete successfully
       And the 1st story in the product backlog should be A default Bug
       And the 1st story in the product backlog should have the tracker Bug
+      
+  Scenario: Edit an existing default story
+    Given I am viewing the master backlog
+      And I want to edit the story with subject Story 1
+      And I set the default story tracker to Bug
+      And I set the subject of the story to A modified default Story
+     When I update the story
+     Then the request should complete successfully
+      And the story should have a subject of A modified default Story
+      And the story should have a tracker of Story
+      
+  Scenario: Edit an existing default bug
+    Given I am viewing the master backlog
+      And I want to edit the story with subject Bug 1
+      And I set the default story tracker to Bug
+      And I set the subject of the story to A modified default Bug
+     When I update the story
+     Then the request should complete successfully
+      And the story should have a subject of A modified default Bug
+      And the story should have a tracker of Bug
 
   Scenario: Update a story
     Given I am viewing the master backlog
@@ -92,7 +114,7 @@ Feature: Product Owner
   Scenario: Move a story to the bottom
     Given I am viewing the master backlog
      When I move the 2nd story to the last position
-     Then the 4th story in the product backlog should be Story 2
+     Then the 5th story in the product backlog should be Story 2
 
   Scenario: Move a story down
     Given I am viewing the master backlog
