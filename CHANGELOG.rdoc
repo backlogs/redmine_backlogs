@@ -1,3 +1,35 @@
+== 2013-07-25 v1.0.4
+
+* RM 2.3.2 supported
+* Ability to choose default story tracker (thanks to stefan-langenmaier)
+* Add releases to time report criteria.
+* Fix for only showing visible project in scrum statistics.
+* Setting for always showing priority field on taskboard (thanks to dpogue)
+* Show shared releases in Release-tab.
+* Integration with redmine header as default.
+* Translations
+
+More details:
+* Collect release_id information from parent issues to get the correct sum of hours for the time report view in redmine.
+* fix typos in spanish translation
+* Change travis to use RM 2.3.2
+* Fix select fields regression on master backlog/taskboard after merging "Issue #27130 : default story tracker".
+* Issue #27130 : default story tracker
+* Issue #27131 : Change les termes dans le backlogs plugin
+* Issue #27131 : Change les termes dans le backlogs plugin
+* Issue 27145: Force scrollbar
+* Bugfix for only showing visible projects in scrum statistics. Possibly related to "Scrum Statistics: mysql2 SQL syntax error".
+* Minor performance improvements for rb_server_variables. See "Slow project.js / app/views/show.js.erb".
+* Fix deprecation warnings.
+* Update Japanese locale
+* Refactoring ja.yml's order same as en.yml.
+* Add releases to time report criteria. See "time_entries/report allow Releases to be a criteria in the filter.".
+* Give the setting a default of nil.
+* Stub the priority string in other locales.
+* Add a setting to always show task priority.
+* Enable integration with redmine header as default. Fixes "Enable integration with redmine header as default".
+* Show shared releases in Release-tab.
+
 == 2013-06-20 v1.0.3
 
 * Fix JSON issue where remaining hours is reset when attribute is not in params array.
