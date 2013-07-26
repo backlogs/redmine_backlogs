@@ -10,7 +10,7 @@ fr:
   backlogs_general_settings: Préférences générales
   backlogs_impediment: Obstacle
   backlogs_include_sat_and_sun: Inclure Le samedi et dimanche dans le Burndown
-  backlogs_new_story_position: Les nouvelles scénarios créés s'affichent
+  backlogs_new_story_position: Les nouveaux scénarios créés s'affichent
   backlogs_new_story_position_bottom: en bas
   backlogs_new_story_position_top: en haut
   backlogs_not_all_themes_are_supported: Not all themes are supported.
@@ -22,7 +22,7 @@ fr:
   backlogs_scrum_stats_menu_position: Position of Scrum Statistics menu
   backlogs_scrum_stats_menu_top: Top menu
   backlogs_set_start_and_duedates_from_sprint: Ajouter la date de début et de livraison
-    de la scénario à partir du sprint
+    du scénario à partir du sprint
   backlogs_sharing_enabled: Activer le partage
   backlogs_sharing_new_sprint: Partager une nouvelle Itérations
   backlogs_sharing_new_sprint_explanation: Même si toutes les options possibles sont
@@ -88,7 +88,7 @@ fr:
   backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
     a valid %done between 0 and 100.'
   backlogs_story_follows_task_status: Scénario suit le statut de tâche
-  backlogs_story_settings: Préférences de Scénario/Tâches
+  backlogs_story_settings: Préférences de Scénarios/Tâches
   backlogs_story_tracker: Tracker de scénarios
   backlogs_default_story_tracker: Tracker défaut de scénarios
   backlogs_task: Tâches
@@ -159,7 +159,7 @@ fr:
   label_master_backlog: Carnet maître
   label_my_tasks: Mes tâches
   label_new_sprint: Nouvelle Itération
-  label_new_story: Nouvelle Scénario
+  label_new_story: Nouveau Scénario
   label_no_data_to_show: Pas de donnée affichée
   label_no_end: pas de fin
   label_no_start: pas de début
@@ -216,7 +216,7 @@ fr:
   rb_label_copy_tasks_all: Tous
   rb_label_copy_tasks_none: Aucun
   rb_label_copy_tasks_open: Ouvert
-  rb_label_link_to_original: Inclure un lien à la Scénario original
+  rb_label_link_to_original: Inclure un lien au Scénario original
   rb_label_timelog_disable: Désactiver
   rb_label_timelog_enable: Activer
   rb_project_settings_update_error: Une erreur est survenue durant la mise à jour
@@ -229,7 +229,7 @@ fr:
   rb_task_cards_tasks_follow_story: Scénarios suivis par leur tâche
   rb_taskboard_card_order: Ordre des cartes pour l'impression
   rb_timelog_from_taskboard: Journal depuis le tableau des tâches
-  remaining_story_points: Points restants de la scénario
+  remaining_story_points: Points restants du scénario
   story_description: Description
   story_estimation_hours: Estimation (heures)
   story_points: Points
