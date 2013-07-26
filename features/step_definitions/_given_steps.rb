@@ -101,6 +101,10 @@ end
 
 Given /^I set the (.+) of the task to (.+)$/ do |attribute, value|
   value = '' if value == 'an empty string'
+  if attribute=="assigned_to"
+    attribute="assigned_to_id"
+    value = User.find(:first, :conditions => ["login=?", value]).id
+  end
   @task_params[attribute] = value
 end
 
@@ -267,6 +271,17 @@ Given /^I have the following issue statuses available:$/ do |table|
     s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].blank?
 
     s.save!
+  end
+end
+
+Given /^I have defined the following logins:$/ do |table|
+  table.hashes.each do |user|
+    u = User.new
+    u.login = user['login']
+    u.mail = "#{user['login']}@example.org"
+    u.firstname = "Test"
+    u.lastname = "Run"
+    u.save!
   end
 end
 
