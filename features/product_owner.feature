@@ -44,49 +44,38 @@ Feature: Product Owner
      When I create the story
      Then the request should complete successfully
       And the 1st story in the product backlog should be A Whole New Story
-      
-  Scenario: Create a new default story
-    Given I am viewing the master backlog
-      And I add the tracker Bug to the story trackers
+
+  @javascript
+  Scenario: Create a new story with tracker Story to check default story tracker functionality
+    Given I add the tracker Bug to the story trackers
       And I set the default story tracker to Story
-      And I want to create a story
-      And I set the subject of the story to A default Story
-     When I create the story
+      And I am viewing the master backlog
+     When I create the story with subject "A default Story"
      Then the request should complete successfully
-      And the 1st story in the product backlog should be A default Story
-      And the 1st story in the product backlog should have the tracker Story
-      
-  Scenario: Create a new default bug
-    Given I am viewing the master backlog
-      And I add the tracker Bug to the story trackers
+      And the 1th story in the product backlog should be A default Story
+      And the 1th story in the product backlog should have the tracker Story
+
+  @javascript
+  Scenario: Create a new story with tracker Bug to check default story tracker functionality
+    Given I add the tracker Bug to the story trackers
       And I set the default story tracker to Bug
-      And I want to create a story
-      And I set the subject of the story to A default Bug
-     When I create the story
+      And I am viewing the master backlog
+     When I create the story with subject "A default Bug"
      Then the request should complete successfully
       And the 1st story in the product backlog should be A default Bug
       And the 1st story in the product backlog should have the tracker Bug
-      
-  Scenario: Edit an existing default story
-    Given I am viewing the master backlog
-      And I want to edit the story with subject Story 1
+
+  @javascript
+  Scenario: Edit an existing default story with full javascript stack to check default tracker does not override when editing.
+    Given I add the tracker Bug to the story trackers
       And I set the default story tracker to Bug
-      And I set the subject of the story to A modified default Story
-     When I update the story
+      And I am viewing the master backlog
+      And I want to edit the story with subject Story 1
+     When I change the subject of story "Story 1" to "A modified default Story"
      Then the request should complete successfully
       And the story should have a subject of A modified default Story
       And the story should have a tracker of Story
       
-  Scenario: Edit an existing default bug
-    Given I am viewing the master backlog
-      And I want to edit the story with subject Bug 1
-      And I set the default story tracker to Bug
-      And I set the subject of the story to A modified default Bug
-     When I update the story
-     Then the request should complete successfully
-      And the story should have a subject of A modified default Bug
-      And the story should have a tracker of Bug
-
   Scenario: Update a story
     Given I am viewing the master backlog
       And I want to edit the story with subject Story 3

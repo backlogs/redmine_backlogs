@@ -9,6 +9,9 @@ Feature: Team Member
       And I add the tracker Bug to the story trackers
       And I am a team member of the project
       And I have deleted all existing issues
+      And I have defined the following logins:
+        | login  |
+        | myuser |
       And I have defined the following sprints:
         | name       | sprint_start_date | effective_date |
         | Sprint 001 | 2010-01-01        | 2010-01-31     |
@@ -23,17 +26,22 @@ Feature: Team Member
         | Story 4 | Sprint 002 | Story   |
         | Bug 1   | Sprint 001 | Bug     |
       And I have defined the following tasks:
-        | subject | story   |
-        | Task 1  | Story 1 |
-        | Task 1B | Bug 1   |
+        | subject | story   | assigned_to |
+        | Task 1  | Story 1 | myuser      |
+        | Task 1B | Bug 1   |             |
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story 1 |
         | Impediment 2 | Sprint 001 | Story 2 |
-      And I have defined the following logins:
-        | login  |
-        | myuser |
          
+  @javascript
+  Scenario: Update a task with full javascript stack to check assigned user is not overwritten during update.
+    Given I am viewing the taskboard for Sprint 001
+     When I change the subject of task "Task 1" to "Whoa there, Sparky"
+     Then the request should complete successfully
+     Then the story named Story 1 should have 1 task named Whoa there, Sparky
+      And the 1st task for Story 1 is assigned to myuser
+
   Scenario: Create a task for a story
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Story 1
@@ -47,28 +55,22 @@ Feature: Team Member
     Given I am viewing the taskboard for Sprint 001
       And I want to create a task for Bug 1
       And I set the subject of the task to A Whole New Bug Task
-      And I set the assigned_to of the task to myuser
      When I create the task
      Then the 2nd task for Bug 1 should be A Whole New Bug Task
-     Then the 2nd task for Bug 1 is assigned to myuser
 
   Scenario: Update a task for a story
     Given I am viewing the taskboard for Sprint 001
       And I want to edit the task named Task 1
       And I set the subject of the task to Whoa there, Sparky
-      And I set the assigned_to of the task to myuser
      When I update the task
      Then the story named Story 1 should have 1 task named Whoa there, Sparky
-     Then the 1st task for Story 1 is assigned to myuser
 
   Scenario: Update a task for a bug
     Given I am viewing the taskboard for Sprint 001
       And I want to edit the task named Task 1B
       And I set the subject of the task to Whoa! - Neo
-      And I set the assigned_to of the task to myuser
      When I update the task
      Then the story named Bug 1 should have 1 task named Whoa! - Neo
-     Then the 1st task for Bug 1 is assigned to myuser
 
   Scenario: View a taskboard
     Given I am viewing the taskboard for Sprint 001

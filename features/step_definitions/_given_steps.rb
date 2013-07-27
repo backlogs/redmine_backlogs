@@ -116,7 +116,7 @@ end
   
 Given /^I set the default story tracker to (.+)$/ do |tracker|
   t = get_tracker(tracker)
-  Backlogs.setting[:default_story_tracker] = t.id
+  Backlogs.setting[:default_story_tracker] = t.id.to_s
 end
 
 Given /^I want to create a story$/ do
@@ -282,6 +282,8 @@ Given /^I have defined the following logins:$/ do |table|
     u.firstname = "Test"
     u.lastname = "Run"
     u.save!
+    m = Member.new(:role_ids => [Role.find_by_name("Developer").id], :user_id => u.id)
+    @project.members << m
   end
 end
 
@@ -385,6 +387,9 @@ Given /^I have defined the following tasks:$/ do |table|
 
     params = initialize_task_params(story.id)
     params['subject'] = task.delete('subject')
+
+    username = task.delete('assigned_to')
+    params['assigned_to_id'] = User.find_by_login(username).id unless username.nil? || username.strip == ''
 
     status = task.delete('status')
     params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
