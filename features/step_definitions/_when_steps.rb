@@ -143,6 +143,36 @@ When /^I change the sprint name of "([^"]*)" to "([^"]*)"$/ do |sprint, newname|
   wait_for_ajax
 end
 
+When /^I create the story with subject "([^"]*)"$/ do |subject|
+  page.find(:xpath,"//div[contains(@class,'product_backlog')]//div[@class='menu']").click
+  page.find(:xpath,"//a[contains(normalize-space(text()),'New Story')]").click
+  #Remove focus from menu to avoid overlap when saving
+  page.find(:xpath,"//div[@id='backlogs_container']").click
+  within ".product_backlog" do
+    fill_in('subject', :with => subject)
+    click_link('Save')
+    wait_for_ajax
+  end
+end
+
+When(/^I change the subject of story "([^"]*)" to "([^"]*)"$/) do |story, subject|
+  page.find(:xpath,"//div[contains(normalize-space(text()), '#{story}')]").click
+  within "#content" do
+    fill_in('subject', :with => subject)
+    click_link('Save')
+  end
+  wait_for_ajax
+end
+
+When(/^I change the subject of task "([^"]*)" to "([^"]*)"$/) do |task, subject|
+  page.find(:xpath,"//div[normalize-space(text())='#{task}']").click
+  within "#task_editor" do
+    fill_in('subject', :with => subject)
+  end
+  page.find(:xpath,"//button/span[contains(normalize-space(text()),'OK')]").click
+  wait_for_ajax
+end
+
 When /^I (try to )?update the story$/ do |attempt|
   page.driver.post(
                       url_for(:controller => :rb_stories,

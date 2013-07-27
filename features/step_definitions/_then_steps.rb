@@ -167,6 +167,13 @@ Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, sto
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
+Then /^the (\d+)(?:st|nd|rd|th) task for (.+) is assigned to (.+)$/ do |position, story_subject, task_assigned_to|
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story.should_not be_nil
+  story.children.length.should be >= position.to_i
+  story.children[position.to_i - 1].assigned_to.should == User.find(:first, :conditions => ["login=?", task_assigned_to])
+end
+
 Then /^the server should return an update error$/ do
   verify_request_status(400)
 end
