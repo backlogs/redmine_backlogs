@@ -330,12 +330,13 @@ Given /^I have defined the following stories in the product backlog:$/ do |table
     else
       project = @project
     end
-    
-    t = get_tracker(story.delete('tracker').strip)
+
+    t_value = story.delete('tracker')
+    t = get_tracker(t_value.strip) unless t_value.nil?
       
     params = initialize_story_params project.id
     params['subject'] = story.delete('subject').strip
-    params['tracker_id'] = t.id
+    params['tracker_id'] = t.id unless t.nil?
     params['story_points'] = story.delete('points').to_i if story['points'].to_s != ''
     params['release_id'] = RbRelease.find_by_name(story['release']).id if story['release'].to_s.strip != ''
     story.delete('release') unless story['release'].nil?
