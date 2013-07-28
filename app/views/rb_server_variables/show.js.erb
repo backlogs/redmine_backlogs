@@ -96,24 +96,22 @@ if (!RB.constants) {
  An approximation would be all projects which all visible sprints are shared in plus self_and_descendants.
  Most simple way: use all projects the user can see, trading some bytes of bandwidth against many server cycles of comparison and filtering.
 =end
-    project_versions = Hash[Project.visible.find(:all).map{|project|
+    project_versions = Hash[@project.droppable_sprints.map{|v|
       [
-        project.id.to_s,
-        project.open_shared_sprints.collect{|v| v.id.to_s }
-      ] if project
+        v["project"],
+	v["list"].split(',').collect{|s| s.to_s}
+      ]
     }]
 
 =begin
  a release can contain stories of all projects which it is visible
  but droppables are only self_and_descendants of the current view to avoid user confusion by vanishing stories
 =end
-    project_releases = Hash[Project.visible.find(:all).map{|project|
+    project_releases = Hash[@project.droppable_releases.map{|v|
       [
-        project.id.to_s,
-        project.shared_releases.open.visible.reject{|r|
-          !@project.projects_in_shared_product_backlog.include? project
-          }.collect{|v| v.id.to_s }
-      ] if project
+        v["project"],
+        v["list"].split(',').collect{|r| r.to_s}
+      ]
     }]
 
 #project_self_and_descendants is used by the js ui to determine if a dragged story can be dropped onto the product backlog.

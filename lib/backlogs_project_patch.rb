@@ -272,6 +272,62 @@ module Backlogs
         end
       end
 
+
+      # Returns a list of releases each project's stories can be dropped to on the master backlog.
+      # Notice it is disallowed to drop stories from sprints to releases if the stories are owned
+      # by parent projects which are out of scope of the currently selected project as they will
+      # disappear when dropped.
+      def droppable_releases
+        connection.select_all(_sql_for_droppables(RbRelease.table_name,true))
+      end
+
+      # Return a list of sprints each project's stories can be dropped to on the master backlog.
+      def droppable_sprints
+         connection.select_all(_sql_for_droppables(Version.table_name))
+      end
+
+private
+
+      # Returns sql for getting a list of projects and for each project which releases/sprints stories from the corresponding
+      # project can be dropped to on the master backlog.
+      # name: table_name for either RbRelease or Version (needs to have fields project_id and sharing)
+      # scoped_subproject: if true only subprojects are considered effectively disallowing dropping any issues from parent projects.
+      def _sql_for_droppables(name,scoped_subproject = false)
+        r = scoped_subproject ? self : self.root
+        sql = "SELECT pp.id as project," + _sql_for_aggregate_list("drp.id") +
+          " FROM #{name} drp " +
+          " LEFT JOIN #{Project.table_name} pp on drp.project_id = pp.id" +
+            " OR (pp.status <> #{Project::STATUS_ARCHIVED} AND (" +
+              " drp.sharing = 'system'" +
+              " OR (pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE " +
+                     "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
+                     "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL) AND " +
+                   "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE " +
+                     "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
+                     "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL) AND " +
+                   "drp.sharing = 'tree' )" +
+            " OR (pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
+                 "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id) AND drp.sharing IN ('hierarchy', 'descendants')) " +
+            " OR (pp.lft <  (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
+                 "pp.rgt >  (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id) AND drp.sharing = 'hierarchy')" +
+          "))" +
+          " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" +
+          " GROUP BY pp.id;"
+      end
+
+      # Returns sql for aggregating a list from grouped rows. Depends on database implementation.
+      def _sql_for_aggregate_list(field_name)
+        adapter_name = connection.adapter_name.downcase
+        aggregate_list = ""
+        if adapter_name.starts_with? 'mysql'
+          aggregate_list = " GROUP_CONCAT(#{field_name} SEPARATOR ',') as list "
+        elsif adapter_name.starts_with? 'postgresql'
+          aggregate_list = " array_to_string(array_agg(#{field_name}),',') as list "
+        else
+          raise NotImplementedError, "Unknown adapter '#{adapter_name}'"
+        end
+      end
+
     end
   end
 end
