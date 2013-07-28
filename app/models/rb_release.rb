@@ -298,11 +298,22 @@ class RbRelease < ActiveRecord::Base
   end
 
   def shared_to_projects(scope_project)
-    projects = []
-    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
-      projects << _project unless (_project.shared_releases.collect{|v| v.id} & [id]).empty?
-    }
-    projects
+    @shared_projects ||=
+      begin
+        # Project used when fetching tree sharing
+        r = self.project.root? ? self.project : self.project.root
+        # Project used for other sharings
+        p = self.project
+        Project.visible.scoped(:include => :releases,
+          :conditions => ["#{RbRelease.table_name}.id = #{id}" +
+          " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
+          " 'system' = ? " +
+          " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
+          " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
+          " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
+          "))",sharing,sharing,sharing,sharing]).order('lft')
+      end
+    @shared_projects
   end
 
   #FIXME Code should be moved to migration task and not require the real model-objects.

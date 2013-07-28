@@ -43,11 +43,22 @@ class RbSprint < Version
   #depending on sharing mode
   #return array of projects where this sprint is visible
   def shared_to_projects(scope_project)
-    projects = []
-    Project.visible.find(:all, :order => 'lft').each{|_project| #exhaustive search FIXME (pa sharing)
-      projects << _project unless (_project.shared_versions.collect{|v| v.id} & [id]).empty?
-    }
-    projects
+    @shared_projects ||=
+      begin
+        # Project used when fetching tree sharing
+        r = self.project.root? ? self.project : self.project.root
+        # Project used for other sharings
+        p = self.project
+        Project.visible.scoped(:include => :versions,
+          :conditions => ["#{Version.table_name}.id = #{id}" +
+          " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
+          " 'system' = ? " +
+          " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
+          " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
+          " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
+          "))",sharing,sharing,sharing,sharing]).order('lft')
+      end
+    @shared_projects
   end
 
   def stories
