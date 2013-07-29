@@ -2,243 +2,220 @@
 nl:
   backlogs_active: lopend
   backlogs_any: alle
-  backlogs_auto_assign_task: Automatisch taak toekennen aan huidige gebruiker
-  backlogs_burndown_print_height: Hoogte voor afdrukken burndown
-  backlogs_burndown_print_width: Breedte voor afdrukken burndown
-  backlogs_burndown_settings: Burndown settings
-  backlogs_card_specification: Label type voor kaartjes
-  backlogs_general_settings: General settings
+  backlogs_auto_assign_task: "Automatisch taak toekennen aan huidige gebruiker"
+  backlogs_burndown_print_height: "Hoogte voor afdrukken burndown"
+  backlogs_burndown_print_width: "Breedte voor afdrukken burndown"
+  backlogs_burndown_settings: "Burndown settings"
+  backlogs_card_specification: "Label type voor kaartjes"
+  backlogs_default_story_tracker: "Default story tracker"
+  backlogs_general_settings: "General settings"
   backlogs_impediment: Impediment
-  backlogs_include_sat_and_sun: Zaterdag en zondag opnemen in Burndown
-  backlogs_new_story_position: Nieuwe stories verschijnen
-  backlogs_new_story_position_bottom: onderaan (vereist herstart)
+  backlogs_include_sat_and_sun: "Zaterdag en zondag opnemen in Burndown"
+  backlogs_new_story_position: "Nieuwe stories verschijnen"
+  backlogs_new_story_position_bottom: "onderaan (vereist herstart)"
   backlogs_new_story_position_top: bovenaan
-  backlogs_not_all_themes_are_supported: Not all themes are supported.
-  backlogs_pblpage_settings: Product backlog page settings
-  backlogs_points_burn_direction: Points burn omhoog/omlaag
-  backlogs_product_backlog: Product backlog
-  backlogs_scrum_stats_menu_application: Application menu
+  backlogs_not_all_themes_are_supported: "Not all themes are supported."
+  backlogs_pblpage_settings: "Product backlog page settings"
+  backlogs_points_burn_direction: "Points burn omhoog/omlaag"
+  backlogs_product_backlog: "Product backlog"
+  backlogs_scrum_stats_menu_application: "Application menu"
   backlogs_scrum_stats_menu_none: None
-  backlogs_scrum_stats_menu_position: Position of Scrum Statistics menu
-  backlogs_scrum_stats_menu_top: Top menu
-  backlogs_set_start_and_duedates_from_sprint: Set story start- and duedate from sprint
-  backlogs_sharing_enabled: Enable sharing
-  backlogs_sharing_new_sprint: Share new Sprints
-  backlogs_sharing_new_sprint_explanation: Although all possible options are available
-    here, new sprints are shared only according to the users and projects permissions.
-    System shared sprints can only be created by admins, hierarchy and tree shared
-    sprints need permissions on the topmost project.
-  backlogs_sharing_support: Backlogs sharing
-  backlogs_show_in_scrum_stats: Show project in Scrum statistics
-  backlogs_show_priority: Show task priority on taskboard
-  backlogs_show_redmine_std_header: Show redmine header in backlogs
-  backlogs_show_stories_from_subprojects_in_backlog: Show stories from subprojects
-    in backlog
-  backlogs_sprint_card_settings: Card printing
-  backlogs_sprint_sort_order: Sort Sprints by start date
+  backlogs_scrum_stats_menu_position: "Position of Scrum Statistics menu"
+  backlogs_scrum_stats_menu_top: "Top menu"
+  backlogs_set_start_and_duedates_from_sprint: "Set story start- and duedate from sprint"
+  backlogs_sharing_enabled: "Enable sharing"
+  backlogs_sharing_new_sprint: "Share new Sprints"
+  backlogs_sharing_new_sprint_explanation: "Although all possible options are available here, new sprints are shared only according to the users and projects permissions. System shared sprints can only be created by admins, hierarchy and tree shared sprints need permissions on the topmost project."
+  backlogs_sharing_support: "Backlogs sharing"
+  backlogs_show_in_scrum_stats: "Show project in Scrum statistics"
+  backlogs_show_priority: "Show task priority on taskboard"
+  backlogs_show_redmine_std_header: "Show redmine header in backlogs"
+  backlogs_show_stories_from_subprojects_in_backlog: "Show stories from subprojects in backlog"
+  backlogs_sprint_card_settings: "Card printing"
+  backlogs_sprint_sort_order: "Sort Sprints by start date"
   backlogs_sprint_sort_order_asc: ascending
   backlogs_sprint_sort_order_desc: descending
   backlogs_sprints: Sprints
-  backlogs_statistics_active: Project is actief
-  backlogs_statistics_active_failed: Project is niet actief
-  backlogs_statistics_committed_velocity_stable: Geplande velocity is stabiel over
-    de sprints heen
-  backlogs_statistics_committed_velocity_stable_failed: Geplande velocity is niet
-    stabiel over de sprints heen
-  backlogs_statistics_hours_per_point: gemiddeld %{value} uren per point
-  backlogs_statistics_product_backlog_filled: Product backlog heeft stories
-  backlogs_statistics_product_backlog_filled_failed: Product backlog is leeg
-  backlogs_statistics_product_backlog_sized: De stories bovenaan de product backlog
-    hebben sizes
-  backlogs_statistics_product_backlog_sized_failed: Er zijn stories bovenaan de product
-    backlog zonder sizes
-  backlogs_statistics_sizing_consistent: Story sizes zijn niet stabiel ten opzichte
-    van de schattingen
-  backlogs_statistics_sizing_consistent_failed: Story sizes zijn stabiel ten opzichte
-    van de schattingen
-  backlogs_statistics_sizing_stddev: ! 'Standaard deviatie uren t.o.v. points: %{value}
-    uren'
-  backlogs_statistics_spent_hours_per_point: ! '%{value} hours spent per accepted
-    point on average'
-  backlogs_statistics_sprint_notes_available: De recent afgesloten sprints hebben
-    retrospective/review verslagen
-  backlogs_statistics_sprint_notes_available_failed: Recent afgesloten sprints missen
-    retrospective/review verslagen
-  backlogs_statistics_sprints: Gemeten over %{value} sprints
-  backlogs_statistics_sprints_estimated: De actieve en recent gesloten sprints hebben
-    uren schattingen
-  backlogs_statistics_sprints_estimated_failed: De actieve of recent gesloten sprints
-    hebben niet overal uren schattingen
-  backlogs_statistics_sprints_sized: De stories op de actieve en recent gesloten sprints
-    hebben sizes
-  backlogs_statistics_sprints_sized_failed: Stories op de actieve of recent gesloten
-    sprints missen sizes
-  backlogs_statistics_velocity: ! 'Velocity: %{value}'
-  backlogs_statistics_velocity_stddev: ! 'Velocity standaard deviatie: %{value} points'
-  backlogs_statistics_yield: Project heeft een goede gemiddelde opbrengst
-  backlogs_statistics_yield_failed: Project heeft een lage gemiddelde opbrengst
+  backlogs_statistics_active: "Project is actief"
+  backlogs_statistics_active_failed: "Project is niet actief"
+  backlogs_statistics_committed_velocity_stable: "Geplande velocity is stabiel over de sprints heen"
+  backlogs_statistics_committed_velocity_stable_failed: "Geplande velocity is niet stabiel over de sprints heen"
+  backlogs_statistics_hours_per_point: "gemiddeld %{value} uren per point"
+  backlogs_statistics_product_backlog_filled: "Product backlog heeft stories"
+  backlogs_statistics_product_backlog_filled_failed: "Product backlog is leeg"
+  backlogs_statistics_product_backlog_sized: "De stories bovenaan de product backlog hebben sizes"
+  backlogs_statistics_product_backlog_sized_failed: "Er zijn stories bovenaan de product backlog zonder sizes"
+  backlogs_statistics_sizing_consistent: "Story sizes zijn niet stabiel ten opzichte van de schattingen"
+  backlogs_statistics_sizing_consistent_failed: "Story sizes zijn stabiel ten opzichte van de schattingen"
+  backlogs_statistics_sizing_stddev: "Standaard deviatie uren t.o.v. points: %{value} uren"
+  backlogs_statistics_spent_hours_per_point: "%{value} hours spent per accepted point on average"
+  backlogs_statistics_sprint_notes_available: "De recent afgesloten sprints hebben retrospective/review verslagen"
+  backlogs_statistics_sprint_notes_available_failed: "Recent afgesloten sprints missen retrospective/review verslagen"
+  backlogs_statistics_sprints: "Gemeten over %{value} sprints"
+  backlogs_statistics_sprints_estimated: "De actieve en recent gesloten sprints hebben uren schattingen"
+  backlogs_statistics_sprints_estimated_failed: "De actieve of recent gesloten sprints hebben niet overal uren schattingen"
+  backlogs_statistics_sprints_sized: "De stories op de actieve en recent gesloten sprints hebben sizes"
+  backlogs_statistics_sprints_sized_failed: "Stories op de actieve of recent gesloten sprints missen sizes"
+  backlogs_statistics_velocity: "Velocity: %{value}"
+  backlogs_statistics_velocity_stddev: "Velocity standaard deviatie: %{value} points"
+  backlogs_statistics_yield: "Project heeft een goede gemiddelde opbrengst"
+  backlogs_statistics_yield_failed: "Project heeft een lage gemiddelde opbrengst"
   backlogs_story: Story
-  backlogs_story_close_status: Status to close story automatically
-  backlogs_story_follow_task_status_close: Close when all Tasks are closed
-  backlogs_story_follow_task_status_loose: Loosely follow Tasks average done ratio
+  backlogs_story_close_status: "Status to close story automatically"
+  backlogs_story_follow_task_status_close: "Close when all Tasks are closed"
+  backlogs_story_follow_task_status_loose: "Loosely follow Tasks average done ratio"
   backlogs_story_follow_task_status_nil: Disabled
-  backlogs_story_follows_task_loose_explanation: ! 'Note: all issue statuses require
-    a valid %done between 0 and 100.'
-  backlogs_story_follows_task_status: Story follows Task status
-  backlogs_story_settings: Story and Task settings
-  backlogs_story_tracker: Story trackers
+  backlogs_story_follows_task_loose_explanation: "Note: all issue statuses require a valid %done between 0 and 100."
+  backlogs_story_follows_task_status: "Story follows Task status"
+  backlogs_story_settings: "Story and Task settings"
+  backlogs_story_tracker: "Story trackers"
   backlogs_task: Taak
-  backlogs_task_tracker: Taak tracker
-  backlogs_wiki_template: Template voor sprint wiki pagina
-  button_edit_wiki: Wijzig wiki page
-  comma_delimited_numbers: Komma-gescheiden getallen
-  current_open_story_points: Story points open op dit moment
-  error_blank: mag niet leeg zijn
-  error_greater_than_start_date: mag niet voor Start Datum liggen
-  error_inclusion: is geen onderdeel van de lijst
-  error_intro_plural: ! 'De volgende fouten zijn opgetreden:'
-  error_intro_singular: ! 'De volgende fout is opgetreden:'
-  error_must_have_comma_delimited_list: moet een komma-gescheiden lijst van story
-    of taak IDs hebben
-  error_no_workflow_for_task_tracker: Je hebt geen toegang tot de taak tracker. Indien
-    dit een fout is, neem dan contact op met de beheerder om dit te laten corrigeren.
-  error_outro: Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend.
-  error_release_end_after_start: De einddatum van de release moet na de start datum
-    liggen
-  error_sprint_end_before_start: Sprint cannot end before it starts
-  error_taken: is al in gebruik
-  event_sprint_summary: ! '%{project}: %{summary}'
-  field_assigned_to: Toegekend aan
-  field_backlogs_issue_type: Backlog type
-  field_base: ''
+  backlogs_task_tracker: "Taak tracker"
+  backlogs_wiki_template: "Template voor sprint wiki pagina"
+  button_edit_wiki: "Wijzig wiki page"
+  comma_delimited_numbers: "Komma-gescheiden getallen"
+  current_open_story_points: "Story points open op dit moment"
+  error_blank: "mag niet leeg zijn"
+  error_greater_than_start_date: "mag niet voor Start Datum liggen"
+  error_inclusion: "is geen onderdeel van de lijst"
+  error_intro_plural: "De volgende fouten zijn opgetreden:"
+  error_intro_singular: "De volgende fout is opgetreden:"
+  error_must_have_comma_delimited_list: "moet een komma-gescheiden lijst van story of taak IDs hebben"
+  error_no_workflow_for_task_tracker: "Je hebt geen toegang tot de taak tracker. Indien dit een fout is, neem dan contact op met de beheerder om dit te laten corrigeren."
+  error_outro: "Verbeter a.u.b de eerdergenoemde problemen voordat u nogmaals verzend."
+  error_release_end_after_start: "De einddatum van de release moet na de start datum liggen"
+  error_sprint_end_before_start: "Sprint cannot end before it starts"
+  error_taken: "is al in gebruik"
+  event_sprint_summary: "%{project}: %{summary}"
+  field_assigned_to: "Toegekend aan"
+  field_backlogs_issue_type: "Backlog type"
+  field_base: ""
   field_blocks: Blokkeert
   field_name: Naam
+  field_planned_velocity: "Planned velocity"
   field_position: Positie
   field_priority: Prioriteit
-  field_project_id: Project Id
-  field_planned_velocity: Planned velocity
-  field_release_relationship: Release relationship
+  field_project_id: "Project Id"
   field_release: Release
-  field_release_end_date: Eind datum van de release
-  field_release_start_date: Start datum release
-  field_remaining_hours: Resterend (uren)
-  field_story_points: Story points
+  field_release_end_date: "Eind datum van de release"
+  field_release_relationship: "Release relationship"
+  field_release_start_date: "Start datum release"
+  field_remaining_hours: "Resterend (uren)"
+  field_story_points: "Story points"
   field_subject: Onderwerp
-  field_time_entry_comments: Tijd registratie commentaar
-  field_time_entry_hours: Tijd registratie uren
-  field_time_entry_spend_on: Tijd registratie spendeer aan
-  field_time_entry_user_id: Tijd registratie gebruiker
-  field_tracker_id: Tracker ID
-  field_velocity_based_estimate: Schatting op basis van velocity
-  label_all_tasks: All tasks
-  label_back_to_project: Terug naar het project
+  field_time_entry_comments: "Tijd registratie commentaar"
+  field_time_entry_hours: "Tijd registratie uren"
+  field_time_entry_spend_on: "Tijd registratie spendeer aan"
+  field_time_entry_user_id: "Tijd registratie gebruiker"
+  field_tracker_id: "Tracker ID"
+  field_velocity_based_estimate: "Schatting op basis van velocity"
+  label_all_tasks: "All tasks"
+  label_back_to_project: "Terug naar het project"
   label_backlogs: Backlogs
-  label_backlogs_unconfigured: U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft
-    naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor
-    deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze
-    pagina om de plugin in gebruik te nemen.
+  label_backlogs_unconfigured: "U heeft Backlogs nog niet geconfigureerd. Gaat u alstublieft naar %{administration} > %{plugins}, en klik dan op de %{configure} link voor deze plugin. Nadat u de configuratie hebt opgeslagen kunt u teruggaan naar deze pagina om de plugin in gebruik te nemen."
   label_burndown: Burndown
-  label_chart_options: Grafiek Opties
-  label_close_completed_sprints: Sluit gecompleteerde sprints
-  label_closed_releases: Closed releases
-  label_column_width: Kolom breedte
+  label_chart_options: "Grafiek Opties"
+  label_close_completed_sprints: "Sluit gecompleteerde sprints"
+  label_closed_releases: "Closed releases"
+  label_column_width: "Kolom breedte"
   label_download_sprint: Download
-  label_filter_tasks: Filter by user
-  label_filter_tasks_my_tasks: Filter by user - my tasks
-  label_hide_completed_sprints: Verberg gecompleteerde sprints
+  label_filter_tasks: "Filter by user"
+  label_filter_tasks_my_tasks: "Filter by user - my tasks"
+  label_hide_completed_sprints: "Verberg gecompleteerde sprints"
   label_hours: uren
-  label_hours_remaining: resterende uren
-  label_hours_required_burn_rate: benodigde burn rate (uren)
+  label_hours_remaining: "resterende uren"
+  label_hours_required_burn_rate: "benodigde burn rate (uren)"
   label_ideal: ideaal
   label_impediments: Impediments
-  label_master_backlog: Master Backlog
-  label_my_tasks: My tasks
-  label_new_sprint: New Sprint
-  label_new_story: New Story
-  label_no_data_to_show: No data to show
-  label_no_end: no end
-  label_no_start: no start
-  label_not_prioritized: geen prioriteit
+  label_master_backlog: "Master Backlog"
+  label_my_tasks: "My tasks"
+  label_new_sprint: "New Sprint"
+  label_new_story: "New Story"
+  label_no_data_to_show: "No data to show"
+  label_no_end: "no end"
+  label_no_start: "no start"
+  label_not_prioritized: "geen prioriteit"
   label_points: points
-  label_points_accepted: points geaccepteerd
-  label_points_added: points added
-  label_points_backlog: points backlog
+  label_points_accepted: "points geaccepteerd"
+  label_points_added: "points added"
+  label_points_backlog: "points backlog"
   label_points_burn_down: Omlaag
   label_points_burn_up: Omhoog
-  label_points_committed: points toegezegd
-  label_points_required_burn_rate: benodigde burn rate (points)
-  label_points_resolved: points opgelost
-  label_points_to_accept: points niet geaccepteerd
-  label_points_to_resolve: points niet opgelost
-  label_product_backlog: product backlog
-  label_product_cards: Product backlog kaarten
+  label_points_committed: "points toegezegd"
+  label_points_required_burn_rate: "benodigde burn rate (points)"
+  label_points_resolved: "points opgelost"
+  label_points_to_accept: "points niet geaccepteerd"
+  label_points_to_resolve: "points niet opgelost"
+  label_product_backlog: "product backlog"
+  label_product_cards: "Product backlog kaarten"
   label_release: Release
-  label_release_end_date: Einddatum release
-  label_release_new: Nieuwe release
-  label_release_planning: Release Planning
+  label_release_end_date: "Einddatum release"
+  label_release_new: "Nieuwe release"
+  label_release_planned_velocity_end_date: "Planned velocity estimated end date"
+  label_release_planning: "Release Planning"
   label_release_plural: Releases
-  label_release_start_date: Start datum release
-  label_release_planned_velocity_end_date: Planned velocity estimated end date
-  label_release_trend_end_date: Trend estimated end date
-  label_release_relationship_auto: Auto
-  label_release_relationship_initial: Initial
   label_release_relationship_added: Added
+  label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
+  label_release_relationship_initial: Initial
+  label_release_start_date: "Start datum release"
+  label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
-  label_scrum_statistics: Scrum statistieken
-  label_select_all: Selecteer alles
-  label_show_completed_sprints: Toon gecompleteerde sprints
-  label_sprint_backlog: sprint backlog
-  label_sprint_cards: Sprint kaarten
-  label_sprint_impediments: Sprint Impediments
-  label_sprint_name: Sprint "%{name}"
+  label_scrum_statistics: "Scrum statistieken"
+  label_select_all: "Selecteer alles"
+  label_show_completed_sprints: "Toon gecompleteerde sprints"
+  label_sprint_backlog: "sprint backlog"
+  label_sprint_cards: "Sprint kaarten"
+  label_sprint_impediments: "Sprint Impediments"
+  label_sprint_name: "Sprint \"%{name}\""
   label_stories: Stories
   label_stories_tasks: Stories/Taken
   label_task_board: Taakbord
-  label_view_options: View options
+  label_view_options: "View options"
   label_webcal: Agenda
-  rb_auto_refresh: Automatische verversing backlogs/taakbord (seconden)
-  rb_burndown_timezone: Time zone for burndown day boundary
-  rb_burndown_timezone_explanation: ! 'To support distributed teams, calculations
-    for burndown graphs use a common concept of when a day begins.
-
-    Your user timezone is %{user_timezone}, the server timezone is %{server_timezone}
-    and Burndowns use %{burndown_timezone} to calculate the graphs.
-
-    Note: Historic data is not affected when changing this option.'
-  rb_release_burnup_enabled: Enable release burnup chart (EXPERIMENTAL)
-  rb_label_copy_tasks: Kopieer taken
+  rb_auto_refresh: "Automatische verversing backlogs/taakbord (seconden)"
+  rb_burndown_timezone: "Time zone for burndown day boundary"
+  rb_burndown_timezone_explanation: |-
+      To support distributed teams, calculations for burndown graphs use a common concept of when a day begins.
+      Your user timezone is %{user_timezone}, the server timezone is %{server_timezone} and Burndowns use %{burndown_timezone} to calculate the graphs.
+      Note: Historic data is not affected when changing this option.
+  rb_label_copy_tasks: "Kopieer taken"
   rb_label_copy_tasks_all: Alle
   rb_label_copy_tasks_none: Geen
   rb_label_copy_tasks_open: Open
-  rb_label_link_to_original: Relateer aan originele story
+  rb_label_link_to_original: "Relateer aan originele story"
   rb_label_timelog_disable: Uitzetten
   rb_label_timelog_enable: Aanzetten
-  rb_project_settings_update_error: Error while updating settings
-  rb_project_settings_updated: Settings updated
-  rb_show_burndown_in_sidebar: Toon burndown grafiek in de issues zijbalk
-  rb_show_project_name: Show project name in backlogs
-  rb_task_cards_stories_then_tasks: Eerst alle stories, dan alle taken
-  rb_task_cards_story_follows_tasks: Taken gevolgd door hun bijbehorende story
-  rb_task_cards_tasks_follow_story: Story gevolg door de bijbehorende taken
-  rb_taskboard_card_order: Afdruk volgorde taakbord kaarten
-  rb_timelog_from_taskboard: Tijd-schrijven via taakbord
-  remaining_story_points: resterende story points
+  rb_project_settings_update_error: "Error while updating settings"
+  rb_project_settings_updated: "Settings updated"
+  rb_release_burnup_enabled: "Enable release burnup chart (EXPERIMENTAL)"
+  rb_show_burndown_in_sidebar: "Toon burndown grafiek in de issues zijbalk"
+  rb_show_project_name: "Show project name in backlogs"
+  rb_task_cards_stories_then_tasks: "Eerst alle stories, dan alle taken"
+  rb_task_cards_story_follows_tasks: "Taken gevolgd door hun bijbehorende story"
+  rb_task_cards_tasks_follow_story: "Story gevolg door de bijbehorende taken"
+  rb_taskboard_card_order: "Afdruk volgorde taakbord kaarten"
+  rb_timelog_from_taskboard: "Tijd-schrijven via taakbord"
+  remaining_story_points: "resterende story points"
   story_description: Omschrijving
-  story_estimation_hours: Schatting (uren)
+  story_estimation_hours: "Schatting (uren)"
   story_points: Points
-  story_remaining_hours: Resterend (uren)
-  story_spent_time: Tijd besteed
+  story_remaining_hours: "Resterend (uren)"
+  story_spent_time: "Tijd besteed"
   story_status: Status
-  today_not_in_release_warning: ! 'Waarschuwing: huidige datum ligt niet binnen de
-    release.'
-  todo_issue_summary: ! '%{type}: %{summary}'
-  use_free_text_if_empty: Gebruik tekst veld in plaats van drop-down lijst indien
-    leeg
-  warning_reset_sprint: ! "JE STAAT OP HET PUNT DEZE SPRINT TE HER-INITIALISEREN!\n\nWeet
-    je zeker dat je dit wilt doen? Her-initialisatie\nheeft de volgende gevolgen voor
-    de stories en taken\nverbonden aan de sprint:\n\n* Creatie-datum wordt veranderd
-    in de start datum van de sprint\n* ALLE wijzigingen aan de stories en taken, behalve
-    notities,\n   zullen worden VERWIJDERD\n* De huidige waarde wordt de startwaarde
-    voor alle\n   eigenschappen van de story/taak\n* De status wordt teruggezet naar
-    de standaard status"
+  today_not_in_release_warning: "Waarschuwing: huidige datum ligt niet binnen de release."
+  todo_issue_summary: "%{type}: %{summary}"
+  use_free_text_if_empty: "Gebruik tekst veld in plaats van drop-down lijst indien leeg"
+  warning_reset_sprint: |-
+      JE STAAT OP HET PUNT DEZE SPRINT TE HER-INITIALISEREN!
+
+      Weet je zeker dat je dit wilt doen? Her-initialisatie
+      heeft de volgende gevolgen voor de stories en taken
+      verbonden aan de sprint:
+
+      * Creatie-datum wordt veranderd in de start datum van de sprint
+      * ALLE wijzigingen aan de stories en taken, behalve notities,
+         zullen worden VERWIJDERD
+      * De huidige waarde wordt de startwaarde voor alle
+         eigenschappen van de story/taak
+      * De status wordt teruggezet naar de standaard status
