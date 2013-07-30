@@ -299,17 +299,22 @@ private
           " LEFT JOIN #{Project.table_name} pp on drp.project_id = pp.id" +
             " OR (pp.status <> #{Project::STATUS_ARCHIVED} AND (" +
               " drp.sharing = 'system'" +
-              " OR (pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE " +
-                     "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
-                     "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL) AND " +
-                   "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE " +
-                     "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
-                     "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL) AND " +
-                   "drp.sharing = 'tree' )" +
-            " OR (pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
-                 "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id) AND drp.sharing IN ('hierarchy', 'descendants')) " +
-            " OR (pp.lft <  (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
-                 "pp.rgt >  (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id) AND drp.sharing = 'hierarchy')" +
+              " OR (drp.sharing = 'tree' AND (" +
+                "pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE " +
+                  "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
+                  "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL) AND " +
+                "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE " +
+                  "p.lft < (SELECT p1.lft from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND " +
+                  "p.rgt > (SELECT p1.rgt from #{Project.table_name} p1 WHERE p1.id=drp.project_id) AND p.parent_id IS NULL)" +
+              "))" +
+              " OR (drp.sharing IN ('hierarchy', 'descendants') AND (" +
+                "pp.lft >= (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
+                "pp.rgt <= (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id)" +
+              ")) " +
+              " OR (drp.sharing = 'hierarchy' AND (" +
+                "pp.lft < (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
+                "pp.rgt > (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id)"+
+              "))" +
           "))" +
           " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" +
           " GROUP BY pp.id;"
