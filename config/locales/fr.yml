@@ -147,7 +147,7 @@ fr:
   label_points_to_accept: "points non acceptés"
   label_points_to_resolve: "points non résolus"
   label_product_backlog: "Carnet de produit"
-  label_product_cards: "Cartes de Carnet de produit"
+  label_product_cards: "Cartes du carnet de produit"
   label_release: Release
   label_release_end_date: "Date de fin de release"
   label_release_new: "Nouvelle release"
