@@ -1,3 +1,22 @@
+== 2013-07-31 v1.0.5
+
+* Performance improvement on loading master backlog and taskboard
+* Translations
+* Unittests for default story tracker (thanks to stefan-langenmaier)
+
+More details:
+* Issue #27131: Change le termes dans le backlogs plugin.
+* Sort all locales using rails_locale_sorter
+* Moving check for sharing type first in sql query seems to help databases avoid costly subselects if unnecessary. It was quite bad on performance when adding new sprints. (see "Slow project.js / app/views/show.js.erb" and "Performance of back log and board")
+* Optimized SQL for droppable sprints/releases on master backlog. (Big performance improvement related to "Slow project.js / app/views/show.js.erb" and "Performance of back log and board")
+* Utilize SQL for fetching release/sprint shared to projects. Huge improvement for "optimize loading time: preload menus" and improvement on total loading time for "Slow project.js / app/views/show.js.erb" and "Performance of back log and board".
+* Change master backlog/taskboard tests related to default story tracker and other select fields into tests using full javascript stack.
+* Allow other tests to create stories without specifying tracker.
+* Remove issues assigned to release from product backlog query on issues tab. ("Product Backlog on Issues page query is wrong")
+* enhanced the taskboard tests for assigned users
+* Issue 27131: fix french translation
+* added some tests on the taskboard
+
 == 2013-07-25 v1.0.4
 
 * RM 2.3.2 supported
