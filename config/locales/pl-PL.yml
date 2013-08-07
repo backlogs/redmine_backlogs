@@ -20,8 +20,8 @@ pl-PL:
   backlogs_product_backlog: "Product backlog"
   backlogs_scrum_stats_menu_application: "Application menu"
   backlogs_scrum_stats_menu_none: None
-  backlogs_scrum_stats_menu_position: "Position of Scrum Statistics menu"
-  backlogs_scrum_stats_menu_top: "Top menu"
+  backlogs_scrum_stats_menu_position: "Pozycja menu dla statystyk scrum"
+  backlogs_scrum_stats_menu_top: "Menu górne"
   backlogs_set_start_and_duedates_from_sprint: "Set story start- and duedate from sprint"
   backlogs_sharing_enabled: "Enable sharing"
   backlogs_sharing_new_sprint: "Share new Sprints"
@@ -36,7 +36,7 @@ pl-PL:
   backlogs_sprint_sort_order_asc: ascending
   backlogs_sprint_sort_order_desc: descending
   backlogs_sprints: Sprints
-  backlogs_statistics_active: "Project show activity"
+  backlogs_statistics_active: "Pokaz aktywność projektu"
   backlogs_statistics_active_failed: "Project shows no activity"
   backlogs_statistics_committed_velocity_stable: "Committed velocity is stable across sprints"
   backlogs_statistics_committed_velocity_stable_failed: "Committed velocity is not stable across sprints"
@@ -61,7 +61,7 @@ pl-PL:
   backlogs_statistics_yield: "Project has good average yield"
   backlogs_statistics_yield_failed: "Project has low average yield"
   backlogs_story: Story
-  backlogs_story_close_status: "Status to close story automatically"
+  backlogs_story_close_status: "Status zamykający story automatycznie"
   backlogs_story_follow_task_status_close: "Close when all Tasks are closed"
   backlogs_story_follow_task_status_loose: "Loosely follow Tasks average done ratio"
   backlogs_story_follow_task_status_nil: Disabled
@@ -71,13 +71,13 @@ pl-PL:
   backlogs_story_tracker: "Story trackers"
   backlogs_task: Task
   backlogs_task_tracker: "Task tracker"
-  backlogs_wiki_template: "Template for sprint wiki page"
+  backlogs_wiki_template: "Szablon dla storn sprintu w wiki"
   button_edit_wiki: "Edit wiki page"
   comma_delimited_numbers: "Comma delimited numbers"
   current_open_story_points: "Current open story points:"
-  error_blank: "cannot be blank"
+  error_blank: "nie może być puste"
   error_greater_than_start_date: "cannot be earlier than Start Date"
-  error_inclusion: "is not included in the list"
+  error_inclusion: "nie jest dodane do listy"
   error_intro_plural: "The following errors were encountered:"
   error_intro_singular: "The following error was encountered:"
   error_must_have_comma_delimited_list: "must have a comma delimited list of story or task IDs"
@@ -87,19 +87,19 @@ pl-PL:
   error_sprint_end_before_start: "Sprint cannot end before it starts"
   error_taken: "is already in use"
   event_sprint_summary: "%{project}: %{summary}"
-  field_assigned_to: "Assigned To"
-  field_backlogs_issue_type: "Backlog type"
+  field_assigned_to: "Przypisany do"
+  field_backlogs_issue_type: "Typ backlog"
   field_base: ""
   field_blocks: Blocks
   field_name: Name
   field_planned_velocity: "Planned velocity"
   field_position: Position
   field_priority: Priority
-  field_project_id: "Project Id"
+  field_project_id: "Id projektu"
   field_release: Release
-  field_release_end_date: "Release end date"
+  field_release_end_date: "Data końcowa dla release"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Release start date"
+  field_release_start_date: "Data startowa dla release"
   field_remaining_hours: "Remaining (hours)"
   field_story_points: "Story points"
   field_subject: Subject
@@ -121,17 +121,17 @@ pl-PL:
   label_download_sprint: Download
   label_filter_tasks: "Filter by user"
   label_filter_tasks_my_tasks: "Filter by user - my tasks"
-  label_hide_completed_sprints: "Hide Completed Sprints"
+  label_hide_completed_sprints: "Ukryj zakończone sprinty"
   label_hours: hours
   label_hours_remaining: "remaining hours"
   label_hours_required_burn_rate: "required burn rate (hours)"
   label_ideal: ideal
   label_impediments: Impediments
-  label_master_backlog: "Master Backlog"
-  label_my_tasks: "My tasks"
-  label_new_sprint: "New Sprint"
-  label_new_story: "New Story"
-  label_no_data_to_show: "No data to show"
+  label_master_backlog: "Główny backlog"
+  label_my_tasks: "Moje zadania"
+  label_new_sprint: "Nowy Sprint"
+  label_new_story: "Nowe Story"
+  label_no_data_to_show: "Brak danych"
   label_no_end: "no end"
   label_no_start: "no start"
   label_not_prioritized: "not prioritized"
@@ -147,10 +147,10 @@ pl-PL:
   label_points_to_accept: "points not accepted"
   label_points_to_resolve: "points not resolved"
   label_product_backlog: "product backlog"
-  label_product_cards: "Product backlog cards"
+  label_product_cards: "Karty Product backlog"
   label_release: Release
   label_release_end_date: field_release_start_date
-  label_release_new: "New release"
+  label_release_new: "Nowy release"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release Planning"
   label_release_plural: Releases
@@ -161,9 +161,9 @@ pl-PL:
   label_release_start_date: field_release_start_date
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
-  label_scrum_statistics: "Scrum statistics"
-  label_select_all: "Select all"
-  label_show_completed_sprints: "Show Completed Sprints"
+  label_scrum_statistics: "Statystyki Scrum"
+  label_select_all: "Zaznacz wszystko"
+  label_show_completed_sprints: "Pokaz zakończone interacje"
   label_sprint_backlog: "sprint backlog"
   label_sprint_cards: "Sprint cards"
   label_sprint_impediments: "Sprint Impediments"
