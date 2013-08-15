@@ -2,10 +2,10 @@
 pt-BR:
   backlogs_active: Ativo
   backlogs_any: Nenhum
-  backlogs_auto_assign_task: "Auto assign task to current user"
+  backlogs_auto_assign_task: "Atribuir tarefa para o usuário atual automaticamente"
   backlogs_burndown_print_height: "Burndown print height"
   backlogs_burndown_print_width: "Burndown print width"
-  backlogs_burndown_settings: "Burndown settings"
+  backlogs_burndown_settings: "Configurações do Burndown"
   backlogs_card_specification: "Tipo de rótulo para impressão no cartão"
   backlogs_default_story_tracker: "Default story tracker"
   backlogs_general_settings: "Configurações gerais"
@@ -20,7 +20,7 @@ pt-BR:
   backlogs_product_backlog: "Product backlog"
   backlogs_scrum_stats_menu_application: "menu Aplicação"
   backlogs_scrum_stats_menu_none: Nenhum
-  backlogs_scrum_stats_menu_position: "Position of Scrum Statistics menu"
+  backlogs_scrum_stats_menu_position: "Posção do menu Estatísticas do Scrum"
   backlogs_scrum_stats_menu_top: "Top menu"
   backlogs_set_start_and_duedates_from_sprint: "Set story start- and duedate from sprint"
   backlogs_sharing_enabled: "Enable sharing"
@@ -28,7 +28,7 @@ pt-BR:
   backlogs_sharing_new_sprint_explanation: "Although all possible options are available here, new sprints are shared only according to the users and projects permissions. System shared sprints can only be created by admins, hierarchy and tree shared sprints need permissions on the topmost project."
   backlogs_sharing_support: "Compartilhar Backlogs"
   backlogs_show_in_scrum_stats: "Mostrar projeto nas estatísticas do Scrum"
-  backlogs_show_priority: "Show task priority on taskboard"
+  backlogs_show_priority: "Mostrar prioridade da tarefa no quadro de tarefas"
   backlogs_show_redmine_std_header: "Mostrar cabeçalho do redmine nos backlogs"
   backlogs_show_stories_from_subprojects_in_backlog: "Mostrar histórias dos subprojetos no backlog"
   backlogs_sprint_card_settings: "Imprimir cartão"
@@ -36,28 +36,28 @@ pt-BR:
   backlogs_sprint_sort_order_asc: crescente
   backlogs_sprint_sort_order_desc: decrescente
   backlogs_sprints: Sprints
-  backlogs_statistics_active: "Project show activity"
-  backlogs_statistics_active_failed: "Project shows no activity"
+  backlogs_statistics_active: "Exibir atividade do Projeto"
+  backlogs_statistics_active_failed: "Não exibir atividade do Projeto"
   backlogs_statistics_committed_velocity_stable: "Committed velocity is stable across sprints"
   backlogs_statistics_committed_velocity_stable_failed: "Committed velocity is not stable across sprints"
-  backlogs_statistics_hours_per_point: "%{value} hours per point on average"
-  backlogs_statistics_product_backlog_filled: "Product backlog has stories"
-  backlogs_statistics_product_backlog_filled_failed: "Product backlog is empty"
+  backlogs_statistics_hours_per_point: "%{value} horas por ponto em média"
+  backlogs_statistics_product_backlog_filled: "Product backlog possui histórias"
+  backlogs_statistics_product_backlog_filled_failed: "Product backlog está vazio"
   backlogs_statistics_product_backlog_sized: "The stories at the top of the product backlog have sizes"
   backlogs_statistics_product_backlog_sized_failed: "The top of the product backlog has unsized stories"
-  backlogs_statistics_sizing_consistent: "Story sizes are stable against their estimates"
-  backlogs_statistics_sizing_consistent_failed: "Story sizes vary against their estimates"
-  backlogs_statistics_sizing_stddev: "Standard deviation on hours vs. points: %{value} hours"
-  backlogs_statistics_spent_hours_per_point: "%{value} hours spent per accepted point on average"
-  backlogs_statistics_sprint_notes_available: "Recently closed sprints have retrospective/review notes"
-  backlogs_statistics_sprint_notes_available_failed: "Closed sprints without retrospective/review notes"
-  backlogs_statistics_sprints: "Measured over %{value} sprints"
-  backlogs_statistics_sprints_estimated: "Active and recently closed sprint have task estimates"
-  backlogs_statistics_sprints_estimated_failed: "Closed or active sprints with unestimated stories"
+  backlogs_statistics_sizing_consistent: "Tamanho das históras estão estáveis em relação as estimativas"
+  backlogs_statistics_sizing_consistent_failed: "Tamanhos das históras variam em relação as estimativas"
+  backlogs_statistics_sizing_stddev: "Desvio padrão em horas vs. pontos: %{value} horas"
+  backlogs_statistics_spent_hours_per_point: "%{value} horas gastas pos ponto aceito em média"
+  backlogs_statistics_sprint_notes_available: "Sprints fechadas recentemente tem notas de retrospectiva/review"
+  backlogs_statistics_sprint_notes_available_failed: "Sprints fechadas sem notas de retrospectiva/review"
+  backlogs_statistics_sprints: "Medido sobre %{value} sprints"
+  backlogs_statistics_sprints_estimated: "Sprints ativos e recentemente fechados tem estimativas de tarefas"
+  backlogs_statistics_sprints_estimated_failed: "Sprints ativas ou fechadas com histórias não estimadas"
   backlogs_statistics_sprints_sized: "Sprints ativos e recentemente fechados foram dimensionados"
   backlogs_statistics_sprints_sized_failed: "Projeto tem histórias ativas ou sprints recentemente fechados que não foram dimensionados"
-  backlogs_statistics_velocity: "Velocity: %{value}"
-  backlogs_statistics_velocity_stddev: "Velocity standard deviation: %{value} points"
+  backlogs_statistics_velocity: "Velocidade: %{value}"
+  backlogs_statistics_velocity_stddev: "Desvio padrão da velocidade: %{value} pontos"
   backlogs_statistics_yield: "Projeto tem um bom rendimento médio"
   backlogs_statistics_yield_failed: "Projeto tem rendimento médio baixo"
   backlogs_story: História
@@ -74,7 +74,7 @@ pt-BR:
   backlogs_wiki_template: "Modelo para a página wiki sprint"
   button_edit_wiki: "Editar a página no wiki"
   comma_delimited_numbers: "números delimitados por vírgula"
-  current_open_story_points: "Current open story points:"
+  current_open_story_points: "Pontos de história em aberto:"
   error_blank: "não pode ser branco"
   error_greater_than_start_date: "não pode ser anterior à data de início"
   error_inclusion: "não está incluído na lista"
@@ -92,10 +92,10 @@ pt-BR:
   field_base: ""
   field_blocks: Blocos
   field_name: Nome
-  field_planned_velocity: "Planned velocity"
+  field_planned_velocity: "Velocidade planejada"
   field_position: Posição
   field_priority: Prioridade
-  field_project_id: "Project Id"
+  field_project_id: "ID do Projeto"
   field_release: Release
   field_release_end_date: "Data final do release"
   field_release_relationship: "Release relationship"
