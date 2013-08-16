@@ -225,3 +225,4 @@ en:
     * The current value will become the initial value for all
        story/task properties
     * State will be set to the default issue state
+  task_color: task color
