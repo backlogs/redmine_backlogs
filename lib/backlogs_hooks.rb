@@ -284,7 +284,7 @@ module BacklogsPlugin
             <fieldset class="box tabular">
             <h3>#{l(:label_backlogs)}</h3>
             <p>
-              #{label :backlogs, :task_color}
+              #{label :backlogs, l(:field_task_color)}
               #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference[:task_color]}
             </p>
           }

@@ -103,6 +103,7 @@ es:
   field_remaining_hours: "Restante (horas)"
   field_story_points: "Puntos de historia"
   field_subject: Tema
+  field_task_color: "Task color"
   field_time_entry_comments: "Time Entry Comments"
   field_time_entry_hours: "Time Entry Hours"
   field_time_entry_spend_on: "Time Entry Spend on"

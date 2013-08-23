@@ -103,6 +103,7 @@ de:
   field_remaining_hours: "Restaufwand (Stunden)"
   field_story_points: Storypunkte
   field_subject: Thema
+  field_task_color: "Task color"
   field_time_entry_comments: "Zeiterfassung Kommentar"
   field_time_entry_hours: "Zeiterfassung Stunden"
   field_time_entry_spend_on: "Zeit gebucht auf"

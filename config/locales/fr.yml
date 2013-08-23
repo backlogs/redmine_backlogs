@@ -103,6 +103,7 @@ fr:
   field_remaining_hours: "Restant à faire (heures)"
   field_story_points: "Points de scénarios"
   field_subject: Sujet
+  field_task_color: "Task color"
   field_time_entry_comments: "Commentaire sur les heures saisies"
   field_time_entry_hours: "Heures saisies en heures"
   field_time_entry_spend_on: "Entrée temps passé sur"

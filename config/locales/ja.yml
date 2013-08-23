@@ -103,6 +103,7 @@ ja:
   field_remaining_hours: 残り時間
   field_story_points: ストーリーポイント
   field_subject: 題名
+  field_task_color: "Task color"
   field_time_entry_comments: コメント
   field_time_entry_hours: 作業時間
   field_time_entry_spend_on: 作業内容

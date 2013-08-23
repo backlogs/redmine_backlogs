@@ -103,6 +103,7 @@ ru:
   field_remaining_hours: "Осталось (часов)"
   field_story_points: "Оценка истории (в баллах)"
   field_subject: Тема
+  field_task_color: "Task color"
   field_time_entry_comments: "Time Entry Comments"
   field_time_entry_hours: "Time Entry Hours"
   field_time_entry_spend_on: "Time Entry Spend on"
