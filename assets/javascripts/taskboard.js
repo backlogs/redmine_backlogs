@@ -102,13 +102,15 @@ RB.Taskboard = RB.Object.create({
     var user_status = el.find('.meta .user_status').text();
     var tracker_id = el.find('.meta .tracker_id').text();
     var old_project_id = el.find('.meta .project_id').text();
+    var old_story_id = el.find('.meta .story_id').text();
 
     //disable non-droppable cells
     RB.$('.ui-sortable').each(function() {
       var new_project_id = this.getAttribute('-rb-project-id');
+      var new_story_id = $(this).closest('tr').find('div.story a').text();
       // check for project
       //sharing, restrictive case: only allow same-project story-task relationship
-      if (new_project_id != old_project_id) {
+      if (new_project_id != old_project_id && old_story_id != new_story_id) {
         RB.$(this).sortable('disable');
         return;
       }
