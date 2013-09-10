@@ -19,7 +19,7 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 
 <h2><%= h @release.name %></h2>
 
-<p><%= @release.description %></p>
+<p><%= textilizable @release, :description %></p>
 
 <% if Backlogs.setting[:release_burnup_enabled] %>
   <h3>Release Burnup chart</h3>
