@@ -1,0 +1,10 @@
+<h2><%=l(:label_release_multiview_new)%></h2>
+
+<% rb_labelled_form_for @release_multiview, :url => url_for(:controller=>'rb_releases_multiview', :action => 'new', :project_id => @project) do |f| %>
+  <%=  error_messages_for 'release_multiview' %>
+  <%= render :partial => 'rb_releases_multiview/form', :locals => { :f => f } %>
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+
+

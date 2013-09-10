@@ -23,6 +23,9 @@ class RbApplicationController < ApplicationController
                elsif params[:release_id] && !params[:release_id].empty?
                  load_release
                  @release.project
+               elsif params[:release_multiview_id] && !params[:release_multiview_id].empty?
+                 load_release_multiview
+                 @release_multiview.project
                elsif params[:project_id]
                  Project.find(params[:project_id])
                else
@@ -45,5 +48,9 @@ class RbApplicationController < ApplicationController
 
   def load_release
     @release = RbRelease.find(params[:release_id])
+  end
+
+  def load_release_multiview
+    @release_multiview = RbReleaseMultiview.find(params[:release_multiview_id])
   end
 end

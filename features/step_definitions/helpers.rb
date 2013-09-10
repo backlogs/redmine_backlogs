@@ -52,6 +52,10 @@ def get_project(identifier)
   Project.find(identifier)
 end
 
+def get_releases(list)
+  list.split(',').collect{|r| RbRelease.find_by_name(r).id}
+end
+
 def get_tracker(identifier)
   Tracker.find_by_name(identifier)
 end
@@ -317,3 +321,18 @@ def check_backlog_menu_new_story(links, project)
   end
   return found
 end
+
+When /^(?:|I )select multiple "([^"]*)" from "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+  options = page.find_field(field).all("option").collect(&:text)
+  with_scope(selector) do
+    # clear all options
+    options.each{|v|
+      unselect(v, :from => field)
+    }
+    # Select the requested options
+    value.split(",").each{|v|
+      select(v, :from => field)
+    }
+  end
+end
+

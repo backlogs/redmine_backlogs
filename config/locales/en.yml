@@ -97,6 +97,7 @@ en:
   field_priority: Priority
   field_project_id: "Project Id"
   field_release: Release
+  field_release_ids: Releases
   field_release_end_date: "Release end date"
   field_release_relationship: "Release relationship"
   field_release_start_date: "Release start date"
@@ -151,6 +152,8 @@ en:
   label_product_cards: "Product backlog cards"
   label_release: Release
   label_release_end_date: "Release end date"
+  label_release_multiview: "Release multiview"
+  label_release_multiview_new: "New release multiview"
   label_release_new: "New release"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release Planning"

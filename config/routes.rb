@@ -29,6 +29,15 @@ def rb_common_routes(rb)
   rb_match rb, 'release/:release_id/shapshot',
                :to => 'rb_releases#snapshot', :via => [:get]
 
+  rb_match rb, 'releases_multiview/:project_id/new',
+               :to => 'rb_releases_multiview#new', :via => [:get, :post]
+  rb_match rb, 'releases_multiview/:release_multiview_id',
+               :to => 'rb_releases_multiview#show', :via => [:get]
+  rb_match rb, 'releases_multiview/:release_multiview_id',
+               :to => 'rb_releases_multiview#destroy', :via => [:delete]
+  rb_match rb, 'releases_multiview/:release_multiview_id/edit',
+               :to => 'rb_releases_multiview#edit', :via => [:get, :post]
+
   rb_match rb, 'updated_items/:project_id', :to => 'rb_updated_items#show'
   rb_match rb, 'wikis/:sprint_id', :to => 'rb_wikis#show'
   rb_match rb, 'wikis/:sprint_id/edit', :to => 'rb_wikis#edit'

@@ -147,7 +147,7 @@ module Backlogs
 
     def stat_velocity_stddev
       return @velocity_stddev unless @velocity_stddev.is_a? Float
-      return '%.2f' % @velocity_stddev      
+      return '%.2f' % @velocity_stddev
     end
 
     def stat_sizing_stddev
@@ -174,6 +174,7 @@ module Backlogs
       base.class_eval do
         unloadable
         has_many :releases, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy, :order => "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC"
+        has_many :releases_multiview, :class_name => 'RbReleaseMultiview', :dependent => :destroy
         include Backlogs::ActiveRecord::Attributes
       end
     end
@@ -208,9 +209,9 @@ module Backlogs
         #TODO have an explicit association map which project shares its issues into other product backlogs
       end
 
-      #return sprints which are 
+      #return sprints which are
       # 1. open in project,
-      # 2. share to project, 
+      # 2. share to project,
       # 3. share to project but are scoped to project and subprojects
       #depending on sharing mode
       def open_shared_sprints
@@ -219,7 +220,7 @@ module Backlogs
           shared_versions.visible.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
-        end 
+        end
       end
 
       #depending on sharing mode

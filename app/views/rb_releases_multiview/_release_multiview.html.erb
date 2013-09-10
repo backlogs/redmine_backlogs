@@ -1,0 +1,7 @@
+<div class="model release" id="<%= release_html_id_or_empty(release_multiview) %>">
+  <h3><%= release_multiview_link_or_empty(release_multiview) %></h3>
+  <br />
+  <div class="meta">
+    <%= render :partial => "backlogs/model_errors", :object => release_multiview.errors unless release_multiview.errors.empty? %>
+  </div>
+</div>

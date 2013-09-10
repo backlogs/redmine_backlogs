@@ -2,8 +2,8 @@
 <%= link_to_if_authorized l(:label_release_new),
                           {:controller => 'rb_releases', :action => 'new', :project_id => @project},
                           :class => 'icon icon-add' %>
-<%= link_to_if_authorized l(:label_release_multiview_new),
-                          {:controller => 'rb_releases_multiview', :action => 'new', :project_id => @project},
+<%= link_to_if_authorized l(:label_releases_multi_view_new),
+                          {:controller => 'rb_releases_multi_view', :action => 'new', :project_id => @project},
                           :class => 'icon icon-add' %>
 </div>
 
@@ -13,11 +13,6 @@
 
 <% @releases_open.each do |release| %>
     <%= render :partial => 'rb_releases/release', :object => release %>
-<% end %>
-
-<h2><%=l(:label_release_multiview)%></h2>
-<% @releases_multiview.each do |multiview| %>
-  <%= render :partial => 'rb_releases_multiview/release_multiview', :object => multiview %>
 <% end %>
 
 <h2><%=l(:label_closed_releases)%></h2>

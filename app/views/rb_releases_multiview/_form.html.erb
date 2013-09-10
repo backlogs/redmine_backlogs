@@ -1,0 +1,14 @@
+<div class="box tabular">
+
+<% rb_labelled_fields_for :release_multiview, @release_multiview do |f| %>
+  <p>
+    <%= f.text_field :name, :required => true %>
+  </p>
+  <p>
+    <%= f.text_area :description, :cols => 60, :rows => 10, :class => 'wiki-edit' %>
+  </p>
+  <p>
+    <%= f.select :release_ids, release_options_for_select(@project.shared_releases, @release_multiview.releases),{}, :multiple => true, :size => 10 %>
+  </p>
+<% end %>
+</div>

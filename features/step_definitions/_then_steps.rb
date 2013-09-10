@@ -563,3 +563,11 @@ Then /^"([^"]*)"\.lower_item_unscoped should be "([^"]*)"$/ do |obj, arg|
   end
 end
 
+Then(/^release multiview "(.*?)" should contain "(.*?)"$/) do |release_multiview_name, releases|
+  m = RbReleaseMultiview.find_by_name(release_multiview_name)
+  m.should_not be_nil
+
+  release_names = releases.split(",")
+  expected_releases = RbRelease.find(:all,:conditions => {:name => release_names})
+  m.releases.should == expected_releases
+end

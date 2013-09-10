@@ -69,6 +69,10 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     release.new_record? ? "" : link_to(release_display_name(release), {:controller => "rb_releases", :action => "show", :release_id => release})
   end
 
+  def release_multiview_link_or_empty(release)
+    release.new_record? ? "" : link_to(release_display_name(release), {:controller => "rb_releases_multiview", :action => "show", :release_multiview_id => release})
+  end
+
   def mark_if_closed(story)
     !story.new_record? && story.status.is_closed? ? "closed" : ""
   end
@@ -243,19 +247,24 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   def release_options_for_select(releases, selected=nil)
     grouped = Hash.new {|h,k| h[k] = []}
+    selected = [selected].compact unless selected.kind_of?(Array)
     releases.each do |release|
       grouped[release.project.name] << [release.name, release.id]
     end
     # Add in the selected
-    if selected && !releases.include?(selected)
-      grouped[selected.project.name] << [selected.name, selected.id]
-    end
+    (selected - releases).each{|s| grouped[s.project.name] << [s.name, s.id] }
 
     if grouped.keys.size > 1
-      grouped_options_for_select(grouped, selected && selected.id)
+      grouped_options_for_select(grouped, selected.collect{|s| s.id})
     else
-      options_for_select((grouped.values.first || []), selected && selected.id)
+      options_for_select((grouped.values.first || []), selected.collect{|s| s.id})
     end
+  end
+
+  # Convert selected ids to integer and remove blank values.
+  def selected_ids(options)
+    return nil if options.nil?
+    options.collect{|o| o.to_i unless o.blank?}.compact! 
   end
 
   def format_release_sharing(v)

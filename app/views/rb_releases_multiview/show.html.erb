@@ -1,0 +1,21 @@
+<% html_title(@release_multiview.name) -%>
+
+<div class="contextual">
+<%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases_multiview', :action => 'edit',    :release_multiview_id => @release_multiview}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
+<%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases_multiview', :action => 'destroy', :release_multiview_id => @release_multiview}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del', :method => :delete %>
+</div>
+
+<h2><%= @release_multiview.name %></h2>
+<p><%= textilizable @release_multiview, :description %></p>
+<p>TODO release multiview graph...</p>
+<h3>Releases</h3>
+<% @release_multiview.releases.each do |release| %>
+<%= render :partial => 'rb_releases/release', :object => release %>
+<% end %>
+
+
+
+<% content_for :sidebar do %>
+<h3><%= l(:label_release_multiview) %></h3>
+
+<% end %>

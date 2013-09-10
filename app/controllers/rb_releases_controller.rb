@@ -9,6 +9,7 @@ class RbReleasesController < RbApplicationController
   def index
     @releases_open = @project.open_releases_by_date
     @releases_closed = @project.closed_releases_by_date
+    @releases_multiview = @project.releases_multiview
   end
 
   def show

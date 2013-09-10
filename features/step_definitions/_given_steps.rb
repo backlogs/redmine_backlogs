@@ -620,6 +620,17 @@ Given /^I have defined the following releases:$/ do |table|
   end
 end
 
+Given /^I have defined the following release multiviews:$/ do |table|
+  RbReleaseMultiview.delete_all
+  table.hashes.each do |release_multiview|
+    release_multiview['project_id'] = get_project((release_multiview.delete('project')||'ecookbook')).id
+    release_multiview['release_ids'] = get_releases(release_multiview['releases'])
+    release_multiview.delete('releases')
+    RbReleaseMultiview.create! release_multiview
+  end
+end
+
+
 Given /^I view the release page$/ do
   visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
   click_link("Releases")
