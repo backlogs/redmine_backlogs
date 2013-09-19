@@ -26,7 +26,7 @@ de:
   backlogs_sharing_enabled: "Sharing aktivieren"
   backlogs_sharing_new_sprint: "Neue Sprints teilen"
   backlogs_sharing_new_sprint_explanation: "Obwohl hier alle Einstellungen verfügbar sind, werden die Rechte für neue Sprints entsprechend der Rollen der Benutzer im Projekt berücksichtigt. Übergreifend geteilte Sprints können nur durch Administratoren erstellt werden. In einer Hierarchie- oder Baumstruktur geteilte Sprints benötigen die notwendigen Rechte des Wurzelprojekts."
-  backlogs_sharing_support: "Backlogs sharing"
+  backlogs_sharing_support: "Projektübergreifende Backlogs"
   backlogs_show_in_scrum_stats: "Zeige das Projekt in der Scrumstatistik an"
   backlogs_show_priority: "Show task priority on taskboard"
   backlogs_show_redmine_std_header: "Zeige den regulären Header an"
