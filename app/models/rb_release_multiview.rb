@@ -12,7 +12,19 @@ class RbReleaseMultiview < ActiveRecord::Base
   include Backlogs::ActiveRecord::Attributes
 
   def releases
-    RbRelease.find(:all,:conditions => {:id => self.release_ids})
+    RbRelease.find(:all,
+                   :conditions => {:id => self.release_ids},
+                   :order => "release_start_date ASC, release_end_date ASC")
+  end
+
+  def has_burnchart?
+    return self.releases.size() > 0
+  end
+
+  def burnchart
+    return nil unless self.has_burnchart?
+    @cached_burnchart ||= RbReleaseMultiviewBurnchart.new(self)
+    return @cached_burnchart
   end
 
 end
