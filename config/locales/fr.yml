@@ -24,7 +24,7 @@ fr:
   backlogs_scrum_stats_menu_top: "Top menu"
   backlogs_set_start_and_duedates_from_sprint: "Ajouter la date de début et de livraison du scénario à partir du sprint"
   backlogs_sharing_enabled: "Activer le partage"
-  backlogs_sharing_new_sprint: "Partager une nouvelle Itérations"
+  backlogs_sharing_new_sprint: "Partager une nouvelle itération"
   backlogs_sharing_new_sprint_explanation: "Même si toutes les options possibles sont disponibles ici, les nouveaux sprints seront seulement partagés selon les permissions d'utilisateurs et de projets. Les sprints partagés du système ne peuvent être créé que par un admin, Les sprints partagés dans un sous-projet doivent avoir les permissions du projet parent initial."
   backlogs_sharing_support: "Partage de Carnets"
   backlogs_show_in_scrum_stats: "Afficher le projet dans les statistiques Scrum"
@@ -39,7 +39,7 @@ fr:
   backlogs_statistics_active: "Le projet affiche son activité"
   backlogs_statistics_active_failed: "Le projet n'affiche aucune activité"
   backlogs_statistics_committed_velocity_stable: "La vélocité est stable dans les itérations"
-  backlogs_statistics_committed_velocity_stable_failed: "La vélocité n'est pas stable dans les sprints"
+  backlogs_statistics_committed_velocity_stable_failed: "La vélocité n'est pas stable dans les itérations"
   backlogs_statistics_hours_per_point: "%{value} heures par point en moyenne"
   backlogs_statistics_product_backlog_filled: "Le carnet de produit contient des scénarios"
   backlogs_statistics_product_backlog_filled_failed: "Le carnet de produit est vide"
@@ -58,14 +58,14 @@ fr:
   backlogs_statistics_sprints_sized_failed: "Des itérations actives et récemments fermées n'ont pas d'estimation"
   backlogs_statistics_velocity: "Velocité: %{value}"
   backlogs_statistics_velocity_stddev: "Déviation standard de la vélocité : %{value} points"
-  backlogs_statistics_yield: "Le projet a un bonne productivité"
+  backlogs_statistics_yield: "Le projet a une bonne productivité"
   backlogs_statistics_yield_failed: "Le projet a une faible productivité"
   backlogs_story: Scénarios
-  backlogs_story_close_status: "Quand les tâches sont fermées, mettre à jour scénario pour :"
+  backlogs_story_close_status: "Quand les tâches sont fermées, mettre à jour le scénario pour :"
   backlogs_story_follow_task_status_close: "Fermer quand toutes les tâches sont fermées"
   backlogs_story_follow_task_status_loose: "Suivre en gros le ratio complété des tâches"
   backlogs_story_follow_task_status_nil: Désactivé
-  backlogs_story_follows_task_loose_explanation: "Note: all issue statuses require a valid %done between 0 and 100."
+  backlogs_story_follows_task_loose_explanation: "Note: toutes les tâches doivent avoir un statut %done compris entre 0 et 100."
   backlogs_story_follows_task_status: "Scénario suit le statut de tâche"
   backlogs_story_settings: "Préférences de Scénarios/Tâches"
   backlogs_story_tracker: "Tracker de scénarios"
@@ -79,7 +79,7 @@ fr:
   error_greater_than_start_date: "ne peut pas être antérieure à la date de début"
   error_inclusion: "n'est pas inclus dans la liste"
   error_intro_plural: "Les erreurs suivantes ont été rencontrées:"
-  error_intro_singular: "L''erreur suivante a été rencontrée:"
+  error_intro_singular: "L'erreur suivante a été rencontrée:"
   error_must_have_comma_delimited_list: "doit avoir une liste de scénarios ou numéros de tâches séparées de virgules"
   error_no_workflow_for_task_tracker: "Vous n'avez pas accès au tracker de tâches. Si vous pensez que c'est une erreur, demandez à votre administrateur de mettre à jour le workflow."
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau."
@@ -92,10 +92,10 @@ fr:
   field_base: ""
   field_blocks: Blocks
   field_name: Nom
-  field_planned_velocity: "Planned velocity"
+  field_planned_velocity: "vélocité planifiée"
   field_position: Position
   field_priority: Priorité
-  field_project_id: "Projet ID"
+  field_project_id: "ID Projet"
   field_release: Release
   field_release_end_date: "Date de fin de la release"
   field_release_relationship: "Liens avec la release"
@@ -108,7 +108,7 @@ fr:
   field_time_entry_hours: "Heures saisies en heures"
   field_time_entry_spend_on: "Entrée temps passé sur"
   field_time_entry_user_id: "ID utilisateur pour les heures saisies"
-  field_tracker_id: "Tracker ID"
+  field_tracker_id: "ID Tracker"
   field_velocity_based_estimate: "Estimation basée sur la vélocité"
   label_all_tasks: "Toutes les tâches"
   label_back_to_project: "Retour à la page du projet"
@@ -117,7 +117,7 @@ fr:
   label_burndown: Burndown
   label_chart_options: "Options du graphique"
   label_close_completed_sprints: "Itérations complétées fermées"
-  label_closed_releases: "Release fermée"
+  label_closed_releases: "Releases fermées"
   label_column_width: "Largeur des colonnes"
   label_download_sprint: Télécharger
   label_filter_tasks: "Filtrer par utilisateur"
