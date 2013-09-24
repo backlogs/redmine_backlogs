@@ -14,7 +14,7 @@ fr:
   backlogs_new_story_position: "Les nouveaux scénarios créés s'affichent"
   backlogs_new_story_position_bottom: "en bas"
   backlogs_new_story_position_top: "en haut"
-  backlogs_not_all_themes_are_supported: "Not all themes are supported."
+  backlogs_not_all_themes_are_supported: "Tous les thèmes ne sont pas supportés."
   backlogs_pblpage_settings: "Préférences du Carnet de produit"
   backlogs_points_burn_direction: "Point du burn Haut/bas"
   backlogs_product_backlog: "Carnet de produit"
@@ -177,9 +177,9 @@ fr:
   rb_auto_refresh: "Auto-Rafraichir carnets/tableau des tâches (seconds)"
   rb_burndown_timezone: "Time zone for burndown day boundary"
   rb_burndown_timezone_explanation: |-
-      To support distributed teams, calculations for burndown graphs use a common concept of when a day begins.
-      Your user timezone is %{user_timezone}, the server timezone is %{server_timezone} and Burndowns use %{burndown_timezone} to calculate the graphs.
-      Note: Historic data is not affected when changing this option.
+      Afin de supporter les équipes mondiales, les calculs de graphes de burndown utilisent un début de journée commun.
+      Votre fuseau horaire est %{user_timezone}, le fuseau horaire du server est %{server_timezone} et les burndowns utilisent %{burndown_timezone} pour calculer les graphes.
+      Note: l'historique des données n'est pas modifié quand cette option est modifiée.
   rb_label_copy_tasks: "Copier les tâches"
   rb_label_copy_tasks_all: Tous
   rb_label_copy_tasks_none: Aucun
