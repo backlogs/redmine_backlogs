@@ -14,21 +14,21 @@ fr:
   backlogs_new_story_position: "Les nouveaux scénarios créés s'affichent"
   backlogs_new_story_position_bottom: "en bas"
   backlogs_new_story_position_top: "en haut"
-  backlogs_not_all_themes_are_supported: "Not all themes are supported."
+  backlogs_not_all_themes_are_supported: "Tous les thèmes ne sont pas supportés."
   backlogs_pblpage_settings: "Préférences du Carnet de produit"
   backlogs_points_burn_direction: "Point du burn Haut/bas"
   backlogs_product_backlog: "Carnet de produit"
   backlogs_scrum_stats_menu_application: "Application menu"
   backlogs_scrum_stats_menu_none: None
-  backlogs_scrum_stats_menu_position: "Position of Scrum Statistics menu"
+  backlogs_scrum_stats_menu_position: "Position du menu des statistiques Scrum"
   backlogs_scrum_stats_menu_top: "Top menu"
   backlogs_set_start_and_duedates_from_sprint: "Ajouter la date de début et de livraison du scénario à partir du sprint"
   backlogs_sharing_enabled: "Activer le partage"
-  backlogs_sharing_new_sprint: "Partager une nouvelle Itérations"
+  backlogs_sharing_new_sprint: "Partager une nouvelle itération"
   backlogs_sharing_new_sprint_explanation: "Même si toutes les options possibles sont disponibles ici, les nouveaux sprints seront seulement partagés selon les permissions d'utilisateurs et de projets. Les sprints partagés du système ne peuvent être créé que par un admin, Les sprints partagés dans un sous-projet doivent avoir les permissions du projet parent initial."
   backlogs_sharing_support: "Partage de Carnets"
-  backlogs_show_in_scrum_stats: "Afficher le projet aux statistiques Scrum"
-  backlogs_show_priority: "Show task priority on taskboard"
+  backlogs_show_in_scrum_stats: "Afficher le projet dans les statistiques Scrum"
+  backlogs_show_priority: "Montrer la priorité de la tâche dans le tableau des tâches"
   backlogs_show_redmine_std_header: "Afficher le header redmine aux Carnets"
   backlogs_show_stories_from_subprojects_in_backlog: "Afficher les scénarios des sous-projets dans le backlog"
   backlogs_sprint_card_settings: "Impression de carte"
@@ -39,7 +39,7 @@ fr:
   backlogs_statistics_active: "Le projet affiche son activité"
   backlogs_statistics_active_failed: "Le projet n'affiche aucune activité"
   backlogs_statistics_committed_velocity_stable: "La vélocité est stable dans les itérations"
-  backlogs_statistics_committed_velocity_stable_failed: "La vélocité n'est pas stable dans les sprints"
+  backlogs_statistics_committed_velocity_stable_failed: "La vélocité n'est pas stable dans les itérations"
   backlogs_statistics_hours_per_point: "%{value} heures par point en moyenne"
   backlogs_statistics_product_backlog_filled: "Le carnet de produit contient des scénarios"
   backlogs_statistics_product_backlog_filled_failed: "Le carnet de produit est vide"
@@ -58,14 +58,14 @@ fr:
   backlogs_statistics_sprints_sized_failed: "Des itérations actives et récemments fermées n'ont pas d'estimation"
   backlogs_statistics_velocity: "Velocité: %{value}"
   backlogs_statistics_velocity_stddev: "Déviation standard de la vélocité : %{value} points"
-  backlogs_statistics_yield: "Le projet a un bonne productivité"
+  backlogs_statistics_yield: "Le projet a une bonne productivité"
   backlogs_statistics_yield_failed: "Le projet a une faible productivité"
   backlogs_story: Scénarios
-  backlogs_story_close_status: "Quand les tâches sont fermées, mettre à jour scénario pour :"
+  backlogs_story_close_status: "Quand les tâches sont fermées, mettre à jour le scénario pour :"
   backlogs_story_follow_task_status_close: "Fermer quand toutes les tâches sont fermées"
   backlogs_story_follow_task_status_loose: "Suivre en gros le ratio complété des tâches"
   backlogs_story_follow_task_status_nil: Désactivé
-  backlogs_story_follows_task_loose_explanation: "Note: all issue statuses require a valid %done between 0 and 100."
+  backlogs_story_follows_task_loose_explanation: "Note: toutes les tâches doivent avoir un statut %done compris entre 0 et 100."
   backlogs_story_follows_task_status: "Scénario suit le statut de tâche"
   backlogs_story_settings: "Préférences de Scénarios/Tâches"
   backlogs_story_tracker: "Tracker de scénarios"
@@ -79,12 +79,12 @@ fr:
   error_greater_than_start_date: "ne peut pas être antérieure à la date de début"
   error_inclusion: "n'est pas inclus dans la liste"
   error_intro_plural: "Les erreurs suivantes ont été rencontrées:"
-  error_intro_singular: "L''erreur suivante a été rencontrée:"
+  error_intro_singular: "L'erreur suivante a été rencontrée:"
   error_must_have_comma_delimited_list: "doit avoir une liste de scénarios ou numéros de tâches séparées de virgules"
   error_no_workflow_for_task_tracker: "Vous n'avez pas accès au tracker de tâches. Si vous pensez que c'est une erreur, demandez à votre administrateur de mettre à jour le workflow."
   error_outro: "Veuillez corriger les erreurs ci-dessus avant de soumettre à nouveau."
   error_release_end_after_start: "La date de fin de Release doit être après la date de début"
-  error_sprint_end_before_start: "Une itération ne peut pas finir avant elle commence"
+  error_sprint_end_before_start: "Une itération ne peut pas finir avant d'avoir commencer"
   error_taken: "est déjà utilisé"
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: "Assigné à"
@@ -92,23 +92,23 @@ fr:
   field_base: ""
   field_blocks: Blocks
   field_name: Nom
-  field_planned_velocity: "Planned velocity"
+  field_planned_velocity: "vélocité planifiée"
   field_position: Position
   field_priority: Priorité
-  field_project_id: "Projet ID"
+  field_project_id: "ID Projet"
   field_release: Release
   field_release_end_date: "Date de fin de la release"
-  field_release_relationship: "Release relationship"
+  field_release_relationship: "Liens avec la release"
   field_release_start_date: "Date de début de la release"
   field_remaining_hours: "Restant à faire (heures)"
   field_story_points: "Points de scénarios"
   field_subject: Sujet
-  field_task_color: "Task color"
+  field_task_color: "Couleur des tâches"
   field_time_entry_comments: "Commentaire sur les heures saisies"
   field_time_entry_hours: "Heures saisies en heures"
   field_time_entry_spend_on: "Entrée temps passé sur"
   field_time_entry_user_id: "ID utilisateur pour les heures saisies"
-  field_tracker_id: "Tracker ID"
+  field_tracker_id: "ID Tracker"
   field_velocity_based_estimate: "Estimation basée sur la vélocité"
   label_all_tasks: "Toutes les tâches"
   label_back_to_project: "Retour à la page du projet"
@@ -117,7 +117,7 @@ fr:
   label_burndown: Burndown
   label_chart_options: "Options du graphique"
   label_close_completed_sprints: "Itérations complétées fermées"
-  label_closed_releases: "Release fermée"
+  label_closed_releases: "Releases fermées"
   label_column_width: "Largeur des colonnes"
   label_download_sprint: Télécharger
   label_filter_tasks: "Filtrer par utilisateur"
@@ -132,13 +132,13 @@ fr:
   label_my_tasks: "Mes tâches"
   label_new_sprint: "Nouvelle Itération"
   label_new_story: "Nouveau Scénario"
-  label_no_data_to_show: "Pas de donnée affichée"
+  label_no_data_to_show: "Pas de donnée à afficher"
   label_no_end: "pas de fin"
   label_no_start: "pas de début"
   label_not_prioritized: "non priorisés"
   label_points: points
   label_points_accepted: "points acceptés"
-  label_points_added: "points added"
+  label_points_added: "points ajoutés"
   label_points_backlog: "points carnet"
   label_points_burn_down: Bas
   label_points_burn_up: Haut
@@ -152,7 +152,7 @@ fr:
   label_release: Release
   label_release_end_date: "Date de fin de release"
   label_release_new: "Nouvelle release"
-  label_release_planned_velocity_end_date: "Planned velocity estimated end date"
+  label_release_planned_velocity_end_date: "Date de fin estimée en fonction de la vélocité"
   label_release_planning: "Planification des releases"
   label_release_plural: Releases
   label_release_relationship_added: Added
@@ -160,7 +160,7 @@ fr:
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
   label_release_start_date: "Date de début de la release"
-  label_release_trend_end_date: "Trend estimated end date"
+  label_release_trend_end_date: "Tendance de la date de fin estimée"
   label_reset: Reinitialiser
   label_scrum_statistics: "Statistiques Scrum"
   label_select_all: "sélectionner tout"
@@ -172,14 +172,14 @@ fr:
   label_stories: Scénarios
   label_stories_tasks: Scénarios/Tâches
   label_task_board: "Tableau des tâches"
-  label_view_options: "Options affichage"
+  label_view_options: "Options d'affichage"
   label_webcal: "Fil Calendrier Web"
   rb_auto_refresh: "Auto-Rafraichir carnets/tableau des tâches (seconds)"
-  rb_burndown_timezone: "Time zone for burndown day boundary"
+  rb_burndown_timezone: "Fuseau horaire pour le calcul de Burndown"
   rb_burndown_timezone_explanation: |-
-      To support distributed teams, calculations for burndown graphs use a common concept of when a day begins.
-      Your user timezone is %{user_timezone}, the server timezone is %{server_timezone} and Burndowns use %{burndown_timezone} to calculate the graphs.
-      Note: Historic data is not affected when changing this option.
+      Afin de supporter les équipes mondiales, les calculs de graphes de Burndown utilisent un début de journée commun.
+      Votre fuseau horaire est %{user_timezone}, le fuseau horaire du server est %{server_timezone} et les Burndowns utilisent %{burndown_timezone} pour calculer les graphes.
+      Note: l'historique des données n'est pas modifié quand cette option est modifiée.
   rb_label_copy_tasks: "Copier les tâches"
   rb_label_copy_tasks_all: Tous
   rb_label_copy_tasks_none: Aucun
@@ -189,7 +189,7 @@ fr:
   rb_label_timelog_enable: Activer
   rb_project_settings_update_error: "Une erreur est survenue durant la mise à jour de configuration"
   rb_project_settings_updated: "Configuration mise à jour"
-  rb_release_burnup_enabled: "Enable release burnup chart (EXPERIMENTAL)"
+  rb_release_burnup_enabled: "Autoriser le graphe Burnup (EXPERIMENTAL)"
   rb_show_burndown_in_sidebar: "Afficher le burndown dans la barre des demandes"
   rb_show_project_name: "Afficher le nom du projet dans le carnet"
   rb_task_cards_stories_then_tasks: "Tous les scénarios d'abord, les tâches ensuite"
