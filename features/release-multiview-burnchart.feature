@@ -142,3 +142,5 @@ Feature: Release multiview burnchart
   Scenario: Initial
     Given I view the release page
 #     Then dump the database to pg_new.dump
+     When I follow "Multi 1"
+     Then the request should complete successfully

@@ -13,11 +13,11 @@ Given(/^I add the following series:$/) do |table|
     tmp_closed_points << entry[:closed_points].to_i
   end
   series = {:days => tmp_days, :total_points => tmp_total_points, :closed_points => tmp_closed_points}
-  @stacked_data.add(series)
+  @stacked_data.add(series,"some name")
 end
 
 Given(/^I finish RbStackedData$/) do
-  @stacked_data.add_overlapping_days
+  @stacked_data.finalize
 end
 
 
