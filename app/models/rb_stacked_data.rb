@@ -20,11 +20,11 @@ class RbStackedData
     @closed_data[:closed_points] = []
   end
 
-  def add(arrays)
+  def add(arrays,name)
     if @total_data.size == 0
-      add_first(arrays)
+      add_first(arrays,name)
     else
-      stack_total(arrays)
+      stack_total(arrays,name)
       merge_closed(arrays)
     end
   end
@@ -33,15 +33,29 @@ class RbStackedData
     return @total_data[i]
   end
 
-  def count
-    return @total_data.size()
+  attr_reader :closed_data
+  attr_reader :total_data
+
+  # Create data points for each overlapping day within the range of each series
+  # This is sort of rippling up (and down!) missing days within each series.
+  def add_overlapping_days
+    return unless @total_data.size() > 1
+
+    # Index arrays with offset
+    idx_top = ((@total_data.size() -1)..1).to_a
+    idx_bottom = ((@total_data.size() -2)..0).to_a
+
+    # Ripple missing days down through the series
+    _ripple_overlapping_days(idx_top,idx_bottom);
+    # Ripple missing days up through the series
+    _ripple_overlapping_days(idx_bottom,idx_top);
   end
 
-  attr_reader :closed_data
 
 private
-  def add_first(arrays)
-    @total_data << {:days => arrays[:days], :total_points => arrays[:total_points]}
+
+  def add_first(arrays,name)
+    @total_data << {:days => arrays[:days], :total_points => arrays[:total_points], :name => name}
     # Need to duplicate array of days. Otherwise ruby references falsely.
     days_within_limit = arrays[:days].select{|day| day <= @closed_day_limit}
     return if days_within_limit.size() == 0
@@ -49,7 +63,7 @@ private
     @closed_data[:closed_points] = arrays[:closed_points][0..(days_within_limit.size() - 1)]
   end
 
-  def stack_total(arrays)
+  def stack_total(arrays,name)
     # Have last stacked series ready when stacking the next
     last = @total_data.last
 
@@ -74,7 +88,8 @@ private
       tmp_total << arrays[:total_points][i] + last[:total_points][idx]
     }
     # Add the new stacked total series
-    @total_data << {:days => arrays[:days], :total_points => tmp_total}
+    @total_data << {:days => arrays[:days], :total_points => tmp_total, :name => name}
+
   end
 
   def merge_closed(arrays)
@@ -137,6 +152,29 @@ private
         array_idx = arrays[:days].find_index(day_for_merge)
         @closed_data[:closed_points][closed_idx] += arrays[:closed_points][array_idx]
       end
+    }
+  end
+
+  def _ripple_overlapping_days(idx_orig_arr,idx_next_arr)
+
+    # Ripple missing days down the stacked totals
+    idx_orig_arr.each_with_index{|orig_idx,i|
+      next_idx=idx_next_arr[i]
+
+      # Find first/last day of *previous* series.
+      day_first = @total_data[next_idx][:days].first
+      day_last = @total_data[next_idx][:days].last
+      # Find all days in *current* series within date range of *previous*
+      days_range = @total_data[orig_idx][:days].select{|d| d >= day_first && d <= day_last}
+      # Find missing days in *previous* series
+      days_missing = days_range - @total_data[next_idx][:days]
+      # Add missing days to *previous* series duplicating total points from closest day before
+      days_missing.each{|day|
+        insert_idx = @total_data[next_idx][:days].find_index{|x| x > day }
+        # due to selection previously we can assume day is always within range.
+        @total_data[next_idx][:days].insert(insert_idx,day)
+        @total_data[next_idx][:total_points].insert(insert_idx,@total_data[next_idx][:total_points][insert_idx - 1])
+      }
     }
   end
 

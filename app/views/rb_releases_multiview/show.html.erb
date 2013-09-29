@@ -7,7 +7,18 @@
 
 <h2><%= @release_multiview.name %></h2>
 <p><%= textilizable @release_multiview, :description %></p>
-<p>TODO release multiview graph...</p>
+
+<% if Backlogs.setting[:release_burnup_enabled] %>
+  <h3>Burnchart</h3>
+  <!--Release multiview burnchart Visualization-->
+  <% unless @release_multiview.has_burnchart? %>
+    <p class="nodata">No burnchart available</p>
+  <% else %>
+      <%= render :partial => "burnchart", :locals => { :release_multiview => @release_multiview, :style => "margin-left:0px; margin-top:20px;"} %>
+    <br />
+  <% end %>
+<% end %>
+
 <h3>Releases</h3>
 <% @release_multiview.releases.each do |release| %>
 <%= render :partial => 'rb_releases/release', :object => release %>

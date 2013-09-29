@@ -230,6 +230,11 @@ Given /^no versions or issues exist$/ do
   Version.destroy_all
 end
 
+Given(/^no releases or release multiviews exist$/) do
+  RbRelease.destroy_all
+  RbReleaseMultiview.destroy_all
+end
+
 Given /^I have selected the (.*) project$/ do |project_id|
   @project = get_project(project_id)
 end

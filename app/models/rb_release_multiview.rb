@@ -18,7 +18,7 @@ class RbReleaseMultiview < ActiveRecord::Base
   end
 
   def has_burnchart?
-    return self.releases.size() > 0
+    releases.inject(false) {|result,release| result |= release.has_burndown?}
   end
 
   def burnchart

@@ -9,6 +9,7 @@ Feature: Test internal calculation of release multiview data
         | 2013-10-01 | 100          | 30            |
         | 2013-11-01 | 110          | 45            |
         | 2013-12-01 | 110          | 60            |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         | 2013-08-01 | 100          |
@@ -53,6 +54,7 @@ Feature: Test internal calculation of release multiview data
         | 2015-01-01 | 140          | 115           |
         | 2015-02-01 | 140          | 120           |
         | 2015-03-01 | 140          | 125           |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         | 2013-08-01 | 100          |
@@ -124,6 +126,7 @@ Feature: Test internal calculation of release multiview data
         | 2014-04-15 | 140          | 50            |
         | 2014-05-15 | 140          | 70            |
         | 2014-06-15 | 140          | 90            |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         |2013-08-01  | 100          |
@@ -131,12 +134,16 @@ Feature: Test internal calculation of release multiview data
         |2013-10-01  | 100          |
         |2013-11-01  | 110          |
         |2013-12-01  | 110          |
+        |2013-12-15  | 110          |
         |2014-01-01  | 110          |
+        |2014-01-15  | 110          |
         |2014-02-01  | 110          |
       And series 1 should be:
         | days       | total_points |
         | 2013-12-15 | 260          |
+        | 2014-01-01 | 260          |
         | 2014-01-15 | 260          |
+        | 2014-02-01 | 260          |
         | 2014-02-15 | 250          |
         | 2014-03-15 | 250          |
         | 2014-04-15 | 250          |
@@ -183,6 +190,7 @@ Feature: Test internal calculation of release multiview data
         | 2014-01-01 | 140          | 110           |
         | 2014-02-01 | 140          | 120           |
         | 2014-03-01 | 140          | 130           |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         |2013-08-01  | 100          |
@@ -233,6 +241,7 @@ Feature: Test internal calculation of release multiview data
         |2013-09-01  | 100          | 15            |
         |2013-10-01  | 100          | 30            |
         |2013-11-01  | 110          | 45            |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         |2013-08-01  | 100          |
@@ -265,6 +274,7 @@ Feature: Test internal calculation of release multiview data
         |2013-05-01  | 100          | 15            |
         |2013-06-01  | 100          | 30            |
         |2013-07-01  | 110          | 45            |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         |2013-08-01  | 100          |
@@ -298,6 +308,7 @@ Feature: Test internal calculation of release multiview data
         |2014-01-01  | 100          | 15            |
         |2014-02-01  | 100          | 30            |
         |2014-03-01  | 110          | 45            |
+     And I finish RbStackedData
      Then series 0 should be:
         | days       | total_points |
         |2013-08-01  | 100          |

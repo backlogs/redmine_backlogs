@@ -1,0 +1,46 @@
+<div style="<%= style %>" class="burndown_chart" id="burndown_<%= release_multiview.id %>"><div class="loading">Generating chart...</div></div>
+
+<style type="text/css" media="screen">
+  .jqplot-axis {
+  font-size: 0.85em;
+  }
+  .jqplot-title {
+  font-size: 1.1em;
+  }
+  .jqplot-y6axis-tick {
+  padding-right: 0px;
+  }
+</style>
+
+<script type="text/javascript" language="javascript">
+  <%-
+    burnchart = release_multiview.burnchart
+    series = burnchart.total_series  + [burnchart.closed_series]
+    names = burnchart.total_series_names
+
+    chart = {
+      :series => series,
+      :mode => 'full',
+      :options => {
+        :seriesDefaults => {
+          # renderer set during javascript initialization below
+        },
+        :axes => {
+          :xaxis => {
+            # renderer set during javascript initialization below
+          },
+          :yaxis => { :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}
+          },
+        },
+        :legend => { :show => true, :location => 'se' },
+        :series => names.collect{|n| { :label => n } } << { :label => l("label_points_accepted") }
+      }
+    }
+  
+  %>
+RB.$(function() { // render when dom is ready
+  RB.burndown.charts[<%= release_multiview.id %>] = <%= chart.to_json.html_safe %>;
+  RB.burndown.charts[<%= release_multiview.id %>].options.axes.xaxis.renderer = RB.$.jqplot.DateAxisRenderer;
+  RB.burndown.initialize();
+});
+</script>

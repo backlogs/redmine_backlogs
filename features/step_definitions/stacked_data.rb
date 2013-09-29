@@ -16,6 +16,11 @@ Given(/^I add the following series:$/) do |table|
   @stacked_data.add(series)
 end
 
+Given(/^I finish RbStackedData$/) do
+  @stacked_data.add_overlapping_days
+end
+
+
 Then(/^series (\d+) should be:$/) do |series_number, table|
   idx = series_number.to_i
   expected_days = []
