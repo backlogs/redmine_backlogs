@@ -11,6 +11,16 @@
 #     This is to avoid initial days with closed points of future releases to
 #     affect the graph.
 class RbStackedData
+
+  attr_reader :closed_data
+  attr_reader :total_data
+  attr_reader :estimate_data
+
+  # Number of days to forecast
+  ESTIMATE_DAYS = 60
+  # Number of history datapoints used for calculating estimate
+  ESTIMATE_POINTS = 5
+
   def initialize(closed_day_limit)
     raise "Date should be supplied when creating RbStackedData!" unless closed_day_limit.is_a?(Date)
     @closed_day_limit = closed_day_limit
@@ -18,13 +28,14 @@ class RbStackedData
     @closed_data = Hash.new
     @closed_data[:days]= []
     @closed_data[:closed_points] = []
+    @estimate_data = []
   end
 
-  def add(arrays,name)
+  def add(arrays,name,create_estimate = false)
     if @total_data.size == 0
-      add_first(arrays,name)
+      add_first(arrays,name,create_estimate)
     else
-      stack_total(arrays,name)
+      stack_total(arrays,name,create_estimate)
       merge_closed(arrays)
     end
   end
@@ -33,11 +44,14 @@ class RbStackedData
     return @total_data[i]
   end
 
-  attr_reader :closed_data
-  attr_reader :total_data
+  def finalize(create_closed_estimate = false)
+    add_overlapping_days
+    calculate_closed_estimate if create_closed_estimate == true
+  end
 
+private
   # Create data points for each overlapping day within the range of each series
-  # This is sort of rippling up (and down!) missing days within each series.
+  # This is sort of rippling up (and down!) missing days between each series.
   def add_overlapping_days
     return unless @total_data.size() > 1
 
@@ -51,19 +65,29 @@ class RbStackedData
     _ripple_overlapping_days(idx_bottom,idx_top);
   end
 
+  # Calculate a trendline for closed points
+  def calculate_closed_estimate
+    return unless @closed_data[:days].size > 1
 
-private
+    est_closed = _linear_regression(@closed_data[:days],@closed_data[:closed_points],ESTIMATE_POINTS)
+    @estimate_data << { :line => est_closed.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => "Estimated accepted points"}
+  end
 
-  def add_first(arrays,name)
+  def add_first(arrays,name,create_estimate)
     @total_data << {:days => arrays[:days], :total_points => arrays[:total_points], :name => name}
     # Need to duplicate array of days. Otherwise ruby references falsely.
     days_within_limit = arrays[:days].select{|day| day <= @closed_day_limit}
     return if days_within_limit.size() == 0
     @closed_data[:days] = days_within_limit
     @closed_data[:closed_points] = arrays[:closed_points][0..(days_within_limit.size() - 1)]
+
+    if create_estimate
+      est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
+      @estimate_data << { :line => est_total.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => name + " estimate"}
+    end
   end
 
-  def stack_total(arrays,name)
+  def stack_total(arrays,name,create_estimate)
     # Have last stacked series ready when stacking the next
     last = @total_data.last
 
@@ -90,8 +114,14 @@ private
     # Add the new stacked total series
     @total_data << {:days => arrays[:days], :total_points => tmp_total, :name => name}
 
+    if create_estimate
+      est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
+      @estimate_data << { :line => est_total.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => name + " estimate"}
+    end
   end
 
+  # Merges closed points of a new series into current closed points data set.
+  # Expects arrays to contains hashes :days and :closed_points as arrays.
   def merge_closed(arrays)
     days_within_limit = arrays[:days].select{|x| x <= @closed_day_limit}
     new_days = days_within_limit - @closed_data[:days]
@@ -176,6 +206,12 @@ private
         @total_data[next_idx][:total_points].insert(insert_idx,@total_data[next_idx][:total_points][insert_idx - 1])
       }
     }
+  end
+
+  # Helper function for creating a linear regression on a dataset limited to a certain number of data points.
+  def _linear_regression(days,points,limited_points)
+    limit = days.size() < limited_points ? days.size() : limited_points
+    Backlogs::LinearRegression.new(days[-limit,limit],points[-limit,limit])
   end
 
 end

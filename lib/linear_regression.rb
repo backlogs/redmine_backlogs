@@ -14,15 +14,20 @@ module Backlogs
 
       days_number = @days.collect{|d| (d - days.first).to_i }
       count = days_number.size.to_f
-      # Least mean square (x=days_number, y=data)
-      avg_x = days_number.sum / count
-      avg_y = data.sum / count
-      avg_xy = days_number.each.with_index.inject(0){|sum,(d,i)|
-                      sum + (d * data[i]) } / count
-      avg_xx = days_number.inject(0){|sum,d| sum + (d * d) } / count
+      if count > 1
+        # Least mean square (x=days_number, y=data)
+        avg_x = days_number.sum / count
+        avg_y = data.sum / count
+        avg_xy = days_number.each.with_index.inject(0){|sum,(d,i)|
+          sum + (d * data[i]) } / count
+        avg_xx = days_number.inject(0){|sum,d| sum + (d * d) } / count
 
-      @slope = (avg_xy - (avg_x * avg_y)) / (avg_xx - (avg_x**2))
-      @intercept = (avg_xx*avg_y - (avg_x*avg_xy)) / (avg_xx - (avg_x**2))
+        @slope = (avg_xy - (avg_x * avg_y)) / (avg_xx - (avg_x**2))
+        @intercept = (avg_xx*avg_y - (avg_x*avg_xy)) / (avg_xx - (avg_x**2))
+      else
+        @slope = 0
+        @intercept = data[0]
+      end
     end
 
     # Calculate date of linear fit crossing other line

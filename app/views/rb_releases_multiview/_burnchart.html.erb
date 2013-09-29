@@ -15,8 +15,10 @@
 <script type="text/javascript" language="javascript">
   <%-
     burnchart = release_multiview.burnchart
-    series = burnchart.total_series  + [burnchart.closed_series]
-    names = burnchart.total_series_names
+    series = burnchart.total_series  + [burnchart.closed_series] +
+      burnchart.estimate_series
+    names = burnchart.total_series_names << l("label_points_accepted")
+    estimate_names = burnchart.estimate_series_names
 
     chart = {
       :series => series,
@@ -33,7 +35,11 @@
           },
         },
         :legend => { :show => true, :location => 'se' },
-        :series => names.collect{|n| { :label => n } } << { :label => l("label_points_accepted") }
+        :series => names.collect{|n| { :label => n } } +
+                   estimate_names.collect{|n| { :label => n,
+                                                :linePattern => "dotted",
+                                                :showMarker => false } }
+
       }
     }
   

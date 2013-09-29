@@ -15,11 +15,12 @@ class RbReleaseMultiviewBurnchart
         release_data[:days] = r.days
         release_data[:total_points] = r.burndown[:total_points]
         release_data[:closed_points] = r.burndown[:closed_points]
-        @stacked_graph.add(release_data,r.name)
+        @stacked_graph.add(release_data,r.name,r.has_open_stories?)
       end
     }
 
-    @stacked_graph.add_overlapping_days
+    open_stories = @releases.inject(false) {|res,r| res |= r.has_open_stories? }
+    @stacked_graph.finalize(open_stories)
   end
 
 
@@ -34,6 +35,22 @@ class RbReleaseMultiviewBurnchart
   def total_series_names
     names = []
     @stacked_graph.total_data.each{|s|
+      names << s[:name]
+    }
+    names
+  end
+
+  def estimate_series
+    series = []
+    @stacked_graph.estimate_data.each{|s|
+      series << s[:line]
+    }
+    series
+  end
+
+  def estimate_series_names
+    names = []
+    @stacked_graph.estimate_data.each{|s|
       names << s[:name]
     }
     names
