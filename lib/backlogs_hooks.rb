@@ -124,7 +124,6 @@ module BacklogsPlugin
 
             if issue.safe_attribute?('release_id') && issue.assignable_releases.any?
               snippet += '<div class="splitcontentleft"><p>'
-puts issue.release.inspect
               snippet += context[:form].select :release_id, release_options_for_select(issue.assignable_releases, issue.release), :include_blank => true
               snippet += '</p></div>'
               snippet += '<div class="splitcontentright"><p>'
