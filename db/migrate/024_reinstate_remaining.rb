@@ -37,6 +37,8 @@ class ReinstateRemaining < ActiveRecord::Migration
     end
 
     catch (:done) do
+      Issue.connection.schema_cache.clear!
+      Issue.reset_column_information
       throw :done if Issue.column_names.include?('remaining_hours')
 
       add_column :issues, :remaining_hours, :float            
