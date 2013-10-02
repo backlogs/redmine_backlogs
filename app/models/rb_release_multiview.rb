@@ -14,7 +14,7 @@ class RbReleaseMultiview < ActiveRecord::Base
   def releases
     RbRelease.find(:all,
                    :conditions => {:id => self.release_ids},
-                   :order => "release_start_date ASC, release_end_date ASC")
+                   :order => "release_end_date ASC, release_start_date ASC")
   end
 
   def has_burnchart?

@@ -244,14 +244,14 @@ module Backlogs
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
         (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
           visible.open.
-          order("#{RbRelease.table_name}.release_start_date #{order}, #{RbRelease.table_name}.release_end_date #{order}")
+          order("#{RbRelease.table_name}.release_end_date #{order}, #{RbRelease.table_name}.release_start_date #{order}")
       end
 
       def closed_releases_by_date
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
         (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
           visible.closed.
-          order("#{RbRelease.table_name}.release_start_date #{order}, #{RbRelease.table_name}.release_end_date #{order}")
+          order("#{RbRelease.table_name}.release_end_date #{order}, #{RbRelease.table_name}.release_start_date #{order}")
       end
 
       def shared_releases
