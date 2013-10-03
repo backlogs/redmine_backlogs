@@ -186,7 +186,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def dates_valid?
-    errors.add(:base, l(:error_release_end_after_start)) if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
+    errors.add(:base, "release_end_after_start") if self.release_start_date >= self.release_end_date if self.release_start_date and self.release_end_date
   end
 
   def stories #compat

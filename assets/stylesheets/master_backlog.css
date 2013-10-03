@@ -497,7 +497,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   display:none;
 }
 
-#backlogs_container .header .editing .end_date.editor,
+#backlogs_container .header .editing .release_end_date.editor,
 #backlogs_container .header .editing .release_start_date.editor,
 #backlogs_container .header .editing .effective_date.editor,
 #backlogs_container .header .editing .sprint_start_date.editor,
@@ -514,7 +514,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 #backlogs_container .header .editing .release_start_date.editor,
 #backlogs_container .header .editing .sprint_start_date.editor,
-#backlogs_container .header .editing .end_date.editor,
+#backlogs_container .header .editing .release_end_date.editor,
 #backlogs_container .header .editing .effective_date.editor{
   height:23px;
   line-height:27px;

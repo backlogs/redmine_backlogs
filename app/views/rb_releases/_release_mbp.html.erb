@@ -20,7 +20,7 @@
 
   <div class="fff-right">
     <div class="release_start_date editable date" fieldname="release_start_date" fieldlabel="<%=l(:field_release_start_date)%>"><%= release.release_start_date || l(:label_no_start) %></div>
-    <div class="end_date editable date" fieldname="end_date" fieldlabel="<%=l(:field_effective_date)%>"><%= release.release_end_date || l(:label_no_end) %></div>
+    <div class="end_date editable date" fieldname="release_end_date" fieldlabel="<%=l(:field_effective_date)%>"><%= release.release_end_date || l(:label_no_end) %></div>
     <div class="meta">
       <%= render :partial => "backlogs/model_errors", :object => release.errors unless release.errors.empty? %>
     </div>
