@@ -19,10 +19,12 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
 
   afterUpdate: function(data, textStatus, xhr){
     this.$.parents('.backlog').data('this').recalcVelocity();
+    this.$.parents('.backlog').data('this').drawMenu();
   },
 
   afterCreate: function(data, textStatus, xhr){
     this.$.parents('.backlog').data('this').recalcVelocity();
+    this.$.parents('.backlog').data('this').drawMenu();
   },
 
   beforeSave: function(){
