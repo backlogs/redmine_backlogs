@@ -115,4 +115,14 @@ class RbSprintsController < RbApplicationController
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
+  
+  def close
+    if @sprint.stories.open.any?
+      flash[:error] = l(:error_cannot_close_sprint_with_open_stories)
+    else
+      @sprint.update_attributes({:status => 'closed'})
+    end
+    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
+  end
+ 
 end

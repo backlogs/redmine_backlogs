@@ -98,6 +98,9 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_release),
               :url => url_for(:controller => 'rb_releases', :action => 'show', :release_id => @release, :target => '_blank', :only_path => true)
              } if @release
+    links << {:label => l(:label_sprint_close),
+              :url => url_for(:controller => 'rb_sprints', :action => 'close', :sprint_id => @sprint, :only_path => true)
+              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)        
 
 
     respond_to do |format|
