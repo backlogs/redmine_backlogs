@@ -3,7 +3,7 @@ Given(/^I initialize RbStackedData with closed date (.*)$/) do |date|
   @stacked_data = RbStackedData.new(date)
 end
 
-Given(/^I add the following series:$/) do |table|
+Given(/^I add the following series "(.*)":$/) do |id,table|
   tmp_days = []
   tmp_total_points = []
   tmp_closed_points = []
@@ -13,11 +13,11 @@ Given(/^I add the following series:$/) do |table|
     tmp_closed_points << entry[:closed_points].to_i
   end
   series = {:days => tmp_days, :total_points => tmp_total_points, :closed_points => tmp_closed_points}
-  @stacked_data.add(series,"some name")
+  @stacked_data.add(series,id,true)
 end
 
 Given(/^I finish RbStackedData$/) do
-  @stacked_data.finalize
+  @stacked_data.finalize(true)
 end
 
 
@@ -44,4 +44,9 @@ Then(/^closed series should be:$/) do |table|
   puts @stacked_data.closed_data.inspect
   @stacked_data.closed_data[:days].should == expected_days
   @stacked_data.closed_data[:closed_points].should == expected_closed
+end
+
+Then(/^series "(.*)" trend end date should be (.*)$/) do |id,date|
+  date = Time.zone.parse(date).to_date
+  @stacked_data.total_estimates[id][:end_date_estimate].should === date
 end

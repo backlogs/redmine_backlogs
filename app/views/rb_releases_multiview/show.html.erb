@@ -33,13 +33,17 @@
 <% end %>
 
 <h3>Releases</h3>
-<% @release_multiview.releases.each do |release| %>
-<%= render :partial => 'rb_releases/release', :object => release %>
+<% unless @release_multiview.has_burnchart? %>
+  <%= render :partial => 'releases', :locals => { :releases => @release_multiview.releases } %>
+<% else %>
+  <%= render :partial => 'releases_estimate', :locals => { :releases => @release_multiview.burnchart.releases_estimate } %>
 <% end %>
+
 
 
 
 <% content_for :sidebar do %>
 <h3><%= l(:label_release_multiview) %></h3>
+
 
 <% end %>

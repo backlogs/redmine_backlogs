@@ -1,0 +1,15 @@
+<table class="list releases">
+  <tr>
+    <th>Release</th>
+    <th><%= l(:field_release_start_date) %></th>
+    <th><%= l(:field_release_end_date) %></th>
+  </tr>
+  <% releases.each do |r|
+  klass=r.closed? ? 'closed':'open' %>
+  <tr class="<%= klass %>">
+    <td><%= release_link_or_empty(r) %></td>
+    <td><%= r.release_start_date   %></td>
+    <td><%= r.release_end_date     %></td>
+  </tr>
+  <% end %>
+</table>

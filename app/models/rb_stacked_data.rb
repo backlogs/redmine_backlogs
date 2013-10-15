@@ -9,15 +9,14 @@
 #   * Points are accumulated with current closed series.
 #   * No data beyond closed_day_limit is accepted into the closed series
 #     This is to avoid initial days with closed points of future releases to
-#     affect the graph.
+#     affect the estimates.
 class RbStackedData
 
   attr_reader :closed_data
   attr_reader :total_data
-  attr_reader :estimate_data
+  attr_reader :total_estimates
+  attr_reader :closed_estimate
 
-  # Number of days to forecast
-  ESTIMATE_DAYS = 60
   # Number of history datapoints used for calculating estimate
   ESTIMATE_POINTS = 5
 
@@ -29,13 +28,20 @@ class RbStackedData
     @closed_data[:days]= []
     @closed_data[:closed_points] = []
     @estimate_data = []
+    @total_estimates = Hash.new
   end
 
-  def add(arrays,name,create_estimate = false)
+  # Add a series to the stacked graph.
+  # arrays: Expected to be a hash with elements :days, :total_points and :closed_points.
+  # All three of them are expected to be arrays of equal size.
+  # object: Associated object for identification.
+  # create_estimate: Choose whether to create trendline or not.
+  # Typically enabled if series contain open stories.
+  def add(arrays,object,create_estimate = false)
     if @total_data.size == 0
-      add_first(arrays,name,create_estimate)
+      add_first(arrays,object,create_estimate)
     else
-      stack_total(arrays,name,create_estimate)
+      stack_total(arrays,object,create_estimate)
       merge_closed(arrays)
     end
   end
@@ -44,9 +50,14 @@ class RbStackedData
     return @total_data[i]
   end
 
+  # Adds overlapping days between stacked series to make the graph look
+  # smoother when the points are changing in each series.
+  # create_closed_estimate: Enable/disable closed points trendline.
+  # Typically enabled when there are open stories in one or more releases.
   def finalize(create_closed_estimate = false)
     add_overlapping_days
     calculate_closed_estimate if create_closed_estimate == true
+    calculate_estimate_end_days if create_closed_estimate == true
   end
 
 private
@@ -65,16 +76,23 @@ private
     _ripple_overlapping_days(idx_bottom,idx_top);
   end
 
+
   # Calculate a trendline for closed points
   def calculate_closed_estimate
     return unless @closed_data[:days].size > 1
-
-    est_closed = _linear_regression(@closed_data[:days],@closed_data[:closed_points],ESTIMATE_POINTS)
-    @estimate_data << { :line => est_closed.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => "Estimated accepted points"}
+    @closed_estimate = _linear_regression(@closed_data[:days],@closed_data[:closed_points],ESTIMATE_POINTS)
   end
 
-  def add_first(arrays,name,create_estimate)
-    @total_data << {:days => arrays[:days], :total_points => arrays[:total_points], :name => name}
+  # Calculate estimated end dates for all stacked series trendlines crossing closed series trendline
+  def calculate_estimate_end_days
+    @total_estimates.each{|k,l|
+      @total_estimates[k][:end_date_estimate] = l[:trendline].crossing_date(@closed_estimate)
+    }
+  end
+
+  # Used when adding first stacked series
+  def add_first(arrays,object,create_estimate)
+    @total_data << {:days => arrays[:days], :total_points => arrays[:total_points], :object => object}
     # Need to duplicate array of days. Otherwise ruby references falsely.
     days_within_limit = arrays[:days].select{|day| day <= @closed_day_limit}
     return if days_within_limit.size() == 0
@@ -83,11 +101,11 @@ private
 
     if create_estimate
       est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
-      @estimate_data << { :line => est_total.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => name + " estimate"}
+      @total_estimates[object] = {:trendline => est_total}
     end
   end
 
-  def stack_total(arrays,name,create_estimate)
+  def stack_total(arrays,object,create_estimate)
     # Have last stacked series ready when stacking the next
     last = @total_data.last
 
@@ -112,11 +130,11 @@ private
       tmp_total << arrays[:total_points][i] + last[:total_points][idx]
     }
     # Add the new stacked total series
-    @total_data << {:days => arrays[:days], :total_points => tmp_total, :name => name}
+    @total_data << {:days => arrays[:days], :total_points => tmp_total, :object => object}
 
     if create_estimate
       est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
-      @estimate_data << { :line => est_total.predict_line(@closed_day_limit + ESTIMATE_DAYS), :name => name + " estimate"}
+      @total_estimates[object] = {:trendline => est_total }
     end
   end
 

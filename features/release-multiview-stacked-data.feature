@@ -2,7 +2,7 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: Add initial series to stacked data
     Given I initialize RbStackedData with closed date 2013-12-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         | 2013-08-01 | 100          | 0             |
         | 2013-09-01 | 100          | 15            |
@@ -27,7 +27,7 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: Add two series to stacked data
     Given I initialize RbStackedData with closed date 2015-03-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         | 2013-08-01 | 100          | 0             |
         | 2013-09-01 | 100          | 15            |
@@ -41,7 +41,7 @@ Feature: Test internal calculation of release multiview data
         | 2014-05-01 | 120          | 100           |
         | 2014-06-01 | 120          | 110           |
         | 2014-07-01 | 120          | 120           |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         | 2014-05-01 | 150          | 0             |
         | 2014-06-01 | 150          | 5             |
@@ -108,7 +108,7 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: Add two series without directly overlapping days
     Given I initialize RbStackedData with closed date 2015-03-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
@@ -117,7 +117,7 @@ Feature: Test internal calculation of release multiview data
         |2013-12-01  | 110          | 60            |
         |2014-01-01  | 110          | 65            |
         |2014-02-01  | 110          | 70            |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         | 2013-12-15 | 150          | 0             |
         | 2014-01-15 | 150          | 5             |
@@ -168,7 +168,7 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: 2nd series overlap before start date of first series
     Given I initialize RbStackedData with closed date 2015-03-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
@@ -177,7 +177,7 @@ Feature: Test internal calculation of release multiview data
         |2013-12-01  | 110          | 60            |
         |2014-01-01  | 110          | 65            |
         |2014-02-01  | 110          | 70            |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         | 2013-05-01 | 150          | 0             |
         | 2013-06-01 | 150          | 5             |
@@ -229,13 +229,13 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: Series has days outside closed day limit
     Given I initialize RbStackedData with closed date 2013-10-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
         |2013-10-01  | 100          | 30            |
         |2013-11-01  | 110          | 45            |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
@@ -262,13 +262,13 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: First Series has all days outside closed day limit
     Given I initialize RbStackedData with closed date 2013-07-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
         |2013-10-01  | 100          | 30            |
         |2013-11-01  | 110          | 45            |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         |2013-04-01  | 100          | 0             |
         |2013-05-01  | 100          | 15            |
@@ -296,13 +296,13 @@ Feature: Test internal calculation of release multiview data
 
   Scenario: 2nd series has all days outside closed day limit
     Given I initialize RbStackedData with closed date 2013-11-01
-      And I add the following series:
+      And I add the following series "A":
         | days       | total_points | closed_points |
         |2013-08-01  | 100          | 0             |
         |2013-09-01  | 100          | 15            |
         |2013-10-01  | 100          | 30            |
         |2013-11-01  | 110          | 45            |
-     And I add the following series:
+     And I add the following series "B":
         | days       | total_points | closed_points |
         |2013-12-01  | 100          | 0             |
         |2014-01-01  | 100          | 15            |
@@ -327,3 +327,15 @@ Feature: Test internal calculation of release multiview data
         | 2013-09-01 | 15            |
         | 2013-10-01 | 30            |
         | 2013-11-01 | 45            |
+
+  Scenario: Check trendlines and estimated end dates
+    Given I initialize RbStackedData with closed date 2013-12-01
+      And I add the following series "A":
+        | days       | total_points | closed_points |
+        | 2013-08-01 | 100          | 0             |
+        | 2013-09-01 | 100          | 15            |
+        | 2013-10-01 | 100          | 30            |
+        | 2013-11-01 | 110          | 45            |
+        | 2013-12-01 | 110          | 60            |
+     And I finish RbStackedData
+    Then series "A" trend end date should be 2014-04-07

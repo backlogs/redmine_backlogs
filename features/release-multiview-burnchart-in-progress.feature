@@ -124,20 +124,20 @@ Feature: Release multiview burnchart
         | 5   | Story 13 | Closed   |
         | 10  | Story 14 | Closed   |
       And the current time is 2012-08-01 08:00:00
-      And I have made the following story mutations:
-        | day | story    | status   |
-        | 5   | Story 15 | Closed   |
-        | 10  | Story 16 | Closed   |
-      And the current time is 2012-09-01 08:00:00
-      And I have made the following story mutations:
-        | day | story    | status   |
-        | 5   | Story 17 | Closed   |
-        | 10  | Story 18 | Closed   |
-      And the current time is 2012-10-01 08:00:00
-      And I have made the following story mutations:
-        | day | story    | status   |
-        | 5   | Story 19 | Closed   |
-        | 10  | Story 20  | Closed   |
+      # And I have made the following story mutations:
+      #   | day | story    | status   |
+      #   | 5   | Story 15 | Closed   |
+      #   | 10  | Story 16 | Closed   |
+      # And the current time is 2012-09-01 08:00:00
+      # And I have made the following story mutations:
+      #   | day | story    | status   |
+      #   | 5   | Story 17 | Closed   |
+      #   | 10  | Story 18 | Closed   |
+      # And the current time is 2012-10-01 08:00:00
+      # And I have made the following story mutations:
+      #   | day | story    | status   |
+      #   | 5   | Story 19 | Closed   |
+      #   | 10  | Story 20  | Closed   |
 
   Scenario: Initial
     Given I view the release page
