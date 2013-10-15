@@ -234,9 +234,10 @@ module Backlogs
       end
 
       def active_sprint
+        time = (Time.zone ? Time.zone : Time).now
         @active_sprint ||= RbSprint.find(:first, :conditions => [
-          "project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? between sprint_start_date and effective_date",
-          self.id, (Time.zone ? Time.zone : Time).now.beginning_of_day
+          "project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? >= sprint_start_date and ? <= effective_date",
+          self.id, time.end_of_day, time.beginning_of_day
         ])
       end
 
