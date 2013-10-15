@@ -72,10 +72,6 @@ class RbReleaseMultiviewBurnchart
     @stacked_graph.closed_data[:days].zip(@stacked_graph.closed_data[:closed_points])
   end
 
-  def trend_end_dates
-    @stacked_graph.trend_end_dates
-  end
-
   # Return all releases including trend information if available
   def releases_estimate
     releases_with_trends = []
