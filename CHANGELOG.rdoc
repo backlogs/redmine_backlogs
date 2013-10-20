@@ -1,3 +1,40 @@
+== 2013-10-20 v1.0.6
+
+* Release Multiview (see http://www.redminebacklogs.net/topics/release_multiview.html)
+* Update supported version to RM 2.3.3
+* A handful of bug fixes (thanks to contributers!)
+* Filter closed stories on taskboard
+* Enable wiki-formatting for release descriptions
+
+More details:
+* Merge pull request "No longer removes search field" from ande3577/bug/removes_search_bar
+* Update travis to RM 2.3.3
+* Remove unused function
+* Refactor estimated series + show estimate end date along with releases when showing multiview.
+* Merge pull request "Fix not showing link to task board if sprint starts on current day" from ande3577/bug/sprint_not_active_if_beginning_date
+* Correct sorting of releases in multiselect fields.
+* Fix missing menu update when creating stories in sprints ("Menu is not refreshed after adding first User Story")
+* Fix typo causing release end dates not to be saved when editing on master backlog.
+* Might help on "bug when trying to add migrate column "remaining_hours" twice"
+* Sort releases by end date
+* Enable basic test of burnchart view
+* Added trendlines to multiview burnchart.
+* Display release multiview graph
+* Merge pull request "FR translation update" from LaurentCoignot/master
+* Merge pull request "Update de.yml" from holgerfriedrich/master
+* Stacked release data calculation
+* Initial CRUD support for creating "Release Multiview" inspired by http://blog.gdinwiddie.com/2012/12/04/multi-release-burnup/.
+* Allow wiki formatting for release description (fixes "Allow wiki formatting for release description")
+* Merge pull request "Allow state of issues to be changed" from MadEgg/master
+* Allow state of issues to be changed, even if they are in a different subproject than the story. Related to issue "Move tasks while on the storyboard"
+* Merge pull request "Finished translation of remaining topics" from sandrix/master
+* Merged patch suggested by @geoff-mci. Closes "Tooltip and drop down give error with sqlite installation".
+* Translation of field task color as suggested by @cforce. Fixes "Make task colorn setting string in settings localized".
+* Merge pull request "Now you can filter closed stories in taskboard view" from dmoreno/master
+* Now you can filter closed stories in taskboard view
+* Merge pull request "Update pt-BR.yml" from prialmeidaa/patch-1
+* Merge pull request "Create pl-PL.yml" from ksciana/master
+
 == 2013-07-31 v1.0.5
 
 * Performance improvement on loading master backlog and taskboard
