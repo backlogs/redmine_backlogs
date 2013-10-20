@@ -29,6 +29,7 @@ module Backlogs
         base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
         base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
         base.add_available_column(QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true))
+        base.add_available_column(QueryColumn.new(:backlogs_issue_type))
 
         alias_method_chain :available_filters, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
