@@ -32,33 +32,14 @@ Feature: Release multiview burnchart
       And I have defined the following release multiviews:
         | name    | project   | releases    |
         | Multi 1 | ecookbook | Rel 1,Rel 2,Rel 3,Rel 4 |
-      # And I have defined the following stories in the product backlog:
-      #   | subject | release | points |
-      #   | Story 01 | Rel 1   | 5 |
-      #   | Story 02 | Rel 1   | 5 |
-      #   | Story 03 | Rel 1   | 5 |
-      #   | Story 04 | Rel 1   | 5 |
-      #   | Story 05 | Rel 1   | 5 |
-      #   | Story 06 | Rel 2   | 5 |
-      #   | Story 07 | Rel 2   | 5 |
-      #   | Story 08 | Rel 2   | 5 |
-      #   | Story 09 | Rel 2   | 5 |
-      #   | Story 10 | Rel 2   | 5 |
-      #   | Story 11 | Rel 3   | 5 |
-      #   | Story 12 | Rel 3   | 5 |
-      #   | Story 13 | Rel 3   | 5 |
-      #   | Story 14 | Rel 3   | 5 |
-      #   | Story 15 | Rel 3   | 5 |
-      #   | Story 16 | Rel 4   | 5 |
-      #   | Story 17 | Rel 4   | 5 |
-      #   | Story 18 | Rel 4   | 5 |
-      #   | Story 19 | Rel 4   | 5 |
-      #   | Story 20 | Rel 4   | 5 |
-      #   | Story 21 |         | 5 |
-      #   | Story 22 |         | 5 |
-      #   | Story 23 |         | 5 |
-      #   | Story 24 |         | 5 |
-      #   | Story 25 |         | 5 |
+      And I have defined the following stories in the product backlog:
+        | subject | release | points |
+        | Story 15 | Rel 3   | 5 |
+        | Story 16 | Rel 4   | 5 |
+        | Story 17 | Rel 4   | 5 |
+        | Story 18 | Rel 4   | 5 |
+        | Story 19 | Rel 4   | 5 |
+        | Story 20 | Rel 4   | 5 |
       And I have defined the following stories in the following sprints:
         | subject | sprint     | release | points |
         | Story 01 | Sprint 001 | Rel 1   | 5 |
@@ -75,12 +56,6 @@ Feature: Release multiview burnchart
         | Story 12 | Sprint 006 | Rel 3   | 5 |
         | Story 13 | Sprint 007 | Rel 3   | 5 |
         | Story 14 | Sprint 007 | Rel 3   | 5 |
-        | Story 15 | Sprint 008 | Rel 3   | 5 |
-        | Story 16 | Sprint 008 | Rel 4   | 5 |
-        | Story 17 | Sprint 009 | Rel 4   | 5 |
-        | Story 18 | Sprint 009 | Rel 4   | 5 |
-        | Story 19 | Sprint 010 | Rel 4   | 5 |
-        | Story 20 | Sprint 010	| Rel 4   | 5 |
       And I have defined the following stories in the product backlog:
         | subject  | release | points |
         | Story 21 |         | 5 |
@@ -119,25 +94,6 @@ Feature: Release multiview burnchart
         | 5   | Story 11 | Closed   |
         | 10  | Story 12 | Closed   |
       And the current time is 2012-07-01 08:00:00
-      And I have made the following story mutations:
-        | day | story    | status   |
-        | 5   | Story 13 | Closed   |
-        | 10  | Story 14 | Closed   |
-      And the current time is 2012-08-01 08:00:00
-      # And I have made the following story mutations:
-      #   | day | story    | status   |
-      #   | 5   | Story 15 | Closed   |
-      #   | 10  | Story 16 | Closed   |
-      # And the current time is 2012-09-01 08:00:00
-      # And I have made the following story mutations:
-      #   | day | story    | status   |
-      #   | 5   | Story 17 | Closed   |
-      #   | 10  | Story 18 | Closed   |
-      # And the current time is 2012-10-01 08:00:00
-      # And I have made the following story mutations:
-      #   | day | story    | status   |
-      #   | 5   | Story 19 | Closed   |
-      #   | 10  | Story 20  | Closed   |
 
   Scenario: Initial
     Given I view the release page
