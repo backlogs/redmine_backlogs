@@ -298,9 +298,6 @@ private
       # scoped_subproject: if true only subprojects are considered effectively disallowing dropping any issues from parent projects.
       def _sql_for_droppables(name,scoped_subproject = false)
         r = scoped_subproject ? self : self.root
-        # Where-clause should only be used when *not* scoping the projects. This allows dnd in sprints with stories from outside
-        # current project tree (applies to system visible sprints only)
-        where_clause = scoped_subproject ? " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" : ""
         sql = "SELECT pp.id as project," + _sql_for_aggregate_list("drp.id") +
           " FROM #{name} drp " +
           " LEFT JOIN #{Project.table_name} pp on drp.project_id = pp.id" +
@@ -322,7 +319,8 @@ private
                 "pp.lft < (SELECT p.lft from #{Project.table_name} p WHERE p.id=drp.project_id) AND " +
                 "pp.rgt > (SELECT p.rgt from #{Project.table_name} p WHERE p.id=drp.project_id)"+
               "))" +
-          "))" + where_clause +
+          "))" +
+          " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" +
           " GROUP BY pp.id;"
       end
 
