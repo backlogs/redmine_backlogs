@@ -154,6 +154,8 @@ RB.Backlog = RB.Object.create({
 
     // disable invalid drag targets
     RB.$('#sprint_backlogs_container .stories').sortable('disable');
+    // Always allow DnD on sprints shared system wide.
+    RB.$('#sprint_backlogs_container .shared-system-wide .stories').sortable('enable');
     if (RB.constants.project_versions[storyProject]) {
       for (i = 0; i < RB.constants.project_versions[storyProject].length; i++) {
         RB.$('#stories-for-' + RB.constants.project_versions[storyProject][i]).sortable('enable');
