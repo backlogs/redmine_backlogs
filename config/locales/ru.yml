@@ -142,7 +142,7 @@ ru:
   label_points_backlog: "баллов в бэклоге"
   label_points_burn_down: "Осталось выполнить"
   label_points_burn_up: Выполнено
-  label_points_committed: "баллов выполнено"
+  label_points_committed: "баллов запланировано"
   label_points_required_burn_rate: "требуемая скорость выполнения (в баллах)"
   label_points_resolved: "баллов решено"
   label_points_to_accept: "баллов не принято"
