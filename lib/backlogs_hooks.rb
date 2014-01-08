@@ -119,7 +119,11 @@ module BacklogsPlugin
           if issue.is_story?
             snippet += '<p>'
             #snippet += context[:form].label(:story_points)
-            snippet += context[:form].select(:story_points, options_for_select(Backlogs.setting[:story_points].split(',').map(&:to_i), issue.story_points.try(:to_i).try(:to_s)), include_blank: true)
+            if Backlogs.setting[:story_points].blank?
+              snippet += context[:form].text_field(:story_points, :size => 3)
+            else
+              snippet += context[:form].select(:story_points, options_for_select(Backlogs.setting[:story_points].split(',').map(&:to_i), issue.story_points.try(:to_i).try(:to_s)), include_blank: true)
+            end
             snippet += '</p>'
 
             if issue.safe_attribute?('release_id') && issue.assignable_releases.any?
