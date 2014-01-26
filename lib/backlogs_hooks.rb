@@ -119,7 +119,11 @@ module BacklogsPlugin
           if issue.is_story?
             snippet += '<p>'
             #snippet += context[:form].label(:story_points)
-            snippet += context[:form].text_field(:story_points, :size => 3)
+            if Backlogs.setting[:story_points].blank?
+              snippet += context[:form].text_field(:story_points, :size => 3)
+            else
+              snippet += context[:form].select(:story_points, options_for_select(Backlogs.setting[:story_points].split(',').map(&:to_i), issue.story_points.try(:to_i).try(:to_s)), include_blank: true)
+            end
             snippet += '</p>'
 
             if issue.safe_attribute?('release_id') && issue.assignable_releases.any?
@@ -252,7 +256,7 @@ module BacklogsPlugin
 
           if User.current.allowed_to?(:edit_wiki_pages, project)
             snippet += '<span id="edit_wiki_page_action">'
-            snippet += link_to l(:button_edit_wiki), 
+            snippet += link_to l(:button_edit_wiki),
                       url_for_prefix_in_hooks + url_for({:controller => 'rb_wikis', :action => 'edit', :sprint_id => version.id }),
                       :class => 'icon icon-edit'
             snippet += '</span>'
