@@ -24,13 +24,9 @@ module Backlogs
       # Same as typing in the class
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
-        base.add_available_column(QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points"))
-        base.add_available_column(QueryColumn.new(:velocity_based_estimate))
-        base.add_available_column(QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position"))
-        base.add_available_column(QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours"))
-        base.add_available_column(QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true))
 
         alias_method_chain :available_filters, :backlogs_issue_type
+        alias_method_chain :available_columns, :backlogs_issue_type
         alias_method_chain :sql_for_field, :backlogs_issue_type
         alias_method_chain :joins_for_order_statement, :backlogs_issue_type
       end
@@ -55,6 +51,7 @@ module Backlogs
 
       def available_filters_with_backlogs_issue_type
         @available_filters = available_filters_without_backlogs_issue_type
+        return @available_filters if !show_backlogs_issue_items?(project)
 
         if RbStory.trackers.length == 0 or RbTask.tracker.blank?
           backlogs_filters = { }
@@ -80,6 +77,19 @@ module Backlogs
           }
         end
         @available_filters = @available_filters.merge(backlogs_filters)
+      end
+      
+      def available_columns_with_backlogs_issue_type
+        @available_columns = available_columns_without_backlogs_issue_type
+        return @available_columns if !show_backlogs_issue_items?(project) or @backlog_columns_included
+        
+        @backlog_columns_included = true
+        
+        @available_columns << QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points")
+        @available_columns << QueryColumn.new(:velocity_based_estimate)
+        @available_columns << QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position")
+        @available_columns << QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours")
+        @available_columns << QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true)
       end
 
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)
@@ -125,6 +135,11 @@ module Backlogs
 
         return sql
       end
+      
+      private
+      def show_backlogs_issue_items?(project)
+        !project.nil? and project.module_enabled?('backlogs')
+      end
     end
 
     module ClassMethods
@@ -137,6 +152,7 @@ module Backlogs
       def add_available_column(column)
         self.available_columns << (column)
       end
+      
     end
   end
 end
