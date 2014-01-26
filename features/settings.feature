@@ -13,7 +13,8 @@ Feature: Configuration
      When I follow "Administration"
      When I follow "Plugins"
      When I follow "Configure"
-     Then I should see "Settings: Redmine Backlogs"
+     Then I should see "Story and Task settings"
+      And I should see "Product backlog page settings"
 
   Scenario: view the project local settings
     Given I am a product owner of the project
