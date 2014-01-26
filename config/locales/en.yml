@@ -172,6 +172,7 @@ en:
   label_sprint_cards: "Sprint cards"
   label_sprint_impediments: "Sprint Impediments"
   label_sprint_name: "Sprint \"%{name}\""
+  label_sprint_close: "Close Sprint"
   label_stories: Stories
   label_stories_tasks: Stories/Tasks
   label_task_board: "Task board"
@@ -222,3 +223,4 @@ en:
       * The current value will become the initial value for all
          story/task properties
       * State will be set to the default issue state
+  error_cannot_close_sprint_with_open_stories: "Cannot close a sprint while it still has open stories."
