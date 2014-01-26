@@ -1,0 +1,224 @@
+---
+tr:
+  backlogs_active: aktif
+  backlogs_any: hiçbir
+  backlogs_auto_assign_task: "Geçerli kullanıcıya otomatik görev atama"
+  backlogs_burndown_print_height: "Burndown baskı yüksekliği"
+  backlogs_burndown_print_width: "Burndown baskı genişliği"
+  backlogs_burndown_settings: "Burndown ayarları"
+  backlogs_card_specification: "Kart baskı için etiket tipleri"
+  backlogs_default_story_tracker: "Standart öykü iş tipi"
+  backlogs_general_settings: "Genel ayarlar"
+  backlogs_impediment: Engel
+  backlogs_include_sat_and_sun: "Burndown içinde Cumartesi ve Pazar dahil"
+  backlogs_new_story_position: "Yeni oluşturulan öykülere git"
+  backlogs_new_story_position_bottom: "alt (yeniden başlatma gerektirir)"
+  backlogs_new_story_position_top: üst
+  backlogs_not_all_themes_are_supported: "Tüm temalar desteklenmemekte."
+  backlogs_pblpage_settings: "Ürün bekleme listesi ayarları"
+  backlogs_points_burn_direction: "Puanlar burn up/down"
+  backlogs_product_backlog: "Ürün bekleme listesi"
+  backlogs_scrum_stats_menu_application: "Uygulama menüsü"
+  backlogs_scrum_stats_menu_none: Hiçbiri
+  backlogs_scrum_stats_menu_position: "Scrum İstatistik menüsü pozisyonu"
+  backlogs_scrum_stats_menu_top: "Üst menü"
+  backlogs_set_start_and_duedates_from_sprint: "Sprint verilerine göre öykü başlangıç ve bitiş tarihlerini ayarla"
+  backlogs_sharing_enabled: "Paylaşımı etkinleştir"
+  backlogs_sharing_new_sprint: "Yeni sprintleri paylaş"
+  backlogs_sharing_new_sprint_explanation: "Tüm seçenekler mevcut olmasına rağmen yeni sprint, sadece kullanıcı ve proje izinlerine göre paylaşılır. Sistemde paylaşılan sprint sadece yöneticiler tarafından oluşturulabilir, hiyerarşi ve paylaşım ağacı için en üst düzey proje izinleri gerekir."
+  backlogs_sharing_support: "Birikmiş işler paylaşımı"
+  backlogs_show_in_scrum_stats: "Scrum istatistiklerinde projeyi göster"
+  backlogs_show_priority: "Görev panosu üzerinde görev önceliğini göster"
+  backlogs_show_redmine_std_header: "Birikmiş işleri redmine başlığında göster"
+  backlogs_show_stories_from_subprojects_in_backlog: "Birikmiş işlerdeki alt projelerden öyküleri göster"
+  backlogs_sprint_card_settings: "Kart yazdırma"
+  backlogs_sprint_sort_order: "Sprintleri başlangıç tarihine göre sırala"
+  backlogs_sprint_sort_order_asc: artan
+  backlogs_sprint_sort_order_desc: azalan
+  backlogs_sprints: Sprintler
+  backlogs_statistics_active: "Proje etkinliklerini göster"
+  backlogs_statistics_active_failed: "Proje etkinliklerini gösterme"
+  backlogs_statistics_committed_velocity_stable: "Tanımlanmış geliştirme hızı sprintler genelinde istikrarlı durumda"
+  backlogs_statistics_committed_velocity_stable_failed: "Tanımlanmış geliştirme hızı sprintler genelinde istikrarlı durumda değil"
+  backlogs_statistics_hours_per_point: "Puan başına ortalama %{value} saat"
+  backlogs_statistics_product_backlog_filled: "Ürün defterinde öyküler var"
+  backlogs_statistics_product_backlog_filled_failed: "Ürün defteri boş"
+  backlogs_statistics_product_backlog_sized: "Ürün defterinin başlangıcındaki öykülerin boyut değerleri tanımlanmış"
+  backlogs_statistics_product_backlog_sized_failed: "Ürün defterinin başlangıcında boyut değeri tanımlanmamış öyküler var"
+  backlogs_statistics_sizing_consistent: "Öykü boyutları kendi tahminlerine karşı kararlı"
+  backlogs_statistics_sizing_consistent_failed: "Öykü boyutları kendi tahminlerine karşı değişir"
+  backlogs_statistics_sizing_stddev: "Saatlik vb. standart sapma puanı: %{value} saat"
+  backlogs_statistics_spent_hours_per_point: "Kabul edilen puan başına harcanan saat: %{value}"
+  backlogs_statistics_sprint_notes_available: "Son zamanlarda kapalı sprint/yorum notları var"
+  backlogs_statistics_sprint_notes_available_failed: "Kapatılan sprintlerin geriye dönük/yorum notları yok"
+  backlogs_statistics_sprints: "%{value} sprint boyunca ölçüldü"
+  backlogs_statistics_sprints_estimated: "Güncel sprint ve yeni kapatılan sprintlerin iş tahminleri var"
+  backlogs_statistics_sprints_estimated_failed: "Kapalı veya açık olan değerinin altında puanlanmış sprintler"
+  backlogs_statistics_sprints_sized: "Aktif veya yeni kapatılmış boyutlandırılmış sprintler"
+  backlogs_statistics_sprints_sized_failed: "Proje öyküleri aktif veya yeni kapatılan sprintler üzerinden boyutlandırılmamış"
+  backlogs_statistics_velocity: "Hız: %{value}"
+  backlogs_statistics_velocity_stddev: "Hız standart sapması: %{value} puan"
+  backlogs_statistics_yield: "Proje iyi bir ortalama verime sahip"
+  backlogs_statistics_yield_failed: "Proje düşük bir ortalama verime sahip"
+  backlogs_story: Öykü
+  backlogs_story_close_status: "Tüm Görevler kapatıldığında Öyküyü güncellemek için:"
+  backlogs_story_follow_task_status_close: "Tüm Görevler kapalı olduğunda kapat"
+  backlogs_story_follow_task_status_loose: "Serbest görevlerin yapılma oranını izle"
+  backlogs_story_follow_task_status_nil: Devre dışı
+  backlogs_story_follows_task_loose_explanation: "Not: Tüm iş durumları 0 ile 100 arasında yapılan bir geçerli yüzde gerektirir."
+  backlogs_story_follows_task_status: "Öykü takibi Görev durumu"
+  backlogs_story_settings: "Öykü ve Görev ayarları"
+  backlogs_story_tracker: "Öykü iş tipleri"
+  backlogs_task: Görev
+  backlogs_task_tracker: "Görev türü"
+  backlogs_wiki_template: "Sprint wiki sayfası için şablon.
+  button_edit_wiki: "Wiki sayfasını düzenle"
+  comma_delimited_numbers: "Virgül ile ayrılmış numaralar"
+  current_open_story_points: "Şu anki açık Öykü puanları:"
+  error_blank: "boş olamaz"
+  error_greater_than_start_date: "Başlangıç Tarihi'nden erken olamaz"
+  error_inclusion: "listeye dahil değil"
+  error_intro_plural: "Şu hatalarla karşılaşıldı:"
+  error_intro_singular: "Şu hata ile karşılaşıldı:"
+  error_must_have_comma_delimited_list: "öykü veya görev ID'lerinin virgülle ayrılmış listesi olmalıdır"
+  error_no_workflow_for_task_tracker: "Bu görev tipi için yetkiniz yok. Bunun bir hata olduğunu düşünüyorsanız, lütfen yöneticinizin iş akışını güncelleyin."
+  error_outro: "Tekrar göndermeden önce yukarıdaki hataları düzeltin."
+  error_release_end_after_start: "Sürüm tarihi başlangıç tarihinden sonra olmalı."
+  error_sprint_end_before_start: "Sprint başlamadan bitemez"
+  error_taken: "zaten kullanılıyor"
+  event_sprint_summary: "%{project}: %{summary}"
+  field_assigned_to: "Atanan"
+  field_backlogs_issue_type: "Birikmiş iş tipi"
+  field_base: ""
+  field_blocks: Blok
+  field_name: Ad
+  field_planned_velocity: "Planlanan hız"
+  field_position: Pozisyon
+  field_priority: Öncelik
+  field_project_id: "Proje ID'si"
+  field_release: Sürüm
+  field_release_ids: Sürümler
+  field_release_end_date: "Sürüm sonu tarihi"
+  field_release_relationship: "Sürüm ilişkisi"
+  field_release_start_date: "Sürüm başı tarihi"
+  field_remaining_hours: "Kalan (saat)"
+  field_story_points: "Öykü puanı"
+  field_subject: Konu
+  field_task_color: "Görev rengi"
+  field_time_entry_comments: "Girdi Zamanı yorumları"
+  field_time_entry_hours: "Girdi Zamanı Saati"
+  field_time_entry_spend_on: "Harcanana Girdi Zamanı üzerinden"
+  field_time_entry_user_id: "Girdi Zamanı Kullanıcı Id'si"
+  field_tracker_id: "İş Tipi ID'si"
+  field_velocity_based_estimate: "Hız tabanlı tahmin"
+  label_all_tasks: "Tüm görevler"
+  label_back_to_project: "Proje sayfasına dön"
+  label_backlogs: Birikmiş işler
+  label_backlogs_unconfigured: "Birikmiş işler henüzz yapılandırılmamış. Lütfen %{administration} > %{plugins} yolunu takip ederek bu eklenti için %{configure} bağlantısına tıklayın. Alanları belirledikten sonra aracı kullanmak için bu sayfaya geri dönün."
+  label_burndown: Burndown
+  label_chart_options: "Grafik Seçenekleri"
+  label_close_completed_sprints: "Tamamlanan Sprintler'i kapat"
+  label_closed_releases: "Sürümleri kapat"
+  label_column_width: "Sütun genişliği"
+  label_download_sprint: İndir
+  label_filter_tasks: "Kullanıcı filitresi"
+  label_filter_tasks_my_tasks: "Kullanıcı filitresi - görevlerim"
+  label_hide_completed_sprints: "Tamamlanan Sprintler'i gizle"
+  label_hours: saat
+  label_hours_remaining: "kalan saat"
+  label_hours_required_burn_rate: "gerekli burn oranı (saat)"
+  label_ideal: ideal
+  label_impediments: Engeller
+  label_master_backlog: "Birikmiş uzman işler"
+  label_my_tasks: "Görevlerim"
+  label_new_sprint: "Yeni sprint"
+  label_new_story: "Yeni Öykü"
+  label_no_data_to_show: "Gösterilecek veri yok"
+  label_no_end: "son yok"
+  label_no_start: "başlangıç yok"
+  label_not_prioritized: "öncelikli değil"
+  label_points: puanlar
+  label_points_accepted: "kabul edilen puanlar"
+  label_points_added: "eklenen puanlar"
+  label_points_backlog: "birikmiş iş puanları"
+  label_points_burn_down: Aşağı
+  label_points_burn_up: Yukarı
+  label_points_committed: "kararlı puanlar"
+  label_points_required_burn_rate: "gerekli burn oranı (puan)"
+  label_points_resolved: "çözülen puanlar"
+  label_points_to_accept: "kabul edilen puanlar"
+  label_points_to_resolve: "çözülmeyen puanlar"
+  label_product_backlog: "birikmiş iş ürünü"
+  label_product_cards: "Birikmiş iş ürünü kartları"
+  label_release: Sürüm
+  label_release_end_date: "Sürüm sonu tarihi"
+  label_release_multiview: "Çoklu görüntü sürümü"
+  label_release_multiview_new: "Yeni çoklu görüntü sürümü"
+  label_release_new: "Yeni sürüm"
+  label_release_planned_velocity_end_date: "Planlanan hıza göre tahmini bitiş tarihi"
+  label_release_planning: "Sürüm Planlama"
+  label_release_plural: Sürümler
+  label_release_relationship_added: Ekli
+  label_release_relationship_auto: Otomatik
+  label_release_relationship_continued: Devam eden
+  label_release_relationship_initial: İlk
+  label_release_start_date: "Sürüm başlangıç tarihi"
+  label_release_trend_end_date: "Tahmini bitiş tarihi eğilimi"
+  label_reset: Sıfırla
+  label_scrum_statistics: "Scrum istatistikleri"
+  label_select_all: "Tümünü seç"
+  label_show_completed_sprints: "Tamamlanan Sprintleri Göster"
+  label_sprint_backlog: "birikmiş sprintler"
+  label_sprint_cards: "Sprint kartları"
+  label_sprint_impediments: "Sprint engelleri"
+  label_sprint_name: "Sprint \"%{name}\""
+  label_stories: Öyküler
+  label_stories_tasks: Öyküler/Görevler
+  label_task_board: "Görev panosu"
+  label_view_options: "Ayarları gör"
+  label_webcal: "Webcal Beslemesi"
+  rb_auto_refresh: "Birikmiş işleri/görev panosunu otomatik yenile (saniye)"
+  rb_burndown_timezone: "burndown gün sınırı için zaman dilimi"
+  rb_burndown_timezone_explanation: |-
+      Dağıtık takımları desteklemek için burndown grafikleri günün ne zaman başladığını ortak bir kavram ile belirler.
+	  Kullanıcı saat diliminiz %{user_timezone}, sunucunun kullandığı zaman dilimi %{server_timezone} ve burndown
+      Not: Bu ​​seçeneği değiştirirken tarihi veriler etkilenmez.
+  rb_label_copy_tasks: "Görevi kopyala"
+  rb_label_copy_tasks_all: Tümü
+  rb_label_copy_tasks_none: Hiçbiri
+  rb_label_copy_tasks_open: Aç
+  rb_label_link_to_original: "Özgün öykü için bağlantı ekle"
+  rb_label_timelog_disable: Devre dışı bırak
+  rb_label_timelog_enable: Etkinleştir
+  rb_project_settings_update_error: "Ayarlar güncellenirken hata oluştu"
+  rb_project_settings_updated: "Ayarlar güncellendi"
+  rb_release_burnup_enabled: "Burnup grafiği sürümünü etkinleştir (EXPERIMENTAL)"
+  rb_show_burndown_in_sidebar: "Konu çubuğunda burndown grafiğini göster"
+  rb_show_project_name: "Birikmiş işlerde proje adını göster"
+  rb_task_cards_stories_then_tasks: "Önce tüm öyküler, sonra tüm görevler"
+  rb_task_cards_story_follows_tasks: "Öyküleri tarafından takip edilen görevler"
+  rb_task_cards_tasks_follow_story: "Görevleri tarafından takip edilen hikaye"
+  rb_taskboard_card_order: "Kart baskı düzeni"
+  rb_timelog_from_taskboard: "Görev panosu zaman günlüğü"
+  remaining_story_points: "Kalan öykü puanları"
+  story_description: Açıklama
+  story_estimation_hours: "Tahimn (saat)"
+  story_points: Puanlar
+  story_remaining_hours: "Kalan (saat)"
+  story_spent_time: "Geçirilen Zaman"
+  story_status: Durum
+  today_not_in_release_warning: "Uyarı: Geçerli tarih sürüm tarihi içinde değil."
+  todo_issue_summary: "%{type}: %{summary}"
+  use_free_text_if_empty: "Boş ise açılan metin alanını kullan"
+  warning_reset_sprint: |
+      BU SPRINTI SIFIRLAMAK ÜZERESİNİZ!
+
+      Bunu yapmak istediğinizden emin misiniz? Sprinti sıfırlamak, öyküler ve görevleri
+      aşağıda belirtilen şekilde etkileyecektir:
+
+      * Oluşturma tarihi sprint başlangıç tarihine ayarlanacak
+      * Öyküler ve görevlere notlar haricinde yapılan bütün değişiklikler
+         SİLİNECEK
+      * Bütün öykü/görev özelliklerinin güncel değerleri
+         başlangıç değerleri olacak
+      * Durum, öntanımlı iş durumuna ayarlanacak
