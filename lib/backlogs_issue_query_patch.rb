@@ -90,6 +90,7 @@ module Backlogs
         @available_columns << QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position")
         @available_columns << QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours")
         @available_columns << QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true)
+        @available_columns << QueryColumn.new(:backlogs_issue_type)
       end
 
       def sql_for_field_with_backlogs_issue_type(field, operator, value, db_table, db_field, is_custom_filter=false)

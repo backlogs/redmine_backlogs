@@ -47,6 +47,13 @@ module Backlogs
       def is_task?
         return (tracker_id == RbTask.tracker)
       end
+      
+      def backlogs_issue_type
+        return "story" if self.is_story?
+        return "impediment" if self.blocks(true).any?
+        return "task" if self.is_task?
+        ""
+      end
 
       def story
         if @rb_story.nil?
@@ -71,11 +78,11 @@ module Backlogs
         return @rb_story
       end
 
-      def blocks
+      def blocks(include_closed = false)
         # return issues that I block that aren't closed
-        return [] if closed?
+        return [] if closed? and !include_closed
         begin
-          return relations_from.collect {|ir| ir.relation_type == 'blocks' && !ir.issue_to.closed? ? ir.issue_to : nil }.compact
+          return relations_from.collect {|ir| ir.relation_type == 'blocks' && (!ir.issue_to.closed? || include_closed) ? ir.issue_to : nil }.compact
         rescue
           # stupid rails and their ignorance of proper relational databases
           Rails.logger.error "Cannot return the blocks list for #{self.id}: #{e}"
