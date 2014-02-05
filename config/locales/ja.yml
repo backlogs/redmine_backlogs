@@ -7,7 +7,7 @@ ja:
   backlogs_burndown_print_width: バーンダウンの印刷の幅
   backlogs_burndown_settings: バーンダウンの設定
   backlogs_card_specification: カード印刷のラベルタイプ
-  backlogs_default_story_tracker: "Default story tracker"
+  backlogs_default_story_tracker: "デフォルトのストーリートラッカー"
   backlogs_general_settings: 一般設定
   backlogs_impediment: 障害事項
   backlogs_include_sat_and_sun: 土曜と日曜をバーンダウンに含める
@@ -74,16 +74,16 @@ ja:
   backlogs_wiki_template: スプリントのテンプレートのWikiページ
   button_edit_wiki: Wikiページの編集
   comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
-  current_open_story_points: "Current open story points:"
-  error_blank: "cannot be blank"
-  error_greater_than_start_date: "cannot be earlier than Start Date"
+  current_open_story_points: "オープン中のストーリーポイント:"
+  error_blank: "空白にすることはできません"
+  error_greater_than_start_date: "開始日より前は指定できません"
   error_inclusion: はリストに含まれていません
   error_intro_plural: "下記のエラーが発生しました:"
   error_intro_singular: "下記のエラーが発生しました:"
   error_must_have_comma_delimited_list: "ストーリーもしくはタスクのIDはカンマ「,」で区切ってください"
   error_no_workflow_for_task_tracker: タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください
   error_outro: 送信する前に、上記のエラーを訂正してください
-  error_release_end_after_start: "Release end date has to be after start date"
+  error_release_end_after_start: "リリース終了日は開始日より後に設定してください"
   error_sprint_end_before_start: 開始していないスプリントは終了できません
   error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
@@ -97,13 +97,14 @@ ja:
   field_priority: 優先度
   field_project_id: プロジェクトID
   field_release: リリース
+  field_release_ids: リリース
   field_release_end_date: リリース終了日
   field_release_relationship: リリース関係
   field_release_start_date: リリース開始日
   field_remaining_hours: 残り時間
   field_story_points: ストーリーポイント
   field_subject: 題名
-  field_task_color: "Task color"
+  field_task_color: "タスクの色"
   field_time_entry_comments: コメント
   field_time_entry_hours: 作業時間
   field_time_entry_spend_on: 作業内容
@@ -151,6 +152,8 @@ ja:
   label_product_cards: プロダクトバックログカード
   label_release: リリース
   label_release_end_date: リリース日
+  label_release_multiview: "リリースマルチビュー"
+  label_release_multiview_new: "新しいリリースマルチビュー"
   label_release_new: 新しいリリース
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: リリース計画
@@ -169,6 +172,7 @@ ja:
   label_sprint_cards: スプリントカード
   label_sprint_impediments: スプリント障害事項
   label_sprint_name: "スプリント: %{name}"
+  label_sprint_close: "スプリントを閉じる"
   label_stories: ストーリー
   label_stories_tasks: ストーリー/タスク
   label_task_board: かんばん
@@ -217,3 +221,4 @@ ja:
       * コメントを除いた全てのストーリーとタスクの変更は削除されます
       * 現在の値は、全てのストーリーとタスクの初期値になります
       * ステータスはチケットのデフォルトのステータスになります
+  error_cannot_close_sprint_with_open_stories: "オープン中のストーリーが存在するためストーリーを閉じることができません"
