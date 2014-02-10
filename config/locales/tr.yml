@@ -71,7 +71,7 @@ tr:
   backlogs_story_tracker: "Öykü iş tipleri"
   backlogs_task: Görev
   backlogs_task_tracker: "Görev türü"
-  backlogs_wiki_template: "Sprint wiki sayfası için şablon.
+  backlogs_wiki_template: "Sprint wiki sayfası için şablon."
   button_edit_wiki: "Wiki sayfasını düzenle"
   comma_delimited_numbers: "Virgül ile ayrılmış numaralar"
   current_open_story_points: "Şu anki açık Öykü puanları:"
@@ -181,7 +181,7 @@ tr:
   rb_burndown_timezone: "burndown gün sınırı için zaman dilimi"
   rb_burndown_timezone_explanation: |-
       Dağıtık takımları desteklemek için burndown grafikleri günün ne zaman başladığını ortak bir kavram ile belirler.
-	  Kullanıcı saat diliminiz %{user_timezone}, sunucunun kullandığı zaman dilimi %{server_timezone} ve burndown
+      Kullanıcı saat diliminiz %{user_timezone}, sunucunun kullandığı zaman dilimi %{server_timezone} ve burndown
       Not: Bu ​​seçeneği değiştirirken tarihi veriler etkilenmez.
   rb_label_copy_tasks: "Görevi kopyala"
   rb_label_copy_tasks_all: Tümü
