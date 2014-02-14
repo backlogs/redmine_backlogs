@@ -64,6 +64,7 @@ Redmine::Plugin.register :redmine_backlogs do
                          :story_points              => "1,2,3,5,8",
                          :show_burndown_in_sidebar  => 'enabled',
                          :show_project_name         => nil,
+                         :show_due_date             => nil,
                          :scrum_stats_menu_position => 'top',
                          :show_redmine_std_header   => 'enabled',
                          :show_priority             => nil
@@ -153,13 +154,13 @@ Redmine::Plugin.register :redmine_backlogs do
   menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_taskboards, :param => :project_id, :if => Proc.new { Backlogs.configured? }
 
   menu :top_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics,
-    :if => Proc.new { 
+    :if => Proc.new {
       Backlogs.configured? &&
       User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) &&
       (Backlogs.setting[:scrum_stats_menu_position].nil? || Backlogs.setting[:scrum_stats_menu_position] == 'top')
     }
   menu :application_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics,
-    :if => Proc.new { 
+    :if => Proc.new {
       Backlogs.configured? &&
       User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) &&
       Backlogs.setting[:scrum_stats_menu_position] == 'application'

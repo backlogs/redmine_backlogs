@@ -196,6 +196,7 @@ en:
   rb_release_burnup_enabled: "Enable release burnup chart (EXPERIMENTAL)"
   rb_show_burndown_in_sidebar: "Show burndown chart in issues sidebar"
   rb_show_project_name: "Show project name in backlogs"
+  rb_show_due_date: "Show due date for sprint stories"
   rb_task_cards_stories_then_tasks: "First all stories, then all tasks"
   rb_task_cards_story_follows_tasks: "Tasks followed by their story"
   rb_task_cards_tasks_follow_story: "Story followed by their tasks"

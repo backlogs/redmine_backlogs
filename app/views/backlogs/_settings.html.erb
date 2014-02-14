@@ -77,7 +77,7 @@
   <br />
   <%= content_tag(:label, l(:backlogs_default_story_tracker)) %>
   <%= select_tag("settings[default_story_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, Backlogs.setting[:default_story_tracker])) %>
-  
+
   <table>
     <thead>
       <tr>
@@ -168,7 +168,7 @@
   <br />
   <span>
   <%= content_tag(:label, l(:backlogs_story_close_status)) %>
-  <%= select_tag("settings[story_close_status_id]", 
+  <%= select_tag("settings[story_close_status_id]",
             options_for_select([['<'+l(:rb_label_timelog_disable)+'>', 0]] + IssueStatus.all.collect{|e| [e.name, e.id]},
                               Setting.plugin_redmine_backlogs.has_key?(:story_close_status_id)?(Setting.plugin_redmine_backlogs[:story_close_status_id].to_i):0)
   ) %>
@@ -285,6 +285,11 @@
   <%= content_tag(:label, l(:rb_show_project_name)) %>
   <%= check_box_tag("settings[show_project_name]",'enabled',
             Backlogs.setting[:show_project_name]) %>
+</p>
+<p>
+  <%= content_tag(:label, l(:rb_show_due_date)) %>
+    <%= check_box_tag("settings[show_due_date]",'enabled',
+            Backlogs.setting[:show_due_date]) %>
 </p>
 </fieldset>
 
