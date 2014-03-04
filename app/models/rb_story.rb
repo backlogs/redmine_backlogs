@@ -396,11 +396,15 @@ class RbStory < Issue
   end
 
   def story_follow_task_state
-    return if Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'close' && Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'loose'
+    return if Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'close' &&
+              Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'loose' &&
+              Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'inprogress'
     return if self.status.is_closed? #bail out if we are closed
 
     self.reload #we might be stale at this point
     case Setting.plugin_redmine_backlogs[:story_follow_task_status]
+      when 'inprogress'
+        set_story_status_if_following_to_close_or_to_in_progress
       when 'close'
         set_closed_status_if_following_to_close
       when 'loose'
@@ -432,6 +436,19 @@ class RbStory < Issue
           }
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
         end
+  end
+
+  def set_story_status_if_following_to_close_or_to_in_progress
+    resolved_status_id = 3
+    in_progress_status_id = 2
+
+    tasks.each{|task|
+      self.journalized_update_attributes :status_id => in_progress_status_id unless task.status.is_default?
+    }
+    tasks.each{|task|
+      return unless task.status.is_closed?
+    }
+    self.journalized_update_attributes :status_id => resolved_status_id #update, but no need to position
   end
 
 private
