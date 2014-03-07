@@ -20,6 +20,7 @@
 
   <%= javascript_include_tag(
     'master_backlog',
+    'teams',
     'backlog',
     'backlog_options',
     'model',
@@ -100,6 +101,21 @@
     <%- sprint_backlog = { :sprint => sprint, :stories => nil } -%>
     <%= render :partial => "backlog", :object => sprint_backlog %>
   </div>
+
+	<% if @associated_teams != nil then %>
+		<% for i in 1..(@associated_teams.length - 1) %>
+			<% id_name = "sprint_template_team" + ((i < 10) ? ("0" + i.to_s) : i.to_s) %>
+			<div id="<%= id_name %>">
+				<% title = @title_for_many_sprints.to_s + i.to_s %>
+				<%- sprint = RbSprint.new( 	:name => title,
+								:sprint_start_date => @start_date_for_many_sprints,
+								:effective_date => @end_date_for_many_sprints) -%>
+				<%- sprint_backlog = { :sprint => sprint, :stories => nil } -%>
+				<%= render :partial => "backlog", :object => sprint_backlog %>
+			</div>
+		<% end %>
+	<% end %>
+
 <%= render :partial => "rb_stories/helpers" %>
 <div id="last_updated"><%= date_string_with_milliseconds(@last_update, 0.001) %></div>
 <%- end %>
