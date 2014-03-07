@@ -132,6 +132,7 @@ en:
   label_master_backlog: "Master Backlog"
   label_my_tasks: "My tasks"
   label_new_sprint: "New Sprint"
+  label_many_new_sprints: "Many New Sprints"
   label_new_story: "New Story"
   label_no_data_to_show: "No data to show"
   label_no_end: "no end"

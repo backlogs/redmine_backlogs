@@ -1,0 +1,55 @@
+<div class="box tabular">
+  <p>
+    <%= f.label "Number" %>
+    <%= f.text_field :partial_title, :required => true %>
+    (e.g. result: <%= Setting.plugin_redmine_backlogs[:alternative_sprint_name] %>
+    XXXX <%= Setting.plugin_redmine_backlogs[:teams_prefix_name] %>1, where XXXX is gathered number)
+  </p>
+  <p>
+  	<%= f.label (Setting.plugin_redmine_backlogs[:alternative_sprint_name].capitalize + " - start date") %>
+  	<%= f.date_select :form_start_date %>
+  </p>
+  <p>
+  	<%= f.label (Setting.plugin_redmine_backlogs[:alternative_sprint_name].capitalize + " - end date") %>
+  	<%= f.date_select :form_end_date %>
+  </p>
+  <p>
+    <%= f.label "Associate with teams:" %>
+    <% wrap_manually_columns = 1 %>
+    <% number_of_teams_in_one_column = 6 %>
+    <% if wrap_manually_columns == 1 then %>
+	<div style="margin-left: 180px;">
+		<div style=" display: inline-block; vertical-align: top;">
+			<% if Setting.plugin_redmine_backlogs[:number_of_teams].to_i == 1 then %>
+				<%= f.check_box :t1, {:checked=>true} %> 
+				<%= Setting.plugin_redmine_backlogs[:teams_prefix_name] + "1" %>
+			<% else %>
+				<% for i in 1..Setting.plugin_redmine_backlogs[:number_of_teams].to_i %>
+					<% name = ":t" + i.to_s %>
+					<%= f.check_box name, {:checked=>true} %> 
+					<%= Setting.plugin_redmine_backlogs[:teams_prefix_name] + i.to_s %>
+
+					<% if i%number_of_teams_in_one_column == 0 then %>
+						</div><div style=" display: inline-block; vertical-align: top;">
+					<% else %>
+						<br>
+					<% end %>
+				<% end %>
+			<% end %>
+			</div>
+		</div>
+	<% else %>
+	<% if Setting.plugin_redmine_backlogs[:number_of_teams].to_i == 1 then %>
+			<%= f.check_box :t1, {:checked=>true} %>
+			<%= Setting.plugin_redmine_backlogs[:teams_prefix_name] + "1" %>
+	<% else %>
+		<% for i in 1..Setting.plugin_redmine_backlogs[:number_of_teams].to_i %>
+				<% name = ":t" + i.to_s %>
+				<%= f.check_box name, {:checked=>true} %>
+				<%= Setting.plugin_redmine_backlogs[:teams_prefix_name] + i.to_s %>
+					<br>
+			<% end %>
+		<% end %>
+	<% end %>
+</p>
+</div>

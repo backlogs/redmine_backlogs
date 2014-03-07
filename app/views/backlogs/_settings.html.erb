@@ -307,3 +307,30 @@
     %><span style="margin-left: 12px;"><%= l(:backlogs_sharing_new_sprint_explanation) %></span>
   </p>
 </fieldset>
+
+<fieldset>
+  <legend><%= "Sprints settings" %></legend>
+  <p>
+    <%= content_tag(:label, "Enable option \"Many New Sprints\"") %>
+    <%= check_box_tag("settings[many_sprints_enabled]", 'enabled',
+        Backlogs.setting[:many_sprints_enabled]) %>
+  </p>
+  <p>
+	<%= content_tag(:label, "Teams' name without number:") %>
+	<%= text_field_tag("settings[teams_prefix_name]",
+		Backlogs.setting[:teams_prefix_name]) %>
+	e.g. for teams' name "T " it's genereted: "T 1", "T 2"...
+  </p>
+  <p>
+	<%= content_tag(:label, "Number of teams:") %>
+    <%= select_tag("settings[number_of_teams]",
+        options_for_select(
+		(2..50).step(1).collect { |s| ["#{s}", s] },
+		Backlogs.setting[:number_of_teams]))%>
+  </p>
+  <p>
+	<%= content_tag(:label, "Alternative name for \"sprint\"") %>
+	<% value = Backlogs.setting[:alternative_sprint_name].nil? ? "sprint" : Backlogs.setting[:alternative_sprint_name] %>
+	<%= text_field_tag("settings[alternative_sprint_name]", value) %>
+  </p>
+</fieldset>

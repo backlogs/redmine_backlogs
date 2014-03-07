@@ -19,6 +19,15 @@ class RbMasterBacklogsController < RbApplicationController
       @release_backlogs.map{|r| r[:releases]}
       ].flatten.compact.map{|s| s.updated_on}.sort.last
 
+    @is_it_creation_of_many_sprints = params[:process_many_sprint]
+    if @is_it_creation_of_many_sprints then
+      team_params = params[:team_parameters]
+      @title_for_many_sprints = team_params[:sprint_title]
+      @associated_teams = team_params[:teams]
+      @start_date_for_many_sprints = team_params[:start_date]
+      @end_date_for_many_sprints = team_params[:end_date]
+    end
+
     respond_to do |format|
       format.html { render :layout => "rb"}
     end
@@ -63,6 +72,11 @@ class RbMasterBacklogsController < RbApplicationController
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
              } unless @sprint || !User.current.allowed_to?(:create_sprints, @project)
+    if Setting.plugin_redmine_backlogs[:many_sprints_enabled] == 'enabled' then
+    links << {:label => "Many New Sprints",
+              :url => url_for(:controller => 'rb_teams', :action => 'create')
+             } unless @sprint || !User.current.allowed_to?(:create_many_sprints, @project)
+    end
     links << {:label => l(:label_task_board),
               :url => url_for(:controller => 'rb_taskboards', :action => 'show', :sprint_id => @sprint, :only_path => true)
              } if @sprint && @sprint.stories.size > 0 && Backlogs.task_workflow(@project) && User.current.allowed_to?(:view_taskboards, @project)

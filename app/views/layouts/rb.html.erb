@@ -86,6 +86,15 @@ RB.$(function(){
 <% end %>
 
   <div id="main" class="rb-main rb-theme-default <%= sidebar_content? ? '' : 'nosidebar' %>">
+
+    <% if @is_it_creation_of_many_sprints then %>
+		<%= content_tag "div", id: "creation_of_many_sprints", data: {manysprints: true} do -%>
+		<% end %>
+		<br>
+		<%= content_tag "div", id: "associated_teams", data: {associateteams: @associated_teams} do -%>
+		<% end %>
+	<% end %>
+
     <div id="sidebar">
         <%= yield :sidebar %>
         <%= view_layouts_base_sidebar_hook_response %>

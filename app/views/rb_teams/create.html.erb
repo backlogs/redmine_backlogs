@@ -1,0 +1,7 @@
+<h2><%= "Many New Sprints"%></h2>
+
+<%= form_for :post do |f| %>
+    <%= render :partial => 'rb_teams/form', :locals => { :f => f } %>
+    <%= f.submit "Create sprints"%>
+<% end %>
+</div>

@@ -55,6 +55,12 @@ RB.Backlog = RB.Object.create({
     });
     
     this.recalcVelocity();
+
+    if ($('#creation_of_many_sprints').data('manysprints') &&
+	is_creation_of_many_sprints_done_ones == false){
+	is_creation_of_many_sprints_done_ones = true;
+	this.newManySprint();
+    }
   },
 
   afterCreate: function(data, textStatus, xhr){
@@ -271,7 +277,7 @@ RB.Backlog = RB.Object.create({
   isReleaseBacklog: function(){
     return RB.$(this.el).find('.release').length == 1; // return true if backlog has an element with class="release"
   },
-    
+
   newStory: function(project_id) {
     var story = RB.$('#story_template').children().first().clone();
     if(project_id) {
@@ -291,7 +297,7 @@ RB.Backlog = RB.Object.create({
         scrollTop: story.find('.editor').first().offset().top-100
         }, 200);
   },
-  
+
   newSprint: function(){
     var sprint_backlog = RB.$('#sprint_template').children().first().clone();
 
@@ -302,6 +308,25 @@ RB.Backlog = RB.Object.create({
     RB.$('html,body').animate({
         scrollTop: sprint_backlog.find('.editor').first().offset().top
         }, 200);
+  },
+
+  newManySprint: function(){
+    var arrayOfManySprintsBacklogs={};
+    var associated_teams = ($('#associated_teams').data('associateteams')).toString();
+
+    for (var i = 2; i <= associated_teams.length; i++){
+	if(associated_teams[i-1] == 1)
+	{
+	    var team_number_leads_by_zeros = (i-1 < 10) ? ("0" + (i-1)) : i-1;
+
+	    arrayOfManySprintsBacklogs[i] = RB.$('#sprint_template_team'+team_number_leads_by_zeros).children().first().clone();
+	    RB.$("*#sprint_backlogs_container").append(arrayOfManySprintsBacklogs[i]);
+	    o = RB.Factory.initialize(RB.Backlog, arrayOfManySprintsBacklogs[i]);
+	    o.edit();
+	    o.saveEdits();
+	}
+    }
+  if (RB.BacklogOptionsInstance) RB.BacklogOptionsInstance.showSprintPanel();
   },
 
   recalcVelocity: function(){
