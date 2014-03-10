@@ -21,6 +21,10 @@
   <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
     <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours_or_empty(task) %></div>
   <% end %>
+  <div class="category_id editable" fieldtype="select" fieldname="category_id" fieldlabel="<%=l(:field_category)%>">
+    <div class="t"><%= h category_name_or_empty(task) %></div>
+    <div class="v"><%= task.category_id %></div>
+  </div>
   <% if User.current.allowed_to?(:log_time, @project) && @settings[:timelog_from_taskboard]=='enabled'  %>
     <div class="time_entry_hours editable" style="display: none" fieldname="time_entry_hours" fieldlabel="<%=l(:field_time_entry_hours)%>"></div>
     <% if User.current.allowed_to?(:edit_time_entries, @project) %>

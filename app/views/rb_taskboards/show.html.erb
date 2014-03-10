@@ -153,6 +153,11 @@
     <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
     <%= users_assignable_options_for_select(@project.assignable_users) %>
   </select>
+
+  <select class="category_id template" id="category_id_options">
+    <option value="" color="#AAAAAA" color_light="#E0E0E0"> </option>
+    <%= options_from_collection_for_select @project.issue_categories, :id, :name %>
+  </select>
   <div id="task_template">
     <%= render :partial => "rb_tasks/task", :object => RbTask.new %>
   </div>
