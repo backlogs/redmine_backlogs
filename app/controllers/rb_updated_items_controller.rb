@@ -15,21 +15,21 @@ class RbUpdatedItemsController < RbApplicationController
 
     latest_updates = []
     if only.include? :stories
-      @items[:stories] = RbStory.find_all_updated_since(params[:since], @project.id)
+      @items[:stories] = RbStory.visible.find_all_updated_since(params[:since], @project.id)
       if @items[:stories].length > 0
         latest_updates << @items[:stories].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
     end
 
     if only.include? :tasks
-      @items[:tasks] = RbTask.find_all_updated_since(params[:since], @project.id, false, params[:sprint])
+      @items[:tasks] = RbTask.visible.find_all_updated_since(params[:since], @project.id, false, params[:sprint])
       if @items[:tasks].length > 0
         latest_updates << @items[:tasks].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
     end
 
     if only.include? :impediments
-      @items[:impediments] = RbTask.find_all_updated_since(params[:since], @project.id, true, params[:sprint])
+      @items[:impediments] = RbTask.visible.find_all_updated_since(params[:since], @project.id, true, params[:sprint])
       if @items[:impediments].length > 0
         latest_updates << @items[:impediments].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end
