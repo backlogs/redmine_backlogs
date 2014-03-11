@@ -190,7 +190,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def stories #compat
-    issues
+    issues.visible
   end
 
   # Returns current stories + stories previously scheduled for this release
@@ -217,7 +217,7 @@ class RbRelease < ActiveRecord::Base
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
 #return issues sorted into sprints. Obviously does not return issues which are not in a sprint
 #unfortunately, group_by returns unsorted results.
-    issues.where(:tracker_id => RbStory.trackers).joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
+    stories.where(:tracker_id => RbStory.trackers).joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
   end
 
   # The dates are:
