@@ -44,7 +44,7 @@ group :test do
       gem "faye-websocket", "~>0.4.7"
       gem "poltergeist", "~>1.0"
     end
-    gem 'cucumber-rails'
+    gem 'cucumber-rails', :require => false
     gem "culerity"
   else
     unless chiliproject
