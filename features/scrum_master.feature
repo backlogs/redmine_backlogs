@@ -26,6 +26,9 @@ Feature: Scrum Master
       And I have defined the following impediments:
         | subject      | sprint     | blocks  |
         | Impediment 1 | Sprint 001 | Story A | 
+     And I have defined the following tasks:
+        | subject | story   | assigned_to |
+        | Task 1  | Story A |             |
 
   Scenario: Create an impediment
     Given I am viewing the taskboard for Sprint 001
@@ -196,3 +199,9 @@ Feature: Scrum Master
      When I update the sprint
      Then the server should return an update error
       And the error message should say "Sprint cannot end before it starts"
+
+  Scenario: Download sprint as XML spreadsheet
+    Given I am viewing the master backlog
+      And I have set my API access key
+     When I try to download the XML sheet for Sprint 001
+     Then the request should complete successfully

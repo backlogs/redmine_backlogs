@@ -204,6 +204,12 @@ When /^I try to download the calendar feed$/ do
   visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project, :format => 'xml', :only_path => true})
 end
 
+When /^I try to download the XML sheet for (.+)$/ do |sprint_name|
+  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  visit url_for({:key => @api_key, :controller => :rb_sprints, :action => :download,
+                 :sprint_id => sprint, :format => :xml, :only_path => true})
+end
+
 When /^I view the master backlog$/ do
   visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
   click_link("Backlogs")

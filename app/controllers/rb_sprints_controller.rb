@@ -7,6 +7,9 @@ include RbCommonHelper
 class RbSprintsController < RbApplicationController
   unloadable
 
+  # Accept download as API request as Redmine redirects XML format to this type
+  accept_api_auth :download
+
   def create
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
     attribs = Hash[*attribs.flatten]
@@ -59,10 +62,10 @@ class RbSprintsController < RbApplicationController
     bold = {:font => {:bold => true}}
     dump = BacklogsSpreadsheet::WorkBook.new
     ws = dump[@sprint.name]
-    ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days(:all).collect{|d| {:value => d, :style => bold} }
+    ws << [nil, @sprint.id, nil, nil, {:value => @sprint.name, :style => bold}, {:value => 'Start', :style => bold}] + @sprint.days.collect{|d| {:value => d, :style => bold} }
     bd = @sprint.burndown
     bd.series(false).sort{|a, b| l("label_#{a}") <=> l("label_#{b}")}.each{ |k|
-      ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd[k]
+      ws << [ nil, nil, nil, nil, l("label_#{k}") ] + bd.data[k.to_sym]
     }
 
     @sprint.stories.each{|s|
@@ -75,7 +78,7 @@ class RbSprintsController < RbApplicationController
         ws << [nil, nil, nil, nil, label ] + bd[k]
       }
       s.tasks.each {|t|
-        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.burndown
+        ws << [nil, nil, t.tracker.name, t.id, {:value => t.subject, :style => bold}] + t.becomes(RbTask).burndown
       }
     }
 
