@@ -21,6 +21,11 @@ RB.Taskboard = RB.Object.create({
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
+
+	RB.$( "#hide_done_cb" ).change(function() {
+		self.showHideDoneTasks(RB.$("#hide_done_cb").attr("checked"));
+	});
+
     //initialize mouse handling for drop handling
     j.bind('mousedown.taskboard', function(e) { return self.onMouseDown(e); });
     j.bind('mouseup.taskboard', function(e) { return self.onMouseUp(e); });
@@ -205,6 +210,14 @@ RB.Taskboard = RB.Object.create({
     RB.$("#col_width input").val(w);
     RB.UserPreferences.set('taskboardColWidth', w);
     RB.$(".swimlane").width(this.colWidthUnit * w).css('min-width', this.colWidthUnit * w);
+  },
+
+  showHideDoneTasks: function(cbValue){
+	var display = 'none';
+	if (! cbValue) {
+		display = "block";
+	}
+	RB.$(".story-swimlane .swimlane .closed").css('display',display);
   }
 });
 

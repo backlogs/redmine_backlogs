@@ -58,6 +58,7 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
+  <span id="hide_done"><input id="hide_done_cb" name="hide_done" type="checkbox"/> <%= l(:label_hide_done) %></span>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
   <% end %>
