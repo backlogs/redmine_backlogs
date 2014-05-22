@@ -21,10 +21,12 @@ RB.Taskboard = RB.Object.create({
     self.updateColWidths();
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
-
-	RB.$( "#hide_done_cb" ).change(function() {
-		self.showHideDoneTasks(RB.$("#hide_done_cb").attr("checked"));
-	});
+    RB.$( "#hide_done_cb" ).change(function() {
+        self.showHideDoneTasks(RB.$("#hide_done_cb").is(":checked"));
+    });
+    $( document ).ready(function() {
+        self.initShowHideDoneTasks();
+    });
 
     //initialize mouse handling for drop handling
     j.bind('mousedown.taskboard', function(e) { return self.onMouseDown(e); });
@@ -218,6 +220,20 @@ RB.Taskboard = RB.Object.create({
 		display = "block";
 	}
 	RB.$(".story-swimlane .swimlane .closed").css('display',display);
+	RB.UserPreferences.set('hideDoneTasks', cbValue);
+  },
+
+  initShowHideDoneTasks: function(){
+    var val = RB.UserPreferences.get('hideDoneTasks');
+    if (!val) { // 0, null, undefined.
+      val = false;
+      RB.UserPreferences.set('hideDoneTasks', val);
+    }
+    var hideDoneTasks = val == 'true' ? true : false;
+
+    $('#hide_done_cb').prop('checked', hideDoneTasks);
+
+    this.showHideDoneTasks(hideDoneTasks);
   }
 });
 
