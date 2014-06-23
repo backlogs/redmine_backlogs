@@ -87,7 +87,7 @@ ja:
   error_sprint_end_before_start: 開始していないスプリントは終了できません
   error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
-  field_assigned_to: "Assigned To"
+  field_assigned_to: 担当者
   field_backlogs_issue_type: バックログタイプ
   field_base: ""
   field_blocks: ブロック
@@ -155,7 +155,7 @@ ja:
   label_release_multiview: "リリースマルチビュー"
   label_release_multiview_new: "新しいリリースマルチビュー"
   label_release_new: 新しいリリース
-  label_release_planned_velocity_end_date: "Planned velocity estimated end date"
+  label_release_planned_velocity_end_date: 計画されたベロシティから推定したリリース日
   label_release_planning: リリース計画
   label_release_plural: リリース
   label_release_relationship_added: 追加
@@ -163,7 +163,7 @@ ja:
   label_release_relationship_continued: 継続
   label_release_relationship_initial: 初期
   label_release_start_date: リリース開始日
-  label_release_trend_end_date: "Trend estimated end date"
+  label_release_trend_end_date: 傾向から推定したリリース日
   label_reset: リセット
   label_scrum_statistics: スクラム統計
   label_select_all: 全て選択
@@ -177,7 +177,7 @@ ja:
   label_stories_tasks: ストーリー/タスク
   label_task_board: かんばん
   label_view_options: 表示オプション
-  label_webcal: "Webcal Feed"
+  label_webcal: "Webcal フィード"
   rb_auto_refresh: バックログとかんばんの自動リフレッシュの間隔(秒)
   rb_burndown_timezone: バーンダウンの日付変更のためのタイムゾーン
   rb_burndown_timezone_explanation: |-
