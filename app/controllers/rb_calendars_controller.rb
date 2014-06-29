@@ -27,13 +27,13 @@ class RbCalendarsController < RbApplicationController
       summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
       description_text = "#{sprint.name}: #{url_for(:controller => 'rb_queries', :only_path => false, :action => 'show', :project_id => @project.id, :sprint_id => sprint.id)}\n#{sprint.description}"
 
-      cal.event do
-        dtstart     sprint.sprint_start_date
-        dtend       sprint.effective_date
-        summary     summary_text
-        description description_text
-        klass       'PRIVATE'
-        transp      'TRANSPARENT'
+      cal.event do |e|
+        e.dtstart     = sprint.sprint_start_date
+        e.dtend       = sprint.effective_date
+        e.summary     = summary_text
+        e.description = description_text
+        e.ip_class    = "PRIVATE"
+        e.transp      = "TRANSPARENT"
       end
     }
 
@@ -89,13 +89,13 @@ class RbCalendarsController < RbApplicationController
       description_text = "#{issue.subject}: #{url_for(:controller => 'issues', :only_path => false, :action => 'show', :id => issue.id)}\n#{issue.description}"
       # I know this should be "cal.todo do", but outlook in it's
       # infinite stupidity doesn't support VTODO
-      cal.event do
-        summary     summary_text
-        description description_text
-        dtstart     Date.today
-        dtend       (Date.today + 1)
-        klass       'PRIVATE'
-        transp      'TRANSPARENT'
+      cal.event do |e|
+        e.summary     = summary_text
+        e.description = description_text
+        e.dtstart     = Date.today
+        e.dtend       = (Date.today + 1)
+        e.ip_class    = 'PRIVATE'
+        e.transp      = 'TRANSPARENT'
       end
     }
 
