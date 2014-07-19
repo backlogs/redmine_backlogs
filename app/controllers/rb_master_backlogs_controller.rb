@@ -39,6 +39,7 @@ class RbMasterBacklogsController < RbApplicationController
       else #menu for product backlog
         projects = @project.projects_in_shared_product_backlog
       end
+      projects.select!{ |p| User.current.allowed_to?(:create_stories, p) }
       #make the submenu or single link
       if !projects.empty?
         if projects.length > 1
