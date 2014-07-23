@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'prawn'
 require 'prawn/measurement_extensions'
+require 'pdf/core/page_geometry'
 require 'net/http'
 
 require 'yaml'
@@ -76,7 +77,7 @@ module BacklogsPrintableCards
         @name = layout['name']
         @source = layout['source']
 
-        geom = Prawn::Document::PageGeometry::SIZES[@papersize]
+        geom = PDF::Core::PageGeometry::SIZES[@papersize]
         if geom.nil?
           Rails.logger.error "Backlogs printable cards: paper size '#{@papersize}' for label #{@name} not supported"
           @valid = false
