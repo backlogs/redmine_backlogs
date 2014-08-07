@@ -57,29 +57,45 @@
 </span>
 <%- end %>
 
+<%-
+   view_type=params['view_type']? params['view_type'].to_i : 2
+ %>
+
 <%- content_for :view_specific_links do %>
-  <% if @sprint.has_burndown? %>
-    <a id='show_charts'><%= l(:label_burndown) %></a>
+  <%- if view_type == 1 %>
+      <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>
+  <%- else %>
+      <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
+  <%- end%>
+  
+  <% if @sprint.has_burndown? %>  
+    <a id='show_charts'><%= l(:label_burndown) %></a>  
   <% end %>
-  <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
+  <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>       
   <a id="disable_autorefresh">Disable Auto-refresh</a>
-  <a id="refresh">Refresh</a>
+  <a id="refresh">Refresh</a>  
 <%- end %>
 
 <%- content_for :main do %>
 <span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
+
+
+
 <div id="taskboard">
 
 
   <table id="board_header" cellspacing="0">
     <tr>
-      <td><%= l(:backlogs_story) %></td>
+      <%-if view_type == 2  %>
+        <td><%= l(:backlogs_story) %></td>
+       <%- end %> 
       <%- @statuses.each do |status| %>
       <td class="swimlane"><%= h status.name %></td>
       <%- end %>
     </tr>
   </table>
 
+  <%-if view_type == 2  %>
   <table id="impediments" class="board" cellspacing="0">
     <tr>
       <td><div class="label_sprint_impediments">
@@ -97,8 +113,13 @@
       <%- end %>
     </tr>
   </table>
+  <%-end  %>
+  
+
+  <%-if view_type == 2  %>
 
   <table id="tasks" class="board" cellspacing="0">
+
     <%- @sprint.stories.each do |story| %>
     <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
@@ -133,7 +154,54 @@
       <%- end %>
     </tr>
     <%- end %>
-  </table>
+  </table> 
+
+  <%-else  %>
+    <!-- Aqui tabela por estorias -->
+    <br>
+    <br>
+    <br>
+
+    <table id="tasks" class="board" cellspacing="0">
+    <%- @sprint.stories.each do |story| %>
+      <tr id="swimlane-<%= story.id %>" class="story-swimlane">
+        <%- @statuses.each do |status| 
+              if story.status == status%>
+                <td>
+                  <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
+                    <div class="id story_tooltip">
+                      <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
+                      <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+                      
+                      <span class="assignee">
+                        <%= assignee_name_or_empty(story) %>
+                      </span>
+                      <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+                    </div>
+                    <div class="subject"><%= h story.subject %></div>
+                    <%- if @project != story.project %>
+                      <div class="id project">
+                        <span class="t"><%= h story.project %></span>
+                        <span class="v"><%= story.project.id %></span>
+                      </div>
+                    <%- end %>
+                    <div class="story_points editable" fieldname="story_points" fieldlabel="<%=l(:field_story_points)%>"><%= story.story_points %></div>
+                  </div>
+                </td> 
+              <%-else%>   
+                  <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>" -rb-status-id="<%= status.id %>" -rb-project-id="<%= story.project.id %>">
+                  
+                </td>
+              <%-end%>
+        <%- end %>
+        
+        
+      
+      </tr>
+  <%- end %>
+  </table> 
+
+  <%-end  %>
 </div>
 <%- end %>
 
