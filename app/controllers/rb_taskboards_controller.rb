@@ -15,7 +15,7 @@ class RbTaskboardsController < RbApplicationController
             puts "inspecting detail "+detail.id.to_s
             if (detail.prop_key == 'status_id')
               puts "found status "+detail.prop_key.to_s
-              story.status = IssueStatus.find(detail.value.to_i)
+              story.status = IssueStatus.find(detail.old_value.to_i)
               puts "found "+story.status.name
             end
           end
