@@ -3,8 +3,36 @@ include RbCommonHelper
 class RbTaskboardsController < RbApplicationController
   unloadable
 
+  def load_stories_status(date,stories)
+
+    stories.each do |story|
+      begin
+        journal = Journal.where("journalized_id = ?",story.id).last
+        if journal  
+          puts "inspecting details from "+journal.id.to_s+" and issue "+story.id.to_s
+  
+          JournalDetail.where("journal_id = ?",journal.id).each do |detail|
+            puts "inspecting detail "+detail.id.to_s
+            if (detail.prop_key == 'status_id')
+              puts "found status "+detail.prop_key.to_s
+              story.status = IssueStatus.find(detail.value.to_i)
+              puts "found "+story.status.name
+            end
+          end
+        else
+          puts "journal not found"
+        end
+      rescue => e
+        puts "error loading journal "+e.message  
+      end
+    end
+  end
+
   def show
     stories = @sprint.stories
+    if params['created_on']
+      load_stories_status(DateTime.strptime(params['created_on'],'%s'),stories)
+    end
     @story_ids    = stories.map{|s| s.id}
 
     @settings = Backlogs.settings
