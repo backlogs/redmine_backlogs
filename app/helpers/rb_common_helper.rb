@@ -155,6 +155,15 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1] + d.strftime(" %z")
   end
 
+  def date_string(d)
+    return '' if d.blank?
+    d.strftime("%B %d, %Y")
+  end  
+
+  def string_date(s)
+    Date.strptime(s, "%B %d, %Y")
+  end
+
   def remaining_hours_or_empty(item)
     item.remaining_hours.blank? || item.remaining_hours==0 ? "" : item.remaining_hours
   end
