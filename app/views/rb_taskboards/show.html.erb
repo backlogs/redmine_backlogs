@@ -89,7 +89,12 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>       
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>  
-  <a href="?memes=1">Show memes </a>   
+  <%- if cookies[:memes] == '1'%>
+    <a href="?memes=0"><%= l(:turn_off_memes) %> </a>   
+  <%- else%>
+    <a href="?memes=1"><%= l(:turn_on_memes) %></a>   
+  <%- end%>
+  
 <%- end %>
 
 <%- content_for :main do %>
