@@ -59,6 +59,7 @@
 
 <%-
    created_on =  DateTime.strptime(params['created_on'],'%s') if params['created_on']
+   show_board_view_switch = !created_on
    view_type= created_on ? 1 : (params['view_type']? params['view_type'].to_i : 2)
    created_on ||= Time.now
  %>
@@ -66,15 +67,20 @@
 <%- content_for :view_specific_links do %>  
   
   <a href="?created_on=<%= created_on.to_i - 1.days  %>"> &lt&lt </a>
-  <a href="?created_on=<%= created_on.to_i  %>"><%= date_string(created_on)  %></a>  
+  <%= date_string(created_on)  %>
   <a href="?created_on=<%= created_on.to_i + 1.days  %>"> &gt&gt </a>  
 
-  <%- if view_type == 1 %>
-      <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>
+  <%- if show_board_view_switch %>
+
+    <%- if view_type == 1 %>
+        <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>
+    <%- else %>
+        <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
+    <%- end%>
   <%- else %>
-      <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
+    <a href="?view_type=2"> &gt&gt&gt </a>
   <%- end%>
-  
+
   <% if @sprint.has_burndown? %>  
     <a id='show_charts'><%= l(:label_burndown) %></a>  
   <% end %>

@@ -3,27 +3,22 @@ include RbCommonHelper
 class RbTaskboardsController < RbApplicationController
   unloadable
 
+  #load the issues historic's status by github.com/ricardobaumann
   def load_stories_status(date,stories)
     @issue_st_hist = Hash.new
     stories.each do |story|
       begin
         journal = Journal.where("journalized_id = ? and created_on <= ?",story.id,date).last
         if journal  
-          puts "inspecting details from "+journal.id.to_s+" and issue "+story.id.to_s
-  
+
           JournalDetail.where("journal_id = ?",journal.id).each do |detail|
-            puts "inspecting detail "+detail.id.to_s
             if (detail.prop_key == 'status_id')
-              puts "found status "+detail.prop_key.to_s
               @issue_st_hist.merge!({story.id => IssueStatus.find(detail.old_value.to_i)})
-              puts "set "+story.status.name+"on "+story.id.to_s+" "+@issue_st_hist.to_s
             end
           end
-        else
-          puts "journal not found"
         end
       rescue => e
-        puts "error loading journal "+e.message  
+        
       end
     end
   end
