@@ -4,10 +4,10 @@ class RbTaskboardsController < RbApplicationController
   unloadable
 
   def load_stories_status(date,stories)
-
+    @issue_st_hist = Hash.new
     stories.each do |story|
       begin
-        journal = Journal.where("journalized_id = ?",story.id).last
+        journal = Journal.where("journalized_id = ? and created_on <= ?",story.id,date).last
         if journal  
           puts "inspecting details from "+journal.id.to_s+" and issue "+story.id.to_s
   
@@ -15,8 +15,8 @@ class RbTaskboardsController < RbApplicationController
             puts "inspecting detail "+detail.id.to_s
             if (detail.prop_key == 'status_id')
               puts "found status "+detail.prop_key.to_s
-              story.status = IssueStatus.find(detail.old_value.to_i)
-              puts "found "+story.status.name
+              @issue_st_hist.merge!({story.id => IssueStatus.find(detail.old_value.to_i)})
+              puts "set "+story.status.name+"on "+story.id.to_s+" "+@issue_st_hist.to_s
             end
           end
         else
@@ -30,9 +30,7 @@ class RbTaskboardsController < RbApplicationController
 
   def show
     stories = @sprint.stories
-    if params['created_on']
-      load_stories_status(DateTime.strptime(params['created_on'],'%s'),stories)
-    end
+    
     @story_ids    = stories.map{|s| s.id}
 
     @settings = Backlogs.settings
@@ -72,6 +70,10 @@ class RbTaskboardsController < RbApplicationController
       @last_updated = RbTask.find(:first,
                         :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.stories[0].fixed_version_id],
                         :order      => "updated_on DESC")
+    end
+
+    if params['created_on']
+      load_stories_status(DateTime.strptime(params['created_on'],'%s'),stories)
     end
 
     respond_to do |format|
