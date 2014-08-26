@@ -207,6 +207,8 @@ pt-BR:
   story_spent_time: "Tempo gasto"
   story_status: Estado
   today_not_in_release_warning: "Aviso: a data atual não está no intervalo de datas do release"
+  turn_on_memes: "Exibir memes"
+  turn_off_memes: "Esconder memes"
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "Utilize o campo texto ao invés do dropdown se estiver vazio"
   warning_reset_sprint: |-
