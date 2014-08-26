@@ -62,6 +62,8 @@
    show_board_view_switch = !created_on
    view_type= created_on ? 1 : (params['view_type']? params['view_type'].to_i : 2)
    created_on ||= Time.now
+
+   cookies[:memes] = { value: params['memes'], expires: 1.days.from_now} if params['memes']
  %>
 
 <%- content_for :view_specific_links do %>  
@@ -87,6 +89,7 @@
   <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>       
   <a id="disable_autorefresh">Disable Auto-refresh</a>
   <a id="refresh">Refresh</a>  
+  <a href="?memes=1">Show memes </a>   
 <%- end %>
 
 <%- content_for :main do %>
@@ -104,15 +107,19 @@
        <%- end %> 
       <%- @statuses.each do |status| %>
       <td class="swimlane">
-        <%= image_tag("#{status.name}.jpg", :alt => "#{status.name}", 
-      :width => 50, :heigth => 50) %><br>
+        <%- if cookies[:memes] == '1'%>
+            <%= image_tag("#{status.name}.jpg", :alt => "#{status.name}", 
+          :width => 50, :heigth => 50) %><br>
+        <%- end %>
         <%= h status.name %>  </td>
       <%- end %>
     </tr>
   </table>
 
-  <br>
-  <br>
+  <%- if cookies[:memes] == '1'%>
+    <br>
+    <br>
+  <%- end %>
   
   <%-if view_type == 2  %>
   <table id="impediments" class="board" cellspacing="0">
