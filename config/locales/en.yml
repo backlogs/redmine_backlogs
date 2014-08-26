@@ -211,6 +211,8 @@ en:
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "Use text field instead of dropdown if empty"
+  label_taskboard_view_story: "Show only stories"
+  label_taskboard_view_task: "Show stories and taks"
   warning_reset_sprint: |
       YOU ARE ABOUT TO RESET THIS SPRINT!
 

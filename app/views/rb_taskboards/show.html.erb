@@ -58,16 +58,29 @@
 <%- end %>
 
 <%-
-   view_type=params['view_type']? params['view_type'].to_i : 2
+   created_on =  DateTime.strptime(params['created_on'],'%s') if params['created_on']
+   show_board_view_switch = !created_on
+   view_type= created_on ? 1 : (params['view_type']? params['view_type'].to_i : 2)
+   created_on ||= Time.now
  %>
 
-<%- content_for :view_specific_links do %>
-  <%- if view_type == 1 %>
-      <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>
-  <%- else %>
-      <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
-  <%- end%>
+<%- content_for :view_specific_links do %>  
   
+  <a href="?created_on=<%= (created_on - 1.days).to_i  %>"> &lt&lt </a>
+  <%= date_string(created_on)  %>
+  <a href="?created_on=<%= (created_on + 1.days).to_i  %>"> &gt&gt </a>  
+
+  <%- if show_board_view_switch %>
+
+    <%- if view_type == 1 %>
+        <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>   
+    <%- else %>
+        <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
+    <%- end%>
+  <%- else %>
+    <a href="?view_type=2"> &gt&gt&gt </a>
+  <%- end%>
+
   <% if @sprint.has_burndown? %>  
     <a id='show_charts'><%= l(:label_burndown) %></a>  
   <% end %>
@@ -165,8 +178,12 @@
     <table id="tasks" class="board" cellspacing="0">
     <%- @sprint.stories.each do |story| %>
       <tr id="swimlane-<%= story.id %>" class="story-swimlane">
-        <%- @statuses.each do |status| 
-              if story.status == status%>
+        <%- 
+
+        story_status = @issue_st_hist && @issue_st_hist[story.id] || story.status
+
+        @statuses.each do |status| 
+              if story_status == status%>
                 <td>
                   <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
                     <div class="id story_tooltip">

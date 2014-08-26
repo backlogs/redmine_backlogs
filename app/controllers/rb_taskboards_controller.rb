@@ -3,8 +3,29 @@ include RbCommonHelper
 class RbTaskboardsController < RbApplicationController
   unloadable
 
+  #load the issues historic's status by github.com/ricardobaumann
+  def load_stories_status(date,stories)
+    @issue_st_hist = Hash.new
+    stories.each do |story|
+      begin
+        journal = Journal.where("journalized_id = ? and created_on <= ?",story.id,date).last
+        if journal  
+
+          JournalDetail.where("journal_id = ?",journal.id).each do |detail|
+            if (detail.prop_key == 'status_id')
+              @issue_st_hist.merge!({story.id => IssueStatus.find(detail.old_value.to_i)})
+            end
+          end
+        end
+      rescue => e
+        
+      end
+    end
+  end
+
   def show
     stories = @sprint.stories
+    
     @story_ids    = stories.map{|s| s.id}
 
     @settings = Backlogs.settings
@@ -44,6 +65,10 @@ class RbTaskboardsController < RbApplicationController
       @last_updated = RbTask.find(:first,
                         :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.stories[0].fixed_version_id],
                         :order      => "updated_on DESC")
+    end
+
+    if params['created_on']
+      load_stories_status(DateTime.strptime(params['created_on'],'%s'),stories)
     end
 
     respond_to do |format|
