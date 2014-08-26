@@ -103,11 +103,17 @@
         <td><%= l(:backlogs_story) %></td>
        <%- end %> 
       <%- @statuses.each do |status| %>
-      <td class="swimlane"><%= h status.name %></td>
+      <td class="swimlane">
+        <%= image_tag("#{status.name}.jpg", :alt => "#{status.name}", 
+      :width => 50, :heigth => 50) %><br>
+        <%= h status.name %>  </td>
       <%- end %>
     </tr>
   </table>
 
+  <br>
+  <br>
+  
   <%-if view_type == 2  %>
   <table id="impediments" class="board" cellspacing="0">
     <tr>
