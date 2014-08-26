@@ -66,14 +66,14 @@
 
 <%- content_for :view_specific_links do %>  
   
-  <a href="?created_on=<%= created_on.to_i - 1.days  %>"> &lt&lt </a>
+  <a href="?created_on=<%= (created_on - 1.days).to_i  %>"> &lt&lt </a>
   <%= date_string(created_on)  %>
-  <a href="?created_on=<%= created_on.to_i + 1.days  %>"> &gt&gt </a>  
+  <a href="?created_on=<%= (created_on + 1.days).to_i  %>"> &gt&gt </a>  
 
   <%- if show_board_view_switch %>
 
     <%- if view_type == 1 %>
-        <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>
+        <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>   
     <%- else %>
         <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
     <%- end%>
