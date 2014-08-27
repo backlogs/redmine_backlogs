@@ -213,6 +213,8 @@ en:
   use_free_text_if_empty: "Use text field instead of dropdown if empty"
   label_taskboard_view_story: "Show only stories"
   label_taskboard_view_task: "Show stories and taks"
+  turn_on_memes: "Turn on memes"
+  turn_off_memes: "Turn off memes"
   warning_reset_sprint: |
       YOU ARE ABOUT TO RESET THIS SPRINT!
 
