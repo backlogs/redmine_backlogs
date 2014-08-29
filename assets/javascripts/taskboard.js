@@ -16,7 +16,7 @@ RB.Taskboard = RB.Object.create({
 
     // Initialize column widths
     self.colWidthUnit = RB.$(".swimlane").width();
-    self.defaultColWidth = 2;
+    self.defaultColWidth = 2;  
     self.loadColWidthPreference();
     self.updateColWidths();   
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
