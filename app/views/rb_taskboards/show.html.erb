@@ -93,7 +93,7 @@
   <%- if cookies[:memes] == '1'%>
     <a href="?memes=0"><%= l(:turn_off_memes) %> </a>   
   <%- else%>
-    <a href="?memes=1"><%= l(:turn_on_memes) %></a>   
+    <a href="?memes=1"><%= l(:turn_on_memes) %> (Beta) </a>   
   <%- end%>
   
 <%- end %>
@@ -114,15 +114,15 @@
       <%- @statuses.each do |status| %>
       <td class="swimlane">
         <%- if cookies[:memes] == '1'%>
-            <%= image_tag("#{status.name}.jpg", :alt => "#{status.name}", 
-          :width => 50, :heigth => 50) %><br>
+            <%= status_pic_or_empty(status) %> <br>
         <%- end %>
-        <%= h status.name %>  </td>
       <%- end %>
     </tr>
   </table>
 
   <%- if cookies[:memes] == '1'%>
+    <br>
+    <br>
     <br>
     <br>
   <%- end %>
