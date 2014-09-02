@@ -38,25 +38,6 @@
   <%= h @sprint.name %>
 <% end %>
 
-<%- content_for :view_specific_users do %>
-<span id="userselect">
-<ul style="list-style:none; margin:0px">
-  <li><label>
-    <select class="userfilter" size="5" name="filter-user-selection" multiple="multiple" title="User selection">
-      <option value='s'>Show empty Stories</option>
-      <option value='c'>Show closed Stories</option>
-      <optgroup label="Users">
-      <% @project.assignable_users.sort.each do |member| %>
-        <option value="<%= member.id %>"> <%= member.name %></option>
-      <% end %>
-      </optgroup>
-      </select>
-  </label></li>
-</ul>
-<br style="clear:both" />
-</span>
-<%- end %>
-
 <%-
    created_on =  DateTime.strptime(params['created_on'],'%s') if params['created_on']
    show_board_view_switch = !created_on
@@ -65,6 +46,30 @@
 
    cookies[:memes] = { value: params['memes'], expires: 1.days.from_now} if params['memes']
  %>
+
+
+
+<%- if (view_type == 2)
+    content_for :view_specific_users do %>
+    <span id="userselect">
+    <ul style="list-style:none; margin:0px">
+      <li><label>
+        <select class="userfilter" size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+          <option value='s'>Show empty Stories</option>
+          <option value='c'>Show closed Stories</option>
+          <optgroup label="Users">
+          <% @project.assignable_users.sort.each do |member| %>
+            <option value="<%= member.id %>"> <%= member.name %></option>
+          <% end %>
+          </optgroup>
+          </select>
+      </label></li>
+    </ul>
+    <br style="clear:both" />
+    </span>
+    <%- end %>
+<%- end %>
+
 
 <%- content_for :view_specific_links do %>  
   
@@ -116,6 +121,7 @@
         <%- if cookies[:memes] == '1'%>
             <%= status_pic_or_empty(status) %> <br>
         <%- end %>
+        <%= status.name %> <br>
       <%- end %>
     </tr>
   </table>

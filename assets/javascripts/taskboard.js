@@ -176,6 +176,10 @@ RB.Taskboard = RB.Object.create({
 
   loadColWidthPreference: function(){
     var w = RB.UserPreferences.get('taskboardColWidth');
+    if ((location.toString().indexOf("created_on")>-1) || (location.toString().indexOf("view_type=1")>-1)) { // issue 246: if the param created_on is there, it means that the user is looking at the historic
+      w = 1;
+      updateColWidths();
+    }
     if (!w) { // 0, null, undefined.
       w = this.defaultColWidth;
       RB.UserPreferences.set('taskboardColWidth', w);

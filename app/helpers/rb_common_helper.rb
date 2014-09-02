@@ -18,7 +18,7 @@ module RbCommonHelper
     status.blank? ? "" : (
         FileTest.exist?("#{Rails.root}/public/images/#{status.name}.jpg") ?
       image_tag("#{status.name}.jpg",  
-          :width => 90, :heigth => 90)+" \n #{status.name}" : "#{status.name}")
+          :width => 90, :heigth => 90) : "")
 
   end
 
