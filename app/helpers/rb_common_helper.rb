@@ -14,6 +14,14 @@ module RbCommonHelper
     story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.name}"
   end
 
+  def status_pic_or_empty(status)
+    status.blank? ? "" : (
+        FileTest.exist?("#{Rails.root}/public/images/#{status.name}.jpg") ?
+      image_tag("#{status.name}.jpg",  
+          :width => 80, :heigth => 80) : "")
+
+  end
+
   def assignee_firstname_or_empty(story)
     story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.firstname}"
   end
