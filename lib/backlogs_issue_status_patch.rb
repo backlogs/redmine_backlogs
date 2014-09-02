@@ -12,7 +12,7 @@ module Backlogs
 
     module InstanceMethods
       def backlog
-        return :success if ([5,8].include?(id))
+        return :success if ([5,9].include?(id))
         return :failure if id == 6 
         return :new if id == 1
         return :in_progress
