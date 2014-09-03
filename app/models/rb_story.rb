@@ -38,6 +38,8 @@ class RbStory < Issue
     end
   end
 
+  
+
   def self.__find_options_release_condition(project_id, release_ids)
     ["
       project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
@@ -56,6 +58,32 @@ class RbStory < Issue
   end
 
   public
+
+  def sprint_is?(sprint)
+    #query to find out if a task was already on another sprint/version   
+    query = """
+      select jd.value, max(j.created_on) as created_on , parent.id as parent_id, i.id as child_id from journals j 
+        inner join issues parent
+            left join versions v
+              on parent.fixed_version_id = v.id
+              and v.id = 5
+            inner join issues i
+                inner join issue_statuses status
+                  on i.status_id = status.id
+              on parent.id = i.parent_id  
+          on j.journalized_id = parent.id
+        inner join journal_details jd
+          on j.id = jd.journal_id
+      where status.is_closed
+        and j.journalized_type = 'Issue'
+        and jd.prop_key = 'fixed_version_id'
+      group by jd.value, parent.id, i.id
+
+    """
+
+    true
+
+  end
 
   def self.find_options(options)
     options = options.dup
