@@ -47,7 +47,7 @@ class RbTaskboardsController < RbApplicationController
     ActiveRecord::Base.connection.select_all(
       ActiveRecord::Base.send(:sanitize_sql_array, 
        [query, @sprint.id])
-    ).map { |record| record["id"] }
+    ).map { |record| record["id"].to_i }
 
   end
 
