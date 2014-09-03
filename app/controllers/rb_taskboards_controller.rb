@@ -41,6 +41,7 @@ class RbTaskboardsController < RbApplicationController
       where status.is_closed
         and j.journalized_type = 'Issue'
         and jd.prop_key = 'fixed_version_id'
+        and cast(jd.value as integer) <> v.id
       group by jd.value, parent.id, i.id
     "
     
