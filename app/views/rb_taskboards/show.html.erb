@@ -139,7 +139,7 @@
       <td><div class="label_sprint_impediments">
             <% if User.current.allowed_to?(:create_impediments, @project) %>
             <span class="add_new">
-              <%= image_tag("add.png", :alt => "+") %>
+              <%= image_tag("add.png", :alt => "+") %>  
             </span>
             <% end %>
             <%= l(:label_sprint_impediments) %>
@@ -165,11 +165,18 @@
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+
+            <a href="?default_task_from=<%=story.id %>">Default Task</a>
+
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">
               <%= image_tag("add.png", :alt => "+") %>
             </span>
             <% end %>
+
+
+
+
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
