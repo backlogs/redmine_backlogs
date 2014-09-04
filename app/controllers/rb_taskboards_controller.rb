@@ -56,7 +56,7 @@ class RbTaskboardsController < RbApplicationController
     stories = @sprint.stories
     
     @story_ids    = stories.map{|s| s.id}
-    @closed_tasks = identity_historic_closed_tasks
+    #@closed_tasks = identity_historic_closed_tasks
     puts "\n\n\ntestando: "+@closed_tasks.to_s
     @settings = Backlogs.settings
 
