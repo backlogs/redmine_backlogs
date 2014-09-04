@@ -23,11 +23,41 @@ class RbTaskboardsController < RbApplicationController
     end
   end
 
+  def identity_historic_closed_tasks
+    query = "
+      select jd.value, max(j.created_on) as created_on ,i.id
+        from journals j 
+          inner join issues parent
+            left join versions v
+              on parent.fixed_version_id = v.id
+              and v.id = ?
+            inner join issues i
+                inner join issue_statuses status
+                  on i.status_id = status.id
+              on parent.id = i.parent_id  
+            on j.journalized_id = parent.id
+          inner join journal_details jd
+            on j.id = jd.journal_id
+      where status.is_closed
+        and j.journalized_type = 'Issue'
+        and jd.prop_key = 'fixed_version_id'
+        and cast(jd.value as integer) <> v.id
+      group by jd.value, parent.id, i.id
+    "
+    
+    ActiveRecord::Base.connection.select_all(
+      ActiveRecord::Base.send(:sanitize_sql_array, 
+       [query, @sprint.id])
+    ).map { |record| record["id"].to_i }
+
+  end
+
   def show
     stories = @sprint.stories
     
     @story_ids    = stories.map{|s| s.id}
-
+    #@closed_tasks = identity_historic_closed_tasks
+    puts "\n\n\ntestando: "+@closed_tasks.to_s
     @settings = Backlogs.settings
 
     ## determine status columns to show
