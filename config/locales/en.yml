@@ -215,6 +215,7 @@ en:
   label_taskboard_view_task: "Show stories and taks"
   turn_on_memes: "Turn on memes"
   turn_off_memes: "Turn off memes"
+  clone_as_child_task: ">>>"
   warning_reset_sprint: |
       YOU ARE ABOUT TO RESET THIS SPRINT!
 
