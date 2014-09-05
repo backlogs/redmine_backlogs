@@ -118,7 +118,7 @@
 
 <div id="taskboard">
 
-
+  <%- if view_type == 2  %>
   <table id="board_header" cellspacing="0">
     <tr>
       <%-if view_type == 2  %>
@@ -133,7 +133,7 @@
       <%- end %>
     </tr>
   </table>
-
+  <%- end %>
   <%- if cookies[:memes] == '1'%>
     <br>
     <br>
@@ -141,7 +141,7 @@
     <br>
   <%- end %>
   
-  <%-if view_type == 2  %>
+  <%- if view_type == 2  %>
   <table id="impediments" class="board" cellspacing="0">
     <tr>
       <td><div class="label_sprint_impediments">
@@ -159,7 +159,7 @@
       <%- end %>
     </tr>
   </table>
-  <%-end  %>
+  <%- end %>
   
 
   <%-if view_type == 2  %>
@@ -208,13 +208,25 @@
 
   <%-else  %>
     <!-- Aqui tabela por estorias -->
-    <br>
-    <br>
-    <br>
+        
 
     <table id="tasks" class="board" cellspacing="0">
+      <thead>
+      <tr id="board_header">
+      <%- @statuses.each do |status| %>
+      <td class="swimlane">
+        <%- if cookies[:memes] == '1'%>
+            <%= status_pic_or_empty(status) %> <br>
+        <%- end %>
+        <%= status.name %> <br>
+      <%- end %>
+    </tr>
+    </thead>
+
+    
+
     <%- @sprint.stories.each do |story| %>
-      <tr id="swimlane-<%= story.id %>" class="story-swimlane">
+      <tr id="swimlane-<%= story.id %>" class="story-swimlane" style="padding-top:200px">
         <%- 
 
         story_status = @issue_st_hist && @issue_st_hist[story.id] || story.status

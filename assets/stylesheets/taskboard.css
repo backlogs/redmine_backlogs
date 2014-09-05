@@ -43,7 +43,7 @@ See RB.Taskboard.initialize()
   border:1px solid #CCCCCC;
   margin-bottom:0;
   margin-right:10px;
-  position: absolute;
+  position: relative;
   z-index: 200;
 }
 #board_header td{
@@ -67,7 +67,7 @@ See RB.Taskboard.initialize()
 .board{
   /* background-color:#FCFCFC; */
   border:1px solid #CCCCCC;
-  border-top:none;
+  /*border-top:none;
   margin-right:10px;
 }
 .board tr:hover{
