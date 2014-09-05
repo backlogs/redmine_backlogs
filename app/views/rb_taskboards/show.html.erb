@@ -22,6 +22,14 @@
                            :context => 'taskboard',
                            :format => 'js') %>">
   </script>
+
+  <script type="text/javascript">
+    <%- if params['default_task_from'] %>
+      window.close();
+    <%- end %>
+  </script>
+
+
   <%# Usability: display default cursor if tasks cannot be dragged %>
   <% unless User.current.allowed_to?(:update_tasks, @project) %> 
     <style type="text/css">
@@ -164,15 +172,16 @@
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
-            <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <strong><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %></strong>
 
-            <a href="?default_task_from=<%=story.id %>">Default Task</a>
+            <a href="?default_task_from=<%=story.id %>" target="_blank" onClick="window.location.reload()"><%=l(:clone_as_child_task) %> (Beta)</a>
 
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">
               <%= image_tag("add.png", :alt => "+") %>
             </span>
             <% end %>
+
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>

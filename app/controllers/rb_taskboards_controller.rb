@@ -125,7 +125,7 @@ class RbTaskboardsController < RbApplicationController
     end
 
     respond_to do |format|
-      format.html { render :layout => "rb" }
+      format.html { render action: "show", :layout => "rb" }
     end
   end
 
