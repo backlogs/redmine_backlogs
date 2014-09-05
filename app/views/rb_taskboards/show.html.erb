@@ -174,7 +174,7 @@
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
             <strong><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %></strong>
 
-            <a href="<%=params.size <= 3 ? "?" : "&" %>default_task_from=<%=story.id %>" target="_blank" onClick="window.location.reload()"><%=l(:clone_as_child_task) %> <%=params.size%>(Beta)</a>
+            <a href="<%=params.size <= 3 ? "?" : "&" %>default_task_from=<%=story.id %>" target="_blank" onClick="window.location.reload()"><%=l(:clone_as_child_task) %> (Beta)</a>
 
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">
