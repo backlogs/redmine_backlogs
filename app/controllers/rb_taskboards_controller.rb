@@ -55,6 +55,29 @@ class RbTaskboardsController < RbApplicationController
   def show
     stories = @sprint.stories
     
+    p = params['default_task_from'] 
+    if (p)  
+      parent = stories.select{ |s| s.id == p.to_i}.first
+      puts "\n\n\nestoria pai: #{parent.subject}"
+      if (parent)
+        
+          task = Issue.new
+          task.parent_issue_id = parent.id
+          task.subject = parent.subject
+          task.description = parent.description
+          task.priority = IssuePriority.default
+          task.tracker = parent.tracker
+          task.author = parent.author
+          task.project = parent.project
+          puts "save: #{task.subject}"  
+          task.save
+          #validates_presence_of :subject, :priority, :project, :tracker, :author, :status
+          puts "\n\n\npassou save #{task.id} #{task.persisted?}"
+      end
+    end
+    
+    
+
     @story_ids    = stories.map{|s| s.id}
     #@closed_tasks = identity_historic_closed_tasks
     puts "\n\n\ntestando: "+@closed_tasks.to_s
