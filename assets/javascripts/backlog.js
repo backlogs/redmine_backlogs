@@ -55,6 +55,7 @@ RB.Backlog = RB.Object.create({
     });
     
     this.recalcVelocity();
+    this.recalcVelocityHours();
   },
 
   afterCreate: function(data, textStatus, xhr){
@@ -144,6 +145,7 @@ RB.Backlog = RB.Object.create({
     }
 
     this.recalcVelocity();
+    this.recalcVelocityHours();
     this.drawMenu();
   },
   
@@ -324,6 +326,23 @@ RB.Backlog = RB.Object.create({
        tracker_summary += '<b>' + t + ':</b> ' + tracker_total[t] + '<br />';
     }
     sprint_points.qtip('option', 'content.text', tracker_summary);
+  },
+
+  recalcVelocityHours: function(){
+    var tracker_total = new Array();
+    total = 0;
+    this.getStories().each(function(index){
+      var story = RB.$(this).data('this');
+      if (!story) return;
+      var story_tracker = story.getTracker();
+      total += RB.$(this).data('this').getHours();
+      if ('undefined' == typeof(tracker_total[story_tracker])) {
+         tracker_total[story_tracker] = 0;
+      }
+      tracker_total[story_tracker] += story.getHours();
+    });
+    var sprint_hours = this.$.children('.header').find('.velocity_hours');
+    sprint_hours.text(total);
   },
 
   showBurndownChart: function(event){

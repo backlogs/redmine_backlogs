@@ -84,6 +84,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #product_backlog_container .header .close_sprint {
   height:28px;
   line-height:30px;
+  margin-right:-30px;
   padding:0;
   float: left;
   width:194px;
@@ -307,7 +308,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 
 #backlogs_container .header .velocity {
   text-align: right;
-  padding-right: 2px;
+  margin-right: 29px;
 }
 
 /* backlog header invisibles */
@@ -418,16 +419,17 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   text-decoration:line-through;
 }
 #backlogs_container .stories .story .status_id {
-  width:68px;
+  width:60px;
   float: left;
-  padding-left:8px;
+  padding-left:5px;
   white-space: nowrap;
 }
 
 #backlogs_container .stories .story .story_points {
   text-align:right;
+  padding-right:5px;
   float: left;
-  width:34px;
+  width:17px;
 }
 /*meta in story*/
 #backlogs_container .stories .story .fixed_version_id,
