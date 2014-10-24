@@ -14,7 +14,7 @@
       <%= render :partial => "productbacklog" %>
     <%- end %>
   </div>
-  <ul id="stories-for-<%= backlog[:release] ? "release-#{backlog[:release].id}" : (backlog[:sprint] ? backlog[:sprint].id : 'product-backlog') %>" class="stories">
+  <ul id="stories-for-<%= backlog[:release] ? "release-#{backlog[:release].id}" : (backlog[:sprint] ? backlog[:sprint].id : 'product-backlog') %>" class="stories <%= backlog[:sprint] ? backlog[:sprint].status : '' %>">
     <%= render :partial => "rb_stories/story", :collection => backlog[:stories] %>
   </ul>
 </div>
