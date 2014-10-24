@@ -177,6 +177,9 @@ RB.Backlog = RB.Object.create({
 
     //get the ui hint up to the header
     RB.$('.ui-sortable-disabled').parent('.backlog').addClass('rb-sortable-disabled');
+
+	// disable locked sprints
+    RB.$('.stories.locked').sortable('disable');
   },
 
   mouseUp: function(event) {
