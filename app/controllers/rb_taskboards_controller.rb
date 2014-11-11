@@ -58,7 +58,7 @@ class RbTaskboardsController < RbApplicationController
     p = params['default_task_from'] 
     if (p)  
       parent = stories.select{ |s| s.id == p.to_i}.first
-      puts "\n\n\nestoria pai: #{parent.subject}"
+      #puts "\n\n\nestoria pai: #{parent.subject}"
       if (parent)
         
           task = Issue.new
@@ -69,10 +69,10 @@ class RbTaskboardsController < RbApplicationController
           task.tracker = parent.tracker
           task.author = parent.author
           task.project = parent.project
-          puts "save: #{task.subject}"  
+          #puts "save: #{task.subject}"  
           task.save
           #validates_presence_of :subject, :priority, :project, :tracker, :author, :status
-          puts "\n\n\npassou save #{task.id} #{task.persisted?}"
+          #puts "\n\n\npassou save #{task.id} #{task.persisted?}"
       end
     end
     
@@ -80,14 +80,15 @@ class RbTaskboardsController < RbApplicationController
 
     @story_ids    = stories.map{|s| s.id}
     #@closed_tasks = identity_historic_closed_tasks
-    puts "\n\n\ntestando: "+@closed_tasks.to_s
+    #puts "\n\n\ntestando: "+@closed_tasks.to_s
     @settings = Backlogs.settings
 
     ## determine status columns to show
     tracker = Tracker.find_by_id(RbTask.tracker)
     statuses = tracker.issue_statuses
     # disable columns by default
-    if User.current.admin?
+
+    if false && User.current.admin? #disabling all columns for admin users
       @statuses = statuses
     else
       enabled = {}
