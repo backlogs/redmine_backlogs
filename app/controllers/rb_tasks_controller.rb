@@ -37,7 +37,11 @@ class RbTasksController < RbApplicationController
     
     #puts "\n\n\nprojeto configurado? #{settings['projects_list'].include? @task.project.id.to_s}"
 
-    verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s))
+    begin
+      verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s))
+    rescue
+      puts "Error"
+    end
 
     respond_to do |format|
       format.html { render :partial => "task", :object => @task, :status => status }
