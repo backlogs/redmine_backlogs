@@ -32,10 +32,10 @@ class RbTasksController < RbApplicationController
     #@task.story.story_follow_task_state if @task.story
 
     settings = Setting['plugin_redmine_issue_status']
-    puts "\n\n\n\n\n settings #{settings}"
-    puts "\n\n\n\n\ #{settings} #{@task.parent} #{(@task.status)} #{(@task.status_was)}"
+    #puts "\n\n\n\n\n settings #{settings}"
+    #puts "\n\n\n\n\ #{settings} #{@task.parent} #{(@task.status)} #{(@task.status_was)}"
     
-    puts "\n\n\nprojeto configurado? #{settings['projects_list'].include? @task.project.id.to_s}"
+    #puts "\n\n\nprojeto configurado? #{settings['projects_list'].include? @task.project.id.to_s}"
 
     verify_children @task, settings if (@task.project && (settings['projects_list'].include? @task.project.id.to_s))
 
@@ -59,7 +59,7 @@ class RbTasksController < RbApplicationController
           end 
 
           if (settings['minor_statuses_list'].include? status.id.to_s) && (issue.parent.status != status)
-            puts "Menor status #{status}"
+            #puts "Menor status #{status}"
             issue.parent.status = status
             issue.parent.save
 
