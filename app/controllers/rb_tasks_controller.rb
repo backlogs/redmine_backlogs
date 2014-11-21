@@ -25,6 +25,7 @@ class RbTasksController < RbApplicationController
   def update
     @task = RbTask.find_by_id(params[:id])
     @settings = Backlogs.settings
+    $stderr.puts "task_controller update params #{params}"
     result = @task.update_with_relationships(params)
     status = (result ? 200 : 400)
     @include_meta = true
@@ -39,9 +40,9 @@ class RbTasksController < RbApplicationController
 
     begin
       verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s)) unless (@task.errors.any? || result != 0)
-      puts "Verify children redmine_issue_status sucessfully"
+      #$stderr.puts "Verify children redmine_issue_status sucessfully"
     rescue => e
-      puts "Error processing redmine_issue_status #{e.message} #{@task.inspect}"
+      $stderr.puts "Error processing redmine_issue_status #{e.message} #{@task.inspect}"
       @task.errors.clear
     end
 
