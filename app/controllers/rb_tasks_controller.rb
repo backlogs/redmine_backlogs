@@ -38,9 +38,11 @@ class RbTasksController < RbApplicationController
     #puts "\n\n\nprojeto configurado? #{settings['projects_list'].include? @task.project.id.to_s}"
 
     begin
-      verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s))
-    rescue
-      puts "Error"
+      verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s)) unless (@task.errors.any? || result != 0)
+      puts "Verify children redmine_issue_status sucessfully"
+    rescue => e
+      puts "Error processing redmine_issue_status #{e.message} #{@task.inspect}"
+      @task.errors.clear
     end
 
     respond_to do |format|
