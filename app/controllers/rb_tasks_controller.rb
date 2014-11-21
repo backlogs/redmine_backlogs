@@ -39,10 +39,12 @@ class RbTasksController < RbApplicationController
     #puts "\n\n\nprojeto configurado? #{settings['projects_list'].include? @task.project.id.to_s}"
 
     begin
-      verify_children @task, settings if (@task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s)) unless (@task.errors.any? || result != 0)
+      $stderr.puts "\n\n\n\n\n erros: #{@task.errors.any?} \n result: #{result}"
+
+      verify_children @task, settings if (!@task.errors.any? && result && @task.project && (settings['projects_list']) && (settings['projects_list'].include? @task.project.id.to_s)) 
       #$stderr.puts "Verify children redmine_issue_status sucessfully"
     rescue => e
-      $stderr.puts "Error processing redmine_issue_status #{e.message} #{@task.inspect}"
+      $stderr.puts "\n\n Error processing redmine_issue_status #{e.message} #{@task.inspect}"
       @task.errors.clear
     end
 
@@ -66,7 +68,7 @@ class RbTasksController < RbApplicationController
           end 
 
           if (settings['minor_statuses_list'].include? status.id.to_s) && (issue.parent.status != status)
-            #puts "Menor status #{status}"
+            puts "\n\n\n\n Minor status #{status}"
             issue.parent.status = status
             issue.parent.save
 
