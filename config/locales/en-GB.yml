@@ -97,6 +97,7 @@ en-GB:
   field_priority: Priority
   field_project_id: "Project Id"
   field_release: Release
+  field_release_ids: Releases
   field_release_end_date: "Release end date"
   field_release_relationship: "Release relationship"
   field_release_start_date: "Release start date"
@@ -150,7 +151,9 @@ en-GB:
   label_product_backlog: "product backlog"
   label_product_cards: "Product backlog cards"
   label_release: Release
-  label_release_end_date: field_release_start_date
+  label_release_end_date: "Release end date"
+  label_release_multiview: "Release multiview" 
+  label_release_multiview_new: "New release multiview" 
   label_release_new: "New release"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release Planning"
@@ -159,7 +162,7 @@ en-GB:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: field_release_start_date
+  label_release_start_date: "Release start date"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum statistics"
@@ -169,6 +172,7 @@ en-GB:
   label_sprint_cards: "Sprint cards"
   label_sprint_impediments: "Sprint Impediments"
   label_sprint_name: "Sprint \"%{name}\""
+  label_sprint_close: "Close Sprint"
   label_stories: Stories
   label_stories_tasks: Stories/Tasks
   label_task_board: "Task board"
@@ -207,6 +211,11 @@ en-GB:
   today_not_in_release_warning: "Warning: current date is not within release date range."
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "Use text field instead of dropdown if empty"
+  label_taskboard_view_story: "Show only stories"
+  label_taskboard_view_task: "Show stories and taks"
+  turn_on_memes: "Turn on memes"
+  turn_off_memes: "Turn off memes"
+  clone_as_child_task: ">>>"
   warning_reset_sprint: |-
       YOU ARE ABOUT TO RESET THIS SPRINT!
 
@@ -219,3 +228,4 @@ en-GB:
       * The current value will become the initial value for all
          story/task properties
       * State will be set to the default issue state
+  error_cannot_close_sprint_with_open_stories: "Cannot close a sprint while it still has open stories."
