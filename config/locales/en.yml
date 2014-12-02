@@ -61,7 +61,7 @@ en:
   backlogs_statistics_yield: "Project has good average yield"
   backlogs_statistics_yield_failed: "Project has low average yield"
   backlogs_story: Story
-  backlogs_story_close_status: "When all Tasks are closed, update Story to:"
+  backlogs_story_close_status: "Status to close story automatically"
   backlogs_story_follow_task_status_close: "Close when all Tasks are closed"
   backlogs_story_follow_task_status_loose: "Loosely follow Tasks average done ratio"
   backlogs_story_follow_task_status_nil: Disabled
@@ -104,7 +104,7 @@ en:
   field_remaining_hours: "Remaining (hours)"
   field_story_points: "Story points"
   field_subject: Subject
-  field_task_color: "Task color"
+  field_task_color: "Task colour"
   field_time_entry_comments: "Time Entry Comments"
   field_time_entry_hours: "Time Entry Hours"
   field_time_entry_spend_on: "Time Entry Spend on"
@@ -152,8 +152,8 @@ en:
   label_product_cards: "Product backlog cards"
   label_release: Release
   label_release_end_date: "Release end date"
-  label_release_multiview: "Release multiview"
-  label_release_multiview_new: "New release multiview"
+  label_release_multiview: "Release multiview" 
+  label_release_multiview_new: "New release multiview" 
   label_release_new: "New release"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release Planning"
@@ -216,7 +216,7 @@ en:
   turn_on_memes: "Turn on memes"
   turn_off_memes: "Turn off memes"
   clone_as_child_task: ">>>"
-  warning_reset_sprint: |
+  warning_reset_sprint: |-
       YOU ARE ABOUT TO RESET THIS SPRINT!
 
       Are you sure you want to do this? Resetting the sprint
