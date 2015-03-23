@@ -90,7 +90,7 @@ class RbIssueHistory < ActiveRecord::Base
   def self.issue_type(tracker_id)
     return nil if tracker_id.nil? || tracker_id == ''
     tracker_id = tracker_id.to_i
-    return :story if RbStory.trackers && RbStory.trackers.include?(tracker_id)
+    return :story if (RbStory.trackers || []).include?(tracker_id)
     return :task if tracker_id == RbTask.tracker
     return nil
   end
