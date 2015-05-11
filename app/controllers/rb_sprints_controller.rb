@@ -17,7 +17,7 @@ class RbSprintsController < RbApplicationController
 
     #share the sprint according to the global setting
     default_sharing = Backlogs.setting[:sharing_new_sprint_sharingmode]
-    if default_sharing 
+    if default_sharing
       if @sprint.allowed_sharings.include? default_sharing
         @sprint.sharing = default_sharing
       end
@@ -92,10 +92,9 @@ class RbSprintsController < RbApplicationController
     end
 
     ids = []
-    status = IssueStatus.default.id
     Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
       ids << issue.id.to_s
-      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
+      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => issue.tracker.default_status_id)
     }
     if ids.size != 0
       ids = ids.join(',')
@@ -118,7 +117,7 @@ class RbSprintsController < RbApplicationController
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
-  
+
   def close
     if @sprint.stories.open.any?
       flash[:error] = l(:error_cannot_close_sprint_with_open_stories)
@@ -127,5 +126,5 @@ class RbSprintsController < RbApplicationController
     end
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
- 
+
 end

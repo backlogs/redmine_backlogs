@@ -14,7 +14,8 @@ module Backlogs
       def backlog
         return :success if is_closed? && (default_done_ratio.nil? || default_done_ratio == 100)
         return :failure if is_closed?
-        return :new if is_default? || default_done_ratio == 0
+        # return :new if is_default? || default_done_ratio == 0
+        return :new if default_done_ratio == 0
         return :in_progress
       end
 

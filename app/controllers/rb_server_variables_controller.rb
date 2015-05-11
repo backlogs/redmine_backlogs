@@ -1,6 +1,8 @@
 class RbServerVariablesController < RbApplicationController
   unloadable
 
+  skip_before_action :verify_authenticity_token
+
   # for index there's no @project
   # (eliminates the need of RbAllProjectsController)
   skip_before_filter :load_project, :authorize, :only => [:index]

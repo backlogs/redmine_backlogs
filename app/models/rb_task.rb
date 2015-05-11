@@ -148,13 +148,13 @@ class RbTask < Issue
 
   # assumes the task is already under the same story as 'id'
   def move_before(id)
-    id = nil if id.respond_to?('blank?') && id.blank?
-    if id.nil?
-      sib = self.siblings
-      move_to_right_of sib[-1].id if sib.any?
-    else
-      move_to_left_of id
-    end
+    # id = nil if id.respond_to?('blank?') && id.blank?
+    # if id.nil?
+    #   sib = self.siblings
+    #   move_to_right_of sib[-1].id if sib.any?
+    # else
+    #   move_to_left_of id
+    # end
   end
 
   def burndown(sprint = nil, status=nil)

@@ -47,7 +47,7 @@ module Backlogs
       def is_task?
         return (tracker_id == RbTask.tracker)
       end
-      
+
       def backlogs_issue_type
         return "story" if self.is_story?
         return "impediment" if self.blocks(true).any?
@@ -114,7 +114,7 @@ module Backlogs
             self.remaining_hours = 0 if self.status.backlog_is?(:success)
 
             self.fixed_version = self.story.fixed_version if self.story
-            self.start_date = Date.today if self.start_date.blank? && self.status_id != IssueStatus.default.id
+            self.start_date = Date.today if self.start_date.blank? && self.status_id != self.tracker.default_status_id
 
             self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
           elsif self.is_story? && Backlogs.setting[:set_start_and_duedates_from_sprint]
@@ -148,6 +148,10 @@ module Backlogs
       end
 
       def backlogs_after_save
+        BacklogsAfterSave.perform_async(self.id)
+      end
+
+      def backlogs_after_save_async
         self.history.save!
         self.invalidate_release_burnchart_data
 
@@ -181,9 +185,9 @@ module Backlogs
                                               RbTask.tracker]).to_a
           tasklist.each{|task| task.history.save! }
           if tasklist.size > 0
-            task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
-            connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
+            task_ids = '(' + tasklist.collect{|task| self.class.connection.quote(task.id)}.join(',') + ')'
+            self.class.connection.execute("update issues set
+                                updated_on = #{self.class.connection.quote(self.updated_on)}, fixed_version_id = #{self.class.connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
                                 where id in #{task_ids}")
           end
         end

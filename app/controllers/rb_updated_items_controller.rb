@@ -8,6 +8,7 @@ class RbUpdatedItemsController < RbApplicationController
   # should return
   def show
     @settings = Backlogs.settings
+    @sprint_estimated_hours = params[:sprint] ? RbSprint.find(params[:sprint]).estimated_hours.to_f : 0
     only  = (params[:only] ? params[:only].split(/, ?/).map{|v| v.to_sym} : [:sprints, :stories, :tasks, :impediments])
     @items = HashWithIndifferentAccess.new
     @include_meta = true
@@ -16,6 +17,7 @@ class RbUpdatedItemsController < RbApplicationController
     latest_updates = []
     if only.include? :stories
       @items[:stories] = RbStory.find_all_updated_since(params[:since], @project.id)
+    @sprint_estimated_hours =
       if @items[:stories].length > 0
         latest_updates << @items[:stories].sort{ |a,b| a.updated_on <=> b.updated_on }.last
       end

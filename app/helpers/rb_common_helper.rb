@@ -98,11 +98,13 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def status_id_or_default(story)
-    story.new_record? ? IssueStatus.default.id : story.status.id
+    # story.new_record? ? IssueStatus.default.id : story.status.id
+    story.new_record? ? ( story.tracker ? story.tracker.default_status.id : "" ) : story.status.id
   end
 
   def status_label_or_default(story)
-    story.new_record? ? IssueStatus.default.name : story.status.name
+    # story.new_record? ? IssueStatus.default.name : story.status.name
+    story.new_record? ? ( story.tracker ? story.tracker.default_status.name : "" ) : story.status.name
   end
 
   def sprint_html_id_or_empty(sprint)
@@ -264,7 +266,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   # Convert selected ids to integer and remove blank values.
   def selected_ids(options)
     return nil if options.nil?
-    options.collect{|o| o.to_i unless o.blank?}.compact! 
+    options.collect{|o| o.to_i unless o.blank?}.compact!
   end
 
   def format_release_sharing(v)
@@ -273,10 +275,6 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   #fixup rails base uri which is not obeyed IF url_for is used in a redmine layout hook
   def url_for_prefix_in_hooks
-    if Rails::VERSION::MAJOR < 3
-      '' #actionpack-2.3.14/lib/action_controller/url_rewriter.rb is injecting relative_url_root
-    else
-      Redmine::Utils.relative_url_root #actionpack-3* is not???
-    end
+    return ''
   end
 end

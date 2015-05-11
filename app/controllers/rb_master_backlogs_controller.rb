@@ -44,14 +44,14 @@ class RbMasterBacklogsController < RbApplicationController
         if projects.length > 1
           links << {:label => l(label_new), :url => '#', :sub => []}
           projects.each{|project|
-            links.first[:sub] << {:label => project.name, :url => '#', :classname => "#{add_class} project_id_#{project.id}"}
+            links.first[:sub] << {:label => project.name, :url => 'javascript:void(0);', :classname => "#{add_class} project_id_#{project.id}"}
           }
         else
-          links << {:label => l(label_new), :url => '#', :classname => "#{add_class} project_id_#{projects[0].id}"}
+          links << {:label => l(label_new), :url => 'javascript:void(0);', :classname => "#{add_class} project_id_#{projects[0].id}"}
         end
       end
     else #no sharing, only own project in the menu
-      links << {:label => l(label_new), :url => '#', :classname => add_class}
+      links << {:label => l(label_new), :url => 'javascript:void(0);', :classname => add_class}
     end
     return links
   end
@@ -100,7 +100,7 @@ class RbMasterBacklogsController < RbApplicationController
              } if @release
     links << {:label => l(:label_sprint_close),
               :url => url_for(:controller => 'rb_sprints', :action => 'close', :sprint_id => @sprint, :only_path => true)
-              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)        
+              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)
 
 
     respond_to do |format|

@@ -164,7 +164,7 @@ end
 def initialize_story_params(project_id = nil)
   @story = HashWithIndifferentAccess.new(RbStory.new.attributes)
   @story['project_id'] = project_id ? Project.find(project_id).id : @project.id
-  @story['tracker_id'] = RbStory.trackers.include?(Backlogs.setting[:default_story_tracker]) ? Backlogs.setting[:default_story_tracker] : RbStory.trackers.first 
+  @story['tracker_id'] = RbStory.trackers.include?(Backlogs.setting[:default_story_tracker]) ? Backlogs.setting[:default_story_tracker] : RbStory.trackers.first
   @story['author_id']  = @user.id
   @story
 end
@@ -175,7 +175,7 @@ def initialize_task_params(story_id)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.tracker.default_status_id
   params
 end
 
@@ -190,7 +190,7 @@ def initialize_impediment_params(attributes)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.tracker.default_status_id
   params
 end
 
@@ -257,7 +257,7 @@ def setup_permissions(typ)
     role.permissions << :configure_backlogs
   end
   role.save!
-  
+
   @projects.each{|project|
     m = Member.new(:user => @user, :roles => [role])
     project.members << m

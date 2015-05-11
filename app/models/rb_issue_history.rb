@@ -2,6 +2,7 @@ require 'pp'
 
 class RbIssueHistory < ActiveRecord::Base
   self.table_name = 'rb_issue_history'
+  attr_protected :created_at # hack, all attributes will be mass asigment
   belongs_to :issue
 
   serialize :history, Array
@@ -30,7 +31,7 @@ class RbIssueHistory < ActiveRecord::Base
     Hash.new{|h, k|
       s = IssueStatus.find_by_id(k.to_i)
       if s.nil?
-        s = IssueStatus.default
+        s = issue.tracker.default_status
         puts "IssueStatus #{k.inspect} not found, using default #{s.id} instead"
       end
       h[k] = {:id => s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
@@ -41,7 +42,7 @@ class RbIssueHistory < ActiveRecord::Base
   def filter(sprint, status=nil)
     h = Hash[*(self.expand.collect{|d| [d[:date], d]}.flatten)]
     filtered = sprint.days.collect{|d| h[d] ? h[d] : {:date => d, :origin => :filter}}
-    
+
     # see if this issue was closed after sprint end
     if filtered[-1][:status_open]
       self.history.select{|h| h[:date] > sprint.effective_date}.each{|h|
@@ -167,12 +168,12 @@ class RbIssueHistory < ActiveRecord::Base
         when 'release_id' then full_journal[date][:release] = {:new => j.value ? j.value.to_i : nil}
         when 'estimated_hours' then full_journal[date][:estimated_hours] = {:new => j.value ? j.value.to_f : nil}
         when 'remaining_hours' then full_journal[date][:remaining_hours] = {:new => j.value ? j.value.to_f : nil}
-  
+
         else raise "Unexpected property #{j.property}: #{j.value.inspect}"
         end
-  
+
         #:status_id is not in rb_journals
-  
+
         full_journal[date][:tracker] ||= {:new =>
           case
           when issue.is_story? then :story
@@ -386,7 +387,7 @@ class RbIssueHistory < ActiveRecord::Base
       date ||= self.history[0][:date] # the after_create calls this function without a parameter, so we know it's the creation call. Get the `yesterday' entry.
       parent_history_index = p.history.history.index{|d| d[:date] == date} # does the parent have an history entry on that date?
       if parent_history_index.nil? # if not, stretch the history to get the values at that date
-        parent_data = p.history.expand.detect{|d| d[:date] == date} 
+        parent_data = p.history.expand.detect{|d| d[:date] == date}
       else # if so, grab that entry
         parent_data = p.history.history[parent_history_index]
       end

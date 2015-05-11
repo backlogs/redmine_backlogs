@@ -173,7 +173,7 @@ module Backlogs
 
       base.class_eval do
         unloadable
-        has_many :releases, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy, :order => "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC"
+        has_many :releases, ->{order("#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC")}, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy
         has_many :releases_multiview, :class_name => 'RbReleaseMultiview', :dependent => :destroy
         include Backlogs::ActiveRecord::Attributes
       end
@@ -257,13 +257,17 @@ module Backlogs
 
       def shared_releases
         if new_record?
-          RbRelease.scoped(:include => :project,
-                       :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
+          RbRelease.scoped(
+            :include => :project,
+            :joins => :project,
+            :conditions => "#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
         else
           @shared_releases ||= begin
             order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
             r = root? ? self : root
-            RbRelease.scoped(:include => :project,
+            RbRelease.scoped(
+              :include => :project,
+              :joins => :project,
               :conditions => "#{Project.table_name}.id = #{id}" +
                 " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
                   " #{RbRelease.table_name}.sharing = 'system'" +
@@ -282,12 +286,12 @@ module Backlogs
       # by parent projects which are out of scope of the currently selected project as they will
       # disappear when dropped.
       def droppable_releases
-        connection.select_all(_sql_for_droppables(RbRelease.table_name,true))
+        self.class.connection.select_all(_sql_for_droppables(RbRelease.table_name,true))
       end
 
       # Return a list of sprints each project's stories can be dropped to on the master backlog.
       def droppable_sprints
-         connection.select_all(_sql_for_droppables(Version.table_name))
+        self.class.connection.select_all(_sql_for_droppables(Version.table_name))
       end
 
 private
@@ -322,11 +326,12 @@ private
           "))" +
           " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" +
           " GROUP BY pp.id;"
+        sql
       end
 
       # Returns sql for aggregating a list from grouped rows. Depends on database implementation.
       def _sql_for_aggregate_list(field_name)
-        adapter_name = connection.adapter_name.downcase
+        adapter_name = self.class.connection.adapter_name.downcase
         aggregate_list = ""
         if adapter_name.starts_with? 'mysql'
           aggregate_list = " GROUP_CONCAT(#{field_name} SEPARATOR ',') as list "
