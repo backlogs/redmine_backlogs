@@ -19,4 +19,5 @@ gem "open-uri-cached"
 gem "prawn"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
+gem 'activerecord-deprecated_finders', require: 'active_record/deprecated_finders'
 
