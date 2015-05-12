@@ -6,12 +6,13 @@
 <meta name="description" content="Redmine Backlogs" />
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
 <%= csrf_meta_tag %>
-<%= favicon %>
 
 <% if Backlogs.setting[:show_redmine_std_header] %>
 <%= stylesheet_link_tag 'application', :media => 'all' %>
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
 <% end %>
+
+<%= javascript_include_tag 'jquery/jquery-1.7.2-ui-1.8.21-ujs-2.0.3.js', :plugin => 'redmine_backlogs' %>
 
 <%= call_hook :view_layouts_base_html_head %>
 

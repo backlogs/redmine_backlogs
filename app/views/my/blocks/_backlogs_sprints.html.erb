@@ -39,7 +39,7 @@
               next if statuses[task.status_id].nil? # Avoid bug?
               if statuses[task.status_id].is_closed?
                 done+=1
-              elsif task.status_id == IssueStatus.default.id
+              elsif task.status_id == task.tracker.default_status_id
                 todo+=1
               else
                 progress+=1

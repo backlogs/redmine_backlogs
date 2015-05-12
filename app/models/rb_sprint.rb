@@ -24,7 +24,8 @@ class RbSprint < Version
                  sprint_start_date #{order},
                  CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
                  effective_date #{order}",
-      :conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
+      :joins => :project,
+      :conditions => [ "versions.status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
     }
   }
 
@@ -36,7 +37,8 @@ class RbSprint < Version
                  sprint_start_date #{order},
                  CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
                  effective_date #{order}",
-      :conditions => [ "status = 'closed' and project_id = ?", project.id ]
+      :joins => :project,
+      :conditions => [ "versions.status = 'closed' and project_id = ?", project.id ]
     }
   }
 
@@ -50,6 +52,7 @@ class RbSprint < Version
         # Project used for other sharings
         p = self.project
         Project.visible.scoped(:include => :versions,
+          :joins => :verions,
           :conditions => ["#{Version.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +

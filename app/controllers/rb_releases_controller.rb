@@ -22,18 +22,23 @@ class RbReleasesController < RbApplicationController
   end
 
   def new
-    @release = RbRelease.new(:project => @project)
-    if request.post?
-      @release.attributes = params[:release]
-      if @release.save
-        flash[:notice] = l(:notice_successful_create)
-        redirect_to :action => 'index', :project_id => @project
-      end
+    @release = RbRelease.new
+    @release.project = @project
+  end
+
+  def create
+    @release = RbRelease.new(release_params)
+    @release.project = @project
+    if @release.save
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to :action => 'index', :project_id => @project
+    else
+      render action: :new
     end
   end
 
   def edit
-    if request.post? and @release.update_attributes(params[:release])
+    if request.post? and @release.update_attributes(release_params)
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
 #    else
@@ -62,6 +67,12 @@ class RbReleasesController < RbApplicationController
   def destroy
     @release.destroy
     redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+  end
+
+  private
+
+  def release_params
+    params.require(:release).permit(:name, :description, :status, :release_start_date, :release_end_date, :planned_velocity, :sharing)
   end
 
 end

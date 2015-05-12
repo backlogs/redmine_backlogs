@@ -6,8 +6,9 @@ module RbServerVariablesHelper
   #
   #   workflow_transitions(RbStory)
   def workflow_transitions(klass)
-     default_status = IssueStatus.default
-     default_status = default_status.id.to_s if default_status
+     # default_status = IssueStatus.default
+     # default_status = default_status.id.to_s if default_status
+     default_status = nil
      roles = User.current.admin ? Role.all : User.current.roles_for_project(@project)
      transitions = {:states => {}, :transitions => {} , :default => default_status }
 

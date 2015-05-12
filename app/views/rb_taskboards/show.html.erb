@@ -23,7 +23,7 @@
                            :format => 'js') %>">
   </script>
   <%# Usability: display default cursor if tasks cannot be dragged %>
-  <% unless User.current.allowed_to?(:update_tasks, @project) %> 
+  <% unless User.current.allowed_to?(:update_tasks, @project) %>
     <style type="text/css">
     #taskboard .issue{cursor:default;}
     </style>
@@ -58,6 +58,8 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
+
+  <span id="sprintestimatedhours">(<%= @sprint.estimated_hours.to_f %> estimated <%= l(:label_hours) %>)</span>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
   <% end %>
@@ -114,7 +116,7 @@
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
-            <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+            <span class="remaininghours">(<%= story.remaining_hours.to_f %> <%= l(:label_hours) %>)</span>
           </div>
           <div class="subject"><%= h story.subject %></div>
           <%- if @project != story.project %>
