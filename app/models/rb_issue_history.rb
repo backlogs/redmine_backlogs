@@ -29,12 +29,12 @@ class RbIssueHistory < ActiveRecord::Base
 
   def self.statuses
     Hash.new{|h, k|
-      s = IssueStatus.find_by_id(k.to_i)
-      if s.nil?
-        s = issue.tracker.default_status
-        puts "IssueStatus #{k.inspect} not found, using default #{s.id} instead"
-      end
-      h[k] = {:id => s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
+      status = IssueStatus.find_by_id(k.to_i)
+      unless (status)
+		status = IssueStatus.find_by_id(1) #issue.tracker.default_status
+        puts "IssueStatus #{k.inspect} not found, using default #{status.id} instead"
+       end
+      h[k] = {:id => status.id, :open => ! status.is_closed?, :success => status.is_closed? ? (status.default_done_ratio.nil? || status.default_done_ratio == 100) : false }
       h[k]
     }
   end
@@ -317,11 +317,11 @@ class RbIssueHistory < ActiveRecord::Base
   def self.rebuild
     RbSprintBurndown.delete_all
 
-    status = self.statuses
 
     issues = Issue.count
     Issue.find(:all, :order => 'root_id asc, lft desc').each_with_index{|issue, n|
       puts "#{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{issues})..."
+	  status = self.statuses
       RbIssueHistory.rebuild_issue(issue, status)
     }
   end
