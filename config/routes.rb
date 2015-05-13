@@ -103,7 +103,7 @@ def rb_common_routes(rb)
   rb_match rb, 'hooks/sidebar/project/:project_id/:sprint_id',
           :to => 'rb_hooks_render#view_issues_sidebar', :via => [:get]
 
-  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_project_settings#project_settings', :via => [:get]
+  rb_match rb, 'project/:project_id/backlogs', :to => 'rb_project_settings#project_settings', :via => [:post, :get]
 end
 
 if Rails::VERSION::MAJOR < 3
