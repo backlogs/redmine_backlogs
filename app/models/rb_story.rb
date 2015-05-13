@@ -203,6 +203,12 @@ class RbStory < Issue
     end
   end
 
+  def self.trackers_include?(tracker_id)
+    tracker_ids = Backlogs.setting[:story_trackers] || []
+    tracker_ids = tracker_ids.map(&:to_i)
+    tracker_ids.include?(tracker_id.to_i)
+  end
+
   def self.has_settings_table
     ActiveRecord::Base.connection.tables.include?('settings')
   end
@@ -432,6 +438,17 @@ class RbStory < Issue
           }
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
         end
+  end
+
+  def descendants(*args)
+    descendants = super
+    descendants.each do |issue|
+      next unless issue.is_task?
+      if self.id == (issue.parent_id || issue.parent_issue_id)
+        issue.instance_variable_set(:@rb_story, self)
+      end
+    end
+    descendants
   end
 
 private
