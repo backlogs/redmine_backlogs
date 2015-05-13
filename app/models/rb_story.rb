@@ -191,7 +191,7 @@ class RbStory < Issue
       trackers = [] if trackers.blank?
     end
 
-    trackers = Tracker.find_all_by_id(trackers)
+    trackers = Tracker.where(:id => trackers).all
     trackers = trackers & options[:project].trackers if options[:project]
     trackers = trackers.sort_by { |t| [t.position] }
 

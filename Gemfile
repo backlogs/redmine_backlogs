@@ -20,4 +20,5 @@ gem "prawn", "1.3.0"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
 gem 'activerecord-deprecated_finders', require: 'active_record/deprecated_finders'
+# gem 'sidekiq', "3.1.4"
 

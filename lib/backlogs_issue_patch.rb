@@ -33,7 +33,7 @@ module Backlogs
 
     module InstanceMethods
       def history
-        @history ||= RbIssueHistory.find_or_create_by_issue_id(self.id)
+        @history ||= RbIssueHistory.find_or_create_by(issue_id: self.id)
       end
 
       def release_burnchart_day_caches(release_id)
@@ -148,10 +148,10 @@ module Backlogs
       end
 
       def backlogs_after_save
-        BacklogsAfterSave.perform_async(self.id)
-      end
+#        BacklogsAfterSave.perform_async(self.id)
+#      end
 
-      def backlogs_after_save_async
+#      def backlogs_after_save_async
         self.history.save!
         self.invalidate_release_burnchart_data
 
