@@ -440,6 +440,17 @@ class RbStory < Issue
         end
   end
 
+  def descendants(*args)
+    descendants = super
+    descendants.each do |issue|
+      next unless issue.is_task?
+      if self.id == (issue.parent_id || issue.parent_issue_id)
+        issue.instance_variable_set(:@rb_story, self)
+      end
+    end
+    descendants
+  end
+
 private
 
   def calc_total_auto(p,days,in_release_first)
