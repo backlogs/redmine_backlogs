@@ -80,7 +80,7 @@ def rb_common_routes(rb)
 
   rb_match rb, 'sprint/create', :to => 'rb_sprints#create', :via => [:post]
   rb_match rb, 'sprint/:sprint_id/update', :to => 'rb_sprints#update', :via => [:post, :put]
-  rb_match rb, 'sprint/:sprint_id/close', :to => 'rb_sprints#close', :via => [:post, :put]
+  rb_match rb, 'sprint/:sprint_id/close', :to => 'rb_sprints#close', :via => [:get, :post, :put]
   rb_match rb, 'sprint/:sprint_id/reset', :to => 'rb_sprints#reset', :via => [:post, :put, :get]
   rb_match rb, 'sprint/download/:sprint_id.xml', :to => 'rb_sprints#download', :format => 'xml', :via => [:get]
   rb_match rb, 'sprints/:project_id/close_completed', :to => 'rb_sprints#close_completed', :via => [:put]
