@@ -171,8 +171,12 @@ class RbRelease < ActiveRecord::Base
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
-  scope :open, :conditions => {:status => 'open'}
-  scope :closed, :conditions => {:status => 'closed'}
+  scope :open, -> {
+    where(:status => 'open')
+  }
+  scope :closed, -> {
+    where(status => 'closed')
+  }
   scope :visible, lambda {|*args| { :include => :project,
                                     :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
 
