@@ -8,7 +8,13 @@ def rb_match(object, path, hash)
       hash.delete(:via)
     end
     object.connect path, hash
-  else
+  elsif Rails::VERSION::MAJOR > 3
+    if not hash[:via]
+      hash[:via] = [:get]
+    end
+    match path, hash
+
+  else # Rails 3
     match path, hash
   end
 end
