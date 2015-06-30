@@ -5,17 +5,11 @@ services:
 - mysql
 - postgresql
 rvm:
-- 1.9.3
 - 2.0.0
 env:
-- REDMINE_VER=2.2.4 DB=mysql CLUSTER=CLUSTER1
-- REDMINE_VER=2.2.4 DB=mysql CLUSTER=CLUSTER2
-- REDMINE_VER=2.2.4 DB=postgresql CLUSTER=CLUSTER1
-- REDMINE_VER=2.2.4 DB=postgresql CLUSTER=CLUSTER2
-- REDMINE_VER=2.3.3 DB=postgresql CLUSTER=CLUSTER1
-- REDMINE_VER=2.3.3 DB=postgresql CLUSTER=CLUSTER2
-- REDMINE_VER=2.5.1 DB=postgresql CLUSTER=CLUSTER1
-- REDMINE_VER=2.5.1 DB=postgresql CLUSTER=CLUSTER2
+- REDMINE_VER=2.5.3 DB=postgresql CLUSTER=CLUSTER1
+- REDMINE_VER=2.6.5 DB=postgresql CLUSTER=CLUSTER2
+- REDMINE_VER=3.0.3 DB=postgresql CLUSTER=CLUSTER1
 matrix:
   allow_failures:
   - rvm: jruby-18mode
