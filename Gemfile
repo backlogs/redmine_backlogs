@@ -20,12 +20,13 @@ gem "holidays", "~>1.0.3"
 gem "icalendar"
 # Choose nokogiri depending on RM version. This is done to avoid conflict with
 # RM 2.3 which pinned nokogiri at "<1.6.0" for group :test.
+# TODO: drop RM 2.3 support, its a security risk to use that nokogiri
 if (redmine_version_major == 2 && redmine_version_minor == 3)
 gem "nokogiri", "< 1.6.0"
 else
 gem "nokogiri"
 end
-gem "open-uri-cached"
+gem "open-uri-cached", ">= 0.0.5"
 gem "prawn"
 gem 'json'
 gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
@@ -69,8 +70,9 @@ group :test do
     gem "rspec", "=1.3.1"
     gem "rspec-rails", "=1.3.3"
   end
-  if RUBY_VERSION >= "1.9"
-    gem "simplecov", "~>0.6"
+  if redmine_version_major >= 3 #redmine 3.0.3 has simplecov
+  elsif RUBY_VERSION >= "1.9"
+    gem "simplecov", "~>0.9.1"
   else
     gem "rcov",  "=0.9.11"
   end
