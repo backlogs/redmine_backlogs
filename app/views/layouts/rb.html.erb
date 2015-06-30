@@ -7,6 +7,14 @@
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
 <%= csrf_meta_tag %>
 <%= favicon %>
+<%     if ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 5)) ||
+          (Redmine::VERSION::MAJOR > 2) # redmine 2.6 changed header code FIXME
+%>
+<%= stylesheet_link_tag 'jquery/jquery-ui-1.11.0', 'application', :media => 'all' %>
+<%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
+<%= javascript_heads %>
+<%= heads_for_theme %>
+<% end %>
 
 <% if Backlogs.setting[:show_redmine_std_header] %>
 <%= stylesheet_link_tag 'application', :media => 'all' %>
