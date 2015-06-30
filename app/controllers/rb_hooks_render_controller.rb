@@ -13,7 +13,7 @@ class RbHooksRenderController < RbApplicationController
     }
 
     respond_to do |format|
-      format.html { render :template => 'backlogs/view_issues_sidebar.html.erb', :layout => false, :locals => locals }
+      format.html { render :template => 'backlogs/view_issues_sidebar', :layout => false, :locals => locals, :handlers => [:erb], :formats => [:html] }
     end
   end
 
