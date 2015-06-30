@@ -105,7 +105,7 @@ run_tests()
     TRACE=--trace
   fi
   # patch fixtures
-  bundle exec rake redmine:backlogs:prepare_fixtures $TRACE
+  bundle exec rake redmine:backlogs:prepare_fixtures #$TRACE
 
   # run cucumber
   if [ ! -n "${CUCUMBER_TAGS}" ];
@@ -227,9 +227,9 @@ sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GON
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
 
-if [ "$VERBOSE" = "yes" ]; then
-  export TRACE=--trace
-fi
+#if [ "$VERBOSE" = "yes" ]; then
+#  export TRACE=--trace
+#fi
 
 # run redmine database migrations
 if [ "$VERBOSE" = "yes" ]; then echo 'Migrations'; fi
