@@ -8,6 +8,7 @@ namespace :redmine do
       root = case Rails::VERSION::MAJOR
         when 2 then RAILS_ROOT.to_s
         when 3 then Rails.root.to_s
+        when 4 then Rails.root.to_s
         else nil
         end
 
