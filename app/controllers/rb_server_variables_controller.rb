@@ -1,5 +1,6 @@
 class RbServerVariablesController < RbApplicationController
   unloadable
+  skip_before_action :verify_authenticity_token, if: :js_request?
 
   # for index there's no @project
   # (eliminates the need of RbAllProjectsController)
@@ -7,12 +8,19 @@ class RbServerVariablesController < RbApplicationController
 
   def index
     @context = params[:context]
+
     respond_to do |format|
+      Rails.logger.warn("Format problem #{format}")
       format.html { render_404 }
-      format.js { render :file => 'rb_server_variables/show', :layout => false, :handlers => [:erb], :formats => [:js] }
+      format.js { render :template => 'rb_server_variables/show', :layout => false, :handlers => [:erb], :formats => [:js] }
+      #format.js { render js: "alert('Hello Rails');" }
     end
   end
 
   alias :project :index
   alias :sprint :index
+
+  def js_request?
+    request.format.js?
+  end
 end
