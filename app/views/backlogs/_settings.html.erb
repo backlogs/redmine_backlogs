@@ -90,7 +90,7 @@
     </thead>
     <tbody>
       <% Tracker.all.each do |tracker| %>
-        <% states = tracker.issue_statuses.group_by {|status| status.backlog} %>
+        <% states = tracker.issue_statuses.group_by {|status| status.backlog(tracker)} %>
         <tr>
           <td class="<%= RbStory.trackers.include?(tracker.id) ? 'selected' : 'not-selected' %> <%= tracker.backlog? ? 'fit' : 'unfit' %>"><%= h tracker.name %></span></td>
           <td><%= h((states[:new] || []).join(', ')) %></td>
