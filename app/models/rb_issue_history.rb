@@ -196,7 +196,7 @@ class RbIssueHistory < ActiveRecord::Base
     }
 
     # Wouldn't be needed if redmine just created journals for update_parent_properties
-    subissues = Issue.find(:all, :conditions => ['parent_id = ?', issue.id]).to_a
+    subissues = Issue.where(parent_id: issue.id).to_a
     subhists = []
     subdates = []
     subissues.each{|i|
@@ -319,10 +319,13 @@ class RbIssueHistory < ActiveRecord::Base
     status = self.statuses
 
     issues = Issue.count
-    Issue.find(:all, :order => 'root_id asc, lft desc').each_with_index{|issue, n|
-      puts "#{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{issues})..."
-      RbIssueHistory.rebuild_issue(issue, status)
-    }
+    begin
+      Issue.order('root_id asc, lft desc').each_with_index{|issue, n|
+        puts "#{issue.id.to_s.rjust(6, ' ')} (#{(n+1).to_s.rjust(6, ' ')}/#{issues})..."
+        RbIssueHistory.rebuild_issue(issue, status)
+      }
+    rescue ActiveRecord::RecordNotFound => e
+    end
   end
 
   def init_history
