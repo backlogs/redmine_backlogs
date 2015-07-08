@@ -223,8 +223,8 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # make sure existing stories don't occupy positions that the tests are going to use
   Issue.connection.execute("update issues set position = (position - #{Issue.minimum(:position)}) + #{Issue.maximum(:position)} + 50000")
 
-  #Backlogs.setting[:card_spec] = 'Zweckform 3474'
-  #BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil
+  Backlogs.setting[:card_spec] = 'Zweckform 3474'
+  BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil
   puts("Project #{@project} has backlogs configured.")
 end
 
