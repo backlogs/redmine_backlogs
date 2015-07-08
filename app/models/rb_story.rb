@@ -75,19 +75,24 @@ class RbStory < Issue
     sprint_ids = self.__find_options_normalize_option(options.delete(:sprint))
     release_ids = self.__find_options_normalize_option(options.delete(:release))
 
+    options[:joins] ||= []
+    options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
+    options[:joins] << :project
+
     if sprint_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_sprint_condition(project_id, sprint_ids))
+      options[:joins] << :fixed_version
     elsif release_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_release_condition(project_id, release_ids))
+      options[:joins] << :release
     else #product backlog
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_pbl_condition(project_id))
-      options[:joins] ||= []
-      options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
     end
-
-    options
+    puts("options #{options}")
+    #options
+    where(options[:condition]).joins(options[:joins])
   end
 
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
@@ -105,7 +110,9 @@ class RbStory < Issue
   end
 
   def self.backlog(project_id, sprint_id, release_id, options={})
-    self.visible.order("#{self.table_name}.position").
+    puts("RbStory self.backlog #{project_id}, #{sprint_id} #{release_id}")
+    self.visible.
+      order("#{self.table_name}.position").
       backlog_scope(
         options.merge({
           :project => project_id,
@@ -130,6 +137,7 @@ class RbStory < Issue
     #make separate queries for each sprint to get higher/lower item right
     return [] unless sprints
     sprints.map do |s|
+      puts("bl sprint: #{s}")
       { :sprint => s,
         :stories => RbStory.backlog(project.id, s.id, nil, options)
       }
@@ -139,6 +147,7 @@ class RbStory < Issue
   def self.backlogs_by_release(project, releases, options={})
     #make separate queries for each release to get higher/lower item right
     return [] unless releases
+    puts("backlogs_by_release #{project} #{releases} #{options}")
     releases.map do |r|
       { :release => r,
         :stories => RbStory.backlog(project.id, nil, r.id, options)

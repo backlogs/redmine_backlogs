@@ -19,25 +19,35 @@ class RbSprint < Version
 
   rb_scope :open_sprints, lambda { |project|
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-    {
-      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+    where("status = 'open' and project_id = ?", project.id).
+    order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
                  sprint_start_date #{order},
                  CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 effective_date #{order}",
-      :conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
-    }
+                 effective_date #{order}")
+#    {
+      #:order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+      #           sprint_start_date #{order},
+      #           CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
+      #           effective_date #{order}",
+      #:conditions => [ "status = 'open' and project_id = ?", project.id ] #FIXME locked, too?
+#    }
   }
 
   #TIB ajout du scope :closed_sprints
   rb_scope :closed_sprints, lambda { |project|
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-    {
-      :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+    where("status = 'closed' and project_id = ?", project.id).
+    order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
                  sprint_start_date #{order},
                  CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
-                 effective_date #{order}",
-      :conditions => [ "status = 'closed' and project_id = ?", project.id ]
-    }
+                 effective_date #{order}")
+    #{
+    #  :order => "CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{order},
+    #             sprint_start_date #{order},
+    #             CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{order},
+    #             effective_date #{order}",
+    #  :conditions => [ "status = 'closed' and project_id = ?", project.id ]
+    #}
   }
 
   #depending on sharing mode

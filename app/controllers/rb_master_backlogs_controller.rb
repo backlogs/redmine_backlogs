@@ -5,15 +5,19 @@ class RbMasterBacklogsController < RbApplicationController
 
   def show
     product_backlog_stories = RbStory.product_backlog(@project)
+    puts("product_backlog_stories #{product_backlog_stories.to_a}")
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
 
     #collect all sprints which are sharing into @project
     sprints = @project.open_shared_sprints
     @sprint_backlogs = RbStory.backlogs_by_sprint(@project, sprints)
+    puts("sprint backlogs #{@sprint_backlogs}")
 
     releases = @project.open_releases_by_date
+    puts("show: Releases #{releases.to_a}")
     @release_backlogs = RbStory.backlogs_by_release(@project, releases)
 
+    puts("last update #{@last_update}")
     @last_update = [product_backlog_stories,
       @sprint_backlogs.map{|s| s[:stories]},
       @release_backlogs.map{|r| r[:releases]}

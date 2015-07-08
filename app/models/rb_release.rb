@@ -177,8 +177,8 @@ class RbRelease < ActiveRecord::Base
   scope :closed, -> {
     where(status => 'closed')
   }
-  scope :visible, lambda {|*args| { :include => :project,
-                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
+  scope :visible, lambda {|*args| joins(:project).
+                                    where(Project.allowed_to_condition(args.first || User.current, :view_releases)) }
 
 
   include Backlogs::ActiveRecord::Attributes
@@ -308,14 +308,14 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.scoped(:include => :releases,
-          :conditions => ["#{RbRelease.table_name}.id = #{id}" +
+        Project.visible.includes(:releases).
+          where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
           " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
           " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
-          "))",sharing,sharing,sharing,sharing]).order('lft')
+          "))",sharing,sharing,sharing,sharing).order('lft')
       end
     @shared_projects
   end
