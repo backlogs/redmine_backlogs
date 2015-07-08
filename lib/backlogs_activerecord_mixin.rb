@@ -28,7 +28,7 @@ module Backlogs
 
       def available_custom_fields
         klass = self.class.respond_to?(:rb_sti_class) ? self.class.rb_sti_class : self.class
-        CustomField.find(:all, :conditions => "type = '#{klass.name}CustomField'", :order => 'position')
+        CustomField.where("type = '#{klass.name}CustomField'").order('position')
       end
 
       def journalized_update_attributes!(attribs)

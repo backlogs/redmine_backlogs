@@ -191,11 +191,12 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   # Enable the backlogs plugin
   @project.enable_module!('backlogs')
 
+  defaultstatus = IssueStatus.find_by(:name => 'New')
   # Configure the story and task trackers
-  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story'))]
-  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task'))
+  story_trackers = [(Tracker.find_by_name('Story') || Tracker.create!(:name => 'Story', :default_status => defaultstatus))]
+  task_tracker = (Tracker.find_by_name('Task') || Tracker.create!(:name => 'Task', :default_status => defaultstatus))
 
-  copy_from = Tracker.find(:first, :conditions=>{:name => 'Feature request'})
+  copy_from = Tracker.find_by(:name => 'Feature request')
   story_trackers.each{|tracker|
     if copy_from.respond_to? :workflow_rules #redmine 2 master
       tracker.workflow_rules.copy(copy_from)
@@ -203,7 +204,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
       tracker.workflows.copy(copy_from)
     end
   }
-  copy_from = Tracker.find(:first, :conditions=>{:name => 'Bug'})
+  copy_from = Tracker.find_by(:name => 'Bug')
   if copy_from.respond_to? :workflow_rules
     task_tracker.save!
     task_tracker.workflow_rules.copy(copy_from)
@@ -224,6 +225,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
 
   #Backlogs.setting[:card_spec] = 'Zweckform 3474'
   #BacklogsPrintableCards::CardPageLayout.selected.should_not be_nil
+  puts("Project #{@project} has backlogs configured.")
 end
 
 Given /^no versions or issues exist$/ do
