@@ -319,7 +319,7 @@ Given /^I have made the following task mutations:$/ do |table|
 
     task.remaining_hours = remaining.to_f unless remaining.blank?
     task.status_id = status if status
-    task.save!.should be_true
+    task.save!.should be true
 
     mutation.should == {}
   end
@@ -497,7 +497,7 @@ Given /^I have set the content for wiki page (.+) to (.+)$/ do |title, content|
   end
 
   page.content.text = content
-  page.save.should be_true
+  page.save.should be true
 end
 
 Given /^I have made (.+) the template page for sprint notes/ do |title|

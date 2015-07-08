@@ -193,7 +193,7 @@ end
 
 Then /^The last_update information should be near (.+)$/ do |t|
   lu = page.find(:css, "#last_updated").text()
-  lu.start_with?(t).should be_true #coarse. hmm.
+  lu.start_with?(t).should be true #coarse. hmm.
 end
 
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
@@ -506,9 +506,9 @@ Then /^(.+) for (.+) should be (true|false)$/ do |key, project, value|
   project.should_not be nil
   setting = project.rb_project_settings.send(key)
   if value=="true"
-    setting.should be_true
+    setting.should be true
   else
-    setting.should_not be_true
+    setting.should be false
   end
 end
 
