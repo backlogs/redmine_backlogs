@@ -190,7 +190,7 @@ module Backlogs
       end
 
       def rb_project_settings
-        @project_settings ||= RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
+        @project_settings ||= RbProjectSettings.find_by(:project_id => self.id)
         unless @project_settings
           @project_settings = RbProjectSettings.new( :project_id => self.id)
           @project_settings.save
