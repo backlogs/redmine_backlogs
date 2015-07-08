@@ -228,7 +228,7 @@ def login_as_admin
 end
 
 def setup_permissions(typ)
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find_by(:name =>'Manager')
   if typ == 'scrum master'
     role.permissions << :view_master_backlog
     role.permissions << :view_releases
