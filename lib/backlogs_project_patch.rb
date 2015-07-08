@@ -7,10 +7,9 @@ module Backlogs
       @statistics = {:succeeded => [], :failed => [], :values => {}}
 
       @active_sprint = @project.active_sprint
-      @past_sprints = RbSprint.find(:all,
-        :conditions => ["project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today],
-        :order => "effective_date desc",
-        :limit => 5).select(&:has_burndown?)
+      @past_sprints = RbSprint.where("project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today)
+        .order("effective_date desc")
+        .limit(5).select(&:has_burndown?)
       @all_sprints = (@past_sprints + [@active_sprint]).compact
 
       @all_sprints.each{|sprint| sprint.burndown.direction = :up }
@@ -217,7 +216,7 @@ module Backlogs
       def open_shared_sprints
         if Backlogs.setting[:sharing_enabled]
           order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-          shared_versions.visible.scoped(:conditions => {:status => ['open', 'locked']}, :order => "sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+          shared_versions.visible.where(:status => ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end
@@ -235,10 +234,9 @@ module Backlogs
 
       def active_sprint
         time = (Time.zone ? Time.zone : Time).now
-        @active_sprint ||= RbSprint.find(:first, :conditions => [
-          "project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? >= sprint_start_date and ? <= effective_date",
+        @active_sprint ||= RbSprint.where("project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? >= sprint_start_date and ? <= effective_date",
           self.id, time.end_of_day, time.beginning_of_day
-        ])
+        ).take
       end
 
       def open_releases_by_date

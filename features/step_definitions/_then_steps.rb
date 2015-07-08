@@ -505,7 +505,7 @@ Then /^(.+) for (.+) should be (true|false)$/ do |key, project, value|
   project = Project.find(project)
   project.should_not be nil
   setting = project.rb_project_settings.send(key)
-  if value=="true"
+  if value=="true" || value === true
     setting.should be true
   else
     setting.should be false
