@@ -186,7 +186,7 @@ Then /^the "([^"]*)" checkbox(?: within "([^"]*)")? should not be checked$/ do |
   with_scope(selector) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
-      field_checked.should be_false
+      field_checked.should be false
     else
       assert !field_checked
     end
