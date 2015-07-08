@@ -178,7 +178,7 @@ Given /^I want to edit the story with subject (.+)$/ do |subject|
 end
 
 Given /^backlogs is configured$/ do
-  Backlogs.configured?.should be_true
+  Backlogs.configured?.should be true
 end
 
 
