@@ -57,6 +57,15 @@ class RbStory < Issue
 
   public
 
+  def self.class_default_status
+    Rails.logger.error("Story has no trackers configured")
+    begin
+      RbStory.trackers(:trackers)[0].default_status
+    rescue
+      Rails.logger.error("Story has no trackers configured")
+      nil
+  end
+
   def self.find_options(options)
     options = options.dup
 
@@ -158,6 +167,8 @@ class RbStory < Issue
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+
+    attribs[:status] = RbStory.class_default_status
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
