@@ -11,9 +11,7 @@ class RbTask < Issue
 
   def self.class_default_status
     begin
-      puts("task tracker #{self.tracker}")
       t = Tracker.find(self.tracker)
-      puts("Tracker default status #{t}")
       return t.default_status
     rescue => e
       Rails.logger.error("Task has no trackers configured #{e}")
