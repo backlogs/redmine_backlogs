@@ -6,15 +6,15 @@ module RbServerVariablesHelper
   #
   #   workflow_transitions(RbStory)
   def workflow_transitions(klass)
-     default_status = IssueStatus.default
-     default_status = default_status.id.to_s if default_status
      roles = User.current.admin ? Role.all : User.current.roles_for_project(@project)
-     transitions = {:states => {}, :transitions => {} , :default => default_status }
+     transitions = {:states => {}, :transitions => {} , :default => 1 }
 
      klass.trackers.each {|tracker_id|
       tracker = Tracker.find(tracker_id)
       tracker_id = tracker_id.to_s
 
+      default_status = tracker.default_status
+      transitions[:default] = default_status if default_status
       transitions[:transitions][tracker_id] = {}
 
       tracker.issue_statuses.each {|status|
