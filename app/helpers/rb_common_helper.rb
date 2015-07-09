@@ -98,11 +98,21 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def status_id_or_default(story)
-    story.new_record? ? IssueStatus.default.id : story.status.id
+    #story.new_record? ? IssueStatus.default.id : story.status.id
+    if story.new_record?
+      story.default_status ? story.default_status.id : 0
+    else
+      story.status ? story.status.id : 0
+    end
   end
 
   def status_label_or_default(story)
-    story.new_record? ? IssueStatus.default.name : story.status.name
+    #story.new_record? ? IssueStatus.default.name : story.status.name
+    if story.new_record?
+      story.default_status ? story.default_status.name : ""
+    else
+      story.status ? story.status.name : ""
+    end
   end
 
   def sprint_html_id_or_empty(sprint)
