@@ -51,9 +51,10 @@ namespace :redmine do
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
         trackers =  ENV['story_trackers'].split(',')
         trackers.each{|name|
-          if ! Tracker.find(:first, :conditions => ["name=?", name])
+          if ! Tracker.find_by_name(name)
             puts "Creating story tracker '#{name}'"
-            tracker = Tracker.new(:name => name)
+            default_status = IssueStatus.find_by(:name => 'New')
+            tracker = Tracker.new(:name => name, :default_status => default_status)
             tracker.save!
           end
         }
@@ -98,9 +99,10 @@ namespace :redmine do
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
-        if ! Tracker.find(:first, :conditions => ["name=?", ENV['task_tracker']])
+        if ! Tracker.find_by_name(ENV['task_tracker'])
           puts "Creating task tracker '#{ENV['task_tracker']}'"
-          tracker = Tracker.new(:name => ENV['task_tracker'])
+          default_status = IssueStatus.find_by(:name => 'New')
+          tracker = Tracker.new(:name => ENV['task_tracker'], :default_status => default_status)
           tracker.save!
         end
         Backlogs.setting[:task_tracker] = Tracker.find_by_name(ENV['task_tracker']).id
@@ -157,8 +159,8 @@ namespace :redmine do
       else
         db_migrate_task = "db:migrate:plugins"
       end
-      system("rake #{db_migrate_task} --trace > redmine_backlogs_install.log")
-      system('rake redmine:backlogs:fix_positions --trace >> redmine_backlogs_install.log')
+      system("rake #{db_migrate_task} > redmine_backlogs_install.log")
+      system('rake redmine:backlogs:fix_positions >> redmine_backlogs_install.log')
       if $?==0
         puts "done!"
         puts "Installation complete. Please restart Redmine."
@@ -179,7 +181,7 @@ namespace :redmine do
         print "Please type the tracker's name: "
         STDOUT.flush
         name = STDIN.gets.chomp!
-        if Tracker.find(:first, :conditions => "name='#{name}'")
+        if Tracker.find_by_name(name)
           puts "Ooops! That name is already taken."
           next
         end
@@ -187,7 +189,8 @@ namespace :redmine do
         STDOUT.flush
 
         if (STDIN.gets.chomp!).match("y")
-          tracker = Tracker.new(:name => name)
+          default_status = IssueStatus.find_by(:name => 'New')
+          tracker = Tracker.new(:name => name, :default_status => default_status)
           tracker.save!
           repeat = false
         end
