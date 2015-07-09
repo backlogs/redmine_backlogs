@@ -165,6 +165,7 @@ class RbRelease < ActiveRecord::Base
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
   has_many :rb_release_burnchart_day_cache, :dependent => :delete_all, :foreign_key => 'release_id'
 
+  attr_accessible :project_id, :name, :release_start_date, :release_end_date, :status
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date
   validates_inclusion_of :status, :in => RELEASE_STATUSES
   validates_inclusion_of :sharing, :in => RELEASE_SHARINGS
@@ -175,7 +176,7 @@ class RbRelease < ActiveRecord::Base
     where(:status => 'open')
   }
   scope :closed, -> {
-    where(status => 'closed')
+    where(:status => 'closed')
   }
   scope :visible, lambda {|*args| joins(:project).
                                     where(Project.allowed_to_condition(args.first || User.current, :view_releases)) }

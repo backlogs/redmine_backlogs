@@ -205,7 +205,7 @@ When /^I try to download the calendar feed$/ do
 end
 
 When /^I try to download the XML sheet for (.+)$/ do |sprint_name|
-  sprint = RbSprint._by_name(sprint_name).first
+  sprint = RbSprint.find_by_name(sprint_name).first
   visit url_for({:key => @api_key, :controller => :rb_sprints, :action => :download,
                  :sprint_id => sprint, :format => :xml, :only_path => true})
 end

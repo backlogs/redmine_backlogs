@@ -626,7 +626,7 @@ Given /^I have defined the following releases:$/ do |table|
   RbRelease.delete_all
   table.hashes.each do |release|
     release['project_id'] = get_project((release.delete('project')||'ecookbook')).id
-    RbRelease.create! release
+    RbRelease.create!(release)
   end
 end
 

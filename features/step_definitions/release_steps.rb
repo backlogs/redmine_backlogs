@@ -64,7 +64,7 @@ Then /^story (.+) should belong to release (.+)$/ do |story_name, release_name|
   release.should_not be_nil
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  release.issues.exists?(story).should be true
+  release.issues.exists?(story.id).should be true
 end
 
 Then /^story (.+) should not belong to any release$/ do |story_name|
