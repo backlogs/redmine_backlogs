@@ -113,10 +113,10 @@ module Backlogs
             self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
             self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
 
-            self.remaining_hours = 0 if self.status.backlog_is?(:success, self.class.trackers(:trackers)[0])
+            self.remaining_hours = 0 if self.status.backlog_is?(:success, self.tracker)
 
             self.fixed_version = self.story.fixed_version if self.story
-            self.start_date = Date.today if self.start_date.blank? && self.status_id != RbStory.class_default_status.id #FIXME for Task IssueStatus.default.id
+            self.start_date = Date.today if self.start_date.blank? && self.status_id != self.tracker.default_status.id
 
             self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
           elsif self.is_story? && Backlogs.setting[:set_start_and_duedates_from_sprint]
