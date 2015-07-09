@@ -90,7 +90,6 @@ class RbStory < Issue
       options[:joins] << :status
       options[:joins] << :project
     end
-    puts("options #{options}")
     #options
     where(options[:condition]).joins(options[:joins])
   end
@@ -110,7 +109,6 @@ class RbStory < Issue
   end
 
   def self.backlog(project_id, sprint_id, release_id, options={})
-    puts("RbStory self.backlog #{project_id}, #{sprint_id} #{release_id}")
     self.visible.
       order("#{self.table_name}.position").
       backlog_scope(
@@ -137,7 +135,6 @@ class RbStory < Issue
     #make separate queries for each sprint to get higher/lower item right
     return [] unless sprints
     sprints.map do |s|
-      puts("bl sprint: #{s}")
       { :sprint => s,
         :stories => RbStory.backlog(project.id, s.id, nil, options)
       }
@@ -147,7 +144,6 @@ class RbStory < Issue
   def self.backlogs_by_release(project, releases, options={})
     #make separate queries for each release to get higher/lower item right
     return [] unless releases
-    puts("backlogs_by_release #{project} #{releases} #{options}")
     releases.map do |r|
       { :release => r,
         :stories => RbStory.backlog(project.id, nil, r.id, options)
