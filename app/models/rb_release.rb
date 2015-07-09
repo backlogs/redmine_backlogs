@@ -272,7 +272,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def today
-    ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
+    ReleaseBurndownDay.where(release_id: self, day: Date.today).first
   end
 
   def remaining_story_points #FIXME merge bohansen_release_chart removed this

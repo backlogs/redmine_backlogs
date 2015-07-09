@@ -62,8 +62,12 @@ module Backlogs
               #{options[:spacing]}
             end
 
-            def self.find_by_rank(r, options)
-              self.find(:first, options.merge(:order => '#{self.table_name}.position', :limit => 1, :offset => r - 1))
+            def self.find_by_rank(r, options) #FIXME this should be a scope
+              #if options
+              #  Rails.logger.error("AR find_by_rank options not supported #{options}")
+              #  puts("AR find_by_rank options not supported #{options}")
+              #end
+              self.order('#{self.table_name}.position').limit(1).offset(r - 1)
             end
 
             before_create  :move_to_#{options[:default]}

@@ -92,10 +92,10 @@ end
 Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
   if attribute=="tracker"
     attribute="tracker_id"
-    value = Tracker.find(:first, :conditions => ["name=?", value]).id
+    value = Tracker.where(name: value).first.id
   elsif attribute=="status"
     attribute="status_id"
-    value = IssueStatus.find(:first, :conditions => ["name=?", value]).id
+    value = IssueStatus.fwhere(name: value).first.id
   end
   @story_params[attribute] = value
 end
@@ -104,13 +104,13 @@ Given /^I set the (.+) of the task to (.+)$/ do |attribute, value|
   value = '' if value == 'an empty string'
   if attribute=="assigned_to"
     attribute="assigned_to_id"
-    value = User.find(:first, :conditions => ["login=?", value]).id
+    value = User.where(login: value).first.id
   end
   @task_params[attribute] = value
 end
 
 Given /^I add the tracker (.+) to the story trackers$/ do |tracker|
-  tracker_id = Tracker.find(:first, :conditions=>{:name => tracker}).id
+  tracker_id = Tracker.where(name: tracker).first.id
   @project.update_attribute :tracker_ids, (@project.tracker_ids << tracker_id)
   Backlogs.setting[:story_trackers] << tracker_id
 end
@@ -125,12 +125,12 @@ Given /^I want to create a story$/ do
 end
 
 Given /^I want to create a task for (.+)$/ do |story_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.where(subject: story_subject).first
   @task_params = initialize_task_params(story.id)
 end
 
 Given /^I want to create an impediment for (.+)$/ do |sprint_subject|
-  sprint = RbSprint.find(:first, :conditions => { :name => sprint_subject })
+  sprint = RbSprint.where(name: sprint_subject ).first
   @impediment_params = initialize_impediment_params(:project_id => sprint.project_id, :fixed_version_id => sprint.id)
 end
 
@@ -139,25 +139,25 @@ Given /^I want to create a sprint$/ do
 end
 
 Given /^I want to edit the task named (.+)$/ do |task_subject|
-  task = RbTask.find(:first, :conditions => { :subject => task_subject })
+  task = RbTask.where(:subject => task_subject ).first
   task.should_not be_nil
   @task_params = HashWithIndifferentAccess.new(task.attributes)
 end
 
 Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
-  impediment = RbTask.find(:first, :conditions => { :subject => impediment_subject })
+  impediment = RbTask.where(subject: impediment_subject ).first
   impediment.should_not be_nil
   @impediment_params = HashWithIndifferentAccess.new(impediment.attributes)
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = RbSprint.find(:first, :conditions => ["name=?", name])
+  sprint = RbSprint.find_by_name(name).first
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
 
 Given /^I want to indicate that the impediment blocks (.+)$/ do |blocks_csv|
-  blocks_csv = RbStory.find(:all, :conditions => { :subject => blocks_csv.split(', ') }).map{ |s| s.id }.join(',')
+  blocks_csv = RbStory.where( :subject => blocks_csv.split(', ') ).map{ |s| s.id }.join(',')
   @impediment_params[:blocks] = blocks_csv
 end
 
@@ -172,7 +172,7 @@ Given /^I want to set the (.+) of the impediment to (.+)$/ do |attribute, value|
 end
 
 Given /^I want to edit the story with subject (.+)$/ do |subject|
-  @story = RbStory.find(:first, :conditions => ["subject=?", subject])
+  @story = RbStory.where(subject: subject).first
   @story.should_not be_nil
   @story_params = HashWithIndifferentAccess.new(@story.attributes)
 end
@@ -269,14 +269,14 @@ end
 
 Given /^I have the following issue statuses available:$/ do |table|
   table.hashes.each do |status|
-    s = IssueStatus.find(:first, :conditions => ['name = ?', status['name']])
+    s = IssueStatus.where(name: status['name']).first
     unless s
       s = IssueStatus.new
       s.name = status['name']
     end
 
     s.is_closed = status['is_closed'] == '1'
-    s.is_default = status['is_default'] == '1'
+    #s.is_default = status['is_default'] == '1'
     s.default_done_ratio = status['default_done_ratio'].to_i unless status['default_done_ratio'].blank?
 
     s.save!
@@ -311,7 +311,7 @@ Given /^I have made the following task mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatus.find(:first, :conditions => ['name = ?', status_name])
+      status = IssueStatuswhere(name: status_name).first
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
@@ -402,7 +402,7 @@ Given /^I have defined the following tasks:$/ do |table|
     params['assigned_to_id'] = User.find_by_login(username).id unless username.nil? || username.strip == ''
 
     status = task.delete('status')
-    params['status_id'] = IssueStatus.find(:first, :conditions => ['name = ?', status]).id unless status.blank?
+    params['status_id'] = IssueStatus.where(name: status).first.id unless status.blank?
 
     hours = task.delete('estimate')
     params['estimated_hours'] = hours.to_f unless hours.blank?
@@ -432,11 +432,11 @@ Given /^I have defined the following impediments:$/ do |table|
   # sharing: an impediment can block more than on issues, each from different projects, when
   # cross_project_issue_relations is enabled. This is tested not here but using javascript tests.
   table.hashes.each do |impediment|
-    sprint = RbSprint.find(:first, :conditions => { :name => impediment.delete('sprint') })
-    blocks = RbStory.find(:first, :conditions => ['subject in (?)', impediment['blocks'].split(', ')])
+    sprint = RbSprint.where(:name => impediment.delete('sprint') ).first
+    blocks = RbStory.where('subject in (?)', impediment['blocks'].split(', ')).first
     params = initialize_impediment_params(:project_id => blocks.project_id, :fixed_version_id => sprint.id)
     params['subject'] = impediment.delete('subject')
-    params['blocks']  = RbStory.find(:all, :conditions => ['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
+    params['blocks']  = RbStory.where(['subject in (?)', impediment.delete('blocks').split(', ')]).map{ |s| s.id }.join(',')
     impediment.should == {}
 
     # NOTE: We're bypassing the controller here because we're just
@@ -466,7 +466,7 @@ Given /^I am viewing the issues sidebar for (.+)$/ do |name|
   verify_request_status(200)
 end
 
-Given /^I am viewing the issue named "([^"]*)"$/ do |name|
+Given /^I am viewing the issue named "([^\"]*)"$/ do |name|
   issue = Issue.find_by_subject(name)
   visit url_for(:controller => 'issues', :action=>'show', :id => issue.id, :project_id => @project, :only_path=>true)
   verify_request_status(200)
@@ -512,7 +512,7 @@ end
 
 Given /^show me the task hours$/ do
   header = ['task', 'hours']
-  data = Issue.find(:all, :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
+  data = Issue.where(['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, current_sprint.id]).collect{|t| [t.subject, t.remaining_hours.inspect]}
   show_table("Task hours", header, data)
 end
 
@@ -538,7 +538,7 @@ Given /^timelog from taskboard has been enabled$/ do
 end
 
 Given /^I am a team member of the project and allowed to update remaining hours$/ do
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.where(name: 'Manager').first
   role.permissions << :view_master_backlog
   role.permissions << :view_releases
   role.permissions << :view_taskboards

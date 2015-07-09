@@ -12,9 +12,8 @@ class RbReleaseMultiview < ActiveRecord::Base
   include Backlogs::ActiveRecord::Attributes
 
   def releases
-    RbRelease.find(:all,
-                   :conditions => {:id => self.release_ids},
-                   :order => "release_end_date ASC, release_start_date ASC")
+    RbRelease.where(id: self.release_ids)
+            .order("release_end_date ASC, release_start_date ASC").all
   end
 
   def has_burnchart?

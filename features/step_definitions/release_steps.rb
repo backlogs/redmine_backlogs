@@ -1,5 +1,5 @@
 Then /^show me the releases$/ do
-  RbRelease.find(:all).each{|release|
+  RbRelease.all.each{|release|
     puts "Release: #{release}"
   }
 end
@@ -113,7 +113,7 @@ Given /^I have made the following story mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatus.find(:first, :conditions => ['name = ?', status_name])
+      status = IssueStatus.find_by_name(status_name).first
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
@@ -128,7 +128,7 @@ end
 Given /^I accept story ([^"]*)$/ do |story_name|
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  status = IssueStatus.find(:first, :conditions => ['name = ?', "Accepted"])
+  status = IssueStatus.find_by_name("Accepted").first
   story.status_id = status.id
   story.save!.should be true
 end
@@ -261,8 +261,8 @@ end
 
 Given(/^I want to bulk edit "(.*?)" and "(.*?)"$/) do |arg1, arg2|
   @bulk_issues = []
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg1])
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg2])
+  @bulk_issues << RbStory.where(subject: arg1).first
+  @bulk_issues << RbStory.where(subject: arg2).first
   visit url_for(:controller => :issues,
                 :action => :bulk_edit,
                 :ids => @bulk_issues.map(&:id)

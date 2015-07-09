@@ -44,8 +44,8 @@ When /^I (try to )?create the sprint$/ do |attempt|
 end
 
 When /^I (try to )?move the story named (.+) above (.+)$/ do |attempt, story_subject, next_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
-  nxt  = RbStory.find(:first, :conditions => ["subject=?", next_subject])
+  story = RbStory.find_by_subject(story_subject).first
+  nxt  = RbStory.find_by_subject(next_subject).first
   
   attributes = story.attributes
   attributes[:next]             = nxt.id
@@ -205,7 +205,7 @@ When /^I try to download the calendar feed$/ do
 end
 
 When /^I try to download the XML sheet for (.+)$/ do |sprint_name|
-  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  sprint = RbSprint._by_name(sprint_name).first
   visit url_for({:key => @api_key, :controller => :rb_sprints, :action => :download,
                  :sprint_id => sprint, :format => :xml, :only_path => true})
 end
@@ -216,7 +216,7 @@ When /^I view the master backlog$/ do
 end
 
 When /^I view the stories of (.+) in the issues tab/ do |sprint_name|
-  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
+  sprint = RbSprint.find_by_name(sprint_name).first
   visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id, :only_path => true)
 end
 

@@ -90,10 +90,11 @@ class RbStats < ActiveRecord::Base
 
     case Backlogs.platform
       when :redmine
-        JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                           :conditions => ["property = 'attr' and prop_key in (?)
+        JournalDetail.where(["property = 'attr' and prop_key in (?)
                                                 and journalized_type = 'Issue' and journalized_id = ?",
-                                                RbJournal::REDMINE_PROPERTIES, issue.id]).each {|detail|
+                                                RbJournal::REDMINE_PROPERTIES, issue.id])
+                .order("journals.created_on asc")
+                .joins(:journal).find_each {|detail|
           changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
         }
 

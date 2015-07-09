@@ -214,10 +214,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def self.find_backlogs_enabled_active_projects
-    projects = EnabledModule.find(:all,
-                             :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
-                             :include => :project,
-                             :joins => :project).collect { |mod| mod.project}
+    #projects =
+    EnabledModule.where(name: 'backlogs')
+                  .includes(:project)
+                  .joins(:project).where(project: {status: Project::STATUS_ACTIVE})
+                  .collect { |mod| mod.project}
   end
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)

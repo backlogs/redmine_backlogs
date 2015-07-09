@@ -183,9 +183,9 @@ module Backlogs
                                               RbTask.tracker).all.to_a
           tasklist.each{|task| task.history.save! }
           if tasklist.size > 0
-            task_ids = '(' + tasklist.collect{|task| connection.quote(task.id)}.join(',') + ')'
-            connection.execute("update issues set
-                                updated_on = #{connection.quote(self.updated_on)}, fixed_version_id = #{connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
+            task_ids = '(' + tasklist.collect{|task| self.class.connection.quote(task.id)}.join(',') + ')'
+            self.class.connection.execute("update issues set
+                                updated_on = #{self.class.connection.quote(self.updated_on)}, fixed_version_id = #{self.class.connection.quote(self.fixed_version_id)}, tracker_id = #{RbTask.tracker}
                                 where id in #{task_ids}")
           end
         end
