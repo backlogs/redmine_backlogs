@@ -180,9 +180,6 @@ class RbTask < Issue
 
   # assumes the task is already under the same story as 'id'
   def move_before(id)
-    puts("RbTask::move_before NOT IMPLEMENTED")
-    Rails.logger.error("RbTask::move_before NOT IMPLEMENTED")
-    return
     id = nil if id.respond_to?('blank?') && id.blank?
     if id.nil?
       sib = self.siblings

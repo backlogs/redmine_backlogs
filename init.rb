@@ -9,6 +9,7 @@ else
   # object_to_prepare = config
 end
 object_to_prepare.to_prepare do
+  require_dependency 'backlogs_redmine3nestedset_mixin'
   require_dependency 'backlogs_activerecord_mixin'
   require_dependency 'backlogs_setup'
   require_dependency 'issue'
