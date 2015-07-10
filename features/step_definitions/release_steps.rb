@@ -113,7 +113,7 @@ Given /^I have made the following story mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatus.find_by_name(status_name).first
+      status = IssueStatus.find_by_name(status_name)
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
@@ -128,7 +128,7 @@ end
 Given /^I accept story ([^"]*)$/ do |story_name|
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  status = IssueStatus.find_by_name("Accepted").first
+  status = IssueStatus.find_by_name("Accepted")
   story.status_id = status.id
   story.save!.should be true
 end

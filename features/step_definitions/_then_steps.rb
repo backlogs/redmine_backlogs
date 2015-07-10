@@ -273,7 +273,7 @@ Then /^the story should have a (.+) of (.+)$/ do |attribute, value|
   @story.reload
   if attribute=="tracker"
     attribute="tracker_id"
-    value = Tracker.find_by_name(value).first.id
+    value = Tracker.find_by_name(value).id
   end
   @story[attribute].should == value
 end

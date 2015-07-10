@@ -151,7 +151,7 @@ Given /^I want to edit the impediment named (.+)$/ do |impediment_subject|
 end
 
 Given /^I want to edit the sprint named (.+)$/ do |name|
-  sprint = RbSprint.find_by_name(name).first
+  sprint = RbSprint.find_by_name(name)
   sprint.should_not be_nil
   @sprint_params = HashWithIndifferentAccess.new(sprint.attributes)
 end
@@ -311,7 +311,7 @@ Given /^I have made the following task mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatuswhere(name: status_name).first
+      status = IssueStatus.find_by_name(status_name)
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
