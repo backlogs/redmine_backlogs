@@ -217,7 +217,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
     #projects =
     EnabledModule.where(name: 'backlogs')
                   .includes(:project)
-                  .joins(:project).where(project: {status: Project::STATUS_ACTIVE})
+                  .joins(:project).where(projects: {status: Project::STATUS_ACTIVE})
                   .collect { |mod| mod.project}
   end
 
