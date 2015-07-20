@@ -95,7 +95,7 @@ Given /^I set the (.+) of the story to (.+)$/ do |attribute, value|
     value = Tracker.where(name: value).first.id
   elsif attribute=="status"
     attribute="status_id"
-    value = IssueStatus.fwhere(name: value).first.id
+    value = IssueStatus.where(name: value).first.id
   end
   @story_params[attribute] = value
 end
