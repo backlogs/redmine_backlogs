@@ -200,7 +200,7 @@ class RbRelease < ActiveRecord::Base
 
   # Returns current stories + stories previously scheduled for this release
   def stories_all_time
-    RbStory.includes(:journals => :details).where(
+    RbStory.joins(:journals => :details).where(
             "(release_id = ?) OR (
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
