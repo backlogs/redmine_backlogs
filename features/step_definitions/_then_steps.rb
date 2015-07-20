@@ -146,7 +146,7 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
-  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+  story = RbStory.backlog_scope(:project => @project, :sprint => sprint).find_by_rank(position.to_i)
 
   story.should_not be_nil
   story.subject.should == subject
@@ -154,8 +154,8 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should have the tracker (.+)$/ do |position, backlog, tracker|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
-  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
-  
+  story = RbStory.backlog_scope(:project => @project, :sprint => sprint).find_by_rank(position.to_i)
+
   t = get_tracker(tracker)
   
   story.should_not be_nil

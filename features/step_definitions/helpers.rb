@@ -139,7 +139,7 @@ def story_after(rank, project, sprint=nil)
 
   rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
 
-  nxt = RbStory.find_by_rank(rank, RbStory.find_options(:project => project, :sprint => sprint))
+  nxt = RbStory.backlog_scope(:project => project, :sprint => sprint).find_by_rank(rank)
   return nil if nxt.nil?
 
   return nxt.id
@@ -276,7 +276,7 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => current_sprint))
+  s2 = RbStory.backlog_scope(:project => @project, :sprint => current_sprint).find_by_rank(p1)
   s2.should_not be_nil
   s2.id.should == story.id
 
