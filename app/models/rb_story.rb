@@ -100,6 +100,7 @@ class RbStory < Issue
       options[:joins] << :project
     end
     #options
+    puts("rbstory.find_options returns #{options}")
     where(options[:condition]).joins(options[:joins])
   end
 
@@ -107,7 +108,6 @@ class RbStory < Issue
 
   def self.inject_lower_higher
     prev = nil
-    i = 1
     all.map {|story|
       #optimization: set virtual attributes to avoid hundreds of sql queries
       # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
@@ -404,15 +404,6 @@ class RbStory < Issue
       end
     }
     return bd
-  end
-
-  def list_with_gaps_scope_condition(options={})
-    return options if self.new_record?
-    self.class.find_options(options.dup.merge({
-      :project => self.project_id,
-      :sprint => self.fixed_version_id,
-      :release => self.release_id
-    }))
   end
 
   def story_follow_task_state
