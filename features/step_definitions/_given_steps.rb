@@ -112,7 +112,9 @@ end
 Given /^I add the tracker (.+) to the story trackers$/ do |tracker|
   tracker_id = Tracker.where(name: tracker).first.id
   @project.update_attribute :tracker_ids, (@project.tracker_ids << tracker_id)
-  Backlogs.setting[:story_trackers] << tracker_id
+  t = Backlogs.setting[:story_trackers]
+  t << tracker_id
+  Backlogs.setting[:story_trackers] = t
 end
   
 Given /^I set the default story tracker to (.+)$/ do |tracker|

@@ -61,6 +61,7 @@ Then /^I should see the product backlog$/ do
 end
 
 Then /^I should see (\d+) stories in the product backlog$/ do |count|
+  RbStory.product_backlog(@project).all.length.should == count.to_i
   page.all(:css, "#stories-for-product-backlog .story").length.should == count.to_i
 end
 
