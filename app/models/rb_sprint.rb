@@ -34,8 +34,8 @@ class RbSprint < Version
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.scoped(:include => :versions,
-          :conditions => ["#{Version.table_name}.id = #{id}" +
+        Project.visible.joins(:versions).
+          where(["#{Version.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +

@@ -32,7 +32,7 @@ class RbStory < Issue
         and fixed_version_id IN (?)", self.trackers, sprint_ids]
     else
       ["
-        project_id = ?
+        issues.project_id = ?
         and tracker_id in (?)
         and fixed_version_id IN (?)", project_id, self.trackers, sprint_ids]
     end
@@ -40,7 +40,7 @@ class RbStory < Issue
 
   def self.__find_options_release_condition(project_id, release_ids)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
       and fixed_version_id is NULL
       and release_id in (?)", self.trackers, release_ids]
@@ -48,7 +48,7 @@ class RbStory < Issue
 
   def self.__find_options_pbl_condition(project_id)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
       and release_id is NULL
       and fixed_version_id is NULL
@@ -87,7 +87,6 @@ class RbStory < Issue
     options[:joins] ||= []
     options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
     options[:joins] << :project
-
     if sprint_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_sprint_condition(project_id, sprint_ids))
       options[:joins] << :fixed_version
@@ -100,8 +99,7 @@ class RbStory < Issue
       options[:joins] << :project
     end
     #options
-    puts("rbstory.find_options returns #{options}")
-    where(options[:condition]).joins(options[:joins])
+    joins(options[:joins]).where(options[:conditions])
   end
 
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
