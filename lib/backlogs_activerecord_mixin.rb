@@ -115,7 +115,6 @@ module Backlogs
 
         def move_after(reference)
           nxt = reference.send(:lower_item_unscoped)
-          puts("move_after self=#{self} ref=#{reference} nxt=#{nxt}")
 
           if nxt.blank?
             move_to_bottom
@@ -134,7 +133,6 @@ module Backlogs
         #before means lower position
         def move_before(reference)
           prev = reference.send(:higher_item_unscoped)
-          #puts("move_before self=#{self} ref=#{reference} prev=#{prev}")
 
           if prev.blank?
             move_to_top
@@ -172,7 +170,7 @@ module Backlogs
         raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless self.position
         whereclause = ["#{self.class.table_name}.position #{dir == :prev ? '<' : '>'} ?", self.position]
         orderclause = "#{self.class.table_name}.position #{dir == :prev ? 'desc' : 'asc'}"
-        puts("list_prev_next #{dir} #{whereclause} #{orderclause}")
+
         return self.class.
           where(whereclause).
           order(orderclause).first
