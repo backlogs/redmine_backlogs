@@ -368,8 +368,12 @@ class RbIssueHistory < ActiveRecord::Base
 
   def touch_sprint
     self.history.select{|h| h[:sprint]}.uniq{|h| "#{h[:sprint]}::#{h[:tracker]}"}.each{|h|
-      sprint = RbSprint.find(h[:sprint].to_i)
-      next unless sprint
+      begin
+        sprint = RbSprint.find(h[:sprint].to_i)
+        next unless sprint
+      rescue
+        next
+      end
       sprint.burndown.touch!(h[:tracker] == :story ? self.issue.id : nil)
     }
   end
