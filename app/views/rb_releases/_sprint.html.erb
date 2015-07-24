@@ -19,7 +19,7 @@
   <% end %>
 <% end %>
 <%= form_tag({}) do -%>
-<% issues.sort!{|a,b|a.position <=> b.position}
+<% issues.to_a.sort!{|a,b|a.position <=> b.position}
    sum_points = 0.0
 %>
   <table class="list issues">
