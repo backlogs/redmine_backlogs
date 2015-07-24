@@ -182,7 +182,7 @@ class RbStory < Issue
 
   def self.find_all_updated_since(since, project_id)
     #look in backlog, sprint and releases. look in shared sprints and shared releases
-    project = Project.select("id,lft,rgt").find_by_id(project_id)
+    project = Project.select("id,lft,rgt,parent_id,name").find(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
     releases = project.open_releases_by_date.map{|s|s.id}
     #following will execute 3 queries and join it as array
