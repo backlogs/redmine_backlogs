@@ -84,7 +84,7 @@ class RbCalendarsController < RbApplicationController
     conditions << @project.id
     conditions << Date.today
 
-    issues = Issue.where(conditions).includes(:status).find_each {|issue|
+    issues = Issue.where(conditions).joins(:status).find_each {|issue|
       summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
       description_text = "#{issue.subject}: #{url_for(:controller => 'issues', :only_path => false, :action => 'show', :id => issue.id)}\n#{issue.description}"
       # I know this should be "cal.todo do", but outlook in it's
