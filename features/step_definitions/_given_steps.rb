@@ -13,6 +13,7 @@ Before do
   Backlogs.setting[:story_follow_task_status] = nil
   Backlogs.setting[:release_burnup_enabled] = 'enabled'
   Backlogs.setting[:new_story_position] = 'top'
+  Backlogs.setting[:sharing_new_sprint_sharingmode] = nil
   Time.zone = 'UTC'
 end
 
