@@ -83,7 +83,7 @@ class RbSprintBurndown < ActiveRecord::Base
   def cached_burndown
     cb = read_attribute(:burndown)
     return cb unless cb.nil? || cb.empty?
-    burndown
+    get_burndown
   end
 
   def get_burndown
