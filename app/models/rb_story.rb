@@ -102,7 +102,15 @@ class RbStory < Issue
     joins(options[:joins]).includes(options[:joins]).where(options[:conditions])
   end
 
-  scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
+  scope :backlog_scope, lambda{|opts={}| self.find_options(opts) }
+
+  def list_with_gaps_options
+    {
+      :project => self.project_id,
+      :sprint => self.fixed_version_id,
+      :release => self.release_id
+    }
+  end
 
   def self.inject_lower_higher
     prev = nil

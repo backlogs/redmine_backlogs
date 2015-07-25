@@ -60,6 +60,8 @@ module Backlogs
           class_eval <<-EOV
             include Backlogs::ActiveRecord::ListWithGaps::InstanceMethods
 
+            scope :backlog_scope, lambda{|opts={}| where(nil) }
+
             def self.list_spacing
               #{options[:spacing]}
             end
@@ -106,8 +108,13 @@ module Backlogs
         end
         attr_writer :lower_item
 
+        def list_with_gaps_options
+          {}
+        end
+
         def rank
           @rank ||= self.class.
+            backlog_scope(self.list_with_gaps_options).
             where(["#{self.class.table_name}.position <= ?", self.position]).
             count
         end
@@ -133,7 +140,6 @@ module Backlogs
         #before means lower position
         def move_before(reference)
           prev = reference.send(:higher_item_unscoped)
-
           if prev.blank?
             move_to_top
           else
@@ -153,11 +159,11 @@ module Backlogs
 
       #higher item is the one with lower position. self is visually displayed below its higher item.
       def higher_item_unscoped()
-        @higher_item_unscoped ||= list_prev_next(:prev)
+        @higher_item_unscoped ||= list_prev_next(:prev, false)
       end
 
       def lower_item_unscoped()
-        @lower_item_unscoped ||= list_prev_next(:next)
+        @lower_item_unscoped ||= list_prev_next(:next, false)
       end
 
       def list_commit
@@ -165,13 +171,18 @@ module Backlogs
         #FIXME now the cached lower/higher_item are wrong during this request. So are those from our old and new peers.
       end
 
-      def list_prev_next(dir)
+      def list_prev_next(dir, scoped=true)
         return nil if self.new_record?
         raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless self.position
         whereclause = ["#{self.class.table_name}.position #{dir == :prev ? '<' : '>'} ?", self.position]
         orderclause = "#{self.class.table_name}.position #{dir == :prev ? 'desc' : 'asc'}"
 
-        return self.class.
+        if scoped
+          sc = self.class.backlog_scope(self.list_with_gaps_options)
+        else
+          sc = self.class
+        end
+        return sc.
           where(whereclause).
           order(orderclause).first
       end
