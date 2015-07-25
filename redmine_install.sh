@@ -6,10 +6,8 @@ cleanup()
 {
   for log in $WORKSPACE/cuke*.log; do
     if [ -f "$log" ]; then
-      sed '/^
-$/d' -i $log # empty lines
-      sed 's/
-$//' -i $log # ^Ms at end of lines
+      sed '/^$/d' -i $log # empty lines
+      sed 's/$//' -i $log # ^Ms at end of lines
       sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
     fi
   done
