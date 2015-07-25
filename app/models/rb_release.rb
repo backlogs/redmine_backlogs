@@ -312,7 +312,8 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.joins(:releases).includes(:releases).
+        Project.visible..joins('LEFT OUTER JOIN releases ON releases.project_id = projects.id').
+        includes(:releases).
           where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
