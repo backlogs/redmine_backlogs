@@ -27,7 +27,7 @@ class RbSprintBurndown < ActiveRecord::Base
       self.stories << story_id
     end
     self.burndown = nil
-    self
+    self.save!
   end
 
 #  This causes a recursive call to recalculate. I don't know why yet

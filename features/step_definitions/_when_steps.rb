@@ -156,7 +156,7 @@ When /^I create the story with subject "([^"]*)"$/ do |subject|
 end
 
 When(/^I change the subject of story "([^"]*)" to "([^"]*)"$/) do |story, subject|
-  page.find(:xpath,"//div[contains(normalize-space(text()), '#{story}')]").click
+  page.find(:xpath,"//span[contains(normalize-space(text()), '#{story}')]").click
   within "#content" do
     fill_in('subject', :with => subject)
     click_link('Save')
