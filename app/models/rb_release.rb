@@ -180,7 +180,7 @@ class RbRelease < ActiveRecord::Base
   scope :closed, -> {
     where(:status => 'closed')
   }
-  scope :visible, lambda {|*args| joins(:project).
+  scope :visible, lambda {|*args| joins(:project).includes(:project).
                                     where(Project.allowed_to_condition(args.first || User.current, :view_releases)) }
 
 
@@ -202,7 +202,7 @@ class RbRelease < ActiveRecord::Base
 
   # Returns current stories + stories previously scheduled for this release
   def stories_all_time
-    RbStory.joins(:journals => :details).where(
+    RbStory.joins(:journals => :details).includes(:journals => :details).where(
             "(release_id = ?) OR (
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
@@ -311,7 +311,7 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.includes(:releases).
+        Project.visible.joins(:releases).includes(:releases).
           where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +

@@ -99,7 +99,7 @@ class RbStory < Issue
       options[:joins] << :project
     end
     #options
-    joins(options[:joins]).where(options[:conditions])
+    joins(options[:joins]).includes(options[:joins]).where(options[:conditions])
   end
 
   scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
