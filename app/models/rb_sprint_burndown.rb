@@ -3,6 +3,7 @@ require 'yaml'
 
 class RbSprintBurndown < ActiveRecord::Base
   self.table_name = 'rb_sprint_burndown'
+  attr_protected :created_at # hack, all attributes will be mass asigment
   belongs_to :version
 
   serialize :stories, Array
@@ -26,7 +27,7 @@ class RbSprintBurndown < ActiveRecord::Base
       self.stories << story_id
     end
     self.burndown = nil
-    self.save!
+    self
   end
 
 #  This causes a recursive call to recalculate. I don't know why yet

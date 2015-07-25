@@ -20,6 +20,10 @@ class RbTask < Issue
     end
   end
 
+  def self.tracker?(tracker_id)
+    self.tracker == tracker_id.to_i
+  end
+
   # unify api between story and task. FIXME: remove this when merging to tracker-free-tasks
   # required for RbServerVariablesHelper.workflow_transitions
   def self.trackers(options = {})

@@ -5,10 +5,10 @@
 ***************************************/
 
 RB.BoardUpdater = RB.Object.create({
-  
+
   initialize: function(){
     var self = this;
- 
+
     RB.$('#refresh').bind('click', function(e,u){ self.handleRefreshClick(e,u); });
     RB.$('#disable_autorefresh').bind('click', function(e,u){ self.handleDisableAutorefreshClick(e,u); });
 
@@ -19,7 +19,7 @@ RB.BoardUpdater = RB.Object.create({
 
   adjustPollWait: function(itemsReceived){
     itemsReceived = (itemsReceived==null) ? 0 : itemsReceived;
-    
+
     if(itemsReceived==0 && this.pollWait < 300000 && !RB.$('body').hasClass('no_autorefresh')){
       this.pollWait += 250;
     } else {
@@ -33,7 +33,7 @@ RB.BoardUpdater = RB.Object.create({
     RB.ajax({
       type      : "GET",
       url       : RB.urlFor('show_updated_items', { id: RB.constants.project_id} ) + '?' + self.params,
-      data      : { 
+      data      : {
                     since : RB.$('#last_updated').text()
                   },
       beforeSend: function(){ RB.$('body').addClass('loading');  },
@@ -89,14 +89,18 @@ RB.BoardUpdater = RB.Object.create({
     if(latest_update.length > 0) {
         RB.$('#last_updated').text(latest_update);
     }
+    sprintestimatedhours = RB.$(data).find('#sprintestimatedhours').text();
+    if(sprintestimatedhours.length > 0) {
+        RB.$('#sprintestimatedhours').text(sprintestimatedhours);
+    }
 
     self.processAllItems(data);
     self.adjustPollWait(RB.$(data).children(":not(.meta)").length);
     self.poll();
   },
-  
+
   processError: function(){
-    this.adjustPollWait(0); 
+    this.adjustPollWait(0);
     this.poll();
   },
 

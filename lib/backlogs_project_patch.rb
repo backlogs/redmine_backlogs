@@ -252,7 +252,7 @@ module Backlogs
       def shared_releases
         if new_record?
           RbRelease.joins(:project).
-                       where("#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
+                    where("#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND #{RbRelease.table_name}.sharing = 'system'")
         else
           @shared_releases ||= begin
             order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
@@ -315,6 +315,7 @@ private
           "))" +
           " WHERE pp.lft >= #{r.lft} AND pp.rgt <= #{r.rgt}" +
           " GROUP BY pp.id;"
+        sql
       end
 
       # Returns sql for aggregating a list from grouped rows. Depends on database implementation.
