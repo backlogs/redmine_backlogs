@@ -107,7 +107,7 @@ When /^I (try to )?update the impediment$/ do |attempt|
 end
 
 When /^I (try to )?update the sprint$/ do |attempt|
-  paht = url_for(:controller => 'rb_sprints',
+  path = url_for(:controller => 'rb_sprints',
                               :action => "update",
                               :sprint_id => @sprint_params['id'],
                               :only_path => true)
