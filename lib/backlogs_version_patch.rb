@@ -23,12 +23,16 @@ module Backlogs
     module InstanceMethods
       def clear_burndown
         self.burndown.touch!
+        true
       end
 
       # load on demand
       def burndown
-        self.sprint_burndown = self.create_sprint_burndown(:version_id => self.id) unless self.new_record? || self.sprint_burndown
-        return self.sprint_burndown
+        unless self.new_record? || self.sprint_burndown
+          self.sprint_burndown = self.build_sprint_burndown
+          self.sprint_burndown.save!
+        end
+        self.sprint_burndown
       end
 
       def days

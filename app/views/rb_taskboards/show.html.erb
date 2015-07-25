@@ -23,7 +23,7 @@
                            :format => 'js') %>">
   </script>
   <%# Usability: display default cursor if tasks cannot be dragged %>
-  <% unless User.current.allowed_to?(:update_tasks, @project) %> 
+  <% unless User.current.allowed_to?(:update_tasks, @project) %>
     <style type="text/css">
     #taskboard .issue{cursor:default;}
     </style>
@@ -58,6 +58,8 @@
 <%- end %>
 
 <%- content_for :view_specific_links do %>
+
+  <span id="sprintestimatedhours">(<%= @sprint.estimated_hours.to_f %> estimated <%= l(:label_hours) %>)</span>
   <% if @sprint.has_burndown? %>
     <a id='show_charts'><%= l(:label_burndown) %></a>
   <% end %>
@@ -103,9 +105,10 @@
     <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
-          <div class="id story_tooltip">
-            <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
+          <div class="id story_tooltip_ajax">
+            <div class="tooltip_text"></div>
             <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <div class="v"><%= story.id %></div>
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">
               <%= image_tag("add.png", :alt => "+") %>
@@ -114,7 +117,7 @@
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
-            <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+            <span class="remaininghours">(<%= story.remaining_hours.to_f %> <%= l(:label_hours) %>)</span>
           </div>
           <div class="subject"><%= h story.subject %></div>
           <%- if @project != story.project %>
@@ -128,7 +131,7 @@
       </td>
       <%- @statuses.each do |status| %>
       <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>" -rb-status-id="<%= status.id %>" -rb-project-id="<%= story.project.id %>">
-        <%= render :partial => "rb_tasks/task", :collection => story.descendants.select{|task| task.status.id==status.id} %>
+        <%= render_rb_task_collection(story.descendants.select{|task| task.status_id==status.id}) %>
       </td>
       <%- end %>
     </tr>

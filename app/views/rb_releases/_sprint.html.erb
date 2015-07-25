@@ -40,7 +40,7 @@
       <td><%= story_points_or_empty(issue) %></td>
     </tr>
     <%
-      sum_points = sum_points + issue.story_points.to_f if issue.story_points 
+      sum_points = sum_points + issue.story_points.to_f if issue.story_points
       end %>
     <tr><td colspan="4"></td><td><%= sum_points %></td></tr>
   </table>

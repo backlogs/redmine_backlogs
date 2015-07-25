@@ -2,7 +2,7 @@
  * reserved classes are
  * .backlog (used in master_backlog.js to initialize all backlogs)
  * .model (used in backlog.js editable_inplace.js model.js)
- * .sprint (used in backlog.js 
+ * .sprint (used in backlog.js
  * .stories (used in backlog.js for sortable)
  * .editor
  * .editable (bind click on)
@@ -286,7 +286,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 .header .date{
   height:28px;
   line-height:28px;
-  white-space: nowrap; 
+  white-space: nowrap;
   font-size:12px;
 }
 
@@ -692,7 +692,6 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   overflow: hidden;
   padding-top: 4px;
   padding-bottom: 5px;
-  height: 14px;
 }
 #backlogs_container .stories .story.editing .story_field {
   display: none;

@@ -3,7 +3,7 @@
   color: black;
 }
 #taskboard .task {
-  color: black; 
+  color: black;
 }
 #taskboard .issue .subject {
   white-space: normal;
@@ -24,7 +24,7 @@
  swimlane class is used by:
   - #board_header
   - .board
-  
+
 Also use by the Column Width preference to
 determine the unit width of the swimlanes.
 See RB.Taskboard.initialize()
@@ -83,7 +83,7 @@ See RB.Taskboard.initialize()
 .board td:first-child{
   min-width:210px;
   padding:5px;
-  width:210px; 
+  width:210px;
 }
 .board td:last-child{
   border-right:none;
@@ -395,4 +395,8 @@ See RB.Taskboard.initialize()
 }
 #ui-datepicker-div{
   display: none;
+}
+
+#project_quick_jump_box{
+  max-width: 300px;
 }

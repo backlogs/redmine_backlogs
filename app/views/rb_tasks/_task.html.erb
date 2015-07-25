@@ -38,7 +38,7 @@
     <div class="project_id"><%= task.project_id %></div>
     <div class="user_status"><%= task.author == User.current ? '+' : '-' %>c<%= task.assigned_to == User.current ? '+' : '-' %>a</div>
     <div class="tracker_id"><%= tracker_id_or_empty(task) %></div>
-    <div class="previous"><%= task.right_sibling.blank? ? '' : task.right_sibling.id %></div>
+    <%# <div class="previous"><%= task.right_sibling.blank? ? '' : task.right_sibling.id %1></div> %>
     <%= render :partial => "backlogs/model_errors", :object => task.errors unless task.errors.empty? %>
   </div>
 </div>

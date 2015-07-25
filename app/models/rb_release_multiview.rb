@@ -2,6 +2,8 @@ class RbReleaseMultiview < ActiveRecord::Base
   self.table_name = 'rb_releases_multiview'
 
   unloadable
+  attr_protected :created_at # hack, all attributes will be mass asigment
+
   belongs_to :project
 
   attr_accessible :name, :project_id, :release_ids

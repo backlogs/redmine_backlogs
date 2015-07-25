@@ -22,7 +22,7 @@ end
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
-  story = RbStory.where(subject: story_subject).joins(:fixed_version).where(versions: {name: sprint_name}).first
+  story = RbStory.where(subject: story_subject).joins(:fixed_version).includes(:fixed_version).where(versions: {name: sprint_name}).first
   story.rank.should == position.to_i
 end
 
@@ -394,7 +394,7 @@ Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,val
 end
 
 Then /^sprint (.+) should contain (.+)$/ do |sprint_name, story_subject|
-  story = RbStory.where(:subject => story_subject).joins(:fixed_version).where(versions: {:name => sprint_name}).first #beware, fixed_version is the relation, Versions the class and versions the table for our sprint. Duh.
+  story = RbStory.where(:subject => story_subject).joins(:fixed_version).includes(:fixed_version).where(versions: {:name => sprint_name}).first #beware, fixed_version is the relation, Versions the class and versions the table for our sprint. Duh.
   story.should_not be_nil
 end
 

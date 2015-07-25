@@ -1,6 +1,8 @@
 <li class="model story fff-wrapper <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>">
  <div class="fff-wrapmiddle">
-  <div class="subject editable story_field fff-middle" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %>
+   <div class="story_field fff-middle">
+     <span class="editable subject" fieldname="subject" fieldlabel="<%=l(:field_subject)%>" fieldtype="textarea"><%=h story.subject %></span>
+     <span class="story_field">(<%= story.estimated_hours.to_f %> est h, <%= story.priority.name %> )</span>
   </div>
  </div>
  <div class="fff-left">

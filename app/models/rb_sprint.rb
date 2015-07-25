@@ -34,7 +34,7 @@ class RbSprint < Version
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.joins(:versions).
+        Project.visible.joins(:versions).includes(:versions).
           where(["#{Version.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
