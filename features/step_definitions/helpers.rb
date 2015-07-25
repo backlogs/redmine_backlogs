@@ -201,6 +201,7 @@ def initialize_sprint_params
 end
 
 def login_as(user, password)
+  logout
   visit url_for(:controller => 'account', :action=>'login', :only_path=>true)
   fill_in 'username', :with => user
   fill_in 'password', :with => password
@@ -285,7 +286,11 @@ def story_position(story)
 end
 
 def logout
-  visit url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  if page.driver.respond_to?(:post)
+    page.driver.post(url_for(:controller => 'account', :action=>'logout', :only_path=>true), {})
+  else
+    post url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  end
   @user = nil
 end
 
