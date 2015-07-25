@@ -6,8 +6,10 @@ cleanup()
 {
   for log in $WORKSPACE/cuke*.log; do
     if [ -f "$log" ]; then
-      sed '/^$/d' -i $log # empty lines
-      sed 's/$//' -i $log # ^Ms at end of lines
+      sed '/^
+$/d' -i $log # empty lines
+      sed 's/
+$//' -i $log # ^Ms at end of lines
       sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"  -i $log # ansi coloring
     fi
   done
@@ -36,8 +38,9 @@ then
   exit 1;
 fi
 
-export CLUSTER1="features/release-multiview-burnchart.feature features/release-multiview-burnchart-in-progress.feature features/release-multiview-burnchart-scope-change.feature features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature features/release_burndown.feature features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature features/release_burndown_complex.feature"
-export CLUSTER2="features/release-multiview-stacked-data.feature features/release-multiview.feature features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
+export CLUSTER1="features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature  features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature"
+export CLUSTER2="features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
+export RELEASE1="features/release-multiview-burnchart.feature features/release-multiview-burnchart-in-progress.feature features/release-multiview-burnchart-scope-change.feature features/release-multiview-stacked-data.feature features/release-multiview.feature features/release_burndown.feature features/release_burndown_complex.feature"
 
 export RAILS_ENV=test
 export IN_RBL_TESTENV=true
