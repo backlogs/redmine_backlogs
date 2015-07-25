@@ -206,6 +206,7 @@ def login_as(user, password)
   fill_in 'password', :with => password
   page.find(:xpath, '//input[@name="login"]').click
   @user = User.find_by(:login => user)
+  User.current = @user
 end
 
 def login_as_product_owner
