@@ -258,13 +258,15 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def release_options_for_select(releases, selected=nil)
+    releases = releases.all.to_a if releases
+    selected = selected.all.to_a if selected
     grouped = Hash.new {|h,k| h[k] = []}
     selected = [selected].compact unless selected.kind_of?(Array)
     releases.each do |release|
       grouped[release.project.name] << [release.name, release.id]
     end
     # Add in the selected
-    (selected - releases).each{|s| grouped[s.project.name] << [s.name, s.id] }
+    (selected.to_a - releases.to_a).each{|s| grouped[s.project.name] << [s.name, s.id] }
 
     if grouped.keys.size > 1
       grouped_options_for_select(grouped, selected.collect{|s| s.id})

@@ -571,6 +571,6 @@ Then(/^release multiview "(.*?)" should contain "(.*?)"$/) do |release_multiview
   m.should_not be_nil
 
   release_names = releases.split(",")
-  expected_releases = RbRelease.where(name: release_names).all
-  m.releases.should == expected_releases
+  expected_releases = RbRelease.where(name: release_names).all.map{|r| r.id}
+  m.releases.map{|r| r.id}.should == expected_releases
 end
