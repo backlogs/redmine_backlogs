@@ -208,6 +208,7 @@ def login_as(user, password)
   page.find(:xpath, '//input[@name="login"]').click
   @user = User.find_by(:login => user)
   User.current = @user
+  @sessiondriver = Capybara.current_session.driver
 end
 
 def login_as_product_owner
@@ -286,12 +287,16 @@ def story_position(story)
 end
 
 def logout
-  if page.driver.respond_to?(:post)
-    page.driver.post(url_for(:controller => 'account', :action=>'logout', :only_path=>true), {})
+  path = url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  if @sessiondriver
+      @sessiondriver.submit :post, path, @task_params
+  elsif page.driver.respond_to?(:post)
+    page.driver.post(path, {})
   else
-    post url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+    post path
   end
   @user = nil
+  User.current = nil
 end
 
 def show_table(title, header, data)
