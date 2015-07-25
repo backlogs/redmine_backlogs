@@ -14,6 +14,7 @@ Before do
   Backlogs.setting[:release_burnup_enabled] = 'enabled'
   Backlogs.setting[:new_story_position] = 'top'
   Backlogs.setting[:sharing_new_sprint_sharingmode] = nil
+  Backlogs.setting[:new_story_position] = 'top'
   Time.zone = 'UTC'
 end
 
