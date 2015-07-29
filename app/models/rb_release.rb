@@ -312,7 +312,7 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible..joins('LEFT OUTER JOIN releases ON releases.project_id = projects.id').
+        Project.visible.joins('LEFT OUTER JOIN releases ON releases.project_id = projects.id').
         includes(:releases).
           where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
@@ -320,7 +320,7 @@ class RbRelease < ActiveRecord::Base
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
           " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
           " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
-          "))",sharing,sharing,sharing,sharing).order('lft')
+          "))",sharing,sharing,sharing,sharing).order('lft').distinct
       end
     @shared_projects
   end

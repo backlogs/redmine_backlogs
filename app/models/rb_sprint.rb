@@ -42,7 +42,7 @@ class RbSprint < Version
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
           " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
           " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
-          "))",sharing,sharing,sharing,sharing]).order('lft')
+          "))",sharing,sharing,sharing,sharing]).order('lft').distinct
       end
     @shared_projects
   end
