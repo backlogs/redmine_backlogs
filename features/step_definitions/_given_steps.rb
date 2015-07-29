@@ -219,6 +219,7 @@ Given /^the (.*) project has the backlogs plugin enabled$/ do |project_id|
   story_trackers = story_trackers.map{|tracker| tracker.id }
   task_tracker = task_tracker.id
   Backlogs.setting[:story_trackers] = story_trackers
+  Backlogs.setting[:default_story_tracker] = story_trackers[0]
   Backlogs.setting[:task_tracker] = task_tracker
 
   # Make sure these trackers are enabled in the project
