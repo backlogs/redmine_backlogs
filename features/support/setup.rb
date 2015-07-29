@@ -27,11 +27,7 @@ World(RSpec::Rails::Matchers::RoutingMatchers)
 
 #Seed the DB
 def seed_the_database
-  if Rails::VERSION::MAJOR < 3
-    fixtures = Fixtures
-  else
-    fixtures = ActiveRecord::Fixtures
-  end
+  fixtures = ActiveRecord::FixtureSet
   seed_the_database_with(fixtures)
 end
 
