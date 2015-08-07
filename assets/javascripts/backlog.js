@@ -162,6 +162,9 @@ RB.Backlog = RB.Object.create({
       }
     }
 
+    //Enable new sprints
+    RB.$('#stories-for-').sortable('enable');
+
     //disable release backlogs
     RB.$('#product_backlog_container .release_backlog .stories').sortable('disable');
     if (RB.constants.project_releases[storyProject]) {
