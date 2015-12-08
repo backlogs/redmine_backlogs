@@ -4,6 +4,8 @@ include ContextMenusHelper
 module BacklogsPlugin
   module Hooks
     class LayoutHook < Redmine::Hook::ViewListener
+
+      include IssuesHelper
       # this ought to be view_issues_sidebar_queries_bottom, but
       # the entire queries toolbar is disabled if you don't have
       # custom queries
@@ -86,35 +88,34 @@ module BacklogsPlugin
 
           return '' unless Backlogs.configured?(issue.project)
 
-          snippet = ''
-
           project = context[:project]
 
-          if issue.is_story?
-            snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td>"
-            unless issue.remaining_hours.nil?
-              snippet += "<th>#{l(:field_remaining_hours)}</th><td>#{l_hours(issue.remaining_hours)}</td>"
+          issue_fields_rows do |rows|
+
+            if issue.is_story?
+              rows.left l(:field_story_points), RbStory.find(issue.id).points_display, :class => 'story-points'
+              unless issue.remaining_hours.nil?
+                rows.right l(:field_remaining_hours), l_hours(issue.remaining_hours), :class => 'remaining-hours'
+              end
+
+              vbe = issue.velocity_based_estimate
+              rows.left l(:field_velocity_based_estimate), vbe ? vbe.to_s + ' days' : '-', :class => 'velocity-based-estimate'
+
+              unless issue.release_id.nil?
+                release = RbRelease.find(issue.release_id)
+                rows.left l(:field_release), link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release})), :class => 'release'
+                relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
+                rows.right l(:field_release_relationship), relation_translate, :class => 'release-relationship'
+              end
             end
-            snippet += "</tr>"
-            vbe = issue.velocity_based_estimate
-            snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
 
-            unless issue.release_id.nil?
-              release = RbRelease.find(issue.release_id)
-              snippet += "<tr><th>#{l(:field_release)}</th><td>#{link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))}</td>"
-              relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
-              snippet += "<th>#{l(:field_release_relationship)}</th><td>#{relation_translate}</td></tr>"
+            if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
+              rows.left l(:field_remaining_hours), issue.remaining_hours, :class => 'remaining-hours'
             end
-          end
 
-          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
-            snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
           end
-
-          return snippet
         rescue => e
           exception(context, e)
-          return ''
         end
       end
 
