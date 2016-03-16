@@ -174,10 +174,10 @@ module BacklogsPlugin
             snippet += "#{check_box_tag('link_to_original', params[:copy_from], true)}</p>"
 
             snippet += "<p><label>#{l(:rb_label_copy_tasks)}</label>"
-            snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], true)} #{l(:rb_label_copy_tasks_open)}<br />"
-            snippet += "#{radio_button_tag('copy_tasks', 'closed:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_closed)}<br />"
-            snippet += "#{radio_button_tag('copy_tasks', 'none', false)} #{l(:rb_label_copy_tasks_none)}<br />"
-            snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
+            snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], Backlogs.setting[:copy_tasks_default]=='open')} #{l(:rb_label_copy_tasks_open)}<br />"
+            snippet += "#{radio_button_tag('copy_tasks', 'closed:' + params[:copy_from], Backlogs.setting[:copy_tasks_default]=='closed')} #{l(:rb_label_copy_tasks_closed)}<br />"
+            snippet += "#{radio_button_tag('copy_tasks', 'none', Backlogs.setting[:copy_tasks_default]=='none')} #{l(:rb_label_copy_tasks_none)}<br />"
+            snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], Backlogs.setting[:copy_tasks_default]=='all')} #{l(:rb_label_copy_tasks_all)}</p>"
           end
 
           if issue.is_task? && !issue.new_record?

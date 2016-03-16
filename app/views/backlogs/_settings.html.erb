@@ -186,6 +186,17 @@
   <%= check_box_tag("settings[show_priority]", 'enabled',
       Backlogs.setting[:show_priority]) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:backlogs_copy_tasks_default)) %>
+  <%= select_tag("settings[copy_tasks_default]",
+            options_for_select([
+                    [l(:rb_label_copy_tasks_open), 'open'],
+                    [l(:rb_label_copy_tasks_closed), 'closed'],
+                    [l(:rb_label_copy_tasks_none), 'none'],
+                    [l(:rb_label_copy_tasks_all), 'all']
+                ], Backlogs.setting[:copy_tasks_default])) %>
+</p>
 </fieldset>
 
 <fieldset>

@@ -29,6 +29,7 @@ en:
   backlogs_sharing_support: "Backlogs sharing"
   backlogs_show_in_scrum_stats: "Show project in Scrum statistics"
   backlogs_show_priority: "Show task priority on taskboard"
+  backlogs_copy_tasks_default: 'Default selection for "Copy tasks"'
   backlogs_show_redmine_std_header: "Show redmine header in backlogs"
   backlogs_show_stories_from_subprojects_in_backlog: "Show stories from subprojects in backlog"
   backlogs_sprint_card_settings: "Card printing"
