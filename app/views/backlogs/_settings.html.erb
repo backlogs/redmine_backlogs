@@ -188,6 +188,15 @@
 </p>
 
 <p>
+  <%= content_tag(:label, l(:backlogs_copy_tasks_action)) %>
+  <%= select_tag("settings[copy_tasks_action]",
+            options_for_select([
+                    [l(:rb_label_copy_tasks_action_copy), 'copy'],
+                    [l(:rb_label_copy_tasks_action_move), 'move']
+            ], Backlogs.setting[:copy_tasks_action])) %>
+</p>
+
+<p>
   <%= content_tag(:label, l(:backlogs_copy_tasks_default)) %>
   <%= select_tag("settings[copy_tasks_default]",
             options_for_select([

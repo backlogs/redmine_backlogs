@@ -173,7 +173,14 @@ module BacklogsPlugin
             snippet += "<p><label for='link_to_original'>#{l(:rb_label_link_to_original)}</label>"
             snippet += "#{check_box_tag('link_to_original', params[:copy_from], true)}</p>"
 
-            snippet += "<p><label>#{l(:rb_label_copy_tasks)}</label>"
+            snippet += "<p><label>#{
+              if Backlogs.setting[:copy_tasks_action] == 'move'
+                l(:rb_label_move_tasks)
+              else
+                l(:rb_label_copy_tasks)
+              end
+            }</label>"
+
             snippet += "#{radio_button_tag('copy_tasks', 'open:' + params[:copy_from], Backlogs.setting[:copy_tasks_default]=='open')} #{l(:rb_label_copy_tasks_open)}<br />"
             snippet += "#{radio_button_tag('copy_tasks', 'closed:' + params[:copy_from], Backlogs.setting[:copy_tasks_default]=='closed')} #{l(:rb_label_copy_tasks_closed)}<br />"
             snippet += "#{radio_button_tag('copy_tasks', 'none', Backlogs.setting[:copy_tasks_default]=='none')} #{l(:rb_label_copy_tasks_none)}<br />"
@@ -349,13 +356,28 @@ module BacklogsPlugin
                   raise "Unexpected value #{params[:copy_tasks]}"
               end
 
-              tasks.each {|t|
-                nt = Issue.new
-                nt.copy_from(t)
-                nt.parent_issue_id = issue.id
-                nt.position = nil # will assign a new position
-                nt.save!
-              }
+              if Backlogs.setting[:copy_tasks_action] == 'move'
+                tasks.each {|t|
+                  #
+                  # Update parent_issue_id as a Task, because it will fail if
+                  # we try to perform the update as an Issue.  The consequence
+                  # of this is that it does not create an entry in the Journal.
+                  #
+                  # We also skip validation, otherwise we would get a "parent
+                  # task is invalid" error.
+                  #
+                  t.parent_issue_id = issue.id
+                  t.save(:validate => false)
+                }
+              else
+                tasks.each {|t|
+                  nt = Issue.new
+                  nt.copy_from(t)
+                  nt.parent_issue_id = issue.id
+                  nt.position = nil # will assign a new position
+                  nt.save!
+                }
+              end
 
               # In case the new story only has closed tasks, make sure it is closed.
               context[:issue].becomes(RbStory).story_follow_task_state
