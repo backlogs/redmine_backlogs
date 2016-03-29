@@ -400,3 +400,7 @@ See RB.Taskboard.initialize()
 #project_quick_jump_box{
   max-width: 300px;
 }
+
+.sprint_description_taskboard {
+	margin: 5px 10px 5px 10px;
+}

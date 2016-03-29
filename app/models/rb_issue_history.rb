@@ -160,7 +160,7 @@ class RbIssueHistory < ActiveRecord::Base
     }
 
     if ActiveRecord::Base.connection.tables.include?('rb_journals')
-      RbJournal.all(:conditions => ['issue_id=?', issue.id], :order => 'timestamp asc').each{|j|
+       RbJournal.where('issue_id=?', 601).order('timestamp asc').each{|j|
         date = j.timestamp.to_date
         full_journal[date] ||= {}
         case j.property
