@@ -94,7 +94,7 @@ module Backlogs
     end
 
     def test_product_backlog_sized
-      return !@product_backlog.detect{|s| s.story_points.blank? }
+      return (@project.status != Project::STATUS_ACTIVE || !@product_backlog.detect{|s| s.story_points.blank? })
     end
 
     def test_sprints_sized
