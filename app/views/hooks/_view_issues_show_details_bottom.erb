@@ -1,0 +1,33 @@
+<%=
+  begin
+    if Backlogs.configured?(issue.project)
+      issue_fields_rows do |rows|
+        if issue.is_story?
+          rows.left l(:field_story_points), RbStory.find(issue.id).points_display, :class => 'story-points'
+
+          unless issue.remaining_hours.nil?
+            rows.left l(:field_remaining_hours), l_hours(issue.remaining_hours), :class => 'remaining-hours'
+          end
+
+          rows.left l(:field_velocity_based_estimate), issue.velocity_based_estimate ? issue.velocity_based_estimate.to_s + ' days' : '', :class => 'velocity-based-estimate'
+
+          unless issue.release_id.nil?
+            release = RbRelease.find(issue.release_id)
+            link_to_release = link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))
+            relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
+            rows.right l(:field_release), link_to_release, :class => 'release'
+            rows.right l(:field_release_relationship), relation_translate, :class => 'release-relationship'
+          end
+        end
+
+        if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
+          rows.left l(:field_remaining_hours), issue.remaining_hours, :class => 'remaining-hours'
+        end
+      end
+    end
+  rescue => e
+    controller.send(:flash)[:error] = "Backlogs error: #{e.message} (#{e.class})"
+    Rails.logger.error "#{e.message} (#{e.class}): " + e.backtrace.join("\n")
+    ''
+  end
+%>
