@@ -218,18 +218,55 @@ RB.UserFilter = RB.Object.create({
       noneSelectedText: _("Filter tasks: my tasks"),
       checkAllText: _("All tasks"),
       uncheckAllText: _("My tasks"),
-      checkAll: function() { me.updateUI(); },
+      checkAll: function() { me.saveUserFilterState(); me.updateUI(); },
       uncheckAll: function() { me.onUnCheckAll(); },
-      click: function() { me.updateUI(); }
+      click: function() { me.saveUserFilterState(); me.updateUI(); }
     });
-    me.el.multiselect('checkAll');
+    me.initState();
+    me.updateUI();
   },
 
   /* uncheck all users but check the current user, so we get a private mode button */
   onUnCheckAll: function() {
     var uid = RB.$("#userid").text();
-    this.el.multiselect("widget").find(":checkbox[value='"+uid+"']").each(function() {this.checked = true;} );
+    var state = [uid];
+    this.setChecked(state);
+    this.saveUserFilterState();
     this.updateUI();
+  },
+
+  initState: function() {
+    var preferenceKey = this.getPreferenceKey();
+    var stateAsJson = RB.UserPreferences.get(preferenceKey);
+
+    if (stateAsJson) {
+      var state = JSON.parse(stateAsJson);
+      this.setChecked(state);
+    } else {
+      this.setChecked(); // check all
+    }
+  },
+
+  /* if state is undefined, all checkboxes will be checked */
+  setChecked: function(state) {
+    this.el.multiselect("widget").find(":checkbox").each(function() {
+      this.checked = !state || state.indexOf(this.value) !== -1;
+    });
+  },
+
+  saveUserFilterState: function() {
+    var state = [];
+
+    this.el.multiselect("widget").find(":checkbox:checked").each(function() {
+      state.push(this.value);
+    });
+
+    var preferenceKey = this.getPreferenceKey();
+    RB.UserPreferences.set(preferenceKey, JSON.stringify(state));
+  },
+
+  getPreferenceKey: function () {
+    return 'taskboardUserFilterStateOnProject' + RB.constants.project_id;
   },
 
   updateUI: function() {
