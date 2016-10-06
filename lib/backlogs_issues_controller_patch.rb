@@ -26,6 +26,7 @@ module Backlogs
           when 'xml'
             body = Nokogiri::XML(response.body)
             body.xpath('//issue').each{|issue|
+              issue << body.create_element('remaining_hours', RbStory.find(issue.at('.//id').text).remaining_hours.to_s)
               next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
               issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
               next unless RbStory.find(issue.at('.//id').text).release
@@ -37,6 +38,7 @@ module Backlogs
             jsonp = (request.params[:callback] || request.params[:jsonp]).to_s.gsub(/[^a-zA-Z0-9_]/, '')
             body = JSON.parse(jsonp.present? ? response.body.sub("#{jsonp}(","").chop : response.body)
             (body['issues'] || [body['issue']]).each{|issue|
+              issue['remaining_hours'] = RbStory.find(issue['id']).remaining_hours
               next unless story_trackers.include?(issue['tracker']['id'])
               issue['story_points'] = RbStory.find(issue['id']).story_points
               next unless RbStory.find(issue['id']).release
