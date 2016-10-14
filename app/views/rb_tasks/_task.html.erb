@@ -12,12 +12,11 @@
     <div class="t"><%= assignee_name_or_empty(task) %></div>
     <div class="v"><%= assignee_id_or_empty(task) %></div>
   </div>
-  <% if Backlogs.settings[:show_priority] || task.priority_id != IssuePriority.default.id %>
-    <div class="priority_id editable"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>">
-      <div class="t"><%= h task.priority.name %></div>
-      <div class="v"><%= task.priority_id %></div>
-    </div>
-  <% end %>
+  <% priority_style = (Backlogs.settings[:show_priority] || task.priority_id != IssuePriority.default.id) ? '' : 'display: none;' %>
+  <div class="priority_id editable"  fieldtype="select"  fieldname="priority_id" fieldlabel="<%=l(:field_priority)%>" style="<%=priority_style%>">
+    <div class="t"><%= h task.priority.name %></div>
+    <div class="v"><%= task.priority_id %></div>
+  </div>
   <% if User.current.allowed_to?(:update_remaining_hours, @project) %>
     <div class="remaining_hours editable" fieldname="remaining_hours" fieldlabel="<%=l(:field_remaining_hours)%>"><%= remaining_hours_or_empty(task) %></div>
   <% end %>
