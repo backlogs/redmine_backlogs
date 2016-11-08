@@ -91,24 +91,23 @@ module BacklogsPlugin
           project = context[:project]
 
           if issue.is_story?
-            snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td>"
+            snippet += '<div class="attribute"><div class="label">'+l(:field_story_points)+':</div> <div class="value">'+RbStory.find(issue.id).points_display+'</div></div>'
             unless issue.remaining_hours.nil?
-              snippet += "<th>#{l(:field_remaining_hours)}</th><td>#{l_hours(issue.remaining_hours)}</td>"
+              snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+l_hours(issue.remaining_hours)+'</div></div>'
             end
-            snippet += "</tr>"
             vbe = issue.velocity_based_estimate
-            snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
+            snippet += '<div class="attribute"><div class="label">'+l(:field_velocity_based_estimate)+':</div> <div class="value">'+(vbe ? vbe.to_s + ' days' : '-')+'</div></div>'
 
             unless issue.release_id.nil?
               release = RbRelease.find(issue.release_id)
-              snippet += "<tr><th>#{l(:field_release)}</th><td>#{link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))}</td>"
+              snippet +=  '<div class="attribute"><div class="label">'+l(:field_release)+':</div> <div class="value">'+link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))+'</div></div>'
               relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
-              snippet += "<th>#{l(:field_release_relationship)}</th><td>#{relation_translate}</td></tr>"
+              snippet += '<div class="attribute"><div class="label">'+l(:field_release_relationship)+':</div> <div class="value">'+relation_translate+'</div></div>'
             end
           end
 
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
-            snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
+            snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+issue.remaining_hours+'</div></div>'
           end
 
           return snippet
