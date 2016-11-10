@@ -40,12 +40,22 @@ module Backlogs
         RbReleaseBurnchartDayCache.where(:issue_id => self.id, :release_id => release_id)
       end
 
+      def remaining_hours
+        if is_story? and super.nil? then total_estimated_hours else super end
+      end
+
       def is_story?
         RbStory.trackers_include?(tracker_id)
       end
 
       def is_task?
         RbTask.tracker?(tracker_id)
+      end
+
+      def allow_remaining_hours?
+        return true if is_task?
+        return true if Backlogs.setting[:remaining_hours_in_stories] and is_story?
+        return false
       end
 
       def backlogs_issue_type

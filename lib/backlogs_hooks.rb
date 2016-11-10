@@ -92,9 +92,6 @@ module BacklogsPlugin
 
           if issue.is_story?
             snippet += '<div class="attribute"><div class="label">'+l(:field_story_points)+':</div> <div class="value">'+RbStory.find(issue.id).points_display+'</div></div>'
-            unless issue.remaining_hours.nil?
-              snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+l_hours(issue.remaining_hours)+'</div></div>'
-            end
             vbe = issue.velocity_based_estimate
             snippet += '<div class="attribute"><div class="label">'+l(:field_velocity_based_estimate)+':</div> <div class="value">'+(vbe ? vbe.to_s + ' days' : '-')+'</div></div>'
 
@@ -106,8 +103,8 @@ module BacklogsPlugin
             end
           end
 
-          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
-            snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+issue.remaining_hours+'</div></div>'
+          if (issue.is_story? or issue.is_task?) && User.current.allowed_to?(:update_remaining_hours, project) != nil
+            snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+l_hours(issue.remaining_hours)+'</div></div>'
           end
 
           return snippet
@@ -178,9 +175,9 @@ module BacklogsPlugin
             snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
           end
 
-          if issue.is_task? && !issue.new_record?
+          if issue.allow_remaining_hours? && !issue.new_record?
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3)
+            snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3, :disabled => if issue.is_story? and issue.children? then true else false end)
             snippet += '</p>'
           end
 
@@ -361,7 +358,7 @@ module BacklogsPlugin
         params = context[:params]
         issue = context[:issue]
 
-        if issue.is_task? && params.include?(:remaining_hours)
+        if issue.allow_remaining_hours? && params.include?(:remaining_hours)
           begin
             issue.remaining_hours = Float(params[:remaining_hours])
           rescue ArgumentError, TypeError
@@ -395,10 +392,12 @@ module BacklogsPlugin
         snippet=''
 
         begin
-          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+          if issue.allow_remaining_hours? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
             remaining_hours = issue.remaining_hours
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6)
+            if issue.allow_remaining_hours? then
+              snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6, :disabled => if issue.is_story? and issue.children? then true else false end)
+            end
             snippet += '</p>'
           end
           return snippet
@@ -419,7 +418,7 @@ module BacklogsPlugin
         return unless Backlogs.configured?(issue.project) &&
                       Backlogs.setting[:timelog_from_taskboard]=='enabled'
 
-        if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+        if issue.allow_remaining_hours? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
           if params.include?("remaining_hours")
             remaining_hours = params[:remaining_hours].gsub(',','.').to_f
             if remaining_hours != issue.remaining_hours
