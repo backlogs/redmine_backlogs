@@ -16,6 +16,7 @@ module Backlogs
         has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
         has_many :rb_release_burnchart_day_cache, :dependent => :delete_all
 
+        alias_method_chain :total_estimated_hours, :story
 
         validates_inclusion_of :release_relationship, :in => RbStory::RELEASE_RELATIONSHIP
 
@@ -40,12 +41,26 @@ module Backlogs
         RbReleaseBurnchartDayCache.where(:issue_id => self.id, :release_id => release_id)
       end
 
+      def remaining_hours
+        if is_story? and super.nil? then total_estimated_hours else super end
+      end
+
+      def total_estimated_hours_with_story
+        if is_story? and not leaf? then estimated_hours else total_estimated_hours_without_story end
+      end
+
       def is_story?
         RbStory.trackers_include?(tracker_id)
       end
 
       def is_task?
         RbTask.tracker?(tracker_id)
+      end
+
+      def allow_remaining_hours?
+        return true if is_task?
+        return true if Backlogs.setting[:remaining_hours_in_stories] and is_story?
+        return false
       end
 
       def backlogs_issue_type
@@ -157,6 +172,12 @@ module Backlogs
           r = p.leaves.sum("COALESCE(remaining_hours, 0)").to_f
           if r != p.remaining_hours
             p.update_attribute(:remaining_hours, r)
+            p.history.save
+          end
+
+          r = p.leaves.sum("COALESCE(estimated_hours, 0)").to_f
+          if r != p.estimated_hours
+            p.update_attribute(:estimated_hours, r)
             p.history.save
           end
         }

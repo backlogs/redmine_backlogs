@@ -91,24 +91,20 @@ module BacklogsPlugin
           project = context[:project]
 
           if issue.is_story?
-            snippet += "<tr><th>#{l(:field_story_points)}</th><td>#{RbStory.find(issue.id).points_display}</td>"
-            unless issue.remaining_hours.nil?
-              snippet += "<th>#{l(:field_remaining_hours)}</th><td>#{l_hours(issue.remaining_hours)}</td>"
-            end
-            snippet += "</tr>"
+            snippet += '<div class="attribute"><div class="label">'+l(:field_story_points)+':</div> <div class="value">'+RbStory.find(issue.id).points_display+'</div></div>'
             vbe = issue.velocity_based_estimate
-            snippet += "<tr><th>#{l(:field_velocity_based_estimate)}</th><td>#{vbe ? vbe.to_s + ' days' : '-'}</td></tr>"
+            snippet += '<div class="attribute"><div class="label">'+l(:field_velocity_based_estimate)+':</div> <div class="value">'+(vbe ? vbe.to_s + ' days' : '-')+'</div></div>'
 
             unless issue.release_id.nil?
               release = RbRelease.find(issue.release_id)
-              snippet += "<tr><th>#{l(:field_release)}</th><td>#{link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))}</td>"
+              snippet +=  '<div class="attribute"><div class="label">'+l(:field_release)+':</div> <div class="value">'+link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))+'</div></div>'
               relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
-              snippet += "<th>#{l(:field_release_relationship)}</th><td>#{relation_translate}</td></tr>"
+              snippet += '<div class="attribute"><div class="label">'+l(:field_release_relationship)+':</div> <div class="value">'+relation_translate+'</div></div>'
             end
           end
 
-          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
-            snippet += "<tr><th>#{l(:field_remaining_hours)}</th><td>#{issue.remaining_hours}</td></tr>"
+          if (issue.is_story? or issue.is_task?) && User.current.allowed_to?(:update_remaining_hours, project) != nil
+            snippet += '<div class="attribute"><div class="label">'+l(:field_remaining_hours)+':</div> <div class="value">'+l_hours(issue.remaining_hours)+'</div></div>'
           end
 
           return snippet
@@ -179,9 +175,9 @@ module BacklogsPlugin
             snippet += "#{radio_button_tag('copy_tasks', 'all:' + params[:copy_from], false)} #{l(:rb_label_copy_tasks_all)}</p>"
           end
 
-          if issue.is_task? && !issue.new_record?
+          if issue.allow_remaining_hours? && !issue.new_record?
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3)
+            snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3, :disabled => if issue.is_story? and issue.children? then true else false end)
             snippet += '</p>'
           end
 
@@ -362,7 +358,7 @@ module BacklogsPlugin
         params = context[:params]
         issue = context[:issue]
 
-        if issue.is_task? && params.include?(:remaining_hours)
+        if issue.allow_remaining_hours? && params.include?(:remaining_hours)
           begin
             issue.remaining_hours = Float(params[:remaining_hours])
           rescue ArgumentError, TypeError
@@ -396,10 +392,12 @@ module BacklogsPlugin
         snippet=''
 
         begin
-          if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+          if issue.allow_remaining_hours? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
             remaining_hours = issue.remaining_hours
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6)
+            if issue.allow_remaining_hours? then
+              snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6, :disabled => if issue.is_story? and issue.children? then true else false end)
+            end
             snippet += '</p>'
           end
           return snippet
@@ -420,7 +418,7 @@ module BacklogsPlugin
         return unless Backlogs.configured?(issue.project) &&
                       Backlogs.setting[:timelog_from_taskboard]=='enabled'
 
-        if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
+        if issue.allow_remaining_hours? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil
           if params.include?("remaining_hours")
             remaining_hours = params[:remaining_hours].gsub(',','.').to_f
             if remaining_hours != issue.remaining_hours

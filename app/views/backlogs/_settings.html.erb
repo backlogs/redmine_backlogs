@@ -130,6 +130,13 @@
   <%= radio_button_tag("settings[scrum_stats_menu_position]", 'application', Backlogs.setting[:scrum_stats_menu_position] == 'application') %><%= l(:backlogs_scrum_stats_menu_application) %>
   <%= radio_button_tag("settings[scrum_stats_menu_position]", 'none', Backlogs.setting[:scrum_stats_menu_position] == 'none') %><%= l(:backlogs_scrum_stats_menu_none) %>
 </p>
+
+
+<p>
+  <%= content_tag(:label, l(:rb_remaining_hours_in_stories)) %>
+	<%= check_box_tag("settings[remaining_hours_in_stories]",'enabled',Backlogs.setting[:remaining_hours_in_stories]) %>
+</p>
+
 </fieldset>
 
 <fieldset>

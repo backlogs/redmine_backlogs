@@ -198,6 +198,7 @@ en:
   rb_show_project_name: "Show project name in backlogs"
   rb_task_cards_stories_then_tasks: "First all stories, then all tasks"
   rb_task_cards_story_follows_tasks: "Tasks followed by their story"
+  rb_remaining_hours_in_stories: "Remaining hours in stories ?"
   rb_task_cards_tasks_follow_story: "Story followed by their tasks"
   rb_taskboard_card_order: "Card print order"
   rb_timelog_from_taskboard: "Timelog from taskboard"
