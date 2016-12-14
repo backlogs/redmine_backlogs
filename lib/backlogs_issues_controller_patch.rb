@@ -1,9 +1,56 @@
+require_dependency 'versions_controller'
 require_dependency 'issues_controller'
 require 'rubygems'
 require 'nokogiri'
 require 'json'
 
 module Backlogs
+  module VersionsControllerPatch
+    def self.included(base) # :nodoc:
+      base.extend(ClassMethods)
+      base.send(:include, InstanceMethods)
+
+      base.class_eval do
+        unloadable # Send unloadable so it will not be unloaded in development
+        after_filter :add_backlogs_fields, :only => [:index, :show]
+      end
+    end
+
+    module ClassMethods
+    end
+
+    module InstanceMethods
+      def add_backlogs_fields
+        case params[:format]
+          when 'xml'
+            body = Nokogiri::XML(response.body)
+            body.xpath('//version').each{|version|
+              if RbRelease.find_by_name(version.at('.//name').text)
+                version << body.create_element('start_date', RbRelease.find_by_name(version.at('.//name').text).release_start_date)
+              elsif RbSprint.find_by_name(version.at('.//name').text)
+                version << body.create_element('start_date', RbSprint.find_by_name(version.at('.//name').text).sprint_start_date)
+              else
+                version << body.create_element('start_date', '')
+              end
+            }
+            response.body = body.to_xml
+          when 'json'
+            jsonp = (request.params[:callback] || request.params[:jsonp]).to_s.gsub(/[^a-zA-Z0-9_]/, '')
+            body = JSON.parse(jsonp.present? ? response.body.sub("#{jsonp}(","").chop : response.body)
+            (body['versions'] || [body['version']]).each{|version|
+              if RbRelease.find_by_name(version['name'])
+                version['start_date'] = RbRelease.find_by_name(version['name']).release_start_date
+              elsif RbSprint.find_by_name(version['name'])
+                version['start_date'] = RbSprint.find_by_name(version['name']).sprint_start_date
+              else
+                version['start_date'] = ''
+              end
+            }
+            response.body = jsonp.present? ? "#{jsonp}(#{body.to_json})" : body.to_json
+        end
+      end
+    end
+  end
   module IssuesControllerPatch
     def self.included(base) # :nodoc:
       base.extend(ClassMethods)
@@ -52,3 +99,4 @@ module Backlogs
 end
 
 IssuesController.send(:include, Backlogs::IssuesControllerPatch) unless IssuesController.included_modules.include? Backlogs::IssuesControllerPatch
+VersionsController.send(:include, Backlogs::VersionsControllerPatch) unless VersionsController.included_modules.include? Backlogs::VersionsControllerPatch
