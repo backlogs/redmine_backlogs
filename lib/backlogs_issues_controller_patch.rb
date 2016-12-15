@@ -25,10 +25,9 @@ module Backlogs
           when 'xml'
             body = Nokogiri::XML(response.body)
             body.xpath('//version').each{|version|
-              if RbRelease.find_by_name(version.at('.//name').text)
-                version << body.create_element('start_date', RbRelease.find_by_name(version.at('.//name').text).release_start_date)
-              elsif RbSprint.find_by_name(version.at('.//name').text)
-                version << body.create_element('start_date', RbSprint.find_by_name(version.at('.//name').text).sprint_start_date)
+              release = Version.where(id: version.at('.//id').text)
+              if release
+                version << body.create_element('start_date', release[0]['sprint_start_date'])
               else
                 version << body.create_element('start_date', '')
               end
@@ -38,10 +37,9 @@ module Backlogs
             jsonp = (request.params[:callback] || request.params[:jsonp]).to_s.gsub(/[^a-zA-Z0-9_]/, '')
             body = JSON.parse(jsonp.present? ? response.body.sub("#{jsonp}(","").chop : response.body)
             (body['versions'] || [body['version']]).each{|version|
-              if RbRelease.find_by_name(version['name'])
-                version['start_date'] = RbRelease.find_by_name(version['name']).release_start_date
-              elsif RbSprint.find_by_name(version['name'])
-                version['start_date'] = RbSprint.find_by_name(version['name']).sprint_start_date
+              release = Version.where(id: version['id'])
+              if release
+                version['start_date'] = release[0]['sprint_start_date']
               else
                 version['start_date'] = ''
               end
