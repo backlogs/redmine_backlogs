@@ -2,7 +2,7 @@ REDMINE BACKLOGS
 ----------------
 
 A Redmine plugin for agile teams. For more information,
-please visit http://www.redminebacklogs.net
+please visit https://backlogs.github.io/www/
 
 PROJECT HEALTH
 --------------
