@@ -14,7 +14,11 @@ namespace :redmine do
         raise "You are missing the '#{gem}' gem" unless installed
       }
 
-      puts Backlogs.platform_support(true)
+      raise_unsupported_error = true
+      if ['yes', 'true'].include?("#{ENV['override_unsupported']}".downcase)
+        raise_unsupported_error = false
+      end
+      puts Backlogs.platform_support(raise_unsupported_error)
 
       # Necessary because adding key-value pairs one by one doesn't seem to work
       Backlogs.setting[:points_burn_direction] ||= 'down'
