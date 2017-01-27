@@ -22,6 +22,14 @@
                            :context => 'taskboard',
                            :format => 'js') %>">
   </script>
+
+  <script type="text/javascript">
+    <%- if params['default_task_from'] %>
+      window.close();
+    <%- end %>
+  </script>
+
+
   <%# Usability: display default cursor if tasks cannot be dragged %>
   <% unless User.current.allowed_to?(:update_tasks, @project) %> 
     <style type="text/css">
@@ -38,54 +46,108 @@
   <%= h @sprint.name %>
 <% end %>
 
-<%- content_for :view_specific_users do %>
-<span id="userselect">
-<ul style="list-style:none; margin:0px">
-  <li><label>
-    <select class="userfilter" size="5" name="filter-user-selection" multiple="multiple" title="User selection">
-      <option value='s'>Show empty Stories</option>
-      <option value='c'>Show closed Stories</option>
-      <optgroup label="Users">
-      <% @project.assignable_users.sort.each do |member| %>
-        <option value="<%= member.id %>"> <%= member.name %></option>
-      <% end %>
-      </optgroup>
-      </select>
-  </label></li>
-</ul>
-<br style="clear:both" />
-</span>
+<%-
+   created_on =  DateTime.strptime(params['created_on'],'%s') if params['created_on']
+   show_board_view_switch = !created_on
+   view_type= created_on ? 1 : (params['view_type']? params['view_type'].to_i : 2)
+   created_on ||= Time.now
+
+   cookies[:memes] = { value: params['memes'], expires: 1.days.from_now} if params['memes']
+ %>
+
+
+
+<%- if (view_type == 2)
+    content_for :view_specific_users do %>
+    <span id="userselect">
+    <ul style="list-style:none; margin:0px">
+      <li><label>
+        <select class="userfilter" size="5" name="filter-user-selection" multiple="multiple" title="User selection">
+          <option value='s'>Show empty Stories</option>
+          <option value='c'>Show closed Stories</option>
+          <optgroup label="Users">
+          <% @project.assignable_users.sort.each do |member| %>
+            <option value="<%= member.id %>"> <%= member.name %></option>
+          <% end %>
+          </optgroup>
+          </select>
+      </label></li>
+    </ul>
+    <br style="clear:both" />
+    </span>
+    <%- end %>
 <%- end %>
 
-<%- content_for :view_specific_links do %>
-  <% if @sprint.has_burndown? %>
-    <a id='show_charts'><%= l(:label_burndown) %></a>
+
+<%- content_for :view_specific_links do %>  
+  
+  <a href="?created_on=<%= (created_on - 1.days).to_i  %>"> &lt&lt </a>
+  <%= date_string(created_on)  %>
+  <a href="?created_on=<%= (created_on + 1.days).to_i  %>"> &gt&gt </a>  
+
+  <%- if show_board_view_switch %>
+
+    <%- if view_type == 1 %>
+        <a href="?view_type=2"><%= l(:label_taskboard_view_task) %></a>   
+    <%- else %>
+        <a href="?view_type=1"><%= l(:label_taskboard_view_story) %></a>
+    <%- end%>
+  <%- else %>
+    <a href="?view_type=2"> &gt&gt&gt </a>
+  <%- end%>
+
+  <% if @sprint.has_burndown? %>  
+    <a id='show_charts'><%= l(:label_burndown) %></a>  
   <% end %>
-  <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>
+  <!-- <span id="col_width"><%= l(:label_column_width) %>: <input name="col_width"/></span>        -->
+  <input name="col_width" type="hidden"/>
   <a id="disable_autorefresh">Disable Auto-refresh</a>
-  <a id="refresh">Refresh</a>
+  <a id="refresh">Refresh</a>  
+  <%- if cookies[:memes] == '1'%>
+    <a href="?memes=0"><%= l(:turn_off_memes) %> </a>   
+  <%- else%>
+    <a href="?memes=1"><%= l(:turn_on_memes) %> (Beta) </a>   
+  <%- end%>
+  
 <%- end %>
 
 <%- content_for :main do %>
 <span id="userid" style="visibility:hidden;"><%= User.current.id %></span>
+
+
+
 <div id="taskboard">
 
-
+  <%- if view_type == 2  %>
   <table id="board_header" cellspacing="0">
     <tr>
-      <td><%= l(:backlogs_story) %></td>
+      <%-if view_type == 2  %>
+        <td><%= l(:backlogs_story) %></td>
+       <%- end %> 
       <%- @statuses.each do |status| %>
-      <td class="swimlane"><%= h status.name %></td>
+      <td class="swimlane">
+        <%- if cookies[:memes] == '1'%>
+            <%= status_pic_or_empty(status) %> <br>
+        <%- end %>
+        <%= status.name %> <br>
       <%- end %>
     </tr>
   </table>
-
+  <%- end %>
+  <%- if cookies[:memes] == '1'%>
+    <br>
+    <br>
+    <br>
+    <br>
+  <%- end %>
+  
+  <%- if view_type == 2  %>
   <table id="impediments" class="board" cellspacing="0">
     <tr>
       <td><div class="label_sprint_impediments">
             <% if User.current.allowed_to?(:create_impediments, @project) %>
             <span class="add_new">
-              <%= image_tag("add.png", :alt => "+") %>
+              <%= image_tag("add.png", :alt => "+") %>  
             </span>
             <% end %>
             <%= l(:label_sprint_impediments) %>
@@ -97,20 +159,29 @@
       <%- end %>
     </tr>
   </table>
+  <%- end %>
+  
+
+  <%-if view_type == 2  %>
 
   <table id="tasks" class="board" cellspacing="0">
+
     <%- @sprint.stories.each do |story| %>
     <tr id="swimlane-<%= story.id %>" class="story-swimlane">
       <td>
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
           <div class="id story_tooltip">
             <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
-            <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <strong><%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %></strong>
+
+            <a href="<%=params.size <= 3 ? "?" : "&" %>default_task_from=<%=story.id %>" target="_blank" onClick="window.location.reload()"><%=l(:clone_as_child_task) %> (Beta)</a>
+
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">
               <%= image_tag("add.png", :alt => "+") %>
             </span>
             <% end %>
+
             <span class="assignee">
               <%= assignee_name_or_empty(story) %>
             </span>
@@ -133,7 +204,70 @@
       <%- end %>
     </tr>
     <%- end %>
-  </table>
+  </table> 
+
+  <%-else  %>
+    <!-- Aqui tabela por estorias -->
+        
+
+    <table id="tasks" class="board" cellspacing="0">
+      <thead>
+      <tr id="board_header">
+      <%- @statuses.each do |status| %>
+      <td class="swimlane">
+        <%- if cookies[:memes] == '1'%>
+            <%= status_pic_or_empty(status) %> <br>
+        <%- end %>
+        <%= status.name %> <br>
+      <%- end %>
+    </tr>
+    </thead>
+
+    
+
+    <%- @sprint.stories.each do |story| %>
+      <tr id="swimlane-<%= story.id %>" class="story-swimlane" style="padding-top:200px">
+        <%- 
+
+        story_status = @issue_st_hist && @issue_st_hist[story.id] || story.status
+
+        @statuses.each do |status| 
+              if story_status == status%>
+                <td>
+                  <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
+                    <div class="id story_tooltip">
+                      <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story %></div>
+                      <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+                      
+                      <span class="assignee">
+                        <%= assignee_name_or_empty(story) %>
+                      </span>
+                      <span class="remaininghours">(<%= story.remaining_hours.to_i %> <%= l(:label_hours) %>)</span>
+                    </div>
+                    <div class="subject"><%= h story.subject %></div>
+                    <%- if @project != story.project %>
+                      <div class="id project">
+                        <span class="t"><%= h story.project %></span>
+                        <span class="v"><%= story.project.id %></span>
+                      </div>
+                    <%- end %>
+                    <div class="story_points editable" fieldname="story_points" fieldlabel="<%=l(:field_story_points)%>"><%= story.story_points %></div>
+                  </div>
+                </td> 
+              <%-else%>   
+                  <td class="swimlane list <%= status.is_closed? ? 'closed' : '' %>" id="<%= story.id %>_<%= status.id %>" -rb-status-id="<%= status.id %>" -rb-project-id="<%= story.project.id %>">
+                  
+                </td>
+              <%-end%>
+        <%- end %>
+        
+        
+      
+      </tr>
+  <%- end %>
+  </table> 
+
+  <%-end  %>
 </div>
 <%- end %>
 

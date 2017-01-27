@@ -12,9 +12,9 @@ module Backlogs
 
     module InstanceMethods
       def backlog
-        return :success if is_closed? && (default_done_ratio.nil? || default_done_ratio == 100)
-        return :failure if is_closed?
-        return :new if is_default? || default_done_ratio == 0
+        return :success if ([5,9].include?(id))
+        return :failure if id == 6 
+        return :new if id == 1
         return :in_progress
       end
 

@@ -14,6 +14,18 @@ module RbCommonHelper
     story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.name}"
   end
 
+  def status_pic_or_empty(status)
+    status.blank? ? "" : (
+        FileTest.exist?("#{Rails.root}/public/images/#{status.name}.jpg") ?
+      image_tag("#{status.name}.jpg",  
+          :width => 80, :heigth => 80) : "")
+
+  end
+
+  def assignee_firstname_or_empty(story)
+    story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.firstname}"
+  end
+
   def blocked_ids(blocked)
     blocked.map{|b| b.id }.join(',')
   end
@@ -149,6 +161,15 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def date_string_with_milliseconds(d, add=0)
     return '' if d.blank?
     d.strftime("%B %d, %Y %H:%M:%S") + '.' + (d.to_f % 1 + add).to_s.split('.')[1] + d.strftime(" %z")
+  end
+
+  def date_string(d)
+    return '' if d.blank?
+    d.strftime("%B %d, %Y")
+  end  
+
+  def string_date(s)
+    Date.strptime(s, "%B %d, %Y")
   end
 
   def remaining_hours_or_empty(item)

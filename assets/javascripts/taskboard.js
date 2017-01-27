@@ -16,9 +16,9 @@ RB.Taskboard = RB.Object.create({
 
     // Initialize column widths
     self.colWidthUnit = RB.$(".swimlane").width();
-    self.defaultColWidth = 2;
+    self.defaultColWidth = 2;  
     self.loadColWidthPreference();
-    self.updateColWidths();
+    self.updateColWidths();   
     RB.$("#col_width input").bind('keyup', function(e){ if(e.which==13) self.updateColWidths(); });
 
     //initialize mouse handling for drop handling
@@ -176,6 +176,10 @@ RB.Taskboard = RB.Object.create({
 
   loadColWidthPreference: function(){
     var w = RB.UserPreferences.get('taskboardColWidth');
+    if ((location.toString().indexOf("created_on")>-1) || (location.toString().indexOf("view_type=1")>-1)) { // issue 246: if the param created_on is there, it means that the user is looking at the historic
+      w = 1;
+      updateColWidths();
+    }
     if (!w) { // 0, null, undefined.
       w = this.defaultColWidth;
       RB.UserPreferences.set('taskboardColWidth', w);
@@ -198,9 +202,9 @@ RB.Taskboard = RB.Object.create({
   },
   
   updateColWidths: function(){
-    var w = parseInt(RB.$("#col_width input").val(), 10);
-    if (!w || isNaN(w)) { // 0,null,undefined,NaN.
-      w = this.defaultColWidth;
+    var w = parseInt(RB.$("#col_width input").val(), 10);  
+    if (!w || isNaN(w)) { // 0,null,undefined,NaN.  
+      w = this.defaultColWidth;  
     }
     RB.$("#col_width input").val(w);
     RB.UserPreferences.set('taskboardColWidth', w);

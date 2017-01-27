@@ -38,6 +38,8 @@ class RbStory < Issue
     end
   end
 
+  
+
   def self.__find_options_release_condition(project_id, release_ids)
     ["
       project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
@@ -56,6 +58,14 @@ class RbStory < Issue
   end
 
   public
+
+  def sprint_is?(sprint)
+    #query to find out if a task was already on another sprint/version   
+    
+
+    true
+
+  end
 
   def self.find_options(options)
     options = options.dup

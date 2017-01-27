@@ -32,8 +32,12 @@ module Backlogs
       end
 
       def journalized_update_attributes!(attribs)
-        self.init_journal(User.current)
-        return self.update_attributes!(attribs)
+        begin
+          self.init_journal(User.current)
+          return self.update_attributes!(attribs)
+        rescue
+          
+        end
       end
       def journalized_update_attributes(attribs)
         self.init_journal(User.current)

@@ -12,10 +12,18 @@
     <div class="v"><%= id_or_empty(story) %></div>
   </div>
 
-  <div class="project editable story_field" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
+  <!-- qa_65 begin-->
+  <div class="project story_field" fieldtype="select" fieldname="user_id" fieldlabel="<%=l(:field_project_id)%>">
+    <div class="t"><strong><%= assignee_firstname_or_empty(story) %></strong></div>
+    
+  </div>
+
+  <!-- qa_65 end-->
+
+  <!-- <div class="project editable story_field" fieldtype="select" fieldname="project_id" fieldlabel="<%=l(:field_project_id)%>">
     <div class="t"><%= story.project %></div>
     <div class="v"><%= story.project_id %></div>
-  </div>
+  </div>-->
 
   <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>">
     <div class="t"><%= h tracker_name_or_empty(story) %></div>

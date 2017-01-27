@@ -7,6 +7,10 @@ class RbStoriesController < RbApplicationController
   unloadable
   include BacklogsPrintableCards
 
+  def new
+
+  end
+
   def index
     if ! BacklogsPrintableCards::CardPageLayout.selected
       render :text => "No label stock selected. How did you get here?", :status => 500
@@ -26,6 +30,8 @@ class RbStoriesController < RbApplicationController
       }
     end
   end
+
+  
 
   def create
     params['author_id'] = User.current.id

@@ -119,6 +119,8 @@ pt-BR:
   label_close_completed_sprints: "Fechar Sprints Concluídos"
   label_closed_releases: "Releases Fechados"
   label_column_width: "Largura da coluna"
+  label_taskboard_view_story: "Visualizar somente estórias"
+  label_taskboard_view_task: "Visualizar estórias e tarefas"
   label_download_sprint: Baixar
   label_filter_tasks: "Filtrar por usuário"
   label_filter_tasks_my_tasks: "Filtrar por usuário - minhas tarefas"
@@ -205,6 +207,9 @@ pt-BR:
   story_spent_time: "Tempo gasto"
   story_status: Estado
   today_not_in_release_warning: "Aviso: a data atual não está no intervalo de datas do release"
+  turn_on_memes: "Exibir memes"
+  turn_off_memes: "Esconder memes"
+  clone_as_child_task: ">>>"
   todo_issue_summary: "%{type}: %{summary}"
   use_free_text_if_empty: "Utilize o campo texto ao invés do dropdown se estiver vazio"
   warning_reset_sprint: |-
