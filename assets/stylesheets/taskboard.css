@@ -148,6 +148,7 @@ See RB.Taskboard.initialize()
 .story .project {
   text-align:left;
 }
+
 .story .id .v {
   display:none;
 }

@@ -390,6 +390,25 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .stories .story .id .v {
   display:none;
 }
+
+#backlogs_container .stories .story .user {
+  display:block;
+  position:relative;
+  float:left;
+  width:300px;
+  padding-left:2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#backlogs_container .stories .story .user .t {
+  overflow:hidden;
+}
+
+#backlogs_container .stories .story .user .v {
+  display:none;
+}
+
 #backlogs_container .stories .story .project {
   display:block;
   position:relative;
@@ -399,6 +418,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   white-space: nowrap;
   overflow: hidden;
 }
+
+
 #backlogs_container .stories .story .project .t {
   overflow:hidden;
 }
