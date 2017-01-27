@@ -65,6 +65,11 @@ class RbSprint < Version
     return RbStory.sprint_backlog(self)
   end
 
+  def taskboard_stories
+    bug_tracker_id = Tracker.find_by_name("Bug").id
+    return RbStory.sprint_backlog(self).where("tracker_id != ?", bug_tracker_id)
+  end
+
   def points
     return stories.inject(0){|sum, story| sum + story.story_points.to_i}
   end

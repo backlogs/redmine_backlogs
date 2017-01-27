@@ -4,8 +4,8 @@ class RbTaskboardsController < RbApplicationController
   unloadable
 
   def show
-    stories = @sprint.stories
-    @story_ids    = stories.map{|s| s.id}
+    @stories = @sprint.taskboard_stories
+    @story_ids    = @stories.map{|s| s.id}
 
     @settings = Backlogs.settings
 
@@ -38,11 +38,11 @@ class RbTaskboardsController < RbApplicationController
       @statuses = statuses.select{|s| enabled[s.id]}
     end
 
-    if @sprint.stories.size == 0
+    if @stories.size == 0
       @last_updated = nil
     else
       @last_updated = RbTask.find(:first,
-                        :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.stories[0].fixed_version_id],
+                        :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @stories[0].fixed_version_id],
                         :order      => "updated_on DESC")
     end
 

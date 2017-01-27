@@ -14,6 +14,10 @@ module RbCommonHelper
     story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.name}"
   end
 
+  def category_name_or_empty(task)
+    task.try(:category).try(:name)
+  end
+
   def blocked_ids(blocked)
     blocked.map{|b| b.id }.join(',')
   end
