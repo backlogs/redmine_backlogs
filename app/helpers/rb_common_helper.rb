@@ -15,6 +15,19 @@ module RbCommonHelper
     story.blank? || story.assigned_to.blank? ? "" : "#{story.assigned_to.name}"
   end
 
+  def assignee_avatar_link_or_empty(story)
+    user = story.assigned_to
+    if user.blank?
+      ""
+    elsif user.is_a?(User)
+      avatar(user, :size => "14") +
+        (link_to h(user.name), user_path(user), :class => user.css_classes + ' prevent_edit')
+    else
+      avatar('<gravatar>', :size => "14") +
+        h(user.to_s)
+    end
+  end
+
   def blocked_ids(blocked)
     blocked.map{|b| b.id }.join(',')
   end

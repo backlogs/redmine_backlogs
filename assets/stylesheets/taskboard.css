@@ -236,8 +236,7 @@ See RB.Taskboard.initialize()
 }
 .issue .assigned_to_id.editable{
   font-size:9px;
-  height:10px;
-  margin-top:2px;
+  height:14px;
   overflow:hidden;
   padding:2px;
   padding-top:0;
