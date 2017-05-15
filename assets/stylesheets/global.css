@@ -31,6 +31,7 @@ a:hover{
   width:100%;
   box-shadow: 0 3px 4px #A0A0A0;
   z-index:1000;
+  border-radius: 10px;
 }
 #toolbar .breadcrumbs{
   float: left;
@@ -53,8 +54,9 @@ a:hover{
 #toolbar .links{
   bottom:5px;
   display:block;
-  right:10px;
-  position:absolute;
+  float: right;
+  margin-top: 1px;
+  margin-right: 10px;
 }
 #toolbar .links a{
   cursor:pointer;
