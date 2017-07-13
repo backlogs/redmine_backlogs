@@ -13,7 +13,10 @@ gem "prawn"
 gem 'json'
 
 group :development do
+  gem "capybara"
   gem "inifile"
+  gem "nokogiri", "~> 1.7.2"
+  gem "thin", :platforms => [:ruby]
 end
 
 group :test do
@@ -36,8 +39,3 @@ group :test do
   gem "timecop", '~> 0.3.5'
 end
 
-# moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
-# thin doesn't work for jruby
-gem "thin", :platforms => [:ruby]
-gem "nokogiri", "~> 1.7.2"
-gem "capybara"
