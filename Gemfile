@@ -12,13 +12,6 @@ gem "open-uri-cached"
 gem "prawn"
 gem 'json'
 
-group :development do
-  gem "capybara"
-  gem "inifile"
-  gem "nokogiri", "~> 1.7.2"
-  gem "thin", :platforms => [:ruby]
-end
-
 group :test do
   gem 'chronic'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
