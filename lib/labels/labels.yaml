@@ -1,0 +1,5105 @@
+---
+Zweckform 3474: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: '0'
+    vertical_pitch: 37mm
+    across: 3
+    top_margin: '0'
+    height: 37mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: '0'
+    name: Zweckform 3474
+  top_margin: 0.0
+  height: 104.88189089999999
+  vertical_pitch: 104.88189089999999
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 8
+  papersize: A4
+  name: Zweckform 3474
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 3688: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 28.3465pt
+    vertical_pitch: 172.913pt
+    across: 1
+    top_margin: 76.5354pt
+    height: 172.913pt
+    horizontal_pitch: 544.252pt
+    width: 544.252pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9.07087pt
+    name: Zweckform 3688
+  top_margin: 76.5354
+  height: 172.913
+  vertical_pitch: 172.913
+  left_margin: 28.3465
+  width: 544.252
+  horizontal_pitch: 544.252
+  across: 1
+  down: 4
+  papersize: A4
+  name: Zweckform 3688
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-250: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.1875in
+    vertical_pitch: 1.5in
+    across: 2
+    top_margin: 1in
+    height: 1.5in
+    horizontal_pitch: 4.125in
+    width: 4in
+    page_size: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-250
+  top_margin: 72.0
+  height: 108.0
+  vertical_pitch: 108.0
+  left_margin: 13.5
+  width: 288.0
+  horizontal_pitch: 297.0
+  across: 2
+  down: 6
+  papersize: LETTER
+  name: Worldlabel WL-250
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5997-Spine: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 15
+    left_margin: '99'
+    vertical_pitch: '48'
+    across: 1
+    top_margin: '36'
+    height: '48'
+    horizontal_pitch: '0'
+    width: '414'
+    page_size: LETTER
+    source: glabel
+    inner_margin: '5'
+    name: Avery 5997-Spine
+  top_margin: 36.0
+  height: 48.0
+  vertical_pitch: 48.0
+  left_margin: 99.0
+  width: 414.0
+  horizontal_pitch: 414.0
+  across: 1
+  down: 15
+  name: Avery 5997-Spine
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+  page_size: LETTER
+Sigel DP 830: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '40'
+    vertical_pitch: '156'
+    across: 2
+    top_margin: '31'
+    height: '155.9'
+    horizontal_pitch: '269'
+    width: '240.9'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Sigel DP 830
+  top_margin: 31.0
+  height: 155.9
+  vertical_pitch: 156.0
+  left_margin: 40.0
+  width: 240.9
+  horizontal_pitch: 269.0
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sigel DP 830
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 6873: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0.375in
+    vertical_pitch: 2.25in
+    across: 2
+    top_margin: 1.125in
+    height: 2.0in
+    horizontal_pitch: 4.0in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6873
+  top_margin: 81.0
+  height: 144.0
+  vertical_pitch: 162.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 4
+  papersize: LETTER
+  name: Avery 6873
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Your Design VM-6310: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 12mm
+    vertical_pitch: 69mm
+    across: 2
+    top_margin: 18mm
+    height: 53.5mm
+    horizontal_pitch: 100mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Your Design VM-6310
+  top_margin: 51.023622599999996
+  height: 151.65354495
+  vertical_pitch: 195.59055329999998
+  left_margin: 34.0157484
+  width: 240.94488449999997
+  horizontal_pitch: 283.46457
+  across: 2
+  down: 4
+  papersize: A4
+  name: Your Design VM-6310
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6232: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 8.5mm
+    vertical_pitch: 42.1mm
+    across: 2
+    top_margin: 21mm
+    height: 42.1mm
+    horizontal_pitch: 96.5mm
+    width: 96.5mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: PEARL VM-6232
+  top_margin: 59.5275597
+  height: 119.33858397
+  vertical_pitch: 119.33858397
+  left_margin: 24.09448845
+  width: 273.54331005
+  horizontal_pitch: 273.54331005
+  across: 2
+  down: 6
+  papersize: A4
+  name: PEARL VM-6232
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5126: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0in
+    vertical_pitch: 5.5in
+    across: 1
+    top_margin: 0in
+    height: 5.5in
+    horizontal_pitch: 0in
+    width: 8.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 9pt
+    name: Avery 5126
+  top_margin: 0.0
+  height: 396.0
+  vertical_pitch: 396.0
+  left_margin: 0.0
+  width: 612.0
+  horizontal_pitch: 612.0
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Avery 5126
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-157: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 9
+    left_margin: 0.49755in
+    vertical_pitch: 1.13in
+    across: 2
+    top_margin: 0.51125in
+    height: 0.9375in
+    horizontal_pitch: 4.0674in
+    width: 3.4375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-157
+  top_margin: 36.81
+  height: 67.5
+  vertical_pitch: 81.35999999999999
+  left_margin: 35.8236
+  width: 247.5
+  horizontal_pitch: 292.8528
+  across: 2
+  down: 9
+  papersize: LETTER
+  name: Worldlabel WL-157
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sigel DE 160: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 15mm
+    vertical_pitch: 138mm
+    across: 2
+    top_margin: 19.5mm
+    height: 120mm
+    horizontal_pitch: 100mm
+    width: 80mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sigel DE 160
+  top_margin: 55.27559115
+  height: 340.15748399999995
+  vertical_pitch: 391.18110659999996
+  left_margin: 42.519685499999994
+  width: 226.77165599999998
+  horizontal_pitch: 283.46457
+  across: 2
+  down: 2
+  papersize: A4
+  name: Sigel DE 160
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4761: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: '25'
+    vertical_pitch: '172.9'
+    across: 1
+    top_margin: '75'
+    height: '172.9'
+    horizontal_pitch: '544.25'
+    width: '544.25'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 4761
+  top_margin: 75.0
+  height: 172.9
+  vertical_pitch: 172.9
+  left_margin: 25.0
+  width: 544.25
+  horizontal_pitch: 544.25
+  across: 1
+  down: 4
+  papersize: A4
+  name: Zweckform 4761
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Sattleford VM-6066: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 14mm
+    vertical_pitch: 54mm
+    across: 2
+    top_margin: 13mm
+    height: 54mm
+    horizontal_pitch: 95mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.175mm
+    name: Sattleford VM-6066
+  top_margin: 36.850394099999995
+  height: 153.0708678
+  vertical_pitch: 153.0708678
+  left_margin: 39.6850398
+  width: 240.94488449999997
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6066
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Neato USCD2lbl Rectangles: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: '51.3'
+    vertical_pitch: '0'
+    across: 2
+    top_margin: '279.72'
+    height: '234.36'
+    horizontal_pitch: '433.44'
+    width: '77.04'
+    papersize: Letter
+    source: glabel
+    inner_margin: '2.016'
+    name: Neato USCD2lbl Rectangles
+  top_margin: 279.72
+  height: 234.36
+  vertical_pitch: 234.36
+  left_margin: 51.3
+  width: 77.04
+  horizontal_pitch: 433.44
+  across: 2
+  down: 1
+  papersize: LETTER
+  name: Neato USCD2lbl Rectangles
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5389: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 1.25in
+    vertical_pitch: 4.5in
+    across: 1
+    top_margin: 1.25in
+    height: 4in
+    horizontal_pitch: 6in
+    width: 6in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Avery 5389
+  top_margin: 90.0
+  height: 288.0
+  vertical_pitch: 324.0
+  left_margin: 90.0
+  width: 432.0
+  horizontal_pitch: 432.0
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Avery 5389
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 7169: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: '14.2'
+    vertical_pitch: '394.0'
+    across: 2
+    top_margin: '20.0'
+    height: '394.0'
+    horizontal_pitch: '287.7'
+    width: '280.9'
+    papersize: A4
+    source: glabel
+    inner_margin: '6'
+    name: Avery 7169
+  top_margin: 20.0
+  height: 394.0
+  vertical_pitch: 394.0
+  left_margin: 14.2
+  width: 280.9
+  horizontal_pitch: 287.7
+  across: 2
+  down: 2
+  papersize: A4
+  name: Avery 7169
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-75: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0.15625in
+    vertical_pitch: 1in
+    across: 2
+    top_margin: 0.5in
+    height: 1in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-75
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 10
+  papersize: LETTER
+  name: Worldlabel WL-75
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-6200: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 15mm
+    vertical_pitch: 55mm
+    across: 1
+    top_margin: 14mm
+    height: 50mm
+    horizontal_pitch: 180mm
+    width: 180mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Sattleford VM-6200
+  top_margin: 39.6850398
+  height: 141.732285
+  vertical_pitch: 155.90551349999998
+  left_margin: 42.519685499999994
+  width: 510.236226
+  horizontal_pitch: 510.236226
+  across: 1
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6200
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Agipa 119488: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '43'
+    vertical_pitch: '142'
+    across: 2
+    top_margin: '67'
+    height: '142'
+    horizontal_pitch: '255'
+    width: '255'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Agipa 119488
+  top_margin: 67.0
+  height: 142.0
+  vertical_pitch: 142.0
+  left_margin: 43.0
+  width: 255.0
+  horizontal_pitch: 255.0
+  across: 2
+  down: 5
+  papersize: A4
+  name: Agipa 119488
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery L4732: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 16
+    left_margin: 11mm
+    vertical_pitch: 16.9mm
+    across: 5
+    top_margin: 13mm
+    height: 16.9mm
+    horizontal_pitch: 38.1mm
+    width: 35.6mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Avery L4732
+  top_margin: 36.850394099999995
+  height: 47.90551232999999
+  vertical_pitch: 47.90551232999999
+  left_margin: 31.181102699999997
+  width: 100.91338692
+  horizontal_pitch: 108.00000116999999
+  across: 5
+  down: 16
+  papersize: A4
+  name: Avery L4732
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Neato Slimline CD Case, spine: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: '96.5'
+    vertical_pitch: '363'
+    across: 1
+    top_margin: '41.9'
+    height: '342.5'
+    horizontal_pitch: '0'
+    width: '394.5'
+    papersize: Letter
+    source: glabel
+    inner_margin: '7.5'
+    name: Neato Slimline CD Case, spine
+  top_margin: 41.9
+  height: 342.5
+  vertical_pitch: 363.0
+  left_margin: 96.5
+  width: 394.5
+  horizontal_pitch: 394.5
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Neato Slimline CD Case, spine
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5159: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 0.15625in
+    vertical_pitch: 1.5in
+    across: 2
+    top_margin: 0.25in
+    height: 1.5in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5159
+  top_margin: 18.0
+  height: 108.0
+  vertical_pitch: 108.0
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 7
+  papersize: LETTER
+  name: Avery 5159
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Best Office 75753: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 0mm
+    vertical_pitch: 36mm
+    across: 3
+    top_margin: 4mm
+    height: 36mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Best Office 75753
+  top_margin: 11.3385828
+  height: 102.04724519999999
+  vertical_pitch: 102.04724519999999
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 8
+  papersize: A4
+  name: Best Office 75753
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 7163: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: '9.5'
+    vertical_pitch: '108'
+    across: 2
+    top_margin: '43'
+    height: '108'
+    horizontal_pitch: '292'
+    width: '280.9'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7163
+  top_margin: 43.0
+  height: 108.0
+  vertical_pitch: 108.0
+  left_margin: 9.5
+  width: 280.9
+  horizontal_pitch: 292.0
+  across: 2
+  down: 7
+  papersize: A4
+  name: Avery 7163
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4781: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: '22.677'
+    vertical_pitch: '119.905'
+    across: 2
+    top_margin: '61.030'
+    height: '119.905'
+    horizontal_pitch: '274.960'
+    width: '274.960'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 4781
+  top_margin: 61.03
+  height: 119.905
+  vertical_pitch: 119.905
+  left_margin: 22.677
+  width: 274.96
+  horizontal_pitch: 274.96
+  across: 2
+  down: 6
+  papersize: A4
+  name: Zweckform 4781
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-625: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0in
+    vertical_pitch: 2in
+    across: 2
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 4.25in
+    width: 4.25in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-625
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 0.0
+  width: 306.0
+  horizontal_pitch: 306.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Worldlabel WL-625
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-6700: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 15mm
+    vertical_pitch: 55mm
+    across: 1
+    top_margin: 14mm
+    height: 50mm
+    horizontal_pitch: 180mm
+    width: 180mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Sattleford VM-6700
+  top_margin: 39.6850398
+  height: 141.732285
+  vertical_pitch: 155.90551349999998
+  left_margin: 42.519685499999994
+  width: 510.236226
+  horizontal_pitch: 510.236226
+  across: 1
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6700
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Sattleford VM-5040: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 28mm
+    vertical_pitch: 64.5mm
+    across: 3
+    top_margin: 24.5mm
+    height: 54.5mm
+    horizontal_pitch: 55mm
+    width: 45mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-5040
+  top_margin: 69.44881964999999
+  height: 154.48819064999998
+  vertical_pitch: 182.83464765
+  left_margin: 79.3700796
+  width: 127.5590565
+  horizontal_pitch: 155.90551349999998
+  across: 3
+  down: 4
+  papersize: A4
+  name: Sattleford VM-5040
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6398: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 4.5mm
+    vertical_pitch: 28mm
+    across: 9
+    top_margin: 10mm
+    height: 25mm
+    horizontal_pitch: 22.6mm
+    width: 19.6mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1.5mm
+    name: PEARL VM-6398
+  top_margin: 28.346456999999997
+  height: 70.8661425
+  vertical_pitch: 79.3700796
+  left_margin: 12.755905649999999
+  width: 55.55905572
+  horizontal_pitch: 64.06299282
+  across: 9
+  down: 10
+  papersize: A4
+  name: PEARL VM-6398
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5167: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.28125in
+    vertical_pitch: 0.5in
+    across: 4
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 2.0625in
+    width: 1.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5167
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 20.25
+  width: 126.0
+  horizontal_pitch: 148.5
+  across: 4
+  down: 20
+  papersize: LETTER
+  name: Avery 5167
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5395: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0.6875in
+    vertical_pitch: 2.5in
+    across: 2
+    top_margin: 0.583333333in
+    height: 2.333333333in
+    horizontal_pitch: 3.75in
+    width: 3.375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5395
+  top_margin: 41.999999976
+  height: 167.999999976
+  vertical_pitch: 180.0
+  left_margin: 49.5
+  width: 243.0
+  horizontal_pitch: 270.0
+  across: 2
+  down: 4
+  papersize: LETTER
+  name: Avery 5395
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 7160: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: '21.2'
+    vertical_pitch: '108.0'
+    across: 3
+    top_margin: '43.9'
+    height: '108.0'
+    horizontal_pitch: '187.2'
+    width: '181.4'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7160
+  top_margin: 43.9
+  height: 108.0
+  vertical_pitch: 108.0
+  left_margin: 21.2
+  width: 181.4
+  horizontal_pitch: 187.2
+  across: 3
+  down: 7
+  papersize: A4
+  name: Avery 7160
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 3659: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: '22.68'
+    vertical_pitch: '120.5'
+    across: 2
+    top_margin: '60'
+    height: '120.5'
+    horizontal_pitch: '274'
+    width: '274'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 3659
+  top_margin: 60.0
+  height: 120.5
+  vertical_pitch: 120.5
+  left_margin: 22.68
+  width: 274.0
+  horizontal_pitch: 274.0
+  across: 2
+  down: 6
+  papersize: A4
+  name: Zweckform 3659
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-171: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0.375in
+    vertical_pitch: 2.25in
+    across: 2
+    top_margin: 1.125in
+    height: 2.0in
+    horizontal_pitch: 4.0in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-171
+  top_margin: 81.0
+  height: 144.0
+  vertical_pitch: 162.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 4
+  papersize: LETTER
+  name: Worldlabel WL-171
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-25: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.28125in
+    vertical_pitch: 0.5in
+    across: 4
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 2.0625in
+    width: 1.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-25
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 20.25
+  width: 126.0
+  horizontal_pitch: 148.5
+  across: 4
+  down: 20
+  papersize: LETTER
+  name: Worldlabel WL-25
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL VM-5220: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5220
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-5220
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6206: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6206
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-6206
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5164: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.15625in
+    vertical_pitch: 3.333333333in
+    across: 2
+    top_margin: 0.5in
+    height: 3.333333333in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Avery 5164
+  top_margin: 36.0
+  height: 239.999999976
+  vertical_pitch: 239.999999976
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 3
+  papersize: LETTER
+  name: Avery 5164
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Stomper PRO Zip: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: '37'
+    vertical_pitch: '142'
+    across: 1
+    top_margin: '440'
+    height: '142'
+    horizontal_pitch: '0'
+    width: '168'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Stomper PRO Zip
+  top_margin: 440.0
+  height: 142.0
+  vertical_pitch: 142.0
+  left_margin: 37.0
+  width: 168.0
+  horizontal_pitch: 168.0
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Stomper PRO Zip
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Epson S041144: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: '33'
+    vertical_pitch: '79.5'
+    across: 4
+    top_margin: '59'
+    height: '68'
+    horizontal_pitch: '59.5'
+    width: '48'
+    papersize: A6
+    source: glabel
+    inner_margin: '5'
+    name: Epson S041144
+  top_margin: 59.0
+  height: 68.0
+  vertical_pitch: 79.5
+  left_margin: 33.0
+  width: 48.0
+  horizontal_pitch: 59.5
+  across: 4
+  down: 4
+  papersize: A6
+  name: Epson S041144
+  source: glabel
+  paper_width: 297.64
+  paper_height: 419.53
+  paper_size: A6
+  valid: true
+Sigel LP 800: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 15.0mm
+    vertical_pitch: 55.0mm
+    across: 2
+    top_margin: 10.0mm
+    height: 55.0mm
+    horizontal_pitch: 95.0mm
+    width: 85.0mm
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Sigel LP 800
+  top_margin: 28.346456999999997
+  height: 155.90551349999998
+  vertical_pitch: 155.90551349999998
+  left_margin: 42.519685499999994
+  width: 240.94488449999997
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sigel LP 800
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery LSK-8: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 4
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 2.13in
+    width: 1.13in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-8
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 81.35999999999999
+  horizontal_pitch: 153.35999999999999
+  across: 4
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-8
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL VM-6630: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 14mm
+    vertical_pitch: 286mm
+    across: 1
+    top_margin: 10.5mm
+    height: 276mm
+    horizontal_pitch: 192mm
+    width: 182mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: PEARL VM-6630
+  top_margin: 29.76377985
+  height: 782.3622131999999
+  vertical_pitch: 810.7086701999999
+  left_margin: 39.6850398
+  width: 515.9055174
+  horizontal_pitch: 544.2519744
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-6630
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5161: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0.15625in
+    vertical_pitch: 1in
+    across: 2
+    top_margin: 0.5in
+    height: 1in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5161
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 10
+  papersize: LETTER
+  name: Avery 5161
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery LSK-5: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 4
+    top_margin: 0.3in
+    height: 0.5in
+    horizontal_pitch: 2.05in
+    width: 1.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-5
+  top_margin: 21.599999999999998
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 126.0
+  horizontal_pitch: 147.6
+  across: 4
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-5
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 6121: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 13
+    left_margin: 26.928pt
+    vertical_pitch: 60.12pt
+    across: 5
+    top_margin: 29.736pt
+    height: 60.12pt
+    horizontal_pitch: 107.928pt
+    width: 107.928pt
+    papersize: A4
+    source: glabel
+    inner_margin: 8.496pt
+    name: Avery 6121
+  top_margin: 29.736
+  height: 60.12
+  vertical_pitch: 60.12
+  left_margin: 26.928
+  width: 107.928
+  horizontal_pitch: 107.928
+  across: 5
+  down: 13
+  papersize: A4
+  name: Avery 6121
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform J8435A: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 27.5mm
+    vertical_pitch: 125mm
+    across: 1
+    top_margin: 22mm
+    height: 125mm
+    horizontal_pitch: 155mm
+    width: 155mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Zweckform J8435A
+  top_margin: 62.36220539999999
+  height: 354.3307125
+  vertical_pitch: 354.3307125
+  left_margin: 77.95275674999999
+  width: 439.37008349999996
+  horizontal_pitch: 439.37008349999996
+  across: 1
+  down: 1
+  papersize: A4
+  name: Zweckform J8435A
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 6490: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0.125in
+    vertical_pitch: 2in
+    across: 3
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 2.78125in
+    width: 2.6875in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6490
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 9.0
+  width: 193.5
+  horizontal_pitch: 200.25
+  across: 3
+  down: 5
+  papersize: LETTER
+  name: Avery 6490
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8373: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0.5in
+    vertical_pitch: 2.5in
+    across: 2
+    top_margin: 0.75in
+    height: 2in
+    horizontal_pitch: 4in
+    width: 3.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 8373
+  top_margin: 54.0
+  height: 144.0
+  vertical_pitch: 180.0
+  left_margin: 36.0
+  width: 252.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 4
+  papersize: LETTER
+  name: Avery 8373
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8435B: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 27.5mm
+    vertical_pitch: 122mm
+    across: 1
+    top_margin: 21mm
+    height: 122mm
+    horizontal_pitch: 155mm
+    width: 155mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Avery 8435B
+  top_margin: 59.5275597
+  height: 345.8267754
+  vertical_pitch: 345.8267754
+  left_margin: 77.95275674999999
+  width: 439.37008349999996
+  horizontal_pitch: 439.37008349999996
+  across: 1
+  down: 1
+  papersize: A4
+  name: Avery 8435B
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4732: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 16
+    left_margin: 31.1811pt
+    vertical_pitch: 48.189pt
+    across: 5
+    top_margin: 36.8504pt
+    height: 48.189pt
+    horizontal_pitch: 107.717pt
+    width: 102.047pt
+    papersize: A4
+    source: glabel
+    inner_margin: 5.66929pt
+    name: Zweckform 4732
+  top_margin: 36.8504
+  height: 48.189
+  vertical_pitch: 48.189
+  left_margin: 31.1811
+  width: 102.047
+  horizontal_pitch: 107.717
+  across: 5
+  down: 16
+  papersize: A4
+  name: Zweckform 4732
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-1125: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '80'
+    vertical_pitch: '133'
+    across: 2
+    top_margin: '60.5'
+    height: '133'
+    horizontal_pitch: '236'
+    width: '220'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Worldlabel WL-1125
+  top_margin: 60.5
+  height: 133.0
+  vertical_pitch: 133.0
+  left_margin: 80.0
+  width: 220.0
+  horizontal_pitch: 236.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Worldlabel WL-1125
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-200: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 15
+    left_margin: 0.53125in
+    vertical_pitch: 0.666666667in
+    across: 2
+    top_margin: 0.5in
+    height: 0.666666667in
+    horizontal_pitch: 4in
+    width: 3.4375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-200
+  top_margin: 36.0
+  height: 48.000000024
+  vertical_pitch: 48.000000024
+  left_margin: 38.25
+  width: 247.5
+  horizontal_pitch: 288.0
+  across: 2
+  down: 15
+  papersize: LETTER
+  name: Worldlabel WL-200
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-6253: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 16.5mm
+    vertical_pitch: 55.5mm
+    across: 2
+    top_margin: 6mm
+    height: 54mm
+    horizontal_pitch: 90mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-6253
+  top_margin: 17.0078742
+  height: 153.0708678
+  vertical_pitch: 157.32283635
+  left_margin: 46.771654049999995
+  width: 240.94488449999997
+  horizontal_pitch: 255.118113
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6253
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5197: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.1875in
+    vertical_pitch: 1.5in
+    across: 2
+    top_margin: 1in
+    height: 1.5in
+    horizontal_pitch: 4.125in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5197
+  top_margin: 72.0
+  height: 108.0
+  vertical_pitch: 108.0
+  left_margin: 13.5
+  width: 288.0
+  horizontal_pitch: 297.0
+  across: 2
+  down: 6
+  papersize: LETTER
+  name: Avery 5197
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL PE-8350: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL PE-8350
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL PE-8350
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery J8157: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 11
+    left_margin: 6.0mm
+    vertical_pitch: 24.3mm
+    across: 3
+    top_margin: 14.0mm
+    height: 24.3mm
+    horizontal_pitch: 66.5mm
+    width: 64mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Avery J8157
+  top_margin: 39.6850398
+  height: 68.88189050999999
+  vertical_pitch: 68.88189050999999
+  left_margin: 17.0078742
+  width: 181.4173248
+  horizontal_pitch: 188.50393904999999
+  across: 3
+  down: 11
+  papersize: A4
+  name: Avery J8157
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Southworth BC554: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '36'
+    vertical_pitch: '144'
+    across: 2
+    top_margin: '36'
+    height: '144'
+    horizontal_pitch: '288'
+    width: '252'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Southworth BC554
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 36.0
+  width: 252.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Southworth BC554
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform 3475: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: '0'
+    vertical_pitch: '102.121'
+    across: 3
+    top_margin: '12.566'
+    height: '102.121'
+    horizontal_pitch: '198.570'
+    width: '198.570'
+    papersize: A4
+    source: glabel
+    inner_margin: '0'
+    name: Zweckform 3475
+  top_margin: 12.566
+  height: 102.121
+  vertical_pitch: 102.121
+  left_margin: 0.0
+  width: 198.57
+  horizontal_pitch: 198.57
+  across: 3
+  down: 8
+  papersize: A4
+  name: Zweckform 3475
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4746: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 13
+    left_margin: '88.8377'
+    vertical_pitch: '56.6929'
+    across: 1
+    top_margin: '52.2425'
+    height: '56.6929'
+    horizontal_pitch: '416.6'
+    width: '416.6'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 4746
+  top_margin: 52.2425
+  height: 56.6929
+  vertical_pitch: 56.6929
+  left_margin: 88.8377
+  width: 416.6
+  horizontal_pitch: 416.6
+  across: 1
+  down: 13
+  papersize: A4
+  name: Zweckform 4746
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-225: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.125in
+    vertical_pitch: 3in
+    across: 3
+    top_margin: 0.5in
+    height: 2.75in
+    horizontal_pitch: 2.75in
+    width: 2.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-225
+  top_margin: 36.0
+  height: 198.0
+  vertical_pitch: 216.0
+  left_margin: 9.0
+  width: 198.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 3
+  papersize: LETTER
+  name: Worldlabel WL-225
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-125: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0.1625in
+    vertical_pitch: 2in
+    across: 2
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Worldlabel WL-125
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 11.700000000000001
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Worldlabel WL-125
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-5061: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 16.5mm
+    vertical_pitch: 55.8mm
+    across: 2
+    top_margin: 10mm
+    height: 53.8mm
+    horizontal_pitch: 91mm
+    width: 86mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-5061
+  top_margin: 28.346456999999997
+  height: 152.50393866
+  vertical_pitch: 158.17323005999998
+  left_margin: 46.771654049999995
+  width: 243.77953019999998
+  horizontal_pitch: 257.9527587
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-5061
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 6874: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.375in
+    vertical_pitch: 3.375in
+    across: 2
+    top_margin: 0.625in
+    height: 3.0in
+    horizontal_pitch: 4.0in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6874
+  top_margin: 45.0
+  height: 216.0
+  vertical_pitch: 243.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 3
+  papersize: LETTER
+  name: Avery 6874
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL VM-6233: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0mm
+    vertical_pitch: 74mm
+    across: 2
+    top_margin: 0.5mm
+    height: 74mm
+    horizontal_pitch: 105mm
+    width: 105mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6233
+  top_margin: 1.41732285
+  height: 209.76378179999998
+  vertical_pitch: 209.76378179999998
+  left_margin: 0.0
+  width: 297.6377985
+  horizontal_pitch: 297.6377985
+  across: 2
+  down: 4
+  papersize: A4
+  name: PEARL VM-6233
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 3274.1: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.3125in
+    vertical_pitch: 3in
+    across: 3
+    top_margin: 1.25in
+    height: 2.5in
+    horizontal_pitch: 2.6875in
+    width: 2.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 3274.1
+  top_margin: 90.0
+  height: 180.0
+  vertical_pitch: 216.0
+  left_margin: 22.5
+  width: 180.0
+  horizontal_pitch: 193.5
+  across: 3
+  down: 3
+  papersize: LETTER
+  name: Avery 3274.1
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8165: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: '0'
+    vertical_pitch: '0'
+    across: 1
+    top_margin: '0'
+    height: 11.in
+    horizontal_pitch: '0'
+    width: 8.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 8165
+  top_margin: 0.0
+  height: 792.0
+  vertical_pitch: 792.0
+  left_margin: 0.0
+  width: 612.0
+  horizontal_pitch: 612.0
+  across: 1
+  down: 1
+  papersize: LETTER
+  name: Avery 8165
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Agipa 114036: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 4mm
+    vertical_pitch: 49mm
+    across: 7
+    top_margin: 2mm
+    height: 48.5mm
+    horizontal_pitch: 20mm
+    width: 18.5mm
+    papersize: A5
+    source: glabel
+    inner_margin: 1mm
+    name: Agipa 114036
+  top_margin: 5.6692914
+  height: 137.48031645
+  vertical_pitch: 138.89763929999998
+  left_margin: 11.3385828
+  width: 52.440945449999994
+  horizontal_pitch: 56.692913999999995
+  across: 7
+  down: 4
+  papersize: A5
+  name: Agipa 114036
+  source: glabel
+  paper_width: 419.53
+  paper_height: 595.28
+  paper_size: A5
+  valid: true
+Avery 6871: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.3725in
+    vertical_pitch: 1.5in
+    across: 3
+    top_margin: 1.125in
+    height: 1.25in
+    horizontal_pitch: 2.69in
+    width: 2.375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6871
+  top_margin: 81.0
+  height: 90.0
+  vertical_pitch: 108.0
+  left_margin: 26.82
+  width: 171.0
+  horizontal_pitch: 193.68
+  across: 3
+  down: 6
+  papersize: LETTER
+  name: Avery 6871
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL VM-6096: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 148mm
+    across: 1
+    top_margin: 0mm
+    height: 148mm
+    horizontal_pitch: 105mm
+    width: 105mm
+    papersize: A6
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6096
+  top_margin: 0.0
+  height: 419.52756359999995
+  vertical_pitch: 419.52756359999995
+  left_margin: 0.0
+  width: 297.6377985
+  horizontal_pitch: 297.6377985
+  across: 1
+  down: 1
+  papersize: A6
+  name: PEARL VM-6096
+  source: glabel
+  paper_width: 297.64
+  paper_height: 419.53
+  paper_size: A6
+  valid: true
+Sattleford VM-6059: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 16mm
+    vertical_pitch: 54mm
+    across: 2
+    top_margin: 14mm
+    height: 54mm
+    horizontal_pitch: 95mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-6059
+  top_margin: 39.6850398
+  height: 153.0708678
+  vertical_pitch: 153.0708678
+  left_margin: 45.3543312
+  width: 240.94488449999997
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6059
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Bruna 241301: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 0pt
+    vertical_pitch: 102.047pt
+    across: 3
+    top_margin: 0pt
+    height: 102.047pt
+    horizontal_pitch: 198.425pt
+    width: 198.425pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9pt
+    name: Bruna 241301
+  top_margin: 0.0
+  height: 102.047
+  vertical_pitch: 102.047
+  left_margin: 0.0
+  width: 198.425
+  horizontal_pitch: 198.425
+  across: 3
+  down: 8
+  papersize: A4
+  name: Bruna 241301
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+APLI 01293: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 0pt
+    vertical_pitch: 94.3937pt
+    across: 3
+    top_margin: 43.3701pt
+    height: 94.3937pt
+    horizontal_pitch: 198.425pt
+    width: 198.425pt
+    papersize: A4
+    source: glabel
+    inner_margin: 0pt
+    name: APLI 01293
+  top_margin: 43.3701
+  height: 94.3937
+  vertical_pitch: 94.3937
+  left_margin: 0.0
+  width: 198.425
+  horizontal_pitch: 198.425
+  across: 3
+  down: 8
+  papersize: A4
+  name: APLI 01293
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Kingdom L: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 33.12pt
+    vertical_pitch: 126.144pt
+    across: 2
+    top_margin: 27pt
+    height: 117pt
+    horizontal_pitch: 261pt
+    width: 252pt
+    papersize: Letter
+    source: glabel
+    inner_margin: 9pt
+    name: Kingdom L
+  top_margin: 27.0
+  height: 117.0
+  vertical_pitch: 126.144
+  left_margin: 33.12
+  width: 252.0
+  horizontal_pitch: 261.0
+  across: 2
+  down: 6
+  papersize: LETTER
+  name: Kingdom L
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8651: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 13
+    left_margin: '13.32'
+    vertical_pitch: '60.09'
+    across: 5
+    top_margin: '30.90'
+    height: '60.09'
+    horizontal_pitch: '115.09'
+    width: '108'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 8651
+  top_margin: 30.9
+  height: 60.09
+  vertical_pitch: 60.09
+  left_margin: 13.32
+  width: 108.0
+  horizontal_pitch: 115.09
+  across: 5
+  down: 13
+  papersize: A4
+  name: Avery 8651
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5040: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 27mm
+    vertical_pitch: 65mm
+    across: 3
+    top_margin: 22.5mm
+    height: 55mm
+    horizontal_pitch: 55mm
+    width: 45mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5040
+  top_margin: 63.77952825
+  height: 155.90551349999998
+  vertical_pitch: 184.2519705
+  left_margin: 76.5354339
+  width: 127.5590565
+  horizontal_pitch: 155.90551349999998
+  across: 3
+  down: 4
+  papersize: A4
+  name: PEARL VM-5040
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL PE-8007: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL PE-8007
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL PE-8007
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Ryman P14: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 4.2mm
+    vertical_pitch: 38.1mm
+    across: 2
+    top_margin: 13.8mm
+    height: 38.1mm
+    horizontal_pitch: 102mm
+    width: 99.1mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Ryman P14
+  top_margin: 39.11811066
+  height: 108.00000116999999
+  vertical_pitch: 108.00000116999999
+  left_margin: 11.90551194
+  width: 280.91338886999995
+  horizontal_pitch: 289.1338614
+  across: 2
+  down: 7
+  papersize: A4
+  name: Ryman P14
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5931-Spine: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0.5in
+    vertical_pitch: 4.84375in
+    across: 2
+    top_margin: 0.734375in
+    height: 4.6875in
+    horizontal_pitch: 0.46875in
+    width: 0.21875in
+    papersize: Letter
+    source: glabel
+    inner_margin: 1mm
+    name: Avery 5931-Spine
+  top_margin: 52.875
+  height: 337.5
+  vertical_pitch: 348.75
+  left_margin: 36.0
+  width: 15.75
+  horizontal_pitch: 33.75
+  across: 2
+  down: 2
+  papersize: LETTER
+  name: Avery 5931-Spine
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Connect KF10647: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 7.86772e-17pt
+    vertical_pitch: 104.882pt
+    across: 3
+    top_margin: 11.3386pt
+    height: 104.882pt
+    horizontal_pitch: 198.425pt
+    width: 198.425pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9pt
+    name: Connect KF10647
+  top_margin: 11.3386
+  height: 104.882
+  vertical_pitch: 104.882
+  left_margin: 7.86772e-17
+  width: 198.425
+  horizontal_pitch: 198.425
+  across: 3
+  down: 8
+  papersize: A4
+  name: Connect KF10647
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Neato Slimline CD Case: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: '130'
+    vertical_pitch: '363'
+    across: 1
+    top_margin: '41.9'
+    height: '342.5'
+    horizontal_pitch: '0'
+    width: '394.5'
+    papersize: Letter
+    source: glabel
+    inner_margin: '7.5'
+    name: Neato Slimline CD Case
+  top_margin: 41.9
+  height: 342.5
+  vertical_pitch: 363.0
+  left_margin: 130.0
+  width: 394.5
+  horizontal_pitch: 394.5
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Neato Slimline CD Case
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-6067: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 15mm
+    vertical_pitch: 54mm
+    across: 2
+    top_margin: 13mm
+    height: 54mm
+    horizontal_pitch: 95mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-6067
+  top_margin: 36.850394099999995
+  height: 153.0708678
+  vertical_pitch: 153.0708678
+  left_margin: 42.519685499999994
+  width: 240.94488449999997
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6067
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6252: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 0mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6252
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-6252
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL PE-8004: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 0mm
+    vertical_pitch: 36mm
+    across: 3
+    top_margin: 4.8mm
+    height: 36mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL PE-8004
+  top_margin: 13.60629936
+  height: 102.04724519999999
+  vertical_pitch: 102.04724519999999
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 8
+  papersize: A4
+  name: PEARL PE-8004
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Tough-Tags TTLW-2016: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 17
+    left_margin: '68'
+    vertical_pitch: '45.3'
+    across: 5
+    top_margin: '4.17'
+    height: '36'
+    horizontal_pitch: '100.8'
+    width: '92.16'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Tough-Tags TTLW-2016
+  top_margin: 4.17
+  height: 36.0
+  vertical_pitch: 45.3
+  left_margin: 68.0
+  width: 92.16
+  horizontal_pitch: 100.8
+  across: 5
+  down: 17
+  papersize: LETTER
+  name: Tough-Tags TTLW-2016
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform 6091: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: '22.961'
+    vertical_pitch: '95.881'
+    across: 3
+    top_margin: '37.502'
+    height: '95.811'
+    horizontal_pitch: '183.118'
+    width: '183.118'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 6091
+  top_margin: 37.502
+  height: 95.811
+  vertical_pitch: 95.881
+  left_margin: 22.961
+  width: 183.118
+  horizontal_pitch: 183.118
+  across: 3
+  down: 8
+  papersize: A4
+  name: Zweckform 6091
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Sattleford VM-6356: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 20mm
+    vertical_pitch: 54mm
+    across: 1
+    top_margin: 14mm
+    height: 54mm
+    horizontal_pitch: 170mm
+    width: 170mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Sattleford VM-6356
+  top_margin: 39.6850398
+  height: 153.0708678
+  vertical_pitch: 153.0708678
+  left_margin: 56.692913999999995
+  width: 481.88976899999994
+  horizontal_pitch: 481.88976899999994
+  across: 1
+  down: 5
+  papersize: A4
+  name: Sattleford VM-6356
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 8195: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 15
+    left_margin: 0.297in
+    vertical_pitch: 0.666in
+    across: 4
+    top_margin: 0.531in
+    height: 0.666in
+    horizontal_pitch: 2.031in
+    width: 1.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Avery 8195
+  top_margin: 38.232
+  height: 47.952000000000005
+  vertical_pitch: 47.952000000000005
+  left_margin: 21.384
+  width: 126.0
+  horizontal_pitch: 146.232
+  across: 4
+  down: 15
+  papersize: LETTER
+  name: Avery 8195
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Russian A4 5x9: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 5mm
+    vertical_pitch: 90mm
+    across: 4
+    top_margin: 13mm
+    height: 90mm
+    horizontal_pitch: 50mm
+    width: 50mm
+    papersize: A4
+    source: glabel
+    inner_margin: 5pt
+    name: Russian A4 5x9
+  top_margin: 36.850394099999995
+  height: 255.118113
+  vertical_pitch: 255.118113
+  left_margin: 14.173228499999999
+  width: 141.732285
+  horizontal_pitch: 141.732285
+  across: 4
+  down: 3
+  papersize: A4
+  name: Russian A4 5x9
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery LSK-5.5: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 2
+    top_margin: 0.3in
+    height: 0.5in
+    horizontal_pitch: 2.05in
+    width: 1.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-5.5
+  top_margin: 21.599999999999998
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 126.0
+  horizontal_pitch: 147.6
+  across: 2
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-5.5
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery LSK-3.5: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 1
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 4.38in
+    width: 3.13in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-3.5
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 225.35999999999999
+  horizontal_pitch: 315.36
+  across: 1
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-3.5
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Biltem 23-756: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: '20.84'
+    vertical_pitch: '204.038'
+    across: 3
+    top_margin: '10'
+    height: '204.038'
+    horizontal_pitch: '187.08'
+    width: '180'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Biltem 23-756
+  top_margin: 10.0
+  height: 204.038
+  vertical_pitch: 204.038
+  left_margin: 20.84
+  width: 180.0
+  horizontal_pitch: 187.08
+  across: 3
+  down: 4
+  papersize: A4
+  name: Biltem 23-756
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 7164: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: '20.84'
+    vertical_pitch: '204.038'
+    across: 3
+    top_margin: '10'
+    height: '204.038'
+    horizontal_pitch: '187.08'
+    width: '180'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7164
+  top_margin: 10.0
+  height: 204.038
+  vertical_pitch: 204.038
+  left_margin: 20.84
+  width: 180.0
+  horizontal_pitch: 187.08
+  across: 3
+  down: 4
+  papersize: A4
+  name: Avery 7164
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-5100: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0.5in
+    vertical_pitch: 5in
+    across: 2
+    top_margin: 0.5in
+    height: 5in
+    horizontal_pitch: 4in
+    width: 3.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-5100
+  top_margin: 36.0
+  height: 360.0
+  vertical_pitch: 360.0
+  left_margin: 36.0
+  width: 252.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 2
+  papersize: LETTER
+  name: Worldlabel WL-5100
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-175: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: '0'
+    vertical_pitch: '0'
+    across: 1
+    top_margin: '0'
+    height: 11.in
+    horizontal_pitch: '0'
+    width: 8.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-175
+  top_margin: 0.0
+  height: 792.0
+  vertical_pitch: 792.0
+  left_margin: 0.0
+  width: 612.0
+  horizontal_pitch: 612.0
+  across: 1
+  down: 1
+  papersize: LETTER
+  name: Worldlabel WL-175
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-160: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.3725in
+    vertical_pitch: 1.5in
+    across: 3
+    top_margin: 1.125in
+    height: 1.25in
+    horizontal_pitch: 2.69in
+    width: 2.375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-160
+  top_margin: 81.0
+  height: 90.0
+  vertical_pitch: 108.0
+  left_margin: 26.82
+  width: 171.0
+  horizontal_pitch: 193.68
+  across: 3
+  down: 6
+  papersize: LETTER
+  name: Worldlabel WL-160
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Poundland 30: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 4.25197pt
+    vertical_pitch: 72pt
+    across: 3
+    top_margin: 62.3622pt
+    height: 72pt
+    horizontal_pitch: 201.26pt
+    width: 184.252pt
+    papersize: A4
+    source: glabel
+    inner_margin: 7.08661pt
+    name: Poundland 30
+  top_margin: 62.3622
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 4.25197
+  width: 184.252
+  horizontal_pitch: 201.26
+  across: 3
+  down: 10
+  papersize: A4
+  name: Poundland 30
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Stomper PRO Spine: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: '18'
+    vertical_pitch: '0'
+    across: 2
+    top_margin: '385'
+    height: '20'
+    horizontal_pitch: '288'
+    width: '288'
+    papersize: Letter
+    source: glabel
+    inner_margin: '2'
+    name: Stomper PRO Spine
+  top_margin: 385.0
+  height: 20.0
+  vertical_pitch: 20.0
+  left_margin: 18.0
+  width: 288.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 1
+  papersize: LETTER
+  name: Stomper PRO Spine
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery LSK-8.5: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 2
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 2.13in
+    width: 1.13in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-8.5
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 81.35999999999999
+  horizontal_pitch: 153.35999999999999
+  across: 2
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-8.5
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5168: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0.5in
+    vertical_pitch: 5in
+    across: 2
+    top_margin: 0.5in
+    height: 5in
+    horizontal_pitch: 4in
+    width: 3.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5168
+  top_margin: 36.0
+  height: 360.0
+  vertical_pitch: 360.0
+  left_margin: 36.0
+  width: 252.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 2
+  papersize: LETTER
+  name: Avery 5168
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Kores KPCV1: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 15mm
+    vertical_pitch: 50mm
+    across: 2
+    top_margin: 24mm
+    height: 50mm
+    horizontal_pitch: 90mm
+    width: 90mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Kores KPCV1
+  top_margin: 68.0314968
+  height: 141.732285
+  vertical_pitch: 141.732285
+  left_margin: 42.519685499999994
+  width: 255.118113
+  horizontal_pitch: 255.118113
+  across: 2
+  down: 5
+  papersize: A4
+  name: Kores KPCV1
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5305: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0pt
+    vertical_pitch: 360pt
+    across: 1
+    top_margin: 216pt
+    height: 180pt
+    horizontal_pitch: 0pt
+    width: 612pt
+    papersize: Letter
+    source: glabel
+    inner_margin: 27pt
+    name: Avery 5305
+  top_margin: 216.0
+  height: 180.0
+  vertical_pitch: 360.0
+  left_margin: 0.0
+  width: 612.0
+  horizontal_pitch: 612.0
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Avery 5305
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-172: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.375in
+    vertical_pitch: 3.375in
+    across: 2
+    top_margin: 0.625in
+    height: 3.0in
+    horizontal_pitch: 4.0in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-172
+  top_margin: 45.0
+  height: 216.0
+  vertical_pitch: 243.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 3
+  papersize: LETTER
+  name: Worldlabel WL-172
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+OfficeMax OM99060: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0pt
+    vertical_pitch: 72pt
+    across: 3
+    top_margin: 36pt
+    height: 72pt
+    horizontal_pitch: 203.76pt
+    width: 203.76pt
+    papersize: Letter
+    source: glabel
+    inner_margin: 12.024pt
+    name: OfficeMax OM99060
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 0.0
+  width: 203.76
+  horizontal_pitch: 203.76
+  across: 3
+  down: 10
+  papersize: LETTER
+  name: OfficeMax OM99060
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Staples STAP14: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 5mm
+    vertical_pitch: 38mm
+    across: 2
+    top_margin: 15mm
+    height: 38mm
+    horizontal_pitch: 102mm
+    width: 99mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3mm
+    name: Staples STAP14
+  top_margin: 42.519685499999994
+  height: 107.7165366
+  vertical_pitch: 107.7165366
+  left_margin: 14.173228499999999
+  width: 280.62992429999997
+  horizontal_pitch: 289.1338614
+  across: 2
+  down: 7
+  papersize: A4
+  name: Staples STAP14
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5081: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5081
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-5081
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5221: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 0mm
+    vertical_pitch: 70mm
+    across: 3
+    top_margin: 8.5mm
+    height: 70mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5221
+  top_margin: 24.09448845
+  height: 198.425199
+  vertical_pitch: 198.425199
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 4
+  papersize: A4
+  name: PEARL VM-5221
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Ednet 45021: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 0pt
+    vertical_pitch: 104.882pt
+    across: 3
+    top_margin: 0pt
+    height: 104.882pt
+    horizontal_pitch: 198.425pt
+    width: 198.425pt
+    papersize: A4
+    source: glabel
+    inner_margin: 0pt
+    name: Ednet 45021
+  top_margin: 0.0
+  height: 104.882
+  vertical_pitch: 104.882
+  left_margin: 0.0
+  width: 198.425
+  horizontal_pitch: 198.425
+  across: 3
+  down: 8
+  papersize: A4
+  name: Ednet 45021
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 7664: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 17mm
+    vertical_pitch: 72mm
+    across: 2
+    top_margin: 5mm
+    height: 71.9mm
+    horizontal_pitch: 104.5mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7664
+  top_margin: 14.173228499999999
+  height: 203.81102583
+  vertical_pitch: 204.09449039999998
+  left_margin: 48.1889769
+  width: 198.425199
+  horizontal_pitch: 296.22047564999997
+  across: 2
+  down: 4
+  papersize: A4
+  name: Avery 7664
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-875: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0.1875in
+    vertical_pitch: 1in
+    across: 3
+    top_margin: 0.5in
+    height: 1in
+    horizontal_pitch: 2.75in
+    width: 2.625in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-875
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 13.5
+  width: 189.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 10
+  papersize: LETTER
+  name: Worldlabel WL-875
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8414: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '42'
+    vertical_pitch: '144'
+    across: 2
+    top_margin: '57.890'
+    height: '144'
+    horizontal_pitch: '264'
+    width: '246.6'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 8414
+  top_margin: 57.89
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 42.0
+  width: 246.6
+  horizontal_pitch: 264.0
+  across: 2
+  down: 5
+  papersize: A4
+  name: Avery 8414
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5162: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 0.15625in
+    vertical_pitch: 1.333333333in
+    across: 2
+    top_margin: 0.833333333in
+    height: 1.333333333in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5162
+  top_margin: 59.999999976
+  height: 95.999999976
+  vertical_pitch: 95.999999976
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 7
+  papersize: LETTER
+  name: Avery 5162
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform J8435B: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 27.5mm
+    vertical_pitch: 122mm
+    across: 1
+    top_margin: 21mm
+    height: 122mm
+    horizontal_pitch: 155mm
+    width: 155mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Zweckform J8435B
+  top_margin: 59.5275597
+  height: 345.8267754
+  vertical_pitch: 345.8267754
+  left_margin: 77.95275674999999
+  width: 439.37008349999996
+  horizontal_pitch: 439.37008349999996
+  across: 1
+  down: 1
+  papersize: A4
+  name: Zweckform J8435B
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5513-1: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 61mm
+    vertical_pitch: 130mm
+    across: 1
+    top_margin: 24mm
+    height: 120mm
+    horizontal_pitch: 130mm
+    width: 120mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5513-1
+  top_margin: 68.0314968
+  height: 340.15748399999995
+  vertical_pitch: 368.503941
+  left_margin: 172.9133877
+  width: 340.15748399999995
+  horizontal_pitch: 368.503941
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-5513-1
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 32015: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 17mm
+    vertical_pitch: 60mm
+    across: 2
+    top_margin: 31.5mm
+    height: 54mm
+    horizontal_pitch: 91mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 5mm
+    name: Avery 32015
+  top_margin: 89.29133954999999
+  height: 153.0708678
+  vertical_pitch: 170.07874199999998
+  left_margin: 48.1889769
+  width: 240.94488449999997
+  horizontal_pitch: 257.9527587
+  across: 2
+  down: 4
+  papersize: A4
+  name: Avery 32015
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Maco LL5805: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0.1875in
+    vertical_pitch: 1in
+    across: 3
+    top_margin: 0.5in
+    height: 1in
+    horizontal_pitch: 2.75in
+    width: 2.625in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Maco LL5805
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 13.5
+  width: 189.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 10
+  papersize: LETTER
+  name: Maco LL5805
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery LSK-3: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 20
+    left_margin: 0.5in
+    vertical_pitch: 0.5in
+    across: 2
+    top_margin: 0.5in
+    height: 0.5in
+    horizontal_pitch: 4.38in
+    width: 3.13in
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery LSK-3
+  top_margin: 36.0
+  height: 36.0
+  vertical_pitch: 36.0
+  left_margin: 36.0
+  width: 225.35999999999999
+  horizontal_pitch: 315.36
+  across: 2
+  down: 20
+  papersize: LETTER
+  name: Avery LSK-3
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform 3348: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 5.66929pt
+    vertical_pitch: 107.717pt
+    across: 3
+    top_margin: 56.6929pt
+    height: 107.717pt
+    horizontal_pitch: 198.425pt
+    width: 189.921pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9pt
+    name: Zweckform 3348
+  top_margin: 56.6929
+  height: 107.717
+  vertical_pitch: 107.717
+  left_margin: 5.66929
+  width: 189.921
+  horizontal_pitch: 198.425
+  across: 3
+  down: 7
+  papersize: A4
+  name: Zweckform 3348
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 3651: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: '2.834'
+    vertical_pitch: '83.6220'
+    across: 4
+    top_margin: '2.834'
+    height: '83.6220'
+    horizontal_pitch: '147.4016'
+    width: '147.4016'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 3651
+  top_margin: 2.834
+  height: 83.622
+  vertical_pitch: 83.622
+  left_margin: 2.834
+  width: 147.4016
+  horizontal_pitch: 147.4016
+  across: 4
+  down: 10
+  papersize: A4
+  name: Zweckform 3651
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+APLI 02793: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '42.5197'
+    vertical_pitch: '144'
+    across: 2
+    top_margin: '62.3622'
+    height: '144'
+    horizontal_pitch: '255.118'
+    width: '255.118'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: APLI 02793
+  top_margin: 62.3622
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 42.5197
+  width: 255.118
+  horizontal_pitch: 255.118
+  across: 2
+  down: 5
+  papersize: A4
+  name: APLI 02793
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL PE-8351: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 297mm
+    across: 1
+    top_margin: 0mm
+    height: 297mm
+    horizontal_pitch: 210mm
+    width: 210mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL PE-8351
+  top_margin: 0.0
+  height: 841.8897728999999
+  vertical_pitch: 841.8897728999999
+  left_margin: 0.0
+  width: 595.275597
+  horizontal_pitch: 595.275597
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL PE-8351
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Q-CONNECT KF26055: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 6mm
+    vertical_pitch: 67.7mm
+    across: 2
+    top_margin: 13mm
+    height: 67.7mm
+    horizontal_pitch: 101.1mm
+    width: 99.1mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Q-CONNECT KF26055
+  top_margin: 36.850394099999995
+  height: 191.90551389
+  vertical_pitch: 191.90551389
+  left_margin: 17.0078742
+  width: 280.91338886999995
+  horizontal_pitch: 286.58268026999997
+  across: 2
+  down: 4
+  papersize: A4
+  name: Q-CONNECT KF26055
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Encre.com BCV10: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '48.19'
+    vertical_pitch: '157.32'
+    across: 2
+    top_margin: '42.50'
+    height: '153.07'
+    horizontal_pitch: '255.12'
+    width: '243.78'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Encre.com BCV10
+  top_margin: 42.5
+  height: 153.07
+  vertical_pitch: 157.32
+  left_margin: 48.19
+  width: 243.78
+  horizontal_pitch: 255.12
+  across: 2
+  down: 5
+  papersize: A4
+  name: Encre.com BCV10
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6234: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 5mm
+    vertical_pitch: 57mm
+    across: 2
+    top_margin: 6mm
+    height: 57mm
+    horizontal_pitch: 102.1mm
+    width: 99.1mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6234
+  top_margin: 17.0078742
+  height: 161.5748049
+  vertical_pitch: 161.5748049
+  left_margin: 14.173228499999999
+  width: 280.91338886999995
+  horizontal_pitch: 289.41732597
+  across: 2
+  down: 5
+  papersize: A4
+  name: PEARL VM-6234
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6097: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 0mm
+    vertical_pitch: 210mm
+    across: 1
+    top_margin: 0mm
+    height: 210mm
+    horizontal_pitch: 148mm
+    width: 148mm
+    papersize: A5
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6097
+  top_margin: 0.0
+  height: 595.275597
+  vertical_pitch: 595.275597
+  left_margin: 0.0
+  width: 419.52756359999995
+  horizontal_pitch: 419.52756359999995
+  across: 1
+  down: 1
+  papersize: A5
+  name: PEARL VM-6097
+  source: glabel
+  paper_width: 419.53
+  paper_height: 595.28
+  paper_size: A5
+  valid: true
+PEARL VM-6083: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 16
+    left_margin: 9mm
+    vertical_pitch: 16.9mm
+    across: 7
+    top_margin: 13mm
+    height: 16.9mm
+    horizontal_pitch: 27.9mm
+    width: 25.4mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: PEARL VM-6083
+  top_margin: 36.850394099999995
+  height: 47.90551232999999
+  vertical_pitch: 47.90551232999999
+  left_margin: 25.511811299999998
+  width: 72.00000078
+  horizontal_pitch: 79.08661502999999
+  across: 7
+  down: 16
+  papersize: A4
+  name: PEARL VM-6083
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 8658: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 27
+    left_margin: 5mm
+    vertical_pitch: 10.14mm
+    across: 7
+    top_margin: 13mm
+    height: 10mm
+    horizontal_pitch: 28.5mm
+    width: 25.4mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Avery 8658
+  top_margin: 36.850394099999995
+  height: 28.346456999999997
+  vertical_pitch: 28.743307398
+  left_margin: 14.173228499999999
+  width: 72.00000078
+  horizontal_pitch: 80.78740245
+  across: 7
+  down: 27
+  papersize: A4
+  name: Avery 8658
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Uline S-5044: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0in
+    vertical_pitch: 5.5in
+    across: 1
+    top_margin: 0in
+    height: 5.5in
+    horizontal_pitch: 0in
+    width: 8.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 9pt
+    name: Uline S-5044
+  top_margin: 0.0
+  height: 396.0
+  vertical_pitch: 396.0
+  left_margin: 0.0
+  width: 612.0
+  horizontal_pitch: 612.0
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Uline S-5044
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery L4785: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 18mm
+    vertical_pitch: 55mm
+    across: 2
+    top_margin: 13mm
+    height: 50mm
+    horizontal_pitch: 95mm
+    width: 80mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Avery L4785
+  top_margin: 36.850394099999995
+  height: 141.732285
+  vertical_pitch: 155.90551349999998
+  left_margin: 51.023622599999996
+  width: 226.77165599999998
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Avery L4785
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 32015: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 17mm
+    vertical_pitch: 60mm
+    across: 2
+    top_margin: 31.5mm
+    height: 54mm
+    horizontal_pitch: 91mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 5mm
+    name: Zweckform 32015
+  top_margin: 89.29133954999999
+  height: 153.0708678
+  vertical_pitch: 170.07874199999998
+  left_margin: 48.1889769
+  width: 240.94488449999997
+  horizontal_pitch: 257.9527587
+  across: 2
+  down: 4
+  papersize: A4
+  name: Zweckform 32015
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-159: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0.18504in
+    vertical_pitch: 5in
+    across: 1
+    top_margin: 0.5in
+    height: 5in
+    horizontal_pitch: '0'
+    width: 8.12992in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-159
+  top_margin: 36.0
+  height: 360.0
+  vertical_pitch: 360.0
+  left_margin: 13.322880000000001
+  width: 585.35424
+  horizontal_pitch: 585.35424
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Worldlabel WL-159
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 7414: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '42.51'
+    vertical_pitch: '147.4'
+    across: 2
+    top_margin: '52.44'
+    height: '147.4'
+    horizontal_pitch: '255.1'
+    width: '255.1'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7414
+  top_margin: 52.44
+  height: 147.4
+  vertical_pitch: 147.4
+  left_margin: 42.51
+  width: 255.1
+  horizontal_pitch: 255.1
+  across: 2
+  down: 5
+  papersize: A4
+  name: Avery 7414
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-6102: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 27mm
+    vertical_pitch: 65mm
+    across: 3
+    top_margin: 23.5mm
+    height: 55mm
+    horizontal_pitch: 55mm
+    width: 45mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-6102
+  top_margin: 66.61417395
+  height: 155.90551349999998
+  vertical_pitch: 184.2519705
+  left_margin: 76.5354339
+  width: 127.5590565
+  horizontal_pitch: 155.90551349999998
+  across: 3
+  down: 4
+  papersize: A4
+  name: PEARL VM-6102
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5366: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 15
+    left_margin: 0.53125in
+    vertical_pitch: 0.666666667in
+    across: 2
+    top_margin: 0.5in
+    height: 0.666666667in
+    horizontal_pitch: 4in
+    width: 3.4375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5366
+  top_margin: 36.0
+  height: 48.000000024
+  vertical_pitch: 48.000000024
+  left_margin: 38.25
+  width: 247.5
+  horizontal_pitch: 288.0
+  across: 2
+  down: 15
+  papersize: LETTER
+  name: Avery 5366
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 38931: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 11
+    left_margin: 0mm
+    vertical_pitch: 25mm
+    across: 3
+    top_margin: 10mm
+    height: 25mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3mm
+    name: Avery 38931
+  top_margin: 28.346456999999997
+  height: 70.8661425
+  vertical_pitch: 70.8661425
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 11
+  papersize: A4
+  name: Avery 38931
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Neato 69143: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 1.875in
+    vertical_pitch: 9.5in
+    across: 1
+    top_margin: 0.75in
+    height: 9.5in
+    horizontal_pitch: 4.75in
+    width: 4.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Neato 69143
+  top_margin: 54.0
+  height: 684.0
+  vertical_pitch: 684.0
+  left_margin: 135.0
+  width: 342.0
+  horizontal_pitch: 342.0
+  across: 1
+  down: 1
+  papersize: LETTER
+  name: Neato 69143
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+PEARL PE-8008: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 8mm
+    vertical_pitch: 25.4mm
+    across: 4
+    top_margin: 21.5mm
+    height: 25.4mm
+    horizontal_pitch: 48.4mm
+    width: 48.4mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL PE-8008
+  top_margin: 60.944882549999996
+  height: 72.00000078
+  vertical_pitch: 72.00000078
+  left_margin: 22.6771656
+  width: 137.19685188
+  horizontal_pitch: 137.19685188
+  across: 4
+  down: 10
+  papersize: A4
+  name: PEARL PE-8008
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+APLI 1999: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: '13'
+    vertical_pitch: '194'
+    across: 2
+    top_margin: '21.890'
+    height: '193'
+    horizontal_pitch: '289'
+    width: '281'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: APLI 1999
+  top_margin: 21.89
+  height: 193.0
+  vertical_pitch: 194.0
+  left_margin: 13.0
+  width: 281.0
+  horizontal_pitch: 289.0
+  across: 2
+  down: 4
+  papersize: A4
+  name: APLI 1999
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4760: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 25.5118pt
+    vertical_pitch: 107.717pt
+    across: 1
+    top_margin: 43.7386pt
+    height: 107.717pt
+    horizontal_pitch: 544.252pt
+    width: 544.252pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9pt
+    name: Zweckform 4760
+  top_margin: 43.7386
+  height: 107.717
+  vertical_pitch: 107.717
+  left_margin: 25.5118
+  width: 544.252
+  horizontal_pitch: 544.252
+  across: 1
+  down: 7
+  papersize: A4
+  name: Zweckform 4760
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-1150: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 15
+    left_margin: '99'
+    vertical_pitch: '48'
+    across: 1
+    top_margin: '36'
+    height: '48'
+    horizontal_pitch: '0'
+    width: '414'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Worldlabel WL-1150
+  top_margin: 36.0
+  height: 48.0
+  vertical_pitch: 48.0
+  left_margin: 99.0
+  width: 414.0
+  horizontal_pitch: 414.0
+  across: 1
+  down: 15
+  papersize: LETTER
+  name: Worldlabel WL-1150
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Celcast IJ37: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '43'
+    vertical_pitch: '147.5'
+    across: 2
+    top_margin: '52.7'
+    height: '147.5'
+    horizontal_pitch: '255'
+    width: '255'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Celcast IJ37
+  top_margin: 52.7
+  height: 147.5
+  vertical_pitch: 147.5
+  left_margin: 43.0
+  width: 255.0
+  horizontal_pitch: 255.0
+  across: 2
+  down: 5
+  papersize: A4
+  name: Celcast IJ37
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5217: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 4.5mm
+    vertical_pitch: 130mm
+    across: 2
+    top_margin: 14mm
+    height: 130mm
+    horizontal_pitch: 107mm
+    width: 100mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-5217
+  top_margin: 39.6850398
+  height: 368.503941
+  vertical_pitch: 368.503941
+  left_margin: 12.755905649999999
+  width: 283.46457
+  horizontal_pitch: 303.3070899
+  across: 2
+  down: 2
+  papersize: A4
+  name: PEARL VM-5217
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5388: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 1.75in
+    vertical_pitch: 3in
+    across: 1
+    top_margin: 1in
+    height: 3in
+    horizontal_pitch: 5in
+    width: 5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Avery 5388
+  top_margin: 72.0
+  height: 216.0
+  vertical_pitch: 216.0
+  left_margin: 126.0
+  width: 360.0
+  horizontal_pitch: 360.0
+  across: 1
+  down: 3
+  papersize: LETTER
+  name: Avery 5388
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Worldlabel WL-150: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.15625in
+    vertical_pitch: 3.333333333in
+    across: 2
+    top_margin: 0.5in
+    height: 3.333333333in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Worldlabel WL-150
+  top_margin: 36.0
+  height: 239.999999976
+  vertical_pitch: 239.999999976
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 3
+  papersize: LETTER
+  name: Worldlabel WL-150
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Sattleford VM-6102: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 27mm
+    vertical_pitch: 65mm
+    across: 3
+    top_margin: 23.5mm
+    height: 55mm
+    horizontal_pitch: 55mm
+    width: 45mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-6102
+  top_margin: 66.61417395
+  height: 155.90551349999998
+  vertical_pitch: 184.2519705
+  left_margin: 76.5354339
+  width: 127.5590565
+  horizontal_pitch: 155.90551349999998
+  across: 3
+  down: 4
+  papersize: A4
+  name: Sattleford VM-6102
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 18036: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 9
+    left_margin: '0'
+    vertical_pitch: '91'
+    across: 3
+    top_margin: '13'
+    height: '91'
+    horizontal_pitch: '198'
+    width: '198'
+    papersize: A4
+    source: glabel
+    inner_margin: '10'
+    name: Avery 18036
+  top_margin: 13.0
+  height: 91.0
+  vertical_pitch: 91.0
+  left_margin: 0.0
+  width: 198.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 9
+  papersize: A4
+  name: Avery 18036
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 7165: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 13.2378pt
+    vertical_pitch: 191.991pt
+    across: 2
+    top_margin: 36.9638pt
+    height: 191.991pt
+    horizontal_pitch: 288.113pt
+    width: 280.8pt
+    papersize: A4
+    source: glabel
+    inner_margin: 5.66929pt
+    name: Avery 7165
+  top_margin: 36.9638
+  height: 191.991
+  vertical_pitch: 191.991
+  left_margin: 13.2378
+  width: 280.8
+  horizontal_pitch: 288.113
+  across: 2
+  down: 4
+  papersize: A4
+  name: Avery 7165
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Ednet BC: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '40'
+    vertical_pitch: '145'
+    across: 2
+    top_margin: '59'
+    height: '145'
+    horizontal_pitch: '253'
+    width: '253'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Ednet BC
+  top_margin: 59.0
+  height: 145.0
+  vertical_pitch: 145.0
+  left_margin: 40.0
+  width: 253.0
+  horizontal_pitch: 253.0
+  across: 2
+  down: 5
+  papersize: A4
+  name: Ednet BC
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5371: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0.75in
+    vertical_pitch: 2in
+    across: 2
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 3.5in
+    width: 3.5in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5371
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 54.0
+  width: 252.0
+  horizontal_pitch: 252.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Avery 5371
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Russian A3 5x9: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 14mm
+    vertical_pitch: 50mm
+    across: 3
+    top_margin: 10mm
+    height: 50mm
+    horizontal_pitch: 90mm
+    width: 90mm
+    papersize: A3
+    source: glabel
+    inner_margin: 5pt
+    name: Russian A3 5x9
+  top_margin: 28.346456999999997
+  height: 141.732285
+  vertical_pitch: 141.732285
+  left_margin: 39.6850398
+  width: 255.118113
+  horizontal_pitch: 255.118113
+  across: 3
+  down: 8
+  papersize: A3
+  name: Russian A3 5x9
+  source: glabel
+  paper_width: 841.89
+  paper_height: 1190.55
+  paper_size: A3
+  valid: true
+Worldlabel WL-161: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.375in
+    vertical_pitch: 1.5in
+    across: 2
+    top_margin: 1.125in
+    height: 1.25in
+    horizontal_pitch: 4in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-161
+  top_margin: 81.0
+  height: 90.0
+  vertical_pitch: 108.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 6
+  papersize: LETTER
+  name: Worldlabel WL-161
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5997-Face: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '80'
+    vertical_pitch: '133'
+    across: 2
+    top_margin: '60.5'
+    height: '133'
+    horizontal_pitch: '236'
+    width: '220'
+    papersize: Letter
+    source: glabel
+    inner_margin: '5'
+    name: Avery 5997-Face
+  top_margin: 60.5
+  height: 133.0
+  vertical_pitch: 133.0
+  left_margin: 80.0
+  width: 220.0
+  horizontal_pitch: 236.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Avery 5997-Face
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+! 'Netc 749303-70001 ': !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: '36'
+    vertical_pitch: '72'
+    across: 3
+    top_margin: '45'
+    height: '59.4'
+    horizontal_pitch: '189'
+    width: '162'
+    papersize: Letter
+    source: glabel
+    inner_margin: '18'
+    name: ! 'Netc 749303-70001 '
+  top_margin: 45.0
+  height: 59.4
+  vertical_pitch: 72.0
+  left_margin: 36.0
+  width: 162.0
+  horizontal_pitch: 189.0
+  across: 3
+  down: 10
+  papersize: LETTER
+  name: ! 'Netc 749303-70001 '
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 7162: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: '11.3'
+    vertical_pitch: '96.1'
+    across: 2
+    top_margin: '36.8'
+    height: '96.1'
+    horizontal_pitch: '290.5'
+    width: '280.9'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Avery 7162
+  top_margin: 36.8
+  height: 96.1
+  vertical_pitch: 96.1
+  left_margin: 11.3
+  width: 280.9
+  horizontal_pitch: 290.5
+  across: 2
+  down: 8
+  papersize: A4
+  name: Avery 7162
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 6021: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 16
+    left_margin: 24.0945pt
+    vertical_pitch: 47.9055pt
+    across: 4
+    top_margin: 39.6853pt
+    height: 47.9055pt
+    horizontal_pitch: 136.913pt
+    width: 130.392pt
+    papersize: A4
+    source: glabel
+    inner_margin: 5pt
+    name: Zweckform 6021
+  top_margin: 39.6853
+  height: 47.9055
+  vertical_pitch: 47.9055
+  left_margin: 24.0945
+  width: 130.392
+  horizontal_pitch: 136.913
+  across: 4
+  down: 16
+  papersize: A4
+  name: Zweckform 6021
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Zweckform 4780: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: '23'
+    vertical_pitch: '72'
+    across: 4
+    top_margin: '53.8898'
+    height: '72'
+    horizontal_pitch: '137.48'
+    width: '137.48'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 4780
+  top_margin: 53.8898
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 23.0
+  width: 137.48
+  horizontal_pitch: 137.48
+  across: 4
+  down: 10
+  papersize: A4
+  name: Zweckform 4780
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Your Design VM-5112: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 4
+    left_margin: 12mm
+    vertical_pitch: 68.75mm
+    across: 2
+    top_margin: 21mm
+    height: 54.25mm
+    horizontal_pitch: 100mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Your Design VM-5112
+  top_margin: 59.5275597
+  height: 153.779529225
+  vertical_pitch: 194.88189187499998
+  left_margin: 34.0157484
+  width: 240.94488449999997
+  horizontal_pitch: 283.46457
+  across: 2
+  down: 4
+  papersize: A4
+  name: Your Design VM-5112
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Impact LC33: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 11
+    left_margin: 0mm
+    vertical_pitch: 25mm
+    across: 3
+    top_margin: 10mm
+    height: 25mm
+    horizontal_pitch: 70mm
+    width: 70mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3mm
+    name: Impact LC33
+  top_margin: 28.346456999999997
+  height: 70.8661425
+  vertical_pitch: 70.8661425
+  left_margin: 0.0
+  width: 198.425199
+  horizontal_pitch: 198.425199
+  across: 3
+  down: 11
+  papersize: A4
+  name: Impact LC33
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Worldlabel WL-100: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 0.15625in
+    vertical_pitch: 1.333333333in
+    across: 2
+    top_margin: 0.833333333in
+    height: 1.333333333in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Worldlabel WL-100
+  top_margin: 59.999999976
+  height: 95.999999976
+  vertical_pitch: 95.999999976
+  left_margin: 11.25
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 7
+  papersize: LETTER
+  name: Worldlabel WL-100
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5163: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0.1625in
+    vertical_pitch: 2in
+    across: 2
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 4.1875in
+    width: 4in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.125in
+    name: Avery 5163
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 11.700000000000001
+  width: 288.0
+  horizontal_pitch: 301.5
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Avery 5163
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform 3669: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: '0'
+    vertical_pitch: '144'
+    across: 3
+    top_margin: '61'
+    height: '144'
+    horizontal_pitch: '198.425'
+    width: '198.425'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Zweckform 3669
+  top_margin: 61.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 0.0
+  width: 198.425
+  horizontal_pitch: 198.425
+  across: 3
+  down: 5
+  papersize: A4
+  name: Zweckform 3669
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-5513-2: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 30.5mm
+    vertical_pitch: 127.5mm
+    across: 1
+    top_margin: 154.5mm
+    height: 117.5mm
+    horizontal_pitch: 160mm
+    width: 150mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: PEARL VM-5513-2
+  top_margin: 437.95276064999996
+  height: 333.07086975
+  vertical_pitch: 361.41732675
+  left_margin: 86.45669385
+  width: 425.19685499999997
+  horizontal_pitch: 453.54331199999996
+  across: 1
+  down: 1
+  papersize: A4
+  name: PEARL VM-5513-2
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+PEARL VM-8005: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 0mm
+    vertical_pitch: 41mm
+    across: 2
+    top_margin: 5mm
+    height: 41mm
+    horizontal_pitch: 105mm
+    width: 105mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: PEARL VM-8005
+  top_margin: 14.173228499999999
+  height: 116.2204737
+  vertical_pitch: 116.2204737
+  left_margin: 0.0
+  width: 297.6377985
+  horizontal_pitch: 297.6377985
+  across: 2
+  down: 7
+  papersize: A4
+  name: PEARL VM-8005
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Viking 02204: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: '0'
+    vertical_pitch: '120'
+    across: 3
+    top_margin: '0'
+    height: '120'
+    horizontal_pitch: '198'
+    width: '198'
+    papersize: A4
+    source: glabel
+    inner_margin: '5'
+    name: Viking 02204
+  top_margin: 0.0
+  height: 120.0
+  vertical_pitch: 120.0
+  left_margin: 0.0
+  width: 198.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 7
+  papersize: A4
+  name: Viking 02204
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5160: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 0.15625in
+    vertical_pitch: 1in
+    across: 3
+    top_margin: 0.5in
+    height: 1in
+    horizontal_pitch: 2.78125in
+    width: 2.625in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5160
+  top_margin: 36.0
+  height: 72.0
+  vertical_pitch: 72.0
+  left_margin: 11.25
+  width: 189.0
+  horizontal_pitch: 200.25
+  across: 3
+  down: 10
+  papersize: LETTER
+  name: Avery 5160
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 8435A: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 1
+    left_margin: 27.5mm
+    vertical_pitch: 125mm
+    across: 1
+    top_margin: 22mm
+    height: 125mm
+    horizontal_pitch: 155mm
+    width: 155mm
+    papersize: A4
+    source: glabel
+    inner_margin: 2mm
+    name: Avery 8435A
+  top_margin: 62.36220539999999
+  height: 354.3307125
+  vertical_pitch: 354.3307125
+  left_margin: 77.95275674999999
+  width: 439.37008349999996
+  horizontal_pitch: 439.37008349999996
+  across: 1
+  down: 1
+  papersize: A4
+  name: Avery 8435A
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Staples EU BC Supreme: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 311.811pt
+    vertical_pitch: 155.906pt
+    across: 1
+    top_margin: 28.3465pt
+    height: 155.906pt
+    horizontal_pitch: 240.945pt
+    width: 240.945pt
+    papersize: A4
+    source: glabel
+    inner_margin: 9.07087pt
+    name: Staples EU BC Supreme
+  top_margin: 28.3465
+  height: 155.906
+  vertical_pitch: 155.906
+  left_margin: 311.811
+  width: 240.945
+  horizontal_pitch: 240.945
+  across: 1
+  down: 5
+  papersize: A4
+  name: Staples EU BC Supreme
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5663: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 0in
+    vertical_pitch: 2in
+    across: 2
+    top_margin: 0.5in
+    height: 2in
+    horizontal_pitch: 4.25in
+    width: 4.25in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5663
+  top_margin: 36.0
+  height: 144.0
+  vertical_pitch: 144.0
+  left_margin: 0.0
+  width: 306.0
+  horizontal_pitch: 306.0
+  across: 2
+  down: 5
+  papersize: LETTER
+  name: Avery 5663
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 6573: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 2
+    left_margin: 0.18504in
+    vertical_pitch: 5in
+    across: 1
+    top_margin: 0.5in
+    height: 5in
+    horizontal_pitch: '0'
+    width: 8.12992in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6573
+  top_margin: 36.0
+  height: 360.0
+  vertical_pitch: 360.0
+  left_margin: 13.322880000000001
+  width: 585.35424
+  horizontal_pitch: 585.35424
+  across: 1
+  down: 2
+  papersize: LETTER
+  name: Avery 6573
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 6879: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 6
+    left_margin: 0.375in
+    vertical_pitch: 1.5in
+    across: 2
+    top_margin: 1.125in
+    height: 1.25in
+    horizontal_pitch: 4in
+    width: 3.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 6879
+  top_margin: 81.0
+  height: 90.0
+  vertical_pitch: 108.0
+  left_margin: 27.0
+  width: 270.0
+  horizontal_pitch: 288.0
+  across: 2
+  down: 6
+  papersize: LETTER
+  name: Avery 6879
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery 5026: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 9
+    left_margin: 0.49755in
+    vertical_pitch: 1.13in
+    across: 2
+    top_margin: 0.51125in
+    height: 0.9375in
+    horizontal_pitch: 4.0674in
+    width: 3.4375in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5026
+  top_margin: 36.81
+  height: 67.5
+  vertical_pitch: 81.35999999999999
+  left_margin: 35.8236
+  width: 247.5
+  horizontal_pitch: 292.8528
+  across: 2
+  down: 9
+  papersize: LETTER
+  name: Avery 5026
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Zweckform 3477: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 7
+    left_margin: 0mm
+    vertical_pitch: 41mm
+    across: 2
+    top_margin: 4.93mm
+    height: 41mm
+    horizontal_pitch: 105mm
+    width: 105mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Zweckform 3477
+  top_margin: 13.974803300999998
+  height: 116.2204737
+  vertical_pitch: 116.2204737
+  left_margin: 0.0
+  width: 297.6377985
+  horizontal_pitch: 297.6377985
+  across: 2
+  down: 7
+  papersize: A4
+  name: Zweckform 3477
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Sattleford VM-5019: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 5
+    left_margin: 13.5mm
+    vertical_pitch: 54.2mm
+    across: 2
+    top_margin: 13.5mm
+    height: 54.2mm
+    horizontal_pitch: 95mm
+    width: 85mm
+    papersize: A4
+    source: glabel
+    inner_margin: 3.2mm
+    name: Sattleford VM-5019
+  top_margin: 38.26771695
+  height: 153.63779694
+  vertical_pitch: 153.63779694
+  left_margin: 38.26771695
+  width: 240.94488449999997
+  horizontal_pitch: 269.2913415
+  across: 2
+  down: 5
+  papersize: A4
+  name: Sattleford VM-5019
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 6570: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 8
+    left_margin: 36pt
+    vertical_pitch: 90pt
+    across: 4
+    top_margin: 36pt
+    height: 90pt
+    horizontal_pitch: 139.536pt
+    width: 126pt
+    papersize: Letter
+    source: glabel
+    inner_margin: 9pt
+    name: Avery 6570
+  top_margin: 36.0
+  height: 90.0
+  vertical_pitch: 90.0
+  left_margin: 36.0
+  width: 126.0
+  horizontal_pitch: 139.536
+  across: 4
+  down: 8
+  papersize: LETTER
+  name: Avery 6570
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
+Avery L4770: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 10
+    left_margin: 10mm
+    vertical_pitch: 25.4mm
+    across: 4
+    top_margin: 22mm
+    height: 25.4mm
+    horizontal_pitch: 48.5mm
+    width: 45.7mm
+    papersize: A4
+    source: glabel
+    inner_margin: 1mm
+    name: Avery L4770
+  top_margin: 62.36220539999999
+  height: 72.00000078
+  vertical_pitch: 72.00000078
+  left_margin: 28.346456999999997
+  width: 129.54330849
+  horizontal_pitch: 137.48031645
+  across: 4
+  down: 10
+  papersize: A4
+  name: Avery L4770
+  source: glabel
+  paper_width: 595.28
+  paper_height: 841.89
+  paper_size: A4
+  valid: true
+Avery 5196: !ruby/object:BacklogsPrintableCards::CardPageLayout
+  layout:
+    down: 3
+    left_margin: 0.125in
+    vertical_pitch: 3in
+    across: 3
+    top_margin: 0.5in
+    height: 2.75in
+    horizontal_pitch: 2.75in
+    width: 2.75in
+    papersize: Letter
+    source: glabel
+    inner_margin: 0.0625in
+    name: Avery 5196
+  top_margin: 36.0
+  height: 198.0
+  vertical_pitch: 216.0
+  left_margin: 9.0
+  width: 198.0
+  horizontal_pitch: 198.0
+  across: 3
+  down: 3
+  papersize: LETTER
+  name: Avery 5196
+  source: glabel
+  paper_width: 612.0
+  paper_height: 792.0
+  paper_size: Letter
+  valid: true
