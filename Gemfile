@@ -8,7 +8,7 @@ redmine_version_major = version_file.match(/MAJOR =/).post_match.match(/\d/)[0].
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
-gem "nokogiri"
+#gem "nokogiri"
 gem "open-uri-cached"
 gem "prawn"
 gem 'json'
@@ -25,7 +25,7 @@ group :test do
   gem 'cucumber-rails', require: false
   gem "culerity"
   gem "cucumber"
-  gem "capybara", "~> 1"
+  #gem "capybara", "~> 1"
   #gem "faye-websocket"
   gem "poltergeist"
   gem "database_cleaner"
