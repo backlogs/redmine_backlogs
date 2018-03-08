@@ -58,23 +58,23 @@ module Backlogs
         else
           backlogs_filters = {
             # mother of *&@&^*@^*#.... order "20" is a magical constant in RM2.2 which means "I'm a custom field". What. The. Fuck.
-            "backlogs_issue_type" => {  :type => :list,
+            "backlogs_issue_type" => QueryFilter.new("backlogs_issue_type", {  :type => :list,
                                         :name => l(:field_backlogs_issue_type),
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 21 },
-            "story_points" => { :type => :float,
+                                        :order => 21 }),
+            "story_points" => QueryFilter.new("story_points", { :type => :float,
                                 :name => l(:field_story_points),
-                                :order => 22 }
+                                :order => 22 })
                              }
         end
 
         if project
-          backlogs_filters["release_id"] = {
+          backlogs_filters["release_id"] = QueryFilter.new("release_id", {
             :type => :list_optional,
             :name => l(:field_release),
             :values => RbRelease.where(project_id: project).order('name ASC').collect { |d| [d.name, d.id.to_s]},
             :order => 21
-          }
+          })
         end
         @available_filters = @available_filters.merge(backlogs_filters)
       end
