@@ -60,9 +60,6 @@ end
 #give travis some time for ajax requests to complete
 Capybara.default_wait_time = 15
 
-if Rails::VERSION::MAJOR >= 3
-  require 'rake'
-  require 'rails/tasks'
-  Rake::Task["tmp:create"].invoke
-end
-
+require 'rake'
+require 'rails/tasks'
+Rake::Task["tmp:create"].invoke

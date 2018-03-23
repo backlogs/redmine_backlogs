@@ -4,11 +4,7 @@
 # so we duplicate the rb_form_for code here and do not monkeypatch RbFormHelper into ProjectsHelper.
   def rb_pr_form_for(*args, &proc)
     form_string = form_for(*args, &proc)
-    if Rails::VERSION::MAJOR < 3
-      form_string
-    else
-      concat(form_string)
-    end
+    concat(form_string)
   end
   rb_pr_form_for @project,
                    :as => :rb_project_settings,

@@ -5,13 +5,7 @@ namespace :redmine do
   namespace :backlogs do
     desc "Prepare fixtures for testing"
     task :prepare_fixtures => :environment do
-      root = case Rails::VERSION::MAJOR
-        when 2 then RAILS_ROOT.to_s
-        when 3 then Rails.root.to_s
-        when 4 then Rails.root.to_s
-        else nil
-        end
-
+      root = Rails.root.to_s
       issues = File.join(root, 'test/fixtures/issues.yml')
       data = YAML::load(open(issues))
       data.keys.each_with_index{|k, i| data[k]['position'] = i }

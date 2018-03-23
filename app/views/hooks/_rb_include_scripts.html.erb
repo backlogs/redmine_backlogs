@@ -1,17 +1,5 @@
 <!-- rb_include_scripts -->
-<%= stylesheet_link_tag 'jquery/jquery.jqplot.min.css', :plugin => 'redmine_backlogs' %>
-<%= if (! ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 1)) ||
-          (Redmine::VERSION::MAJOR > 2)
-       ) || (controller.is_a? RbApplicationController)
-      # javascript_include_tag 'jquery/jquery-1.7.2-ui-1.8.21-ujs-2.0.3.js', :plugin => 'redmine_backlogs'
-    end
-
-    # redmine uses new jquery, need some compat libs
-    if ((Redmine::VERSION::MAJOR == 2) && (Redmine::VERSION::MINOR >= 5)) ||
-          (Redmine::VERSION::MAJOR > 2)
-      javascript_include_tag('jquery/jquery.jqplot/jquery.browser.js', :plugin => 'redmine_backlogs')
-    end
-%>
+<%= stylesheet_link_tag 'jquery/jquery.jqplot.css', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery-migrate-1.2.1.js', :plugin => 'redmine_backlogs' %>
 <%= javascript_include_tag 'jquery/jquery.verticalfix-min.js', :plugin => 'redmine_backlogs' %>
 <!--[if IE]>
@@ -19,10 +7,10 @@
 <![endif]-->
 <%= javascript_include_tag('jquery/jquery.jqplot/jquery.jqplot.js',
       'jquery/jquery.jqplot/plugins/jqplot.highlighter.js',
-      'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.min.js',
-      'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js',
-      'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.min.js',
-      'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.min.js',
+      'jquery/jquery.jqplot/plugins/jqplot.canvasTextRenderer.js',
+      'jquery/jquery.jqplot/plugins/jqplot.canvasAxisTickRenderer.js',
+      'jquery/jquery.jqplot/plugins/jqplot.enhancedLegendRenderer.js',
+      'jquery/jquery.jqplot/plugins/jqplot.dateAxisRenderer.js',
       'jquery/jquery.cookie.js',
       :plugin => 'redmine_backlogs') %>
 

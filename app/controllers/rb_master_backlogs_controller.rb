@@ -108,12 +108,6 @@ class RbMasterBacklogsController < RbApplicationController
     end
   end
 
-  if Rails::VERSION::MAJOR < 3
-    def view_context
-      @template
-    end
-  end
-
   def closed_sprints
     c_sprints = @project.closed_shared_sprints
     @backlogs = RbStory.backlogs_by_sprint(@project, c_sprints)
