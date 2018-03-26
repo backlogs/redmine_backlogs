@@ -1,8 +1,4 @@
-if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-  require_dependency 'issue_query'
-else
-  require_dependency 'query'
-end
+require_dependency 'issue_query'
 require 'erb'
 
 module Backlogs
@@ -38,11 +34,7 @@ module Backlogs
         if order_options
           if order_options.include?("#{RbRelease.table_name}")
             joins = "" if joins.nil?
-            if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-              joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
-            else
-              joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{Issue.table_name}.release_id"
-            end
+            joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
           end
         end
 
@@ -58,33 +50,33 @@ module Backlogs
         else
           backlogs_filters = {
             # mother of *&@&^*@^*#.... order "20" is a magical constant in RM2.2 which means "I'm a custom field". What. The. Fuck.
-            "backlogs_issue_type" => {  :type => :list,
+            "backlogs_issue_type" => QueryFilter.new("backlogs_issue_type", {  :type => :list,
                                         :name => l(:field_backlogs_issue_type),
                                         :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 21 },
-            "story_points" => { :type => :float,
+                                        :order => 21 }),
+            "story_points" => QueryFilter.new("story_points", { :type => :float,
                                 :name => l(:field_story_points),
-                                :order => 22 }
+                                :order => 22 })
                              }
         end
 
         if project
-          backlogs_filters["release_id"] = {
+          backlogs_filters["release_id"] = QueryFilter.new("release_id", {
             :type => :list_optional,
             :name => l(:field_release),
             :values => RbRelease.where(project_id: project).order('name ASC').collect { |d| [d.name, d.id.to_s]},
             :order => 21
-          }
+          })
         end
         @available_filters = @available_filters.merge(backlogs_filters)
       end
-      
+
       def available_columns_with_backlogs_issue_type
         @available_columns = available_columns_without_backlogs_issue_type
         return @available_columns if !show_backlogs_issue_items?(project) or @backlog_columns_included
-        
+
         @backlog_columns_included = true
-        
+
         @available_columns << QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points")
         @available_columns << QueryColumn.new(:velocity_based_estimate)
         @available_columns << QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position")
@@ -136,7 +128,7 @@ module Backlogs
 
         return sql
       end
-      
+
       private
       def show_backlogs_issue_items?(project)
         !project.nil? and project.module_enabled?('backlogs')
@@ -153,13 +145,9 @@ module Backlogs
       def add_available_column(column)
         self.available_columns << (column)
       end
-      
+
     end
   end
 end
 
-if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-  IssueQuery.send(:include, Backlogs::IssueQueryPatch) unless IssueQuery.included_modules.include? Backlogs::IssueQueryPatch
-else
-  Query.send(:include, Backlogs::IssueQueryPatch) unless Query.included_modules.include? Backlogs::IssueQueryPatch
-end
+IssueQuery.send(:include, Backlogs::IssueQueryPatch) unless IssueQuery.included_modules.include? Backlogs::IssueQueryPatch

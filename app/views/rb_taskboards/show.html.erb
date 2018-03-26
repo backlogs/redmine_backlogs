@@ -2,26 +2,41 @@
 <%# early javascript before common.hs %>
 <%- controller.rb_jquery_plugins = capture do %>
   <%= javascript_include_tag(
-    'jquery/jquery.multiselect.js', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js',
-     :plugin => 'redmine_backlogs')
+    'jquery/jquery.qtip.pack.js',
+    'jquery/jquery.qtip.setup.js',
+
+
+    'jquery/jquery.multiselect.js',
+    :plugin => 'redmine_backlogs')
   %>
 <%- end %>
-<% content_for :head_tags do %>
+<% content_for :header_tags do %>
+  <script type="text/javascript"
+          src="<%= url_for(:controller => 'rb_server_variables',
+                           :action => 'sprint',
+                           :sprint_id => @sprint.id,
+                           :context => 'taskboard',
+                           :format => 'js') %>">
+  </script>
+
   <%= javascript_include_tag(
-    'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment',
+    'show_main',
+    'board_updater',
+    'taskboard_updater',
+    'taskboard',
+    'model',
+    'issue',
+    'task',
+    'impediment',
      :plugin => 'redmine_backlogs')
   %>
+
+
   <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
   <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
   <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
-  <script type="text/javascript"
-          src="<%= url_for(:controller => 'rb_server_variables',
-                           :action => 'sprint', :sprint_id => @sprint.id,
-                           :context => 'taskboard',
-                           :format => 'js') %>">
-  </script>
   <%# Usability: display default cursor if tasks cannot be dragged %>
   <% unless User.current.allowed_to?(:update_tasks, @project) %>
     <style type="text/css">

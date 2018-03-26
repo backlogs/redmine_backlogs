@@ -1,13 +1,8 @@
 require 'redmine'
 
-if Rails::VERSION::MAJOR < 3
-  require 'dispatcher'
-  object_to_prepare = Dispatcher
-else
-  object_to_prepare = Rails.configuration
-  # if redmine plugins were railties:
-  # object_to_prepare = config
-end
+object_to_prepare = Rails.configuration
+# if redmine plugins were railties:
+# object_to_prepare = config
 object_to_prepare.to_prepare do
   require_dependency 'backlogs_redmine3nestedset_mixin'
   require_dependency 'backlogs_activerecord_mixin'
@@ -22,9 +17,7 @@ object_to_prepare.to_prepare do
     Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
-  if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-    require_dependency 'backlogs_time_report_patch'
-  end
+  require_dependency 'backlogs_time_report_patch'
   require_dependency 'backlogs_issue_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
@@ -154,13 +147,13 @@ Redmine::Plugin.register :redmine_backlogs do
   menu :project_menu, :rb_releases, { :controller => :rb_releases, :action => :index }, :caption => :label_release_plural, :after => :rb_taskboards, :param => :project_id, :if => Proc.new { Backlogs.configured? }
 
   menu :top_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics,
-    :if => Proc.new { 
+    :if => Proc.new {
       Backlogs.configured? &&
       User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) &&
       (Backlogs.setting[:scrum_stats_menu_position].nil? || Backlogs.setting[:scrum_stats_menu_position] == 'top')
     }
   menu :application_menu, :rb_statistics, { :controller => :rb_all_projects, :action => :statistics}, :caption => :label_scrum_statistics,
-    :if => Proc.new { 
+    :if => Proc.new {
       Backlogs.configured? &&
       User.current.allowed_to?({:controller => :rb_all_projects, :action => :statistics}, nil, :global => true) &&
       Backlogs.setting[:scrum_stats_menu_position] == 'application'

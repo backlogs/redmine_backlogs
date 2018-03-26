@@ -42,7 +42,7 @@ namespace :redmine do
         end
       end
 
-      if BacklogsPrintableCards::CardPageLayout.selected.blank? && BacklogsPrintableCards::CardPageLayout.available.size > 0 
+      if BacklogsPrintableCards::CardPageLayout.selected.blank? && BacklogsPrintableCards::CardPageLayout.available.size > 0
         Backlogs.setting[:card_spec] = BacklogsPrintableCards::CardPageLayout.available[0]
       end
 
@@ -154,7 +154,7 @@ namespace :redmine do
 
       print "Migrating the database..."
       STDOUT.flush
-      if Backlogs.platform == :redmine && Redmine::VERSION::MAJOR > 1
+      if Backlogs.platform == :redmine
         db_migrate_task = "redmine:plugins:migrate"
       else
         db_migrate_task = "db:migrate:plugins"
