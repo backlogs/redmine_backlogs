@@ -9,17 +9,12 @@
 <meta name="keywords" content="issue,bug,tracker,scrum,agile,plugin" />
 <%= csrf_meta_tag %>
 <%= favicon %>
-<% if Backlogs.setting[:show_redmine_std_header] %>
-<%= stylesheet_link_tag 'application', 'responsive', :media => 'all' %>
+<%= stylesheet_link_tag 'jquery/jquery-ui-1.11.0', 'application', 'responsive', :media => 'all' %>
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
-<%#= javascript_heads %>
-<%= heads_for_theme %>
-<% end %>
-<%= stylesheet_link_tag 'global.css', 'jquery/jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
+<%= stylesheet_link_tag 'global.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
 <%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
-
-<%= javascript_include_tag 'jquery/jquery-1.8.3-ui-1.9.2-ujs-2.0.3.js', :plugin => 'redmine_backlogs' %>
-<%= javascript_include_tag 'application', 'responsive' %>
+<%= javascript_heads %>
+<%= heads_for_theme %>
 
 <%= call_hook :view_layouts_base_html_head %>
 <!-- page specific tags -->
