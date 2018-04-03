@@ -46,10 +46,6 @@
 <% end %>
 
 <% content_for :breadcrumbs do %>
-  <% unless Backlogs.setting[:show_redmine_std_header] %>
-    <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
-    <%= breadcrumb_separator %>
-  <% end %>
   <%= h @sprint.name %>
 <% end %>
 

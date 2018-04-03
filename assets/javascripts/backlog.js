@@ -282,7 +282,7 @@ RB.Backlog = RB.Object.create({
     var story = RB.$('#story_template').children().first().clone();
     if(project_id) {
       RB.$('#project_id_options').empty();
-      RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
+      RB.$('#project_id_options').append('<option value="'+project_id+'" selected="selected">'+project_id+'</option>');
     }
     
     if (RB.constants.new_story_position == 'bottom') {

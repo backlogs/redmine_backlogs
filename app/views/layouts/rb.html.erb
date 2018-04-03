@@ -21,7 +21,6 @@
 
 <%= yield :header_tags -%>
 
-<% if Backlogs.setting[:show_redmine_std_header] %>
 <script type="text/javascript">
 RB.$(function(){
 
@@ -42,9 +41,8 @@ RB.$(function(){
   });
 });
 </script>
-<% end %>
 </head>
-<body class="<%= body_css_classes if Backlogs.setting[:show_redmine_std_header] %>">
+<body class="<%= body_css_classes %>">
 <%= call_hook :view_layouts_base_body_top %>
 <div id="wrapper">
 
@@ -87,7 +85,6 @@ RB.$(function(){
 
 <div id="wrapper2">
 <div id="wrapper3">
-<% if Backlogs.setting[:show_redmine_std_header] %>
 <div id="usability-compat-wrapper">
 <div id="top-menu" title="Doubleclick to collapse">
     <div id="account">
@@ -127,7 +124,6 @@ RB.$(function(){
     <% end %>
 </div>
 </div>
-<% end %>
 
 <div id="main" class="rb-main rb-theme-default <%= sidebar_content? ? '' : 'nosidebar' %>">
     <div id="sidebar">
@@ -139,14 +135,6 @@ RB.$(function(){
         <%= render_flash_messages %>
         <div id="rbcontentwrapper">
             <div id="toolbar" class="rb-toolbar">
-                <% unless Backlogs.setting[:show_redmine_std_header] %>
-                <div class="breadcrumbs">
-                    <%= render_project_jump_box %>
-                    <span class="home"><%= link_to @project.name, :controller => :projects, :action => :show, :id => @project %></span>
-                    <%= breadcrumb_separator %>
-                    <%= yield :breadcrumbs -%>
-                </div>
-                <% end %>
                 <div class="userselect">
                     <%= yield :view_specific_users -%>
                 </div>
