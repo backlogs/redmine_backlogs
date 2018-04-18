@@ -1,6 +1,6 @@
 <!-- story helper tags -->
 <select class="status_id helper" id="status_id_options">
-  <%- IssueStatus.find(:all, :order => "position ASC").each do |status| %>
+  <%- IssueStatus.all.order("position ASC").each do |status| %>
   <option value="<%= status.id %>" class="<%= (status.is_closed? ?  l(:label_closed_issues) + ' ' : "") %>"><%= h status.name %></option>
   <%- end %>
 </select>

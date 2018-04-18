@@ -162,6 +162,9 @@ RB.Backlog = RB.Object.create({
       }
     }
 
+    //Enable new sprints
+    RB.$('#stories-for-').sortable('enable');
+
     //disable release backlogs
     RB.$('#product_backlog_container .release_backlog .stories').sortable('disable');
     if (RB.constants.project_releases[storyProject]) {
@@ -177,6 +180,9 @@ RB.Backlog = RB.Object.create({
 
     //get the ui hint up to the header
     RB.$('.ui-sortable-disabled').parent('.backlog').addClass('rb-sortable-disabled');
+
+	// disable locked sprints
+    RB.$('.stories.locked').sortable('disable');
   },
 
   mouseUp: function(event) {
@@ -276,7 +282,7 @@ RB.Backlog = RB.Object.create({
     var story = RB.$('#story_template').children().first().clone();
     if(project_id) {
       RB.$('#project_id_options').empty();
-      RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
+      RB.$('#project_id_options').append('<option value="'+project_id+'" selected="selected">'+project_id+'</option>');
     }
     
     if (RB.constants.new_story_position == 'bottom') {

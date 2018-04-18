@@ -19,7 +19,7 @@ class RbTaskboardsController < RbApplicationController
       enabled = {}
       statuses.each{|s| enabled[s.id] = false}
       # enable all statuses held by current tasks, regardless of whether the current user has access
-      RbTask.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|task| enabled[task.status_id] = true }
+      RbTask.where(fixed_version_id: @sprint.id).find_each {|task| enabled[task.status_id] = true }
 
       roles = User.current.roles_for_project(@project)
       #@transitions = {}
@@ -41,9 +41,8 @@ class RbTaskboardsController < RbApplicationController
     if @sprint.stories.size == 0
       @last_updated = nil
     else
-      @last_updated = RbTask.find(:first,
-                        :conditions => ['tracker_id = ? and fixed_version_id = ?', RbTask.tracker, @sprint.stories[0].fixed_version_id],
-                        :order      => "updated_on DESC")
+      @last_updated = RbTask.where(tracker_id: RbTask.tracker, fixed_version_id: @sprint.stories[0].fixed_version_id)
+                            .order("updated_on DESC").first
     end
 
     respond_to do |format|

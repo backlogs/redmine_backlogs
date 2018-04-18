@@ -126,8 +126,12 @@ private
         # before previous start date with points from first day in the
         # previous series for now.
       end
-      # Accumulate value for the day to the new stacked total series 
-      tmp_total << arrays[:total_points][i] + last[:total_points][idx]
+      # Accumulate value for the day to the new stacked total series
+      begin
+        tmp_total << arrays[:total_points][i] + last[:total_points][idx]
+      rescue
+        tmp_total = 0
+      end
     }
     # Add the new stacked total series
     @total_data << {:days => arrays[:days], :total_points => tmp_total, :object => object}

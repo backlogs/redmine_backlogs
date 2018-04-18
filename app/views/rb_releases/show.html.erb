@@ -1,7 +1,7 @@
 <%# we use a helper of our controller since we cannot inject content_for blocks into the hook which is rendering our javascript %>
 <%- controller.rb_jquery_plugins = capture do %>
   <%= javascript_include_tag(
-    'jquery/jquery.jqplot/plugins/jqplot.barRenderer.min.js',
+    'jquery/jquery.jqplot/plugins/jqplot.barRenderer.js',
     :plugin => 'redmine_backlogs')
   %>
 <%- end %>

@@ -50,7 +50,7 @@ class ReinstateRemaining < ActiveRecord::Migration
 
       throw :done if trackers.size == 0 || projects.size == 0
 
-      issues = RbTask.find(:all, :conditions => ['project_id in (?) and tracker_id in (?)', projects, trackers]).to_a
+      issues = RbTaskwhere(['project_id in (?) and tracker_id in (?)', projects, trackers]).to_a
       converted = 0
 
       puts "Reverting estimated hours for #{issues.size} issues. This will take a while. Sorry."

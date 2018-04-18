@@ -36,8 +36,9 @@ then
   exit 1;
 fi
 
-export CLUSTER1="features/release-multiview-burnchart.feature features/release-multiview-burnchart-in-progress.feature features/release-multiview-burnchart-scope-change.feature features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature features/release_burndown.feature features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature features/release_burndown_complex.feature"
-export CLUSTER2="features/release-multiview-stacked-data.feature features/release-multiview.feature features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
+export CLUSTER1="features/updater.feature features/list_with_gaps.feature features/burndown.feature features/cecilia_burndown.feature features/common.feature features/duplicate_story.feature features/extended_timelog.feature features/product_owner.feature features/release3.feature  features/routes.feature features/scrum_master.feature features/settings.feature features/sidebar.feature features/team_member.feature features/ui.feature"
+export CLUSTER2="features/shared-versions-burndown.feature features/shared-versions-chief_product_owner2.feature features/shared-versions-chief_product_owner.feature features/shared-versions.feature features/shared-versions-pblpage.feature features/shared-versions-positioning.feature features/shared-versions-scrum_master-dnd.feature features/shared-versions-team_member-dnd.feature"
+export RELEASE1="features/release-multiview-burnchart.feature features/release-multiview-burnchart-in-progress.feature features/release-multiview-burnchart-scope-change.feature features/release-multiview-stacked-data.feature features/release-multiview.feature features/release_burndown.feature features/release_burndown_complex.feature"
 
 export RAILS_ENV=test
 export IN_RBL_TESTENV=true
@@ -48,7 +49,7 @@ case $REDMINE_VER in
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0
+  2.*|3.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0/3.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
@@ -105,7 +106,7 @@ run_tests()
     TRACE=--trace
   fi
   # patch fixtures
-  bundle exec rake redmine:backlogs:prepare_fixtures $TRACE
+  bundle exec rake redmine:backlogs:prepare_fixtures #$TRACE
 
   # run cucumber
   if [ ! -n "${CUCUMBER_TAGS}" ];
@@ -227,9 +228,9 @@ sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GON
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
 
-if [ "$VERBOSE" = "yes" ]; then
-  export TRACE=--trace
-fi
+#if [ "$VERBOSE" = "yes" ]; then
+#  export TRACE=--trace
+#fi
 
 # run redmine database migrations
 if [ "$VERBOSE" = "yes" ]; then echo 'Migrations'; fi

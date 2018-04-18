@@ -106,7 +106,7 @@ Feature: Scrum Master
     Given I am viewing the master backlog
       And I want to edit the sprint named Sprint 001
       And I want to set the name of the sprint to an empty string
-     When I update the sprint
+     When I try to update the sprint
      Then the server should return an update error
 
   Scenario: Move a story from product backlog to sprint backlog
@@ -196,7 +196,7 @@ Feature: Scrum Master
       And I want to edit the sprint named Sprint 001
       And I want to set the sprint_start_date of the sprint to 2012-03-01
       And I want to set the effective_date of the sprint to 2012-02-20
-     When I update the sprint
+     When I try to update the sprint
      Then the server should return an update error
       And the error message should say "Sprint cannot end before it starts"
 

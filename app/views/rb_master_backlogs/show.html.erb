@@ -7,9 +7,10 @@
     'jquery/jquery.liveFilter.js',
     'jquery/jquery.liveFilter.setup.js',
     'jquery/jquery.multiselect.js',
-    :plugin => 'redmine_backlogs') %>
+    :plugin => 'redmine_backlogs')
+  %>
 <%- end %>
-<%- content_for :head_tags do %>
+<%- content_for :header_tags do %>
   <script type="text/javascript"
           src="<%= url_for(:controller => 'rb_server_variables',
                            :action => 'project',

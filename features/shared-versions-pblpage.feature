@@ -124,7 +124,7 @@ Feature: Shared versions
 #     Then the 5th story in the product backlog should be Story 5
 
   @javascript @optional
-  Scenario: View the subjproject backlog page in the middle
+  Scenario: View the subproject backlog page in the middle
     Given I have selected the p1s1 project
       And I am viewing the master backlog
      Then I should see the product backlog
@@ -227,7 +227,7 @@ Feature: Shared versions
 #      And the 2nd story in the product backlog should be Story f
 
   @optional
-  Scenario: View the subjproject backlog page at a leaf project
+  Scenario: View the subproject backlog page at a leaf project
     Given I have selected the p1s1s1 project
       And I am viewing the master backlog
      Then I should see the product backlog
@@ -247,7 +247,7 @@ Feature: Shared versions
       And I should not see the backlog of Sprint Sp013
 
   @optional
-  Scenario: View the subjproject backlog page at a middle leaf project
+  Scenario: View the subproject backlog page at a middle leaf project
     Given I have selected the p1s2 project
       And I am viewing the master backlog
      Then I should see the product backlog
@@ -267,7 +267,7 @@ Feature: Shared versions
       And I should not see the backlog of Sprint Sp013
 
   @optional
-  Scenario: View the subjproject backlog page of a separate project
+  Scenario: View the subproject backlog page of a separate project
     Given I have selected the p2 project
       And I am viewing the master backlog
      Then I should see the product backlog

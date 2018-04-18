@@ -34,7 +34,7 @@ module Backlogs
         case attr
           when :task_color
             if value == '' # assign default
-              colors = UserPreference.find(:all).collect{|p| p[prefixed].to_s.upcase}.select{|p| p != ''}
+              colors = UserPreference.all.collect{|p| p[prefixed].to_s.upcase}.select{|p| p != ''}
               min = 0x999999
               50.times do
                 candidate = "##{(min + rand(0xFFFFFF-min)).to_s(16).upcase}"

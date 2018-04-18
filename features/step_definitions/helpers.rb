@@ -139,7 +139,7 @@ def story_after(rank, project, sprint=nil)
 
   rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
 
-  nxt = RbStory.find_by_rank(rank, RbStory.find_options(:project => project, :sprint => sprint))
+  nxt = RbStory.backlog_scope(:project => project, :sprint => sprint).find_by_rank(rank)
   return nil if nxt.nil?
 
   return nxt.id
@@ -175,7 +175,7 @@ def initialize_task_params(story_id)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
   params['parent_issue_id'] = story_id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.class_default_status.id
   params
 end
 
@@ -190,7 +190,7 @@ def initialize_impediment_params(attributes)
   params = HashWithIndifferentAccess.new(RbTask.new.attributes).merge(attributes)
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['status_id'] = IssueStatus.default.id
+  params['status_id'] = RbTask.class_default_status.id
   params
 end
 
@@ -201,11 +201,14 @@ def initialize_sprint_params
 end
 
 def login_as(user, password)
+  logout
   visit url_for(:controller => 'account', :action=>'login', :only_path=>true)
   fill_in 'username', :with => user
   fill_in 'password', :with => password
   page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='"+user+"'")
+  @user = User.find_by(:login => user)
+  User.current = @user
+  @sessiondriver = Capybara.current_session.driver
 end
 
 def login_as_product_owner
@@ -228,7 +231,7 @@ def login_as_admin
 end
 
 def setup_permissions(typ)
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find_by(:name =>'Manager')
   if typ == 'scrum master'
     role.permissions << :view_master_backlog
     role.permissions << :view_releases
@@ -276,7 +279,7 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => current_sprint))
+  s2 = RbStory.backlog_scope(:project => @project, :sprint => current_sprint).find_by_rank(p1)
   s2.should_not be_nil
   s2.id.should == story.id
 
@@ -284,8 +287,16 @@ def story_position(story)
 end
 
 def logout
-  visit url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  path = url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  if @sessiondriver
+      @sessiondriver.submit :post, path, @task_params
+  elsif page.driver.respond_to?(:post)
+    page.driver.post(path, {})
+  else
+    post path
+  end
   @user = nil
+  User.current = nil
 end
 
 def show_table(title, header, data)

@@ -12,7 +12,7 @@ module Backlogs
 
     module InstanceMethods
       def backlog?
-        return (issue_statuses.collect{|s| s.backlog}.compact.uniq.size == 4)
+        return (issue_statuses.collect{|s| s.backlog(self)}.compact.uniq.size == 4)
       end
 
       def status_for_done_ratio(r)

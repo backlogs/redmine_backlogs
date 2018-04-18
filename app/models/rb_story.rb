@@ -32,7 +32,7 @@ class RbStory < Issue
         and fixed_version_id IN (?)", self.trackers, sprint_ids]
     else
       ["
-        project_id = ?
+        issues.project_id = ?
         and tracker_id in (?)
         and fixed_version_id IN (?)", project_id, self.trackers, sprint_ids]
     end
@@ -40,7 +40,7 @@ class RbStory < Issue
 
   def self.__find_options_release_condition(project_id, release_ids)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
       and fixed_version_id is NULL
       and release_id in (?)", self.trackers, release_ids]
@@ -48,7 +48,7 @@ class RbStory < Issue
 
   def self.__find_options_pbl_condition(project_id)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
       and release_id is NULL
       and fixed_version_id is NULL
@@ -56,6 +56,15 @@ class RbStory < Issue
   end
 
   public
+
+  def self.class_default_status
+    begin
+      RbStory.trackers(:trackers)[0].default_status
+    rescue
+      Rails.logger.error("Story has no trackers configured")
+      nil
+    end
+  end
 
   def self.find_options(options)
     options = options.dup
@@ -75,26 +84,36 @@ class RbStory < Issue
     sprint_ids = self.__find_options_normalize_option(options.delete(:sprint))
     release_ids = self.__find_options_normalize_option(options.delete(:release))
 
+    options[:joins] ||= []
+    options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
+    options[:joins] << :project
     if sprint_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_sprint_condition(project_id, sprint_ids))
+      options[:joins] << :fixed_version
     elsif release_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_release_condition(project_id, release_ids))
+      options[:joins] << :release
     else #product backlog
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_pbl_condition(project_id))
-      options[:joins] ||= []
-      options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
       options[:joins] << :project
     end
-
-    options
+    #options
+    joins(options[:joins]).includes(options[:joins]).where(options[:conditions])
   end
 
-  scope :backlog_scope, lambda{|opts| RbStory.find_options(opts) }
+  scope :backlog_scope, lambda{|opts={}| self.find_options(opts) }
+
+  def list_with_gaps_options
+    {
+      :project => self.project_id,
+      :sprint => self.fixed_version_id,
+      :release => self.release_id
+    }
+  end
 
   def self.inject_lower_higher
     prev = nil
-    i = 1
     all.map {|story|
       #optimization: set virtual attributes to avoid hundreds of sql queries
       # this requires that the scope is clean - meaning exactly ONE backlog is queried here.
@@ -105,7 +124,8 @@ class RbStory < Issue
   end
 
   def self.backlog(project_id, sprint_id, release_id, options={})
-    self.visible.order("#{self.table_name}.position").
+    self.visible.
+      order("#{self.table_name}.position").
       backlog_scope(
         options.merge({
           :project => project_id,
@@ -153,6 +173,8 @@ class RbStory < Issue
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+
+    attribs[:status] = RbStory.class_default_status
     attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
@@ -168,7 +190,7 @@ class RbStory < Issue
 
   def self.find_all_updated_since(since, project_id)
     #look in backlog, sprint and releases. look in shared sprints and shared releases
-    project = Project.select("id,lft,rgt").find_by_id(project_id)
+    project = Project.select("id,lft,rgt,parent_id,name").find(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
     releases = project.open_releases_by_date.map{|s|s.id}
     #following will execute 3 queries and join it as array
@@ -191,7 +213,7 @@ class RbStory < Issue
       trackers = [] if trackers.blank?
     end
 
-    trackers = Tracker.find_all_by_id(trackers)
+    trackers = Tracker.where(:id => trackers).all
     trackers = trackers & options[:project].trackers if options[:project]
     trackers = trackers.sort_by { |t| [t.position] }
 
@@ -201,6 +223,12 @@ class RbStory < Issue
         when :string      then return trackers.collect{|t| t.id.to_s}.join(',')
         else                   raise "Unexpected return type #{options[:type].inspect}"
     end
+  end
+
+  def self.trackers_include?(tracker_id)
+    tracker_ids = Backlogs.setting[:story_trackers] || []
+    tracker_ids = tracker_ids.map(&:to_i)
+    tracker_ids.include?(tracker_id.to_i)
   end
 
   def self.has_settings_table
@@ -356,7 +384,7 @@ class RbStory < Issue
     self.relations.each{|r|
       if r.relation_type == IssueRelation::TYPE_COPIED_TO
         from_story = RbStory.find(r.issue_from_id)
-        if from_story.status.backlog_is?(:failure)
+        if from_story.status.backlog_is?(:failure, RbStory.trackers(:trackers)[0])
 #FIXME check from_story is in the same release as this story at the
 # point in time being examined.
           return true
@@ -384,15 +412,6 @@ class RbStory < Issue
       end
     }
     return bd
-  end
-
-  def list_with_gaps_scope_condition(options={})
-    return options if self.new_record?
-    self.class.find_options(options.dup.merge({
-      :project => self.project_id,
-      :sprint => self.fixed_version_id,
-      :release => self.release_id
-    }))
   end
 
   def story_follow_task_state
@@ -432,6 +451,17 @@ class RbStory < Issue
           }
           self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
         end
+  end
+
+  def descendants(*args)
+    descendants = super
+    descendants.each do |issue|
+      next unless issue.is_task?
+      if self.id == (issue.parent_id || issue.parent_issue_id)
+        issue.instance_variable_set(:@rb_story, self)
+      end
+    end
+    descendants
   end
 
 private

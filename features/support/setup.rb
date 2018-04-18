@@ -4,18 +4,30 @@ require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 require 'cucumber/rails/world'
 Cucumber::Rails::World.use_transactional_fixtures = true
 
-if Rails::VERSION::MAJOR >= 3
-  require 'rspec/rails/matchers'
-  World(RSpec::Rails::Matchers::RoutingMatchers)
+require 'minitest/spec'
+
+require 'minitest/unit'
+require 'minitest/spec'
+
+
+require 'minitest'
+module MiniTestAssertions
+  def self.extended(base)
+    base.extend(MiniTest::Assertions)
+    base.assertions = 0
+  end
+
+  attr_accessor :assertions
 end
+World(MiniTestAssertions)
+
+require 'rspec/rails/matchers'
+World(RSpec::Rails::Matchers::RoutingMatchers)
+
 
 #Seed the DB
 def seed_the_database
-  if Rails::VERSION::MAJOR < 3
-    fixtures = Fixtures
-  else
-    fixtures = ActiveRecord::Fixtures
-  end
+  fixtures = ActiveRecord::FixtureSet
   seed_the_database_with(fixtures)
 end
 
@@ -48,9 +60,6 @@ end
 #give travis some time for ajax requests to complete
 Capybara.default_wait_time = 15
 
-if Rails::VERSION::MAJOR >= 3
-  require 'rake'
-  require 'rails/tasks'
-  Rake::Task["tmp:create"].invoke
-end
-
+require 'rake'
+require 'rails/tasks'
+Rake::Task["tmp:create"].invoke

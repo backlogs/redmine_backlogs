@@ -1,5 +1,5 @@
 Then /^show me the releases$/ do
-  RbRelease.find(:all).each{|release|
+  RbRelease.all.each{|release|
     puts "Release: #{release}"
   }
 end
@@ -64,7 +64,7 @@ Then /^story (.+) should belong to release (.+)$/ do |story_name, release_name|
   release.should_not be_nil
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  release.issues.exists?(story).should be_true
+  release.issues.exists?(story.id).should be true
 end
 
 Then /^story (.+) should not belong to any release$/ do |story_name|
@@ -94,7 +94,7 @@ end
 Then /^The release "([^"]*)" should be closed$/ do |release|
   release = RbRelease.find_by_name(release)
   release.status.should == 'closed'
-  release.closed?.should be_true
+  release.closed?.should be true
 end
 
 Given /^I have made the following story mutations:$/ do |table|
@@ -113,13 +113,13 @@ Given /^I have made the following story mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatus.find(:first, :conditions => ['name = ?', status_name])
+      status = IssueStatus.find_by_name(status_name)
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
 
     story.status_id = status if status
-    story.save!.should be_true
+    story.save!.should be true
 
     mutation.should == {}
   end
@@ -128,9 +128,9 @@ end
 Given /^I accept story ([^"]*)$/ do |story_name|
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  status = IssueStatus.find(:first, :conditions => ['name = ?', "Accepted"])
+  status = IssueStatus.find_by_name("Accepted")
   story.status_id = status.id
-  story.save!.should be_true
+  story.save!.should be true
 end
 
 
@@ -215,7 +215,7 @@ Then /^(.*?) has trend (scope|closed) based on dates "(.*?)"$/ do |release_name,
   lr = burndown.send(burndown_line) # fetch linear regression object
   array_dates = list_dates.split(",").collect{|d| Date.parse d }
   puts "days: #{array_dates}"
-  (((array_dates | lr.days) - (array_dates & lr.days)).empty?).should be_true
+  (((array_dates | lr.days) - (array_dates & lr.days)).empty?).should be true
 end
 
 Then /^(.*?) has trend (scope|closed) with slope of (.*?) points per day intercepting at (.*?) points$/ do |release_name,line_name, slope, intercept|
@@ -227,8 +227,8 @@ Then /^(.*?) has trend (scope|closed) with slope of (.*?) points per day interce
   lr = burndown.send(burndown_line) # fetch linear regression object
   puts "slope: #{lr.slope}"
   puts "intercept: #{lr.intercept}"
-  ((expected_slope - lr.slope).abs <= 0.01).should be_true
-  ((expected_intercept - lr.intercept).abs <= 0.01).should be_true
+  ((expected_slope - lr.slope).abs <= 0.01).should be true
+  ((expected_intercept - lr.intercept).abs <= 0.01).should be true
 end
 
 
@@ -243,7 +243,7 @@ Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story
       found_change = true if jd.value.to_i == release.id
     }
   }
-  found_change.should be_true
+  found_change.should be true
 
   # Verify Backlogs issue history
   h = story.history.filter_release([RbIssueHistory.burndown_timezone.now.to_date])
@@ -261,8 +261,8 @@ end
 
 Given(/^I want to bulk edit "(.*?)" and "(.*?)"$/) do |arg1, arg2|
   @bulk_issues = []
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg1])
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg2])
+  @bulk_issues << RbStory.where(subject: arg1).first
+  @bulk_issues << RbStory.where(subject: arg2).first
   visit url_for(:controller => :issues,
                 :action => :bulk_edit,
                 :ids => @bulk_issues.map(&:id)

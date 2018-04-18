@@ -5,6 +5,7 @@ module RbCommonHelper
   unloadable
 
   include CustomFieldsHelper
+  include RbPartialsHelper
 
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
@@ -98,11 +99,21 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def status_id_or_default(story)
-    story.new_record? ? IssueStatus.default.id : story.status.id
+    #story.new_record? ? IssueStatus.default.id : story.status.id
+    if story.new_record?
+      story.default_status ? story.default_status.id : 0
+    else
+      story.status ? story.status.id : 0
+    end
   end
 
   def status_label_or_default(story)
-    story.new_record? ? IssueStatus.default.name : story.status.name
+    #story.new_record? ? IssueStatus.default.name : story.status.name
+    if story.new_record?
+      story.default_status ? story.default_status.name : ""
+    else
+      story.status ? story.status.name : ""
+    end
   end
 
   def sprint_html_id_or_empty(sprint)
@@ -204,10 +215,11 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def self.find_backlogs_enabled_active_projects
-    projects = EnabledModule.find(:all,
-                             :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
-                             :include => :project,
-                             :joins => :project).collect { |mod| mod.project}
+    #projects =
+    EnabledModule.where(name: 'backlogs')
+                  .includes(:project)
+                  .joins(:project).where(projects: {status: Project::STATUS_ACTIVE})
+                  .collect { |mod| mod.project}
   end
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
@@ -246,13 +258,14 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def release_options_for_select(releases, selected=nil)
+    releases = releases.all.to_a unless releases.is_a? Array
     grouped = Hash.new {|h,k| h[k] = []}
     selected = [selected].compact unless selected.kind_of?(Array)
     releases.each do |release|
       grouped[release.project.name] << [release.name, release.id]
     end
     # Add in the selected
-    (selected - releases).each{|s| grouped[s.project.name] << [s.name, s.id] }
+    (selected.to_a - releases.to_a).each{|s| grouped[s.project.name] << [s.name, s.id] }
 
     if grouped.keys.size > 1
       grouped_options_for_select(grouped, selected.collect{|s| s.id})
@@ -264,7 +277,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   # Convert selected ids to integer and remove blank values.
   def selected_ids(options)
     return nil if options.nil?
-    options.collect{|o| o.to_i unless o.blank?}.compact! 
+    options.collect{|o| o.to_i unless o.blank?}.compact!
   end
 
   def format_release_sharing(v)
@@ -273,10 +286,6 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
 
   #fixup rails base uri which is not obeyed IF url_for is used in a redmine layout hook
   def url_for_prefix_in_hooks
-    if Rails::VERSION::MAJOR < 3
-      '' #actionpack-2.3.14/lib/action_controller/url_rewriter.rb is injecting relative_url_root
-    else
-      Redmine::Utils.relative_url_root #actionpack-3* is not???
-    end
+     ''
   end
 end

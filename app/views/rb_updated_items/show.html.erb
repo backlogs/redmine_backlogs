@@ -1,4 +1,5 @@
 <div id="updates">
+  <div id="sprintestimatedhours"><%= @sprint_estimated_hours %></div>
   <div id="last_updated"><%= date_string_with_milliseconds(@last_update, 0.001) %></div>
   <div id="stories">
     <%= render :partial => "rb_stories/story", :collection => @items[:stories],

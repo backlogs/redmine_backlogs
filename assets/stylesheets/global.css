@@ -31,6 +31,7 @@ a:hover{
   width:100%;
   box-shadow: 0 3px 4px #A0A0A0;
   z-index:1000;
+  border-radius: 10px;
 }
 #toolbar .breadcrumbs{
   float: left;
@@ -53,8 +54,9 @@ a:hover{
 #toolbar .links{
   bottom:5px;
   display:block;
-  right:10px;
-  position:absolute;
+  float: right;
+  margin-top: 1px;
+  margin-right: 10px;
 }
 #toolbar .links a{
   cursor:pointer;
@@ -68,7 +70,7 @@ body.loading #refresh{
 }
 /* MAIN */
 #main{
-  display:block;
+ /* display:block;
   height:100%;
   width:100%;
   margin: 0; /*yes, we do!*/
@@ -85,7 +87,7 @@ body.loading #refresh{
 #helpers{
   display:none;
 }
-/* 
+/*
   .editor is the classname for field editors of sprint,
   story, task, impediment. These field editors get created
   at runtime whenever any of the above models are edited.
@@ -119,5 +121,8 @@ ul.ui-sortable {
 }
 
 /* redmine header in backlogs page */
-#usability-compat-wrapper {font-size:12px; }
 .w-rb-header-collapsed { height:18px; overflow:hidden; }
+
+#project_quick_jump_box{
+  max-width: 300px;
+}

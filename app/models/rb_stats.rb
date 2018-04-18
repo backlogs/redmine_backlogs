@@ -13,6 +13,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class RbStats < ActiveRecord::Base
+  attr_protected :created_at # hack, all attributes will be mass asigment
   REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
   JOURNALED_PROPERTIES = {
     'estimated_hours'   => :float,
@@ -55,7 +56,7 @@ class RbStats < ActiveRecord::Base
         status = nil
       end
       changes = [ { :property => 'status_open',              :value => status && !status.is_closed },
-                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success) } ]
+                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) } ]
     else
       changes = [ { :property => journal_property_key(prop), :value => journal_property_value(prop, j) } ]
     end
@@ -90,10 +91,11 @@ class RbStats < ActiveRecord::Base
 
     case Backlogs.platform
       when :redmine
-        JournalDetail.find(:all, :order => "journals.created_on asc" , :joins => :journal,
-                                           :conditions => ["property = 'attr' and prop_key in (?)
+        JournalDetail.where(["property = 'attr' and prop_key in (?)
                                                 and journalized_type = 'Issue' and journalized_id = ?",
-                                                RbJournal::REDMINE_PROPERTIES, issue.id]).each {|detail|
+                                                RbJournal::REDMINE_PROPERTIES, issue.id])
+                .order("journals.created_on asc")
+                .joins(:journal).find_each {|detail|
           changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
         }
 
@@ -138,7 +140,7 @@ class RbStats < ActiveRecord::Base
     changes['status_id'].each{|change|
       status = issue_status[change[:new]]
       changes['status_open'] << change.merge(:new => status && !status.is_closed?)
-      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success))
+      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success, RbStory.trackers(:trackers)[0]))
     }
     changes.delete('status_id')
 

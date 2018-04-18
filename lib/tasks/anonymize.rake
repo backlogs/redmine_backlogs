@@ -100,7 +100,7 @@ namespace :redmine do
                       :hashed_password => '5f2570b6183a74c5709a751ad344a909436f16f5', :salt => 'e358ba6a9fd7e24796b149315e8554a4',
                       :identity_url => nil)
 
-      puts "Your anonymized admins are #{User.find(:all, :conditions => ['admin = ?', true]).collect{|u| u.login}.inspect} with password 'insecure'"
+      puts "Your anonymized admins are #{User.where(['admin = ?', true]).collect{|u| u.login}.inspect} with password 'insecure'"
     end
   end
 end

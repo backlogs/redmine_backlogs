@@ -90,7 +90,7 @@
     </thead>
     <tbody>
       <% Tracker.all.each do |tracker| %>
-        <% states = tracker.issue_statuses.group_by {|status| status.backlog} %>
+        <% states = tracker.issue_statuses.group_by {|status| status.backlog(tracker)} %>
         <tr>
           <td class="<%= RbStory.trackers.include?(tracker.id) ? 'selected' : 'not-selected' %> <%= tracker.backlog? ? 'fit' : 'unfit' %>"><%= h tracker.name %></span></td>
           <td><%= h((states[:new] || []).join(', ')) %></td>
@@ -116,12 +116,6 @@
 <p>
   <%= content_tag(:label, l(:rb_timelog_from_taskboard)) %>
 	<%= check_box_tag("settings[timelog_from_taskboard]",'enabled',Backlogs.setting[:timelog_from_taskboard]) %>
-</p>
-
-<p>
-  <%= content_tag(:label, l(:backlogs_show_redmine_std_header)) %>
-  <%= check_box_tag("settings[show_redmine_std_header]", 'enabled',
-      Backlogs.setting[:show_redmine_std_header]) %><span><%= l(:backlogs_not_all_themes_are_supported) %></span>
 </p>
 
 <p>
