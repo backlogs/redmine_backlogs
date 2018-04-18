@@ -14,7 +14,7 @@ gem 'json'
 
 group :test do
   gem 'chronic'
-  gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
+  gem 'ZenTest', ">4.6.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
   #gem 'cucumber-rails', '~>1.4.0', require: false
   gem 'cucumber-rails', require: false
