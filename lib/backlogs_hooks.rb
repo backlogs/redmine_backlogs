@@ -47,7 +47,7 @@ module BacklogsPlugin
               end
 
             when 'issues#index'
-              q = context[:request].session[:query]
+              q = context[:request].session[:issue_query]
               sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
               if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
                 sprint_id = sprint[:values][0]
