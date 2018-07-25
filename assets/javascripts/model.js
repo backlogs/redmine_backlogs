@@ -126,6 +126,9 @@ RB.Model = RB.Object.create({
       }
 
       input.val(value);
+      if (fieldType == 'select' && input[0].selectedIndex == -1) {
+          input[0].selectedIndex = 0;
+      }
       
       // Record in the model's root element which input field had the last focus. We will
       // use this information inside RB.Model.refresh() to determine where to return the
