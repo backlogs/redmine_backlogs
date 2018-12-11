@@ -119,6 +119,7 @@ en-GB:
   label_close_completed_sprints: "Close completed Sprints"
   label_closed_releases: "Closed releases"
   label_column_width: "Column width"
+  label_hide_done: "Hide 'Done' Tasks"
   label_download_sprint: Download
   label_filter_tasks: "Filter by user"
   label_filter_tasks_my_tasks: "Filter by user - my tasks"
