@@ -162,6 +162,9 @@
   <%= radio_button_tag("settings[story_follow_task_status]", 'close',
       Backlogs.setting[:story_follow_task_status] == 'close' ) %><%= l(:backlogs_story_follow_task_status_close) %>
   <br />
+  <%= radio_button_tag("settings[story_follow_task_status]", 'inprogress',
+      Backlogs.setting[:story_follow_task_status] == 'inprogress' ) %><%= "Resolved when all Tasks are closed.\n In Progress when even one Task is not new." %>
+  <br />
   <%= radio_button_tag("settings[story_follow_task_status]", 'loose',
       Backlogs.setting[:story_follow_task_status] == 'loose' ) %><%= l(:backlogs_story_follow_task_status_loose) %>
   <span id="settings_story_follow_task_status_explanation" style="display:block;margin-left:12px"><%= l(:backlogs_story_follows_task_loose_explanation) %></span>
