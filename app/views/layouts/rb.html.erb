@@ -13,11 +13,14 @@
 <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
 <% end %>
 
-<%= call_hook :view_layouts_base_html_head %>
-
 <%= stylesheet_link_tag 'global.css', 'jquery/jquery-ui.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
 <%= stylesheet_link_tag 'global_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
 
+<%= javascript_heads %>
+<%= heads_for_theme %>
+<%= call_hook :view_layouts_base_html_head %>
+<!-- page specific tags -->
+<%= yield :header_tags -%>
 <%= yield :head_tags -%>
 
 <% if Backlogs.setting[:show_redmine_std_header] %>
@@ -42,6 +45,7 @@ RB.$(function(){
 });
 </script>
 <% end %>
+
 </head>
 <body class="<%=h body_css_classes if Backlogs.setting[:show_redmine_std_header] %>">
 <div id="wrapper">
@@ -122,5 +126,6 @@ RB.$(function(){
 </div>
 </div>
 </div>
+<%= call_hook :view_layouts_base_body_bottom %>
 </body>
 </html>
