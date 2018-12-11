@@ -27,7 +27,7 @@ namespace :redmine do
       puts "Installing to the #{ENV['RAILS_ENV']} environment."
 
       if ! ['no', 'false'].include?("#{ENV['labels']}".downcase)
-        print "Fetching card labels from http://git.gnome.org..."
+        print "Fetching card labels from https://git.gnome.org..."
         STDOUT.flush
         begin
           BacklogsPrintableCards::CardPageLayout.update
