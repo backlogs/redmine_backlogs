@@ -41,11 +41,11 @@ module Backlogs
       end
 
       def is_story?
-        return RbStory.trackers.include?(tracker_id)
+        RbStory.trackers_include?(tracker_id)
       end
 
       def is_task?
-        return (tracker_id == RbTask.tracker)
+        RbTask.tracker?(tracker_id)
       end
       
       def backlogs_issue_type
