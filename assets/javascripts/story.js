@@ -87,8 +87,13 @@ RB.Story = RB.Object.create(RB.Issue, RB.EditableInplace, {
     return ( isNaN(points) ? 0 : points );
   },
 
+  getHours: function(){
+    hours = parseFloat( this.$.find('.estimated_hours').first().text() );
+    return ( isNaN(hours) ? 0 : hours )
+  },
+
   getTracker: function(){
-	return this.$.find('.tracker_id .t').text();
+    return this.$.find('.tracker_id .t').text();
   },
 
   getType: function(){
