@@ -241,6 +241,7 @@ def setup_permissions(typ)
     role.permissions << :view_wiki_pages        # NOTE: This is a Redmine core permission
     role.permissions << :edit_wiki_pages        # NOTE: This is a Redmine core permission
     role.permissions << :create_sprints
+    role.permissions << :create_many_sprints
   elsif typ == 'team member'
     role.permissions << :view_master_backlog
     role.permissions << :view_releases
@@ -255,6 +256,7 @@ def setup_permissions(typ)
     role.permissions << :modify_releases
     role.permissions << :view_scrum_statistics
     role.permissions << :configure_backlogs
+    role.permissions << :create_many_sprints
   end
   role.save!
   

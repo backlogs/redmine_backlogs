@@ -122,6 +122,7 @@ Redmine::Plugin.register :redmine_backlogs do
     # Sprint permissions
     # :show_sprints and :list_sprints are implicit in :view_master_backlog permission
     permission :create_sprints,      { :rb_sprints => [:new, :create]  }
+    permission :create_many_sprints, { :rb_teams => [:create]          }
     permission :update_sprints,      {
                                         :rb_sprints => [:edit, :update, :close],
                                         :rb_wikis   => [:edit, :update]
