@@ -31,7 +31,7 @@ class RbIssueHistory < ActiveRecord::Base
     Hash.new{|h, k|
       s = IssueStatus.where(:id => k.to_i).take
       if s.nil?
-        s = IssueStatus.first.id
+        s = IssueStatus.first
         puts "IssueStatus #{k.inspect} not found, using default #{s.id} instead"
       end
       h[k] = {:id => s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
