@@ -1,8 +1,4 @@
-if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-  require_dependency 'issue_query'
-else
-  require_dependency 'query'
-end
+require_dependency 'issue_query'
 require 'erb'
 
 module Backlogs
@@ -38,11 +34,7 @@ module Backlogs
         if order_options
           if order_options.include?("#{RbRelease.table_name}")
             joins = "" if joins.nil?
-            if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-              joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
-            else
-              joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{Issue.table_name}.release_id"
-            end
+            joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
           end
         end
 
@@ -136,7 +128,7 @@ module Backlogs
 
         return sql
       end
-      
+
       private
       def show_backlogs_issue_items?(project)
         !project.nil? and project.module_enabled?('backlogs')
@@ -153,13 +145,9 @@ module Backlogs
       def add_available_column(column)
         self.available_columns << (column)
       end
-      
+
     end
   end
 end
 
-if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-  IssueQuery.send(:include, Backlogs::IssueQueryPatch) unless IssueQuery.included_modules.include? Backlogs::IssueQueryPatch
-else
-  Query.send(:include, Backlogs::IssueQueryPatch) unless Query.included_modules.include? Backlogs::IssueQueryPatch
-end
+IssueQuery.send(:include, Backlogs::IssueQueryPatch) unless IssueQuery.included_modules.include? Backlogs::IssueQueryPatch

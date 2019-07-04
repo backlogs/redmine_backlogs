@@ -16,7 +16,7 @@ module Backlogs
           Rails.logger.warn("IssueStatus.backlog called without parameter")
           begin 5 / 0; rescue => e; Rails.logger.warn e; Rails.logger.warn e.backtrace.join("\n"); end
         end
-        if Redmine::VERSION::MAJOR >= 3 && tracker
+        if tracker
           is_default = tracker.default_status_id == id
         else
           is_default = is_default?
