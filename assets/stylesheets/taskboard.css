@@ -264,6 +264,10 @@ See RB.Taskboard.initialize()
   right:-5px;
 }
 
+.issue .priority_id.low {
+  background-color: rgba(0, 0, 238, 0.5);
+}
+
 .issue .priority_id .v{
   display:none;
 }

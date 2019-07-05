@@ -214,6 +214,8 @@ RB.UserFilter = RB.Object.create({
       _ = RB.constants.locale._;
     me.el = RB.$(".userfilter");
     me.el.multiselect({
+      height: 360,
+      minWidth: 200,
       selectedText: _("Filter tasks"),
       noneSelectedText: _("Filter tasks: my tasks"),
       checkAllText: _("All tasks"),
@@ -228,6 +230,7 @@ RB.UserFilter = RB.Object.create({
   /* uncheck all users but check the current user, so we get a private mode button */
   onUnCheckAll: function() {
     var uid = RB.$("#userid").text();
+    this.el.multiselect("widget").find(":checkbox[value^='p']").each(function() {this.checked = true;} );
     this.el.multiselect("widget").find(":checkbox[value='"+uid+"']").each(function() {this.checked = true;} );
     this.updateUI();
   },
@@ -240,13 +243,24 @@ RB.UserFilter = RB.Object.create({
   updateTasks: function() {
     var me = this;
     RB.$(".task").each(function() {
-      var task_ownerid = null;
+      var task_priority_id = null;
+      var task_owner_id = null;
+      var visible = false;
+
       try{
-        task_ownerid = RB.$(".assigned_to_id .v", this).text();
-      } catch(e){ return; }
-      if (!task_ownerid || me.el.multiselect("widget").find(":checkbox[value='"+task_ownerid+"']").is(':checked')) {
+        task_priority_id = RB.$(".priority_id .v", this).text();
+        task_owner_id = RB.$(".assigned_to_id .v", this).text();
+      } catch(e){ console.log(e); return; }
+
+      if (me.el.multiselect("widget").find(":checkbox[value='p"+task_priority_id+"']").is(':checked')) {
+        if (!task_owner_id || me.el.multiselect("widget").find(":checkbox[value='"+task_owner_id+"']").is(':checked')) {
+          visible = true;
+        }
+      }
+
+      if (visible) {
         RB.$(this).show();
-      }else {
+      } else {
         RB.$(this).hide();
       }
     });

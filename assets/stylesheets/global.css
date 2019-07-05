@@ -23,6 +23,7 @@ a:hover{
 }
 /* TOOLBAR */
 #toolbar{
+  padding: 2px;
   background-color:#CCCCCC;
   display:block;
   height:30px;
@@ -49,6 +50,10 @@ a:hover{
 #toolbar .userselect{
   float: left;
   position:relative;
+  padding: 4px;
+}
+#toolbar .userselect ul{
+  padding-inline-start: 4px;
 }
 #toolbar .links{
   bottom:5px;
