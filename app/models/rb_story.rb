@@ -26,7 +26,7 @@ class RbStory < Issue
   end
 
   def self.__find_options_sprint_condition(project_id, sprint_ids)
-    if Backlogs.settings[:sharing_enabled]
+    if Backlogs.setting[:sharing_enabled]
       ["
         tracker_id in (?)
         and fixed_version_id IN (?)", self.trackers, sprint_ids]

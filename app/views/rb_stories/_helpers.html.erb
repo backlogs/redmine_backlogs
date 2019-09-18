@@ -15,7 +15,7 @@
 
 <select class="tracker_id helper" id="tracker_id_options">
   <%- RbStory.trackers(:project => @project, :type => :trackers).each do |tracker| %>
-	  <%- if (Backlogs.settings[:default_story_tracker] && tracker.id.to_s==Backlogs.settings[:default_story_tracker]) %>
+	  <%- if (Backlogs.setting[:default_story_tracker] && tracker.id.to_s==Backlogs.setting[:default_story_tracker]) %>
 	  <option value="<%= tracker.id %>" selected="selected"><%= h tracker.name %></option>
 	  <%- else %>
 	  <option value="<%= tracker.id %>"><%= h tracker.name %></option>

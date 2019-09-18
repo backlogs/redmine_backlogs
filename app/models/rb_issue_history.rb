@@ -19,8 +19,8 @@ class RbIssueHistory < ActiveRecord::Base
     @burndown_timezone ||= begin
       server_tz = ActiveSupport::TimeZone["Etc/GMT-#{Time.now.utc_offset/3600}"] rescue server_tz = nil
       fallback_tz = server_tz || ActiveSupport::TimeZone["UTC"]
-      if Backlogs.settings[:burndown_timezone] #backlogs configuration for burndown day boundaries
-        ActiveSupport::TimeZone[Backlogs.settings[:burndown_timezone]] || fallback_tz
+      if Backlogs.setting[:burndown_timezone] #backlogs configuration for burndown day boundaries
+        ActiveSupport::TimeZone[Backlogs.setting[:burndown_timezone]] || fallback_tz
       else
         fallback_tz
       end
