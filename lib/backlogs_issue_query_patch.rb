@@ -21,10 +21,17 @@ module Backlogs
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
 
-        alias_method_chain :available_filters, :backlogs_issue_type
-        alias_method_chain :available_columns, :backlogs_issue_type
-        alias_method_chain :sql_for_field, :backlogs_issue_type
-        alias_method_chain :joins_for_order_statement, :backlogs_issue_type
+        alias_method :available_filters_without_backlogs_issue_type, :available_filters
+        alias_method :available_filters, :available_filters_with_backlogs_issue_type
+
+        alias_method :available_columns_without_backlogs_issue_type, :available_columns
+        alias_method :available_columns, :available_columns_with_backlogs_issue_type
+
+        alias_method :sql_for_field_without_backlogs_issue_type, :sql_for_field
+        alias_method :sql_for_field, :sql_for_field_with_backlogs_issue_type
+
+        alias_method :joins_for_order_statement_without_backlogs_issue_type, :joins_for_order_statement
+        alias_method :joins_for_order_statement, :joins_for_order_statement_with_backlogs_issue_type
       end
     end
 

@@ -4,11 +4,13 @@ class RbImpedimentsController < RbApplicationController
   unloadable
 
   def create
-    @settings = Backlogs.settings
+    params.permit!
+    @settings = Backlogs.setting
     begin
       @impediment = RbTask.create_with_relationships(params, User.current.id, @project.id, true)
     rescue => e
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      Rails.logger.error(e.message.blank? ? e.to_s : e.message)
+      render :partial => "backlogs/model_errors", :object => { "base" => e.message.blank? ? e.to_s : e.message }, :status => 400
       return
     end
 
@@ -22,8 +24,9 @@ class RbImpedimentsController < RbApplicationController
   end
 
   def update
+    params.permit!
     @impediment = RbTask.find_by_id(params[:id])
-    @settings = Backlogs.settings
+    @settings = Backlogs.setting
     begin
       result = @impediment.update_with_relationships(params)
     rescue => e

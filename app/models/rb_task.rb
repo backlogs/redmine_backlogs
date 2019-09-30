@@ -59,7 +59,7 @@ class RbTask < Issue
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = attribs.select{|k,v| k != 'lft' and k != 'rgt' }
-    attribs = Hash[*attribs.flatten] if attribs.is_a?(Array)
+    attribs = attribs.to_enum.to_h if attribs.is_a?(Array)
     return attribs
   end
 
@@ -82,14 +82,16 @@ class RbTask < Issue
       end
     end
 
-    task = new(attribs)
+    attribs = attribs.to_enum.to_h
+    task = RbTask.new(attribs)
     if params['parent_issue_id']
       parent = Issue.find(params['parent_issue_id'])
       task.start_date = parent.start_date
     end
-    task.save!
 
-    raise "Block list must be comma-separated list of task IDs" if is_impediment && !task.validate_blocks_list(blocks) # could we do that before save and integrate cross-project checks?
+    return task if is_impediment && !task.validate_blocks_list(blocks) # could we do that before save and integrate cross-project checks?
+
+    task.save!
 
     task.move_before params[:next] unless is_impediment # impediments are not hosted under a single parent, so you can't tree-order them
     task.update_blocked_list blocks.split(/\D+/) if is_impediment
@@ -175,7 +177,7 @@ class RbTask < Issue
 
   def validate_blocks_list(list)
     if list.split(/\D+/).length==0
-      errors.add :blocks, :must_have_comma_delimited_list
+      errors.add :blocks, :must_have_comma_delimited_list.to_s
       false
     else
       true

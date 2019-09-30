@@ -7,7 +7,7 @@ class RbTaskboardsController < RbApplicationController
     stories = @sprint.stories
     @story_ids    = stories.map{|s| s.id}
 
-    @settings = Backlogs.settings
+    @settings = Backlogs.setting
 
     ## determine status columns to show
     tracker = Tracker.find_by_id(RbTask.tracker)

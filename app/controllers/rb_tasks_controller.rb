@@ -4,11 +4,14 @@ class RbTasksController < RbApplicationController
   unloadable
 
   def create
-    @settings = Backlogs.settings
+    params.permit!
+    @settings = Backlogs.setting
     @task = nil
     begin
       @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
     rescue => e
+      Rails.logger.error(e.to_yaml)
+      Rails.logger.error(e.backtrace)
       render :text => e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
@@ -23,8 +26,9 @@ class RbTasksController < RbApplicationController
   end
 
   def update
+    params.permit!
     @task = RbTask.find_by_id(params[:id])
-    @settings = Backlogs.settings
+    @settings = Backlogs.setting
     result = @task.update_with_relationships(params)
     status = (result ? 200 : 400)
     @include_meta = true

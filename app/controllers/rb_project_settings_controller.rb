@@ -23,4 +23,7 @@ class RbProjectSettingsController < RbApplicationController
                 :tab => 'backlogs'
   end
 
+  def project_settings_params
+    params.require(:rb_project_settings).permit(:project_id);
+  end
 end

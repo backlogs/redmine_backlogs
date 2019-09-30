@@ -2,7 +2,7 @@ require 'pp'
 
 class RbIssueHistory < ActiveRecord::Base
   self.table_name = 'rb_issue_history'
-  attr_protected :created_at # hack, all attributes will be mass asigment
+  #attr_protected :created_at # hack, all attributes will be mass asigment
   belongs_to :issue
 
   serialize :history, Array

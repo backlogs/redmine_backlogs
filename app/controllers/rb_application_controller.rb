@@ -2,7 +2,7 @@
 class RbApplicationController < ApplicationController
   unloadable
 
-  before_filter :load_project, :authorize, :check_if_plugin_is_configured
+  before_action :load_project, :authorize, :check_if_plugin_is_configured
 
   #provide list of javascript_include_tags which must be rendered before common.js
   def rb_jquery_plugins

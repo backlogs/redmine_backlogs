@@ -44,7 +44,7 @@ See RB.Taskboard.initialize()
   margin-bottom:0;
   margin-right:10px;
   position: absolute;
-  z-index: 200;
+  z-index: 100;
 }
 #board_header td{
   background-color:#EEEEEE;

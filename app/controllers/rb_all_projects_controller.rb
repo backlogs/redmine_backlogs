@@ -1,7 +1,7 @@
 class RbAllProjectsController < ApplicationController
   unloadable
 
-  before_filter :authorize_global
+  before_action :authorize_global
 
   def statistics
     backlogs_projects = RbCommonHelper.find_backlogs_enabled_active_projects

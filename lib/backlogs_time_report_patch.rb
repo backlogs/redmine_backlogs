@@ -6,7 +6,8 @@ module Backlogs
       base.send(:include, InstanceMethods)
 
       base.class_eval do
-        alias_method_chain :load_available_criteria, :releases
+        alias_method :load_available_criteria_without_releases, :load_available_criteria
+        alias_method :load_available_criteria, :load_available_criteria_with_releases
       end
     end
 

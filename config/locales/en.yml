@@ -86,6 +86,7 @@ en:
   error_release_end_after_start: "Release end date has to be after start date"
   error_sprint_end_before_start: "Sprint cannot end before it starts"
   error_taken: "is already in use"
+  error_impediment: "Block list must be comma-separated list of task IDs"
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: "Assigned To"
   field_backlogs_issue_type: "Backlog type"

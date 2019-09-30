@@ -12,7 +12,7 @@ class RbSprintsController < RbApplicationController
 
   def create
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_enum.to_h
     @sprint = RbSprint.new(attribs)
 
     #share the sprint according to the global setting
@@ -43,7 +43,7 @@ class RbSprintsController < RbApplicationController
   def update
     except = ['id', 'project_id']
     attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_enum.to_h
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
