@@ -1,4 +1,4 @@
-class CreateStoriesTasksSprintsAndBurndown < ActiveRecord::Migration
+class CreateStoriesTasksSprintsAndBurndown < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     add_column :issues, :position, :integer
     add_column :issues, :story_points, :integer

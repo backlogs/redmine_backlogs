@@ -1,4 +1,4 @@
-class AddReleasesIndexes < ActiveRecord::Migration
+class AddReleasesIndexes < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     add_index :issues, :release_id
     add_index :issues, :release_relationship

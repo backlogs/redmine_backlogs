@@ -1,4 +1,4 @@
-class DropReleaseBurndownDays < ActiveRecord::Migration
+class DropReleaseBurndownDays < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     if ActiveRecord::Base.connection.table_exists?('release_burndown_days')
       drop_table :release_burndown_days

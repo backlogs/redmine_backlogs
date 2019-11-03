@@ -1,7 +1,7 @@
 require 'benchmark'
 require 'yaml'
 
-class RbAddHistory < ActiveRecord::Migration
+class RbAddHistory < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     #drop_table :rb_journals if ActiveRecord::Base.connection.table_exists?('rb_journals')
 

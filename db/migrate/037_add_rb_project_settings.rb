@@ -1,4 +1,4 @@
-class AddRbProjectSettings < ActiveRecord::Migration
+class AddRbProjectSettings < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     create_table :rb_project_settings do |t|
       t.references :project
