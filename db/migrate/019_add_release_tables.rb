@@ -1,4 +1,4 @@
-class AddReleaseTables < ActiveRecord::Migration
+class AddReleaseTables < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     create_table :releases do |t|
       t.column :name, :string, :null => false

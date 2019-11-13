@@ -1,4 +1,4 @@
-class AddIndexOnIssuesPosition < ActiveRecord::Migration
+class AddIndexOnIssuesPosition < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     add_index :issues, :position 
   end

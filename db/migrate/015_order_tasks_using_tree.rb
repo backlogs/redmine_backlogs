@@ -1,4 +1,4 @@
-class OrderTasksUsingTree < ActiveRecord::Migration
+class OrderTasksUsingTree < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def self.up
     unless ActiveRecord::Base.connection.table_exists?('rb_issue_history')
       create_table :rb_issue_history do |t|
