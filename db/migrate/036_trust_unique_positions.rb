@@ -1,6 +1,6 @@
 require 'benchmark'
 
-class TrustUniquePositions < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class TrustUniquePositions < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     # Needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
     remove_index :issues, [:position, :position_lock]

@@ -1,4 +1,4 @@
-class ChangeIssuePositionColumn < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class ChangeIssuePositionColumn < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     change_column :issues, :position, :integer, :null => true, :default => nil
   end

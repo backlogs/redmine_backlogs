@@ -1,4 +1,4 @@
-class SumRemainingHours < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class SumRemainingHours < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     unless RbStory.trackers == []
       create_table :backlogs_tmp_story_remaining_hours do |t|

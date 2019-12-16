@@ -1,6 +1,6 @@
 require 'benchmark'
 
-class ReinstateRemaining < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class ReinstateRemaining < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
 
   def self.initial_estimate(issue)
     if issue.leaf?

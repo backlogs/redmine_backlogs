@@ -1,4 +1,4 @@
-class MigrateLegacy < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class MigrateLegacy < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.normalize_value(v, t)
     v = v[1] if v.is_a?(Array)
 

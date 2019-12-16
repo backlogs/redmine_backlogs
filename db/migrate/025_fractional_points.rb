@@ -1,4 +1,4 @@
-class FractionalPoints < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class FractionalPoints < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     add_column :issues, :fractional_story_points, :float
     execute "update issues set fractional_story_points = story_points"

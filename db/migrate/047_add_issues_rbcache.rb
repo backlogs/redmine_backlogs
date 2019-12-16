@@ -1,4 +1,4 @@
-class AddIssuesRbcache < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class AddIssuesRbcache < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     create_table :rb_release_burndown_caches do |t|
       t.column :issue_id, :integer, :null => false

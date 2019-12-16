@@ -1,6 +1,6 @@
 require 'benchmark'
 
-class NullTaskPosition < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class NullTaskPosition < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     if RbTask.tracker
       execute "update issues set position = null where tracker_id = #{RbTask.tracker}"

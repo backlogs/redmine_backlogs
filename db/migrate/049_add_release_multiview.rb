@@ -1,4 +1,4 @@
-class AddReleaseMultiview < (Rails.version < 5.1) ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class AddReleaseMultiview < (ActiveRecord::VERSION::MAJOR >= 5) ? ActiveRecord::Migration["#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}"] : ActiveRecord::Migration
   def self.up
     create_table :rb_releases_multiview do |t|
       t.column :name, :string, :null => false
