@@ -93,6 +93,7 @@ en:
   field_base: ""
   field_blocks: Blocks
   field_name: Name
+  field_parent_issue_id: "Parent issue id"
   field_planned_velocity: "Planned velocity"
   field_position: Position
   field_priority: Priority

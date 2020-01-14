@@ -1,5 +1,16 @@
 <div class="errors">
   <%- model_errors.each do |a, err| %>
-  <div><%= "#{l('field_' + a.to_s)} #{l('error_' + err.to_s)}" %></div>
+    <%
+      field = "#{l('field_' + a.to_s)}"
+      error = "#{l('error_' + err.to_s)}"
+
+      if field.include? "translation missing:"
+        field = a.to_s
+      end
+      if error.include? "translation missing:"
+        error = err.to_s
+      end
+    %>
+  <div><%= "#{field} #{error}" %></div>
   <%- end %>
 </div>

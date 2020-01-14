@@ -93,6 +93,7 @@ fr:
   field_blocks: Blocks
   field_name: Nom
   field_planned_velocity: "vélocité planifiée"
+  field_parent_issue_id: "L'ID de l'issuedac  parent"
   field_position: Position
   field_priority: Priorité
   field_project_id: "ID Projet"
