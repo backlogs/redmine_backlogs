@@ -194,7 +194,7 @@ RB.Backlog = RB.Object.create({
       ui.item.addClass("dragging");
     } else {
       // for IE    
-      ui.item.draggable('enabled');
+      ui.item.draggable();
     }
     ui.item.data('dragging', 'true');
   },
