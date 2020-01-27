@@ -147,7 +147,7 @@ RB.Taskboard = RB.Object.create({
     } else {
       // for IE
       ui.item.addClass("dragging");      
-      ui.item.draggable('enabled');
+      ui.item.draggable();
     }
   },
   
