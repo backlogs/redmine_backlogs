@@ -86,7 +86,7 @@ private
   # Calculate estimated end dates for all stacked series trendlines crossing closed series trendline
   def calculate_estimate_end_days
     @total_estimates.each{|k,l|
-      @total_estimates[k][:end_date_estimate] = l[:trendline].crossing_date(@closed_estimate)
+      @total_estimates[k][:end_date_estimate] = l[:trendline].crossing_date(@closed_estimate) unless @closed_estimate.nil?
     }
   end
 
