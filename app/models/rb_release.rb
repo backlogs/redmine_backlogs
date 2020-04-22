@@ -256,8 +256,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def has_burndown?
-    false #FIXME release burndown broken
-    #return self.stories.size > 0
+    return self.stories.size > 0
   end
 
   def burndown
