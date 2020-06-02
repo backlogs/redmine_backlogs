@@ -29,7 +29,6 @@ a:hover{
   height:30px;
   overflow:hidden;
   position:relative;
-  width:100%;
   box-shadow: 0 3px 4px #A0A0A0;
   z-index:1000;
 }

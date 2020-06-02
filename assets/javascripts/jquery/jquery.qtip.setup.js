@@ -22,7 +22,7 @@ $.qtipMakeOptions = function(container, ajax) {
               ajax: {
                 url: RB.urlFor('show_tooltip', {id: id}),
                 type: 'GET',
-                data: { project_id: RB.constants.project_id }, //to satisfy before_filter and authorize
+                data: { project_id: RB.constants.project_id }, //to satisfy before_action and authorize
                 once: true
               }
             };

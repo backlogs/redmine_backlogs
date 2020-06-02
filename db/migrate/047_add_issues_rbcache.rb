@@ -1,4 +1,4 @@
-class AddIssuesRbcache < ActiveRecord::Migration
+class AddIssuesRbcache < ActiveRecord::Migration[5.2]
   def self.up
     create_table :rb_release_burndown_caches do |t|
       t.column :issue_id, :integer, :null => false

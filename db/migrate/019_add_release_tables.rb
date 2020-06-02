@@ -1,4 +1,4 @@
-class AddReleaseTables < ActiveRecord::Migration
+class AddReleaseTables < ActiveRecord::Migration[5.2]
   def self.up
     create_table :releases do |t|
       t.column :name, :string, :null => false

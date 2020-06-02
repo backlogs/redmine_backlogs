@@ -11,7 +11,7 @@ module Backlogs
 
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
-        after_filter :add_backlogs_fields, :only => [:index, :show]
+        after_action :add_backlogs_fields, :only => [:index, :show]
       end
     end
 

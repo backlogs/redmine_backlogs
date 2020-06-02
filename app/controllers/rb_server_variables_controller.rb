@@ -7,7 +7,7 @@ class RbServerVariablesController < RbApplicationController
 
   # for index there's no @project
   # (eliminates the need of RbAllProjectsController)
-  skip_before_filter :load_project, :authorize, :only => [:index]
+  skip_before_action :load_project, :authorize, :only => [:index]
 
   def index
     @context = params[:context]

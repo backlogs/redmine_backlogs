@@ -1,6 +1,6 @@
 require 'benchmark'
 
-class UniquePositions < ActiveRecord::Migration
+class UniquePositions < ActiveRecord::Migration[5.2]
   def self.up
     unless ActiveRecord::Base.connection.table_exists?('rb_issue_history')
       create_table :rb_issue_history do |t|

@@ -1,4 +1,4 @@
-class MigrateReleases < ActiveRecord::Migration
+class MigrateReleases < ActiveRecord::Migration[5.2]
   def self.up
     add_column :releases, :status, :string, :null => false, :default => 'open'
     add_column :releases, :description, :text

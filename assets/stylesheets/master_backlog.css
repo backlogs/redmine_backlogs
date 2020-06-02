@@ -553,6 +553,7 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .stories .story.editing select.story_points.editor {
   margin:0;
   padding: 0px;
+  min-height: 24px;
   height: inherit;
   width: 40px;
   overflow: visible;

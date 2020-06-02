@@ -1,4 +1,4 @@
-class AddReleaseIdToIssues < ActiveRecord::Migration
+class AddReleaseIdToIssues < ActiveRecord::Migration[5.2]
   def self.up
     unless ActiveRecord::Base.connection.column_exists?(:issues, :release_id)
       add_column :issues, :release_id, :integer

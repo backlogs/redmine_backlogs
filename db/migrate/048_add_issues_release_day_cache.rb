@@ -1,6 +1,6 @@
 require "./plugins/redmine_backlogs/db/migrate/047_add_issues_rbcache.rb"
 
-class AddIssuesReleaseDayCache < ActiveRecord::Migration
+class AddIssuesReleaseDayCache < ActiveRecord::Migration[5.2]
   def self.up
     create_table :rb_release_burnchart_day_caches, :id => false do |t|
       t.column :issue_id, :integer, :null => false

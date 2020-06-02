@@ -1,4 +1,4 @@
-class FractionalPoints < ActiveRecord::Migration
+class FractionalPoints < ActiveRecord::Migration[5.2]
   def self.up
     add_column :issues, :fractional_story_points, :float
     execute "update issues set fractional_story_points = story_points"

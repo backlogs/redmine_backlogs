@@ -9,11 +9,11 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
+        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id', optional: true
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :backlogs_history, :class_name => RbIssueHistory, :dependent => :destroy
+        has_one :backlogs_history, :class_name => 'RbIssueHistory', :dependent => :destroy
         has_many :rb_release_burnchart_day_cache, :dependent => :delete_all
 
 
@@ -59,7 +59,6 @@ module Backlogs
         if @rb_story.nil?
           if self.new_record?
             parent_id = self.parent_id
-            parent_id = self.parent_issue_id if parent_id.blank?
             parent_id = nil if parent_id.blank?
             parent = parent_id ? Issue.find(parent_id) : nil
 
@@ -117,7 +116,7 @@ module Backlogs
             self.fixed_version = self.story.fixed_version if self.story
             self.start_date = Date.today if self.start_date.blank? && self.status_id != self.tracker.default_status.id
 
-            self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+            self.tracker = Tracker.find(self.tracker_id) unless self.tracker_id == RbTask.tracker
           elsif self.is_story? && Backlogs.setting[:set_start_and_duedates_from_sprint]
             if self.fixed_version
               self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
@@ -142,7 +141,7 @@ module Backlogs
       end
 
       def invalidate_release_burnchart_data
-        RbReleaseBurnchartDayCache.delete_all(["issue_id = ? AND day >= ?",self.id,Date.today])
+        RbReleaseBurnchartDayCache.where(["issue_id = ? AND day >= ?",self.id,Date.today]).delete_all
         #FIXME Missing cleanup of older cache entries which is no longer
         # valid for any releases. Delete cache entries not related to
         # current release?

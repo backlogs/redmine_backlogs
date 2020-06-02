@@ -1,4 +1,4 @@
-class AddStoryPositions < ActiveRecord::Migration
+class AddStoryPositions < ActiveRecord::Migration[5.2]
   def self.up
     # Rails doesn't support temp tables, mysql doesn't support update
     # from same-table subselect

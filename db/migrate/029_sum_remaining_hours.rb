@@ -1,4 +1,4 @@
-class SumRemainingHours < ActiveRecord::Migration
+class SumRemainingHours < ActiveRecord::Migration[5.2]
   def self.up
     unless RbStory.trackers == []
       create_table :backlogs_tmp_story_remaining_hours do |t|

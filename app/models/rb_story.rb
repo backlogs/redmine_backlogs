@@ -1,6 +1,4 @@
 class RbStory < Issue
-  unloadable
-
   RELEASE_RELATIONSHIP = %w(auto initial continued added)
 
   private
@@ -175,7 +173,7 @@ class RbStory < Issue
     attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
 
     attribs[:status] = RbStory.class_default_status
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_enum.to_h
     s = RbStory.new(attribs)
     s.save!
     s.position!(params)
@@ -263,7 +261,7 @@ class RbStory < Issue
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_enum.to_h
 
     return self.journalized_update_attributes attribs
   end
@@ -291,11 +289,10 @@ class RbStory < Issue
   end
 
   def save_release_burnchart_data(series,release_burndown_id)
-    RbReleaseBurnchartDayCache.delete_all(
-      ["issue_id = ? AND release_id = ? AND day IN (?)",
-       self.id,
-       release_burndown_id,
-       series.series(:day)])
+    RbReleaseBurnchartDayCache.where(["issue_id = ? AND release_id = ? AND day IN (?)",
+                                      self.id,
+                                      release_burndown_id,
+                                      series.series(:day)]).delete_all
 
     series.each{|s|
       RbReleaseBurnchartDayCache.create(:issue_id => self.id,

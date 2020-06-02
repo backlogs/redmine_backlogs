@@ -47,7 +47,7 @@ module BacklogsPlugin
               end
 
             when 'issues#index'
-              q = context[:request].session[:query]
+              q = context[:request].session[:issue_query]
               sprint = (q && q[:filters]) ? q[:filters]['fixed_version_id'] : nil
               if sprint && sprint[:operator] == '=' && sprint[:values].size == 1
                 sprint_id = sprint[:values][0]
@@ -349,7 +349,7 @@ module BacklogsPlugin
               tasks.each {|t|
                 nt = Issue.new
                 nt.copy_from(t)
-                nt.parent_issue_id = issue.id
+                nt.parent_id = issue.id
                 nt.position = nil # will assign a new position
                 nt.save!
               }

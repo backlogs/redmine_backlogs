@@ -1,4 +1,4 @@
-class MigrateLegacy < ActiveRecord::Migration
+class MigrateLegacy < ActiveRecord::Migration[5.2]
   def self.normalize_value(v, t)
     v = v[1] if v.is_a?(Array)
 

@@ -174,7 +174,7 @@ def initialize_task_params(story_id)
   params['project_id'] = RbStory.find_by_id(story_id).project_id
   params['tracker_id'] = RbTask.tracker
   params['author_id']  = @user.id
-  params['parent_issue_id'] = story_id
+  params['parent_id'] = story_id
   params['status_id'] = RbTask.class_default_status.id
   params
 end

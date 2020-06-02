@@ -258,7 +258,7 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def release_options_for_select(releases, selected=nil)
-    releases = releases.all.to_a if releases
+    releases = releases.all.to_a unless releases.is_a? Array
     grouped = Hash.new {|h,k| h[k] = []}
     selected = [selected].compact unless selected.kind_of?(Array)
     releases.each do |release|

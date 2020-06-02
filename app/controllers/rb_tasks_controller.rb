@@ -4,6 +4,7 @@ class RbTasksController < RbApplicationController
   unloadable
 
   def create
+    params.permit!
     @settings = Backlogs.settings
     @task = nil
     begin
@@ -23,6 +24,7 @@ class RbTasksController < RbApplicationController
   end
 
   def update
+    params.permit!
     @task = RbTask.find_by_id(params[:id])
     @settings = Backlogs.settings
     result = @task.update_with_relationships(params)

@@ -426,7 +426,7 @@ Given /^I have defined the following tasks:$/ do |table|
     # setting up the database for the actual tests. The actual tests,
     # however, should NOT bypass the controller
     task = RbTask.create_with_relationships(params, @user.id, story.project.id)
-    task.parent_issue_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
+    task.parent_id = story.id # workaround racktest driver weirdness: user is not member of subprojects. phantomjs driver works as expected, though.
     task.save! # workaround racktest driver weirdness
     task
   end

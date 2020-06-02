@@ -5,7 +5,7 @@ class RbCalendarsController < RbApplicationController
 
   case Backlogs.platform
     when :redmine
-      before_filter :require_admin_or_api_request, :only => :ical
+      before_action :require_admin_or_api_request, :only => :ical
       accept_api_auth :ical
     when :chiliproject
       accept_key_auth :ical

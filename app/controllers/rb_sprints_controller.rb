@@ -11,9 +11,7 @@ class RbSprintsController < RbApplicationController
   accept_api_auth :download
 
   def create
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
-    attribs = Hash[*attribs.flatten]
-    @sprint = RbSprint.new(attribs)
+    @sprint = RbSprint.new(rb_sprint_params)
 
     #share the sprint according to the global setting
     default_sharing = Backlogs.setting[:sharing_new_sprint_sharingmode]
@@ -41,11 +39,8 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    except = ['id', 'project_id']
-    attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
-    attribs = Hash[*attribs.flatten]
     begin
-      result  = @sprint.update_attributes attribs
+      result = @sprint.update_attributes(rb_sprint_params)
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
@@ -128,4 +123,16 @@ class RbSprintsController < RbApplicationController
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
  
+  private
+
+  def rb_sprint_params
+    permitted = [:name, :sprint_start_date, :effective_date, :description]
+
+    case action_name
+    when 'create'
+      params.permit(*permitted).merge(project_id: @project.id)
+    when 'update'
+      params.permit(*permitted)
+    end
+  end 
 end

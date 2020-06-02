@@ -1,4 +1,4 @@
-class AddReleaseMultiview < ActiveRecord::Migration
+class AddReleaseMultiview < ActiveRecord::Migration[5.2]
   def self.up
     create_table :rb_releases_multiview do |t|
       t.column :name, :string, :null => false

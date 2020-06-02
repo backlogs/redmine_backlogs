@@ -20,7 +20,7 @@ end
 module RbCommonHelper
 end
 class ApplicationController
-  def self.before_filter(*args)
+  def self.before_action(*args)
   end
 end
 class Object

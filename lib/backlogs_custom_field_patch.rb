@@ -2,25 +2,18 @@ require_dependency 'custom_field'
 
 module Backlogs
   module CustomFieldPatch
-    def self.included(base) # :nodoc:
-      base.extend(ClassMethods)
-      base.send(:include, InstanceMethods)
-      base.class_eval do
-        class << self
-          alias_method_chain :customized_class, :sti
-        end
+    def customized_class
+      if self.respond_to?(:rb_sti_class)
+        self.rb_sti_class.customized_class
+      else
+        super
       end
-    end
-
-    module ClassMethods
-      def customized_class_with_sti
-        (self.respond_to?(:rb_sti_class) ? self.rb_sti_class : self).customized_class_without_sti
-      end
-    end
-
-    module InstanceMethods
     end
   end
 end
 
-CustomField.send(:include, Backlogs::CustomFieldPatch) unless CustomField.included_modules.include? Backlogs::CustomFieldPatch
+class CustomField
+  class << self
+    prepend Backlogs::CustomFieldPatch
+  end
+end

@@ -1,6 +1,6 @@
 require 'benchmark'
 
-class TrustUniquePositions < ActiveRecord::Migration
+class TrustUniquePositions < ActiveRecord::Migration[5.2]
   def self.up
     # Needed until MySQL undoes the retardation that is http://bugs.mysql.com/bug.php?id=5573
     remove_index :issues, [:position, :position_lock]

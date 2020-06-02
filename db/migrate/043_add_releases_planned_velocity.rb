@@ -1,4 +1,4 @@
-class AddReleasesPlannedVelocity < ActiveRecord::Migration
+class AddReleasesPlannedVelocity < ActiveRecord::Migration[5.2]
   def self.up
     add_column :releases, :planned_velocity, :float
   end
