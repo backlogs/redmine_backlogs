@@ -1,9 +1,6 @@
 require 'redmine'
 
-object_to_prepare = Rails.configuration
-# if redmine plugins were railties:
-# object_to_prepare = config
-object_to_prepare.to_prepare do
+Rails.configuration.to_prepare do
   require_dependency 'backlogs_redmine3nestedset_mixin'
   require_dependency 'backlogs_activerecord_mixin'
   require_dependency 'backlogs_setup'
@@ -18,7 +15,13 @@ object_to_prepare.to_prepare do
   end
 
   require_dependency 'backlogs_time_report_patch'
-  require_dependency 'backlogs_issue_query_patch'
+
+  begin
+    require_dependency 'backlogs_issue_query_patch'
+  rescue ActiveRecord::StatementInvalid
+    puts "Warning: cannot load backlogs_issue_query_patch until database gets ready"
+  end
+
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
   require_dependency 'backlogs_tracker_patch'
