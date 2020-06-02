@@ -1,6 +1,6 @@
 ---
 language: ruby
-release: 1.0.6
+release: v1.2.0
 sudo: false
 services:
 - mysql
