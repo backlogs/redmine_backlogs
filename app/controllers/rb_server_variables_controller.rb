@@ -13,7 +13,7 @@ class RbServerVariablesController < RbApplicationController
     @context = params[:context]
 
     respond_to do |format|
-      Rails.logger.warn("Format problem #{format}")
+      #Rails.logger.warn("Format problem #{format}")
       format.html { render_404 }
       format.js { render :template => 'rb_server_variables/show', :layout => false, :handlers => [:erb], :formats => [:js] }
       #format.js { render js: "alert('Hello Rails');" }
