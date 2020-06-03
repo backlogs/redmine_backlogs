@@ -3,8 +3,6 @@
 _site
 _posts
 assets/styles
-lib/labels/labels.yaml
-lib/labels/labels-malformed.yaml
 graph.dot
 nbproject
 *.rc
