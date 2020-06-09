@@ -21,35 +21,19 @@ class RbSprintsController < RbApplicationController
       end
     end
 
-    begin
-      @sprint.save!
-    rescue => e
-      Rails.logger.debug e
-      Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
-      return
-    end
-
-    result = @sprint.errors.size
-    status = (result == 0 ? 200 : 400)
+    result = @sprint.save
+    status = (result ? 200 : 400)
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => status, :locals => { :sprint => @sprint, :cls => 'model sprint' } }
+      format.html { render partial: "sprint", status: status = (result ? 200 : 400), locals: {sprint: @sprint, cls: 'model sprint'} }
     end
   end
 
   def update
-    begin
-      result = @sprint.update_attributes(rb_sprint_params)
-    rescue => e
-      Rails.logger.debug e
-      Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
-      return
-    end
+    result = @sprint.update_attributes(rb_sprint_params)
 
     respond_to do |format|
-      format.html { render :partial => "sprint", :status => (result ? 200 : 400), :locals => { :sprint => @sprint, :cls => 'model sprint' } }
+      format.html { render partial: "sprint", status: (result ? 200 : 400), locals: {sprint: @sprint, cls: 'model sprint'} }
     end
   end
 
@@ -127,7 +111,7 @@ class RbSprintsController < RbApplicationController
 
   def rb_sprint_params
     permitted = [:name, :sprint_start_date, :effective_date, :description]
-
+    
     case action_name
     when 'create'
       params.permit(*permitted).merge(project_id: @project.id)

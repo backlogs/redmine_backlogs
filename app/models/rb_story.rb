@@ -164,21 +164,15 @@ class RbStory < Issue
     end
   end
 
-  def self.create_and_position(params)
+  def self.save_and_position(story, params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
     params['next'] = params.delete('next_id') if params.include?('next_id')
     params['prev'] = nil if (['next', 'prev'] - params.keys).size == 2
 
-    # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    result = story.save
+    story.position!(params)
 
-    attribs[:status] = RbStory.class_default_status
-    attribs = attribs.to_enum.to_h
-    s = RbStory.new(attribs)
-    s.save!
-    s.position!(params)
-
-    return s
+    return result
   end
 
   scope :updated_since, lambda {|since|
@@ -254,7 +248,7 @@ class RbStory < Issue
     return story_points.to_s
   end
 
-  def update_and_position!(params)
+  def update_and_position(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
     params['next'] = params.delete('next_id') if params.include?('next_id')
     self.position!(params)

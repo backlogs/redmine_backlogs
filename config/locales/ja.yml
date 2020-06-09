@@ -77,15 +77,18 @@ ja:
   current_open_story_points: "オープン中のストーリーポイント:"
   error_base: ""
   error_blank: "空白にすることはできません"
+  error_effective_date: ""
   error_greater_than_start_date: "開始日より前は指定できません"
   error_inclusion: はリストに含まれていません
   error_intro_plural: "下記のエラーが発生しました:"
   error_intro_singular: "下記のエラーが発生しました:"
   error_must_have_comma_delimited_list: "ストーリーもしくはタスクのIDはカンマ「,」で区切ってください"
+  error_name: ""
   error_no_workflow_for_task_tracker: タスクトラッカーのアクセス権がありません。エラーだと思う場合は、管理者にワークフローの更新を依頼してください
   error_outro: 送信する前に、上記のエラーを訂正してください
   error_release_end_after_start: "リリース終了日は開始日より後に設定してください"
   error_sprint_end_before_start: 開始していないスプリントは終了できません
+  error_subject: ""
   error_taken: は既に利用されています
   event_sprint_summary: "%{project}: %{summary}"
   field_assigned_to: 担当者

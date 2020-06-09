@@ -28,36 +28,26 @@ class RbStoriesController < RbApplicationController
   end
 
   def create
-    params['author_id'] = User.current.id
-    begin
-      story = RbStory.create_and_position(params)
-    rescue => e
-      Rails.logger.error(e.message.blank? ? e.to_s : e.message)
-      render text: e.message.blank? ? e.to_s : e.message, status: 400
-      return
-    end
 
-    status = (story.id ? 200 : 400)
+    # lft and rgt fields are handled by acts_as_nested_set
+    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    attribs[:author_id] = User.current.id
+    attribs[:status] = RbStory.class_default_status
+    attribs = attribs.to_enum.to_h
+    story = RbStory.new(attribs)
+    result = RbStory.save_and_position(story, params)
 
     respond_to do |format|
-      format.html { render :partial => "story", :object => story, :status => status }
+      format.html { render partial: "story", status: (result ? 200 : 400), locals: {story: story} }
     end
   end
 
   def update
     story = RbStory.find(params[:id])
-    begin
-      result = story.update_and_position!(params)
-    rescue => e
-      Rails.logger.error(e.message.blank? ? e.to_s : e.message)
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
-      return
-    end
-
-    status = (result ? 200 : 400)
+    result = story.update_and_position(params)
 
     respond_to do |format|
-      format.html { render :partial => "story", :object => story, :status => status }
+      format.html { render partial: "story", status: (result ? 200 : 400), locals: {story: story} }
     end
   end
 
