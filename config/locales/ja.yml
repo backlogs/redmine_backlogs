@@ -75,6 +75,7 @@ ja:
   button_edit_wiki: Wikiページの編集
   comma_delimited_numbers: "カンマで区切った数字(ex: 1,2,3,5,8,13,...)"
   current_open_story_points: "オープン中のストーリーポイント:"
+  error_base: ""
   error_blank: "空白にすることはできません"
   error_greater_than_start_date: "開始日より前は指定できません"
   error_inclusion: はリストに含まれていません
