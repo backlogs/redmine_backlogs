@@ -192,10 +192,9 @@ module BacklogsPlugin
         end
       end
 
-      def view_issues_new_top(context={ })
-        #Remove the copy_subtasks functionality from redmine 2.1+ since backlogs offers it with a choice to copy only open tasks
+      def view_issues_new_top(context = {})
         project = context[:project]
-        return '' unless project.module_enabled?('backlogs')
+        return '' unless project&.module_enabled?('backlogs')
         return '<script type="text/javascript">$(function(){try{$("#copy_subtasks")[0].checked=false;$($("#copy_subtasks")[0].parentNode).hide();}catch(e){}});</script>'
       end
 
