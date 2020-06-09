@@ -87,10 +87,10 @@ class RbSprintsController < RbApplicationController
     end
 
     ids = []
-    status = IssueStatus.default.id
+    default_status_id = Tracker.find(Backlogs.setting[:task_tracker]).default_status_id
     Issue.where(fixed_version_id: @sprint.id).find_each {|issue|
       ids << issue.id.to_s
-      issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
+      issue.update_attributes!(created_on: @sprint.sprint_start_date.to_time, status_id: default_status_id)
     }
     if ids.size != 0
       ids = ids.join(',')
@@ -105,7 +105,7 @@ class RbSprintsController < RbApplicationController
                                    where journalized_type = 'Issue' and journalized_id in (#{ids})")
     end
 
-    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier
+    redirect_to controller: 'rb_master_backlogs', action: 'show', project_id: @project.identifier
   end
 
   def close_completed
