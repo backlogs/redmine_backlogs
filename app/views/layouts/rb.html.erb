@@ -43,6 +43,16 @@ RB.$(function(){
     RB.$('#usability-compat-wrapper').toggleClass('w-rb-header-collapsed');
   });
 });
+
+<%# redmine-core requires the script below %>
+function toggleNewObjectDropdown() {
+  var dropdown = $('#new-object + ul.menu-children');
+  if(dropdown.hasClass('visible')){
+    dropdown.removeClass('visible');
+  }else{
+    dropdown.addClass('visible');
+  }
+}
 </script>
 <% end %>
 </head>
