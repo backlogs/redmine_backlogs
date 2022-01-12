@@ -42,6 +42,8 @@ Rails.configuration.to_prepare do
   require_dependency 'linear_regression'
 
   Redmine::AccessControl.permission(:manage_versions).actions << "rb_sprints/close_completed"
+
+  FileUtils.cp(File.dirname(__FILE__) + '/test/fixtures/issues.yml', Rails.root + 'test/fixtures/')
 end
 
 
@@ -49,7 +51,7 @@ Redmine::Plugin.register :redmine_backlogs do
   name 'Redmine Backlogs'
   author "friflaj,Mark Maglana,John Yani,mikoto20000,Frank Blendinger,Bo Hansen,stevel,Patrick Atamaniuk"
   description 'A plugin for agile teams'
-  version 'v1.2.5'
+  version 'v1.2.6'
 
   settings :default => {
                          :story_trackers            => nil,
