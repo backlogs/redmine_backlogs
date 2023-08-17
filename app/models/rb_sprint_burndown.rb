@@ -85,6 +85,11 @@ class RbSprintBurndown < ActiveRecord::Base
     @_burndown = read_attribute(:burndown)
     @_burndown = nil if !@_burndown || @_burndown.size == 0
 
+    if @_burndown.nil? && burndown_changed?
+      logger.info("SprintBurndown #{id}'s burndown have been clean. skip burndown calculation due to performance issue")
+      return
+    end
+
     # if I use self.version.id I get a "stack level too deep?!
     sprint = self.version # RbSprint.find(self.version_id)
 
@@ -132,7 +137,10 @@ class RbSprintBurndown < ActiveRecord::Base
 
     cur = read_attribute(:burndown)
     write_attribute(:burndown, @_burndown)
-    self.save if @_burndown != cur
+    if @_burndown != cur
+      self.save
+      logger.info("SprintBurndown #{id}'s burndown have been saved")
+    end
     return @_burndown
   end
 end
